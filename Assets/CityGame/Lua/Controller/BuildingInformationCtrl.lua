@@ -466,6 +466,7 @@ function BuildingInformationCtrl:_clickBuildingName(ins)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(25040001)
+    data.inputDefaultStr = GetLanguage(37030002)
     data.btnCallBack = function(name)
         Event.Brocast("m_ReqSetBuildingName",ins.m_data.id,name)
     end

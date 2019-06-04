@@ -32,6 +32,7 @@ end
 function InputDialogPageCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("setBuildingNameFailure",self.setBuildingNameFailure,self)
+    Event.AddListener("c_SetPlayerNameEvent",self.setPlayerNameCallback,self)
 end
 function InputDialogPageCtrl:Refresh()
     self:_initData()
@@ -40,6 +41,7 @@ end
 function InputDialogPageCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("setBuildingNameFailure",self.setBuildingNameFailure,self)
+    Event.RemoveListener("c_SetPlayerNameEvent",self.setPlayerNameCallback,self)
 end
 ---寻找组件
 function InputDialogPageCtrl:_getComponent(go)
@@ -60,11 +62,13 @@ function InputDialogPageCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.rentInput.text = ""
     self.errorTipRoot.localScale = Vector3.zero
-    --self.changeNameTipText.transform.localScale = Vector3.zero
+    if self.m_data.inputDefaultStr ~= nil then
+        self.rentInputPlaceholderText.text = self.m_data.inputDefaultStr
+    end
 end
 
 function InputDialogPageCtrl:_language()
-    self.rentInputPlaceholderText.text = GetLanguage(37030002)
+    --self.rentInputPlaceholderText.text = GetLanguage(37030002)
 end
 
 ---点击确认按钮
@@ -91,5 +95,19 @@ function InputDialogPageCtrl:setBuildingNameFailure(data)
     if data then
         self.errorTipRoot.localScale = Vector3.one
         self.errorTipText.text = "Modified every seven days!"
+    end
+end
+--修改玩家姓名
+function InputDialogPageCtrl:setPlayerNameCallback(data)
+    if data.reason ~= nil then
+        self.errorTipRoot.localScale = Vector3.one
+        if data.reason == "roleNameDuplicated" then
+            self.errorTipText.text = "改名称已被使用"
+        elseif data.reason == "roleNameSetInCd" then
+            self.errorTipText.text = "距离上次修改不足7天"
+        end
+    else
+        Event.Brocast("SmallPop", "修改名字成功", 300)
+        UIPanel.ClosePage()
     end
 end

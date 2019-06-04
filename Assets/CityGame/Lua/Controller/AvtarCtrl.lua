@@ -47,10 +47,6 @@ end
 
 function AvtarCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    AvatarOrganImageList[1] = {}
-    AvatarOrganImageList[2] = {}
-    headPrefab[1] = {}
-    headPrefab[2] = {}
 end
 
 --【over】
@@ -101,7 +97,10 @@ function AvtarCtrl:ClearCasch()
         UnLoadSprite(pastApperance.path)
     end
     mySex = nil
+    currentHead = nil
     myCurrentHeadNum = nil
+    AvatarOrganImageList = nil
+    headPrefab = nil
 end
 
 
@@ -160,6 +159,13 @@ function AvtarCtrl:begin()
     local faceId = DataManager.GetFaceId()
     --加载左侧五官选择按钮
     InsAndObjectPool(AvtarConfig.man,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
+    --初始化
+    AvatarOrganImageList = {}
+    AvatarOrganImageList[1] = {}
+    AvatarOrganImageList[2] = {}
+    headPrefab = {}
+    headPrefab[1] = {}
+    headPrefab[2] = {}
     --加载中间实例
     if faceId then --有ID为二次修改，隐藏性别选项
         local arr = split(faceId,"-")
@@ -271,7 +277,6 @@ function AvtarCtrl:changAparance(data,rank)
     --TODO://y验证
     elseif type == "frontHat" then
         local tempList = AvatarOrganImageList[mySex][myCurrentHeadNum]
-        local tempList = AvatarOrganImageList[mySex][myCurrentHeadNum]
         pastApperanceID[type] = {}
         if path =="" then
             tempList[type].gameObject:SetActive(false)
@@ -282,7 +287,6 @@ function AvtarCtrl:changAparance(data,rank)
             pastApperanceID[type].rank = rank
             pastApperanceID[type].type = type
         end
-
         pastApperanceID["backHat"] = {}
         if arr[3]=="" then
             tempList[arr[4]].gameObject:SetActive(false)
@@ -314,27 +318,42 @@ function GetAvtar(faceId)
     if arr[1] == "1" then--男人
         mySex = 1
         myCurrentHeadNum = 1
+        local temp = split(arr[2],",")
+        for i = 1, #temp ,2 do
+            if temp[i] == "1" then
+                myCurrentHeadNum = tonumber(temp[i+1])
+            end
+        end
         --todo：加载小人头像
         headPrefab[mySex][myCurrentHeadNum] = creatGoods(HeadConfig.man[myCurrentHeadNum].path,panel.showContent)
         AvatarOrganImageList[mySex][myCurrentHeadNum] =  FindOrgan(headPrefab[mySex][myCurrentHeadNum].transform)
+        local arr = split(AvtarConfig.man[1].kinds[myCurrentHeadNum].path,",")
+        LoadSprite(arr[1],AvatarOrganImageList[mySex][myCurrentHeadNum]["head"])
 
-        local temp = split(arr[2],",")
         for i = 1, #temp ,2 do
             if temp[i] ~= "" then
-                local kind = AvtarConfig.man[temp[i]].kinds[temp[i+1]]
+                local kind = AvtarConfig.man[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
                 this:changAparance(kind, temp[i+1])
             end
         end
     else--女人
         mySex = 2
         myCurrentHeadNum = 1
+        local temp = split(arr[2],",")
+        for i = 1, #temp ,2 do
+            if temp[i] == "1" then
+                myCurrentHeadNum = tonumber(temp[i+1])
+            end
+        end
         --todo：加载小人头像
         headPrefab[mySex][myCurrentHeadNum] = creatGoods(HeadConfig.man[myCurrentHeadNum].path,panel.showContent)
         AvatarOrganImageList[mySex][myCurrentHeadNum] =  FindOrgan(headPrefab[mySex][myCurrentHeadNum].transform)
-        local temp = split(arr[2],",")
+        local arr = split(AvtarConfig.man[1].kinds[myCurrentHeadNum].path,",")
+        LoadSprite(arr[1],AvatarOrganImageList[mySex][myCurrentHeadNum]["head"])
+
         for i = 1, #temp ,2 do
             if temp[i] ~= "" then
-                local kind = AvtarConfig.woMan[temp[i]].kinds[temp[i+1]].path
+                local kind = AvtarConfig.woMan[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
                 this:changAparance(kind,temp[i+1])
             end
         end
@@ -345,7 +364,11 @@ end
 ---==========================================================================================点击函数===================================================================================================
 --返回
 function AvtarCtrl:c_OnClick_backBtn(ins)
-    ins:Hide()
+    if DataManager.GetFaceId() then
+        UIPanel.ClosePage()
+    else
+        ins:Hide()
+    end
 end
 
 --确定 TODO://
@@ -353,9 +376,12 @@ function AvtarCtrl:c_OnClick_confirm()
     local faceId,type,rankID=""
 
     for key, value in pairs(pastApperanceID) do
-        if value.type ~= nil then
+        if value.type ~= nil and value.type ~= "backHat"  then
             type = tostring(FiveType[value.type])
             rankID = tostring(value.rank)
+            if rankID == nil then
+                rankID = ""
+            end
             faceId = faceId..type..","..rankID..","
         end
     end
@@ -376,7 +402,11 @@ function AvtarCtrl:c_OnClick_confirm()
     end
 
     if DataManager.GetFaceId() then
-        Event.Brocast("m_setRoleFaceId",faceId)
+        if faceId ~= DataManager.GetFaceId() then
+            Event.Brocast("m_setRoleFaceId",faceId)
+            DataManager.SetFaceId(faceId)
+        end
+        UIPanel.ClosePage()
     else
         if mySex == 1 then
             temp.gender = true

@@ -207,6 +207,7 @@ function PersonalHomeDialogPageCtrl:_avatarBtnFunc(ins)
     --PlayMusEff(1002)
     --UIPanel.ClosePage()
     --ct.OpenCtrl("CompanyCtrl", ins.m_data)
+    ct.OpenCtrl("AvtarCtrl")
 end
 --修改名字
 function PersonalHomeDialogPageCtrl:_nameBtnFunc(ins)

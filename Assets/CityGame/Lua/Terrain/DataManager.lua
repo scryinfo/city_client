@@ -1338,6 +1338,11 @@ function DataManager.GetFaceId()
     return  PersonDataStack.m_faceId
 end
 
+--设置头像ID
+function DataManager.SetFaceId(faceid)
+    PersonDataStack.m_faceId = faceid
+end
+
 function DataManager.GetMyPersonData()
     return PersonDataStack
 end

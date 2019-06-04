@@ -1394,6 +1394,14 @@ function DataManager.SetMyPersonalHomepageInfo(this,info)
     PersonDataStack.m_roleInfo.createTs = data.createTs
 end
 
+--设置玩家姓名
+function DataManager.SetPlayerName(str)
+    if str ~= nil then
+        PersonDataStack.m_name = str
+        PersonDataStack.m_roleInfo.name = str
+    end
+end
+
 --设置主页需要的显示信息--个人描述
 function DataManager.SetMyPersonalHomepageDesInfo(des)
     PersonDataStack.m_roleInfo.des = des
@@ -1768,6 +1776,8 @@ function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyIntroduction","gs.BytesStrings", DataManager.n_ModifyIntroduction)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyDeclaration","gs.BytesStrings", DataManager.n_ModifyDeclaration)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getPrivateBuildingCommonInfo","gs.PrivateBuildingInfos",DataManager.n_OnGetPrivateBuildingCommonInfo)
+    --DataManager.RegisterErrorNetMsg()
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","setPlayerName","gs.Str",DataManager.n_OnReceiveNameData)
 end
 
 --DataManager初始化
@@ -2202,4 +2212,15 @@ end
 --今日营业回调
 function DataManager.n_OnGetPrivateBuildingCommonInfo(info)
     RevenueDetailsMsg.GetPrivateBuildingCommonInfo(info.infos[1].todayIncome)
+end
+
+--修改玩家名字
+function DataManager.n_OnReceiveNameData(data, msgId)
+    if msgId == 0 then
+        Event.Brocast("c_SetPlayerNameEvent", data)
+        return
+    end
+    DataManager.SetPlayerName(data.str)
+    Event.Brocast("c_SetPlayerNameEvent", data)
+    Event.Brocast("updatePlayerName", data.str)
 end

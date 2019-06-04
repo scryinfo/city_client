@@ -26,10 +26,10 @@ function EvaPanel.InitPanel()
     this.optionTwoScroll = transform:Find("BottomRoot/OptionRoot/OptionTwoScroll"):GetComponent("ActiveLoopScrollRect")
     this.optionThereScroll = transform:Find("BottomRoot/OptionRoot/OptionThereScroll"):GetComponent("ActiveLoopScrollRect")
 
-    this.myEvaText = transform:Find("BottomRoot/PropertyRoot/MyEvaText"):GetComponent("Text")
-    this.introductionBtn = transform:Find("BottomRoot/PropertyRoot/IntroductionBtn").gameObject
-    this.introductionImage = transform:Find("BottomRoot/PropertyRoot/IntroductionImage")
-    this.introductionText = transform:Find("BottomRoot/PropertyRoot/IntroductionText")
+    this.myEvaText = transform:Find("TopRoot/MyEvaText"):GetComponent("Text")
+    this.introductionBtn = transform:Find("TopRoot/IntroductionBtn").gameObject
+    this.introductionImage = transform:Find("TopRoot/IntroductionImage")
+    this.introductionText = transform:Find("TopRoot/IntroductionText")
 
     this.iconTF = transform:Find("BottomRoot/PropertyRoot/ResultImage/Icon")
     this.iconImageTF = transform:Find("BottomRoot/PropertyRoot/ResultImage/Icon/IconImage")
@@ -40,6 +40,5 @@ function EvaPanel.InitPanel()
     this.ResultRootThere = ResultTwoItem:new(transform:Find("BottomRoot/PropertyRoot/ResultImage/ResultRootThere"))
 
     this.propertyScroll = transform:Find("BottomRoot/PropertyRoot/PropertyScroll"):GetComponent("ActiveLoopScrollRect")
-    --this.closeTipsBtn = transform:Find("BottomRoot/PropertyRoot/CloseTipsBtn")
     this.propertyRootRt = transform:Find("BottomRoot/PropertyRoot")
 end

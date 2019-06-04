@@ -63,6 +63,7 @@ end
 
 function EvaCtrl:Hide()
     self:_removeListener()
+    UIPanel.Hide(self)
 end
 
 function EvaCtrl:Close()
@@ -110,9 +111,9 @@ end
 -- 清理Eva数据以及界面显示
 function EvaCtrl:_clearEvaDataAndView()
     -- 数据
-    self.addData = nil
-    self.addEvaData = nil
-    self.addEvaLvData = nil
+    self.addData = {}
+    self.addEvaData = {}
+    self.addEvaLvData = {}
 
     -- 界面上显示的加点多少
     for _, v in ipairs(self.evaTitleItem) do
@@ -233,6 +234,20 @@ end
 -- 服务器返回的Eva加点
 function EvaCtrl:c_OnUpdateMyEvas(evas)
     ct.OpenCtrl("EvaPopCtrl", evas.resultInfo)
+    local tempDecEva = 0
+    for i, v in ipairs(evas.resultInfo) do
+        tempDecEva = tempDecEva + v.evasInfo.old_eva.decEva
+        for j, k in ipairs(self.evasData) do
+            if v.evasInfo.old_eva.id == k.id then
+                self.evasData[j] = v.evasInfo.old_eva
+                break
+            end
+        end
+    end
+    local evaPoint = DataManager.GetEvaPoint()
+    evaPoint = evaPoint - tempDecEva
+    EvaPanel.myEvaText.text = tostring(evaPoint)
+    DataManager.SetEvaPoint(evaPoint)
 end
 
 -------------------------------------------------------------- 滑动复用相关 --------------------------------------------------------

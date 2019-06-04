@@ -37,6 +37,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.addExNumInputField = transform:Find("AddExNumInputField"):GetComponent("InputField")
 
     self:_showBtnState(false)
+    self:_setBtnInteractable()
 
     self.strId = string.format("%d%s", self.configData.Atype, self.configData.Btype)
     if EvaCtrl.static.evaCtrl.addEvaLvData and EvaCtrl.static.evaCtrl.addEvaLvData[self.strId] then
@@ -124,6 +125,19 @@ function PropertyTrueItem:ShowData(lv, cexp)
     self.experienceText.text = tostring(cexp)
     self.levelSlider.value = cexp / EvaUp[lv].upexp
     self.totalLevelNumberText.text = EvaUp[lv].upexp
+end
+
+-- 设置按钮状态
+function PropertyTrueItem:_setBtnInteractable()
+    local isCan
+    local evaPoint = DataManager.GetEvaPoint()
+    if evaPoint and evaPoint > 0 then
+        isCan = true
+    else
+        isCan = false
+    end
+    self.subtractBtn.interactable = isCan
+    self.addBtn.interactable = isCan
 end
 
 -- 按钮切换
@@ -294,37 +308,41 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
             end
         end
         local totalNum1 = 0
-        for _, y in ipairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
+        for _, y in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
             totalNum1 = totalNum1 + y.value
         end
         EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(totalNum1)
     end
     --{
     -- 保存需要发送的eva数据
-    local evaData = {}
-    evaData.id = self.data.id
-    evaData.at = self.data.at
-    evaData.b = self.data.b
-    evaData.cexp = self.data.cexp + addNumber
-    evaData.lv = self.data.lv
-    evaData.pid = self.data.pid
-    if self.data.bt == "Quality" then
-        evaData.bt = 1
-    elseif self.data.bt == "Brand" then
-        evaData.bt = 2
-    elseif self.data.bt == "ProduceSpeed" then
-        evaData.bt = 3
-    elseif self.data.bt == "PromotionAbility" then
-        evaData.bt = 4
-    elseif self.data.bt == "InventionUpgrade" then
-        evaData.bt = 5
-    elseif self.data.bt == "EvaUpgrade" then
-        evaData.bt = 6
-    elseif self.data.bt == "WarehouseUpgrade" then
-        evaData.bt = 7
+    if addNumber == 0 then
+        EvaCtrl.static.evaCtrl.addEvaData[self.strId] = nil
+    else
+        local evaData = {}
+        evaData.id = self.data.id
+        evaData.at = self.data.at
+        evaData.b = self.data.b
+        evaData.cexp = self.data.cexp + addNumber
+        evaData.lv = self.data.lv
+        evaData.pid = self.data.pid
+        if self.data.bt == "Quality" then
+            evaData.bt = 1
+        elseif self.data.bt == "Brand" then
+            evaData.bt = 2
+        elseif self.data.bt == "ProduceSpeed" then
+            evaData.bt = 3
+        elseif self.data.bt == "PromotionAbility" then
+            evaData.bt = 4
+        elseif self.data.bt == "InventionUpgrade" then
+            evaData.bt = 5
+        elseif self.data.bt == "EvaUpgrade" then
+            evaData.bt = 6
+        elseif self.data.bt == "WarehouseUpgrade" then
+            evaData.bt = 7
+        end
+        evaData.decEva = addNumber
+        EvaCtrl.static.evaCtrl.addEvaData[self.strId] = evaData
     end
-    evaData.decEva = addNumber
-    EvaCtrl.static.evaCtrl.addEvaData[self.strId] = evaData
     --    [1] = {value = 1, optionValue ={ } }, -- 原料厂
     --    [2] = {value = 1, optionValue ={ { optionValue = {}} } -- 加工厂
     --}

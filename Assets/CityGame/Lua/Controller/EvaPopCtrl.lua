@@ -58,7 +58,7 @@ end
 -- Eva结果信息显示
 EvaPopCtrl.static.evaResultData = function(transform, idx)
     idx = idx + 1
-    EvaResultItem:new(transform, EvaPopCtrl.resultInfo[idx])
+    EvaResultItem:new(transform, EvaPopCtrl.resultInfo[idx], idx)
 end
 
 EvaPopCtrl.static.evaResultClearData = function(transform)

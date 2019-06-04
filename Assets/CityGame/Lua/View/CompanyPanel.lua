@@ -53,14 +53,14 @@ function CompanyPanel.InitPanel()
     this.infoBtn = transform:Find("BottomRoot/LeftRoot/InfoBtn"):GetComponent("Button")
     this.landBtn = transform:Find("BottomRoot/LeftRoot/LandBtn"):GetComponent("Button")
     this.buildingBtn = transform:Find("BottomRoot/LeftRoot/BuildingBtn"):GetComponent("Button")
-    this.evaBtn = transform:Find("BottomRoot/LeftRoot/EvaBtn"):GetComponent("Button")
+    --this.evaBtn = transform:Find("BottomRoot/LeftRoot/EvaBtn"):GetComponent("Button")
     this.brandBtn = transform:Find("BottomRoot/LeftRoot/BrandBtn"):GetComponent("Button")
 
     -- 显示节点
     this.infoRoot = transform:Find("BottomRoot/InfoRoot")
     this.landRoot = transform:Find("BottomRoot/LandRoot")
     this.buildingRoot = transform:Find("BottomRoot/BuildingRoot")
-    this.evaRoot = transform:Find("BottomRoot/EvaRoot")
+    --this.evaRoot = transform:Find("BottomRoot/EvaRoot")
     this.brandRoot = transform:Find("BottomRoot/BrandRoot")
 
     -- 土地显示
@@ -83,12 +83,12 @@ function CompanyPanel.InitPanel()
     --this.closeTipsBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/CloseTipsBtn")
 
     -- Eva界面调整
-    this.optionRootRt = transform:Find("BottomRoot/EvaRoot/OptionRoot"):GetComponent("RectTransform")
-    this.bg2Rt = transform:Find("BottomRoot/EvaRoot/OptionRoot/Bg2")
-    this.optionOneRt = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll/Content"):GetComponent("RectTransform")
-    this.optionTwoT = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionTwoScroll")
-    this.optionThereT = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionThereScroll")
-    this.propertyRootRt = transform:Find("BottomRoot/EvaRoot/PropertyRoot"):GetComponent("RectTransform")
+    --this.optionRootRt = transform:Find("BottomRoot/EvaRoot/OptionRoot"):GetComponent("RectTransform")
+    --this.bg2Rt = transform:Find("BottomRoot/EvaRoot/OptionRoot/Bg2")
+    --this.optionOneRt = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll/Content"):GetComponent("RectTransform")
+    --this.optionTwoT = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionTwoScroll")
+    --this.optionThereT = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionThereScroll")
+    --this.propertyRootRt = transform:Find("BottomRoot/EvaRoot/PropertyRoot"):GetComponent("RectTransform")
 
     -- 品牌显示
     this.brandTitleContent = transform:Find("BottomRoot/BrandRoot/TitleScroll/Viewport/Content")

@@ -30,6 +30,9 @@ function PersonalHomeDialogPageCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.sendMessageBtn.gameObject, self._strangerChatBtnFunc, self)
     self.luaBehaviour:AddClick(self.friendSendMessageBtn.gameObject, self._friendChatBtnFunc, self)
     self.luaBehaviour:AddClick(self.companyBtn.gameObject, self._companyBtnFunc, self)
+    self.luaBehaviour:AddClick(self.avatarBtn.gameObject, self._avatarBtnFunc, self)
+    self.luaBehaviour:AddClick(self.nameBtn.gameObject, self._nameBtnFunc, self)
+    self.luaBehaviour:AddClick(self.moneyBtn.gameObject, self._moneyBtnFunc, self)
 end
 
 function PersonalHomeDialogPageCtrl:Active()
@@ -53,27 +56,34 @@ function PersonalHomeDialogPageCtrl:Hide()
 end
 ---寻找组件
 function PersonalHomeDialogPageCtrl:_getComponent(go)
+    local trans = go.transform
     self.closeBtn = go.transform:Find("root/topBg/closeBtn")
-    self.bgCloseBtn = go.transform:Find("bgCloseBtn")
-    self.roleProtaitImg = go.transform:Find("root/Image"):GetComponent("Image")
-    self.sayText = go.transform:Find("root/sayRoot/sayText"):GetComponent("Text")
-    self.changeSayBtn = go.transform:Find("root/sayRoot/changeBtn")
-    self.nameText = go.transform:Find("root/infoRoot/name/nameText"):GetComponent("Text")
-    self.famaleTran = go.transform:Find("root/infoRoot/name/nameText/famale")
-    self.maleTran = go.transform:Find("root/infoRoot/name/nameText/male")
-    self.companyText = go.transform:Find("root/infoRoot/company/companyText"):GetComponent("Text")
-    self.companyBtn = go.transform:Find("root/infoRoot/company")
+    self.avatarBtn = go.transform:Find("root/avatarBtn"):GetComponent("Button")
+    self.bgCloseBtn = trans:Find("bgCloseBtn")
+    self.roleProtaitImg = trans:Find("root/avatarBtn")
+    self.sayText = trans:Find("root/sayRoot/sayText"):GetComponent("Text")
+    self.changeSayBtn = trans:Find("root/sayRoot/changeBtn")
+    self.nameText = trans:Find("root/infoRoot/name/nameText"):GetComponent("Text")
+    self.nameBtn = trans:Find("root/infoRoot/name"):GetComponent("Button")
+    self.nameIconTran = trans:Find("root/infoRoot/name/iconImg")
+    self.famaleTran = trans:Find("root/infoRoot/name/nameText/famale")
+    self.maleTran = trans:Find("root/infoRoot/name/nameText/male")
+    self.companyText = trans:Find("root/infoRoot/company/companyText"):GetComponent("Text")
+    self.companyBtn = trans:Find("root/infoRoot/company")
+    self.moneyRoot = trans:Find("root/moneyRoot")
+    self.moneyBtn = trans:Find("root/moneyRoot/btn")
+    self.moneyText = trans:Find("root/moneyRoot/Text"):GetComponent("Text")
 
-    self.otherOpen = go.transform:Find("root/otherOpen")
-    self.strangerOtherTran = go.transform:Find("root/otherOpen/stranger")
-    self.addFriendBtn = go.transform:Find("root/otherOpen/stranger/addFriendBtn")
-    self.sendMessageBtn = go.transform:Find("root/otherOpen/stranger/sendMessageBtn")
+    self.otherOpen = trans:Find("root/otherOpen")
+    self.strangerOtherTran = trans:Find("root/otherOpen/stranger")
+    self.addFriendBtn = trans:Find("root/otherOpen/stranger/addFriendBtn")
+    self.sendMessageBtn = trans:Find("root/otherOpen/stranger/sendMessageBtn")
 
-    self.friendOtherTran = go.transform:Find("root/otherOpen/friends")
-    self.friendSendMessageBtn = go.transform:Find("root/otherOpen/friends/sendMessageBtn")  --如果是好友则只能聊天，不能再加好友
+    self.friendOtherTran = trans:Find("root/otherOpen/friends")
+    self.friendSendMessageBtn = trans:Find("root/otherOpen/friends/sendMessageBtn")  --如果是好友则只能聊天，不能再加好友
 
     --多语言
-    self.titleText = go.transform:Find("root/topBg/Text"):GetComponent("Text")
+    self.titleText = trans:Find("root/topBg/Text"):GetComponent("Text")
 end
 ---初始化
 function PersonalHomeDialogPageCtrl:_initData()
@@ -92,6 +102,12 @@ function PersonalHomeDialogPageCtrl:_initData()
         if self.m_data.des == nil or self.m_data.des == "" then
             self.m_data.des = GetLanguage(12010003)  --默认值
         end
+
+        --
+        self.moneyRoot.localScale = Vector3.zero
+        self.nameBtn.interactable = false
+        self.avatarBtn.interactable = false
+        self.nameIconTran.localScale = Vector3.zero
     else
         self.otherOpen.localScale = Vector3.zero
         self.changeSayBtn.localScale = Vector3.one
@@ -99,6 +115,11 @@ function PersonalHomeDialogPageCtrl:_initData()
         if self.m_data.des == nil or self.m_data.des == "" then
             self.m_data.des = GetLanguage(4301013)  --默认值
         end
+
+        self.moneyRoot.localScale = Vector3.one
+        self.nameBtn.interactable = true
+        self.avatarBtn.interactable = true
+        self.nameIconTran.localScale = Vector3.one
     end
 
     if self.m_data.male == false then
@@ -113,7 +134,7 @@ function PersonalHomeDialogPageCtrl:_initData()
     self.nameText.text = self.m_data.name
     self.nameText.rectTransform.sizeDelta = Vector2.New(self.nameText.preferredWidth + 45, self.nameText.rectTransform.sizeDelta.y)  --加一个性别图片的宽度
     self.companyText.text = self.m_data.companyName
-    self.playerAvatar = AvatarManger.GetBigAvatar(self.m_data.faceId,self.roleProtaitImg.transform,1.1)
+    self.playerAvatar = AvatarManger.GetBigAvatar(self.m_data.faceId,self.roleProtaitImg.transform,1.0)
 end
 ---点击关闭按钮
 function PersonalHomeDialogPageCtrl:_onClickClose(ins)
@@ -172,6 +193,23 @@ function PersonalHomeDialogPageCtrl:_companyBtnFunc(ins)
     PlayMusEff(1002)
     UIPanel.ClosePage()
     ct.OpenCtrl("CompanyCtrl", ins.m_data)
+end
+--avatar
+function PersonalHomeDialogPageCtrl:_avatarBtnFunc(ins)
+    --PlayMusEff(1002)
+    --UIPanel.ClosePage()
+    --ct.OpenCtrl("CompanyCtrl", ins.m_data)
+end
+--修改名字
+function PersonalHomeDialogPageCtrl:_nameBtnFunc(ins)
+    PlayMusEff(1002)
+    --ct.OpenCtrl("CompanyCtrl", ins.m_data)
+end
+--充值
+function PersonalHomeDialogPageCtrl:_moneyBtnFunc(ins)
+    --PlayMusEff(1002)
+    --UIPanel.ClosePage()
+    --ct.OpenCtrl("CompanyCtrl", ins.m_data)
 end
 --
 function PersonalHomeDialogPageCtrl:_reqChangeDesToServer(str)

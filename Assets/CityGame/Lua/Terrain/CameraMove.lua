@@ -188,6 +188,10 @@ local nowScaleValue_ScaleCamera
 local targetScalePos_ScaleCamera
 --缩放相机距离远近
 function CameraMove:ScaleCamera()
+    --不调远近
+    if true then
+        return
+    end
     tempValue_ScaleCamera =  inputTools:GetZoomValue() * UnityEngine_Time.deltaTime
     nowScaleValue_ScaleCamera = mainCameraTransform.localPosition.y - tempValue_ScaleCamera
     targetScalePos_ScaleCamera = nil

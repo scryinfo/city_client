@@ -27,15 +27,16 @@ function ServerListCtrl:Awake()
     serverListBehaviour:AddClick(ServerListPanel.back,self.c_OnBack,self);
     serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
 
+    --普通消息注册
+    Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
+    Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
+    Event.AddListener("c_OnServer",self.c_OnServer,self)
+
     self:_initData();
 end
 
 function ServerListCtrl:Active()
     UIPanel.Active(self)
-    --普通消息注册
-    Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
-    Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-    Event.AddListener("c_OnServer",self.c_OnServer,self)
 end
 
 function ServerListCtrl:Refresh()
@@ -44,10 +45,6 @@ end
 
 function ServerListCtrl:Hide()
     UIPanel.Hide(self)
-    --注销事件
-    Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
-    Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
-    Event.RemoveListener("c_OnServer",self.c_OnServer,self)
 end
 
 function ServerListCtrl:c_OnBack()

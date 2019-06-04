@@ -14,7 +14,7 @@ function BuildingSetSalaryCtrl:initialize()
 end
 
 function BuildingSetSalaryCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/BuildingSetSalaryPanel.prefab"
+    return "Assets/CityGame/Resources/View/BuildingSetSalaryPanelOld.prefab"
 end
 
 function BuildingSetSalaryCtrl:OnCreate(obj )

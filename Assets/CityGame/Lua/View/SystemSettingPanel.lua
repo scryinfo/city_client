@@ -48,35 +48,29 @@ function SystemSettingPanel.InitPanel()
 
     this.englishBtnText = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/English/Text"):GetComponent("Text")
     this.englishBtn = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/English")
----气泡
-    this.bubbleBtn = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/musicyellow");
+    ---气泡
+    this.bubbleShowBtn = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/showBubble")
+    this.bubbleCloseBtn = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/closeBubble")
     this.bubbleText = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/Text"):GetComponent("Text")
-    this.bubbleBtnText = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/musicyellow/Text"):GetComponent("Text")
+    this.bubbleShowText = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/showBubble/Text"):GetComponent("Text")
+    this.bubbleCloseText = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/closeBubble/Text"):GetComponent("Text")
 
-    this.bubblePanel = transform:Find("Panel/bodyRoot/bg/bubble")
 
-    this.allBigBtnText = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allBig/Text"):GetComponent("Text")
-    this.allBigBtn = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allBig")
-
-    this.allSmallBtnText = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allSmall/Text"):GetComponent("Text")
-    this.allSmallBtn = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allSmall")
-
-    this.allCloseBtnText = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allClose/Text"):GetComponent("Text")
-    this.allCloseBtn = transform:Find("Panel/bodyRoot/bg/bubble/bg/Scroll View/Viewport/Content/allClose")
 end
 --数据初始化
 function SystemSettingPanel:InitDate(string)
-        this.titleText.text=GetLanguage(14010001)
-        this.outText.text=GetLanguage(14010005)
-        this.MusicText.text=GetLanguage(14010003)
-        this.MusicEffectBtnText.text=GetLanguage(14010002)
-        this.LanguageText.text=GetLanguage(14010004)
-        this.LanguageBtnText.text=GetLanguage(14010008,string)
-        this.chineseBtnText.text=GetLanguage(14010006)
-        this.englishBtnText.text=GetLanguage(14010007)
-    local music=UnityEngine.PlayerPrefs.GetInt("Music")
-    local musicEffect=UnityEngine.PlayerPrefs.GetInt("MusicEffect")
-
+    this.titleText.text=GetLanguage(14010001)
+    this.outText.text=GetLanguage(14010005)
+    this.MusicText.text=GetLanguage(14010003)
+    this.MusicEffectBtnText.text=GetLanguage(14010002)
+    this.LanguageText.text=GetLanguage(14010004)
+    this.LanguageBtnText.text=GetLanguage(14010008,string)
+    this.chineseBtnText.text=GetLanguage(14010006)
+    this.englishBtnText.text=GetLanguage(14010007)
+    --TODO:设置气泡多语言
+    local music = UnityEngine.PlayerPrefs.GetInt("Music")
+    local musicEffect = UnityEngine.PlayerPrefs.GetInt("MusicEffect")
+    local bubble  = UnityEngine.PlayerPrefs.GetInt("BuildingBubble")
 
     if music==0 then
         this.MusicBtnyellosw.localScale=Vector3.one
@@ -87,7 +81,6 @@ function SystemSettingPanel:InitDate(string)
         this.MusicBtngrey.localScale=Vector3.one
         this.Music:Stop()
     end
-
     if musicEffect==0 then
         this.MusicEffectBtnyellow.localScale=Vector3.one
         this.MusicEffectBtngrey.localScale=Vector3.zero
@@ -96,5 +89,11 @@ function SystemSettingPanel:InitDate(string)
         this.MusicEffectBtnyellow.localScale=Vector3.zero
         this.MusicEffectBtngrey.localScale=Vector3.one
         this.MusicEffect:Stop()
+    end
+    --关闭气泡
+    if bubble == 3 then
+        this.bubbleCloseBtn.gameObject:SetActive(true)
+    else
+        this.bubbleCloseBtn.gameObject:SetActive(false)
     end
 end

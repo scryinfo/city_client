@@ -72,6 +72,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         end)
     end
     HousePanel.openBusinessItem:initData(houseDetailData.info, BuildingType.House)  --初始化
+    houseDetailData.info.buildingType = BuildingType.House
 
     local insId = self.m_data.insId
     self.m_data = houseDetailData
@@ -97,9 +98,9 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
                 self.groupMgr:AddParts(TurnoverPart, 0)
                 self.groupMgr:AddParts(BuildingSalaryPart, 0)
             else
-                self.groupMgr:AddParts(BuildingRentPart, 0.3)
-                self.groupMgr:AddParts(TurnoverPart, 0.3)
-                self.groupMgr:AddParts(BuildingSalaryPart, 0.4)
+                self.groupMgr:AddParts(BuildingRentPart, 0.3333)
+                self.groupMgr:AddParts(TurnoverPart, 0.3333)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0.3334)
                 --self.groupMgr:AddParts(BuildingSignPart, 0.25)
 
             end

@@ -65,6 +65,7 @@ function GameMainInterfacePanel.InitPanel()
     this.clearBtn = transform:Find("EarningsPanel/bg/clearBtn").gameObject; --清空简易收益
     this.clearBg = transform:Find("EarningsPanel/bg/clearBg").gameObject; --清空简易收益背景
     this.simple = transform:Find("EarningsPanel/simpleEarning").gameObject; --简易收益面板
+    this.income = transform:Find("EarningsPanel/simpleEarning/income").gameObject:GetComponent("Text"); --建筑类型
     this.simpleMoney = transform:Find("EarningsPanel/simpleEarning/incomeText").gameObject:GetComponent("Text"); --简易收益面板金额
     this.simplePicture = transform:Find("EarningsPanel/simpleEarning/picture").gameObject:GetComponent("Image"); --简易收益面板图片
     this.simplePictureText = transform:Find("EarningsPanel/simpleEarning/picture/pictureText").gameObject:GetComponent("Text"); --简易收益面板图片内容

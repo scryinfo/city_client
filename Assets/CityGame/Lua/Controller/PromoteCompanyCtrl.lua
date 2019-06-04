@@ -77,6 +77,7 @@ end
 
 --建筑详情回调
 function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
+    detailData.info.buildingType = BuildingType.Municipal
     if PromoteCompanyPanel.topItem ~= nil then
         PromoteCompanyPanel.topItem:refreshData(detailData.info, function ()
             self:OnBack(self)

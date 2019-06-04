@@ -10,16 +10,24 @@ function BuildingSalaryPart:PrefabName()
 end
 --
 function BuildingSalaryPart:GetDetailClass()
-    return BuildingSalaryDetailPart
+    return BuildingSalaryDetailPartNew
 end
 --
 function  BuildingSalaryPart:_ResetTransform()
-    self.salaryPercentText.text = "0%"
+    self.salaryPercentText.text = "E0.0000"
     self:_language()
 end
 --
 function BuildingSalaryPart:_InitTransform()
     self:_getComponent(self.transform)
+end
+--
+function BuildingSalaryPart:_InitChildClick(mainPanelLuaBehaviour)
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "queryIndustryWages", "gs.QueryIndustryWages", self._getStandardWage, self)
+end
+--
+function BuildingSalaryPart:_RemoveChildClick()
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "queryIndustryWages", self)
 end
 --
 function BuildingSalaryPart:RefreshData(data)
@@ -38,25 +46,20 @@ function BuildingSalaryPart:_getComponent(transform)
 end
 --
 function BuildingSalaryPart:_initFunc()
-    if self.m_data.info.salary ~= nil then
-        self.salaryPercentText.text = self.m_data.info.salary.."%"
-
-        --local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
-        --self.staffNumText.text = staffNum
-        --local standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)
-        --if standardWage == nil then
-        --    DataManager.m_ReqStandardWage(self.m_data.info.mId)
-        --else
-        --    self.standardWageText.text = string.format("E%s/d", GetClientPriceString(standardWage))
-        --    local value = self.m_data.info.salary * staffNum * standardWage / 100  --因为工资百分比是整数
-        --    self.totalText.text = "E"..GetClientPriceString(value)
-        --    self.standardWage = standardWage
-        --end
+    if self.m_data.info ~= nil then
+        local standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)
+        if standardWage == nil then
+            DataManager.m_ReqStandardWage(self.m_data.info.mId)
+        else
+            local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
+            local value = self.m_data.info.salary * staffNum * standardWage / 100  --因为工资百分比是整数
+            self.salaryPercentText.text = "E"..GetClientPriceString(value)
+        end
     end
 end
 --
 function BuildingSalaryPart:_language()
-    self.salaryText01.text = "Satisfaction:"
+    self.salaryText01.text = "Employee salary:"
     self.unSelectText02.text = "Staff"
     self.selectText03.text = "Staff"
 
@@ -64,4 +67,15 @@ function BuildingSalaryPart:_language()
     self.unSelectText02.rectTransform.sizeDelta = Vector2.New(trueTextW01, self.unSelectText02.rectTransform.sizeDelta.y)
     local trueTextW02 = self.selectText03.preferredWidth
     self.selectText03.rectTransform.sizeDelta = Vector2.New(trueTextW02, self.selectText03.rectTransform.sizeDelta.y)
+end
+--
+function BuildingSalaryPart:_getStandardWage(data)
+    if data.industryWages ~= nil then
+        DataManager.SetBuildingStandardWage(data.type, data.industryWages)
+
+        local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
+        local standardWage = data.industryWages
+        local value = self.m_data.info.salary * staffNum * standardWage / 100  --因为工资百分比是整数
+        self.salaryPercentText.text = "E"..GetClientPriceString(value)
+    end
 end

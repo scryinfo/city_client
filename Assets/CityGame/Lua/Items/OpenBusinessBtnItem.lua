@@ -44,18 +44,20 @@ function OpenBusinessBtnItem:_clickOpenBtn()
     PlayMusEff(1002)
 
     if self.data.type == BuildingType.House then
-        ct.OpenCtrl("OpenHouseCtrl", {info = self.data.info, callBackFunc = function (salary, rent)
+        ct.OpenCtrl("OpenHouseCtrlNew", {info = self.data.info, callBackFunc = function (salary, rent)
             if salary ~= nil and rent ~= nil then
-                self:_reqSetSalary(self.data.info.id, salary, TimeSynchronized.GetTheCurrentTime())
+                --self:_reqSetSalary(self.data.info.id, salary, TimeSynchronized.GetTheCurrentTime())
+                self:_reqSetSalary(self.data.info.id, 100, TimeSynchronized.GetTheCurrentTime())
                 local rentValue = GetServerPriceNumber(rent)
                 self:_reqHouseChangeRent(self.data.info.id, rentValue)
                 self:_reqOpenBusiness(self.data.info.id)
             end
         end})
     else
-        ct.OpenCtrl("BuildingSetSalaryCtrl", {info = self.data.info, callBackFunc = function (salary)
+        ct.OpenCtrl("BuildingSetSalaryCtrlNew", {info = self.data.info, callBackFunc = function (salary)
             if salary ~= nil then
-                self:_reqSetSalary(self.data.info.id, salary, TimeSynchronized.GetTheCurrentTime())
+                --self:_reqSetSalary(self.data.info.id, salary, TimeSynchronized.GetTheCurrentTime())
+                self:_reqSetSalary(self.data.info.id, 100, TimeSynchronized.GetTheCurrentTime())
                 self:_reqOpenBusiness(self.data.info.id)
             end
         end})

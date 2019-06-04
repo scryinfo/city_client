@@ -15,7 +15,8 @@ function BuildingRentPart:GetDetailClass()
 end
 
 function  BuildingRentPart:_ResetTransform()
-    self.rentText.text = "0"
+    self.rentText.text = "0/0"
+    self:_language()
 end
 
 function BuildingRentPart:_InitTransform()
@@ -32,12 +33,25 @@ end
 
 function BuildingRentPart:_getComponent(transform)
     self.rentText = transform:Find("Top/RentText"):GetComponent("Text")
+    self.rentText01 = transform:Find("Top/Text"):GetComponent("Text")
+    self.unSelectText02 = transform:Find("UnselectBtn/Text"):GetComponent("Text")
+    self.selectText03 = transform:Find("SelectBtn/Text"):GetComponent("Text")
 end
 
 -- 显示日租金
 function BuildingRentPart:_initFunc()
     if self.m_data.rent ~= nil then
-        --self.rentText.text = GetClientPriceString(self.m_data.rent)
-        self.rentText.text = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
+        self.rentText.text = string.format("%s/%s",self.m_data.renter, PlayerBuildingBaseData[self.m_data.info.mId].npc)
     end
+end
+--
+function BuildingRentPart:_language()
+    self.rentText01.text = "Check-in:"
+    self.unSelectText02.text = "Check-in situation"
+    self.selectText03.text = "Check-in situation"
+
+    local trueTextW01 = self.unSelectText02.preferredWidth
+    self.unSelectText02.rectTransform.sizeDelta = Vector2.New(trueTextW01, self.unSelectText02.rectTransform.sizeDelta.y)
+    local trueTextW02 = self.selectText03.preferredWidth
+    self.selectText03.rectTransform.sizeDelta = Vector2.New(trueTextW02, self.selectText03.rectTransform.sizeDelta.y)
 end

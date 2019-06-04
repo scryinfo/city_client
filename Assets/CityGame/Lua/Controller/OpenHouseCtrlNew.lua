@@ -104,9 +104,13 @@ function OpenHouseCtrlNew:_onClickConfirm(ins)
     end
 
     if ins.m_data.callBackFunc ~= nil then
-        ins.m_data.callBackFunc(100, tonumber(ins.rentInput.text))
+        local temp = os.date("%H:%M", os.time())
+        local data = {salary = ins.totalText.text, time = temp, fun = function ()
+            ins.m_data.callBackFunc(100, tonumber(ins.rentInput.text))
+            UIPanel.ClosePage()
+        end}
+        ct.OpenCtrl("OpenBuildingCheckCtrl", data)
     end
-    UIPanel.ClosePage()
 end
 --
 function OpenHouseCtrlNew:_onClickCloseBtn(ins)

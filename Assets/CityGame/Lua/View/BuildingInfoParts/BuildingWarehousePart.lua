@@ -54,10 +54,9 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --重置组件
 function BuildingWarehousePart:_language()
-    --暂时  需要修改多语言
-    self.topText.text = "仓库容量"
-    self.unselectTitleText.text = "仓库"
-    self.selectTitleText.text = "仓库"
+    self.topText.text = GetLanguage(25010002)
+    self.unselectTitleText.text = GetLanguage(25010001)
+    self.selectTitleText.text = GetLanguage(25010001)
 end
 --初始化仓库容量
 function BuildingWarehousePart:_initializeWarehouseCapacity()

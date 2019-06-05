@@ -109,8 +109,8 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
 function BuildingWarehouseDetailPart:_language()
-    self.capacityText.text = "容量"
-    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
+    self.capacityText.text = GetLanguage(25010002)
+    self.tipText.text = GetLanguage(25020024)
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
@@ -166,18 +166,18 @@ function BuildingWarehouseDetailPart:addTransportList(data)
         table.insert(self.transportTab,data)
         self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop","添加成功", 300)
+        Event.Brocast("SmallPop",GetLanguage(25030010), 300)
     else
         for key,value in pairs(self.transportTab) do
             if value.itemId == data.itemId then
-                Event.Brocast("SmallPop","不能重复添加同一种商品", 300)
+                Event.Brocast("SmallPop",GetLanguage(25020025), 300)
                 return
             end
         end
         table.insert(self.transportTab,data)
         --self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop","添加成功", 300)
+        Event.Brocast("SmallPop",GetLanguage(25030010), 300)
     end
 end
 --删除运输列表
@@ -194,7 +194,7 @@ function BuildingWarehouseDetailPart:deleTransportList(id)
             self.numberText.text = #self.transportTab
         end
     end
-    Event.Brocast("SmallPop","删除成功", 300)
+    Event.Brocast("SmallPop",GetLanguage(25020022), 300)
 end
 --开始运输
 function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
@@ -325,7 +325,7 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
     self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop", GetLanguage(26030003), 300)
+    Event.Brocast("SmallPop", GetLanguage(25020012), 300)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取仓库里某个商品的数量

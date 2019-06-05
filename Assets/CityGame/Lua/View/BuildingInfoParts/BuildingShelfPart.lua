@@ -57,9 +57,9 @@ end
 --重置组件
 function BuildingShelfPart:_language()
     --暂时  需要修改多语言
-    self.topText.text = "数量"
-    self.unselectTitleText.text = "货架"
-    self.selectTitleText.text = "货架"
+    self.topText.text = GetLanguage(25010009)
+    self.unselectTitleText.text = GetLanguage(25010008)
+    self.selectTitleText.text = GetLanguage(25010008)
 end
 --初始化货架数量
 function BuildingShelfPart:_initializeShelfCount()

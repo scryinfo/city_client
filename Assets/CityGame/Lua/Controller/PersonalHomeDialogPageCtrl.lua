@@ -111,6 +111,7 @@ function PersonalHomeDialogPageCtrl:_initData()
         self.nameBtn.interactable = false
         self.avatarBtn.interactable = false
         self.nameIconTran.localScale = Vector3.zero
+        self.playerAvatar = AvatarManger.GetBigAvatar(self.m_data.faceId,self.roleProtaitImg.transform,1.0)
     else
         self.otherOpen.localScale = Vector3.zero
         self.changeSayBtn.localScale = Vector3.one
@@ -123,6 +124,7 @@ function PersonalHomeDialogPageCtrl:_initData()
         self.nameBtn.interactable = true
         self.avatarBtn.interactable = true
         self.nameIconTran.localScale = Vector3.one
+        self.playerAvatar = AvatarManger.GetBigAvatar(DataManager.GetFaceId(),self.roleProtaitImg.transform,1.0)
     end
 
     if self.m_data.male == false then
@@ -137,7 +139,6 @@ function PersonalHomeDialogPageCtrl:_initData()
     self.nameText.text = self.m_data.name
     self.nameText.rectTransform.sizeDelta = Vector2.New(self.nameText.preferredWidth + 50, self.nameText.rectTransform.sizeDelta.y)  --加一个性别图片的宽度
     self.companyText.text = self.m_data.companyName
-    self.playerAvatar = AvatarManger.GetBigAvatar(self.m_data.faceId,self.roleProtaitImg.transform,1.0)
 end
 --刷新玩家名字
 function PersonalHomeDialogPageCtrl:updateNameFunc(str)

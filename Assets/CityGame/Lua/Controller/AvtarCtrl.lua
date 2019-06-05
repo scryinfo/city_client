@@ -88,13 +88,17 @@ end
 
 --清空缓存数据
 function AvtarCtrl:ClearCasch()
-    for tempSex, table in pairs(headPrefab) do
-        for i, v in pairs(table) do
-            destroy(v)
+    if headPrefab~= nil then
+        for tempSex, table in pairs(headPrefab) do
+            for i, v in pairs(table) do
+                destroy(v)
+            end
         end
     end
-    for key, pastApperance in pairs(pastApperanceID) do
-        UnLoadSprite(pastApperance.path)
+    if pastApperanceID ~= nil then
+        for key, pastApperance in pairs(pastApperanceID) do
+            UnLoadSprite(pastApperance.path)
+        end
     end
     mySex = nil
     currentHead = nil

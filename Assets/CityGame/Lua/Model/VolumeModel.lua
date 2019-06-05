@@ -106,7 +106,7 @@ function VolumeModel:n_OnGetNpcNum(lMsg)
 end
 
 function VolumeModel:n_OnGoodsNpcNum(lMsg)
-    Event.Brocast("c_OnGoodsNpcNum",lMsg.goodNpcNumInfo)
+    Event.Brocast("c_OnGoodsNpcNum",lMsg.numInfo)
 end
 
 function VolumeModel:n_OnNpcExchangeAmount(lMsg)

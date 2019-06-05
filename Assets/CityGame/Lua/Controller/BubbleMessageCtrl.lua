@@ -9,7 +9,7 @@ UIPanel:ResgisterOpen(BubbleMessageCtrl) --注册打开的方法
 
 local path="Assets/CityGame/Resources/Atlas/UIBubble/"
 local pool={}
-local panel ,LuaBehaviour,isShow,this
+local panel ,LuaBehaviour,this,isShow
 
 BubbleMessageCtrl.configPath={
   [1]={path=path.."bubb-mua.png"},
@@ -124,22 +124,20 @@ function BubbleMessageCtrl:initialize()
 end
 
 function BubbleMessageCtrl:Refresh()
+    BubbleMessagePanel.InitLanguage()
     panel.inputFrame.text = ""
     DataManager.OpenDetailModel(BubbleMessageModel,OpenModelInsID.BubbleMessageCtrl)
     InsAndObjectPool(BubbleMessageCtrl.configPath,SmallBubbleItem,"View/BubbleItems/samllBubble",panel.scrollParent,self)
 end
 
 function  BubbleMessageCtrl:Awake(go)
-    isShow=true
     self.gameObject = go
     this=self
-    panel=BubbleMessagePanel
+    panel = BubbleMessagePanel
     LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     LuaBehaviour:AddClick(panel.closeBtn.gameObject,self.c_OnClick_backBtn,self);
     LuaBehaviour:AddClick(panel.confirmBtn.gameObject,self.c_OnClick_confirm,self);
-    LuaBehaviour:AddClick(panel.isShow.gameObject,self.c_OnClick_isShow,self);
-
-
+    LuaBehaviour:AddClick(panel.hideBtn.gameObject,self.c_OnClick_hide,self);
 end
 
 ---==========================================================================================业务代码===================================================================================================
@@ -160,20 +158,17 @@ function BubbleMessageCtrl:c_OnClick_confirm(ins)
     if panel.inputFrame.text == "" then
         des=" "
     end
-    Event.Brocast("m_setBuildingInfo",ins.m_data,des,ins.bubbleId,isShow)
+    Event.Brocast("m_setBuildingInfo",ins.m_data,des,ins.bubbleId,true)
     Event.Brocast("c_BuildingTopChangeData", {des = des, emoticon = ins.bubbleId})
     UIPanel.ClosePage()
 end
 
---是否展示气泡
-function BubbleMessageCtrl:c_OnClick_isShow(ins)
-    if panel.yesIcon.localScale.x==1  then
-        panel.yesIcon.localScale=Vector3.zero
-        isShow=false
-    else
-        panel.yesIcon.localScale=Vector3.one
-        isShow=true
-    end
+--隐藏
+function BubbleMessageCtrl:c_OnClick_hide(ins)
+    local des = " "
+    Event.Brocast("m_setBuildingInfo",ins.m_data,des,ins.bubbleId,false)
+    Event.Brocast("c_BuildingTopChangeData", {des = des, emoticon = ins.bubbleId})
+    UIPanel.ClosePage()
 end
 
 

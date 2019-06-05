@@ -15,12 +15,14 @@ end
 function BubbleMessagePanel.InitPanel()
     this.closeBtn=transform:Find("PopCommpent/closeBtn")
     this.confirmBtn=transform:Find("PopCommpent/confimBtn")
+    this.hideBtn=transform:Find("PopCommpent/hideBtn")
+    this.hideText=transform:Find("PopCommpent/hideBtn/Text")
     this.titleText=transform:Find("PopCommpent/titleText"):GetComponent("Text")
 
     this.scrollParent=transform:Find("PopCommpent/root/Scroll View/Viewport/Content")
     this.inputFrame=transform:Find("PopCommpent/root/enter/InputField"):GetComponent("InputField")
 
-    this.isShow=transform:Find("PopCommpent/root/isShow")
+    --this.isShow=transform:Find("PopCommpent/root/isShow")
     this.noIcon=transform:Find("PopCommpent/root/isShow/no")
     this.yesIcon=transform:Find("PopCommpent/root/isShow/yes")
     this.topic=transform:Find("PopCommpent/root/isShow/topic"):GetComponent("Text")

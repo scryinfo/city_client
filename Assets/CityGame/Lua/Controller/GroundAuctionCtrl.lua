@@ -31,11 +31,11 @@ end
 
 function GroundAuctionCtrl:Active()
     UIPanel.Active(self)
-    GroundAuctionPanel.hourText01.text = "hour"
-    GroundAuctionPanel.minuteText02.text = "minute"
-    GroundAuctionPanel.secondText03.text = "second"
-    GroundAuctionPanel.noneHistoryText04.text = "Nobody bid"
-    GroundAuctionPanel.tipText05.text = "The price will be locked"
+    GroundAuctionPanel.hourText01.text = GetLanguage(20160004)
+    GroundAuctionPanel.minuteText02.text = GetLanguage(20160005)
+    GroundAuctionPanel.secondText03.text = GetLanguage(20160006)
+    GroundAuctionPanel.noneHistoryText04.text = GetLanguage(20160009)
+    GroundAuctionPanel.tipText05.text = GetLanguage(21010004)
 end
 
 function GroundAuctionCtrl:Refresh()
@@ -244,8 +244,8 @@ function GroundAuctionCtrl:BidGround(ins)
     if bidPrice == "" then
         --打开弹框
         local showData = {}
-        showData.titleInfo = GetLanguage(40010008)
-        showData.contentInfo = GetLanguage(24070001)
+        showData.titleInfo = GetLanguage(24020009)
+        showData.contentInfo = GetLanguage(22070001)
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
         return
@@ -253,7 +253,7 @@ function GroundAuctionCtrl:BidGround(ins)
 
     local mMoney = tonumber(GetClientPriceString(DataManager.GetMoney()))
     if tonumber(bidPrice) > mMoney  then
-        Event.Brocast("SmallPop", GetLanguage(22010003), 300)
+        Event.Brocast("SmallPop", GetLanguage(41010006), 300)
         return
     end
 
@@ -265,8 +265,8 @@ function GroundAuctionCtrl:BidGround(ins)
     else
         --打开弹框
         local showData = {}
-        showData.titleInfo = GetLanguage(40010008)
-        showData.contentInfo = GetLanguage(22030002)
+        showData.titleInfo = GetLanguage(24020009)
+        showData.contentInfo = GetLanguage(21010010)
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
     end

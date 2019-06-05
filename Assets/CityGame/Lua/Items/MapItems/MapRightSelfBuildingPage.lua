@@ -121,7 +121,7 @@ function MapRightSelfBuildingPage:_createMaterial()
 
     if self.data.line == nil then  --生产线
         --local str2 = GetLanguage(12345678)
-        local str2 = "No production"
+        local str2 = GetLanguage(20060005)
         local data2 = {infoTypeStr = "Production", value = str2}
         self.items[#self.items + 1] = self:_createShowItem(data2)
     else
@@ -280,10 +280,8 @@ function MapRightSelfBuildingPage:openShow()
 end
 --多语言
 function MapRightSelfBuildingPage:_language()
-    --正式代码
-    --self.goHereText01.text = GetLanguage()
-    self.goHereText01.text = "Go here"
-    self.notOpenText01.text = "Not open"
+    self.goHereText01.text = GetLanguage(20160010)
+    self.notOpenText01.text = GetLanguage(20160009)
 end
 --关闭
 function MapRightSelfBuildingPage:close()

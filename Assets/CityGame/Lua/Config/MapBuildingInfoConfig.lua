@@ -2,23 +2,23 @@
 MapBuildingInfoConfig={
     ["Revenue"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-turnover.png",
-        ["languageId"] = "Revenue",
+        ["languageId"] = 20060001,
     },
     ["Salary"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Feestandard.png",
-        ["languageId"] = "Fee standard",
+        --["languageId"] = "Fee standard",
     },
     ["Warehouse"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-warehouse-s.png",
-        ["languageId"] = "Warehouse",
+        ["languageId"] = 20060002,
     },
     ["OrderCenter"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Ordercenter.png",
-        ["languageId"] = "OrderCenter",
+        ["languageId"] = 20060003,
     },
     ["Production"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/iocn-productionline-s.png",
-        ["languageId"] = "Production",
+        ["languageId"] = 20060004,
     },
     ["Sign"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-signing.png",
@@ -26,11 +26,11 @@ MapBuildingInfoConfig={
     },
     ["HouseOccupancy"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Occupancyrate.png",
-        ["languageId"] = "HouseOccupancy",
+        ["languageId"] = 20090002,
     },
     ["HouseRent"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Dailyrent.png",
-        ["languageId"] = "HouseRent",
+        ["languageId"] = 20090003,
     },
     ["WarehouseRent"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-rent.png",
@@ -42,20 +42,20 @@ MapBuildingInfoConfig={
     },
     ["Queued"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-queue.png",
-        ["languageId"] = "Queued",
+        ["languageId"] = 20100002,
     },
     --点击其他人建筑显示的信息
     ["Price"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
-        ["languageId"] = "Price:",
+        ["languageId"] = 20130001,
     },
     ["PromotionTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
-        ["languageId"] = "PromotionTime:",
+        ["languageId"] = 20130002,
     },
     ["ResearchTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
-        ["languageId"] = "ResearchTime:",
+        ["languageId"] = 20140004,
     },
     ["WarehouseTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
@@ -72,20 +72,20 @@ MapBuildingInfoConfig={
     --土地交易
     ["GroundRentTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
-        ["languageId"] = "Tenancy:",
+        ["languageId"] = 20150002,
     },
     ["GroundRental"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
-        ["languageId"] = "Rental:",
+        ["languageId"] = 20150003,
     },
     --土地拍卖
     ["GAucPrice"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
-        ["languageId"] = "Floor price:",
+        ["languageId"] = 20160007,
     },
     ["GAucTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
-        ["languageId"] = "Auction time:",
+        ["languageId"] = 20160009,
     },
 }
 ------------------------------------------------------
@@ -93,25 +93,25 @@ MapBuildingInfoConfig={
 MapPromotionInfoConfig={
     [1] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-food-w.png",
-        ["languageId"] = "Food",
+        ["languageId"] = 20050001,
         ["colorV3"] = Vector3.New(75, 101, 161),  --右侧显示详情的颜色
         ["leftColorV3"] = Vector3.New(49, 49, 49),  --左侧搜索部分的颜色
     },
     [2] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-clothes-w.png",
-        ["languageId"] = "Clothes",
+        ["languageId"] = 20050002,
         ["colorV3"] = Vector3.New(65, 168, 138),
         ["leftColorV3"] = Vector3.New(49, 49, 49),
     },
     [3] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/SuperMarket_3x3.png",
-        ["languageId"] = "SuperMarket",
+        ["languageId"] = 20050003,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
     },
     [4] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
-        ["languageId"] = "House",
+        ["languageId"] = 20050004,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
     },
@@ -128,10 +128,10 @@ MapPromotionConfig={
 MapTechnologyInfoConfig={
     [1] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-newcommodity.png",
-        ["languageId"] = "发明新产品",
+        ["languageId"] = 20040001,
     },
     [2] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eva.png",
-        ["languageId"] = "Eva能力",
+        ["languageId"] = 20040002,
     },
 }

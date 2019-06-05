@@ -34,9 +34,7 @@ function MapRightSystemPage:openShow()
 end
 --多语言
 function MapRightSystemPage:_language()
-    --正式代码
-    --self.goHereText01.text = GetLanguage()
-    self.goHereText01.text = "Go here"
+    self.goHereText01.text = GetLanguage(20160010)
 end
 --关闭
 function MapRightSystemPage:close()

@@ -109,10 +109,10 @@ function MapRightGroundAucPage:openShow()
 end
 --多语言
 function MapRightGroundAucPage:_language()
-    self.hourText01.text = "hour"
-    self.minuteText02.text = "minute"
-    self.secondText03.text = "second"
-    self.noneHistoryText04.text = "Nobody bid"
+    self.hourText01.text = GetLanguage(20160004)
+    self.minuteText02.text = GetLanguage(20160005)
+    self.secondText03.text = GetLanguage(20160006)
+    self.noneHistoryText04.text = GetLanguage(20160009)
 end
 --关闭
 function MapRightGroundAucPage:close()

@@ -23,12 +23,10 @@ function MapRightOtherTechnologyPage:refreshData(data, typeData)
 
     if typeData.typeId == EMapSearchType.Technology then
         if typeData.detailId == EMapTechnologyType.TechNewItem then
-            --self.infoText.text = GetLanguage(12345678)
-            self.infoText.text = "Inventing new goods"
+            self.infoText.text = GetLanguage(20040001)
             self.valueText.text = (self.data.goodProb / MapRightOtherTechnologyPage.successNum).."%"
         elseif typeData.detailId == EMapTechnologyType.TechEva then
-            --self.infoText.text = GetLanguage(12345678)
-            self.infoText.text = "Eva"
+            self.infoText.text = GetLanguage(20040002)
             self.valueText.text = (self.data.evaProb/ MapRightOtherTechnologyPage.successNum).."%"
         end
         self:_language()
@@ -52,11 +50,11 @@ function MapRightOtherTechnologyPage:_createTech()
     if self.items == nil then
         self.items = {}
     end
-    local str2 = string.format("<color=%s>E%s</color>/D", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.price))
+    local str2 = string.format("<color=%s>E%s</color>/%s", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.price), GetLanguage(20150004))
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.showInfoRoot)
 
-    local str1 = self.data.availableTimes.."h"
+    local str1 = self.data.availableTimes..GetLanguage(20100003)
     local data1 = {infoTypeStr = "ResearchTime", value = str1}  --科研时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
 
@@ -101,8 +99,7 @@ function MapRightOtherTechnologyPage:_cleanItems()
 end
 --多语言
 function MapRightOtherTechnologyPage:_language()
-    --self.text01.text = GetLanguage(12345678)
-    self.text01.text = "Success rate:"
+    self.text01.text = GetLanguage(20140002)
 end
 --关闭
 function MapRightOtherTechnologyPage:close()

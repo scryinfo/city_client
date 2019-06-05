@@ -44,8 +44,7 @@ function MapRightGroundTransPage:refreshData(data)
     if data.detailData.groundState == GroundTransState.Sell then
         self.sellRoot.localScale = Vector3.one
         self.rentRoot.localScale = Vector3.zero
-        self.typeText.text = "Land sell"
-        --self.typeText.text = GetLanguage(12345678)
+        self.typeText.text = GetLanguage(22010004)
 
         if self.sellPriceItem == nil then
             self.sellPriceItem = MapRightShowInfoItem:new(self.sellPrice)
@@ -56,7 +55,7 @@ function MapRightGroundTransPage:refreshData(data)
     elseif data.detailData.groundState == GroundTransState.Rent then
         self.rentRoot.localScale = Vector3.one
         self.sellRoot.localScale = Vector3.zero
-        self.typeText.text = "Land rent"
+        self.typeText.text = GetLanguage(22010003)
 
         if self.rentTimeItem == nil then
             self.rentTimeItem = MapRightShowInfoItem:new(self.rentTime)
@@ -64,9 +63,9 @@ function MapRightGroundTransPage:refreshData(data)
         if self.rentalItem == nil then
             self.rentalItem = MapRightShowInfoItem:new(self.rental)
         end
-        local str1 = string.format("%d-%d(d)", groundInfo.rent.rentDaysMin, groundInfo.rent.rentDaysMax)
+        local str1 = string.format("%d-%d(%s)", groundInfo.rent.rentDaysMin, groundInfo.rent.rentDaysMax, GetLanguage(20150004))
         local data1 = {infoTypeStr = "GroundRentTime", value = str1}  --出租时间
-        local str2 = string.format("<color=%s>E%s</color>/d", MapRightGroundTransPage.moneyColor, GetClientPriceString(groundInfo.rent.rentPreDay))
+        local str2 = string.format("<color=%s>E%s</color>/%s", MapRightGroundTransPage.moneyColor, GetClientPriceString(groundInfo.rent.rentPreDay), GetLanguage(20150004))
         local data2 = {infoTypeStr = "GroundRental", value = str2}  --租金
         self.rentTimeItem:initData(data1)
         self.rentalItem:initData(data2)
@@ -80,8 +79,7 @@ function MapRightGroundTransPage:openShow()
 end
 --多语言
 function MapRightGroundTransPage:_language()
-    --self.goHereText01.text = GetLanguage(24040002)
-    self.goHereText01.text = "Go here"
+    self.goHereText01.text = GetLanguage(20160010)
 end
 --关闭
 function MapRightGroundTransPage:close()

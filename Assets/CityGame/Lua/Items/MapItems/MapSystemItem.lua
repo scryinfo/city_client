@@ -12,6 +12,7 @@ function MapSystemItem:_childInit()
     self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")  --镜头拉近时显示大小
     self.detailShowBtn = self.viewRect.transform:Find("detailShowImg"):GetComponent("Button")
     self.scaleRoot = self.viewRect.transform:Find("bubble")  --需要缩放的气泡
+    self.Text01 = self.viewRect.transform:Find("bubble/Text")
 
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
@@ -43,4 +44,8 @@ function MapSystemItem:toggleShowDetailImg(show)
     else
         self.detailShowImg.enabled = false
     end
+end
+--
+function MapSystemItem:_language()
+    self.Text01.text = GetLanguage(20010001)
 end

@@ -71,7 +71,7 @@ function MapGroundAucItem:_toggleState(state)
     self.selectBgTran.localScale = Vector3.zero
 
     if state == EGAucState.NowBid then
-        self.typeText.text = "NOW"
+        self.typeText.text = GetLanguage(21010001)
         self.typeText.color = getColorByVector3(MapGroundAucItem.nowColor)
         self.bottomBgImg.color = getColorByVector3(MapGroundAucItem.nowColor)
         self.nowBgTran.localScale = Vector3.one
@@ -80,7 +80,7 @@ function MapGroundAucItem:_toggleState(state)
         self.nowWaitState.localScale = Vector3.zero  --状态切换，是待出价或者now/soon
 
     elseif state == EGAucState.Soon then
-        self.typeText.text = "Soon"
+        self.typeText.text = GetLanguage(21010009)
         self.typeText.color = getColorByVector3(MapGroundAucItem.soonColor)
         self.bottomBgImg.color = getColorByVector3(MapGroundAucItem.soonColor)
         self.nowBgTran.localScale = Vector3.zero

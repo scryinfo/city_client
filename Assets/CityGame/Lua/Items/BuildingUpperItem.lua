@@ -79,7 +79,7 @@ function BuildingUpperItem:refreshData(data, closeCallBack)
     local type = string.sub(tostring(data.mId), 1, 2)
     if type == "13" or type == "14" then
         self.gradeBg.localScale = Vector3.one
-        --self.gradeText.text = math.ceil((data.brand + data.quality + 2) * 25)   -- 公式，必改
+        self.gradeText.text = math.ceil((data.brand + data.quality) / 2)   -- 公式，必改
     else
         self.gradeBg.localScale = Vector3.zero
     end
@@ -112,6 +112,7 @@ end
 --    PlayMusEff(1002)
 --    local data = {}
 --    data.titleInfo = GetLanguage(25040001)
+--data.inputDefaultStr = GetLanguage(37030002)
 --    data.btnCallBack = function(name)
 --        if self.data.id ~= nil then
 --            DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id = self.data.id, name = name})

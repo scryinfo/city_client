@@ -53,8 +53,8 @@ function OpenBuildingCheckCtrl:_initData()
         local str2 = string.format("<color=%s><size=%d>%s</size></color>", timeColor, timeSize, self.m_data.time)
         --self.contentText.text = GetLanguage(12020003, str1)
         --self.secondText.text = GetLanguage(12020003, str2)
-        self.contentText.text = str1
-        self.secondText.text = str2
+        self.contentText.text = string.format("Was paid %s to open immediately", str1)
+        self.secondText.text = string.format("·Deduction time is the daily current time %s", str2)
     end
 end
 -------------------------------------------------------------点击函数------------------------------------------------------------------------------
@@ -75,6 +75,8 @@ end
 --多语言
 function OpenBuildingCheckCtrl:language()
     self.titleText01.text = "TAKE DOWN"
-    self.oneText.text = GetLanguage(12020003)
-    self.thirdText.text = GetLanguage(12020003)
+    --self.oneText.text = GetLanguage(12020003)
+    --self.thirdText.text = GetLanguage(12020003)
+    self.oneText.text = ""
+    self.thirdText.text = ""
 end

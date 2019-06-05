@@ -61,7 +61,7 @@ EvaBaseData =
         Atype = 2251101,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [10] = {
         name = "品牌",
@@ -82,7 +82,7 @@ EvaBaseData =
         Atype = 2251102,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [13] = {
         name = "品牌",
@@ -103,7 +103,7 @@ EvaBaseData =
         Atype = 2251103,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [16] = {
         name = "品牌",
@@ -124,7 +124,7 @@ EvaBaseData =
         Atype = 2251201,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [19] = {
         name = "品牌",
@@ -145,7 +145,7 @@ EvaBaseData =
         Atype = 2251202,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [22] = {
         name = "品牌",
@@ -166,7 +166,7 @@ EvaBaseData =
         Atype = 2251203,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [25] = {
         name = "品牌",
@@ -187,7 +187,7 @@ EvaBaseData =
         Atype = 2252101,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [28] = {
         name = "品牌",
@@ -208,7 +208,7 @@ EvaBaseData =
         Atype = 2252102,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [31] = {
         name = "品牌",
@@ -229,7 +229,7 @@ EvaBaseData =
         Atype = 2252103,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [34] = {
         name = "品牌",
@@ -250,7 +250,7 @@ EvaBaseData =
         Atype = 2252201,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [37] = {
         name = "品牌",
@@ -271,7 +271,7 @@ EvaBaseData =
         Atype = 2252202,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [40] = {
         name = "品牌",
@@ -292,7 +292,7 @@ EvaBaseData =
         Atype = 2252203,
         Btype = "Quality",
         b = 0,
-        basevalue = 1,
+        basevalue = 100,
     },
     [43] = {
         name = "品牌",

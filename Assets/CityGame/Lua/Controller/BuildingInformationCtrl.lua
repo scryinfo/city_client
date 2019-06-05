@@ -53,7 +53,7 @@ function BuildingInformationCtrl:Refresh()
     self:language()
     --获取,初始化UI建筑信息
     self:getBuildingInfo()
-    self:initializeUiBuildingInfo()
+
     --获取,初始化土地信息
     self:getLandInfo()
     --button 索引
@@ -64,8 +64,10 @@ end
 function BuildingInformationCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("openTipBox",self.openTipBox,self)
-    destroy(self.buildingInfoItem.prefab.gameObject)
-    self.buildingInfoItem = nil
+    if self.buildingInfoItem ~= nil then
+        destroy(self.buildingInfoItem.prefab.gameObject)
+        self.buildingInfoItem = nil
+    end
     if isShow == true then
         self.tipBox.transform:SetParent(self.content)
         self.tipBoxText.text = ""
@@ -186,12 +188,15 @@ function BuildingInformationCtrl:getBuildingInfo()
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
+        elseif self.m_data.buildingType == BuildingType.House then
+            --住宅
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.Laboratory then
             --研究所
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailLaboratoryInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.House then
-            --住宅
-            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseInfo',self.m_data.id,self.m_data.ownerId)
+            --住宅和零售店一个协议，所以不需要添加其他监听
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.Municipal then
             --推广
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqPromoteInfo',self.m_data.id,self.m_data.ownerId)
@@ -480,6 +485,7 @@ function BuildingInformationCtrl:_clickBuildingName(ins)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(25040001)
+    data.inputDefaultStr = GetLanguage(37030002)
     data.btnCallBack = function(name)
         Event.Brocast("m_ReqSetBuildingName",ins.m_data.id,name)
     end
@@ -532,7 +538,11 @@ end
 ---------------------------------------------------------------回调函数---------------------------------------------------------------------------
 --缓存建筑信息回调
 function BuildingInformationCtrl:builidngInfo(dataInfo)
-    self.buildingInfo = dataInfo
+    if dataInfo ~= nil then
+        self.buildingInfo = dataInfo
+        --初始化UI建筑信息
+        self:initializeUiBuildingInfo()
+    end
 end
 --停业成功回调
 function BuildingInformationCtrl:closedBuildingSucceed(dataInfo)

@@ -131,10 +131,11 @@ function UIBubbleBuildingSignItem:updateData(data)
             self:CloesBubble()
         elseif BuilldingBubbleInsManger.type == BuildingBubbleType.show then
             self:changeSmall()
+            self:ShowBubble()
         end
     end
 end
----========================================================================点击函数============================================================
+---========================================================================点击函数============================================================/
 
 function UIBubbleBuildingSignItem:c_OnClick_small()
     --另外一个变小

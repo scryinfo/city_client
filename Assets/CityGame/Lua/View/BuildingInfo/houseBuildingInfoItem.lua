@@ -18,7 +18,6 @@ function houseBuildingInfoItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     self.qualityAdditionTextBtn = prefab.transform:Find("basicQualityText/symbol/qualityAdditionText"):GetComponent("Text")
     self.popolarityTextBtn = prefab.transform:Find("popolarityText"):GetComponent("Text")
 
-
     self.scoreText.text = (self.dataInfo.score[1].val + self.dataInfo.score[4].val) / 2
     self:language()
 

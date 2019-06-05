@@ -43,7 +43,7 @@ end
 --刷新数据【不做修改】
 function FiveFaceItem:saveData(data)
     self.id = data.id
-    self.text.text = data.name--   TODO:GetLanguage()
+    self.text.text = GetLanguage(data.name)
     self.kinds = data.kinds
     local pat = split(data.kinds[1].path,",")
     LoadSprite(path..pat[2]..".png",self.ima,true)

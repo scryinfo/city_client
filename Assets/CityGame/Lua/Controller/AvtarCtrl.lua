@@ -55,6 +55,7 @@ function AvtarCtrl:OnCreate(obj)
 end
 
 function AvtarCtrl:Refresh()
+    panel.InitLanguage()
     DataManager.OpenDetailModel(AvtarModel,OpenModelInsID.AvtarCtrl)
     self:begin()
 end

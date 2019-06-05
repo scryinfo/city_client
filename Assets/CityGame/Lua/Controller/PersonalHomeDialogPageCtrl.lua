@@ -37,7 +37,7 @@ end
 
 function PersonalHomeDialogPageCtrl:Active()
     UIPanel.Active(self)
-    self.titleText.text = GetLanguage(16010001)
+    self.titleText.text = GetLanguage(17010001)
 
     Event.AddListener("updatePlayerName",self.updateNameFunc,self)
 end

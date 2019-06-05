@@ -125,6 +125,7 @@ function PersonalHomeDialogPageCtrl:_initData()
         self.avatarBtn.interactable = true
         self.nameIconTran.localScale = Vector3.one
         self.playerAvatar = AvatarManger.GetBigAvatar(DataManager.GetFaceId(),self.roleProtaitImg.transform,1.0)
+        self.moneyText.text = string.format("E%s", DataManager.GetMoneyByString())
     end
 
     if self.m_data.male == false then

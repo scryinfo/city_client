@@ -31,7 +31,6 @@ end
 
 function GroundAuctionCtrl:Active()
     UIPanel.Active(self)
-    --GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
     GroundAuctionPanel.hourText01.text = "hour"
     GroundAuctionPanel.minuteText02.text = "minute"
     GroundAuctionPanel.secondText03.text = "second"

@@ -90,6 +90,6 @@ function BuildingRentPartDetail:_initFunc()
 end
 --
 function BuildingRentPartDetail:_language()
-    self.occupancyText01.text = "Occupancy rate:"
-    self.rentText02.text = "Adjust daily rent:"
+    self.occupancyText01.text = GetLanguage(26040001)
+    self.rentText02.text = GetLanguage(26040002)
 end

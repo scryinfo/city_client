@@ -108,7 +108,13 @@ function NoticeItem:OnBg(go)
         startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
         go:GetPromote(go.uuidParas[1])
     elseif go.typeId == 6 then
-        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+        money = GetClientPriceString(go.goodsDataInfo.tparas[1])
+        time =go.goodsDataInfo.tparas[2] .. "h"
+        local timmer = tonumber(go.goodsDataInfo.tparas[3])
+        local ts = getFormatUnixTime(timmer/1000)
+        startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
+        go:GetLaboratory(go.uuidParas[1])
+        --GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 7 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 8 then
@@ -173,6 +179,11 @@ function NoticeItem:GetPromote(buildingId)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetPromote',buildingId)
 end
 
+--获取研究所建筑详情
+function NoticeItem:GetLaboratory(buildingId)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetLaboratory',buildingId)
+end
+
 --获取公会信息
 function NoticeItem:GetSocietyInfo(id)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetSocietyInfo',id)
@@ -185,6 +196,7 @@ function NoticeItem:_addListener()
     Event.AddListener("c_ProduceInfo", self.c_ProduceInfo, self) --加工厂建筑详情回调
     Event.AddListener("c_RetailShopInfo", self.c_RetailShopInfo, self) --零售店建筑详情回调
     Event.AddListener("c_PromoteInfo", self.c_PromoteInfo, self) --推广公司建筑详情回调
+    Event.AddListener("c_Laboratory", self.c_Laboratory, self) --研究所建筑详情回调
     Event.AddListener("c_SocietyInfo", self.c_SocietyInfo, self) --公会详情回调
 end
 
@@ -195,6 +207,7 @@ function NoticeItem:_removeListener()
     Event.RemoveListener("c_ProduceInfo", self.c_ProduceInfo, self)--加工厂建筑详情回调
     Event.RemoveListener("c_RetailShopInfo", self.c_RetailShopInfo, self)--零售店建筑详情回调
     Event.RemoveListener("c_PromoteInfo", self.c_PromoteInfo, self)--推广公司建筑详情回调
+    Event.RemoveListener("c_Laboratory", self.c_Laboratory, self)--研究所建筑详情回调
     Event.RemoveListener("c_SocietyInfo", self.c_SocietyInfo, self)--公会详情回调
 end
 
@@ -240,6 +253,11 @@ end
 
 function NoticeItem:c_PromoteInfo(name)
     self.content = GetLanguage(13010080,name,time,money,startTime)
+    GameNoticePanel.rightContent.text = self.content
+end
+
+function NoticeItem:c_Laboratory(name)
+    self.content = GetLanguage(13010081,name,time,money,startTime)
     GameNoticePanel.rightContent.text = self.content
 end
 

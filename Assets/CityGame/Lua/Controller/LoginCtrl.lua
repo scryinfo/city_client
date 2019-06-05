@@ -4,7 +4,6 @@ require('Controller/ServerListCtrl')
 LoginCtrl = class('LoginCtrl',UIPanel)
 UIPanel:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
 
-LoginCtrl.SmallPop_Path="View/GoodsItem/TipsParticle"--小弹窗路径
 require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
 --构建函数--
 function LoginCtrl:initialize()
@@ -36,9 +35,9 @@ function LoginCtrl:Awake(go)
 	LuaBehaviour:AddClick(LoginPanel.normText, self.OnNormText,self);  --用户准则
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
+
 	self.showPassword = false
 
-	self.root=self.gameObject.transform.root:Find("FixedRoot");
 
 	--多语言
 	local languageId = UnityEngine.PlayerPrefs.GetInt("Language")
@@ -77,8 +76,6 @@ function LoginCtrl:Active()
 	Event.AddListener("c_Aslogin", self.c_Aslogin, self);
 	Event.AddListener("c_ChangeLanguage", self.c_ChangeLanguage, self);
 
-	-----小弹窗
-	Event.AddListener("SmallPop",self.c_SmallPop,self)
 	--多语言
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
@@ -104,7 +101,6 @@ function LoginCtrl:Hide()
 	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
 	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
 	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
-	Event.RemoveListener("SmallPop",self.c_SmallPop,self)
 	Event.RemoveListener("c_ChangeLanguage",self.c_ChangeLanguage,self)
 
 	LoginPanel.inputUsername:GetComponent('InputField').text = ""
@@ -366,23 +362,4 @@ function LoginCtrl:rpcTest(a,b)
 end
 
 UnitTest.TestBlockEnd()---------------------------------------------------------------
-
---生成预制
-function LoginCtrl:c_creatGoods(path,parent)
-	local prefab = UnityEngine.Resources.Load(path);
-	local go = UnityEngine.GameObject.Instantiate(prefab);
-	local rect = go.transform:GetComponent("RectTransform");
-	go.transform:SetParent(parent);--.transform
-	rect.transform.localScale = Vector3.one;
-	rect.transform.localPosition=Vector3.zero
-	return go
-end
----小弹窗
-function LoginCtrl:c_SmallPop(string,spacing)
-	if not self.prefab  then
-		self.prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
-	end
-	SmallPopItem:new(string,spacing,self.prefab ,self);
-end
-
 

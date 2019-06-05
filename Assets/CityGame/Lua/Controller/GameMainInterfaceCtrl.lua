@@ -16,6 +16,8 @@ local time = {}          --重大交易时间
 local index = 0
 local indexs = 0
 
+GameMainInterfaceCtrl.SmallPop_Path="Assets/CityGame/Resources/View/GoodsItem/TipsParticle.prefab"--小弹窗路径
+
 function  GameMainInterfaceCtrl:bundleName()
     return "Assets/CityGame/Resources/View/GameMainInterfacePanel.prefab"
 end
@@ -74,6 +76,8 @@ function GameMainInterfaceCtrl:Close()
     self:RemoveUpdata()
     UIPanel.Close(self)
     Event.RemoveListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
+    Event.RemoveListener("updatePlayerName",self.updateNameFunc,self)  --改变名字
+    Event.RemoveListener("SmallPop",self.c_SmallPop,self)
     self = nil
 end
 
@@ -83,10 +87,28 @@ function GameMainInterfaceCtrl:c_ChangeMoney(money)
     GameMainInterfacePanel.money.text = self.money
 end
 
+---小弹窗
+function GameMainInterfaceCtrl:c_SmallPop(string,spacing)
+    if  not self.prefab then
+        local function callback(prefab)
+            self.prefab = prefab
+            SmallPopItem:new(string,spacing,prefab ,self);
+        end
+        createPrefab(GameMainInterfaceCtrl.SmallPop_Path,self.root, callback)
+    else
+        SmallPopItem:new(string,spacing,self.prefab ,self);
+    end
+end
+
 function GameMainInterfaceCtrl:SaveData(ownerData)
     if self.groundOwnerDatas then
         table.insert(self.groundOwnerDatas,ownerData[1])
     end
+end
+
+--改变名字
+function GameMainInterfaceCtrl:updateNameFunc(name)
+    GameMainInterfacePanel.name.text = name
 end
 
 --全城Npc数量
@@ -374,8 +396,12 @@ end
 
 function GameMainInterfaceCtrl:Awake()
     --PlayerTempModel.tempTestCreateAll()
+    self.root=self.gameObject.transform.root:Find("FixedRoot");
     Event.AddListener("c_OnConnectTradeSuccess",self.c_OnSSSuccess,self)        --連接ss成功回調
     Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
+    Event.AddListener("updatePlayerName",self.updateNameFunc,self)  --改变名字
+    -----小弹窗
+    Event.AddListener("SmallPop",self.c_SmallPop,self)
     CityEngineLua.login_tradeapp(true)
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
@@ -401,6 +427,7 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.clearBtn,self.OnClearBtn,self); --点击ClearBtn
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.clearBg,self.OnClearBg,self); --点击ClearBg
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.simple,self.OnSimple,self); --点击简单收益面板
+
 
     --todo 城市广播
     --gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.leftRadioBtn,self.OnLeftRadioBtn,self);

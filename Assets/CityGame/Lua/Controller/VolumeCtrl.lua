@@ -64,7 +64,7 @@ function VolumeCtrl:Awake()
     volumeBehaviour:AddClick(VolumePanel.back,self.OnBack,self)
     volumeBehaviour:AddClick(VolumePanel.clotherBtn,self.OnClotherBtn,self)
     volumeBehaviour:AddClick(VolumePanel.foodBtn,self.OnFoodBtn,self)
-    volumeBehaviour:AddClick(VolumePanel.cityBg,self.OnCityBg,self)
+    --volumeBehaviour:AddClick(VolumePanel.cityBg,self.OnCityBg,self)
     volumeBehaviour:AddClick(VolumePanel.volume,self.OnVolume,self)
     volumeBehaviour:AddClick(VolumePanel.titleBg,self.OnTitleBg,self)
 

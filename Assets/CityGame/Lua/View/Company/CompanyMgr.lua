@@ -163,30 +163,30 @@ end
 
 -- Eva默认选择
 function CompanyMgr:SetEvaDefaultState()
-    CompanyPanel.optionOneRt.anchoredPosition = Vector2.New(0,0)
+    --CompanyPanel.optionOneRt.anchoredPosition = Vector2.New(0,0)
     self.evaTitleItem[1]:_setContent()
 end
 
 -- 更新Eva的数据
-function CompanyMgr:UpdateMyEva(eva)
-    for i, v in ipairs(self.evasData) do
-        if eva.id == v.id then
-            self.evasData[i] = eva
-            break
-        end
-    end
-end
+--function CompanyMgr:UpdateMyEva(eva)
+--    for i, v in ipairs(self.evasData) do
+--        if eva.id == v.id then
+--            self.evasData[i] = eva
+--            break
+--        end
+--    end
+--end
 
 -- 更新Eva属性界面
-function CompanyMgr:UpdateMyEvaProperty(eva)
-    for _, v in ipairs(self.propertyItems) do
-        if eva.id == v.data.id then
-            v.data = eva
-            v:ShowData(v.data.lv, v.data.cexp)
-            break
-        end
-    end
-end
+--function CompanyMgr:UpdateMyEvaProperty(eva)
+--    for _, v in ipairs(self.propertyItems) do
+--        if eva.id == v.data.id then
+--            v.data = eva
+--            v:ShowData(v.data.lv, v.data.cexp)
+--            break
+--        end
+--    end
+--end
 
 -- 重置Eva属性的小提示
 function CompanyMgr:ClsoeTips()

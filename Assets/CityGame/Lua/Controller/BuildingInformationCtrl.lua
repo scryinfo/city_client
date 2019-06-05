@@ -187,6 +187,9 @@ function BuildingInformationCtrl:getBuildingInfo()
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
+        elseif self.m_data.buildingType == BuildingType.House then
+            --住宅
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.Laboratory then
             --研究所
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailLaboratoryInfo',self.m_data.id,self.m_data.ownerId)

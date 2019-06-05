@@ -66,6 +66,7 @@ end
 --
 
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
+    houseDetailData.info.buildingType = BuildingType.House
     if HousePanel.topItem ~= nil then
         HousePanel.topItem:refreshData(houseDetailData.info, function ()
             self:_clickCloseBtn(self)

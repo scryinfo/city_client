@@ -1123,6 +1123,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_societyId = tempData.societyId
     --初始化自己的Eva点数
     PersonDataStack.m_evaPoint = tempData.eva
+    --初始化矿工费用及它的百分显示
+    --PersonDataStack.m_minersCostRatio = tempData.minersCostRatio
 
     --初始化自己的基本信息
     PersonDataStack.m_roleInfo =
@@ -1618,6 +1620,25 @@ end
 -- 获得公会成员
 function DataManager.GetGuildMembers()
     return PersonDataStack.guildManager:GetGuildMembers()
+end
+
+-- 获得矿工费用值的百分显示
+function DataManager.GetMinersCostRatioPercent()
+    if PersonDataStack.m_minersCostRatio == nil or PersonDataStack.m_minersCostRatio == "" or PersonDataStack.m_minersCostRatio <= 0 then
+        return
+    end
+    if not PersonDataStack.m_minersCostRatioPercent then
+        PersonDataStack.m_minersCostRatioPercent = string.format("%.2f", PersonDataStack.m_minersCostRatio * 100) .. "%"
+    end
+    return PersonDataStack.m_minersCostRatioPercent
+end
+
+-- 获得实际所需的矿工费用
+function DataManager.GetMinersCostRatioMoney(number)
+    if number == nil or number == "" or tonumber(number) <= 0 or PersonDataStack.m_minersCostRatio <= 0 then
+        return 0
+    end
+    return PersonDataStack.m_minersCostRatio * tonumber(number)
 end
 ---------------------------------
 --获取自己所有的建筑详情

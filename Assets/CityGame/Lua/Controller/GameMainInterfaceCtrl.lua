@@ -15,6 +15,7 @@ local  cost = {}          --重大交易金额
 local time = {}          --重大交易时间
 local index = 0
 local indexs = 0
+local chatItemNum = 3   -- 世界聊天的显示数量
 
 function  GameMainInterfaceCtrl:bundleName()
     return "Assets/CityGame/Resources/View/GameMainInterfacePanel.prefab"
@@ -435,20 +436,16 @@ function GameMainInterfaceCtrl:Awake()
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
 
-    -- 初始化两个世界聊天的item
-    self.worldChatDouble = {}
-    for a = 1, 2 do
+    -- 初始化三个世界聊天的item
+    self.worldChatItem = {}
+    for a = 1, chatItemNum do
         panelMgr:LoadPrefab_A("Assets/CityGame/Resources/View/Chat/ChatWorldItem.prefab", nil, nil, function(ins, obj )
             if obj ~= nil then
                 local go = ct.InstantiatePrefab(obj)
                 local rect = go.transform:GetComponent("RectTransform")
                 go.transform:SetParent(GameMainInterfacePanel.worldChatContent)
-                if a == 1 then
-                    rect.transform.localScale = Vector3.New(0.8, 0.8, 0.8)
-                else
-                    rect.transform.localScale = Vector3.one
-                end
-                self.worldChatDouble[a] = ChatWorldItem:new(go)
+                rect.transform.localScale = Vector3.one
+                self.worldChatItem[a] = ChatWorldItem:new(go)
             end
         end)
     end
@@ -640,25 +637,14 @@ end
 -- 世界聊天显示
 function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
     if chatData.channel == "WORLD" then
-        if not self.ChatWorldData then
-            self.ChatWorldData = {}
-        end
-        if #self.ChatWorldData == 0 then
-            self.ChatWorldData[1] = chatData
-            self.worldChatDouble[1]:_ShowPrefab(false)
-            self.worldChatDouble[2]:_ShowPrefab(true)
-            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[1])
-        elseif #self.ChatWorldData == 1 then
-            self.ChatWorldData[2] = chatData
-            self.worldChatDouble[2]:_ShowPrefab(true)
-            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[2])
-            self.worldChatDouble[1]:_ShowPrefab(true)
-            self.worldChatDouble[1]:_ShowChatContent(self.ChatWorldData[1])
-        elseif #self.ChatWorldData == 2 then
-            self.ChatWorldData[3] = chatData
-            table.remove(self.ChatWorldData, 1)
-            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[2])
-            self.worldChatDouble[1]:_ShowChatContent(self.ChatWorldData[1])
+        for i = 1, chatItemNum do
+            if i == 3 then
+                self.worldChatItem[i]:_ShowChatContent(chatData)
+            else
+                if self.worldChatItem[i + 1].data then
+                    self.worldChatItem[i]:_ShowChatContent(self.worldChatItem[i + 1].data)
+                end
+            end
         end
     else
         GameMainInterfacePanel.chatItem.localScale = Vector3.one
@@ -694,19 +680,10 @@ function GameMainInterfaceCtrl:_showWorldChatNoticeItem()
     local data = DataManager.GetMyChatInfo(1)
     local worldInfoAllNum = #data
     if worldInfoAllNum >=1 then
-        self.ChatWorldData = {}
-        if  worldInfoAllNum ==1 then
-            self.ChatWorldData[1] = data[1]
-            self.worldChatDouble[1]:_ShowPrefab(false)
-            self.worldChatDouble[2]:_ShowPrefab(true)
-            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[1])
-        else
-            self.ChatWorldData[1] = data[worldInfoAllNum - 1]
-            self.ChatWorldData[2] = data[worldInfoAllNum]
-            self.worldChatDouble[2]:_ShowPrefab(true)
-            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[2])
-            self.worldChatDouble[1]:_ShowPrefab(true)
-            self.worldChatDouble[1]:_ShowChatContent(self.ChatWorldData[1])
+        for i = 1, chatItemNum do
+            if data[worldInfoAllNum - chatItemNum + i] then
+                self.worldChatItem[i]:_ShowChatContent(data[worldInfoAllNum - chatItemNum + i])
+            end
         end
     end
 end
@@ -762,6 +739,14 @@ end
 --Eva
 function GameMainInterfaceCtrl:OnEva()
     PlayMusEff(1002)
+    local evaSaveKey = string.format("%sEvaOpen", DataManager.GetMyOwnerID())
+    local isOpenEva = UnityEngine.PlayerPrefs.HasKey(evaSaveKey)
+    if isOpenEva then -- 打开过Eva
+        ct.OpenCtrl("EvaCtrl")
+    else -- 没有打开过Eva
+        UnityEngine.PlayerPrefs.SetInt(evaSaveKey, 1)
+        ct.OpenCtrl("EvaJoinCtrl")
+    end
 end
 
 --充值

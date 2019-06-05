@@ -441,10 +441,10 @@ end
 function GetLanguage(key,...)
 	local temp={...}
 	for Id, String in pairs(currentLanguage) do
-		if Id==key then
-          local tempString=String
+		if Id == key then
+            local tempString = String
 			for i = 1, #temp do
-				tempString=string.gsub(tempString,"{"..tostring(i-1).."}",temp[i])
+				tempString = string.gsub(tempString,"{"..tostring(i-1).."}",temp[i])
 			end
 			return tempString
 		end

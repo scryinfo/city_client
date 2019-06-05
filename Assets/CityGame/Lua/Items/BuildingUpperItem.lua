@@ -79,7 +79,7 @@ function BuildingUpperItem:refreshData(data, closeCallBack)
     local type = string.sub(tostring(data.mId), 1, 2)
     if type == "13" or type == "14" then
         self.gradeBg.localScale = Vector3.one
-        --self.gradeText.text = math.ceil((data.brand + data.quality + 2) * 25)   -- 公式，必改
+        self.gradeText.text = math.ceil((data.brand + data.quality) / 2)   -- 公式，必改
     else
         self.gradeBg.localScale = Vector3.zero
     end

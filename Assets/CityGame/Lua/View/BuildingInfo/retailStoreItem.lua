@@ -14,10 +14,11 @@ function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     self.retailStoreIntroduceBtn = prefab.transform:Find("retailStoreIntroduceBtn")
     self.retailStoreText = prefab.transform:Find("retailStoreIntroduceBtn/retailStoreText"):GetComponent("Text")
     self.basicQualityTextBtn = prefab.transform:Find("basicQualityText"):GetComponent("Text")
+    self.symbol = prefab.transform:Find("basicQualityText/symbol")
     self.qualityAdditionTextBtn = prefab.transform:Find("basicQualityText/symbol/qualityAdditionText"):GetComponent("Text")
     self.popolarityTextBtn = prefab.transform:Find("popolarityText"):GetComponent("Text")
 
-    self.scoreText.text = 100
+    self.scoreText.text = (self.dataInfo.score[1].val + self.dataInfo.score[4].val) / 2
     self:language()
 
     luaBehaviour:AddClick(self.basicQualityTextBtn.gameObject,self._clickBasicQualityTextBtn,self)
@@ -34,10 +35,11 @@ function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     end
 end
 function retailStoreItem:language()
+    self.symbol.transform.localScale = Vector3.zero
     self.retailStoreText.text = "综合分数"
-    self.basicQualityTextBtn.text = "基本质量"
-    self.qualityAdditionTextBtn.text = "质量加成"
-    self.popolarityTextBtn.text = "知名度"
+    self.basicQualityTextBtn.text = "品质".." "..self.dataInfo.score[4].val.."(".."+"..self.dataInfo.score[5].val.."%"..")"
+    self.qualityAdditionTextBtn.transform.localScale = Vector3.zero
+    self.popolarityTextBtn.text = "品牌".." "..self.dataInfo.score[1].val
 end
 function retailStoreItem:_clickBasicQualityTextBtn(ins)
     local stringKey = 27010005

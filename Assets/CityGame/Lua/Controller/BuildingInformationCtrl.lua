@@ -52,7 +52,7 @@ function BuildingInformationCtrl:Refresh()
     self:language()
     --获取,初始化UI建筑信息
     self:getBuildingInfo()
-    self:initializeUiBuildingInfo()
+
     --获取,初始化土地信息
     self:getLandInfo()
     --button 索引
@@ -63,8 +63,10 @@ end
 function BuildingInformationCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("openTipBox",self.openTipBox,self)
-    destroy(self.buildingInfoItem.prefab.gameObject)
-    self.buildingInfoItem = nil
+    if self.buildingInfoItem ~= nil then
+        destroy(self.buildingInfoItem.prefab.gameObject)
+        self.buildingInfoItem = nil
+    end
     if isShow == true then
         self.tipBox.transform:SetParent(self.content)
         self.tipBoxText.text = ""
@@ -517,7 +519,11 @@ end
 ---------------------------------------------------------------回调函数---------------------------------------------------------------------------
 --缓存建筑信息回调
 function BuildingInformationCtrl:builidngInfo(dataInfo)
-    self.buildingInfo = dataInfo
+    if dataInfo ~= nil then
+        self.buildingInfo = dataInfo
+        --初始化UI建筑信息
+        self:initializeUiBuildingInfo()
+    end
 end
 --停业成功回调
 function BuildingInformationCtrl:closedBuildingSucceed(dataInfo)

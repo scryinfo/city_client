@@ -189,8 +189,8 @@ function BuildingInformationCtrl:getBuildingInfo()
             --研究所
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailLaboratoryInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.House then
-            --住宅
-            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseInfo',self.m_data.id,self.m_data.ownerId)
+            --住宅和零售店一个协议，所以不需要添加其他监听
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         end
     end
 end

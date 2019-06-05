@@ -717,19 +717,23 @@ function GetEvaData(index, configData, lv)
 	elseif index == 3 then -- 大
 		brandSizeNum = 900
 	end
-	if configData.Btype == "Quality" then
+	if configData.Btype == "Quality" then -- 品质
 		if configData.Atype < 2100000 then -- 建筑品质加成
-			return string.format( "%.2f", (1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
+			return string.format( (1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
 		else -- 商品品质值
-			return string.format( "%.2f",EvaUp[lv].add / 1000 * configData.basevalue)
+			return string.format( EvaUp[lv].add / 1000 * configData.basevalue)
 		end
-	elseif configData.Btype == "ProduceSpeed" then
-		return math.floor((1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue)) / brandSizeNum) .. "s/个"
-	elseif configData.Btype == "PromotionAbility" then
-		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "s/个"
-	elseif configData.Btype == "InventionUpgrade" then
+	elseif configData.Btype == "ProduceSpeed" then -- 生产速度
+		local resultNum = tostring( ((1 + EvaUp[lv].add / 100000) * configData.basevalue) * brandSizeNum)
+		if string.find(resultNum, ".") ~= nil then
+			resultNum = string.format( "%.4f", resultNum)
+		end
+		return resultNum .. "s/个"
+	elseif configData.Btype == "PromotionAbility" then -- 推广能力
+		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
+	elseif configData.Btype == "InventionUpgrade" then -- 发明提升
 		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
-	elseif configData.Btype == "EvaUpgrade" then
+	elseif configData.Btype == "EvaUpgrade" then -- Eva提示
 		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
 	end
 end

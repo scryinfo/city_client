@@ -431,13 +431,9 @@ function VolumeCtrl:OnplayerRect(ins)
     --        Vector2.New(0, 336),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
     VolumePanel.firstScroll:ActiveLoopScroll(ins.playerOneInfo, #DealConfig, "View/Laboratory/ToggleBtnItem")
-    --local function callback(prefab)
-    --    self.WareHouseLuaItem = ToggleBtnTwoItem:new(self.ModelDataList[i].uiData,prefab,self.behaviour, self, i)
-    --end
-    --createPrefab("View/Laboratory/ToggleBtnTwoItem",VolumePanel.secondScrollcontent,callback)
-    --VolumePanel.secondScroll:ActiveLoopScroll(ins.playerTwosInfo, #DealConfig[1].childs,"View/Laboratory/ToggleBtnTwoItem")
+
     VolumePanel.trade.localScale = Vector3.one
-    --self:initPayerVolume()1`
+    --self:initPayerVolume()
 
 end
 
@@ -493,7 +489,7 @@ function VolumeCtrl:c_OnClick_Delete(ins)
         optionOneScript[1].highlight.localScale = Vector3.zero
         firstshow = 1
     end
-    if optionOneScript[ins.ctrl].city  then
+    if optionOneScript[ins.ctrl].city  then                                 ---点击第一层item清空二三层item
         VolumePanel.threeScroll:ActiveLoopScroll(optionOneScript[ins.ctrl].city.ToggleBtnTwoItem, 0,"View/Laboratory/ToggleBtnThreeItem")
     end
     if ins.data.childs.childs ~= nil then
@@ -505,7 +501,7 @@ function VolumeCtrl:c_OnClick_Delete(ins)
 end
 
 
-
+--玩家交易信息（金额）
 function VolumeCtrl:c_GoodsplayerTypeNum(info)
     VolumePanel.slide:Close()
     VolumePanel.graph:Close()

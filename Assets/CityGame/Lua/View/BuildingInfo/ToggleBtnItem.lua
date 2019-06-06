@@ -69,11 +69,10 @@ ToggleBtnItem.static.OptionTwoData = function(transform, idx)
     ToggleBtnItem.city = {}
     idx = idx + 1
     if playerdata.childs == nil then
-        --第一次点击初始化显示第二层第一个（土地租赁）
-        optionTwoScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, DealConfig[1].childs[idx], idx)
+        optionTwoScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, DealConfig[1].childs[idx], idx)       --第一次点击初始化显示第二层第一个（土地租赁）
         if idx == 1 then
             optionTwoScript[idx].highlight.localScale  = Vector3.one
-            optionTwoScript[1]:_firstclose(optionTwoScript[1].highlight)
+            optionTwoScript[1]:_firstclose(optionTwoScript[1].highlight)                                                --第一次点击初始化关闭第二层第一个（土地租赁）
         end
     else
         optionTwoScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, playerdata.childs[idx], idx)

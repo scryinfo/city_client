@@ -92,7 +92,7 @@ function DETAILSBoxCtrl:Refresh()
     if Math_Floor(self.itemId / 100000) == materialKey then
         DETAILSBoxPanel.playerGoodInfo.localScale = Vector3.zero
         DETAILSBoxPanel.playerMaterialInfo.localScale = Vector3.one
-        DETAILSBoxPanel.materialNameText.text = Material[self.itemId].name
+        DETAILSBoxPanel.materialNameText.text = GetLanguage(Material[self.itemId].name)
         LoadSprite(Material[self.itemId].img,DETAILSBoxPanel.materialIcon,false)
         DETAILSBoxPanel.scoreText.transform.localScale = Vector3.zero
         DETAILSBoxPanel.infoBtn.transform.localScale = Vector3.zero

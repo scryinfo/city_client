@@ -18,8 +18,8 @@ function RollItem:c_OnClick_roll(ins)
     if ins.data.availableRoll < 5 then
         RollPanel.resultRoot.localScale = Vector3.one
         RollPanel.evanotenough.localScale = Vector3.one
+        RollPanel.Evaresultbg.localScale = Vector3.zero
     else
-        RollPanel.result.localScale = Vector3.zero
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId,"m_ReqLabRoll",ins.data.lineId)
     end
 end

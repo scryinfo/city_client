@@ -117,9 +117,9 @@ function RollCtrl:_closeAll(ins)
         panel.resultRoot.localScale =  Vector3.one
         panel.result.localScale =  Vector3.one
     end
-    --congratulation界面文本更新（0goodCategory 0为失败+1 1为成功+10）
-    for i, v in ipairs(self.data) do
-        if ins.m_data.goodCategory == 0 then
+    --congratulation界面文本更新（0为失败+1 1为成功+10）
+    for i = 1, #ins.data do
+        if ins.data[i] == 0 then
             sums = sums + 1
             panel.sum.text = sums
         else
@@ -174,7 +174,6 @@ end
 function RollCtrl:handleEvaResult(data)
     self.Rollpoint = {}
     self.data = data
-    panel.evacount.text = DataManager.GetEvaPoint()
     panel.Evaresultbg.localScale = Vector3.one
     panel.Evaresult.localScale = Vector3.one
     panel.resultRoot.localScale = Vector3.one
@@ -197,6 +196,7 @@ function RollCtrl:handleEvaResult(data)
                 panel.BigEVAtext.text = DataManager.GetEvaPoint()
             end
         end
+    panel.evacount.text = DataManager.GetEvaPoint()
 end
 
 function  RollCtrl:handleGoodsResult(data)

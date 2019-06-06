@@ -32,6 +32,7 @@ end
 
 --选中左侧效果【不做修改】
 function FiveFaceItem:c_OnClick_switchKind(ins)
+    PlayMusEff(1002)
     if ctrl ~= nil then
         ctrl:switchKinds(ins.kinds)
         ctrl.select.localScale = Vector3.zero

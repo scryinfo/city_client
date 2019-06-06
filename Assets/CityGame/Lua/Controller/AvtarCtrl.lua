@@ -369,6 +369,7 @@ end
 ---==========================================================================================点击函数===================================================================================================
 --返回
 function AvtarCtrl:c_OnClick_backBtn(ins)
+    PlayMusEff(1002)
     if DataManager.GetFaceId() then
         UIPanel.ClosePage()
     else
@@ -378,6 +379,8 @@ end
 
 --确定 TODO://
 function AvtarCtrl:c_OnClick_confirm()
+
+    PlayMusEff(1002)
     local faceId,type,rankID=""
 
     for key, value in pairs(pastApperanceID) do
@@ -424,11 +427,13 @@ end
 
 --随机
 function AvtarCtrl:c_OnClick_randomChange(ins)
+    PlayMusEff(1002)
     ins:randomChange()
 end
 
 --切换为男性
 function AvtarCtrl:c_OnClick_male(ins)
+    PlayMusEff(1002)
     if mySex == 2 then
         mySex = 1
         panel.feMaleSelect.localScale=Vector3.zero
@@ -444,6 +449,7 @@ end
 
 --切换为女性
 function AvtarCtrl:c_OnClick_faMale(ins)
+    PlayMusEff(1002)
     if mySex == 1 then
         mySex = 2
         panel.feMaleSelect.localScale=Vector3.one

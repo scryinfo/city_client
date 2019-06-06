@@ -74,6 +74,8 @@ end
 --退出
 function SystemSettingCtrl:c_OnClickout(ins)
     PlayMusEff(1002)
+    --退出游戏后音效切换
+    PlayMus(1000)
     CityEngineLua.LoginOut()
 end
 --开音乐

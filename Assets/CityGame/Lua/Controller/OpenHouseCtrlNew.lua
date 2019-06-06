@@ -104,7 +104,7 @@ function OpenHouseCtrlNew:_onClickConfirm(ins)
         --
         return
     end
-
+    PlayMusEff(1002)
     if ins.m_data.callBackFunc ~= nil then
         local temp = os.date("%H:%M", os.time())
         local data = {salary = ins.totalText.text, time = temp, fun = function ()
@@ -116,5 +116,6 @@ function OpenHouseCtrlNew:_onClickConfirm(ins)
 end
 --
 function OpenHouseCtrlNew:_onClickCloseBtn(ins)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end

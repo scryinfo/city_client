@@ -15,9 +15,11 @@ function MapBuildingItem:_childInit()
     self.scaleRoot = self.viewRect.transform:Find("selfRoot")
 
     self.btn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_clickFunc()
     end)
     self.detailShowBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_clickFunc()
     end)
 

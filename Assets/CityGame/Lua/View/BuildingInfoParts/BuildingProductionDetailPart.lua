@@ -152,6 +152,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.content.transform.localScale = Vector3.zero
         self.lineNumberText.text = 0 .."/"..PlayerBuildingBaseData[self.m_data.info.mId].lineNum
     else
+        self.brandNameText.text = DataManager.GetCompanyName()
         self.itemId = lineData[1].itemId
         self.ScrollView.gameObject:SetActive(true)
         self.content.transform.localScale = Vector3.one

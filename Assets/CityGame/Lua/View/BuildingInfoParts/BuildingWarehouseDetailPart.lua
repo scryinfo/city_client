@@ -31,6 +31,9 @@ function BuildingWarehouseDetailPart:RefreshData(data)
     if data == nil then
         return
     end
+    self.brandId = nil
+    self.BrandName = 0
+    self.BrandNameSucceed = 0
     self.m_data = data
     self:_initFunc()
     self:initializeUiInfoData(self.m_data.store.inHand)
@@ -91,6 +94,7 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.AddListener("deleteSucceed",self.deleteSucceed,self)
     Event.AddListener("getItemIdCount",self.getItemIdCount,self)
+    Event.AddListener("getBrandNameSucceed",self.getBrandNameSucceed,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
@@ -101,6 +105,7 @@ function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.RemoveListener("deleteSucceed",self.deleteSucceed,self)
     Event.RemoveListener("getItemIdCount",self.getItemIdCount,self)
+    Event.RemoveListener("getBrandNameSucceed",self.getBrandNameSucceed,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
@@ -114,7 +119,8 @@ function BuildingWarehouseDetailPart:_language()
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
-    if not storeData then
+    self.storeData = storeData
+    if not self.storeData then
         self.Capacity = 0
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
@@ -132,14 +138,15 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        if #storeData == #self.warehouseDatas then
+        if #self.storeData == #self.warehouseDatas then
             return
         else
             if next(self.warehouseDatas) ~= nil then
                 self:CloseDestroy(self.warehouseDatas)
             end
             self.transportBool = GoodsItemStateType.transport
-            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+            --获取品牌
+            self:getBrandName(self.storeData)
         end
     end
 end
@@ -327,6 +334,14 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
     UIPanel.ClosePage()
     Event.Brocast("SmallPop", GetLanguage(25020012), 300)
 end
+--获得特定品牌
+function BuildingWarehouseDetailPart:getBrandNameSucceed(data)
+    self.BrandNameSucceed = self.BrandNameSucceed + 1
+    self.storeData[self.brandId].key.brandName = data.brandName
+    if self.BrandName == self.BrandNameSucceed then
+        self:CreateGoodsItems(self.storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+    end
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取仓库里某个商品的数量
 --(后边要修改)
@@ -343,5 +358,18 @@ function BuildingWarehouseDetailPart:getItemIdCount(itemId,callback)
             end
         end
         callback(nowCount)
+    end
+end
+--获取特定品牌
+function BuildingWarehouseDetailPart:getBrandName(dataInfo)
+    for key,value in pairs(dataInfo) do
+        if value.key.producerId ~= nil then
+            self.BrandName = self.BrandName + 1
+            self.brandId = key
+            Event.Brocast("m_ReqGetBrandName",value.key.producerId,value.key.id)
+        end
+    end
+    if self.BrandName == 0 then
+        self:CreateGoodsItems(self.storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
     end
 end

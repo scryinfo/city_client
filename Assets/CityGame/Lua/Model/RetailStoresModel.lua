@@ -133,7 +133,7 @@ end
 function RetailStoresModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
         self:m_ReqOpenRetailShop(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(24020017), 300)  --开业成功提示
+        Event.Brocast("SmallPop", GetLanguage(24020018), 300)  --开业成功提示
     end
 end
 --员工工资改变

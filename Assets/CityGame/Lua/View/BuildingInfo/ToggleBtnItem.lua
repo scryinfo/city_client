@@ -5,6 +5,8 @@ local optionTwoScript = {}
 local volumeBehaviour
 local playerdata = {}
 local state = true
+local this = ToggleBtnItem
+local firstshow = nil
 ---初始化方法   数据（读配置表）
 function ToggleBtnItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab = prefab
@@ -14,7 +16,7 @@ function ToggleBtnItem:initialize(prefab,luaBehaviour,data,ctrl)
 
     --self.ima=prefab.transform:Find("Image"):GetComponent("Image");
     --self.deleteBtn=prefab.transform:Find("Button")
-    self.foodtext = prefab.transform:Find("food/foodText"):GetComponent("Text")
+    this.foodtext = prefab.transform:Find("food/foodText"):GetComponent("Text")
     self.bgBtn = prefab.transform:Find("bgBtn")
     self.highlight = prefab.transform:Find("highlight")
 
@@ -45,7 +47,7 @@ end
 
 function ToggleBtnItem:updateData( data )
     self.data = data
-    self.foodtext.text = self.data.name
+    this.foodtext.text = self.data.name
 end
 
 function ToggleBtnItem:updateUI( data )
@@ -61,12 +63,23 @@ function ToggleBtnItem:Refresh(data)
     --self:updateUI(data)
 end
 
+
 -- 第二层信息显示
 ToggleBtnItem.static.OptionTwoData = function(transform, idx)
     ToggleBtnItem.city = {}
     idx = idx + 1
-    optionTwoScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, playerdata.childs[idx], idx)
-    ToggleBtnItem.city = optionTwoScript[idx]
+    if playerdata.childs == nil then
+        --第一次点击初始化显示第二层第一个（土地租赁）
+        optionTwoScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, DealConfig[1].childs[idx], idx)
+        if idx == 1 then
+            optionTwoScript[idx].highlight.localScale  = Vector3.one
+            optionTwoScript[1]:_firstclose(optionTwoScript[1].highlight)
+        end
+    else
+        optionTwoScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, playerdata.childs[idx], idx)
+        optionTwoScript[1].highlight.localScale = Vector3.zero
+        ToggleBtnItem.city = optionTwoScript[idx]
+    end
 end
 
 ToggleBtnItem.static.OptionTwoClearData = function(transform)

@@ -16,7 +16,10 @@ local defaultPos_Y= -74
 local pool={}
 local optionOneScript ={}
 local state
-
+local type = true
+local optionTwosScript = {}
+local isone = true
+local firstshow
 local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
     if not pool[class] then
         pool[class]={}
@@ -60,6 +63,7 @@ function VolumeCtrl:initialize()
     --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 function VolumeCtrl:Awake()
+
     volumeBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     volumeBehaviour:AddClick(VolumePanel.back,self.OnBack,self)
     volumeBehaviour:AddClick(VolumePanel.clotherBtn,self.OnClotherBtn,self)
@@ -100,6 +104,11 @@ function VolumeCtrl:Awake()
     self.playerOneInfo.mProvideData = VolumeCtrl.static.OptionOneData
     self.playerOneInfo.mClearData = VolumeCtrl.static.OptionOneClearData
 
+    -- 第二层信息展示
+    self.playerTwosInfo = UnityEngine.UI.LoopScrollDataSource.New()  --交易信息
+    self.playerTwosInfo.mProvideData = VolumeCtrl.static.OptionTwosData
+    self.playerTwosInfo.mClearData = VolumeCtrl.static.OptionTwosClearData
+
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.Update, self), 1, -1, true)
@@ -112,11 +121,11 @@ function VolumeCtrl:Active()
     self.m_Timer:Start()
     Event.AddListener("c_NpcNum",self.c_NpcNum,self)
     Event.AddListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
-    Event.AddListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self) --所有npc交易量
-    Event.AddListener("c_ExchangeAmount",self.c_ExchangeAmount,self) --所有交易量
-    Event.AddListener("c_allbuyAmount",self.c_allbuyAmount,self) --玩家所有交易量
-    Event.AddListener("c_currebPlayerNum",self.c_allPlayerAmount,self) --玩家数量
-
+    Event.AddListener("c_NpcExchangeAmount",self.c_NpcExchangeAmount,self)   --所有npc交易量
+    Event.AddListener("c_ExchangeAmount",self.c_ExchangeAmount,self)         --所有交易量
+    Event.AddListener("c_allbuyAmount",self.c_allbuyAmount,self)             --玩家所有交易量
+    Event.AddListener("c_currebPlayerNum",self.c_allPlayerAmount,self)       --玩家数量
+    Event.AddListener("c_ToggleBtnTwoItem",self.c_GoodsplayerTypeNum,self)       --点击玩家按钮后初始化土地
 end
 function VolumeCtrl:Refresh()
     --打开Model
@@ -135,6 +144,8 @@ function VolumeCtrl:Hide()
     Event.RemoveListener("c_ExchangeAmount",self.c_ExchangeAmount,self)        --所有交易量
     Event.RemoveListener("c_allbuyAmount",self.c_allbuyAmount,self)          --玩家所有交易量
     Event.RemoveListener("c_currebPlayerNum",self.c_allPlayerAmount,self)          --玩家数量
+    Event.RemoveListener("c_ToggleBtnTwoItem",self.c_GoodsplayerTypeNum,self)
+
 end
 
 function VolumeCtrl:initInsData()
@@ -161,7 +172,9 @@ function VolumeCtrl:Update()
     if tonumber(second) <= 0 then
         second = 10
     end
-    VolumePanel.undateTime.text = second
+    if second  then
+        VolumePanel.undateTime.text = second
+    end
 end
 
 --NPC数量
@@ -407,24 +420,62 @@ function VolumeCtrl:OnplayerRect(ins)
     VolumePanel.infoBgrRect.localScale= Vector3.one
     VolumePanel.playercurrRoot.gameObject:SetActive(true)
 
+    --点击之后初始化显示
+    local info = {}
+    info.id = 888
+    info.exchangeType = 3
+    info.type = type
+    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNumCurve',info)
+
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 336),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
     VolumePanel.firstScroll:ActiveLoopScroll(ins.playerOneInfo, #DealConfig, "View/Laboratory/ToggleBtnItem")
-    --self:initPayerVolume()
+    --local function callback(prefab)
+    --    self.WareHouseLuaItem = ToggleBtnTwoItem:new(self.ModelDataList[i].uiData,prefab,self.behaviour, self, i)
+    --end
+    --createPrefab("View/Laboratory/ToggleBtnTwoItem",VolumePanel.secondScrollcontent,callback)
+    --VolumePanel.secondScroll:ActiveLoopScroll(ins.playerTwosInfo, #DealConfig[1].childs,"View/Laboratory/ToggleBtnTwoItem")
+    VolumePanel.trade.localScale = Vector3.one
+    --self:initPayerVolume()1`
 
 end
 
 function VolumeCtrl:initPayerVolume(go)
     local temps ={}
-    --InsAndObjectPool(DealConfig,ToggleBtnItem,"View/Laboratory/ToggleBtnItem",VolumePanel.firstScroll,volumeBehaviour,self)
+    InsAndObjectPool(DealConfig,ToggleBtnItem,"View/Laboratory/ToggleBtnItem",VolumePanel.firstScroll,volumeBehaviour,self)
 end
 
 -- 第一层信息显示
 VolumeCtrl.static.OptionOneData = function(transform, idx)
     idx = idx + 1
     optionOneScript[idx] = ToggleBtnItem:new(transform, volumeBehaviour, DealConfig[idx], idx)
+    if idx == 1 then
+        optionOneScript[idx].highlight.localScale = Vector3.one
+    end
     volumeBehaviour:AddClick(transform.transform:Find("bgBtn").gameObject,VolumeCtrl.c_OnClick_Delete,optionOneScript[idx])
+    if isone then
+        VolumeCtrl:initPayer( optionOneScript[idx] )
+        isone = false
+    end
+end
+
+function VolumeCtrl:initPayer(go)
+    VolumePanel.secondScroll:ActiveLoopScroll(go.playerTwoInfo, #DealConfig[1].childs,"View/Laboratory/ToggleBtnTwoItem")
+end
+
+VolumeCtrl.static.OptionOneClearData = function(transform)
+end
+
+--第二层信息显示
+VolumeCtrl.static.OptionTwosData = function(transform, idx)
+    --ToggleBtnItem.city = {}
+    idx = idx + 1
+    optionTwosScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, DealConfig[1].childs[idx], idx)
+    --ToggleBtnItem.city = optionTwosScript[idx]
+end
+
+VolumeCtrl.static.OptionTwosClearData = function(transform)
 end
 
 function VolumeCtrl:c_OnClick_Delete(ins)
@@ -434,12 +485,15 @@ function VolumeCtrl:c_OnClick_Delete(ins)
     VolumePanel.strade.localScale = Vector3.zero
     VolumePanel.trade.localScale = Vector3.zero
     if state ~= nil then
-        --state = Vector3.zero
         state.localScale = Vector3.zero
     end
     state = ins.highlight
     ins.highlight.localScale = Vector3.one
-    if optionOneScript[ins.ctrl].city then
+    if firstshow == nil then                                                 ---第一次进入第一层关闭高亮
+        optionOneScript[1].highlight.localScale = Vector3.zero
+        firstshow = 1
+    end
+    if optionOneScript[ins.ctrl].city  then
         VolumePanel.threeScroll:ActiveLoopScroll(optionOneScript[ins.ctrl].city.ToggleBtnTwoItem, 0,"View/Laboratory/ToggleBtnThreeItem")
     end
     if ins.data.childs.childs ~= nil then
@@ -447,11 +501,86 @@ function VolumeCtrl:c_OnClick_Delete(ins)
     else
         VolumePanel.secondScroll:ActiveLoopScroll(ins.playerTwoInfo, #ins.data.childs,"View/Laboratory/ToggleBtnTwoItem")
     end
-
     prints("ToggleBtnItem")
 end
-VolumeCtrl.static.OptionOneClearData = function(transform)
+
+
+
+function VolumeCtrl:c_GoodsplayerTypeNum(info)
+    VolumePanel.slide:Close()
+    VolumePanel.graph:Close()
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    local hour = tonumber(ts.hour)
+    if second ~= 0 then
+        currentTime = currentTime - second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    if hour ~= 0 then
+        currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
+    end
+    currentTime = math.floor(currentTime)
+    local demandNumTab = {}
+    local sevenDaysAgo = currentTime - 604800
+    local sevenDaysAgoTime = sevenDaysAgo
+    local time = {}
+    local boundaryLine = {}
+    for i = 1, 168 do
+        sevenDaysAgo = sevenDaysAgo + 3600
+        time[i] = sevenDaysAgo
+        demandNumTab[i] = {}
+        demandNumTab[i] .ts = (sevenDaysAgo - sevenDaysAgoTime)/3600 * 116
+        if tonumber(getFormatUnixTime(sevenDaysAgo).hour) == 0 then
+            time[i] = getFormatUnixTime(sevenDaysAgo).month .. "/" .. getFormatUnixTime(sevenDaysAgo).day
+            table.insert(boundaryLine,(sevenDaysAgo - sevenDaysAgoTime )/3600 * 116)
+        else
+            time[i] = tostring(getFormatUnixTime(sevenDaysAgo).hour)
+        end
+        if info == nil then
+            demandNumTab[i].num = 0
+        else
+            for k, v in ipairs(info) do
+                if math.floor(v.time/1000) == sevenDaysAgo then
+                    demandNumTab[i].num = tonumber(GetClientPriceString(v.money))
+                end
+            end
+        end
+    end
+
+    table.insert(time,1,"0")
+    table.insert(boundaryLine,1,0)
+
+    local demandNumValue = {}
+    for i, v in ipairs(demandNumTab) do
+        demandNumValue[i] = Vector2.New(v.ts,v.num)
+    end
+    table.insert(demandNumValue,1,Vector2.New(0,0))
+
+    local max = 0
+    for i, v in ipairs(demandNumValue) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+    local demandNumVet = {}
+    local scale = SetYScale(max,6,VolumePanel.yScale)
+    for i, v in ipairs(demandNumValue) do
+        if scale == 0 then
+            demandNumVet[i] = v
+        else
+            demandNumVet[i] = Vector2.New(v.x,v.y / scale * 60)
+        end
+    end
+
+    VolumePanel.slide:SetXScaleValue(time,116)
+    VolumePanel.graph:BoundaryLine(boundaryLine)
+    VolumePanel.graph:DrawLine(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255),1)
+    VolumePanel.slide:SetCoordinate(demandNumVet,demandNumValue,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255),1)
+
+    VolumePanel.curve.localPosition = VolumePanel.curve.localPosition + Vector3.New(0.01, 0,0)
+    VolumePanel.curve.sizeDelta = VolumePanel.curve.sizeDelta + Vector2.New(0.01, 0)
 end
-
-
-

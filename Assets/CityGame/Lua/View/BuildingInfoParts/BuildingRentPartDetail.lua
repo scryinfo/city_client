@@ -13,6 +13,7 @@ end
 --
 function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.confirmBtn.gameObject, function ()
+        PlayMusEff(1002)
         local rent = self.rentInputField.text
         if rent == nil or rent == ""then
             return

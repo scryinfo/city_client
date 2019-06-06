@@ -21,9 +21,11 @@ function MapGroundTransItem:_childInit()
     self.selectTranText = trans:Find("root/selectImg/Text"):GetComponent("Text")
 
     self.sellBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_openGroundTransPage()
     end)
     self.rentBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_openGroundTransPage()
     end)
 

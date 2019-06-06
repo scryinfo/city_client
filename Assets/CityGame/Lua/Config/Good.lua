@@ -1,110 +1,110 @@
 Good={
-    [2251101]={
-        ["itemId"]=2251101,
-        ["name"]="面包",
-        ["size"]=1,
-        ["luxury"]=1,
-        ["des"]="面包",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2251101.png",
-        ["numOneSec"]=0.000225
-    },
-    [2251102]={
-        ["itemId"]=2251102,
-        ["name"]="热狗",
-        ["size"]=1,
-        ["luxury"]=1,
-        ["des"]="热狗",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2251102.png",
-        ["numOneSec"]=0.00015
-    },
-    [2251103]={
-        ["itemId"]=2251103,
-        ["name"]="蛋挞",
-        ["size"]=1,
-        ["luxury"]=1,
-        ["des"]="蛋挞",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2251103.png",
-        ["numOneSec"]=0.00009
-    },
-    [2251201]={
-        ["itemId"]=2251201,
-        ["name"]="汉堡",
-        ["size"]=1,
-        ["luxury"]=2,
-        ["des"]="汉堡",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2251201.png",
-        ["numOneSec"]=0.0000365
-    },
-    [2251202]={
-        ["itemId"]=2251202,
-        ["name"]="香肠",
-        ["size"]=1,
-        ["luxury"]=2,
-        ["des"]="香肠",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2251202.png",
-        ["numOneSec"]=0.000061
-    },
-    [2251203]={
-        ["itemId"]=2251203,
-        ["name"]="三明治",
-        ["size"]=1,
-        ["luxury"]=2,
-        ["des"]="三明治",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2251203.png",
-        ["numOneSec"]=0.000033
-    },
-    [2252101]={
-        ["itemId"]=2252101,
-        ["name"]="手套",
-        ["size"]=1,
-        ["luxury"]=1,
-        ["des"]="手套",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2252101.png",
-        ["numOneSec"]=0.00009
-    },
-    [2252102]={
-        ["itemId"]=2252102,
-        ["name"]="围巾",
-        ["size"]=1,
-        ["luxury"]=1,
-        ["des"]="围巾",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2252102.png",
-        ["numOneSec"]=0.0000545
-    },
-    [2252103]={
-        ["itemId"]=2252103,
-        ["name"]="冬帽",
-        ["size"]=1,
-        ["luxury"]=1,
-        ["des"]="冬帽",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2252103.png",
-        ["numOneSec"]=0.0000324
-    },
-    [2252201]={
-        ["itemId"]=2252201,
-        ["name"]="西装",
-        ["size"]=1,
-        ["luxury"]=2,
-        ["des"]="西装",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2252201.png",
-        ["numOneSec"]=0.000015
-    },
-    [2252202]={
-        ["itemId"]=2252202,
-        ["name"]="毛衣",
-        ["size"]=1,
-        ["luxury"]=2,
-        ["des"]="毛衣",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2252202.png",
-        ["numOneSec"]=0.00002085
-    },
-    [2252203]={
-        ["itemId"]=2252203,
-        ["name"]="大衣",
-        ["size"]=1,
-        ["luxury"]=2,
-        ["des"]="大衣",
-        ["img"]="Assets/CityGame/Resources/View/iconImg/2252203.png",
-        ["numOneSec"]=0.00001339
-    }
+[2251101]={
+["itemId"]=2251101,
+["name"]=2251101,
+["size"]=1,
+["luxury"]=1,
+["des"]=2251101,
+["img"]="Assets/CityGame/Resources/View/iconImg/2251101.png",
+["numOneSec"]=0.000225
+},
+[2251102]={
+["itemId"]=2251102,
+["name"]=2251102,
+["size"]=1,
+["luxury"]=1,
+["des"]=2251102,
+["img"]="Assets/CityGame/Resources/View/iconImg/2251102.png",
+["numOneSec"]=0.00015
+},
+[2251103]={
+["itemId"]=2251103,
+["name"]=2251103,
+["size"]=1,
+["luxury"]=1,
+["des"]=2251103,
+["img"]="Assets/CityGame/Resources/View/iconImg/2251103.png",
+["numOneSec"]=0.00009
+},
+[2251201]={
+["itemId"]=2251201,
+["name"]=2251201,
+["size"]=1,
+["luxury"]=2,
+["des"]=2251201,
+["img"]="Assets/CityGame/Resources/View/iconImg/2251201.png",
+["numOneSec"]=0.0000365
+},
+[2251202]={
+["itemId"]=2251202,
+["name"]=2251202,
+["size"]=1,
+["luxury"]=2,
+["des"]=2251202,
+["img"]="Assets/CityGame/Resources/View/iconImg/2251202.png",
+["numOneSec"]=0.000061
+},
+[2251203]={
+["itemId"]=2251203,
+["name"]=2251203,
+["size"]=1,
+["luxury"]=2,
+["des"]=2251203,
+["img"]="Assets/CityGame/Resources/View/iconImg/2251203.png",
+["numOneSec"]=0.000033
+},
+[2252101]={
+["itemId"]=2252101,
+["name"]=2252101,
+["size"]=1,
+["luxury"]=1,
+["des"]=2252101,
+["img"]="Assets/CityGame/Resources/View/iconImg/2252101.png",
+["numOneSec"]=0.00009
+},
+[2252102]={
+["itemId"]=2252102,
+["name"]=2252102,
+["size"]=1,
+["luxury"]=1,
+["des"]=2252102,
+["img"]="Assets/CityGame/Resources/View/iconImg/2252102.png",
+["numOneSec"]=0.0000545
+},
+[2252103]={
+["itemId"]=2252103,
+["name"]=2252103,
+["size"]=1,
+["luxury"]=1,
+["des"]=2252103,
+["img"]="Assets/CityGame/Resources/View/iconImg/2252103.png",
+["numOneSec"]=0.0000324
+},
+[2252201]={
+["itemId"]=2252201,
+["name"]=2252201,
+["size"]=1,
+["luxury"]=2,
+["des"]=2252201,
+["img"]="Assets/CityGame/Resources/View/iconImg/2252201.png",
+["numOneSec"]=0.000015
+},
+[2252202]={
+["itemId"]=2252202,
+["name"]=2252202,
+["size"]=1,
+["luxury"]=2,
+["des"]=2252202,
+["img"]="Assets/CityGame/Resources/View/iconImg/2252202.png",
+["numOneSec"]=0.00002085
+},
+[2252203]={
+["itemId"]=2252203,
+["name"]=2252203,
+["size"]=1,
+["luxury"]=2,
+["des"]=2252203,
+["img"]="Assets/CityGame/Resources/View/iconImg/2252203.png",
+["numOneSec"]=0.00001339
+}
 }

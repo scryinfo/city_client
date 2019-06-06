@@ -33,6 +33,7 @@ function VolumePanel.InitPanel()
     --this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport/Content"):GetComponent("ActiveLoopScrollRect");
     this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
     this.secondScroll = this.playercurrRoot:Find("topRoot/secondScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
+    this.secondScrollcontent = this.playercurrRoot:Find("topRoot/secondScroll/Viewport/content");
     this.threeScroll = this.playercurrRoot:Find("topRoot/threeScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
 
     --left

@@ -1,65 +1,65 @@
 Material={
     [2101001]={
         ["itemId"]=2101001,
-        ["name"]="小麦",
+        ["name"]=2101001,
         ["size"]=1,
-        ["des"]="小麦",
+        ["des"]=2101001,
         ["img"]="Assets/CityGame/Resources/View/iconImg/2101001.png",
         ["numOneSec"]=0.001
     },
     [2101002]={
         ["itemId"]=2101002,
-        ["name"]="猪肉",
+        ["name"]=2101002,
         ["size"]=1,
-        ["des"]="猪肉",
+        ["des"]=2101002,
         ["img"]="Assets/CityGame/Resources/View/iconImg/2101002.png",
         ["numOneSec"]=0.0005
     },
     [2101003]={
         ["itemId"]=2101003,
-        ["name"]="鸡蛋",
+        ["name"]=2101003,
         ["size"]=1,
-        ["des"]="鸡蛋",
+        ["des"]=2101003,
         ["img"]="Assets/CityGame/Resources/View/iconImg/2101003.png",
         ["numOneSec"]=0.00065
     },
     [2101004]={
         ["itemId"]=2101004,
-        ["name"]="奶酪",
+        ["name"]=2101004,
         ["size"]=1,
-        ["des"]="奶酪",
+        ["des"]=2101004,
         ["img"]="Assets/CityGame/Resources/View/iconImg/2101004.png",
         ["numOneSec"]=0.0002
     },
     [2102001]={
         ["itemId"]=2102001,
-        ["name"]="棉",
+        ["name"]=2102001,
         ["size"]=1,
-        ["des"]="棉",
+        ["des"]=2102001,
         ["img"]="Assets/CityGame/Resources/View/iconImg/2102001.png",
         ["numOneSec"]=0.0004
     },
     [2102002]={
         ["itemId"]=2102002,
-        ["name"]="珊瑚绒",
+        ["name"]=2102002,
         ["size"]=1,
-        ["des"]="珊瑚绒",
+        ["des"]=2102002,
         ["img"]="Assets/CityGame/Resources/View/iconImg/2102002.png",
         ["numOneSec"]=0.00025
     },
     [2102003]={
         ["itemId"]=2102003,
-        ["name"]="树胶",
+        ["name"]=2102003,
         ["size"]=1,
-        ["des"]="树胶",
+        ["des"]=2102003,
         ["img"]="Assets/CityGame/Resources/View/iconImg/2102003.png",
         ["numOneSec"]=0.000325
     },
     [2102004]={
         ["itemId"]=2102004,
-        ["name"]="呢绒",
+        ["name"]=2102004,
         ["size"]=1,
-        ["des"]="呢绒",
+        ["des"]=2102004,
         ["img"]="Assets/CityGame/Resources/View/iconImg/2102004.png",
         ["numOneSec"]=0.000075
     }

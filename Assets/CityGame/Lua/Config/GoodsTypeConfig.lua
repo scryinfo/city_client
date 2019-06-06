@@ -1,6 +1,6 @@
 GoodsTypeConfig = {
  [1] = {
-	name = "食物",
+	name = 20030002,
 	typeId = 2251,
 	icon = "***.png",
 	subclass = {
@@ -13,7 +13,7 @@ GoodsTypeConfig = {
 				}		
 		},
  [2] = {
-	name = "服饰",
+	name = 20030001,
 	typeId = 2252,
 	icon = "***.png",
 	subclass = {

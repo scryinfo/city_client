@@ -53,7 +53,14 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
     --Event.AddListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
 
-    GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11020005)
+    GameMainInterfacePanel.city.text = GetLanguage(10050002)
+    GameMainInterfacePanel.smallMapText.text = GetLanguage(11010005)
+    GameMainInterfacePanel.cityInfoText.text = GetLanguage(11010004)
+    GameMainInterfacePanel.guideText.text = GetLanguage(11010003)
+    GameMainInterfacePanel.buildButtonText.text = GetLanguage(11010002)
+    GameMainInterfacePanel.evaText.text = GetLanguage(11010001)
+    GameMainInterfacePanel.grossVolume.text = GetLanguage(11010006)
+    GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11010009)
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -156,7 +163,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
 
     if dataInfo.buyer == "PLAYER" then
         if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
-            GameMainInterfacePanel.income.text = "土地"
+            GameMainInterfacePanel.income.text = GetLanguage(11010010)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/landx1.png", GameMainInterfacePanel.simplePicture, true)
             GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
         elseif dataInfo.type == "INSHELF" then
@@ -186,11 +193,11 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
         end
         elseif dataInfo.buyer == "NPC" then
         if dataInfo.type == "RENT_ROOM" then
-            GameMainInterfacePanel.income.text = "NPC住房"
+            GameMainInterfacePanel.income.text = GetLanguage(11010011)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", GameMainInterfacePanel.simplePicture, true)
             GameMainInterfacePanel.simplePictureText.text = "X1"
         elseif dataInfo.type == "INSHELF" then
-            GameMainInterfacePanel.income.text = "NPC购物"
+            GameMainInterfacePanel.income.text =  GetLanguage(11010012)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         end
@@ -518,7 +525,6 @@ function GameMainInterfaceCtrl:initInsData()
     --    GameMainInterfacePanel.male.localScale = Vector3.zero
     --    GameMainInterfacePanel.woman.localScale = Vector3.one
     --end
-    GameMainInterfacePanel.city.text = GetLanguage(10030003)
 end
 
 local date

@@ -27,6 +27,12 @@ local panel,luabehaviour,this
 function QueneCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_updateQuque",self.c_updateQuque,self)
+
+    QuenePanel.name.text = GetLanguage(27010008)
+    QuenePanel.player.text = GetLanguage(27040015)
+    QuenePanel.goods.text = GetLanguage(27040016)
+    QuenePanel.details.text = GetLanguage(27040017)
+    QuenePanel.startTime.text = GetLanguage(27040018)
 end
 --todo：刷新
 function QueneCtrl:Refresh()

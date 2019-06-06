@@ -214,13 +214,13 @@ end
 function NoticeItem:c_OnReceivePlayerInfo(playerData)
     self.name = playerData[1].name
     if type == 11 then
-        self.content = GetLanguage(13010051,self.name)
+        self.content = GetLanguage(16020019,self.name)
         GameNoticePanel.rightContent.text = self.content
     elseif type == 12 then
-        self.content = GetLanguage(13010053,"(".. pos.x..","..pos.y .. ")",self.name)
+        self.content = GetLanguage(16020020,"(".. pos.x..","..pos.y .. ")",self.name)
         GameNoticePanel.rightContent.text = self.content
     elseif type == 13 then
-        self.content = GetLanguage(13010054,"(".. pos.x..","..pos.y .. ")",self.name)
+        self.content = GetLanguage(16020021,"(".. pos.x..","..pos.y .. ")",self.name)
         GameNoticePanel.rightContent.text = self.content
     end
     --NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)
@@ -228,46 +228,46 @@ end
 
 function NoticeItem:c_MaterialInfo(name)
     if type == 3 then
-        self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
+        self.content = GetLanguage(16020004,name,nameSize,goodsName,num)
         GameNoticePanel.rightContent.text = self.content
     elseif  type == 2 then
-        self.content = GetLanguage(13010017,name,nameSize)
+        self.content = GetLanguage(16020002,name,nameSize)
         GameNoticePanel.rightContent.text = self.content
     end
 end
 
 function NoticeItem:c_ProduceInfo(name)
     if type == 3 then
-        self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
+        self.content = GetLanguage(16020004,name,nameSize,goodsName,num)
         GameNoticePanel.rightContent.text = self.content
     elseif  type == 2 then
-        self.content = GetLanguage(13010017,name,nameSize)
+        self.content = GetLanguage(16020002,name,nameSize)
         GameNoticePanel.rightContent.text = self.content
     end
 end
 
 function NoticeItem:c_RetailShopInfo(name)
-    self.content = GetLanguage(13010017,name,nameSize)
+    self.content = GetLanguage(16020002,name,nameSize)
     GameNoticePanel.rightContent.text = self.content
 end
 
 function NoticeItem:c_PromoteInfo(name)
-    self.content = GetLanguage(13010080,name,time,money,startTime)
+    self.content = GetLanguage(16020012,name,time,money,startTime)
     GameNoticePanel.rightContent.text = self.content
 end
 
 function NoticeItem:c_Laboratory(name)
-    self.content = GetLanguage(13010081,name,time,money,startTime)
+    self.content = GetLanguage(16020013,name,time,money,startTime)
     GameNoticePanel.rightContent.text = self.content
 end
 
 function NoticeItem:c_SocietyInfo(name)
     if type == 14 then
-        self.content = GetLanguage(13010068,name)
+        self.content = GetLanguage(16020022,name)
     elseif type == 15 then
-        self.content = GetLanguage(13010066,name)
+        self.content = GetLanguage(16020023,name)
     elseif type == 16 then
-        self.content = GetLanguage(13010070,name)
+        self.content = GetLanguage(16020024,name)
     end
     GameNoticePanel.rightContent.text = self.content
 end

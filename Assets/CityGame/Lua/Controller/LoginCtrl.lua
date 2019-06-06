@@ -78,15 +78,31 @@ function LoginCtrl:Active()
 
 	--多语言
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
+	LoginPanel.account.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
-	LoginPanel.btnLoginText.text = GetLanguage(10020003)
+	LoginPanel.password.text = GetLanguage(10020002)
+	LoginPanel.btnLoginText.text = GetLanguage(10020006)
+	LoginPanel.btnRegisterText.text = GetLanguage(10020005)
+	LoginPanel.forget:GetComponent("Text").text = GetLanguage(10020003)
+	LoginPanel.rememberText.text = GetLanguage(10020004)
+	LoginPanel.normText:GetComponent("Text").text = GetLanguage(10020015)
+	LoginPanel.agree.text = GetLanguage(10020014)
+	LoginPanel.languageText.text = GetLanguage(10020010)
 end
 
 function LoginCtrl:c_ChangeLanguage()
 	--多语言
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
+	LoginPanel.account.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
-	LoginPanel.btnLoginText.text = GetLanguage(10020003)
+	LoginPanel.password.text = GetLanguage(10020002)
+	LoginPanel.btnLoginText.text = GetLanguage(10020006)
+	LoginPanel.btnRegisterText.text = GetLanguage(10020005)
+	LoginPanel.forget:GetComponent("Text").text = GetLanguage(10020003)
+	LoginPanel.rememberText.text = GetLanguage(10020004)
+	LoginPanel.normText:GetComponent("Text").text = GetLanguage(10020015)
+	LoginPanel.agree.text = GetLanguage(10020014)
+	LoginPanel.languageText.text = GetLanguage(10020010)
 end
 
 function LoginCtrl:Refresh()
@@ -181,16 +197,19 @@ end
 
 --打开多语言
 function LoginCtrl:OnChoose(go)
+	PlayMusEff(1002)
     go:SwitchLanguage(true)
 end
 
 --关闭多语言
 function LoginCtrl:OnCloseBg(go)
+	PlayMusEff(1002)
 	go:SwitchLanguage(false)
 end
 
 --打开用户准则
 function LoginCtrl:OnNormText()
+	PlayMusEff(1002)
 	ct.OpenCtrl("UserNanualCtrl")
 end
 
@@ -215,10 +234,10 @@ function LoginCtrl:OnLogin(go)
 
 	if username == "" or pw == "" then
 		LoginPanel.textStatus.transform.localScale = Vector3.one
-		LoginPanel.textStatus:GetComponent('Text').text =GetLanguage(10020004)
+		LoginPanel.textStatus:GetComponent('Text').text =GetLanguage(10020008)
 	elseif LoginPanel.norm.isOn == false then
 		LoginPanel.textStatus.transform.localScale = Vector3.one
-		LoginPanel.textStatus:GetComponent('Text').text = "请同意用户手册"
+		LoginPanel.textStatus:GetComponent('Text').text = GetLanguage(10020016)
 	else
 		Event.Brocast("m_OnAsLogin", username, pw, "lxq");
 	end
@@ -231,15 +250,15 @@ function LoginCtrl:c_Aslogin(info,msgId)
 	if msgId == 0 then
 		if info.reason == "accountInFreeze" then
 			LoginPanel.textStatus.transform.localScale = Vector3.one
-			LoginPanel.textStatus:GetComponent('Text').text = "账号冻结"
+			LoginPanel.textStatus:GetComponent('Text').text = GetLanguage(10020017)
 		end
 	else
 		if info.status == "FAIL_ACCOUNT_UNREGISTER" then
 			LoginPanel.textStatus.transform.localScale = Vector3.one
-			LoginPanel.textStatus:GetComponent('Text').text = "账号未注册"
+			LoginPanel.textStatus:GetComponent('Text').text = GetLanguage(10020018)
 		elseif info.status == "FAIL_ERROR" then
 			LoginPanel.textStatus.transform.localScale = Vector3.one
-			LoginPanel.textStatus:GetComponent('Text').text = "账号或密码错误"
+			LoginPanel.textStatus:GetComponent('Text').text = GetLanguage(10020007)
 		end
 	end
 end

@@ -21,11 +21,16 @@ function SetPasswordPanel.InitPanel()
     this.name = transform:Find("nameBg/name"):GetComponent('Text');
 
     this.password = transform:Find("password"):GetComponent('InputField');
+    this.passwordPlaceholder = transform:Find("password/Placeholder"):GetComponent('Text');
+    this.passwordText = transform:Find("password/passwordBg/passwordText"):GetComponent('Text');
     this.confirm = transform:Find("confirm"):GetComponent('InputField');
+    this.confirmPlaceholder = transform:Find("confirm/Placeholder"):GetComponent('Text');
+    this.confirmText = transform:Find("confirm/confirmBg/confirmText"):GetComponent('Text');
 
     this.passwordHint = transform:Find("password/hint"):GetComponent("Text");  --确认密码提示
     this.confirmHint = transform:Find("confirm/hint"):GetComponent("Text");  --确认密码提示
 
     this.back = transform:Find("back").gameObject; --返回
-    this.next = transform:Find("next").gameObject;    --获取验证码
+    this.next = transform:Find("next").gameObject;
+    this.nextText = transform:Find("nextText"):GetComponent("Text");
 end

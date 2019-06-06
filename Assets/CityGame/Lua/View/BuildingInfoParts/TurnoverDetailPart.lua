@@ -53,6 +53,9 @@ function TurnoverDetailPart:RefreshData(data)
             buildingTs = data.info.constructCompleteTs
         end
     end
+
+    self.xText.text = GetLanguage(27030002)
+    self.yText.text = GetLanguage(27030003)
 end
 
 function TurnoverDetailPart:_setValue(turnover)
@@ -72,6 +75,8 @@ function TurnoverDetailPart:_getComponent(transform)
     self.curve = transform:Find("down/bg/curveBg/curve"):GetComponent("RectTransform");
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动
     self.graph = transform:Find("down/bg/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
+    self.xText = transform:Find("down/bg/xScale/Text"):GetComponent("Text");
+    self.yText = transform:Find("down/bg/yScale"):GetChild(transform:Find("down/bg/yScale").childCount-1):GetComponent("Text")
 end
 --
 function TurnoverDetailPart:_initFunc()

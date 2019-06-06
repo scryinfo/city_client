@@ -79,8 +79,8 @@ function MapRightSelfBuildingPage:_createInfoByType(buildingType)
     self.items[#self.items + 1] = revenueItem
     self.revenueItem = revenueItem
 
-    local salaryData = {infoTypeStr = "Salary", value = self.data.info.salary.."%"}  --工资
-    self.items[#self.items + 1] = self:_createShowItem(salaryData)
+    --local salaryData = {infoTypeStr = "Salary", value = self.data.info.salary.."%"}  --工资
+    --self.items[#self.items + 1] = self:_createShowItem(salaryData)
 
     if buildingType == BuildingType.House then
         self:_createHouse()
@@ -102,12 +102,12 @@ function MapRightSelfBuildingPage:_createHouse()
     local occData = {infoTypeStr = "HouseOccupancy", value = occStr}  --入住率
     self.items[#self.items + 1] = self:_createShowItem(occData)
 
-    local rentStr = string.format("<color=%s>E%s</color>/D", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(self.data.rent))
+    local rentStr = string.format("<color=%s>E%s</color>/%s", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(self.data.rent), GetLanguage(20150004))
     local rentData = {infoTypeStr = "HouseRent", value = rentStr}  --租金
     self.items[#self.items + 1] = self:_createShowItem(rentData)
 
-    local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
-    self.items[#self.items + 1] = self:_createShowItem(data3)
+    --local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
+    --self.items[#self.items + 1] = self:_createShowItem(data3)
 end
 --原料厂
 function MapRightSelfBuildingPage:_createMaterial()
@@ -146,8 +146,8 @@ function MapRightSelfBuildingPage:_createRetailShop()
     local data2 = {infoTypeStr = "OrderCenter", value = self:getShelfCount(self.data.shelf)}  --订单中心
     self.items[#self.items + 1] = self:_createShowItem(data2)
 
-    local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
-    self.items[#self.items + 1] = self:_createShowItem(data3)
+    --local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
+    --self.items[#self.items + 1] = self:_createShowItem(data3)
 end
 --研究所
 function MapRightSelfBuildingPage:_createLab()
@@ -177,11 +177,11 @@ function MapRightSelfBuildingPage:_createPromotion()
             temp = hour
         end
     end
-    local data1 = {infoTypeStr = "Queued", value = temp.."h"}  --队列
+    local data1 = {infoTypeStr = "Queued", value = temp..GetLanguage(20100003)}  --队列
     self.items[#self.items + 1] = self:_createShowItem(data1)
 
-    local data3 = {infoTypeStr = "ADSign", value = self.data.curflowPromoAbTotall.."%"}  --流量签约
-    self.items[#self.items + 1] = self:_createShowItem(data3)
+    --local data3 = {infoTypeStr = "ADSign", value = self.data.curflowPromoAbTotall.."%"}  --流量签约
+    --self.items[#self.items + 1] = self:_createShowItem(data3)
 end
 --研究所队列
 function MapRightSelfBuildingPage:getLabQueued(line)

@@ -36,6 +36,7 @@ function GroundAuctionCtrl:Active()
     GroundAuctionPanel.secondText03.text = GetLanguage(20160006)
     GroundAuctionPanel.noneHistoryText04.text = GetLanguage(20160009)
     GroundAuctionPanel.tipText05.text = GetLanguage(21010004)
+    GroundAuctionPanel.titleText.text = GetLanguage(21010001)
 end
 
 function GroundAuctionCtrl:Refresh()

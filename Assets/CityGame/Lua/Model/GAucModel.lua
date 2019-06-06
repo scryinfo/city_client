@@ -275,9 +275,9 @@ function GAucModel.n_OnReceiveBindGround(stream)
         --this._updateAucBidInfo(auctionInfo)
 
         local info = {}
-        info.titleInfo = GetLanguage(22010005)
-        info.contentInfo = GetLanguage(22010007)
-        info.tipInfo = string.format("(%s)", GetLanguage(22010006))
+        info.titleInfo = GetLanguage(21010005)
+        info.contentInfo = GetLanguage(21010007)
+        info.tipInfo = string.format("(%s)", GetLanguage(21010006))
         ct.OpenCtrl("BtnDialogPageCtrl", info)
     end
 end

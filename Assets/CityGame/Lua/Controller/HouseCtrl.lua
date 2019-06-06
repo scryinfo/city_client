@@ -145,7 +145,7 @@ end
 function HouseCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
         if self.m_data.info.state == "OPERATE" then
-            Event.Brocast("SmallPop", GetLanguage(26020006), 300)
+            Event.Brocast("SmallPop", GetLanguage(26020007), 300)
         end
         self.m_data.info.salary = data.Salary
         self.m_data.info.setSalaryTs = data.ts

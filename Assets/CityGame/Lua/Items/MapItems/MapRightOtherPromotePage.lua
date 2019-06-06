@@ -32,9 +32,8 @@ function MapRightOtherPromotePage:refreshData(data, typeData)
 
         LoadSprite(infoData.imgPath, self.iconImg, true)
         self.iconImg.color = getColorByVector3(infoData.colorV3)
-        --self.infoText.text = GetLanguage(MapPromotionInfoConfig[typeData.detailId].languageId)
-        self.infoText.text = MapPromotionInfoConfig[typeData.detailId].languageId
-        self.valueText.text = "+"..value.."/h"
+        self.infoText.text = GetLanguage(MapPromotionInfoConfig[typeData.detailId].languageId)
+        self.valueText.text = "+"..value.."/"..GetLanguage(20100003)
 
         self:_language()
         self:_createPromotion()

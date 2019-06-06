@@ -37,7 +37,7 @@ function MapGroundAucItem:_childInit()
 
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
 
-    self.nowWaitStateText01.text = GetLanguage(22010001)
+    self.nowWaitStateText01.text = GetLanguage(21010001)
     self:initData(self.data)
 end
 --

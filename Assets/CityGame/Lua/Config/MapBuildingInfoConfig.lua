@@ -6,7 +6,7 @@ MapBuildingInfoConfig={
     },
     ["Salary"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Feestandard.png",
-        --["languageId"] = "Fee standard",
+        ["languageId"] = 12345678,
     },
     ["Warehouse"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-warehouse-s.png",
@@ -22,7 +22,7 @@ MapBuildingInfoConfig={
     },
     ["Sign"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-signing.png",
-        ["languageId"] = "Sign",
+        ["languageId"] = 12345678,
     },
     ["HouseOccupancy"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Occupancyrate.png",
@@ -34,11 +34,11 @@ MapBuildingInfoConfig={
     },
     ["WarehouseRent"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-rent.png",
-        ["languageId"] = "Warehouse",
+        ["languageId"] = 12345678,
     },
     ["ADSign"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-signing.png",
-        ["languageId"] = "ADSign",
+        ["languageId"] = 12345678,
     },
     ["Queued"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-queue.png",
@@ -59,15 +59,15 @@ MapBuildingInfoConfig={
     },
     ["WarehouseTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
-        ["languageId"] = "RentTime:",
+        ["languageId"] = 12345678,
     },
     ["SignTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
-        ["languageId"] = "SignTime:",
+        ["languageId"] = 12345678,
     },
     ["SignPromotion"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Currentpromotion.png",
-        ["languageId"] = "Current promotion:",
+        ["languageId"] = 12345678,
     },
     --土地交易
     ["GroundRentTime"] = {
@@ -85,7 +85,7 @@ MapBuildingInfoConfig={
     },
     ["GAucTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
-        ["languageId"] = 20160009,
+        ["languageId"] = 20160010,
     },
 }
 ------------------------------------------------------

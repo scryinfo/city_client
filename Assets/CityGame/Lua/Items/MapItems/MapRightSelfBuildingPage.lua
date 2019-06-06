@@ -280,7 +280,7 @@ function MapRightSelfBuildingPage:openShow()
 end
 --多语言
 function MapRightSelfBuildingPage:_language()
-    self.goHereText01.text = GetLanguage(20160010)
+    self.goHereText01.text = GetLanguage(20010008)
     self.notOpenText01.text = GetLanguage(20160009)
 end
 --关闭

@@ -113,6 +113,7 @@ function MapRightGroundAucPage:_language()
     self.minuteText02.text = GetLanguage(20160005)
     self.secondText03.text = GetLanguage(20160006)
     self.noneHistoryText04.text = GetLanguage(20160009)
+    self.titleText.text = GetLanguage(21010001)
 end
 --关闭
 function MapRightGroundAucPage:close()

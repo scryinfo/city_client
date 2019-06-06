@@ -78,7 +78,7 @@ function MapRightMatGoodPage:openShow()
 end
 --多语言
 function MapRightMatGoodPage:_language()
-    self.goHereText01.text = GetLanguage(20160010)
+    self.goHereText01.text = GetLanguage(20010008)
 end
 --关闭
 function MapRightMatGoodPage:close()

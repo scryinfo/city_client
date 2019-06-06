@@ -12,7 +12,7 @@ function MapSystemItem:_childInit()
     self.detailShowImg = self.viewRect.transform:Find("detailShowImg"):GetComponent("Image")  --镜头拉近时显示大小
     self.detailShowBtn = self.viewRect.transform:Find("detailShowImg"):GetComponent("Button")
     self.scaleRoot = self.viewRect.transform:Find("bubble")  --需要缩放的气泡
-    self.Text01 = self.viewRect.transform:Find("bubble/Text")
+    self.Text01 = self.viewRect.transform:Find("bubble/Text"):GetComponent("Text")
 
     self.btn.onClick:AddListener(function ()
         self:_clickFunc()
@@ -20,6 +20,7 @@ function MapSystemItem:_childInit()
     self.detailShowBtn.onClick:AddListener(function ()
         self:_clickFunc()
     end)
+    self:_language()
     --LoadSprite(data.disSelectIconPath, self.iconImg, true)
 end
 --

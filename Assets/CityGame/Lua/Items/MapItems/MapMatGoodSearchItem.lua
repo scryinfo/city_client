@@ -13,11 +13,11 @@ function MapMatGoodSearchItem:childInit(viewRect)
 
     local mat = Material[self.data.itemId]
     if mat ~= nil then
-        self.nameText.text = mat.name
+        self.nameText.text = GetLanguage(mat.name)
         LoadSprite(mat.img, self.iconImg, false)
     else
         local good = Good[self.data.itemId]
-        self.nameText.text = good.name
+        self.nameText.text = GetLanguage(good.name)
         LoadSprite(good.img, self.iconImg, false)
     end
 end

@@ -21,6 +21,7 @@ function MapSearchTypeNonePageItem:refreshShow(isSelect)
 end
 --点击事件
 function MapSearchTypeNonePageItem:_clickFunc()
+    PlayMusEff(1002)
     if self.isSelect == true then
         Event.Brocast("c_MapSearchCancelSelect", self.data.typeId)  --取消选中状态
     else

@@ -37,7 +37,7 @@ function MusicManger:Awake()
 
      music = self:CreatedMusic(true)
      music.name = "Music"
-     PlayMus(1001)
+     PlayMus(1000)
      musicEffect=self:CreatedMusic(false)
      musicEffect.name = "MusicEffect"
 

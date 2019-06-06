@@ -441,10 +441,10 @@ end
 function GetLanguage(key,...)
 	local temp={...}
 	for Id, String in pairs(currentLanguage) do
-		if Id==key then
-          local tempString=String
+		if Id == key then
+            local tempString = String
 			for i = 1, #temp do
-				tempString=string.gsub(tempString,"{"..tostring(i-1).."}",temp[i])
+				tempString = string.gsub(tempString,"{"..tostring(i-1).."}",temp[i])
 			end
 			return tempString
 		end
@@ -701,4 +701,52 @@ end
 function ct.instance_rpc(ins, modelMethord, ...)
 	local arg = {...}
 	arg[#arg](ins[modelMethord](ins,...))
+end
+
+-- 得到eva显示数据
+-- index 小中大型
+function GetEvaData(index, configData, lv)
+	if not index or not configData or not lv then
+		return
+	end
+	local brandSizeNum
+	if index == 1 then -- 小
+		brandSizeNum = 100
+	elseif index == 2 then -- 中
+		brandSizeNum = 400
+	elseif index == 3 then -- 大
+		brandSizeNum = 900
+	end
+	if configData.Btype == "Quality" then -- 品质
+		if configData.Atype < 2100000 then -- 建筑品质加成
+			return string.format( (1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
+		else -- 商品品质值
+			return string.format( EvaUp[lv].add / 1000 * configData.basevalue)
+		end
+	elseif configData.Btype == "ProduceSpeed" then -- 生产速度
+		local resultNum = tostring( ((1 + EvaUp[lv].add / 100000) * configData.basevalue) * brandSizeNum)
+		if string.find(resultNum, ".") ~= nil then
+			resultNum = string.format( "%.4f", resultNum)
+		end
+		return resultNum .. "s/个"
+	elseif configData.Btype == "PromotionAbility" then -- 推广能力
+		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
+	elseif configData.Btype == "InventionUpgrade" then -- 发明提升
+		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+	elseif configData.Btype == "EvaUpgrade" then -- Eva提示
+		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+	end
+end
+
+-- 得到eva百分比加成
+function GetEvaPercent(lv)
+	if not lv or lv <= 0 then
+		return ""
+	end
+
+	if lv == 1 then
+		return "0"
+	else
+		return tostring(EvaUp[lv].add / 1000) .. "%"
+	end
 end

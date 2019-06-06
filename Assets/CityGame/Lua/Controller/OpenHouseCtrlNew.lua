@@ -55,16 +55,18 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.totalText05 = transform:Find("root/salary/total/Text"):GetComponent("Text")
     self.rentInputText06 = transform:Find("root/rent/rentInput/Placeholder"):GetComponent("Text")
     self.rentText07 = transform:Find("root/rent/priceBg/Text"):GetComponent("Text")
+    self.rentText08 = transform:Find("root/rent/Text01"):GetComponent("Text")
 end
 --
 function OpenHouseCtrlNew:_language()
-    self.titleText01.text = "SETTING"
-    self.standardWageText02.text = "Employee single standard salary:"
-    self.standardWageText03.text = "/d"
-    self.staffNumText04.text = "number of staff:"
-    self.totalText05.text = "-DAILY WAGE-"
-    self.rentInputText06.text = "Please Enter"
-    self.rentText07.text = "The house can only be opened after the daily rent is set"
+    self.titleText01.text = GetLanguage(24020001)
+    self.standardWageText02.text = GetLanguage(24020002)
+    self.standardWageText03.text = "/"..GetLanguage(24020003)
+    self.staffNumText04.text = GetLanguage(24020004)..":"
+    self.totalText05.text = "-"..GetLanguage(24020007).."-"
+    self.rentInputText06.text = GetLanguage(24020017)
+    self.rentText07.text = GetLanguage(24020014)
+    self.rentText08.text = GetLanguage(24020015)..":"
 end
 --
 function OpenHouseCtrlNew:_initData()

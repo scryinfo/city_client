@@ -14,8 +14,8 @@ end
 function CompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getGroundInfo","gs.GroundChange",self.n_OnGetGroundInfo,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBuildings","gs.MyBuildingInfos",self.n_OnQueryMyBuildings,self)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyEva","gs.Evas",self.n_OnQueryMyEva,self)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","updateMyEva","gs.Eva",self.n_OnUpdateMyEva,self)
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyEva","gs.Evas",self.n_OnQueryMyEva,self)
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","updateMyEva","gs.Eva",self.n_OnUpdateMyEva,self)
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerIncomePayCurve","ss.PlayerIncomePayCurve",self.n_OnQueryPlayerIncomePayCurve,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyCompanyName","gs.RoleInfo",self.n_OnModifyCompanyName,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyBrands","gs.MyBrands",self.n_OnQueryMyBrands,self)
@@ -44,24 +44,24 @@ function CompanyModel:n_OnQueryMyBuildings(buildingInfos)
 end
 
 -- 查询玩家的Eva信息
-function CompanyModel.m_QueryMyEva()
-    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyEva","gs.Id",{id = DataManager.GetMyOwnerID()})
-end
+--function CompanyModel.m_QueryMyEva()
+--    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyEva","gs.Id",{id = DataManager.GetMyOwnerID()})
+--end
 
 -- 服务器返回的Eva信息
-function CompanyModel:n_OnQueryMyEva(evas)
-    Event.Brocast("c_OnQueryMyEva", evas)
-end
+--function CompanyModel:n_OnQueryMyEva(evas)
+--    Event.Brocast("c_OnQueryMyEva", evas)
+--end
 
 -- Eva加点
-function CompanyModel:m_UpdateMyEva(eva)
-    DataManager.ModelSendNetMes("gscode.OpCode", "updateMyEva","gs.Eva",eva)
-end
+--function CompanyModel:m_UpdateMyEva(eva)
+--    DataManager.ModelSendNetMes("gscode.OpCode", "updateMyEva","gs.Eva",eva)
+--end
 
 -- 服务器返回的Eva加点
-function CompanyModel:n_OnUpdateMyEva(eva)
-    Event.Brocast("c_OnUpdateMyEva", eva)
-end
+--function CompanyModel:n_OnUpdateMyEva(eva)
+--    Event.Brocast("c_OnUpdateMyEva", eva)
+--end
 
 -- 查询玩家的收支信息
 function CompanyModel.m_QueryPlayerIncomePayCurve()

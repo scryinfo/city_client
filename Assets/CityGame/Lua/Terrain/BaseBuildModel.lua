@@ -23,12 +23,15 @@ function BaseBuildModel:Refresh(data)
     self:CheckBubbleState()
     --建筑气泡
     if self.bubbleIns then
+        self.bubbleIns:updateData(data)
+        --[[
         if data.bubble then
             self.bubbleIns:updateData(data)
         else
             DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.bubbleIns.prefab)
             AvatarManger.CollectAvatar(self.bubbleIns.avatarData)
         end
+        --]]
     else
         if data.bubble then
             self.bubble = DataManager.buildingBubblePool:GetAvailableGameObject()

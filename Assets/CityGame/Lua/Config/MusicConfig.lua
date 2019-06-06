@@ -5,12 +5,12 @@
 ---
 
 MusicConfig={
-    [1001]="beijingyinyue",
-    [1002]="dianjiyinxiao",
-    [1003]="jianzaochenggong",
-    [1004]="kaishishengchan",
-    [1005]="paimaichujia",
-    [1006]="tongzhi",
+    [1000] = "startBGM",                    --登录背景音乐
+    [1001] = "gameBGM",                     --背景音乐
+    [1002] = "touchEffect",                 --点击音效
+    [1003] = "notification",                --通知
+    [1004] = "technologySuccess",           --科技研发成功
+    [1005] = "technologyFail",              --科技研发失败
 }
 
 

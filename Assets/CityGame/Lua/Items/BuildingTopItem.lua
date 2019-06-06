@@ -91,6 +91,7 @@ function BuildingTopItem:changeBuildingName()
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(25040001)
+    data.inputDefaultStr = GetLanguage(37030002)
     data.btnCallBack = function(name)
         if self.data.id ~= nil then
             DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id = self.data.id, name = name})

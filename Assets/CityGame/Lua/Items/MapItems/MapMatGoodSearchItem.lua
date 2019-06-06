@@ -39,7 +39,6 @@ function MapMatGoodSearchItem:setToggleGroup(toggle)
 end
 --
 function MapMatGoodSearchItem:getNameStr()
-    --return "wait"
-    --return GetLanguage(self.data.languageId)
+    --return GetLanguage(self.data.itemId)
     return self.nameText.text
 end

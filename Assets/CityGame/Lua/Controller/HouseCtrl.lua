@@ -66,6 +66,7 @@ end
 --
 
 function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
+    houseDetailData.info.buildingType = BuildingType.House
     if HousePanel.topItem ~= nil then
         HousePanel.topItem:refreshData(houseDetailData.info, function ()
             self:_clickCloseBtn(self)
@@ -144,7 +145,7 @@ end
 function HouseCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
         if self.m_data.info.state == "OPERATE" then
-            Event.Brocast("SmallPop", "设置工资成功", 300)
+            Event.Brocast("SmallPop", GetLanguage(26020007), 300)
         end
         self.m_data.info.salary = data.Salary
         self.m_data.info.setSalaryTs = data.ts
@@ -165,7 +166,7 @@ end
 function HouseCtrl:_refreshRent(data)
     if self.m_data ~= nil then
         if self.m_data.info.state == "OPERATE" then
-            Event.Brocast("SmallPop", "设置日租金成功", 300)
+            Event.Brocast("SmallPop", GetLanguage(26040003), 300)
         end
         self.m_data.rent = data.rent
         self.groupMgr:RefreshData(self.m_data)

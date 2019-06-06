@@ -34,10 +34,10 @@ end
 
 function GroundTransSelfCheckInfoCtrl:Active()
     UIPanel.Active(self)
-    GroundTransSelfCheckInfoPanel.rentalText01.text = GetLanguage(24060004)
-    GroundTransSelfCheckInfoPanel.tenancyText02.text = GetLanguage(24060004)
-    GroundTransSelfCheckInfoPanel.remainDayText03.text = GetLanguage(24060004)
-    GroundTransSelfCheckInfoPanel.titleText04.text = GetLanguage(24060001)  --缺剩余租赁天数&总的租赁天数
+    GroundTransSelfCheckInfoPanel.rentalText01.text = GetLanguage(22050006)
+    GroundTransSelfCheckInfoPanel.tenancyText02.text = GetLanguage(22060005)
+    GroundTransSelfCheckInfoPanel.remainDayText03.text = GetLanguage(22060008)
+    GroundTransSelfCheckInfoPanel.titleText04.text = GetLanguage(22060001)
 end
 
 function GroundTransSelfCheckInfoCtrl:Close()

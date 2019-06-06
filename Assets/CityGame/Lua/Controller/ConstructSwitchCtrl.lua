@@ -25,7 +25,7 @@ function ConstructSwitchCtrl:OnCreate(obj)
         --ct.log("Allen_wk13","确认建造")
         Event.Brocast("m_constructBuildConfirm")
         Event.Brocast("m_abolishConstructBuild")
-        PlayMusEff(1003)
+        PlayMusEff(1002)
     end );
     LuaBehaviour:AddClick(ConstructSwitchPanel.btn_abolish.gameObject, function()
         --取消建造

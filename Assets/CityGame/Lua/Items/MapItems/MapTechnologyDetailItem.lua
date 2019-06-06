@@ -21,8 +21,8 @@ function MapTechnologyDetailItem:initLanguage()
     if self.data.technologyIndex == nil then
         return
     end
-    --self.typeText.text = GetLanguage(MapPromotionInfoConfig[self.data.technologyIndex].languageId)
-    self.typeText.text = MapTechnologyInfoConfig[self.data.technologyIndex].languageId
+    self.typeText.text = GetLanguage(MapPromotionInfoConfig[self.data.technologyIndex].languageId)
+    --self.typeText.text = MapTechnologyInfoConfig[self.data.technologyIndex].languageId
     self.data.itemId = self.data.technologyIndex
 end
 --设置toggleGroup

@@ -37,7 +37,7 @@ end
 
 function PersonalHomeDialogPageCtrl:Active()
     UIPanel.Active(self)
-    self.titleText.text = GetLanguage(16010001)
+    self.titleText.text = GetLanguage(17010001)
 
     Event.AddListener("updatePlayerName",self.updateNameFunc,self)
 end
@@ -103,7 +103,7 @@ function PersonalHomeDialogPageCtrl:_initData()
         end
 
         if self.m_data.des == nil or self.m_data.des == "" then
-            self.m_data.des = GetLanguage(12010003)  --默认值
+            self.m_data.des = GetLanguage(17020007)  --默认值
         end
 
         --
@@ -111,18 +111,21 @@ function PersonalHomeDialogPageCtrl:_initData()
         self.nameBtn.interactable = false
         self.avatarBtn.interactable = false
         self.nameIconTran.localScale = Vector3.zero
+        self.playerAvatar = AvatarManger.GetBigAvatar(self.m_data.faceId,self.roleProtaitImg.transform,1.0)
     else
         self.otherOpen.localScale = Vector3.zero
         self.changeSayBtn.localScale = Vector3.one
 
         if self.m_data.des == nil or self.m_data.des == "" then
-            self.m_data.des = GetLanguage(4301013)  --默认值
+            self.m_data.des = GetLanguage(17010004)  --默认值
         end
 
         self.moneyRoot.localScale = Vector3.one
         self.nameBtn.interactable = true
         self.avatarBtn.interactable = true
         self.nameIconTran.localScale = Vector3.one
+        self.playerAvatar = AvatarManger.GetBigAvatar(DataManager.GetFaceId(),self.roleProtaitImg.transform,1.0)
+        self.moneyText.text = string.format("E%s", DataManager.GetMoneyByString())
     end
 
     if self.m_data.male == false then
@@ -137,7 +140,6 @@ function PersonalHomeDialogPageCtrl:_initData()
     self.nameText.text = self.m_data.name
     self.nameText.rectTransform.sizeDelta = Vector2.New(self.nameText.preferredWidth + 50, self.nameText.rectTransform.sizeDelta.y)  --加一个性别图片的宽度
     self.companyText.text = self.m_data.companyName
-    self.playerAvatar = AvatarManger.GetBigAvatar(self.m_data.faceId,self.roleProtaitImg.transform,1.0)
 end
 --刷新玩家名字
 function PersonalHomeDialogPageCtrl:updateNameFunc(str)
@@ -204,17 +206,15 @@ function PersonalHomeDialogPageCtrl:_companyBtnFunc(ins)
 end
 --avatar
 function PersonalHomeDialogPageCtrl:_avatarBtnFunc(ins)
-    --PlayMusEff(1002)
-    --UIPanel.ClosePage()
-    --ct.OpenCtrl("CompanyCtrl", ins.m_data)
+    PlayMusEff(1002)
     ct.OpenCtrl("AvtarCtrl")
 end
 --修改名字
 function PersonalHomeDialogPageCtrl:_nameBtnFunc(ins)
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = GetLanguage(25040001)
-    data.inputDefaultStr = GetLanguage(37030002)
+    data.titleInfo = GetLanguage(17020001)
+    data.inputDefaultStr = GetLanguage(17020002)
     data.btnCallBack = function(name)
         ins:_reqChangePlayerName(name)
     end

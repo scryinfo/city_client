@@ -55,11 +55,11 @@ function BuildingSetSalaryCtrlNew:_getComponent(go)
 end
 --
 function BuildingSetSalaryCtrlNew:_language()
-    self.titleText01.text = "SETTING"
-    self.standardWageText02.text = "Employee single standard salary:"
-    self.standardWageText03.text = "/d"
-    self.staffNumText04.text = "number of staff:"
-    self.totalText05.text = "-DAILY WAGE-"
+    self.titleText01.text = GetLanguage(24020001)
+    self.standardWageText02.text = GetLanguage(24020002)
+    self.standardWageText03.text = "/"..GetLanguage(24020003)
+    self.staffNumText04.text = GetLanguage(24020004)..":"
+    self.totalText05.text = "-"..GetLanguage(24020007).."-"
 end
 --
 function BuildingSetSalaryCtrlNew:_initData()

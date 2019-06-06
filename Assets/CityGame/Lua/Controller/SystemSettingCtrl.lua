@@ -17,16 +17,13 @@ function SystemSettingCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
 
-
-
-
-
 function SystemSettingCtrl:Refresh()
-    local Languagenum=UnityEngine.PlayerPrefs.GetInt("Language")
-    if Languagenum==1 then
-        panel:InitDate(GetLanguage(14010006))
-    elseif Languagenum==0 then
-        panel:InitDate(GetLanguage(14010007))
+    --打开英文的
+    local Languagenum = UnityEngine.PlayerPrefs.GetInt("Language")
+    if Languagenum == 1 then
+        panel:InitDate(GetLanguage(14010005))
+    elseif Languagenum == 0 then
+        panel:InitDate(GetLanguage(14010004))
     end
 end
 
@@ -54,33 +51,20 @@ function  SystemSettingCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.backBtn2.gameObject,self.c_OnClick_backBtn1,self);
     LuaBehaviour:AddClick(panel.closeLan.gameObject,self.c_OnClick_backBtn2,self);
     --气泡
-    LuaBehaviour:AddClick(panel.bubbleBtn.gameObject,self.c_OnClick_Bubble,self);
-    LuaBehaviour:AddClick(panel.allBigBtn.gameObject,self.c_OnClick_BubbleBig,self);
-    LuaBehaviour:AddClick(panel.allSmallBtn.gameObject,self.c_OnClick_BubbleSmall,self);
-    LuaBehaviour:AddClick(panel.allCloseBtn.gameObject,self.c_OnClick_BubbleClose,self);
+    LuaBehaviour:AddClick(panel.bubbleShowBtn.gameObject,self.c_OnClick_BubbleClose,self);
+    LuaBehaviour:AddClick(panel.bubbleCloseBtn.gameObject,self.c_OnClick_BubbleShow,self);
 
 end
 ---========================================================点击==============================================================================================
---打开面板
-function SystemSettingCtrl:c_OnClick_Bubble(ins)
-    panel.bubblePanel.localScale=Vector3.one
-    panel.closeLan.localScale=Vector3.one
-end
---气泡全小
-function SystemSettingCtrl:c_OnClick_BubbleBig(ins)
-    panel.bubblePanel.localScale=Vector3.zero
-    Event.Brocast("c_BuildingBubbleALlSmall")
-    SaveBuildingBubbleSettings(BuildingBubbleType.small)
-end
---气泡全大
-function SystemSettingCtrl:c_OnClick_BubbleSmall(ins)
-    panel.bubblePanel.localScale=Vector3.zero
-    Event.Brocast("c_BuildingBubbleALlLarge")
-    SaveBuildingBubbleSettings(BuildingBubbleType.big)
+--气泡全开
+function SystemSettingCtrl:c_OnClick_BubbleShow(ins)
+    panel.bubbleCloseBtn.gameObject:SetActive(false)
+    Event.Brocast("c_BuildingBubbleShow")
+    SaveBuildingBubbleSettings(BuildingBubbleType.show)
 end
 --气泡全关
 function SystemSettingCtrl:c_OnClick_BubbleClose(ins)
-    panel.bubblePanel.localScale=Vector3.zero
+    panel.bubbleCloseBtn.gameObject:SetActive(true)
     Event.Brocast("c_BuildingBubbleHide")
     SaveBuildingBubbleSettings(BuildingBubbleType.close)
 end
@@ -124,9 +108,8 @@ function SystemSettingCtrl:c_OnClick_backBtn(ins)
 end
 --返回
 function SystemSettingCtrl:c_OnClick_backBtn1(ins)
-    if panel.LanguagePanel.localScale.x==1 or panel.bubblePanel.localScale.x  then
+    if panel.LanguagePanel.localScale.x == 1  then
         panel.LanguagePanel.localScale=Vector3.zero
-        panel.bubblePanel.localScale=Vector3.zero
         return
     end
     UIPanel.ClosePage()
@@ -136,20 +119,19 @@ end
 function SystemSettingCtrl:c_OnClick_backBtn2()
     panel.LanguagePanel.localScale=Vector3.zero
     panel.closeLan.localScale=Vector3.zero
-    panel.bubblePanel.localScale=Vector3.zero
 end
 --改变语言
 function SystemSettingCtrl:c_OnClick_changeLanguage()
     PlayMusEff(1002)
-    panel.LanguagePanel.localScale=Vector3.one
-    panel.closeLan.localScale=Vector3.one
+    panel.LanguagePanel.localScale = Vector3.one
+    panel.closeLan.localScale = Vector3.one
 end
 --中文
 function SystemSettingCtrl:c_OnClick_chinese()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.Chinese)
-    panel:InitDate(GetLanguage(14010006))
+    panel:InitDate(GetLanguage(14010004))
     panel.closeLan.localScale=Vector3.zero
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end
@@ -158,7 +140,7 @@ function SystemSettingCtrl:c_OnClick_english()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.English)
-    panel:InitDate(GetLanguage(14010007))
+    panel:InitDate(GetLanguage(14010005))
     panel.closeLan.localScale=Vector3.zero
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end

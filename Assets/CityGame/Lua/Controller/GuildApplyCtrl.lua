@@ -71,6 +71,13 @@ function GuildApplyCtrl:_showView()
     if societyInfo and societyInfo.reqs then
         GuildApplyCtrl.societyApplyInfo = societyInfo.reqs
         GuildApplyPanel.guildInfoScroll:ActiveLoopScroll(self.guildApplySource, #GuildApplyCtrl.societyApplyInfo, "View/Guild/GuildApplyItem")
+        if #GuildApplyCtrl.societyApplyInfo == 0 then
+            GuildApplyPanel.noContentImage.localScale = Vector3.one
+        else
+            GuildApplyPanel.noContentImage.localScale = Vector3.zero
+        end
+    else
+        GuildApplyPanel.noContentImage.localScale = Vector3.one
     end
 end
 
@@ -103,6 +110,11 @@ function GuildApplyCtrl:c_DelJoinReq(joinReq)
         end
     end
     GuildApplyPanel.guildInfoScroll:ActiveLoopScroll(self.guildApplySource, #GuildApplyCtrl.societyApplyInfo, "View/Guild/GuildApplyItem")
+    if #GuildApplyCtrl.societyApplyInfo == 0 then
+        GuildApplyPanel.noContentImage.localScale = Vector3.one
+    else
+        GuildApplyPanel.noContentImage.localScale = Vector3.zero
+    end
 end
 
 -- 新增入会请求

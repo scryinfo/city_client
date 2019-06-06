@@ -73,7 +73,7 @@ public class ActiveLoopScrollRect : MonoBehaviour
         else
         {
             mLoopScrollRect.totalCount = diffPrefabNameList.Length;
-            mLoopScrollRect.RefreshCells();
+            mLoopScrollRect.RefreshDiffCells();
         }
     }
 

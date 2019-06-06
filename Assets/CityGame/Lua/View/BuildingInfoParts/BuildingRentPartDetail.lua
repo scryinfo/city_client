@@ -10,14 +10,8 @@ BuildingRentPartDetail.static.NumberColor = "#333333" -- 总容量的颜色
 function BuildingRentPartDetail:PrefabName()
     return "BuildingRentPartDetail"
 end
-
-function  BuildingRentPartDetail:_InitEvent()
-end
-
+--
 function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
-    mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
-        self:clickCloseBtn()
-    end , self)
     mainPanelLuaBehaviour:AddClick(self.confirmBtn.gameObject, function ()
         local rent = self.rentInputField.text
         if rent == nil or rent == ""then
@@ -30,19 +24,20 @@ function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
         self:_reqHouseChangeRent(price)
     end , self)
 end
-
+--
 function BuildingRentPartDetail:_ResetTransform()
     self.rentInputField.text = ""
+    self.otherSeeRentText.text = ""
+    self:_language()
 end
-
+--
 function BuildingRentPartDetail:_RemoveEvent()
 end
-
+--
 function BuildingRentPartDetail:_RemoveClick()
-    self.closeBtn.onClick:RemoveAllListeners()
     self.confirmBtn.onClick:RemoveAllListeners()
 end
-
+--
 function BuildingRentPartDetail:RefreshData(data)
     self:_ResetTransform()
     if data == nil then
@@ -51,37 +46,50 @@ function BuildingRentPartDetail:RefreshData(data)
     self.m_data = data
     self:_initFunc()
 end
-
+--
 function BuildingRentPartDetail:_InitTransform()
     self:_getComponent(self.transform)
 end
-
+--
 function BuildingRentPartDetail:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.closeBtn = transform:Find("Root/CloseBtn"):GetComponent("Button")
     self.confirmBtn = transform:Find("Root/ConfirmBtn"):GetComponent("Button")
     self.rentInputField = transform:Find("Root/RentInputField"):GetComponent("InputField")
     self.rentInputFieldPlaceholder = transform:Find("Root/RentInputField/Placeholder"):GetComponent("Text")
     self.occupancyText = transform:Find("Root/OccupancyText"):GetComponent("Text")
-end
+    self.otherSee = transform:Find("Root/otherSee")
+    self.otherSeeRentText = transform:Find("Root/otherSee/Text"):GetComponent("Text")
 
+    self.occupancyText01 = transform:Find("Root/Text01"):GetComponent("Text")
+    self.rentText02 = transform:Find("Root/Text02"):GetComponent("Text")
+end
+--
 function BuildingRentPartDetail:clickCloseBtn()
     self.groupClass.TurnOffAllOptions(self.groupClass)
 end
-
 --改变房租
 function BuildingRentPartDetail:_reqHouseChangeRent(price)
     DataManager.ModelSendNetMes("gscode.OpCode", "setRent","gs.SetRent",{ buildingId = self.m_data.info.id, rent = GetServerPriceNumber(price)})
 end
-
 -- 显示入住人数和总人数
 function BuildingRentPartDetail:_initFunc()
-    if self.m_data and self.m_data.renter then
+    if self.m_data.info.ownerId ~= DataManager.GetMyOwnerID() then
+        self.otherSee.localScale = Vector3.one
+        self.confirmBtn.transform.localScale = Vector3.zero
+        self.otherSeeRentText.text = GetClientPriceString(self.m_data.rent)
+        self.occupancyText.text = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
+    else
+        self.otherSee.localScale = Vector3.zero
+        self.confirmBtn.transform.localScale = Vector3.one
+        --self.rentInputFieldPlaceholder.text = GetClientPriceString(self.m_data.rent)
+        self.rentInputField.text = GetClientPriceString(self.m_data.rent)
         self.occupancyText.text = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
     end
-    if self.m_data.rent ~= nil then
-        self.rentInputFieldPlaceholder.text = GetClientPriceString(self.m_data.rent)
-    end
+end
+--
+function BuildingRentPartDetail:_language()
+    self.occupancyText01.text = GetLanguage(26040001)
+    self.rentText02.text = GetLanguage(26040002)
 end

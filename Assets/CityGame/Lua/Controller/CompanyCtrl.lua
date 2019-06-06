@@ -33,10 +33,10 @@ function CompanyCtrl:Awake()
     luaBehaviour:AddClick(CompanyPanel.infoBtn.gameObject, self.OnInfo, self)
     luaBehaviour:AddClick(CompanyPanel.landBtn.gameObject, self.OnLand, self)
     luaBehaviour:AddClick(CompanyPanel.buildingBtn.gameObject, self.OnBuilding, self)
-    luaBehaviour:AddClick(CompanyPanel.evaBtn.gameObject, self.OnEva, self)
+    --luaBehaviour:AddClick(CompanyPanel.evaBtn.gameObject, self.OnEva, self)
     luaBehaviour:AddClick(CompanyPanel.brandBtn.gameObject, self.OnBrand, self)
-    luaBehaviour:AddClick(CompanyPanel.introductionBtn, self.OnIntroduction, self)
-    luaBehaviour:AddClick(CompanyPanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
+    --luaBehaviour:AddClick(CompanyPanel.introductionBtn, self.OnIntroduction, self)
+    --luaBehaviour:AddClick(CompanyPanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
     luaBehaviour:AddClick(CompanyPanel.companyRenameBtn.gameObject, self.OnCompanyRename, self)
     luaBehaviour:AddClick(CompanyPanel.sizeBtn.gameObject, self.OnSize, self)
     luaBehaviour:AddClick(CompanyPanel.choiceOBtn.gameObject, self.OnChoiceO, self)
@@ -53,14 +53,14 @@ function CompanyCtrl:Awake()
     self.buildingSource.mClearData = CompanyCtrl.static.buildingClearData
 
     -- Eva节点2
-    self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
-    self.evaOptionTwoSource.mProvideData = CompanyCtrl.static.evaOptionTwoData
-    self.evaOptionTwoSource.mClearData = CompanyCtrl.static.evaOptionTwoClearData
+    --self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
+    --self.evaOptionTwoSource.mProvideData = CompanyCtrl.static.evaOptionTwoData
+    --self.evaOptionTwoSource.mClearData = CompanyCtrl.static.evaOptionTwoClearData
 
     -- Eva节点3
-    self.evaOptionThereSource = UnityEngine.UI.LoopScrollDataSource.New()
-    self.evaOptionThereSource.mProvideData = CompanyCtrl.static.evaOptionThereData
-    self.evaOptionThereSource.mClearData = CompanyCtrl.static.evaOptionThereClearData
+    --self.evaOptionThereSource = UnityEngine.UI.LoopScrollDataSource.New()
+    --self.evaOptionThereSource.mProvideData = CompanyCtrl.static.evaOptionThereData
+    --self.evaOptionThereSource.mClearData = CompanyCtrl.static.evaOptionThereClearData
 
     -- 品牌节点
     self.brandSource = UnityEngine.UI.LoopScrollDataSource.New()
@@ -103,7 +103,7 @@ end
 function CompanyCtrl:_addListener()
     Event.AddListener("c_OnGetGroundInfo", self.c_OnGetGroundInfo, self)
     Event.AddListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
-    Event.AddListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
+    --Event.AddListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
     Event.AddListener("c_OnUpdateMyEva", self.c_OnUpdateMyEva, self)
     Event.AddListener("c_OnQueryPlayerIncomePayCurve", self.c_OnQueryPlayerIncomePayCurve, self)
     Event.AddListener("c_OnModifyCompanyName", self.c_OnModifyCompanyName, self)
@@ -115,7 +115,7 @@ end
 function CompanyCtrl:_removeListener()
     Event.RemoveListener("c_OnGetGroundInfo", self.c_OnGetGroundInfo, self)
     Event.RemoveListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
-    Event.RemoveListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
+    --Event.RemoveListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
     Event.RemoveListener("c_OnUpdateMyEva", self.c_OnUpdateMyEva, self)
     Event.RemoveListener("c_OnQueryPlayerIncomePayCurve", self.c_OnQueryPlayerIncomePayCurve, self)
     Event.RemoveListener("c_OnModifyCompanyName", self.c_OnModifyCompanyName, self)
@@ -283,33 +283,33 @@ function CompanyCtrl:OnBuilding(go)
 end
 
 -- Eva加点
-function CompanyCtrl:OnEva(go)
-    PlayMusEff(1002)
-    go:_showMainRoot(4)
-    go.isClickEva = true
-    go:ShowOptionTwo(0)
-    go:ShowOptionThere(0)
-    CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
-    if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
-        DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
-        CompanyPanel.optionOneScroll.anchoredPosition = Vector2.New(0,0)
-    else
-        CompanyCtrl.static.companyMgr:CreateEvaTitleItem()
-    end
-end
+--function CompanyCtrl:OnEva(go)
+--    PlayMusEff(1002)
+--    go:_showMainRoot(4)
+--    go.isClickEva = true
+--    go:ShowOptionTwo(0)
+--    go:ShowOptionThere(0)
+--    CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
+--    if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
+--        DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
+--        CompanyPanel.optionOneScroll.anchoredPosition = Vector2.New(0,0)
+--    else
+--        CompanyCtrl.static.companyMgr:CreateEvaTitleItem()
+--    end
+--end
 
 --显示eva介绍
-function CompanyCtrl:OnIntroduction(go)
-    PlayMusEff(1002)
-    ct.OpenCtrl("CompanyIntroductionCtrl")
-end
+--function CompanyCtrl:OnIntroduction(go)
+--    PlayMusEff(1002)
+--    ct.OpenCtrl("CompanyIntroductionCtrl")
+--end
 
 --关闭eva小提示
-function CompanyCtrl:OnCloseTips(go)
-    --PlayMusEff(1002)
-    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
-    CompanyCtrl.static.companyMgr:ClsoeTips()
-end
+--function CompanyCtrl:OnCloseTips(go)
+--    --PlayMusEff(1002)
+--    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
+--    CompanyCtrl.static.companyMgr:ClsoeTips()
+--end
 
 -- 打开品牌
 function CompanyCtrl:OnBrand(go)
@@ -385,7 +385,7 @@ function CompanyCtrl:_initData()
         {btn = CompanyPanel.infoBtn, root = CompanyPanel.infoRoot, transform = CompanyPanel.infoBtn.transform},
         {btn = CompanyPanel.landBtn, root = CompanyPanel.landRoot, transform = CompanyPanel.landBtn.transform},
         {btn = CompanyPanel.buildingBtn, root = CompanyPanel.buildingRoot, transform = CompanyPanel.buildingBtn.transform},
-        {btn = CompanyPanel.evaBtn, root = CompanyPanel.evaRoot, transform = CompanyPanel.evaBtn.transform},
+        --{btn = CompanyPanel.evaBtn, root = CompanyPanel.evaRoot, transform = CompanyPanel.evaBtn.transform},
         {btn = CompanyPanel.brandBtn, root = CompanyPanel.brandRoot, transform = CompanyPanel.brandBtn.transform},
     }
 end
@@ -410,24 +410,24 @@ function CompanyCtrl:_showMainRoot(index)
     end
 
     -- 控制Eva标题的显示，解决设置content位置不成功的bug
-    if index == 4 then
-        CompanyPanel.optionOneObj:SetActive(true)
-    else
-        CompanyPanel.optionOneObj:SetActive(false)
-    end
+    --if index == 4 then
+    --    CompanyPanel.optionOneObj:SetActive(true)
+    --else
+    --    CompanyPanel.optionOneObj:SetActive(false)
+    --end
 end
 
 -- 初始化基本数据
 function CompanyCtrl:_updateData()
     if self.m_data.id == DataManager.GetMyOwnerID() then
-        CompanyPanel.evaBtn.transform.localScale = Vector3.one
+        --CompanyPanel.evaBtn.transform.localScale = Vector3.one
         CompanyPanel.companyRenameBtn.localScale = Vector3.one
         CompanyPanel.titleText.text = GetLanguage(17010001)
         --CompanyPanel.coinBg:SetActive(true)
         --CompanyPanel.coinText.text = DataManager.GetMoneyByString()
         CompanyCtrl.static.companyMgr:SetIsOwn(true)
     else
-        CompanyPanel.evaBtn.transform.localScale = Vector3.zero
+        --CompanyPanel.evaBtn.transform.localScale = Vector3.zero
         CompanyPanel.companyRenameBtn.localScale = Vector3.zero
         CompanyPanel.titleText.text = GetLanguage(17010007)
         --CompanyPanel.coinBg:SetActive(false)
@@ -623,10 +623,10 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
 end
 
 -- 服务器查询Eva，并把Eva信息保存下來，并默认显示第一项
-function CompanyCtrl:c_OnQueryMyEva(evas)
-    CompanyCtrl.static.companyMgr:SetEvaData(evas)
-    CompanyCtrl.static.companyMgr:SetEvaDefaultState()
-end
+--function CompanyCtrl:c_OnQueryMyEva(evas)
+--    CompanyCtrl.static.companyMgr:SetEvaData(evas)
+--    CompanyCtrl.static.companyMgr:SetEvaDefaultState()
+--end
 
 -- 加点后，更新Eva信息
 function CompanyCtrl:c_OnUpdateMyEva(eva)
@@ -695,18 +695,18 @@ function CompanyCtrl:c_OnModyfyMyBrandName(modyfyMyBrandName)
 end
 
 -- 刷新Eva滑动选项2的信息
-function CompanyCtrl:ShowOptionTwo(itemNumber)
-    CompanyCtrl.optionTwoScript = {}
-    CompanyPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Company/EvaBtnTwoItem")
-    CompanyPanel.optionTwoScroll:RefillCells()
-end
+--function CompanyCtrl:ShowOptionTwo(itemNumber)
+--    CompanyCtrl.optionTwoScript = {}
+--    CompanyPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Company/EvaBtnTwoItem")
+--    CompanyPanel.optionTwoScroll:RefillCells()
+--end
 
 -- 刷新Eva滑动选项3的信息
-function CompanyCtrl:ShowOptionThere(itemNumber)
-    CompanyCtrl.optionThereScript = {}
-    CompanyPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Company/EvaBtnThereItem")
-    CompanyPanel.optionThereScroll:RefillCells()
-end
+--function CompanyCtrl:ShowOptionThere(itemNumber)
+--    CompanyCtrl.optionThereScript = {}
+--    CompanyPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Company/EvaBtnThereItem")
+--    CompanyPanel.optionThereScroll:RefillCells()
+--end
 
 -- 刷新品牌的信息
 function CompanyCtrl:ShowBrand(itemNumber)

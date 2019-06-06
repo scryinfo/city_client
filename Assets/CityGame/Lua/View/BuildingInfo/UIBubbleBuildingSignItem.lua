@@ -25,14 +25,12 @@ function UIBubbleBuildingSignItem:initialize(prefab,data,ctr)
     self.rect:SetParent(UIBubbleManager.BubbleParent.transform)
     self.prefab.transform.localScale = Vector3.one
     self.rect.transform.localPosition=Vector3.one
-
     self.data=data
-
     self.smallRec=prefab.transform:Find("small")
     self.smallBgBtn=prefab.transform:Find("small/bgBtn"):GetComponent("Button")
     self.smallIma=prefab.transform:Find("small/bgBtn/Image"):GetComponent("Image")
     self.ExIma=prefab.transform:Find("Expection")
-  
+
 
     self.largeRec=prefab.transform:Find("large")
     self.largeBgBtn=prefab.transform:Find("large/bgBtn"):GetComponent("Button")
@@ -53,8 +51,7 @@ function UIBubbleBuildingSignItem:initialize(prefab,data,ctr)
     self.z=PlayerBuildingBaseData[data.mId].deviationPos[3]
     ---
     Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
-    Event.AddListener("c_BuildingBubbleALlSmall", self.changeSmall, self)
-    Event.AddListener("c_BuildingBubbleALlLarge", self.changeLarge, self)
+    Event.AddListener("c_BuildingBubbleShow", self.ShowBubble, self)
     Event.AddListener("c_BuildingBubbleHide", self.CloesBubble, self)
 
     self:updateData(data)
@@ -70,6 +67,9 @@ function UIBubbleBuildingSignItem:initialize(prefab,data,ctr)
     end
     self.m_anchoredPos =  self.rect.anchoredPosition
     self:ShowOrHideSelf(self:JudgeSelfIsShow())
+    if BuilldingBubbleInsManger.type == BuildingBubbleType.close then
+        self:CloesBubble()
+    end
 end
 
 
@@ -115,9 +115,9 @@ function UIBubbleBuildingSignItem:updateData(data)
             self.ExIma.gameObject:SetActive(false)
         end
     end
-   --赋值留言
+    --赋值留言
     if data.des then
-       self.desText.text=data.des
+        self.desText.text=data.des
     end
     --赋值 姓名和 头像
     if self.avatarData then
@@ -126,16 +126,16 @@ function UIBubbleBuildingSignItem:updateData(data)
     if not data.bubble then
         self:CloesBubble()
     else
-        if BuilldingBubbleInsManger.type == 3 then
-            self:CloesBubble()
-        elseif BuilldingBubbleInsManger.type == 2 then
-            self:changeLarge()
-        else
+        if BuilldingBubbleInsManger.type == BuildingBubbleType.close then
             self:changeSmall()
+            self:CloesBubble()
+        elseif BuilldingBubbleInsManger.type == BuildingBubbleType.show then
+            self:changeSmall()
+            self:ShowBubble()
         end
     end
 end
----========================================================================点击函数============================================================
+---========================================================================点击函数============================================================/
 
 function UIBubbleBuildingSignItem:c_OnClick_small()
     --另外一个变小
@@ -151,9 +151,9 @@ function UIBubbleBuildingSignItem:c_OnClick_small()
 end
 
 function UIBubbleBuildingSignItem:c_OnClick_large()
-    if BuilldingBubbleInsManger.type == 2 then
-        return
-    end
+    --if BuilldingBubbleInsManger.type == bui then
+    --    return
+    --end
     --变小
     self:changeSmall()
 end
@@ -163,9 +163,15 @@ end
 function UIBubbleBuildingSignItem:CloesBubble()
     self.prefab.gameObject:SetActive(false)
 end
+
+--显示
+function UIBubbleBuildingSignItem:ShowBubble()
+    self.prefab.gameObject:SetActive(true)
+end
+
 --开始
 function UIBubbleBuildingSignItem:Start()
-    self.prefab.gameObject:SetActive(true)
+    self:ShowBubble()
 end
 
 function UIBubbleBuildingSignItem:changeSmall()
@@ -204,12 +210,12 @@ function UIBubbleBuildingSignItem:changeLarge()
 end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
-   self.nameText.text=info[1].name
-   self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
+    self.nameText.text=info[1].name
+    self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
 end
 
 function UIBubbleBuildingSignItem:LateUpdate()
-    if self.prefab ~= nil then
+    if self.prefab ~= nil and BuilldingBubbleInsManger.type == BuildingBubbleType.show  then
         self.m_anchoredPos = ScreenPosTurnActualPos(mainCamera:WorldToScreenPoint( Vector3.New(self.data.x + self.x, self.y, self.data.y + self.z))) --Vector3.New(-0.1, 0, 2)))
         self:IsMove()
     end
@@ -221,10 +227,7 @@ function UIBubbleBuildingSignItem:Close()
     DataManager.buildingBubblePool:RecyclingGameObjectToPool(self.prefab)
     --取消注册
     Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
-    Event.RemoveListener("c_BuildingBubbleALlSmall", self.changeSmall, self)
-    Event.RemoveListener("c_BuildingBubbleALlLarge", self.changeLarge, self)
+    Event.RemoveListener("c_BuildingBubbleShow", self.ShowBubble, self)
     Event.RemoveListener("c_BuildingBubbleHide", self.CloesBubble, self)
     self = nil
 end
-
-

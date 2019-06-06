@@ -20,4 +20,5 @@ function GuildApplyPanel.InitPanel()
 
     -- 申请信息
     this.guildInfoScroll = transform:Find("MiddleRoot/Bg/Scroll View"):GetComponent("ActiveLoopScrollRect")
+    this.noContentImage = transform:Find("MiddleRoot/NoContentImage")
 end

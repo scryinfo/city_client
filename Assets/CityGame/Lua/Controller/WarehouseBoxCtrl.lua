@@ -27,7 +27,6 @@ end
 function WarehouseBoxCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    self:_language()
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.addTransportBtn.gameObject,self._clickAddTransportBtn,self)
@@ -38,12 +37,12 @@ function WarehouseBoxCtrl:Awake(go)
 end
 
 function WarehouseBoxCtrl:Refresh()
+    self:_language()
     self:initializeUiInfoData()
 end
 
 function WarehouseBoxCtrl:Hide()
     UIPanel.Hide(self)
-
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WarehouseBoxCtrl:_getComponent(go)
@@ -75,7 +74,7 @@ function WarehouseBoxCtrl:_getComponent(go)
     self.deleBtn = go.transform:Find("contentRoot/bottom/deleBtn")
     self.addTransportBtn = go.transform:Find("contentRoot/bottom/addTransportBtn")
 end
-----------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------初始化函数--------------------------------------------------------------------------------
 --初始化UI数据
 function WarehouseBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22

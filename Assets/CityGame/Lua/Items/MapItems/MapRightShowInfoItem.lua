@@ -20,7 +20,7 @@ end
 --数据初始化
 function MapRightShowInfoItem:initData(data)
     local temp = MapBuildingInfoConfig[data.infoTypeStr]
-    --self.showText.text = GetLanguage(temp.languageId)  --多语言
+    self.showText.text = GetLanguage(temp.languageId)  --多语言
     if temp.imgPath ~= nil and temp.imgPath ~= "" then
         LoadSprite(temp.imgPath, self.iconImg, true)
     end
@@ -31,7 +31,7 @@ function MapRightShowInfoItem:initData(data)
     end
 
     --Temp
-    self.showText.text = temp.languageId
+    --self.showText.text = temp.languageId
     --LoadSprite("Assets/CityGame/Resources/View/iconImg/2101001.png", self.iconImg, true)
 
     if self.detailImg ~= nil and data.detailImgPath ~= nil then

@@ -174,6 +174,7 @@ public static class CustomSettings
         _GT(typeof(Button.ButtonClickedEvent)),
         _GT(typeof(UnityEventBase)),  //为了使用RemoveAllListener
         _GT(typeof(Text)),
+        _GT(typeof(RawImage)),
         _GT(typeof(InputField)),
         _GT(typeof(Toggle)),
         _GT(typeof(Scrollbar.ScrollEvent)),
@@ -183,6 +184,8 @@ public static class CustomSettings
         _GT(typeof(VerticalWrapMode)),
         _GT(typeof(LayoutElement)),
         _GT(typeof(GridLayoutGroup)),
+        _GT(typeof(RectOffset)),
+
 
         _GT(typeof(Util)),
         _GT(typeof(AppConst)),

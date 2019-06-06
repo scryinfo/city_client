@@ -31,13 +31,13 @@ end
 
 function GroundTransContractCtrl:Active()
     UIPanel.Active(self)
-    GroundTransContractPanel.AText02.text = GetLanguage(24060007)
-    GroundTransContractPanel.BText03.text = GetLanguage(24060006)
-    GroundTransContractPanel.buyAreaText04.text = GetLanguage(24040006)
-    GroundTransContractPanel.rentAreaText05.text = GetLanguage(24050004)
-    GroundTransContractPanel.rentTenancyText06.text = GetLanguage(24050005)
-    GroundTransContractPanel.rentDailyText07.text = GetLanguage(24050006)
-    GroundTransContractPanel.totalText08.text = GetLanguage(24040005)
+    GroundTransContractPanel.AText02.text = GetLanguage(22060007)
+    GroundTransContractPanel.BText03.text = GetLanguage(22060006)
+    GroundTransContractPanel.buyAreaText04.text = GetLanguage(22010002)
+    GroundTransContractPanel.rentAreaText05.text = GetLanguage(22040006)
+    GroundTransContractPanel.rentTenancyText06.text = GetLanguage(22050005)
+    GroundTransContractPanel.rentDailyText07.text = GetLanguage(22050006)
+    GroundTransContractPanel.totalText08.text = GetLanguage(22040005)
 end
 
 function GroundTransContractCtrl:Hide()
@@ -63,8 +63,8 @@ end
 --根据状态显示界面
 function GroundTransContractCtrl:_setShowState(data)
     if data.rentDay then
-        GroundTransContractPanel.titleText01.text = GetLanguage(24050003)
-        GroundTransContractPanel.rentTipText.text = GetLanguage(24050007)
+        GroundTransContractPanel.titleText01.text = GetLanguage(22050003)
+        GroundTransContractPanel.rentTipText.text = GetLanguage(22050008)
         GroundTransContractPanel.chooseState(true)
         local total = data.groundInfo.rent.rentPreDay * data.rentDay
         GroundTransContractPanel.rentDailyRentText.text = "E"..getPriceString(GetClientPriceString(data.groundInfo.rent.rentPreDay),30,24)
@@ -74,7 +74,7 @@ function GroundTransContractCtrl:_setShowState(data)
         local endStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime() + data.rentDay * 86400)
         GroundTransContractPanel.rentTenancyTimeText.text = string.format("(%s - %s)", nowStr, endStr)
     else
-        GroundTransContractPanel.titleText01.text = GetLanguage(24040003)
+        GroundTransContractPanel.titleText01.text = GetLanguage(22040003)
         GroundTransContractPanel.chooseState(false)
         GroundTransContractPanel.totalPriceText.text = "E"..getPriceString(GetClientPriceString(data.groundInfo.sell.price),48,36)
     end
@@ -105,7 +105,7 @@ function GroundTransContractCtrl:_buyBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.sell.price then
         if ins.m_data.groundInfo.sell.price > DataManager.GetMoney() then
-            Event.Brocast("SmallPop", GetLanguage(22010003), 300)
+            Event.Brocast("SmallPop", GetLanguage(41010006), 300)
             GroundTransSetPriceCtrl._closeBackToMain()
             return
         end
@@ -118,7 +118,7 @@ function GroundTransContractCtrl:_rentBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.rent then
         if ins.m_data.groundInfo.rent.rentPreDay * ins.m_data.rentDay > DataManager.GetMoney() then
-            Event.Brocast("SmallPop", GetLanguage(22010003), 300)
+            Event.Brocast("SmallPop", GetLanguage(41010006), 300)
             GroundTransSetPriceCtrl._closeBackToMain()
             return
         end

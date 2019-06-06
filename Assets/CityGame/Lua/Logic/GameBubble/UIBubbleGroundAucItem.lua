@@ -29,9 +29,9 @@ function UIBubbleGroundAucItem:initialize(data)
     self.soonText02 = viewTrans:Find("soon/bgBtn/root/typeText"):GetComponent("Text")
     self.soonBgBtn = viewTrans:Find("soon/bgBtn"):GetComponent("Button")
 
-    self.nowText01.text = GetLanguage(22010001)
-    self.soonText02.text = GetLanguage(22020003)
-    self.noneBidText02.text = GetLanguage(22010001)
+    self.nowText01.text = GetLanguage(21010001)
+    self.soonText02.text = GetLanguage(21010009)
+    self.noneBidText02.text = GetLanguage(21010001)
 
     self.nowBgBtn.onClick:RemoveAllListeners()
     self.nowBgBtn.onClick:AddListener(function ()
@@ -191,9 +191,9 @@ function UIBubbleGroundAucItem:_showFunc()
     end
 end
 function UIBubbleGroundAucItem:_changeLanguageFunc()
-    self.nowText01.text = GetLanguage(22010001)
-    self.soonText02.text = GetLanguage(22020003)
-    self.noneBidText02.text = GetLanguage(22010001)
+    self.nowText01.text = GetLanguage(21010001)
+    self.soonText02.text = GetLanguage(21010009)
+    self.noneBidText02.text = GetLanguage(21010001)
 end
 
 --小地图需要的数据

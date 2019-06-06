@@ -51,12 +51,8 @@ function MapSearchTypeItemBase:resetState()
 end
 --多语言
 function MapSearchTypeItemBase:_language()
-    --正式代码
-    --self.selectShowNameText.text = GetLanguage(self.data.languageId)
-    --self.greyTypeNameText.text = GetLanguage(self.data.languageId)
-
-    self.chooseShowNameText.text = self.data.name
-    self.greyTypeNameText.text = self.data.name
+    self.chooseShowNameText.text = GetLanguage(self.data.languageId)
+    self.greyTypeNameText.text = GetLanguage(self.data.languageId)
 end
 --loading
 function MapSearchTypeItemBase:_endLoading()

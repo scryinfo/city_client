@@ -20,6 +20,7 @@ function GameNoticeModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnMaterialFactory,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnProduceDepartment,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailRetailShop","gs.RetailShop",self.n_OnDetailRetailShop,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailPublicFacility","gs.PublicFacility",self.n_OnPromote,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getOneSocietyInfo","gs.SocietyInfo",self.n_OnSocietyInfo,self)
 end
 
@@ -60,6 +61,11 @@ function GameNoticeModel:m_GetRetailShop(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode","detailRetailShop" ,"gs.Id",{id = buildingId})
 end
 
+--获取推广公司详情
+function GameNoticeModel:m_GetPromote(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode","detailPublicFacility" ,"gs.Id",{id = buildingId})
+end
+
 --获取公会名字
 function GameNoticeModel:m_GetSocietyInfo(id)
     DataManager.ModelSendNetMes("gscode.OpCode","getOneSocietyInfo" ,"gs.Id",{id = id})
@@ -95,6 +101,11 @@ end
 --零售店建筑详情回调
 function GameNoticeModel:n_OnDetailRetailShop(info)
     Event.Brocast("c_RetailShopInfo",info.info.name)
+end
+
+--推广公司建筑详情回调
+function GameNoticeModel:n_OnPromote(info)
+    Event.Brocast("c_PromoteInfo",info.info.name)
 end
 
 --公会详情回调

@@ -153,10 +153,12 @@ end
 -----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
 --关闭详情
 function BuildingWarehouseDetailPart:clickCloseBtn()
+    PlayMusEff(1002)
     self.groupClass.TurnOffAllOptions(self.groupClass)
 end
 --打开运输弹窗
 function BuildingWarehouseDetailPart:clickTransportBtn()
+    PlayMusEff(1002)
     local data = {}
     data.buildingId = self.m_data.insId
     data.buildingInfo = self.m_data.info

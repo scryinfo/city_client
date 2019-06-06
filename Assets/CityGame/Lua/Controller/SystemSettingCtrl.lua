@@ -21,12 +21,10 @@ function SystemSettingCtrl:Refresh()
     --打开英文的
     local Languagenum = UnityEngine.PlayerPrefs.GetInt("Language")
     if Languagenum == 1 then
-        panel:InitDate(GetLanguage(14010006))
+        panel:InitDate(GetLanguage(14010005))
     elseif Languagenum == 0 then
-        panel:InitDate(GetLanguage(14010007))
+        panel:InitDate(GetLanguage(14010004))
     end
-
-
 end
 
 function  SystemSettingCtrl:Hide()
@@ -125,15 +123,15 @@ end
 --改变语言
 function SystemSettingCtrl:c_OnClick_changeLanguage()
     PlayMusEff(1002)
-    panel.LanguagePanel.localScale=Vector3.one
-    panel.closeLan.localScale=Vector3.one
+    panel.LanguagePanel.localScale = Vector3.one
+    panel.closeLan.localScale = Vector3.one
 end
 --中文
 function SystemSettingCtrl:c_OnClick_chinese()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.Chinese)
-    panel:InitDate(GetLanguage(14010006))
+    panel:InitDate(GetLanguage(14010004))
     panel.closeLan.localScale=Vector3.zero
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end
@@ -142,7 +140,7 @@ function SystemSettingCtrl:c_OnClick_english()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.English)
-    panel:InitDate(GetLanguage(14010007))
+    panel:InitDate(GetLanguage(14010005))
     panel.closeLan.localScale=Vector3.zero
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end

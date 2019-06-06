@@ -165,7 +165,7 @@ man={
         }
     },
     [10]={
-        name = 10060000, --花纹
+        name = 10060012, --花纹
         kinds={
             [1]={path=",decal"},
             [2]={path=manPath.."Decal".."/Avatar_Decal_01.png,decal"},

@@ -266,13 +266,13 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     elseif self.m_data.buildingType == BuildingType.Municipal then
         --推广公司
         if self.m_data.mId == 1600001 then
-            self.buildingTypeText.text = "小型推广公司"
-        elseif self.m_data.mId == 1500002 then
-            self.buildingTypeText.text = "中型推广公司"
-        elseif self.m_data.mId == 1500003 then
-            self.buildingTypeText.text = "大型推广公司"
+            self.buildingTypeText.text = GetLanguage(PlayerBuildingBaseData[1600001].sizeName) .. GetLanguage(PlayerBuildingBaseData[1600001].typeName)
+        elseif self.m_data.mId == 1600002 then
+            self.buildingTypeText.text = GetLanguage(PlayerBuildingBaseData[1600002].sizeName) .. GetLanguage(PlayerBuildingBaseData[1600002].typeName)
+        elseif self.m_data.mId == 1600003 then
+            self.buildingTypeText.text = GetLanguage(PlayerBuildingBaseData[1600003].sizeName) .. GetLanguage(PlayerBuildingBaseData[1600003].typeName)
         end
-        self.tipText.text = "推广公司提升玩家商品或建筑的知名度。"
+        self.tipText.text = GetLanguage(27040030)
         local function callback(obj)
             self.buildingInfoItem = PromoteItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end

@@ -1,8 +1,8 @@
 PlayerBuildingBaseData=
 {
     [1100001] ={
-        ["sizeName"] =41010001,
-        ["typeName"] =41020001,
+        ["sizeName"] =42010001,
+        ["typeName"] =42020001,
         ["des"] ="小型原料厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/MaterialBuilding_1x1.png",
         ["prefabRoute"] = "Building/MaterialBuilding_1x1",
@@ -27,8 +27,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "MaterialBuilding_1",
     },
     [1100002] ={
-        ["sizeName"] =41010002,
-        ["typeName"] =41020001,
+        ["sizeName"] =42010002 ,
+        ["typeName"] =42020001,
         ["des"] ="中型原料厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/MaterialBuilding_2x2.png",
         ["prefabRoute"] = "Building/MaterialBuilding_2x2",
@@ -54,7 +54,7 @@ PlayerBuildingBaseData=
     },
     [1100003] ={
         ["sizeName"] =41010003,
-        ["typeName"] =41020001,
+        ["typeName"] =42020001,
         ["des"] ="大型原料厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/MaterialBuilding_3x3.png",
         ["prefabRoute"] = "Building/MaterialBuilding_3x3",
@@ -79,8 +79,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "MaterialBuilding_3",
     },
     [1200001] ={
-        ["sizeName"] =41010001,
-        ["typeName"] =41020002,
+        ["sizeName"] =42010001,
+        ["typeName"] =42020002 ,
         ["des"] ="小型加工厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Factory_1x1.png",
         ["prefabRoute"] = "Building/Factory_1x1",
@@ -105,8 +105,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "Factory_1",
     },
     [1200002] ={
-        ["sizeName"] =41010002,
-        ["typeName"] =41020002,
+        ["sizeName"] =42010002 ,
+        ["typeName"] =42020002 ,
         ["des"] ="中型加工厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Factory_2x2.png",
         ["prefabRoute"] = "Building/Factory_2x2",
@@ -132,7 +132,7 @@ PlayerBuildingBaseData=
     },
     [1200003] ={
         ["sizeName"] =41010003,
-        ["typeName"] =41020002,
+        ["typeName"] =42020002 ,
         ["des"] ="大型加工厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Factory_3x3.png",
         ["prefabRoute"] = "Building/Factory_3x3",
@@ -157,8 +157,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "Factory_3",
     },
     [1300001] ={
-        ["sizeName"] =41010001,
-        ["typeName"] =41020003,
+        ["sizeName"] =42010001,
+        ["typeName"] =42020003,
         ["des"] ="小型零售店的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/SuperMarket_1x1.png",
         ["prefabRoute"] = "Building/SuperMarket_1x1",
@@ -186,8 +186,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "SuperMarket_1",
     },
     [1300002] ={
-        ["sizeName"] =41010002,
-        ["typeName"] =41020003,
+        ["sizeName"] =42010002 ,
+        ["typeName"] =42020003,
         ["des"] ="中型零售店的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/SuperMarket_2x2.png",
         ["prefabRoute"] = "Building/SuperMarket_2x2",
@@ -216,7 +216,7 @@ PlayerBuildingBaseData=
     },
     [1300003] ={
         ["sizeName"] =41010003,
-        ["typeName"] =41020003,
+        ["typeName"] =42020003,
         ["des"] ="大型零售店的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/SuperMarket_3x3.png",
         ["prefabRoute"] = "Building/SuperMarket_3x3",
@@ -244,8 +244,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "SuperMarket_3",
     },
     [1400001] ={
-        ["sizeName"] =41010001,
-        ["typeName"] =41020005,
+        ["sizeName"] =42010001,
+        ["typeName"] =42020004,
         ["des"] ="小型住宅的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/HomeHouse1x1.png",
         ["prefabRoute"] = "Building/HomeHouse_1x1",
@@ -273,8 +273,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "HomeHouse_1",
     },
     [1400002] ={
-        ["sizeName"] =41010002,
-        ["typeName"] =41020005,
+        ["sizeName"] =42010002 ,
+        ["typeName"] =42020004,
         ["des"] ="中型住宅的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/HomeHouse2x2.png",
         ["prefabRoute"] = "Building/HomeHouse_2x2",
@@ -303,7 +303,7 @@ PlayerBuildingBaseData=
     },
     [1400003] ={
         ["sizeName"] =41010003,
-        ["typeName"] =41020005,
+        ["typeName"] =42020004,
         ["des"] ="大型住宅的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/HomeHouse3x3.png",
         ["prefabRoute"] = "Building/HomeHouse_3x3",
@@ -331,8 +331,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "HomeHouse_3",
     },
     [1500001] ={
-        ["sizeName"] =41010001,
-        ["typeName"] =41020006,
+        ["sizeName"] =42010001,
+        ["typeName"] =42020006,
         ["des"] ="小型研究所的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/TechnologyBuilding1x1.png",
         ["prefabRoute"] = "Building/TechnologyBuilding_1x1",
@@ -357,8 +357,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "TechnologyBuilding_1",
     },
     [1500002] ={
-        ["sizeName"] =41010002,
-        ["typeName"] =41020006,
+        ["sizeName"] =42010002 ,
+        ["typeName"] =42020006,
         ["des"] ="中型研究所的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/TechnologyBuilding2x2.png",
         ["prefabRoute"] = "Building/TechnologyBuilding_2x2",
@@ -384,7 +384,7 @@ PlayerBuildingBaseData=
     },
     [1500003] ={
         ["sizeName"] =41010003,
-        ["typeName"] =41020006,
+        ["typeName"] =42020006,
         ["des"] ="大型研究所的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/TechnologyBuilding3x3.png",
         ["prefabRoute"] = "Building/TechnologyBuilding_3x3",
@@ -409,8 +409,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "TechnologyBuilding_3",
     },
     [1600001] ={
-        ["sizeName"] =41010001,
-        ["typeName"] =41020004,
+        ["sizeName"] =42010001,
+        ["typeName"] =42020005,
         ["des"] ="小型推广公司的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Advertising_1x1.png",
         ["prefabRoute"] = "Building/Advertising_1x1",
@@ -438,8 +438,8 @@ PlayerBuildingBaseData=
         ["poolName"] = "Park_1",
     },
     [1600002] ={
-        ["sizeName"] =41010002,
-        ["typeName"] =41020004,
+        ["sizeName"] =42010002 ,
+        ["typeName"] =42020005,
         ["des"] ="中型推广公司的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Advertising_2x2.png",
         ["prefabRoute"] = "Building/Advertising_2x2",
@@ -468,7 +468,7 @@ PlayerBuildingBaseData=
     },
     [1600003] ={
         ["sizeName"] =41010003,
-        ["typeName"] =41020004,
+        ["typeName"] =42020005,
         ["des"] ="大型推广公司的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Advertising_3x3.png",
         ["prefabRoute"] = "Building/Advertising_3x3",
@@ -496,7 +496,7 @@ PlayerBuildingBaseData=
         ["poolName"] = "Park_3",
     },
 	[1700001] ={
-        ["sizeName"] =41010001,
+        ["sizeName"] =42010001,
         ["typeName"] =41020007,
         ["des"] ="小型集散中心的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/ExpertTradingCenter-1x1.png",
@@ -522,7 +522,7 @@ PlayerBuildingBaseData=
         ["poolName"] = "ExpertTradingCenter_1",
     },
     [1700002] ={
-        ["sizeName"] =41010002,
+        ["sizeName"] =42010002 ,
         ["typeName"] =41020007,
         ["des"] ="中型集散中心的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/ExpertTradingCenter-2x2.png",

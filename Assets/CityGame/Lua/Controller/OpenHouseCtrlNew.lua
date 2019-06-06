@@ -47,6 +47,7 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.staffNumText = transform:Find("root/salary/staffNum/staffNumText"):GetComponent("Text")
     self.totalText = transform:Find("root/salary/total/totalText"):GetComponent("Text")
     self.rentInput = transform:Find("root/rent/rentInput"):GetComponent("InputField")
+    self.tipRoot = transform:Find("root/tipRoot")
 
     self.titleText01 = transform:Find("root/titleText01"):GetComponent("Text")
     self.standardWageText02 = transform:Find("root/salary/wage/Text"):GetComponent("Text")
@@ -56,6 +57,7 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.rentInputText06 = transform:Find("root/rent/rentInput/Placeholder"):GetComponent("Text")
     self.rentText07 = transform:Find("root/rent/priceBg/Text"):GetComponent("Text")
     self.rentText08 = transform:Find("root/rent/Text01"):GetComponent("Text")
+    self.tipText09 = transform:Find("root/tipRoot/Text"):GetComponent("Text")
 end
 --
 function OpenHouseCtrlNew:_language()
@@ -67,6 +69,7 @@ function OpenHouseCtrlNew:_language()
     self.rentInputText06.text = GetLanguage(24020017)
     self.rentText07.text = GetLanguage(24020014)
     self.rentText08.text = GetLanguage(24020015)..":"
+    self.tipText09.text = GetLanguage(24020016)
 end
 --
 function OpenHouseCtrlNew:_initData()
@@ -74,7 +77,7 @@ function OpenHouseCtrlNew:_initData()
     if self.m_data == nil then
         return
     end
-
+    self.tipRoot.localScale = Vector3.zero
     local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
     self.staffNum = staffNum
     self.staffNumText.text = staffNum
@@ -101,7 +104,7 @@ end
 --
 function OpenHouseCtrlNew:_onClickConfirm(ins)
     if ins.rentInput.text == "" then
-        --
+        ins.tipRoot.localScale = Vector3.one
         return
     end
     PlayMusEff(1002)
@@ -112,6 +115,7 @@ function OpenHouseCtrlNew:_onClickConfirm(ins)
             UIPanel.ClosePage()
         end}
         ct.OpenCtrl("OpenBuildingCheckCtrl", data)
+        ins.tipRoot.localScale = Vector3.zero
     end
 end
 --

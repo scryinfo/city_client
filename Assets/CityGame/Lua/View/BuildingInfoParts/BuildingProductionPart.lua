@@ -95,8 +95,8 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
 function BuildingProductionPart:_language()
-    self.unselectTitleText.text = "生产线"
-    self.selectTitleText.text = "生产线"
+    self.unselectTitleText.text = GetLanguage(25010003)
+    self.selectTitleText.text = GetLanguage(25010003)
 end
 --计算总时间
 function BuildingProductionPart:GetTime(lineData)

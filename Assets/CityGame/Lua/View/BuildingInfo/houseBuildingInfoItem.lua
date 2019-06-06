@@ -14,9 +14,11 @@ function houseBuildingInfoItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     self.retailStoreIntroduceBtn = prefab.transform:Find("retailStoreIntroduceBtn")
     self.retailStoreText = prefab.transform:Find("retailStoreIntroduceBtn/retailStoreText"):GetComponent("Text")
     self.basicQualityTextBtn = prefab.transform:Find("basicQualityText"):GetComponent("Text")
+    self.symbol = prefab.transform:Find("basicQualityText/symbol")
     self.qualityAdditionTextBtn = prefab.transform:Find("basicQualityText/symbol/qualityAdditionText"):GetComponent("Text")
     self.popolarityTextBtn = prefab.transform:Find("popolarityText"):GetComponent("Text")
 
+    self.scoreText.text = (self.dataInfo.score[1].val + self.dataInfo.score[4].val) / 2
     self:language()
 
     luaBehaviour:AddClick(self.basicQualityTextBtn.gameObject,self._clickBasicQualityTextBtn,self)
@@ -33,13 +35,14 @@ function houseBuildingInfoItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     end
 end
 function houseBuildingInfoItem:language()
-    self.retailStoreText.text = "综合分数"
-    self.basicQualityTextBtn.text = "基本质量"
-    self.qualityAdditionTextBtn.text = "质量加成"
-    self.popolarityTextBtn.text = "知名度"
+    self.symbol.transform.localScale = Vector3.zero
+    self.retailStoreText.text = GetLanguage(30040001)
+    self.basicQualityTextBtn.text = GetLanguage(30040002).." "..self.dataInfo.score[4].val.."(".."+"..self.dataInfo.score[5].val.."%"..")"
+    self.qualityAdditionTextBtn.transform.localScale = Vector3.zero
+    self.popolarityTextBtn.text = GetLanguage(30040003).." "..self.dataInfo.score[1].val
 end
 function houseBuildingInfoItem:_clickBasicQualityTextBtn(ins)
-    local stringKey = 27010005
+    local stringKey = 30040004
     Event.Brocast("openTipBox",stringKey,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
 end
 function houseBuildingInfoItem:_clickQualityAdditionTextBtn(ins)
@@ -47,6 +50,6 @@ function houseBuildingInfoItem:_clickQualityAdditionTextBtn(ins)
     Event.Brocast("openTipBox",stringKey,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
 end
 function houseBuildingInfoItem:_clickPopolarityTextBtn(ins)
-    local stringKey = 27010005
+    local stringKey = 30040005
     Event.Brocast("openTipBox",stringKey,ins.popolarityTextBtn.transform.localPosition,ins.popolarityTextBtn.transform)
 end

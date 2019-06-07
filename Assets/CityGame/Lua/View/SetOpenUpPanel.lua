@@ -29,7 +29,7 @@ function SetOpenUpPanel.InitPanel()
     this.open = transform:Find("set/open"):GetComponent("Toggle")
     this.openBtn = transform:Find("set/open/btnImage"):GetComponent("RectTransform")
     this.close = transform:Find("set/close")
-    this.closeText = transform:Find("set/closeText"):GetComponent("Text")
+    this.closeText = transform:Find("set/close/closeText"):GetComponent("Text")
     this.confirm = transform:Find("set/confirm").gameObject
 
 end

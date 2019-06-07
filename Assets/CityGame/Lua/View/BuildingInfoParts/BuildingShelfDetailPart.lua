@@ -109,7 +109,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
 function BuildingShelfDetailPart:_language()
-    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
+    self.tipText.text = GetLanguage(25060001)
 end
 --初始化UI数据
 function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
@@ -178,18 +178,18 @@ function BuildingShelfDetailPart:addBuyList(data)
         table.insert(self.buyDatas,data)
         self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.buyDatas
-        Event.Brocast("SmallPop","添加成功", 300)
+        Event.Brocast("SmallPop",GetLanguage(25070010), 300)
     else
         for key,value in pairs(self.buyDatas) do
             if value.itemId == data.itemId then
-                Event.Brocast("SmallPop","不能重复添加同一种商品", 300)
+                Event.Brocast("SmallPop",GetLanguage(25070011), 300)
                 return
             end
         end
         table.insert(self.buyDatas,data)
         --self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.buyDatas
-        Event.Brocast("SmallPop","添加成功", 300)
+        Event.Brocast("SmallPop",GetLanguage(25070010), 300)
     end
 end
 --删除购买列表
@@ -402,7 +402,7 @@ function BuildingShelfDetailPart:replenishmentSucceed(data)
                     value.autoReplenish = data.autoRepOn
                 end
             end
-            Event.Brocast("SmallPop","自动补货关闭成功", 300)
+            Event.Brocast("SmallPop",GetLanguage(25060010), 300)
             UIPanel.ClosePage()
         else
             --如果是打开自动补货
@@ -442,7 +442,7 @@ function BuildingShelfDetailPart:replenishmentSucceed(data)
                     value.n = value.n + warehouseNum
                 end
             end
-            Event.Brocast("SmallPop","自动补货打开成功", 300)
+            Event.Brocast("SmallPop",GetLanguage(25060009), 300)
             UIPanel.ClosePage()
         end
     end

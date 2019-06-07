@@ -41,7 +41,7 @@ AvtarConfig={
 
 man={
     [1]={
-       name="脸型",
+       name= 10060003,-- 脸型
        kinds={
         [1]={path=manPath.."Head".."/Avatar_Head_01.png,head"},
         [2]={path=manPath.."Head".."/Avatar_Head_02.png,head"},
@@ -52,7 +52,7 @@ man={
        }
     },
     [2]={
-        name="服装",
+        name = 10060008, -- 服饰
         kinds={
             [1]={path=manPath.."Body".."/Avatar_body_01.png,body"},
             [2]={path=manPath.."Body".."/Avatar_body_02.png,body"},
@@ -79,14 +79,14 @@ man={
         }
     },
     [3]={
-        name="眉毛",
+        name = 10060004,-- 眉毛
         kinds={
             [1]={path=manPath.."Brow".."/Avatar_Brow.png,brow"},
         }
     },
 
     [4]={
-        name="眼睛",
+        name= 10060002,--"眼睛",
         kinds={
             [1]={path=manPath.."Eyes".."/Avatar_Eyes_01.png,eyes"},
             [2]={path=manPath.."Eyes".."/Avatar_Eyes_02.png,eyes"},
@@ -107,7 +107,7 @@ man={
     },
 
     [5]={
-        name="发型",
+        name= 10060001,-- "发型",
         kinds={
             [1]={path=manPath.."Haircut".."/Avatar_Haircut_01.png,haircut"},
             [2]={path=manPath.."Haircut".."/Avatar_Haircut_02.png,haircut"},
@@ -118,7 +118,7 @@ man={
         }
     },
     [6]={
-        name="帽子",
+        name= 10060007,--"帽子",
         kinds={
             [1]={path=",frontHat,"..",backHat"},
             [2]={path=manPath.."Hat".."/Avatar_Hat_front_01.png,frontHat,"..manPath .."Hat".."/Avatar_Hat_Back_01.png,backHat"},
@@ -136,13 +136,13 @@ man={
         }
     },
     [7]={
-        name="嘴",
+        name= 10060006,--"嘴",
         kinds={
             [1]={path=manPath.."Mouth".."/Avatar_Mouth.png,mouth"},
         }
     },
     [8]={
-        name="鼻子",
+        name= 10060005,--"鼻子",
         kinds={
             [1]={path=manPath .."Nose".."/Avatar_Nose_01.png,nose"},
             [2]={path=manPath .."Nose".."/Avatar_Nose_02.png,nose"},
@@ -156,7 +156,7 @@ man={
         }
     },
     [9]={
-        name="胡子",
+        name= 10060010,--胡子
         kinds={
             [1]={path=",goatee"},
             [2]={path=manPath.."Goatee".."/Avatar_Goatee_01.png,goatee"},
@@ -165,7 +165,7 @@ man={
         }
     },
     [10]={
-        name="花纹",
+        name = 10060012, --花纹
         kinds={
             [1]={path=",decal"},
             [2]={path=manPath.."Decal".."/Avatar_Decal_01.png,decal"},
@@ -179,7 +179,7 @@ man={
 
 woMan={
     [1]={
-        name="脸型",
+        name=10060003, -- 脸型
         kinds={
             [1]={path=woManPath.."Head".."/Avatar_Head_01.png,head"},
             [2]={path=woManPath.."Head".."/Avatar_Head_02.png,head"},
@@ -192,7 +192,7 @@ woMan={
         }
     },
     [2]={
-        name="服装",
+        name= 10060008, -- 服饰
         kinds={
             [1]={path=woManPath.."Body".."/Avatar_body_01.png,body"},
             [2]={path=woManPath.."Body".."/Avatar_body_02.png,body"},
@@ -206,14 +206,14 @@ woMan={
         }
     },
     [3]={
-        name="眉毛",
+        name= 10060004, -- 眉毛
         kinds={
             [1]={path=woManPath.."Brow".."/Avatar_Girl_Brow_01.png,brow"},
         }
     },
 
     [4]={
-        name="眼睛",
+        name= 10060002,--"眼睛",
         kinds={
             [1]={path=woManPath.."Eyes".."/Avatar_Eyes_01.png,eyes"},
             [2]={path=woManPath.."Eyes".."/Avatar_Eyes_02.png,eyes"},
@@ -228,7 +228,7 @@ woMan={
     },
 
     [5]={
-        name="发型",
+        name= 10060001,-- "发型",
         kinds={
             [1]={path=woManPath.."Haircut".."/Avatar_Haircut_front_02.png,haircut"},
             [2]={path=woManPath.."Haircut".."/Avatar_Haircut_front_01.png,haircut"},
@@ -243,7 +243,7 @@ woMan={
         }
     },
     [6]={
-        name="帽子",
+        name= 10060007,--"帽子",
         kinds={
             [1]={path=",frontHat,"..",backHat"},
             [2]={path=woManPath.."Hat".."/Avatar_Hat_front_01.png,frontHat,"..woManPath .."Hat".."/Avatar_Hat_Back_01.png,backHat"},
@@ -251,13 +251,13 @@ woMan={
         }
     },
     [7]={
-        name="嘴",
+        name= 10060006,--"嘴",
         kinds={
             [1]={path=woManPath.."Mouth".."/Avatar_Girl_Mouth_01.png,mouth"},
         }
     },
     [8]={
-        name="鼻子",
+        name= 10060005,--"鼻子",
         kinds={
             [1]={path=woManPath .."Nose".."/Avatar_Nose_01.png,nose"},
             [2]={path=woManPath .."Nose".."/Avatar_Nose_02.png,nose"},

@@ -47,6 +47,7 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.staffNumText = transform:Find("root/salary/staffNum/staffNumText"):GetComponent("Text")
     self.totalText = transform:Find("root/salary/total/totalText"):GetComponent("Text")
     self.rentInput = transform:Find("root/rent/rentInput"):GetComponent("InputField")
+    self.tipRoot = transform:Find("root/tipRoot")
 
     self.titleText01 = transform:Find("root/titleText01"):GetComponent("Text")
     self.standardWageText02 = transform:Find("root/salary/wage/Text"):GetComponent("Text")
@@ -55,16 +56,20 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.totalText05 = transform:Find("root/salary/total/Text"):GetComponent("Text")
     self.rentInputText06 = transform:Find("root/rent/rentInput/Placeholder"):GetComponent("Text")
     self.rentText07 = transform:Find("root/rent/priceBg/Text"):GetComponent("Text")
+    self.rentText08 = transform:Find("root/rent/Text01"):GetComponent("Text")
+    self.tipText09 = transform:Find("root/tipRoot/Text"):GetComponent("Text")
 end
 --
 function OpenHouseCtrlNew:_language()
-    self.titleText01.text = "SETTING"
-    self.standardWageText02.text = "Employee single standard salary:"
-    self.standardWageText03.text = "/d"
-    self.staffNumText04.text = "number of staff:"
-    self.totalText05.text = "-DAILY WAGE-"
-    self.rentInputText06.text = "Please Enter"
-    self.rentText07.text = "The house can only be opened after the daily rent is set"
+    self.titleText01.text = GetLanguage(24020001)
+    self.standardWageText02.text = GetLanguage(24020002)
+    self.standardWageText03.text = "/"..GetLanguage(24020003)
+    self.staffNumText04.text = GetLanguage(24020004)..":"
+    self.totalText05.text = "-"..GetLanguage(24020007).."-"
+    self.rentInputText06.text = GetLanguage(24020017)
+    self.rentText07.text = GetLanguage(24020014)
+    self.rentText08.text = GetLanguage(24020015)..":"
+    self.tipText09.text = GetLanguage(24020016)
 end
 --
 function OpenHouseCtrlNew:_initData()
@@ -72,7 +77,7 @@ function OpenHouseCtrlNew:_initData()
     if self.m_data == nil then
         return
     end
-
+    self.tipRoot.localScale = Vector3.zero
     local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
     self.staffNum = staffNum
     self.staffNumText.text = staffNum
@@ -99,10 +104,10 @@ end
 --
 function OpenHouseCtrlNew:_onClickConfirm(ins)
     if ins.rentInput.text == "" then
-        --
+        ins.tipRoot.localScale = Vector3.one
         return
     end
-
+    PlayMusEff(1002)
     if ins.m_data.callBackFunc ~= nil then
         local temp = os.date("%H:%M", os.time())
         local data = {salary = ins.totalText.text, time = temp, fun = function ()
@@ -110,9 +115,11 @@ function OpenHouseCtrlNew:_onClickConfirm(ins)
             UIPanel.ClosePage()
         end}
         ct.OpenCtrl("OpenBuildingCheckCtrl", data)
+        ins.tipRoot.localScale = Vector3.zero
     end
 end
 --
 function OpenHouseCtrlNew:_onClickCloseBtn(ins)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end

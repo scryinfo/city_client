@@ -26,6 +26,8 @@ function BuildingInformationModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryProduceDepInfo","gs.ProduceDepInfo",self.n_ProcessingFactoryInfo,self)
     --零售店
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryRetailShopOrApartmentInfo","gs.RetailShopOrApartmentInfo",self.n_RetailShopInfo,self)
+    --推广
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPromotionCompanyInfo","gs.PromotionCompanyInfo",self.n_PromoteInfo,self)
 end
 
 function BuildingInformationModel:Close()
@@ -43,6 +45,8 @@ function BuildingInformationModel:Close()
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryProduceDepInfo","gs.ProduceDepInfo",self.n_ProcessingFactoryInfo,self)
     --零售店
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryRetailShopOrApartmentInfo","gs.RetailShopOrApartmentInfo",self.n_RetailShopInfo,self)
+    --推广
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryPromotionCompanyInfo","gs.PromotionCompanyInfo",self.n_PromoteInfo,self)
 end
 
 ---客户端请求----
@@ -81,6 +85,12 @@ function BuildingInformationModel:m_ReqRetailLaboratoryInfo(buildingId,playerId)
     DataManager.ModelSendNetMes("gscode.OpCode", "queryLaboratoryInfo","gs.QueryBuildingInfo",lMsg)
 end
 
+--推广建筑信息
+function BuildingInformationModel:m_ReqPromoteInfo(buildingId,playerId)
+    local lMsg = {buildingId = buildingId,playerId = playerId}
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPromotionCompanyInfo","gs.QueryBuildingInfo",lMsg)
+end
+
 ---服务器回调---
 --建筑停业
 function BuildingInformationModel:n_ClosedBuilding(data)
@@ -112,3 +122,8 @@ end
 function BuildingInformationModel:n_LaboratoryInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'builidngInfo',data)
 end
+--推广建筑信息
+function BuildingInformationModel:n_PromoteInfo(data)
+    DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'builidngInfo',data)
+end
+

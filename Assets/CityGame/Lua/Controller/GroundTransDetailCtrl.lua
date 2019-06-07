@@ -43,14 +43,14 @@ end
 
 function GroundTransDetailCtrl:Active()
     UIPanel.Active(self)
-    GroundTransDetailPanel.titleText01.text = GetLanguage(24010001)
-    GroundTransDetailPanel.averageText02.text = GetLanguage(24010002)
-    GroundTransDetailPanel.buildingText03.text = GetLanguage(24010003)
-    GroundTransDetailPanel.areaText04.text = GetLanguage(24010004)
-    GroundTransDetailPanel.rentText05.text = GetLanguage(24010005)
-    GroundTransDetailPanel.sellText06.text = GetLanguage(24010006)
-    GroundTransDetailPanel.sellingText07.text = GetLanguage(24010008)
-    GroundTransDetailPanel.rentingText08.text = GetLanguage(24010007)
+    GroundTransDetailPanel.titleText01.text = GetLanguage(22010001)
+    --GroundTransDetailPanel.averageText02.text = GetLanguage(24010002)
+    --GroundTransDetailPanel.buildingText03.text = GetLanguage(24010003)
+    GroundTransDetailPanel.areaText04.text = GetLanguage(22010002)
+    GroundTransDetailPanel.rentText05.text = GetLanguage(22010003)
+    GroundTransDetailPanel.sellText06.text = GetLanguage(22010004)
+    GroundTransDetailPanel.sellingText07.text = GetLanguage(22010006)
+    GroundTransDetailPanel.rentingText08.text = GetLanguage(22010005)
 end
 
 function GroundTransDetailCtrl:Hide()

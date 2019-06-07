@@ -31,7 +31,7 @@ function NoticeMgr:_createNotice(insluabehaviour,MailsData)
         uiTab.state = v.read
         uiTab.uuidParas = v.uuidParas
         uiTab.intParasArr = v.intParasArr
-        uiTab.from = GetLanguage(13010002)
+        uiTab.from = GetLanguage(16010023)
         uiTab.time = v.ts
         uiTab.paras = v.paras
         uiTab.tparas = v.tparas

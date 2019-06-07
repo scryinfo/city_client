@@ -19,7 +19,7 @@ function VolumeModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcExchangeAmount","ss.NpcExchangeAmount",self.n_OnNpcExchangeAmount,self) --所有npc交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnExchangeAmount,self) --所有交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerExchangeAmount","ss.PlayExchangeAmount",self.n_OnPlayerTypeNum,self) --总量曲线
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnPlayerNumCurve,self) --购买数量
+    --DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnPlayerNumCurve,self) --购买数量
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getPlayerAmount","gs.PlayerAmount",self.n_OnPlayerCountCurve,self) --玩家数量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OngetPlayerAmount,self) --玩家交易商品数量
 
@@ -50,7 +50,7 @@ function VolumeModel:m_GoodsNpcNum(time)
     local msgId = pbl.enum("sscode.OpCode","queryNpcNum")
     local lMsg = { time = time ,type = 1 }
     local pMsg = assert(pbl.encode("ss.QueryNpcNum", lMsg))
-    local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
+    --local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 
@@ -106,7 +106,7 @@ function VolumeModel:n_OnGetNpcNum(lMsg)
 end
 
 function VolumeModel:n_OnGoodsNpcNum(lMsg)
-    Event.Brocast("c_OnGoodsNpcNum",lMsg.goodNpcNumInfo)
+    Event.Brocast("c_OnGoodsNpcNum",lMsg.numInfo)
 end
 
 function VolumeModel:n_OnNpcExchangeAmount(lMsg)
@@ -130,7 +130,7 @@ function VolumeModel:n_OnPlayerCountCurve(lMsg)
 end
 ----玩家购买数量折线图
 function VolumeModel:n_OngetPlayerAmount(lMsg)
-    if lMsg.exchangeType == 4 or lMsg.exchangeType == 2 then
+    if  lMsg.exchangeType == 2 or lMsg.exchangeType == 4 then
         Event.Brocast("c_ToggleBtnThreeItem",lMsg.playerGoodsCurveMap)
     else
         Event.Brocast("c_ToggleBtnTwoItem",lMsg.playerGoodsCurveMap)

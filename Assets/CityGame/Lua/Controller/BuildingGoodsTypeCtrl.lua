@@ -21,7 +21,7 @@ function BuildingGoodsTypeCtrl:OnCreate(obj)
 end
 function BuildingGoodsTypeCtrl:Active()
     UIPanel.Active(self)
-    self:_language()
+    --self:_language()
     --存放商品分好类的实例
     self.GoodsTypeDatas = {}
     --存放分类button的实例
@@ -69,9 +69,11 @@ end
 function BuildingGoodsTypeCtrl:initializeUiInfoData()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.buttonScrollView.transform.localScale = Vector3.zero
+        self.topName.text = GetLanguage(30020001)
         self:createMaterialInstance()
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         self.buttonScrollView.transform.localScale = Vector3.one
+        self.topName.text = GetLanguage(30030001)
         self:createButtonInstance()
     end
 end
@@ -87,10 +89,10 @@ function BuildingGoodsTypeCtrl:createButtonInstance()
     end
     self.ButtonTypeData[1].nomal.isOn = true
 end
---设置多语言
-function BuildingGoodsTypeCtrl:_language()
-    self.topName.text = "PRODUCTION RATE OF RAW MATERIALS"
-end
+----设置多语言
+--function BuildingGoodsTypeCtrl:_language()
+--    self.topName.text = GetLanguage(30020001)
+--end
 ------------------------------------------------------------点击函数--------------------------------------------------------------------------------
 --关闭
 function BuildingGoodsTypeCtrl:_clickCloseBtn()

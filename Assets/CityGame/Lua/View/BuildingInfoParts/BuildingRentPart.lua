@@ -46,9 +46,9 @@ function BuildingRentPart:_initFunc()
 end
 --
 function BuildingRentPart:_language()
-    self.rentText01.text = "Check-in:"
-    self.unSelectText02.text = "Check-in situation"
-    self.selectText03.text = "Check-in situation"
+    self.rentText01.text = GetLanguage(26010006)
+    self.unSelectText02.text = GetLanguage(26010005)
+    self.selectText03.text = GetLanguage(26010005)
 
     local trueTextW01 = self.unSelectText02.preferredWidth
     self.unSelectText02.rectTransform.sizeDelta = Vector2.New(trueTextW01, self.unSelectText02.rectTransform.sizeDelta.y)

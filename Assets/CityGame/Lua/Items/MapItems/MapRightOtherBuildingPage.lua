@@ -33,9 +33,11 @@ function MapRightOtherBuildingPage:initialize(viewRect)
     self.matGoodItem = MapRightOtherMatGoodPage:new(self.matGoodInfo)
 
     self.closeBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:close()
     end)
     self.goHereBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_goHereBtn()
     end)
     --
@@ -147,7 +149,7 @@ function MapRightOtherBuildingPage:_createSign()
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.simpleShowRoot)
 
-    local str1 = self.data.hours.."h"
+    local str1 = self.data.hours..GetLanguage(20100003)
     local data1 = {infoTypeStr = "SignTime", value = str1}  --签约时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.simpleShowRoot)
 
@@ -157,11 +159,12 @@ function MapRightOtherBuildingPage:_createSign()
 end
 --仓库
 function MapRightOtherBuildingPage:_createWarehouse()
-    local str2 = string.format("<color=%s>E%s</color>/h", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.rent))
+    local hour = GetLanguage(20100003)
+    local str2 = string.format("<color=%s>E%s</color>/%s", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.rent), hour)
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.simpleShowRoot)
 
-    local str1 = string.format("%dh - %dh", self.data.minHourToRent, self.data.maxHourToRent)
+    local str1 = string.format("%d%s - %d%s", self.data.minHourToRent, hour, self.data.maxHourToRent, hour)
     local data1 = {infoTypeStr = "WarehouseTime", value = str1}  --时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.simpleShowRoot)
 
@@ -207,9 +210,7 @@ function MapRightOtherBuildingPage:openShow()
 end
 --多语言
 function MapRightOtherBuildingPage:_language()
-    --正式代码
-    --self.goHereText01.text = GetLanguage()
-    self.goHereText01.text = "Go here"
+    self.goHereText01.text = GetLanguage(20010008)
 end
 --关闭
 function MapRightOtherBuildingPage:close()

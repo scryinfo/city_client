@@ -16,6 +16,7 @@ function KindsItem:updateData(data)
 end
 
 function KindsItem:c_OnClick_change(ins)
+    PlayMusEff(1002)
     ctrl:changAparance(ins.data,ins.data.id)
 end
 

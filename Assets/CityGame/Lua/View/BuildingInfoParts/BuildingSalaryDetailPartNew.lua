@@ -58,10 +58,10 @@ function BuildingSalaryDetailPartNew:_getComponent(transform)
 end
 --
 function BuildingSalaryDetailPartNew:_language()
-    self.standardWageText01.text = "Standard wages:"
-    self.staffNumText02.text = "Number of staff:"
-    self.totalText03.text = "Total:"
-    self.timeText04.text = "Wage settlement time:"
+    self.standardWageText01.text = GetLanguage(26020001)
+    self.staffNumText02.text = GetLanguage(26020003)
+    self.totalText03.text = GetLanguage(26020005)
+    self.timeText04.text = GetLanguage(26020006)
 end
 
 --

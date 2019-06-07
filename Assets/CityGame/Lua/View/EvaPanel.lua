@@ -46,4 +46,5 @@ function EvaPanel.InitPanel()
     this.titleText = transform:Find("TopRoot/TitleText"):GetComponent("Text")
     this.desText = transform:Find("TopRoot/DesText"):GetComponent("Text")
     this.addBtnText = transform:Find("TopRoot/AddBtn/Text"):GetComponent("Text")
+    this.introductionTextT = transform:Find("TopRoot/IntroductionText"):GetComponent("Text")
 end

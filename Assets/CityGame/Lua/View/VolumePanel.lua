@@ -42,11 +42,12 @@ function VolumePanel.InitPanel()
     this.playerRect = transform:Find("leftBg/player"):GetComponent("RectTransform");
     this.infoBgrRect = transform:Find("leftBg/infoBg"):GetComponent("RectTransform");
     this.TradingCount = transform:Find("leftBg/infoBg/Tradingvolume/count"):GetComponent("Text");     --玩家交易量
-    this.Tradingname = transform:Find("leftBg/infoBg/Tradingvolume/name");
+    this.Tradingname = transform:Find("leftBg/infoBg/Tradingvolume/name"):GetComponent("Text");
     this.Tradingnum = transform:Find("leftBg/infoBg/Tradingnum/count"):GetComponent("Text");        --玩家人数
     this.Tradingnumname = transform:Find("leftBg/infoBg/Tradingnum/name"):GetComponent("Text");
 
     this.citzen = transform:Find("leftBg/citzen/citzenText"):GetComponent("Text");   --市民
+    this.player = transform:Find("leftBg/player/citzenText"):GetComponent("Text");   --玩家
     this.turnover = transform:Find("leftBg/moneyBg/turnover/turnoverText"):GetComponent("Text"); --营业额
     this.money = transform:Find("leftBg/moneyBg/money/moneyText"):GetComponent("Text"); --营业额
 

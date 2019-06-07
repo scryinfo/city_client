@@ -71,7 +71,7 @@ function RollCtrl:Refresh()
     local data = self.m_data
     if data.goodCategory ~=0 then
         Event.AddListener("c_InventResult",self.handleGoodsResult,self)
-        panel.EvaRoot.localScale = Vector3.zero
+        panel.EvaRoot.localScale = Vector3.one
     else
         panel.EvaRoot.localScale = Vector3.one
         Event.AddListener("c_InventResult",self.handleEvaResult,self)
@@ -83,6 +83,7 @@ function RollCtrl:Refresh()
 end
 function RollCtrl:Awake(go)
     panel = RollPanel
+    panel.totalnameText.text = GetLanguage(28040024)
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.LuaBehaviour=LuaBehaviour
     self.popCompent = PopCommpent:new(go,LuaBehaviour,self)

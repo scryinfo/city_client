@@ -118,6 +118,7 @@ end
 
 function VolumeCtrl:Active()
     UIPanel.Active(self)
+    VolumeCtrl:lauguega()
     self.m_Timer:Start()
     Event.AddListener("c_NpcNum",self.c_NpcNum,self)
     Event.AddListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
@@ -152,7 +153,17 @@ function VolumeCtrl:initInsData()
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')
 end
+function VolumeCtrl:lauguega()
 
+   VolumePanel.name.text = GetLanguage(19030018)
+   VolumePanel.citzen.text = GetLanguage(19020001)
+   VolumePanel.turnover.text = GetLanguage(19020002)
+   VolumePanel.city.text = GetLanguage(19020003)
+   VolumePanel.player.text = GetLanguage(19030019)
+   VolumePanel.Tradingname.text = GetLanguage(19030001)
+   VolumePanel.Tradingnumname.text = GetLanguage(19030002)
+
+end
 --更新时间
 function VolumeCtrl:Update()
 

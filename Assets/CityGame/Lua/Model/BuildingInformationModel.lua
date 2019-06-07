@@ -42,7 +42,7 @@ function BuildingInformationModel:Close()
     --加工厂
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryProduceDepInfo","gs.ProduceDepInfo",self.n_ProcessingFactoryInfo,self)
     --零售店
-    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryRetailShopOrApartmentInfo","gs.RetailShopOrApartmentInfo",self.n_RetailShopInfo,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryLaboratoryInfo","gs.LaboratoryInfo",self.n_LaboratoryInfo,self)
 end
 
 ---客户端请求----

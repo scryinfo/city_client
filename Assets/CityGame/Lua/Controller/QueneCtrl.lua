@@ -117,7 +117,11 @@ end
 
 --多语言
 function QueneCtrl.ChangeLanguage()
-    --panel.topicText
+    --panel.topicText.text = GetLanguage()
+    panel.player.text = GetLanguage(28040010)
+    panel.goods.text = GetLanguage(28040034)
+    panel.details.text = GetLanguage(28040035)
+    panel.startTime.text = GetLanguage(28040013)
     --panel.buildingInfoText
     --panel.buildingSelectedInfoText
     --panel.landInfomationText

@@ -13,7 +13,7 @@ local businessState = false
 BuildingInformationCtrl.MaterialFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/materialFactoryItem.prefab"         --原料厂
 BuildingInformationCtrl.ProcessingFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/processingFactoryItem.prefab"     --加工厂
 BuildingInformationCtrl.RetailStoreItem_Path = "Assets/CityGame/Resources/View/NewItems/retailStoreItem.prefab"                 --零售店
-BuildingInformationCtrl.LaboratoryItem_Path = "Assets/CityGame/Resources/View/NewItems/laboratoryItem.prefab"                 --零售店
+BuildingInformationCtrl.LaboratoryItem_Path = "Assets/CityGame/Resources/View/NewItems/laboratoryItem.prefab"                 --研究所
 BuildingInformationCtrl.HouseItem_Path = "Assets/CityGame/Resources/View/NewItems/houseBuildingInfoItem.prefab"                 --住宅
 function BuildingInformationCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -192,7 +192,7 @@ function BuildingInformationCtrl:getBuildingInfo()
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.Laboratory then
             --研究所
-            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailLaboratoryInfo',self.m_data.id,self.m_data.ownerId)
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'n_LaboratoryInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.House then
             --住宅和零售店一个协议，所以不需要添加其他监听
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
@@ -270,7 +270,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         elseif self.m_data.mId == 1500003 then
             self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         end
-        self.tipText.text = GetLanguage(23020006)
+        self.tipText.text = GetLanguage("30070005")
         local function callback(obj)
             self.buildingInfoItem = laboratoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end

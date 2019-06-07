@@ -79,9 +79,9 @@ function AdvertisementPartDetail:_getComponent(transform)
     self.openedOthers = transform:Find("bg/down/openOther/openBg/openedImage/openedOthers"):GetComponent("Text")
     self.open = transform:Find("bg/down/openOther/openBg/open").gameObject      --对外开放
     self.price = transform:Find("bg/down/openOther/openBg/priceImage/price"):GetComponent("Text")    --价格
-    self.priceText = transform:Find("bg/down/openOther/openBg/priceImage/price/priceImage/priceText"):GetComponent("Text")    --价格
+    self.priceText = transform:Find("bg/down/openOther/openBg/priceImage/priceImage/priceText"):GetComponent("Text")    --价格
     self.time = transform:Find("bg/down/openOther/openBg/timeImage/time"):GetComponent("Text")    --时间
-    self.timeText = transform:Find("bg/down/openOther/openBg/timeImage/time/timeImage/timeText"):GetComponent("Text")    --时间
+    self.timeText = transform:Find("bg/down/openOther/openBg/timeImage/timeImage/timeText"):GetComponent("Text")    --时间
     self.quene = transform:Find("bg/down/openOther/startTimeBg/quene").gameObject;      --队列
     self.queneText = transform:Find("bg/down/openOther/startTimeBg/quene/queneImage/queneText"):GetComponent("Text");
     self.queneValue = transform:Find("bg/down/openOther/startTimeBg/quene/queneImage/queneText/queneValue"):GetComponent("Text");

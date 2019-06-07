@@ -32,9 +32,9 @@ function LoginPanel.InitPanel()
 	this.eye = transform:Find("InputField_password/eye").gameObject;   --是否显示密码
 	this.closeEye = transform:Find("InputField_password/eye/closeeye");   --隐藏密码
 	this.openEye = transform:Find("InputField_password/eye/openeye");   --显示密码
-	this.norm = transform:Find("Button_login/norm").gameObject:GetComponent("Toggle");   --同意准则
-	this.normText = transform:Find("Button_login/norm/normText").gameObject;   --用户准则
-	this.agree = transform:Find("Button_login/norm/normText/agree").gameObject:GetComponent("Text");
+	--this.norm = transform:Find("Button_login/norm").gameObject:GetComponent("Toggle");   --同意准则
+	--this.normText = transform:Find("Button_login/norm/normText").gameObject;   --用户准则
+	--this.agree = transform:Find("Button_login/norm/normText/agree").gameObject:GetComponent("Text");
 
 	--多语言
 	this.choose = transform:Find("language/choose").gameObject;

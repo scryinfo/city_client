@@ -57,7 +57,7 @@ function EvaCtrl:Active()
 
     -- 多语言适配
     EvaPanel.titleText.text = "EVA" --GetLanguage(31010001)
-    EvaPanel.desText.text = GetLanguage(31010001)
+    EvaPanel.desText.text = GetLanguage(28040024)
     EvaPanel.addBtnText.text = GetLanguage(31010013)
     EvaPanel.introductionTextT.text = GetLanguage(31020001)
 end

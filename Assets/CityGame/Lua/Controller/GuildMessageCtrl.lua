@@ -41,7 +41,8 @@ function GuildMessageCtrl:Active()
 
     -- 多语言
     GuildMessagePanel.memberTitleText.text = GetLanguage(12010006)
-    GuildMessagePanel.timeTitleText.text = GetLanguage(12010006)
+    GuildMessagePanel.timeTitleText.text = GetLanguage(12040002)
+    GuildMessagePanel.messageTitleText.text = GetLanguage(12040003)
 end
 
 -- 监听Model层网络回调

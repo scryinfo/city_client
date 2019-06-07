@@ -36,4 +36,7 @@ function GuildMessagePanel.InitPanel()
     this.applyListNotice = transform:Find("TopRoot/Bg/ApplyListBtn/Notice")
     -- 退出联盟
     this.quitBtn = transform:Find("TopRoot/Bg/QuitBtn").gameObject
+
+    -- 多语言
+    this.messageTitleText = transform:Find("MiddleRoot/MessageTitleText"):GetComponent("Text")
 end

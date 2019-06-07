@@ -12,6 +12,7 @@ function Failitem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab=prefab
     local transform = prefab.transform
     self.closeBtn = prefab.transform:Find("closeBtn")
+    self.failText = prefab.transform:Find("Image/Text")
 
     luaBehaviour:AddClick(self.closeBtn.gameObject,self._closeFunc,self)
     self:Refresh(data)
@@ -32,6 +33,7 @@ function Failitem:updateUI(data)
 end
 
 function Failitem:Refresh(data)
+    self.failText = GetLanguage(28040023)
     self:updateData(data)
     self:updateUI(data)
 end

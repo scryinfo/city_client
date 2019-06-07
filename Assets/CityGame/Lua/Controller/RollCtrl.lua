@@ -86,6 +86,8 @@ function RollCtrl:Refresh()
 end
 function RollCtrl:Awake(go)
     panel = RollPanel
+    panel.count1.text = GetLanguage(28040024)
+    panel.count2.text = GetLanguage(28040024)
     LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.LuaBehaviour=LuaBehaviour
     self.popCompent = PopCommpent:new(go,LuaBehaviour,self)

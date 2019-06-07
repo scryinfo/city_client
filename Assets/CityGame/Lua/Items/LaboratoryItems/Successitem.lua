@@ -9,7 +9,7 @@ Successitem = class('Successitem')
 function Successitem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab=prefab
     local transform = prefab.transform
-
+    self.successText = prefab.transform:Find("Image/Text")
     self:Refresh(data)
 end
 ---==========================================================================================点击函数=============================================================================
@@ -25,6 +25,7 @@ function Successitem:updateUI(data)
 end
 
 function Successitem:Refresh(data)
+    self.successText = GetLanguage(28040022)
     self:updateData(data)
     self:updateUI(data)
 end

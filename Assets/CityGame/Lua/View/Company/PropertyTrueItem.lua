@@ -29,6 +29,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.typeImage = transform:Find("TypeImage"):GetComponent("Image")
     self.levelText = transform:Find("LevelText"):GetComponent("Text")
     self.nameNumberText = transform:Find("NameNumberText"):GetComponent("Text")
+    transform:Find("ExperienceTitleText"):GetComponent("Text").text = GetLanguage(31020012)
     self.experienceText = transform:Find("ExperienceTitleText/ExperienceText"):GetComponent("Text")
     self.levelSlider = transform:Find("LevelSlider"):GetComponent("Slider")
     self.totalLevelNumberText = transform:Find("LevelSlider/TotalLevelNumberText"):GetComponent("Text")
@@ -118,7 +119,7 @@ function PropertyTrueItem:ShowData(lv, cexp)
             --self.nameNumberText.text = self.configData.name .. ":" .. speed .. EvaUp[lv].add / 1000 .. "%"
     --    end
     --else
-        self.nameNumberText.text = self.configData.name
+        self.nameNumberText.text = GetLanguage(self.configData.name)
     --end
     self.levelText.text = string.format("Lv%s", lv)
     --self.experienceText.text = string.format("%s:<color=%s><b>%s</b></color>","Current experience value", PropertyTrueItem.static.ExperienceColor, cexp)

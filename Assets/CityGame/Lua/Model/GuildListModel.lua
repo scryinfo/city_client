@@ -32,7 +32,7 @@ function GuildListModel:n_OnSocietyInfo(societyInfo, msgId)
     --异常处理
     if msgId == 0 then
         if societyInfo.reason == "societyNameDuplicated"then
-            Event.Brocast("SmallPop","公会名字重复！",80)
+            Event.Brocast("SmallPop",GetLanguage(12050007), 80)
         elseif societyInfo.reason == "moneyNotEnough"then
             Event.Brocast("SmallPop","钱不够！",80)
         end
@@ -65,10 +65,10 @@ function GuildListModel:n_OnJoinSociety(guildIdDes, msgId)
         Event.Brocast("c_OnJoinSociety")
         return
     end
-    Event.Brocast("SmallPop", "已提交申请公会",80)
+    Event.Brocast("SmallPop", GetLanguage(12010012),80)
 end
 
 -- 申请加入公会通过
-function GuildListModel:n_JoinHandle(guildIdDes)
+function GuildListModel:n_JoinHandle(societyList)
     Event.Brocast("c_JoinHandle", societyList)
 end

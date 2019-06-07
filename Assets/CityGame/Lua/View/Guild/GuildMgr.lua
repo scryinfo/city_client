@@ -78,3 +78,9 @@ function GuildMgr:SetIdentity()
         self.guildMenu:_SetIdentity()
     end
 end
+
+function GuildMgr:SetLanguage()
+    if self.guildMenu then
+        self.guildMenu:_SetLanguage()
+    end
+end

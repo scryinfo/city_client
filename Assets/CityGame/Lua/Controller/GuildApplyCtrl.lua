@@ -35,6 +35,10 @@ end
 function GuildApplyCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
+
+    -- 多语言
+    GuildApplyPanel.panelNameText.text = GetLanguage(12060015)
+    GuildApplyPanel.noContentText.text = GetLanguage(12060016)
 end
 
 -- 监听Model层网络回调

@@ -214,13 +214,8 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     self:initializeLandUiLayout()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
-        if self.m_data.mId == 1100001 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        elseif self.m_data.mId == 1100002 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        elseif self.m_data.mId == 1100003 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        end
+        local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020001)
         local function callback(obj)
             self.buildingInfoItem = materialFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
@@ -228,13 +223,8 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         createPrefab(BuildingInformationCtrl.MaterialFactoryItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --加工厂
-        if self.m_data.mId == 1200001 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        elseif self.m_data.mId == 1200002 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        elseif self.m_data.mId == 1200003 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        end
+        local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020002)
         local function callback(obj)
             self.buildingInfoItem = processingFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
@@ -242,13 +232,8 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         createPrefab(BuildingInformationCtrl.ProcessingFactoryItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.RetailShop then
         --零售店
-        if self.m_data.mId == 1300001 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        elseif self.m_data.mId == 1300002 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        elseif self.m_data.mId == 1300003 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        end
+        local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020003)
         local function callback(obj)
             self.buildingInfoItem = retailStoreItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
@@ -265,13 +250,8 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         createPrefab(BuildingInformationCtrl.HouseItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.Municipal then
         --推广公司
-        if self.m_data.mId == 1600001 then
-            self.buildingTypeText.text = GetLanguage(PlayerBuildingBaseData[1600001].sizeName) .. GetLanguage(PlayerBuildingBaseData[1600001].typeName)
-        elseif self.m_data.mId == 1600002 then
-            self.buildingTypeText.text = GetLanguage(PlayerBuildingBaseData[1600002].sizeName) .. GetLanguage(PlayerBuildingBaseData[1600002].typeName)
-        elseif self.m_data.mId == 1600003 then
-            self.buildingTypeText.text = GetLanguage(PlayerBuildingBaseData[1600003].sizeName) .. GetLanguage(PlayerBuildingBaseData[1600003].typeName)
-        end
+        local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(27040030)
         local function callback(obj)
             self.buildingInfoItem = PromoteItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)

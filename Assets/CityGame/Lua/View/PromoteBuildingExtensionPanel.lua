@@ -27,9 +27,9 @@ function PromoteBuildingExtensionPanel.InitPanel()
     this.queue = transform:Find("contentRoot/queue").gameObject    --确定(自己)
     this.queueText = transform:Find("contentRoot/queue/queueText"):GetComponent("Text")    --确定(自己)
     this.supermarket = transform:Find("contentRoot/top/curveBg/supermarketIcon")    --零售店
-    this.supermarketText = transform:Find("contentRoot/top/curveBg/supermarketIcon/iconText")    --零售店
+    this.supermarketText = transform:Find("contentRoot/top/curveBg/supermarketIcon/iconText"):GetComponent("Text")   --零售店
     this.house = transform:Find("contentRoot/top/curveBg/houseIcon")    --住宅
-    this.houseText = transform:Find("contentRoot/top/curveBg/houseIcon/iconText")    --住宅
+    this.houseText = transform:Find("contentRoot/top/curveBg/houseIcon/iconText"):GetComponent("Text")    --住宅
     this.myTime = transform:Find("contentRoot/time")     --时间(自己)
     this.time = transform:Find("contentRoot/time/InputField"):GetComponent("InputField")     --时间(自己)
     this.titleText = transform:Find("contentRoot/title"):GetComponent("Text")     --推广加成

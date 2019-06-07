@@ -87,7 +87,7 @@ function FriendslistCtrl:_initState()
     FriendslistCtrl.friendInfo = {}
 
     if type == 2 then
-        FriendslistPanel.panelNameText.text = GetLanguage(12020001) --"MANAGE"
+        FriendslistPanel.panelNameText.text = GetLanguage(13020001) --"MANAGE"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.blacklistNumberText.text = ""
         FriendslistPanel.searchInputField:SetActive(false)
@@ -100,7 +100,7 @@ function FriendslistCtrl:_initState()
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
         end
     elseif type == 3 then
-        FriendslistPanel.panelNameText.text = GetLanguage(12030001) --"BLACK LIST"
+        FriendslistPanel.panelNameText.text = GetLanguage(13030001) --"BLACK LIST"
         FriendslistPanel.blacklistNumberImage:SetActive(true)
         FriendslistPanel.searchInputField:SetActive(false)
         FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-88)
@@ -117,7 +117,7 @@ function FriendslistCtrl:_initState()
         if FriendslistCtrl.static.isAddfriends then
             FriendslistCtrl.static.isAddfriends = false
         else
-            FriendslistPanel.panelNameText.text = GetLanguage(12040001) --"ADD NEW FRIENDS"
+            FriendslistPanel.panelNameText.text = GetLanguage(13040001) --"ADD NEW FRIENDS"
             FriendslistPanel.blacklistNumberImage:SetActive(false)
             FriendslistPanel.blacklistNumberText.text = ""
             --显示和清空搜索框
@@ -128,7 +128,7 @@ function FriendslistCtrl:_initState()
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
         end
     elseif type == 5 then
-        FriendslistPanel.panelNameText.text = GetLanguage(12050001) --"APPLICATION LIST"
+        FriendslistPanel.panelNameText.text = GetLanguage(13050001) --"APPLICATION LIST"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.blacklistNumberText.text = ""
         FriendslistPanel.searchInputField:SetActive(false)
@@ -188,14 +188,14 @@ function FriendslistCtrl:c_OnReceiveDeleteFriend(friendsId)
         end
     end
     FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
-    Event.Brocast("SmallPop",GetLanguage(12020002),60)
+    Event.Brocast("SmallPop",GetLanguage(13020004),60)
 end
 
 function FriendslistCtrl:c_DeleteBlacklist(friendsId)
     if friendsId.id then
         self:_showBlacklistNum()
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
-        Event.Brocast("SmallPop",GetLanguage(12030004),60)
+        Event.Brocast("SmallPop",GetLanguage(13030004),60)
     end
 end
 

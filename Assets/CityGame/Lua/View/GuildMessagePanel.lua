@@ -21,7 +21,9 @@ function GuildMessagePanel.InitPanel()
 
     -- 联盟信息
     this.guildNameText = transform:Find("TopRoot/Bg/GuildNameText"):GetComponent("Text")
+    this.memberTitleText = transform:Find("TopRoot/Bg/MemberTitleText"):GetComponent("Text")
     this.memberNumberText = transform:Find("TopRoot/Bg/MemberNumberText"):GetComponent("Text")
+    this.timeTitleText = transform:Find("TopRoot/Bg/TimeTitleText"):GetComponent("Text")
     this.timeText = transform:Find("TopRoot/Bg/TimeText"):GetComponent("Text")
 
     -- 联盟信息

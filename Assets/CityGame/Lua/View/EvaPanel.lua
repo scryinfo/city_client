@@ -41,4 +41,9 @@ function EvaPanel.InitPanel()
 
     this.propertyScroll = transform:Find("BottomRoot/PropertyRoot/PropertyScroll"):GetComponent("ActiveLoopScrollRect")
     this.propertyRootRt = transform:Find("BottomRoot/PropertyRoot")
+
+    -- 多语言
+    this.titleText = transform:Find("TopRoot/TitleText"):GetComponent("Text")
+    this.desText = transform:Find("TopRoot/DesText"):GetComponent("Text")
+    this.addBtnText = transform:Find("TopRoot/AddBtn/Text"):GetComponent("Text")
 end

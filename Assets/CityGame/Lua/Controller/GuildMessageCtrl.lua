@@ -38,6 +38,10 @@ end
 function GuildMessageCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
+
+    -- 多语言
+    GuildMessagePanel.memberTitleText.text = GetLanguage(12010006)
+    GuildMessagePanel.timeTitleText.text = GetLanguage(12010006)
 end
 
 -- 监听Model层网络回调

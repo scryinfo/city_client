@@ -60,11 +60,11 @@ function EvaResultItem:initialize(perfab, data, index)
         end
         LoadSprite(imgPath, iconImage, true)
 
-        v.root:Find("PropertyNumberText"):GetComponent("Text").text = string.format("%s +%s", configData.name, GetEvaPercent(v.tempData.lv))
+        v.root:Find("PropertyNumberText"):GetComponent("Text").text = string.format("%s +%s", GetLanguage(configData.name), GetEvaPercent(v.tempData.lv))
         if idStr == "22" and v.tempData.bt == "Quality" then
             local qualityNumberText = v.root:Find("QualityNumberText")
             qualityNumberText.localScale = Vector3.New(1, 1, 1)
-            qualityNumberText:GetComponent("Text").text = "Quality" .. GetEvaPercent(v.tempData.lv)
+            qualityNumberText:GetComponent("Text").text = GetLanguage(31010019) .. "   " .. GetEvaPercent(v.tempData.lv)
             v.root:Find("LargeNumberText").localScale = Vector3.New(0, 0, 0)
             v.root:Find("MediumNumberText").localScale = Vector3.New(0, 0, 0)
             v.root:Find("SmallNumberText").localScale = Vector3.New(0, 0, 0)
@@ -79,9 +79,9 @@ function EvaResultItem:initialize(perfab, data, index)
             MediumNumberText.localScale = Vector3.New(1, 1, 1)
             local SmallNumberText = v.root:Find("SmallNumberText")
             SmallNumberText.localScale = Vector3.New(1, 1, 1)
-            largeNumberText:GetComponent("Text").text = "Large " .. GetEvaData(3, configData, v.tempData.lv)
-            MediumNumberText:GetComponent("Text").text = "Medium " .. GetEvaData(2, configData, v.tempData.lv)
-            SmallNumberText:GetComponent("Text").text = "Small " .. GetEvaData(1, configData, v.tempData.lv)
+            largeNumberText:GetComponent("Text").text = GetLanguage(31010016) .. "   " .. GetEvaData(3, configData, v.tempData.lv)
+            MediumNumberText:GetComponent("Text").text = GetLanguage(31010015) .. "   " .. GetEvaData(2, configData, v.tempData.lv)
+            SmallNumberText:GetComponent("Text").text = GetLanguage(31010014) .. "   " .. GetEvaData(1, configData, v.tempData.lv)
             if i == 1 then
                 transform.sizeDelta = Vector2.New(1000, 400)
             end

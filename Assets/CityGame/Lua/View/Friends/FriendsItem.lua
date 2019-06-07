@@ -54,7 +54,7 @@ function FriendsItem:initialize(itemId, type, luaBehaviour, prefab, data)
     self.nameText.text = self.data.name
     self.companyText.text = self.data.companyName
     if self.data.des == nil or self.data.des == "" then
-        self.data.des = GetLanguage(12010003)  --默认值
+        self.data.des = GetLanguage(13010003)  --默认值
     end
     self.signatureText.text = self.data.des
     if self.data.desc then
@@ -176,8 +176,8 @@ function FriendsItem:OnDelete(go)
     --打开弹框
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = GetLanguage(12020002)
-    data.contentInfo = GetLanguage(12020003, go.data.name)
+    data.titleInfo = GetLanguage(13020002)
+    data.contentInfo = GetLanguage(13020003, go.data.name)
     data.btnCallBack = function()
         ct.log("tina_w7_friends", "向服务器发送删除好友请求")
         Event.Brocast("m_DeleteFriend", go.data.id, false)
@@ -190,8 +190,8 @@ function FriendsItem:OnRemoveMask(go)
     --打开弹框
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = GetLanguage(12030002)
-    data.contentInfo = GetLanguage(12030003, go.data.name)
+    data.titleInfo = GetLanguage(13030002)
+    data.contentInfo = GetLanguage(13030003, go.data.name)
     data.btnCallBack = function()
         ct.log("tina_w7_friends", "向服务器发送移除屏蔽请求")
         Event.Brocast("m_DeleteBlacklist", go.data.id)
@@ -215,13 +215,13 @@ end
 function FriendsItem:OnAddFriends(go)
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = GetLanguage(12040002)
-    data.tipInfo = GetLanguage(12040003)
+    data.titleInfo = GetLanguage(13040002)
+    data.tipInfo = GetLanguage(13040003)
     data.inputInfo = GetLanguage(15010023)
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         Event.Brocast("m_AddFriends", go.data.id, text)
-        Event.Brocast("SmallPop", GetLanguage(12040004),80)
+        Event.Brocast("SmallPop", GetLanguage(13040004),80)
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end
@@ -234,7 +234,7 @@ function FriendsItem:OnAgree(go)
     if FriendslistCtrl.friendInfo[go.itemId] then
         DataManager.SetMyFriendsApply({itemId = go.itemId})
         FriendslistCtrl:_refreshItem(#FriendslistCtrl.friendInfo)
-        Event.Brocast("SmallPop", GetLanguage(12050002, go.data.name),80)
+        Event.Brocast("SmallPop", GetLanguage(13050002, go.data.name),80)
     end
 end
 
@@ -247,6 +247,6 @@ function FriendsItem:OnRefuse(go)
         DataManager.SetMyFriendsApply({id = go.data.id})
         table.remove(FriendslistCtrl.friendInfo, go.itemId)
         FriendslistCtrl:_refreshItem(#FriendslistCtrl.friendInfo)
-        Event.Brocast("SmallPop", GetLanguage(12050003, go.data.name),80)
+        Event.Brocast("SmallPop", GetLanguage(13050003, go.data.name),80)
     end
 end

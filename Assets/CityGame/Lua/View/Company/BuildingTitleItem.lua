@@ -37,19 +37,19 @@ end
 -- 设置类型名字
 function BuildingTitleItem:SetName()
     if self.data == 0 then
-        self.nameText.text = "全部"
+        self.nameText.text = GetLanguage(18020002) -- "全部"
     elseif self.data == 1 then
-        self.nameText.text = "原料厂"
+        self.nameText.text = GetLanguage(42020001) -- "原料厂"
     elseif self.data == 2 then
-        self.nameText.text = "加工厂"
+        self.nameText.text = GetLanguage(42020002) -- "加工厂"
     elseif self.data == 3 then
-        self.nameText.text = "零售店"
+        self.nameText.text = GetLanguage(42020003) -- "零售店"
     elseif self.data == 4 then
-        self.nameText.text = "住宅"
+        self.nameText.text = GetLanguage(42020004) -- "住宅"
     elseif self.data == 5 then
-        self.nameText.text = "研究所"
+        self.nameText.text = GetLanguage(42020006) -- "研究所"
     elseif self.data == 6 then
-        self.nameText.text = "推广公司"
+        self.nameText.text = GetLanguage(42020005) -- "推广公司"
     elseif self.data == 7 then
         self.nameText.text = "仓库"
         self.prefab:SetActive(false)

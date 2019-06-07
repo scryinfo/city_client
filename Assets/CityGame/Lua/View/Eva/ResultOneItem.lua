@@ -12,8 +12,11 @@ function ResultOneItem:initialize(transform, data, configData)
     self.titleText = transform:Find("TitleText"):GetComponent("Text")
     self.addText = transform:Find("AddText"):GetComponent("Text")
     self.addContentText = transform:Find("AddText/AddContentText"):GetComponent("Text")
+    self.largeTitleText = transform:Find("LargeTitleText"):GetComponent("Text")
     self.largeText = transform:Find("LargeText"):GetComponent("Text")
+    self.mediumTitleText = transform:Find("MediumTitleText"):GetComponent("Text")
     self.mediumText = transform:Find("MediumText"):GetComponent("Text")
+    self.smallTitleText = transform:Find("SmallTitleText"):GetComponent("Text")
     self.smallText = transform:Find("SmallText"):GetComponent("Text")
 end
 
@@ -21,18 +24,18 @@ end
 function ResultOneItem:_initData(data, configData)
     self.configData = configData
     self.data = data
-    self.titleText.text = configData.name
+    self.titleText.text = GetLanguage(configData.name)
 
     if configData.Btype == "ProduceSpeed" then
-        self.addText.text = "Speed bonus"
+        self.addText.text = GetLanguage(31010011) -- "Speed bonus"
     elseif configData.Btype == "Quality" then
-        self.addText.text = "Quality bonus"
+        self.addText.text = GetLanguage(31010018) -- "Quality bonus"
     elseif configData.Btype == "PromotionAbility" then
-        self.addText.text = "Ability bonus"
+        self.addText.text = GetLanguage(31010011) -- "Ability bonus"
     elseif configData.Btype == "InventionUpgrade" then
-        self.addText.text = "Upgrade bonus"
+        self.addText.text = GetLanguage(31010011) -- "Upgrade bonus"
     elseif configData.Btype == "EvaUpgrade" then
-        self.addText.text = "Upgrade bonus"
+        self.addText.text = GetLanguage(31010011) -- "Upgrade bonus"
     end
 end
 
@@ -53,4 +56,11 @@ end
 -- 设置是否显示
 function ResultOneItem:_isShow(isShow)
     self.transform.localScale = isShow and Vector3.one or Vector3.zero
+end
+
+-- 设置多语言
+function ResultOneItem:_isShow(isShow)
+    self.largeTitleText.text = GetLanguage(31010016)
+    self.mediumTitleText.text = GetLanguage(31010015)
+    self.smallTitleText.text = GetLanguage(31010014)
 end

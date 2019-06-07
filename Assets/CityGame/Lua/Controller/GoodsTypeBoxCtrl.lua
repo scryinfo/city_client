@@ -70,7 +70,7 @@ end
 ------------------------------------------------------------初始化函数--------------------------------------------------------------------------------
 --初始化UI
 function GoodsTypeBoxCtrl:initializeUiInfoData()
-    self.topName.text = GetLanguage(self.m_data.itemId).."生产技术"
+    self.topName.text = GetLanguage(self.m_data.itemId)..GetLanguage(30020008)
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == 21 then
         --原料
         self.basicQuality.gameObject:SetActive(false)
@@ -95,12 +95,12 @@ function GoodsTypeBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function GoodsTypeBoxCtrl:_language()
-    self.basicProduceRateText.text = "基础生产速度"
-    self.produceBounusText.text = "生产速度加成"
-    self.basicQualityText.text = "基础品质"
-    self.qualityAdditionText.text = "品质加成"
-    self.popularityText.text = "知名度"
-    self.basicProduceRateUnit.text = "per/s"
+    self.basicProduceRateText.text = GetLanguage(30020002)
+    self.produceBounusText.text = GetLanguage(30020003)
+    self.basicQualityText.text = GetLanguage(30030004)
+    self.qualityAdditionText.text = GetLanguage(30030005)
+    self.popularityText.text = GetLanguage(30030006)
+    self.basicProduceRateUnit.text = GetLanguage(30030012)
     self.produceBounusUnit.text = "%"
     self.qualityAdditionUnit.text = "%"
 end

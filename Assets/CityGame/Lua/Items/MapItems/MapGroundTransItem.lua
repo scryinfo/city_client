@@ -21,9 +21,11 @@ function MapGroundTransItem:_childInit()
     self.selectTranText = trans:Find("root/selectImg/Text"):GetComponent("Text")
 
     self.sellBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_openGroundTransPage()
     end)
     self.rentBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_openGroundTransPage()
     end)
 
@@ -40,14 +42,13 @@ function MapGroundTransItem:_setBubbleState(state)
         self.groundSell.localScale = Vector3.one
         self.groundRent.localScale = Vector3.zero
         --self.sellText01.text = GetLanguage()
-        self.sellText01.text = "SELL"
-        self.selectTranText.text = "SELL"
+        self.sellText01.text = GetLanguage(22010004)
+        self.selectTranText.text = GetLanguage(22010004)
     elseif state == GroundTransState.Rent then
         self.groundRent.localScale = Vector3.one
         self.groundSell.localScale = Vector3.zero
-        --self.rentText02.text = GetLanguage()
-        self.rentText02.text = "RENT"
-        self.selectTranText.text = "RENT"
+        self.rentText02.text = GetLanguage(22010003)
+        self.selectTranText.text = GetLanguage(22010003)
     end
 end
 --

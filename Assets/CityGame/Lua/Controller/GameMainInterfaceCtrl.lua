@@ -36,6 +36,8 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
+    --进入游戏后音效切换
+    PlayMus(1001)
     --Event.AddListener("m_MainCtrlShowGroundAuc",self.SaveData,self)
 end
 

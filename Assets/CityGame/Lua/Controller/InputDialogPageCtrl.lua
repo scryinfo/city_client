@@ -26,7 +26,7 @@ function InputDialogPageCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.closeBtn, self._onClickClose, self)
     self.luaBehaviour:AddClick(self.confimBtn, self._onClickConfim, self)
     self.rentInput.onValueChanged:AddListener(function ()
-        ct.log("cycle_w12_hosueServer", "----")  --敏感词检测
+        --ct.log("cycle_w12_hosueServer", "----")  --敏感词检测
     end)
 end
 function InputDialogPageCtrl:Active()
@@ -64,12 +64,12 @@ function InputDialogPageCtrl:_initData()
     self.errorTipRoot.localScale = Vector3.zero
     if self.m_data.inputDefaultStr ~= nil then
         self.rentInputPlaceholderText.text = self.m_data.inputDefaultStr
+    else
+        self.rentInputPlaceholderText.text = GetLanguage(17020002)
     end
 end
 
-function InputDialogPageCtrl:_language()
-    --self.rentInputPlaceholderText.text = GetLanguage(37030002)
-end
+function InputDialogPageCtrl:_language() end
 
 ---点击确认按钮
 function InputDialogPageCtrl:_onClickConfim(ins)
@@ -94,7 +94,7 @@ end
 function InputDialogPageCtrl:setBuildingNameFailure(data)
     if data then
         self.errorTipRoot.localScale = Vector3.one
-        self.errorTipText.text = "Modified every seven days!"
+        self.errorTipText.text = GetLanguage(17020005)
     end
 end
 --修改玩家姓名
@@ -102,12 +102,12 @@ function InputDialogPageCtrl:setPlayerNameCallback(data)
     if data.reason ~= nil then
         self.errorTipRoot.localScale = Vector3.one
         if data.reason == "roleNameDuplicated" then
-            self.errorTipText.text = "改名称已被使用"
+            self.errorTipText.text = GetLanguage(17020003)
         elseif data.reason == "roleNameSetInCd" then
-            self.errorTipText.text = "距离上次修改不足7天"
+            self.errorTipText.text = GetLanguage(17020005)
         end
     else
-        Event.Brocast("SmallPop", "修改名字成功", 300)
+        Event.Brocast("SmallPop", GetLanguage(17020006), 300)
         UIPanel.ClosePage()
     end
 end

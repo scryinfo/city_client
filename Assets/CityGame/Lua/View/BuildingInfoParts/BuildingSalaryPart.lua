@@ -59,9 +59,9 @@ function BuildingSalaryPart:_initFunc()
 end
 --
 function BuildingSalaryPart:_language()
-    self.salaryText01.text = "Employee salary:"
-    self.unSelectText02.text = "Staff"
-    self.selectText03.text = "Staff"
+    self.salaryText01.text = GetLanguage(26010002)
+    self.unSelectText02.text = GetLanguage(26010001)
+    self.selectText03.text = GetLanguage(26010001)
 
     local trueTextW01 = self.unSelectText02.preferredWidth
     self.unSelectText02.rectTransform.sizeDelta = Vector2.New(trueTextW01, self.unSelectText02.rectTransform.sizeDelta.y)

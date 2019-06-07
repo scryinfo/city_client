@@ -23,6 +23,7 @@ function MapSearchTypeItemBase:initialize(data, selectFunc, viewRect)
     self.clickBtn = self.viewRect.transform:Find("clickBtn"):GetComponent("Button")
     self.loadBtnTran = self.viewRect.transform:Find("loadBtn")
     self.clickBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_clickFunc()
     end)
     self.isOpenState = false  --是否是打开状态  --只用于有展开页的typeItem
@@ -51,12 +52,8 @@ function MapSearchTypeItemBase:resetState()
 end
 --多语言
 function MapSearchTypeItemBase:_language()
-    --正式代码
-    --self.selectShowNameText.text = GetLanguage(self.data.languageId)
-    --self.greyTypeNameText.text = GetLanguage(self.data.languageId)
-
-    self.chooseShowNameText.text = self.data.name
-    self.greyTypeNameText.text = self.data.name
+    self.chooseShowNameText.text = GetLanguage(self.data.languageId)
+    self.greyTypeNameText.text = GetLanguage(self.data.languageId)
 end
 --loading
 function MapSearchTypeItemBase:_endLoading()

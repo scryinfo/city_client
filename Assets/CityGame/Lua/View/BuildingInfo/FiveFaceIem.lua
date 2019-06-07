@@ -32,6 +32,7 @@ end
 
 --选中左侧效果【不做修改】
 function FiveFaceItem:c_OnClick_switchKind(ins)
+    PlayMusEff(1002)
     if ctrl ~= nil then
         ctrl:switchKinds(ins.kinds)
         ctrl.select.localScale = Vector3.zero
@@ -43,7 +44,7 @@ end
 --刷新数据【不做修改】
 function FiveFaceItem:saveData(data)
     self.id = data.id
-    self.text.text = data.name--   TODO:GetLanguage()
+    self.text.text = GetLanguage(data.name)
     self.kinds = data.kinds
     local pat = split(data.kinds[1].path,",")
     LoadSprite(path..pat[2]..".png",self.ima,true)

@@ -4,25 +4,25 @@ CompoundTypeConfig={
 		
 		[1] = {
 		itemId = 2101001,
-		name = "fooddata", 
+		name = 20020001,
 		itemType = 0,
 		},
 		
 		[2] = {
 		itemId = 2101002,
-		name = "fooddata", 
+		name = 20020001,
 		itemType = 0,
 		},
 		
 		[3] = {
 		itemId = 2101003,
-		name = "fooddata", 
+		name = 20020001,
 		itemType = 0,
 		},
 		
 		[4] = {
 		itemId = 2101004,
-		name = "fooddata", 
+		name = 20020001,
 		itemType = 0,
 		},
 	},
@@ -33,25 +33,25 @@ CompoundTypeConfig={
 		
 		[1] = {
 		itemId = 2102001,
-		name = "dressdata", 
+		name = 20020002,
 		itemType = 0,
 		},
 		
 		[2] = {
 		itemId = 2102002,
-		name = "dressdata", 
+		name = 20020002,
 		itemType = 0,
 		},
 		
 		[3] = {
 		itemId = 2102003,
-		name = "dressdata", 
+		name = 20020002,
 		itemType = 0,
 		},
 		
 		[4] = {
 		itemId = 2102004,
-		name = "dressdata", 
+		name = 20020002,
 		itemType = 0,
 		},
 	},
@@ -59,32 +59,32 @@ CompoundTypeConfig={
 	[2251] = {
 		[1] = {
 		itemId = 2251101,
-		name = "food",
+		name = 20020001,
 		itemType = 1,
 		},
 		[2] = {
 		itemId = 2251102,
-		name = "food",
+		name = 20020001,
 		itemType = 1
 		},
 		[3] = {
 		itemId = 2251103,
-		name = "food",
+		name = 20020001,
 		itemType = 1,
 		},
 		[4] = {
 		itemId = 2251201,
-		name = "food",
+		name = 20020001,
 		itemType = 1,
 		},
 		[5] = {
 		itemId = 2251202,
-		name = "food",
+		name = 20020001,
 		itemType = 1,
 		},
 		[6] = {
 		itemId = 2251203,
-		name = "food",
+		name = 20020001,
 		itemType = 1,
 		}
 	},
@@ -93,32 +93,32 @@ CompoundTypeConfig={
 	[2252] = {
 		[1] = {
 		itemId = 2252101,
-		name = "dress",
+		name = 20030001,
 		itemType = 1,
 		},
 		[2] = {
 		itemId = 2252102,
-		name = "dress",
+		name = 20030001,
 		itemType = 1,
 		},
 		[3] = {
 		itemId = 2252103,
-		name = "dress",
+		name = 20030001,
 		itemType = 1,
 		},
 		[4] = {
 		itemId = 2252201,
-		name = "dress",
+		name = 20030001,
 		itemType = 1,
 		},
 		[5] = {
 		itemId = 2252202,
-		name = "dress",
+		name = 20030001,
 		itemType = 1,
 		},
 		[6] = {
 		itemId = 2252203,
-		name = "dress",
+		name = 20030001,
 		itemType = 1,
 		}
 	}

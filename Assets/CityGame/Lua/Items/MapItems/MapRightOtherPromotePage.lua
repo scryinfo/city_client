@@ -32,9 +32,8 @@ function MapRightOtherPromotePage:refreshData(data, typeData)
 
         LoadSprite(infoData.imgPath, self.iconImg, true)
         self.iconImg.color = getColorByVector3(infoData.colorV3)
-        --self.infoText.text = GetLanguage(MapPromotionInfoConfig[typeData.detailId].languageId)
-        self.infoText.text = MapPromotionInfoConfig[typeData.detailId].languageId
-        self.valueText.text = "+"..value.."/h"
+        self.infoText.text = GetLanguage(MapPromotionInfoConfig[typeData.detailId].languageId)
+        self.valueText.text = "+"..value.."/"..GetLanguage(20100003)
 
         self:_language()
         self:_createPromotion()
@@ -54,11 +53,11 @@ function MapRightOtherPromotePage:_sortInfoItems()
 end
 --推广
 function MapRightOtherPromotePage:_createPromotion()
-    local str2 = string.format("<color=%s>E%s</color>/h", MapRightOtherPromotePage.moneyColor, GetClientPriceString(self.data.pricePerHour))
+    local str2 = string.format("<color=%s>E%s</color>/%s", MapRightOtherPromotePage.moneyColor, GetClientPriceString(self.data.pricePerHour), GetLanguage(20150004))
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.showInfoRoot)
 
-    local str1 = self.data.remainTime / 3600000 .."h"
+    local str1 = self.data.remainTime / 3600000 ..GetLanguage(20100003)
     local data1 = {infoTypeStr = "PromotionTime", value = str1}  --时间
     self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
 
@@ -103,7 +102,7 @@ function MapRightOtherPromotePage:_cleanItems()
 end
 --多语言
 function MapRightOtherPromotePage:_language()
-    --self.text01.text = GetLanguage(12345678)
+    self.text01.text = GetLanguage(20130004)
 end
 --关闭
 function MapRightOtherPromotePage:close()

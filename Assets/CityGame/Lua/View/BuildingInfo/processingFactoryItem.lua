@@ -36,12 +36,12 @@ function processingFactoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     end
 end
 function processingFactoryItem:language()
-    self.processingText.text = "产品"
-    self.basicProduceRateTextBtn.text = "基本的生产速度"
-    self.produceBounusTextBtn.text = "生产加成"
-    self.basicQualityTextBtn.text = "基本质量"
-    self.qualityAdditionTextBtn.text = "质量加成"
-    self.popolarityTextBtn.text = "知名度"
+    self.processingText.text = GetLanguage(30030001)
+    self.basicProduceRateTextBtn.text = GetLanguage(30030002)
+    self.produceBounusTextBtn.text = GetLanguage(30030003)
+    self.basicQualityTextBtn.text = GetLanguage(30030004)
+    self.qualityAdditionTextBtn.text = GetLanguage(30030005)
+    self.popolarityTextBtn.text = GetLanguage(30030006)
 end
 function processingFactoryItem:_clickProcessingIntroduceBtn(ins)
     local data = {}
@@ -50,22 +50,22 @@ function processingFactoryItem:_clickProcessingIntroduceBtn(ins)
     ct.OpenCtrl("BuildingGoodsTypeCtrl",data)
 end
 function processingFactoryItem:_clickBasicProduceRateTextBtn(ins)
-    local stringKey = 27010005
+    local stringKey = 30030007
     Event.Brocast("openTipBox",stringKey,ins.basicProduceRateTextBtn.transform.localPosition,ins.basicProduceRateTextBtn.transform)
 end
 function processingFactoryItem:_clickProduceBounusTextBtn(ins)
-    local stringKey = 27010005
+    local stringKey = 30030008
     Event.Brocast("openTipBox",stringKey,ins.produceBounusTextBtn.transform.localPosition,ins.produceBounusTextBtn.transform)
 end
 function processingFactoryItem:_clickBasicQualityTextBtn(ins)
-    local stringKey = 27010005
+    local stringKey = 30030009
     Event.Brocast("openTipBox",stringKey,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
 end
 function processingFactoryItem:_clickQualityAdditionTextBtn(ins)
-    local stringKey = 27010005
+    local stringKey = 30030010
     Event.Brocast("openTipBox",stringKey,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
 end
 function processingFactoryItem:_clickPopolarityTextBtn(ins)
-    local stringKey = 27010005
+    local stringKey = 30030011
     Event.Brocast("openTipBox",stringKey,ins.popolarityTextBtn.transform.localPosition,ins.popolarityTextBtn.transform)
 end

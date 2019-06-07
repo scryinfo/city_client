@@ -139,8 +139,8 @@ function ToggleBtnThreeItem:c_GoodsplayerTypeThreeNum(info)
             demandNumTab[i].num = 0
         else
             for k, v in ipairs(info) do
-                if math.floor(v.key/1000) == sevenDaysAgo then
-                    demandNumTab[i].num = tonumber(GetClientPriceString(v.value))
+                if math.floor(v.time/1000) == sevenDaysAgo then
+                    demandNumTab[i].num = tonumber(GetClientPriceString(v.money))
                 end
             end
         end

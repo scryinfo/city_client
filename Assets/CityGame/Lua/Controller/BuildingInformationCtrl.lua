@@ -215,13 +215,13 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
         if self.m_data.mId == 1100001 then
-            self.buildingTypeText.text = "小型原料厂"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         elseif self.m_data.mId == 1100002 then
-            self.buildingTypeText.text = "中型原料厂"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         elseif self.m_data.mId == 1100003 then
-            self.buildingTypeText.text = "大型原料厂"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         end
-        self.tipText.text = "原料厂可生产各种基本原料，这些原料是生产产品所必需的。"
+        self.tipText.text = GetLanguage(23020001)
         local function callback(obj)
             self.buildingInfoItem = materialFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
@@ -229,13 +229,13 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --加工厂
         if self.m_data.mId == 1200001 then
-            self.buildingTypeText.text = "小型加工厂"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         elseif self.m_data.mId == 1200002 then
-            self.buildingTypeText.text = "中型加工厂"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         elseif self.m_data.mId == 1200003 then
-            self.buildingTypeText.text = "大型加工厂"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         end
-        self.tipText.text = "加工厂采用原料生产同步产品，提高了产品的质量和知名度。"
+        self.tipText.text = GetLanguage(23020002)
         local function callback(obj)
             self.buildingInfoItem = processingFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
@@ -243,13 +243,13 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     elseif self.m_data.buildingType == BuildingType.RetailShop then
         --零售店
         if self.m_data.mId == 1300001 then
-            self.buildingTypeText.text = "小型零售店"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         elseif self.m_data.mId == 1300002 then
-            self.buildingTypeText.text = "中型零售店"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         elseif self.m_data.mId == 1300003 then
-            self.buildingTypeText.text = "大型零售店"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         end
-        self.tipText.text = "本厂采用原料生产同步产品，提高了产品的质量和知名度。"
+        self.tipText.text = GetLanguage(23020003)
         local function callback(obj)
             self.buildingInfoItem = retailStoreItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
@@ -258,7 +258,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         --住宅
         local data = PlayerBuildingBaseData[self.m_data.mId]
         self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
-        self.tipText.text = "本厂采用原料生产同步产品，提高了产品的质量和知名度。"
+        self.tipText.text = GetLanguage(23020004)
         local function callback(obj)
             self.buildingInfoItem = houseBuildingInfoItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
@@ -280,13 +280,13 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     elseif self.m_data.buildingType == BuildingType.Laboratory then
         --研究所
         if self.m_data.mId == 1500001 then
-            self.buildingTypeText.text = "小型研究所"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         elseif self.m_data.mId == 1500002 then
-            self.buildingTypeText.text = "中型研究所"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         elseif self.m_data.mId == 1500003 then
-            self.buildingTypeText.text = "大型研究所"
+            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         end
-        self.tipText.text = "研究所为Eva提供研究点数以及发明新商品。"
+        self.tipText.text = GetLanguage(23020006)
         local function callback(obj)
             self.buildingInfoItem = laboratoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
@@ -300,10 +300,10 @@ function BuildingInformationCtrl:initializeButtonInfo()
     if self.m_data.ownerId == DataManager.GetMyOwnerID() then
         --是否开业
         if self.m_data.state == "OPERATE" then
-            self.switchBtn.text = "停业"
+            self.switchBtn.text = GetLanguage(30010004)
             businessState = true
         else
-            self.switchBtn.text = "拆除"
+            self.switchBtn.text = GetLanguage(30010005)
             businessState = false
         end
     else
@@ -435,12 +435,16 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 --多语言
 function BuildingInformationCtrl:language()
-    self.topName.text = "建筑综合评分"
-    self.buildingNomalText.text = "建筑信息"
-    self.buildingChooseText.text = "建筑信息"
-    self.landNomalText.text = "土地信息"
-    self.landChooseText.text = "土地信息"
-    self.buildTimeText.text = "施工时间:"
+    self.topName.text = ""
+    self.buildingNomalText.text = GetLanguage(30010001)
+    self.buildingChooseText.text = GetLanguage(30010001)
+    self.landNomalText.text = GetLanguage(30010002)
+    self.landChooseText.text = GetLanguage(30010002)
+    self.buildTimeText.text = GetLanguage(30010003)
+    self.buyingTime.text = GetLanguage(30080003)
+    self.buyingPrice.text = GetLanguage(30080004)
+    self.leaseTime.text = GetLanguage(30080001)
+    self.rentText.text = GetLanguage(30080002)
 end
 ---------------------------------------------------------------点击函数--------------------------------------------------------------------------------
 --打开建筑信息
@@ -484,7 +488,7 @@ end
 function BuildingInformationCtrl:_clickBuildingName(ins)
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = GetLanguage(25040001)
+    data.titleInfo = GetLanguage(30010006)
     data.inputDefaultStr = GetLanguage(37030002)
     data.btnCallBack = function(name)
         Event.Brocast("m_ReqSetBuildingName",ins.m_data.id,name)
@@ -548,9 +552,9 @@ end
 function BuildingInformationCtrl:closedBuildingSucceed(dataInfo)
     if dataInfo then
         UIPanel.ClosePage()
-        self.switchBtn.text = "拆除"
+        self.switchBtn.text = GetLanguage(30010005)
         businessState = false
-        Event.Brocast("SmallPop","停业成功", 300)
+        Event.Brocast("SmallPop",GetLanguage(30010013), 300)
     end
 end
 --修改建筑名字成功

@@ -54,6 +54,12 @@ end
 function EvaCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
+
+    -- 多语言适配
+    EvaPanel.titleText.text = "EVA" --GetLanguage(31010001)
+    EvaPanel.desText.text = GetLanguage(28040024)
+    EvaPanel.addBtnText.text = GetLanguage(31010013)
+    EvaPanel.introductionTextT.text = GetLanguage(31020001)
 end
 
 function EvaCtrl:Refresh()
@@ -144,7 +150,7 @@ function EvaCtrl:OnBack(go)
         end
         if isHaveEvaAddData then
             local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
-                        content = "Have you added a point that has not been saved yet, or is it quit?？",func = function()
+                        content = GetLanguage(31010023),func = function()
                     -- 清理eva数据
                     go:_clearEvaDataAndView()
                     UIPanel.ClosePage()

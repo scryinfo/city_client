@@ -33,6 +33,7 @@ function VolumePanel.InitPanel()
     --this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport/Content"):GetComponent("ActiveLoopScrollRect");
     this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
     this.secondScroll = this.playercurrRoot:Find("topRoot/secondScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
+    this.secondScrollcontent = this.playercurrRoot:Find("topRoot/secondScroll/Viewport/content");
     this.threeScroll = this.playercurrRoot:Find("topRoot/threeScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
 
     --left
@@ -58,7 +59,7 @@ function VolumePanel.InitPanel()
     this.income = transform:Find("leftBg/moneyBg/numberBg/city/title/expense/expenseText"):GetComponent("Text");
     this.incomesText = transform:Find("leftBg/moneyBg/numberBg/city/title/expense/expenses/expensesText"):GetComponent("Text");
 
-    this.cityBg = transform:Find("leftBg/moneyBg/numberBg/city").gameObject; --城市市民Bg
+    --this.cityBg = transform:Find("leftBg/moneyBg/numberBg/city").gameObject; --城市市民Bg
     this.city = transform:Find("leftBg/moneyBg/numberBg/city/hint/Text"):GetComponent("Text"); --城市市民
     this.adult = transform:Find("leftBg/moneyBg/numberBg/adult/adultImage/adultText"):GetComponent("Text"); --成年人
     this.old = transform:Find("leftBg/moneyBg/numberBg/old/oldImage/oldText"):GetComponent("Text"); --老人

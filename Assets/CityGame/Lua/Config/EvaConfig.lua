@@ -1,14 +1,14 @@
 EvaConfig = {
     [1] =
     {
-        name="原料厂",
+        name=42020001,
         option = {
 
             [1] = {
-                name = "小麦",
+                name = 2101001,
                 property = {
                     [1] = {
-                        name = "生产技术",
+                        name = 31010020,
                         Atype = 2101001,
                         Btype = "ProduceSpeed",
                         b = 0,
@@ -17,10 +17,10 @@ EvaConfig = {
                 },
             },
             [2] = {
-                name = "猪肉",
+                name = 2101002,
                 property = {
                     [1] = {
-                        name = "生产技术",
+                        name = 31010020,
                         Atype = 2101002,
                         Btype = "ProduceSpeed",
                         b = 0,
@@ -29,10 +29,10 @@ EvaConfig = {
                 },
             },
             [3] = {
-                name = "鸡蛋",
+                name = 2101003,
                 property = {
                     [1] = {
-                        name = "生产技术",
+                        name = 31010020,
                         Atype = 2101003,
                         Btype = "ProduceSpeed",
                         b = 0,
@@ -41,10 +41,10 @@ EvaConfig = {
                 },
             },
             [4] = {
-                name = "奶酪",
+                name = 2101004,
                 property = {
                     [1] = {
-                        name = "生产技术",
+                        name = 31010020,
                         Atype = 2101004,
                         Btype = "ProduceSpeed",
                         b = 0,
@@ -53,10 +53,10 @@ EvaConfig = {
                 },
             },
             [5] = {
-                name = "棉",
+                name = 2102001,
                 property = {
                     [1] = {
-                        name = "生产技术",
+                        name = 31010020,
                         Atype = 2102001,
                         Btype = "ProduceSpeed",
                         b = 0,
@@ -65,10 +65,10 @@ EvaConfig = {
                 },
             },
             [6] = {
-                name = "珊瑚绒",
+                name = 2102002,
                 property = {
                     [1] = {
-                        name = "生产技术",
+                        name = 31010020,
                         Atype = 2102002,
                         Btype = "ProduceSpeed",
                         b = 0,
@@ -77,10 +77,10 @@ EvaConfig = {
                 },
             },
             [7] = {
-                name = "树胶",
+                name = 2102003,
                 property = {
                     [1] = {
-                        name = "生产技术",
+                        name = 31010020,
                         Atype = 2102003,
                         Btype = "ProduceSpeed",
                         b = 0,
@@ -89,10 +89,10 @@ EvaConfig = {
                 },
             },
             [8] = {
-                name = "呢绒",
+                name = 2102004,
                 property = {
                     [1] = {
-                        name = "生产技术",
+                        name = 31010020,
                         Atype = 2102004,
                         Btype = "ProduceSpeed",
                         b = 0,
@@ -104,33 +104,33 @@ EvaConfig = {
     },
     [2] =
     {
-        name="加工厂",
+        name=42020002,
         option = {
 
             [1] =
             {
-                name="食品",
+                name=20050001,
                 option = {
 
                     [1] = {
-                        name = "面包",
+                        name = 2251101,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2251101,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2251101,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2251101,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -139,24 +139,24 @@ EvaConfig = {
                         },
                     },
                     [2] = {
-                        name = "热狗",
+                        name = 2251102,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2251102,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2251102,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2251102,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -165,24 +165,24 @@ EvaConfig = {
                         },
                     },
                     [3] = {
-                        name = "蛋挞",
+                        name = 2251103,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2251103,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2251103,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2251103,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -191,24 +191,24 @@ EvaConfig = {
                         },
                     },
                     [4] = {
-                        name = "汉堡",
+                        name = 2251201,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2251201,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2251201,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2251201,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -217,24 +217,24 @@ EvaConfig = {
                         },
                     },
                     [5] = {
-                        name = "香肠",
+                        name = 2251202,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2251202,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2251202,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2251202,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -243,24 +243,24 @@ EvaConfig = {
                         },
                     },
                     [6] = {
-                        name = "三明治",
+                        name = 2251203,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2251203,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2251203,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2251203,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -271,28 +271,28 @@ EvaConfig = {
                 },},
             [2] =
             {
-                name="服饰",
+                name=20050002,
                 option = {
 
                     [1] = {
-                        name = "手套",
+                        name = 2252101,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2252101,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2252101,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2252101,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -301,24 +301,24 @@ EvaConfig = {
                         },
                     },
                     [2] = {
-                        name = "围巾",
+                        name = 2252102,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2252102,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2252102,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2252102,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -327,24 +327,24 @@ EvaConfig = {
                         },
                     },
                     [3] = {
-                        name = "冬帽",
+                        name = 2252103,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2252103,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2252103,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2252103,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -353,24 +353,24 @@ EvaConfig = {
                         },
                     },
                     [4] = {
-                        name = "西装",
+                        name = 2252201,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2252201,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2252201,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2252201,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -379,24 +379,24 @@ EvaConfig = {
                         },
                     },
                     [5] = {
-                        name = "毛衣",
+                        name = 2252202,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2252202,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2252202,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2252202,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -405,24 +405,24 @@ EvaConfig = {
                         },
                     },
                     [6] = {
-                        name = "大衣",
+                        name = 2252203,
                         property = {
                             [1] = {
-                                name = "品质",
+                                name = 31010019,
                                 Atype = 2252203,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
                             [2] = {
-                                name = "品牌",
+                                name = 31010025,
                                 Atype = 2252203,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
                             },
                             [3] = {
-                                name = "生产技术",
+                                name = 31010020,
                                 Atype = 2252203,
                                 Btype = "ProduceSpeed",
                                 b = 0,
@@ -433,17 +433,17 @@ EvaConfig = {
                 },},
         },},
     [3] = {
-        name = "零售店",
+        name = 42020003,
         property = {
             [1] = {
-                name = "品质",
+                name = 31010019,
                 Atype = 13,
                 Btype = "Quality",
                 b = 0,
                 basevalue = 1,
             },
             [2] = {
-                name = "品牌",
+                name = 31010025,
                 Atype = 13,
                 Btype = "Brand",
                 b = 1,
@@ -452,17 +452,17 @@ EvaConfig = {
         },
     },
     [4] = {
-        name = "住宅",
+        name = 42020004,
         property = {
             [1] = {
-                name = "品质",
+                name = 31010019,
                 Atype = 14,
                 Btype = "Quality",
                 b = 0,
                 basevalue = 1,
             },
             [2] = {
-                name = "品牌",
+                name = 31010025,
                 Atype = 14,
                 Btype = "Brand",
                 b = 1,
@@ -471,14 +471,14 @@ EvaConfig = {
         },
     },
     [5] = {
-        name = "研究所",
+        name = 42020006,
         option = {
 
             [1] = {
-                name = "发明商品",
+                name = 31010026,
                 property = {
                     [1] = {
-                        name = "发明提升",
+                        name = 31010030,
                         Atype = 155,
                         Btype = "InventionUpgrade",
                         b = 0,
@@ -487,10 +487,10 @@ EvaConfig = {
                 },
             },
             [2] = {
-                name = "Eva点数研究",
+                name = 31010027,
                 property = {
                     [1] = {
-                        name = "EVA提升",
+                        name = 31010031,
                         Atype = 156,
                         Btype = "EvaUpgrade",
                         b = 0,
@@ -502,19 +502,19 @@ EvaConfig = {
     },
     [6] =
     {
-        name="推广公司",
+        name=42020005,
         option = {
 
             [1] =
             {
-                name="建筑推广",
+                name=31010028,
                 option = {
 
                     [1] = {
-                        name = "零售店",
+                        name = 42020003,
                         property = {
                             [1] = {
-                                name = "推广能力",
+                                name = 31010008,
                                 Atype = 1613,
                                 Btype = "PromotionAbility",
                                 b = 0,
@@ -523,10 +523,10 @@ EvaConfig = {
                         },
                     },
                     [2] = {
-                        name = "住宅",
+                        name = 42020004,
                         property = {
                             [1] = {
-                                name = "推广能力",
+                                name = 31010008,
                                 Atype = 1614,
                                 Btype = "PromotionAbility",
                                 b = 0,
@@ -538,14 +538,14 @@ EvaConfig = {
             },
             [2] =
             {
-                name="商品推广",
+                name=31010029,
                 option = {
 
                     [1] = {
-                        name = "食品",
+                        name = 20050001,
                         property = {
                             [1] = {
-                                name = "推广能力",
+                                name = 31010008,
                                 Atype = 1651,
                                 Btype = "PromotionAbility",
                                 b = 0,
@@ -554,10 +554,10 @@ EvaConfig = {
                         },
                     },
                     [2] = {
-                        name = "服饰",
+                        name = 20050002,
                         property = {
                             [1] = {
-                                name = "推广能力",
+                                name = 31010008,
                                 Atype = 1652,
                                 Btype = "PromotionAbility",
                                 b = 0,
@@ -567,7 +567,7 @@ EvaConfig = {
                     },
                 },
             },
-        },
+        }, 
     },
     --[7] = {
     --    name = "集散中心",

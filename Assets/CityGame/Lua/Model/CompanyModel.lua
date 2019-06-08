@@ -24,8 +24,9 @@ end
 
 -- 查询玩家的土地消息
 function CompanyModel:m_GetGroundInfo()
-    local msgId = pbl.enum("gscode.OpCode","getGroundInfo")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    --local msgId = pbl.enum("gscode.OpCode","getGroundInfo")
+    --CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    DataManager.ModelSendNetMes("gscode.OpCode", "getGroundInfo","gs.Id",{id = CompanyCtrl.static.companyMgr:GetId()})
 end
 
 -- 服务器返回的土地消息
@@ -35,7 +36,7 @@ end
 
 -- 查询玩家的建筑信息
 function CompanyModel.m_QueryMyBuildings()
-    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyBuildings","gs.QueryMyBuildings",{id = DataManager.GetMyOwnerID()})
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyBuildings","gs.QueryMyBuildings",{id = CompanyCtrl.static.companyMgr:GetId()})
 end
 
 -- 服务器返回的建筑信息
@@ -66,7 +67,7 @@ end
 -- 查询玩家的收支信息
 function CompanyModel.m_QueryPlayerIncomePayCurve()
     local msgId = pbl.enum("sscode.OpCode","queryPlayerIncomePayCurve")
-    local lMsg = { id = DataManager.GetMyOwnerID() }
+    local lMsg = { id = CompanyCtrl.static.companyMgr:GetId() }
     local pMsg = assert(pbl.encode("ss.Id", lMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
@@ -86,9 +87,9 @@ function CompanyModel:n_OnModifyCompanyName(roleInfo, msgId)
     --异常处理
     if msgId == 0 then
         if roleInfo.reason == "roleNameDuplicated"then
-            Event.Brocast("SmallPop","公司名字重复！",80)
+            Event.Brocast("SmallPop",GetLanguage(18010011),80)
         elseif roleInfo.reason == "accountInFreeze"then
-            Event.Brocast("SmallPop","七天只能修改一次！",80)
+            Event.Brocast("SmallPop",GetLanguage(18010012),80)
         end
         return
     end
@@ -97,7 +98,7 @@ end
 
 -- 查询品牌
 function CompanyModel:m_QueryMyBrands()
-    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyBrands","gs.QueryMyBrands", {pId = DataManager.GetMyOwnerID()})
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyBrands","gs.QueryMyBrands", {pId = CompanyCtrl.static.companyMgr:GetId()})
 end
 
 -- 查询品牌返回

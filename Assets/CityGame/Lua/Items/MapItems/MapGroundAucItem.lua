@@ -32,6 +32,7 @@ function MapGroundAucItem:_childInit()
 
     self.clickBtn = tran:Find("root/btn"):GetComponent("Button")
     self.clickBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_openGroundAucFunc()
     end)
 

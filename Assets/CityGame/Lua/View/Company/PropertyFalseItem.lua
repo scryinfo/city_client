@@ -25,10 +25,10 @@ function PropertyFalseItem:initialize(prefab, data, name)
     self.tipsText = transform:Find("TipsText")
 
 --[[    self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",name, PropertyFalseItem.static.NumberColor, data.b)]]
-    self.nameNumberText.text = name
+    self.nameNumberText.text = GetLanguage(name)
     --self.tipsImage.localScale = Vector3.zero
     --self.tipsText.transform.localScale = Vector3.zero
-    self.tipsText:GetComponent("Text").text = "The popularity needs to be promoted through promotion company."
+    self.tipsText:GetComponent("Text").text = GetLanguage(31010024)
     LoadSprite(PropertyFalseItem.static.BTypeIcon[data.bt], self.typeImage, true)
 
     -- 点击按钮显示提示

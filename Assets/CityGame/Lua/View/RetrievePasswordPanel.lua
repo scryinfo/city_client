@@ -20,7 +20,11 @@ end
 function RetrievePasswordPanel.InitPanel()
     this.name = transform:Find("nameBg/name"):GetComponent('Text');
     this.phone = transform:Find("phone"):GetComponent('InputField');
+    this.phonePlaceholder = transform:Find("phone/Placeholder"):GetComponent('Text');
+    this.phoneText = transform:Find("phone/phoneBg/phoneText"):GetComponent('Text');
     this.authCode = transform:Find("authCode"):GetComponent('InputField');
+    this.authCodePlaceholder = transform:Find("authCode/Placeholder"):GetComponent('Text');
+    this.authCodeText = transform:Find("authCode/authCodeBg/authCodeText"):GetComponent('Text');
 
     this.gain = transform:Find("authCode/gain").gameObject;    --获取验证码
     this.gainText = transform:Find("authCode/gain/Text"):GetComponent("Text");
@@ -31,5 +35,6 @@ function RetrievePasswordPanel.InitPanel()
     this.authCodeHint = transform:Find("authCode/hint"):GetComponent("Text"); --验证码提示
 
     this.next = transform:Find("next").gameObject;    --获取验证码
+    this.nextText = transform:Find("next/Text"):GetComponent("Text");
     this.back = transform:Find("back").gameObject;    --返回
 end

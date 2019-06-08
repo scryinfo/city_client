@@ -39,6 +39,18 @@ function RegisterCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_GetCode",self.c_GetCode,self)
     Event.AddListener("c_OnResult",self.c_OnResult,self)
+
+    RegisterPanel.name.text = GetLanguage(10030001)
+    RegisterPanel.phonePlaceholder.text = GetLanguage(10030006)
+    RegisterPanel.phoneText.text = GetLanguage(10030006)
+    RegisterPanel.passwordPlaceholder.text = GetLanguage(10030007)
+    RegisterPanel.passwordText.text = GetLanguage(10030007)
+    RegisterPanel.confirmPlaceholder.text = GetLanguage(10030008)
+    RegisterPanel.confirmText.text = GetLanguage(10030008)
+    RegisterPanel.authCodePlaceholder.text = GetLanguage(10030009)
+    RegisterPanel.authCodeText.text = GetLanguage(10030009)
+    RegisterPanel.gainText.text = GetLanguage(10030010)
+    RegisterPanel.registerText.text = GetLanguage(10030011)
 end
 
 function RegisterCtrl:Hide()
@@ -64,8 +76,9 @@ end
 
 --返回
 function RegisterCtrl:OnBack(go)
+    PlayMusEff(1002)
     local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
-                content = "修改密码成功!",func = function()
+                content = GetLanguage(10030016),func = function()
             UIPanel.ClosePage()
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)
@@ -73,9 +86,10 @@ end
 
 --点击获取验证码
 function RegisterCtrl:OnGain(go)
+    PlayMusEff(1002)
     if RegisterPanel.phone.text == "" then
         RegisterPanel.phoneHint.transform.localScale = Vector3.one
-        RegisterPanel.phoneHint.text = "请输入手机号"
+        RegisterPanel.phoneHint.text = GetLanguage(10030020)
     else
         RegisterPanel.phoneHint.transform.localScale = Vector3.zero
         Event.Brocast("m_GetCode",RegisterPanel.phone.text)
@@ -88,11 +102,11 @@ function RegisterCtrl:c_GetCode(info,msgId)
         if info.reason == "highFrequency" then
             RegisterPanel.authCodeHint.transform.localScale = Vector3.one
             RegisterPanel.phoneHint.transform.localScale = Vector3.zero
-            RegisterPanel.authCodeHint.text = "请求过于频繁,请稍候重试"
+            RegisterPanel.authCodeHint.text = GetLanguage(10030025)
         elseif info.reason == "paramError" then
             RegisterPanel.authCodeHint.transform.localScale = Vector3.zero
             RegisterPanel.phoneHint.transform.localScale = Vector3.one
-            RegisterPanel.phoneHint.text = "手机号格式错误"
+            RegisterPanel.phoneHint.text = GetLanguage(10040002)
         end
     else
         RegisterPanel.authCodeHint.transform.localScale = Vector3.zero
@@ -121,6 +135,7 @@ end
 
 --注册
 function RegisterCtrl:OnRegister(go)
+    PlayMusEff(1002)
     RegisterPanel.phoneHint.transform.localScale = Vector3.zero
     RegisterPanel.passwordHint.transform.localScale = Vector3.zero
     RegisterPanel.confirmHint.transform.localScale = Vector3.zero
@@ -128,25 +143,25 @@ function RegisterCtrl:OnRegister(go)
 
     if RegisterPanel.phone.text == "" then
         RegisterPanel.phoneHint.transform.localScale = Vector3.one
-        RegisterPanel.phoneHint.text = "请输入手机号"
+        RegisterPanel.phoneHint.text = GetLanguage(10030020)
     elseif RegisterPanel.password.text == "" then
         RegisterPanel.passwordHint.transform.localScale = Vector3.one
-        RegisterPanel.passwordHint.text = "请输入密码"
+        RegisterPanel.passwordHint.text = GetLanguage(10030021)
     elseif RegisterPanel.confirm.text == "" then
         RegisterPanel.confirmHint.transform.localScale = Vector3.one
-        RegisterPanel.confirmHint.text = "请确认密码"
+        RegisterPanel.confirmHint.text = GetLanguage(10030022)
     elseif RegisterPanel.authCode.text == "" then
         RegisterPanel.authCodeHint.transform.localScale = Vector3.one
-        RegisterPanel.authCodeHint.text = "请输入验证码"
+        RegisterPanel.authCodeHint.text = GetLanguage(10030023)
     elseif string.find(RegisterPanel.password.text,"%s") ~= nil then
         RegisterPanel.passwordHint.transform.localScale = Vector3.one
-        RegisterPanel.passwordHint.text = "密码不能出现空格"
+        RegisterPanel.passwordHint.text = GetLanguage(10030024)
     elseif #RegisterPanel.password.text < 8 or #RegisterPanel.password.text > 12 then
         RegisterPanel.passwordHint.transform.localScale = Vector3.one
-        RegisterPanel.passwordHint.text = "密码格式错误(8到12个字符)"
+        RegisterPanel.passwordHint.text = GetLanguage(10030013)
     elseif RegisterPanel.password.text ~= RegisterPanel.confirm.text  then
         RegisterPanel.confirmHint.transform.localScale = Vector3.one
-        RegisterPanel.confirmHint.text = "两次输入密码不同"
+        RegisterPanel.confirmHint.text = GetLanguage(10030012)
     else
         local data = {}
         data.InviteCode = go.m_data
@@ -163,19 +178,15 @@ function RegisterCtrl:c_OnResult(info)
     RegisterPanel.authCodeHint.transform.localScale = Vector3.zero
     if info.status == "FAIL_ACCOUNT_EXIST" then
         RegisterPanel.phoneHint.transform.localScale = Vector3.one
-        RegisterPanel.phoneHint.text = "账号已注册"
+        RegisterPanel.phoneHint.text = GetLanguage(10030026)
 
-        local data={ins = self,content = "注册成功!",func = function()
-            ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
-        end  }
-        ct.OpenCtrl('ReminderCtrl',data)
     elseif info.status == "FAIL_AUTHCODE_ERROR" then
         RegisterPanel.authCodeHint.transform.localScale = Vector3.one
-        RegisterPanel.authCodeHint.text = "验证码错误"
+        RegisterPanel.authCodeHint.text = GetLanguage(10030014)
 
     elseif info.status == "FAIL_INVCODE_USED" then
         local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
-                    content = "邀请码也过期，请重新注册!",func = function()
+                    content = GetLanguage(10030015),func = function()
                 UIPanel.ClosePage()
             end  }
         ct.OpenCtrl('NewReminderCtrl',data)
@@ -188,7 +199,7 @@ function RegisterCtrl:c_OnResult(info)
         ct.OpenCtrl("ErrorBtnDialogPageCtrl", info_RegisterErrorNetMsg)
     elseif info.status == "SUCCESS" then
         local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                    content = "注册成功!",func = function()
+                    content =  GetLanguage(10030017),func = function()
                 ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
             end  }
         ct.OpenCtrl('NewReminderCtrl',data)

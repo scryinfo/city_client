@@ -24,6 +24,7 @@ function PromoteCompanyPanel.InitPanel()
     this.open = transform:Find("open").gameObject
     this.queue = transform:Find("quene").gameObject
     this.open = transform:Find("open").gameObject
+    this.queneText = transform:Find("quene/queneImage/queneText"):GetComponent("Text")
     this.queneValue = transform:Find("quene/queneImage/queneText/queneValue"):GetComponent("Text")
     this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("top/OpenBusinessItem"))
 end

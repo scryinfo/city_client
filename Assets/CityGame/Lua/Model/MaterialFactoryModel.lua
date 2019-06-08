@@ -26,6 +26,7 @@ function MaterialFactoryModel:OnCreate()
     Event.AddListener("m_ReqMaterialSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.AddListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
     Event.AddListener("m_ReqMaterialAddShoppingCart",self.m_ReqAddShoppingCart,self)
+    Event.AddListener("m_ReqGetBrandName",self.m_ReqGetBrandName,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
@@ -48,6 +49,8 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryBrand","gs.BrandInfo",self.n_OnGetBrandName,self)
+
 end
 
 function MaterialFactoryModel:Close()
@@ -64,6 +67,8 @@ function MaterialFactoryModel:Close()
     Event.RemoveListener("m_ReqMaterialSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.RemoveListener("m_ReqMaterialSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
     Event.RemoveListener("m_ReqMaterialAddShoppingCart",self.m_ReqAddShoppingCart,self)
+    Event.RemoveListener("m_ReqGetBrandName",self.m_ReqGetBrandName,self)
+
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
@@ -85,6 +90,8 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryBrand","gs.BrandInfo",self.n_OnGetBrandName)
+
 end
 ---客户端请求---
 --打开原料厂
@@ -148,7 +155,7 @@ end
 function MaterialFactoryModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
         self:m_ReqOpenMaterial(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
+        Event.Brocast("SmallPop", GetLanguage(24020018), 300)  --开业成功提示
     end
 end
 --员工工资改变
@@ -181,7 +188,7 @@ function MaterialFactoryModel:n_OnModifyShelfInfo(data)
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(27010005), 300)
+        Event.Brocast("SmallPop", GetLanguage(29010010), 300)
     end
 end
 --下架
@@ -189,7 +196,7 @@ function MaterialFactoryModel:n_OnShelfDelInfo(data)
     Event.Brocast("downShelfSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(27010003), 300)
+        Event.Brocast("SmallPop", GetLanguage(25060007), 300)
     end
 end
 --添加生产线
@@ -226,6 +233,10 @@ end
 --自动补货
 function MaterialFactoryModel:n_OnSetAutoReplenish(data)
     Event.Brocast("replenishmentSucceed",data)
+end
+--获取特定品牌
+function MaterialFactoryModel:n_OnGetBrandName(data)
+    Event.Brocast("getBrandNameSucceed",data)
 end
 ----添加购物车
 --function MaterialFactoryModel:n_OnAddShoppingCart(data)

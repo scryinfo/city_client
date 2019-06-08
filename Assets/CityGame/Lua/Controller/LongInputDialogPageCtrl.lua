@@ -28,8 +28,8 @@ end
 
 function LongInputDialogPageCtrl:Active()
     UIPanel.Active(self)
-    self.titleText.text = GetLanguage(16010002)
-    self.inputPlaceholderText.text = GetLanguage(16010003)
+    --self.titleText.text = GetLanguage(16010002)
+    --self.inputPlaceholderText.text = GetLanguage(16010003)
 end
 
 function LongInputDialogPageCtrl:Refresh()
@@ -38,19 +38,21 @@ end
 
 ---寻找组件
 function LongInputDialogPageCtrl:_getComponent(go)
-    self.titleText = go.transform:Find("root/titleText"):GetComponent("Text")
+    --self.titleText = go.transform:Find("root/titleText"):GetComponent("Text")
     self.closeBtn = go.transform:Find("root/closeBtn")
     self.confirmBtn = go.transform:Find("root/confirmBtn")
     self.input = go.transform:Find("root/input"):GetComponent("InputField")
     --language
     self.titleText = go.transform:Find("root/titleText"):GetComponent("Text")
-    self.inputPlaceholderText = go.transform:Find("root/input/Placeholder"):GetComponent("Text")
+    --self.inputPlaceholderText = go.transform:Find("root/input/Placeholder"):GetComponent("Text")
     self.inputPlaceholder = go.transform:Find("root/input/Placeholder"):GetComponent("Text")
 end
 ---初始化
 function LongInputDialogPageCtrl:_initData()
     if self.m_data.titleInfo then
         self.titleText.text = self.m_data.titleInfo
+    else
+        self.titleText.text = GetLanguage(17010002)
     end
     if self.m_data.inputContent then
         self.input.text = self.m_data.inputContent
@@ -60,7 +62,7 @@ function LongInputDialogPageCtrl:_initData()
     if self.m_data.placeholderContent then
         self.inputPlaceholder.text = self.m_data.placeholderContent
     else
-        self.inputPlaceholder.text = "不超过60字"
+        self.inputPlaceholder.text = GetLanguage(12060021)
     end
 end
 

@@ -42,7 +42,7 @@ function BuildingInfoItem:initialize(prefab, data)
     end
 
     -- 位置
-    self.posText.text = string.format("coordinate(%d,%d)", self.data.pos.x, self.data.pos.y)
+    self.posText.text = string.format("%s(%d,%d)",GetLanguage(18030003), self.data.pos.x, self.data.pos.y)
 
     -- 显示不同建筑的图片
     LoadSprite(BuildingIconConfig[data.mId], self.buildingImage, true)

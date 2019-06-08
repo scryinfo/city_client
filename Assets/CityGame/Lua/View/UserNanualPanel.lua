@@ -18,7 +18,6 @@ end
 
 --初始化面板--
 function UserNanualPanel.InitPanel()
-    this.content = transform:Find("contentBg/Text"):GetComponent("Text")
     this.name = transform:Find("nameBg/name"):GetComponent("Text")
     this.back = transform:Find("back").gameObject
     this.agree = transform:Find("agree").gameObject

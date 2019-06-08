@@ -38,17 +38,17 @@ end
 -- 设置类型名字
 function LandTitleItem:SetName()
     if self.data == 0 then
-        self.nameText.text = "全部"
+        self.nameText.text = GetLanguage(18020002) -- "全部"
     elseif self.data == 1 then
-        self.nameText.text = "租用中"
+        self.nameText.text = GetLanguage(18020003) -- "租用中"
     elseif self.data == 2 then
-        self.nameText.text = "已出租"
+        self.nameText.text = GetLanguage(18020004) -- "已出租"
     elseif self.data == 3 then
-        self.nameText.text = "出租中"
+        self.nameText.text = GetLanguage(18020005) -- "出租中"
     elseif self.data == 4 then
-        self.nameText.text = "出售中"
+        self.nameText.text = GetLanguage(18020006) -- "出售中"
     elseif self.data == 5 then
-        self.nameText.text = "可使用"
+        self.nameText.text = GetLanguage(18020007) -- "可使用"
     end
 end
 

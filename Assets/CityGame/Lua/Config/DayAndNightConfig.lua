@@ -1,147 +1,147 @@
 DayAndNightConfig = {
 [1] = {
-["_DayLightStrength"] = 0.44292712211609,
-["_DayLightColor"] = getColorByInt(216,187,77,255), 
-["_LightStrengh"] = 0.70468544960022,
-["_DiffuseColor"] = getColorByInt(129,143,175,255), 
+["_LightStrengh"] = 0.081099011003971,
+["_DayLightColor"] = getColorByInt(202,254,213,255), 
+["_DiffuseColor"] = getColorByInt(202,255,247,255), 
+["_DayLightStrength"] = 0.50303041934967,
 
  },[2] = {
+["_DayLightStrength"] = 0.6922590136528,
+["_DayLightColor"] = getColorByInt(255,255,106,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(240,228,161,255), 
-["_DiffuseColor"] = getColorByInt(220,217,208,255), 
-["_DayLightStrength"] = 0.40000000596046,
+["_DiffuseColor"] = getColorByInt(214,237,249,255), 
 
  },[3] = {
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(255,241,159,255), 
-["_DiffuseColor"] = getColorByInt(255,255,242,255), 
-["_DayLightStrength"] = 1,
+["_DayLightColor"] = getColorByInt(255,255,187,255), 
+["_DiffuseColor"] = getColorByInt(255,255,255,255), 
+["_DayLightStrength"] = 0.50586754083633,
 
  },[4] = {
-["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(219,197,139,255), 
-["_DiffuseColor"] = getColorByInt(255,240,211,255), 
 ["_DayLightStrength"] = 1,
+["_DayLightColor"] = getColorByInt(255,255,123,255), 
+["_LightStrengh"] = 0,
+["_DiffuseColor"] = getColorByInt(255,238,223,255), 
 
  },[5] = {
-["_LightStrengh"] = 0.73773378133774,
-["_DayLightColor"] = getColorByInt(218,130,50,255), 
-["_DiffuseColor"] = getColorByInt(222,195,147,255), 
 ["_DayLightStrength"] = 1,
+["_DayLightColor"] = getColorByInt(255,246,123,255), 
+["_LightStrengh"] = 0.10924119502306,
+["_DiffuseColor"] = getColorByInt(255,205,191,255), 
 
  },[6] = {
-["_DayLightStrength"] = 0.47921326756477,
-["_DayLightColor"] = getColorByInt(133,174,231,255), 
-["_LightStrengh"] = 1.5806888341904,
-["_DiffuseColor"] = getColorByInt(86,115,163,255), 
+["_LightStrengh"] = 0.83912187814713,
+["_DayLightColor"] = getColorByInt(122,255,255,255), 
+["_DiffuseColor"] = getColorByInt(115,151,255,255), 
+["_DayLightStrength"] = 0.54087573289871,
 
  },[7] = {
-["_LightStrengh"] = 0.94272255897522,
-["_DayLightColor"] = getColorByInt(137,145,157,255), 
-["_DiffuseColor"] = getColorByInt(110,130,171,255), 
-["_DayLightStrength"] = 0.44292712211609,
+["_DayLightStrength"] = 0.30839505791664,
+["_DayLightColor"] = getColorByInt(206,225,213,255), 
+["_LightStrengh"] = 0.081099011003971,
+["_DiffuseColor"] = getColorByInt(197,215,238,255), 
 
  },[8] = {
+["_DayLightStrength"] = 0.31380116939545,
+["_DayLightColor"] = getColorByInt(255,255,213,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(154,180,199,255), 
-["_DiffuseColor"] = getColorByInt(185,206,232,255), 
-["_DayLightStrength"] = 0.40000000596046,
+["_DiffuseColor"] = getColorByInt(208,241,249,255), 
 
  },[9] = {
+["_DayLightStrength"] = 0.49762389063835,
+["_DayLightColor"] = getColorByInt(255,255,213,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(220,207,213,255), 
-["_DiffuseColor"] = getColorByInt(225,234,247,255), 
-["_DayLightStrength"] = 0.73073762655258,
+["_DiffuseColor"] = getColorByInt(236,249,255,255), 
 
  },[10] = {
+["_DayLightStrength"] = 0.26514279842377,
+["_DayLightColor"] = getColorByInt(255,255,122,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(201,189,156,255), 
-["_DiffuseColor"] = getColorByInt(221,205,194,255), 
-["_DayLightStrength"] = 0.92025172710419,
+["_DiffuseColor"] = getColorByInt(222,236,234,255), 
 
  },[11] = {
-["_LightStrengh"] = 1.1005952358246,
-["_DayLightColor"] = getColorByInt(137,102,89,255), 
-["_DiffuseColor"] = getColorByInt(157,140,135,255), 
-["_DayLightStrength"] = 1,
+["_DayLightStrength"] = 0.37867996096611,
+["_DayLightColor"] = getColorByInt(255,246,123,255), 
+["_LightStrengh"] = 0.10923913121223,
+["_DiffuseColor"] = getColorByInt(248,212,222,255), 
 
  },[12] = {
-["_LightStrengh"] = 1.6533727645874,
-["_DayLightColor"] = getColorByInt(133,174,231,255), 
-["_DiffuseColor"] = getColorByInt(68,91,148,255), 
-["_DayLightStrength"] = 0.44123002886772,
+["_LightStrengh"] = 0.83912402391434,
+["_DayLightColor"] = getColorByInt(122,255,255,255), 
+["_DiffuseColor"] = getColorByInt(115,164,255,255), 
+["_DayLightStrength"] = 0.22189012169838,
 
  },[13] = {
-["_LightStrengh"] = 0.94272255897522,
-["_DayLightColor"] = getColorByInt(125,134,145,255), 
-["_DiffuseColor"] = getColorByInt(99,120,151,255), 
-["_DayLightStrength"] = 0.44292712211609,
+["_DayLightStrength"] = 0.30839505791664,
+["_DayLightColor"] = getColorByInt(206,225,213,255), 
+["_LightStrengh"] = 0.081099011003971,
+["_DiffuseColor"] = getColorByInt(199,215,238,255), 
 
  },[14] = {
+["_DayLightStrength"] = 0.31380116939545,
+["_DayLightColor"] = getColorByInt(255,255,213,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(140,161,184,255), 
-["_DiffuseColor"] = getColorByInt(173,193,213,255), 
-["_DayLightStrength"] = 0.40000000596046,
+["_DiffuseColor"] = getColorByInt(208,241,249,255), 
 
  },[15] = {
+["_DayLightStrength"] = 0.49762389063835,
+["_DayLightColor"] = getColorByInt(255,255,213,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(203,192,200,255), 
-["_DiffuseColor"] = getColorByInt(205,224,237,255), 
-["_DayLightStrength"] = 0.73073762655258,
+["_DiffuseColor"] = getColorByInt(236,249,255,255), 
 
  },[16] = {
+["_DayLightStrength"] = 0.26514279842377,
+["_DayLightColor"] = getColorByInt(255,255,122,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(183,172,136,255), 
-["_DiffuseColor"] = getColorByInt(205,187,175,255), 
-["_DayLightStrength"] = 0.92025172710419,
+["_DiffuseColor"] = getColorByInt(222,236,234,255), 
 
  },[17] = {
-["_LightStrengh"] = 1.1005952358246,
-["_DayLightColor"] = getColorByInt(117,82,71,255), 
-["_DiffuseColor"] = getColorByInt(139,122,115,255), 
-["_DayLightStrength"] = 1,
+["_DayLightStrength"] = 0.37867996096611,
+["_DayLightColor"] = getColorByInt(255,246,123,255), 
+["_LightStrengh"] = 0.10923913121223,
+["_DiffuseColor"] = getColorByInt(248,212,222,255), 
 
  },[18] = {
-["_LightStrengh"] = 1.8639439344406,
-["_DayLightColor"] = getColorByInt(121,161,218,255), 
-["_DiffuseColor"] = getColorByInt(54,79,134,255), 
-["_DayLightStrength"] = 0.57282036542892,
+["_LightStrengh"] = 0.83912402391434,
+["_DayLightColor"] = getColorByInt(122,255,255,255), 
+["_DiffuseColor"] = getColorByInt(115,164,255,255), 
+["_DayLightStrength"] = 0.22189012169838,
 
  },[19] = {
-["_LightStrengh"] = 1.1269445419312,
-["_DayLightColor"] = getColorByInt(114,123,133,255), 
-["_DiffuseColor"] = getColorByInt(87,108,140,255), 
-["_DayLightStrength"] = 0.49386170506477,
+["_DayLightStrength"] = 0.30839505791664,
+["_DayLightColor"] = getColorByInt(206,225,213,255), 
+["_LightStrengh"] = 0.081099011003971,
+["_DiffuseColor"] = getColorByInt(199,215,238,255), 
 
  },[20] = {
+["_DayLightStrength"] = 0.31380116939545,
+["_DayLightColor"] = getColorByInt(255,255,213,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(132,149,173,255), 
-["_DiffuseColor"] = getColorByInt(159,179,201,255), 
-["_DayLightStrength"] = 0.40000000596046,
+["_DiffuseColor"] = getColorByInt(208,241,249,255), 
 
  },[21] = {
+["_DayLightStrength"] = 0.49762389063835,
+["_DayLightColor"] = getColorByInt(255,255,213,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(189,180,189,255), 
-["_DiffuseColor"] = getColorByInt(194,210,224,255), 
-["_DayLightStrength"] = 0.73073762655258,
+["_DiffuseColor"] = getColorByInt(236,249,255,255), 
 
  },[22] = {
+["_DayLightStrength"] = 0.26514279842377,
+["_DayLightColor"] = getColorByInt(255,255,122,255), 
 ["_LightStrengh"] = 0,
-["_DayLightColor"] = getColorByInt(175,160,125,255), 
-["_DiffuseColor"] = getColorByInt(195,175,165,255), 
-["_DayLightStrength"] = 0.92025172710419,
+["_DiffuseColor"] = getColorByInt(222,236,234,255), 
 
  },[23] = {
-["_LightStrengh"] = 1.2322301864624,
-["_DayLightColor"] = getColorByInt(109,72,63,255), 
-["_DiffuseColor"] = getColorByInt(128,111,105,255), 
-["_DayLightStrength"] = 1,
+["_DayLightStrength"] = 0.37867996096611,
+["_DayLightColor"] = getColorByInt(255,246,123,255), 
+["_LightStrengh"] = 0.10923913121223,
+["_DiffuseColor"] = getColorByInt(248,212,222,255), 
 
  },[24] = {
-["_LightStrengh"] = 2.0218167304993,
-["_DayLightColor"] = getColorByInt(110,150,209,255), 
-["_DiffuseColor"] = getColorByInt(44,69,124,255), 
-["_DayLightStrength"] = 0.62547433376312,
+["_LightStrengh"] = 0.83912402391434,
+["_DayLightColor"] = getColorByInt(122,255,255,255), 
+["_DiffuseColor"] = getColorByInt(115,164,255,255), 
+["_DayLightStrength"] = 0.22189012169838,
 
  },
  }

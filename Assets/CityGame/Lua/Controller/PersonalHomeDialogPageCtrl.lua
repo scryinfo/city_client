@@ -156,7 +156,7 @@ function PersonalHomeDialogPageCtrl:_changeDesFunc(ins)
     PlayMusEff(1002)
     ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
         if str == "" or str == nil then
-            str = GetLanguage(12010003)
+            str = GetLanguage(17020007)
         end
         ins:_reqChangeDesToServer(str)
         DataManager.SetMyPersonalHomepageDesInfo(str)
@@ -172,13 +172,13 @@ end
 function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = GetLanguage(12040002)
-    data.tipInfo = GetLanguage(12040003)
+    data.titleInfo = GetLanguage(13040002)
+    data.tipInfo = GetLanguage(13040003)
     data.inputInfo = GetLanguage(15010023)
     data.btnCallBack = function(text)
         --Event.Brocast("m_ChatAddFriends", { id = ins.m_data.id, desc = text })
         DataManager.ModelSendNetMes("gscode.OpCode", "addFriend","gs.ByteStr", { id = ins.m_data.id, desc = text })
-        Event.Brocast("SmallPop", GetLanguage(12040004), 80)
+        Event.Brocast("SmallPop", GetLanguage(13040004), 80)
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end

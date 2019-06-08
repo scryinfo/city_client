@@ -29,6 +29,8 @@ end
 
 function UserNanualCtrl:Active()
     UIPanel.Active(self)
+
+    UserNanualPanel.content.text = GetLanguage(35010001)
 end
 
 function UserNanualCtrl:Hide()
@@ -37,10 +39,12 @@ end
 
 --返回
 function UserNanualCtrl:OnBack()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 
 function UserNanualCtrl:OnAgree()
+    PlayMusEff(1002)
     --同意用户准则
     LoginPanel.norm.isOn = true
     UIPanel.ClosePage()

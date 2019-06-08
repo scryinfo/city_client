@@ -86,6 +86,7 @@ function SetPasswordCtrl:c_ChangePassword()
     local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
                 content = GetLanguage(10040003),func = function()
             ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
+            LoginPanel.inputPassword:GetComponent('InputField').text = ""
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)
 end

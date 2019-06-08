@@ -49,16 +49,19 @@ Notice = {
 	 content = "您好,您已成功获得{0}土地.",
 	 redirect=""
     },
+
     [11] = {
      header = 16010012,
 	 content = "您好,{0}已同意了您的好友申请。.",
 	 redirect=""
-}   ,
+    },
+
     [12] = {
      header = 16010013,
 	 content = "您好,您出售的{0}土地已被{1}购买.",
 	 redirect=""
     },
+
     [13] = {
      header = 16010014,
 	 content = "您好,您出租的{0}土地已被{1}租赁.",
@@ -78,6 +81,11 @@ Notice = {
     [16] = {
         header = 16010022,
         content = "您好，{0}公会已拒绝您的加入申请",
+        redirect=""
+    },
+    [17] = {
+        header = 16010024,
+        content = "您好,{0}土地出现了更高的出价.",
         redirect=""
     }
 }

@@ -346,7 +346,7 @@ function BuildingShelfDetailPart:downShelfSucceed(data)
         self.ScrollView.transform.localScale = Vector3.zero
     end
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop",GetLanguage(27010003), 300)
+    Event.Brocast("SmallPop",GetLanguage(25060007), 300)
 end
 --购买成功
 function BuildingShelfDetailPart:buySucceed(data)
@@ -382,7 +382,7 @@ function BuildingShelfDetailPart:buySucceed(data)
     self.number.transform.localScale = Vector3.zero
     self.buyDatas = {}
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop",GetLanguage(27010006), 300)
+    Event.Brocast("SmallPop",GetLanguage(25070005), 300)
 end
 --自动补货
 function BuildingShelfDetailPart:replenishmentSucceed(data)

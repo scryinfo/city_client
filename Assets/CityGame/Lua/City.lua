@@ -24,7 +24,8 @@ local log = log
 
 --服务器
 CityEngineLua.ip = AppConst.asServerIp
-CityEngineLua.port = "9001";
+CityEngineLua.port = "9001";-- 国内
+--CityEngineLua.port = "4601";-- 国外
 
 -- Mobile(Phone, Pad)	= 1,
 -- Windows Application program	= 2,

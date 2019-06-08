@@ -16,7 +16,7 @@ local defaultPos_Y= -74
 local pool={}
 local optionOneScript ={}
 local state
-local type = true
+local types = true
 local optionTwosScript = {}
 local isone = true
 local firstshow
@@ -118,7 +118,7 @@ end
 
 function VolumeCtrl:Active()
     UIPanel.Active(self)
-    VolumeCtrl:lauguega()
+    VolumeCtrl:language()
     self.m_Timer:Start()
     Event.AddListener("c_NpcNum",self.c_NpcNum,self)
     Event.AddListener("c_OnGoodsNpcNum",self.c_OnGoodsNpcNum,self)
@@ -153,15 +153,20 @@ function VolumeCtrl:initInsData()
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')
 end
-function VolumeCtrl:lauguega()
+function VolumeCtrl:language()
 
-   VolumePanel.name.text = GetLanguage(19030018)
+   VolumePanel.name.text = GetLanguage(11010006)
    VolumePanel.citzen.text = GetLanguage(19020001)
    VolumePanel.turnover.text = GetLanguage(19020002)
    VolumePanel.city.text = GetLanguage(19020003)
-   VolumePanel.player.text = GetLanguage(19030019)
+   VolumePanel.player.text = GetLanguage(28040010)
    VolumePanel.Tradingname.text = GetLanguage(19030001)
    VolumePanel.Tradingnumname.text = GetLanguage(19030002)
+   VolumePanel.clotherBtnText.text = GetLanguage(20030002)
+   VolumePanel.clothes.text = GetLanguage(20030002)
+   VolumePanel.foodBtnText.text = GetLanguage(20030001)
+   VolumePanel.foodText.text = GetLanguage(20030001)
+
 
 end
 --更新时间
@@ -372,7 +377,7 @@ function VolumeCtrl:AssignmentDemandSupply(table , info )
     end
     local temp = {}
     for i, v in pairs(table) do
-        temp[i] = {}
+        temp[i] = 0
         for k, z in pairs(info) do
             if v.itemId == z.id then
                 temp[i] = z.total
@@ -435,7 +440,7 @@ function VolumeCtrl:OnplayerRect(ins)
     local info = {}
     info.id = 888
     info.exchangeType = 3
-    info.type = type
+    info.type = types
     DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNumCurve',info)
 
     --VolumePanel.infoBgrRect:DOSizeDelta(

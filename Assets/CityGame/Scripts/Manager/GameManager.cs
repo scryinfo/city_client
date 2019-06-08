@@ -272,7 +272,7 @@ namespace LuaFramework
             cancel = reminder.transform.Find("reninder/cancel").GetComponent<Button>();
             confirm = reminder.transform.Find("reninder/confirm").GetComponent<Button>();
             contentText = reminder.transform.Find("reninder/content").GetComponent<Text>();
-            contentText.text = "The "+ "<color=#546BCB>100M</color>" + " resources need to be updated" ;
+            contentText.text = "The "+ "<color=#546BCB>414M</color>" + " resources need to be updated" ;
             cancel.onClick.AddListener(OnCancel);
             confirm.onClick.AddListener(OnConfirm);
         }

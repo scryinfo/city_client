@@ -79,7 +79,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
         end
         self.head.color = Color.New(255,255,255,255)
         LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/NPC.png", self.head, true)
-        self.headName.text = GetLanguage(11020006)
+        self.headName.text = GetLanguage(11010008)
         self.name.localScale = Vector3.one
         if dataInfo.type == "RENT_ROOM" then
             self.income.text = GetLanguage(11010011)

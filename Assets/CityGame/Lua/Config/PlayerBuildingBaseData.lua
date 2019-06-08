@@ -23,7 +23,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {5,4,-4},
-		["salary"] = 3250,
+		["salary"] = 1500000,
         ["poolName"] = "MaterialBuilding_1",
     },
     [1100002] ={
@@ -49,7 +49,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {7,5,-5},
-		["salary"] = 3250,
+		["salary"] = 1500000,
         ["poolName"] = "MaterialBuilding_2",
     },
     [1100003] ={
@@ -75,7 +75,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {10,6,-6},
-		["salary"] = 3250,
+		["salary"] = 1500000,
         ["poolName"] = "MaterialBuilding_3",
     },
     [1200001] ={
@@ -101,7 +101,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {5,4,-4},
-		["salary"] = 3250,
+		["salary"] = 1500000,
         ["poolName"] = "Factory_1",
     },
     [1200002] ={
@@ -127,7 +127,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {7,5,-5},
-		["salary"] = 3250,
+		["salary"] = 1500000,
         ["poolName"] = "Factory_2",
     },
     [1200003] ={
@@ -153,7 +153,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {10,6,-6},
-		["salary"] = 3250,
+		["salary"] = 1500000,
         ["poolName"] = "Factory_3",
     },
     [1300001] ={
@@ -182,7 +182,7 @@ PlayerBuildingBaseData=
         ["isAd"]=true,
         ["AdmId"]=13,
         ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/supermarket-s.png",
-        ["salary"] = 3250,
+        ["salary"] = 1500000,
         ["poolName"] = "SuperMarket_1",
     },
     [1300002] ={
@@ -211,7 +211,7 @@ PlayerBuildingBaseData=
         ["isAd"]=true,
         ["AdmId"]=13,
         ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/supermarket-s.png",
-        ["salary"] = 3250,
+        ["salary"] = 1500000,
         ["poolName"] = "SuperMarket_2",
     },
     [1300003] ={
@@ -240,7 +240,7 @@ PlayerBuildingBaseData=
         ["isAd"]=true,
         ["AdmId"]=13,
         ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/supermarket-s.png",
-        ["salary"] = 3250,
+        ["salary"] = 1500000,
         ["poolName"] = "SuperMarket_3",
     },
     [1400001] ={
@@ -269,7 +269,7 @@ PlayerBuildingBaseData=
         ["isAd"]=true,
         ["AdmId"]=14,
         ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/HomeHouse-s.png",
-        ["salary"] = 3250,
+        ["salary"] = 1500000,
         ["poolName"] = "HomeHouse_1",
     },
     [1400002] ={
@@ -298,7 +298,7 @@ PlayerBuildingBaseData=
         ["isAd"]=true,
         ["AdmId"]=14,
         ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/HomeHouse-s.png",
-        ["salary"] = 3250,
+        ["salary"] = 1500000,
         ["poolName"] = "HomeHouse_2",
     },
     [1400003] ={
@@ -327,7 +327,7 @@ PlayerBuildingBaseData=
         ["isAd"]=true,
         ["AdmId"]=14,
         ["AdIma"]="Assets/CityGame/Resources/Atlas/Municipal/HomeHouse-s.png",
-        ["salary"] = 3250,
+        ["salary"] = 1500000,
         ["poolName"] = "HomeHouse_3",
     },
     [1500001] ={
@@ -353,7 +353,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4},
-        ["salary"] = 55,
+        ["salary"] = 1500000,
         ["poolName"] = "TechnologyBuilding_1",
     },
     [1500002] ={
@@ -379,7 +379,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5},
-        ["salary"] = 55,
+        ["salary"] = 1500000,
         ["poolName"] = "TechnologyBuilding_2",
     },
     [1500003] ={
@@ -405,7 +405,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6},
-        ["salary"] = 55,
+        ["salary"] = 1500000,
         ["poolName"] = "TechnologyBuilding_3",
     },
     [1600001] ={
@@ -434,7 +434,7 @@ PlayerBuildingBaseData=
         ["isAd"] = true,
         ["AdmId"] = 16,
         ["AdIma"] = "Assets/CityGame/Resources/Atlas/Municipal/park-s.png",
-        ["salary"] = 55,
+        ["salary"] = 1500000,
         ["poolName"] = "Park_1",
     },
     [1600002] ={
@@ -463,7 +463,7 @@ PlayerBuildingBaseData=
         ["isAd"] = true,
         ["AdmId"] = 16,
         ["AdIma"] = "Assets/CityGame/Resources/Atlas/Municipal/park-s.png",
-        ["salary"] = 55,
+        ["salary"] = 1500000,
         ["poolName"] = "Park_2",
     },
     [1600003] ={
@@ -492,7 +492,7 @@ PlayerBuildingBaseData=
         ["isAd"] = true,
         ["AdmId"] = 16,
         ["AdIma"] = "Assets/CityGame/Resources/Atlas/Municipal/park-s.png",
-        ["salary"] = 55,
+        ["salary"] = 1500000,
         ["poolName"] = "Park_3",
     },
 	[1700001] ={
@@ -518,7 +518,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.5,0,0.5},
         ["ScalePos"] = {4,4,-4},
-        ["salary"] = 55,
+        ["salary"] = 1500000,
         ["poolName"] = "ExpertTradingCenter_1",
     },
     [1700002] ={
@@ -544,7 +544,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {0.7,0,1.3},
         ["ScalePos"] = {5,5,-5},
-        ["salary"] = 55,
+        ["salary"] = 1500000,
         ["poolName"] = "ExpertTradingCenter_2",
     },
     [1700003] ={
@@ -570,7 +570,7 @@ PlayerBuildingBaseData=
 		["workTime"] = {[1]={0,24}},
         ["UICenterPos"] = {1,0,2},
         ["ScalePos"] = {6,6,-6},
-        ["salary"] = 55,
+        ["salary"] = 1500000,
         ["poolName"] = "ExpertTradingCenter_3",
     },
     [2000000] = { --old

@@ -768,7 +768,7 @@ end
 --指南书--
 function GameMainInterfaceCtrl.OnGuideBool()
     PlayMusEff(1002)
-    ct.OpenCtrl("GuidBookCtrl")
+    --ct.OpenCtrl("GuidBookCtrl")
 end
 
 --小地图
@@ -780,6 +780,7 @@ end
 --城市信息
 function GameMainInterfaceCtrl:OnCityInfo()
     PlayMusEff(1002)
+    ct.OpenCtrl("VolumeCtrl")
 end
 
 --Eva

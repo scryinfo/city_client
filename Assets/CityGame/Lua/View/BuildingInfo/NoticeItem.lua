@@ -122,7 +122,7 @@ function NoticeItem:OnBg(go)
     elseif go.typeId == 9 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 10 then
-        go.content = GetLanguage(13010043,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
+        go.content = GetLanguage(16020017,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
         GameNoticePanel.rightContent.text = go.content
     elseif go.typeId == 11 then
         type = go.typeId
@@ -146,6 +146,9 @@ function NoticeItem:OnBg(go)
     elseif go.typeId == 16 then
         type = go.typeId
         go:GetSocietyInfo(go.uuidParas[1])
+    elseif go.typeId == 17 then
+        go.content = GetLanguage(16010025,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
+        GameNoticePanel.rightContent.text = go.content
     end
         Event.Brocast("c_onBg",go)
     end

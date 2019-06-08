@@ -16,7 +16,7 @@ local defaultPos_Y= -74
 local pool={}
 local optionOneScript ={}
 local state
-local type = true
+local types = true
 local optionTwosScript = {}
 local isone = true
 local firstshow
@@ -372,7 +372,7 @@ function VolumeCtrl:AssignmentDemandSupply(table , info )
     end
     local temp = {}
     for i, v in pairs(table) do
-        temp[i] = {}
+        temp[i] = 0
         for k, z in pairs(info) do
             if v.itemId == z.id then
                 temp[i] = z.total
@@ -435,7 +435,7 @@ function VolumeCtrl:OnplayerRect(ins)
     local info = {}
     info.id = 888
     info.exchangeType = 3
-    info.type = type
+    info.type = types
     DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNumCurve',info)
 
     --VolumePanel.infoBgrRect:DOSizeDelta(

@@ -100,8 +100,8 @@ function LoginCtrl:c_ChangeLanguage()
 	LoginPanel.btnRegisterText.text = GetLanguage(10020005)
 	LoginPanel.forget:GetComponent("Text").text = GetLanguage(10020003)
 	LoginPanel.rememberText.text = GetLanguage(10020004)
-	LoginPanel.normText:GetComponent("Text").text = GetLanguage(10020015)
-	LoginPanel.agree.text = GetLanguage(10020014)
+	--LoginPanel.normText:GetComponent("Text").text = GetLanguage(10020015)
+	--LoginPanel.agree.text = GetLanguage(10020014)
 	LoginPanel.languageText.text = GetLanguage(10020010)
 end
 

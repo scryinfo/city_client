@@ -144,8 +144,8 @@ function AdvertisementPartDetail:Show(data)
     self.startTimeText.text = GetLanguage(27040006)
     self.supermarketText.text = GetLanguage(27040009)
     self.houseText.text = GetLanguage(27040009)
-    self.supermarketText.text = GetLanguage(42020003)
     self.houseName.text = GetLanguage(42020004)
+    self.supermarketName.text = GetLanguage(42020003)
 end
 
 function AdvertisementPartDetail:Hide()

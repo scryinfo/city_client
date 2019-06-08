@@ -618,6 +618,7 @@ end
 
 --更新邮件
 function GameMainInterfaceCtrl:c_RefreshMails(mails)
+    PlayMusEff(1003)
     GameMainInterfacePanel.noticeItem.localScale = Vector3.one
     if Mails == nil then
         Mails = {}

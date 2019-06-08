@@ -19,4 +19,6 @@ function ServerListPanel.InitPanel()
     this.content = transform:Find("LeftServerList/Scroll View/Viewport/Content").gameObject;
     this.back = transform:Find("back").gameObject;
     this.oKBtn = transform:Find("OKButton").gameObject;
+    this.name = transform:Find("nameBg/name"):GetComponent("Text");
+    this.oKBtnText = transform:Find("OKButton/Text"):GetComponent("Text");
 end

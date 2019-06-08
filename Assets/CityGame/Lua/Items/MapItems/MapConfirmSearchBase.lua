@@ -11,6 +11,7 @@ function MapConfirmSearchBase:initialize(data, viewRect)
     self.data = data
     self.toggle = self.viewRect.transform:GetComponent("Toggle")
     self.toggle.onValueChanged:AddListener(function(isOn)
+        PlayMusEff(1002)
         self:_toggle(isOn)
     end)
 

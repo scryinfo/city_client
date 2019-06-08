@@ -53,13 +53,13 @@ function InventPopCtrl:Refresh()
 
     if self.m_data.ins.type ~= "eva" then
         panel.num.text = tostring(modelData.probGood).."%"
-        InventPopPanel.iconNameText.text = self.m_data.ins.name
-        InventPopPanel.evaTips.text = string.format("You will get new %s when succeed", self.m_data.ins.name)
+        InventPopPanel.iconNameText.text = GetLanguage(self.m_data.ins.name)
+        InventPopPanel.evaTips.text = string.format("You will get new %s when succeed", GetLanguage(self.m_data.ins.name))
         LoadSprite(self.m_data.ins.path, InventPopPanel.icon, true)
     else
         panel.num.text = tostring(modelData.probEva).."%"
-        InventPopPanel.iconNameText.text = "EVA"
-        InventPopPanel.evaTips.text = "You will get 1point EVA when succeed"
+        InventPopPanel.iconNameText.text = GetLanguage(28040031)
+        InventPopPanel.evaTips.text = GetLanguage(28040014)
         LoadSprite("Assets/CityGame/Resources/Atlas/Laboratory/chooseInventPop/EVA-100%.png", InventPopPanel.icon, true)
     end
 
@@ -100,18 +100,18 @@ end
 ---====================================================================================业务逻辑==============================================================================================
 function InventPopCtrl:ChangeLan()
     if self.m_data.ins.type and self.m_data.ins.type == "eva" then  --判断研究类型
-        InventPopPanel.titleText.text = "RESEARCH POINT EVA"
+        InventPopPanel.titleText.text = GetLanguage(28040029)
     else
-        InventPopPanel.titleText.text = "INVENT NEW GOODS"
+        InventPopPanel.titleText.text = GetLanguage(28040030)
     end
-    --panel.iconNameText
-    --panel.oddsText
-    --panel.evaTips
-    --panel.timeText
-    --panel.tips
-    --panel.confimBtnText
-   --panel.timeText1
-    --panel.tips1
+    panel.iconNameText.text = GetLanguage(28040031)
+    panel.oddsText.text = GetLanguage(28040003)
+    panel.evaTips.text  = GetLanguage(28040014)
+    panel.timeText.text = GetLanguage(28040027)
+    panel.tips.text  = GetLanguage(28040008)
+    panel.confimBtnText.text = GetLanguage(28040033)
+   panel.timeText1.text = GetLanguage(28040028)
+    panel.tips1.text =  GetLanguage(28040008)
 end
 
 function InventPopCtrl:other()

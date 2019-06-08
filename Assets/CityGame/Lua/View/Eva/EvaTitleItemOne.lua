@@ -21,7 +21,7 @@ EvaTitleItemOne.static.ImagePath = -- 标题图片显示
 
 -- 子类继承实现自己的方法用以显示具体的内容
 function EvaTitleItemOne:_showContent()
-    self.nameText.text = EvaConfig[self.index].name
+    self.nameText.text = GetLanguage(EvaConfig[self.index].name)
     self.IconTF = self.transform:Find("IconImage")
     self.IconTF.localScale = Vector3.zero
     self.IconImage = self.transform:Find("IconImage"):GetComponent("Image")

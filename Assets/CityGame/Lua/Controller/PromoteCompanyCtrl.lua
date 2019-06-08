@@ -29,6 +29,8 @@ end
 function PromoteCompanyCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_Revenue",self.c_Revenue,self)
+
+    PromoteCompanyPanel.queneText.text = GetLanguage(27010008)
 end
 
 function PromoteCompanyCtrl:Refresh()
@@ -62,11 +64,13 @@ end
 
 --建筑个性签名
 function PromoteCompanyCtrl:OnOpen(go)
+    PlayMusEff(1002)
     ct.OpenCtrl("BubbleMessageCtrl",go.m_data.insId)
 end
 
 --点击队列
 function PromoteCompanyCtrl:OnQueue(go)
+    PlayMusEff(1002)
         if go.m_data.info.ownerId == myOwnerID then
            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
         else
@@ -77,6 +81,7 @@ end
 
 --建筑详情回调
 function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
+    detailData.info.buildingType = BuildingType.Municipal
     if PromoteCompanyPanel.topItem ~= nil then
         PromoteCompanyPanel.topItem:refreshData(detailData.info, function ()
             self:OnBack(self)
@@ -143,7 +148,7 @@ end
 function PromoteCompanyCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
         if self.m_data.info.state == "OPERATE" then
-            Event.Brocast("SmallPop", "设置工资成功", 300)
+            Event.Brocast("SmallPop", GetLanguage(26020007), 300)
         end
         self.m_data.info.salary = data.Salary
         self.m_data.info.setSalaryTs = data.ts

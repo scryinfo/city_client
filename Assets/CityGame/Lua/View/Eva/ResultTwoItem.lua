@@ -21,10 +21,10 @@ end
 function ResultTwoItem:_initData(data, configData)
     self.configData = configData
     self.data = data
-    self.titleText.text = configData.name
-    self.contentTitleText.text = configData.name
+    self.titleText.text = GetLanguage(configData.name)
+    self.contentTitleText.text = GetLanguage(configData.name)
     if configData.Btype == "Quality" then
-        self.addText.text = "Quality bonus"
+        self.addText.text = GetLanguage(31010018)
         self.addTextTF.localScale = Vector3.one
     else
         self.addTextTF.localScale = Vector3.zero

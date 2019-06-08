@@ -7,14 +7,14 @@
 EvaResultItem = class("EvaResultItem")
 EvaResultItem.static.ItemNameConfig = -- icon显示配置
 {
-    [13] = "零售店",
-    [14] = "住宅",
-    [1613] = "零售店",
-    [1614] = "住宅",
-    [1651] = "食品",
-    [1652] = "服饰",
-    [155] = "发明商品",
-    [156] = "Eva点数研究",
+    [13] = 23010003,
+    [14] = 23010004,
+    [1613] = 23010003,
+    [1614] = 23010004,
+    [1651] = 20050001,
+    [1652] = 20050002,
+    [155] = 31010026,
+    [156] = 31010027,
 }
 
 -- 初始化
@@ -55,16 +55,16 @@ function EvaResultItem:initialize(perfab, data, index)
             iconRoot.localScale = Vector3.New(0.5, 0.5, 1)
         else
             imgPath = BrandItem.static.brandIcon[v.tempData.at]
-            nameText.text = EvaResultItem.static.ItemNameConfig[v.tempData.at]
+            nameText.text = GetLanguage(EvaResultItem.static.ItemNameConfig[v.tempData.at])
             iconRoot.localScale = Vector3.New(1, 1, 1)
         end
         LoadSprite(imgPath, iconImage, true)
 
-        v.root:Find("PropertyNumberText"):GetComponent("Text").text = string.format("%s +%s", configData.name, GetEvaPercent(v.tempData.lv))
+        v.root:Find("PropertyNumberText"):GetComponent("Text").text = string.format("%s +%s", GetLanguage(configData.name), GetEvaPercent(v.tempData.lv))
         if idStr == "22" and v.tempData.bt == "Quality" then
             local qualityNumberText = v.root:Find("QualityNumberText")
             qualityNumberText.localScale = Vector3.New(1, 1, 1)
-            qualityNumberText:GetComponent("Text").text = "Quality" .. GetEvaPercent(v.tempData.lv)
+            qualityNumberText:GetComponent("Text").text = GetLanguage(31010019) .. "   " .. GetEvaPercent(v.tempData.lv)
             v.root:Find("LargeNumberText").localScale = Vector3.New(0, 0, 0)
             v.root:Find("MediumNumberText").localScale = Vector3.New(0, 0, 0)
             v.root:Find("SmallNumberText").localScale = Vector3.New(0, 0, 0)
@@ -79,9 +79,9 @@ function EvaResultItem:initialize(perfab, data, index)
             MediumNumberText.localScale = Vector3.New(1, 1, 1)
             local SmallNumberText = v.root:Find("SmallNumberText")
             SmallNumberText.localScale = Vector3.New(1, 1, 1)
-            largeNumberText:GetComponent("Text").text = "Large " .. GetEvaData(3, configData, v.tempData.lv)
-            MediumNumberText:GetComponent("Text").text = "Medium " .. GetEvaData(2, configData, v.tempData.lv)
-            SmallNumberText:GetComponent("Text").text = "Small " .. GetEvaData(1, configData, v.tempData.lv)
+            largeNumberText:GetComponent("Text").text = GetLanguage(31010016) .. "   " .. GetEvaData(3, configData, v.tempData.lv)
+            MediumNumberText:GetComponent("Text").text = GetLanguage(31010015) .. "   " .. GetEvaData(2, configData, v.tempData.lv)
+            SmallNumberText:GetComponent("Text").text = GetLanguage(31010014) .. "   " .. GetEvaData(1, configData, v.tempData.lv)
             if i == 1 then
                 transform.sizeDelta = Vector2.New(1000, 400)
             end

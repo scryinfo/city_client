@@ -20,15 +20,20 @@ end
 --初始化面板--
 function PromoteGoodsExtensionPanel.InitPanel()
     this.xBtn = transform:Find("contentRoot/top/xBtn").gameObject
+    this.name = transform:Find("contentRoot/top/name"):GetComponent("Text")
     --this.curve = transform:Find("contentRoot/curveBg").gameObject     --曲线图
     this.icon = transform:Find("contentRoot/curveBg/icon"):GetComponent("Image")     --图片
     this.iconText = transform:Find("contentRoot/curveBg/icon/iconText"):GetComponent("Text")     --图片名字
     this.popularity = transform:Find("contentRoot/curveBg/popularity"):GetComponent("Text")     --加成
+    this.popularityText = transform:Find("contentRoot/curveBg/popularity/Text"):GetComponent("Text")     --加成
     this.queue = transform:Find("contentRoot/queue").gameObject     --确定(自己)
+    this.queueText = transform:Find("contentRoot/queue/queueText"):GetComponent("Text")     --确定(自己)
     this.myTime = transform:Find("contentRoot/time")     --时间(自己)
     this.time = transform:Find("contentRoot/time/InputField"):GetComponent("InputField")     --时间
+    this.titleText = transform:Find("contentRoot/title"):GetComponent("Text")     --推广加成
     this.title = transform:Find("contentRoot/title/tltleText"):GetComponent("Text")     --推广加成
     this.otherTimeBg = transform:Find("contentRoot/otherTime")    --别人打开的时间
+    this.otherTimeText = transform:Find("contentRoot/otherTime/time"):GetComponent("Text")    --别人打开的时间
     this.otherTime = transform:Find("contentRoot/otherTime/time/InputField"):GetComponent("InputField")     --别人打开的时间
     this.slider = transform:Find("contentRoot/otherTime/Slider"):GetComponent("Slider")
     this.content = transform:Find("contentRoot/Scroll View/Viewport/Content"):GetComponent("RectTransform")
@@ -36,5 +41,6 @@ function PromoteGoodsExtensionPanel.InitPanel()
     this.moneyBg = transform:Find("contentRoot/moneyBg")   --别人打开的money
     this.money = transform:Find("contentRoot/moneyBg/moneyImage/moneyText"):GetComponent("Text")   --money
     this.otherQueue = transform:Find("contentRoot/moneyBg/queue").gameObject   --确定(别人)
+    this.otherQueueText = transform:Find("contentRoot/moneyBg/queue/queueText"):GetComponent("Text")   --确定(别人)
 
 end

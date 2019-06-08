@@ -20,9 +20,11 @@ function MapRightSelfBuildingPage:initialize(viewRect)
     self.notOpenText01 = tran:Find("notOpenTran/Text"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:close()
     end)
     self.goHereBtn.onClick:AddListener(function ()
+        PlayMusEff(1002)
         self:_goHereBtn()
     end)
     --

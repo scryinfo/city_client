@@ -33,6 +33,12 @@ function SetOpenUpCtrl:Active()
         SetOpenUpPanel.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
         SetOpenUpPanel.time.text = math.floor(self.m_data.promRemainTime/3600000)
     end
+
+    SetOpenUpPanel.name.text = GetLanguage(27040010)
+    SetOpenUpPanel.external.text = GetLanguage(27040002)
+    SetOpenUpPanel.pricePlaceholder.text = GetLanguage(27040012)
+    SetOpenUpPanel.timePlaceholder.text = GetLanguage(27040011)
+    SetOpenUpPanel.closeText.text = GetLanguage(27040001)
 end
 
 function SetOpenUpCtrl:Refresh()
@@ -61,11 +67,13 @@ function SetOpenUpCtrl:initData()
 end
 
 function SetOpenUpCtrl:OnxBtn()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 
 --对外开放
 function SetOpenUpCtrl:OnOpen(isOn)
+    PlayMusEff(1002)
     self.openUp = isOn
     if isOn then
         --SetOpenUpPanel.openBtn:DOMove(Vector3.New(88,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
@@ -80,14 +88,14 @@ end
 
 --点击确定
 function SetOpenUpCtrl:OnConfirm(go)
-
+    PlayMusEff(1002)
     if go.openUp then
         if SetOpenUpPanel.price.text == "" or SetOpenUpPanel.time.text == "" then
-            Event.Brocast("SmallPop","时间或价格不能为空",300)
+            Event.Brocast("SmallPop",GetLanguage(27040029),300)
             return
         end
         if tonumber(SetOpenUpPanel.time.text ) == 0 then
-            Event.Brocast("SmallPop","时间不能为0",300)
+            Event.Brocast("SmallPop",GetLanguage(27040027),300)
         else
             local price = tonumber(SetOpenUpPanel.price.text)
             local time = tonumber(SetOpenUpPanel.time.text)

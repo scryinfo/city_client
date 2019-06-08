@@ -17,6 +17,8 @@ local index = 0
 local indexs = 0
 local chatItemNum = 3   -- 世界聊天的显示数量
 
+GameMainInterfaceCtrl.SmallPop_Path="Assets/CityGame/Resources/View/GoodsItem/TipsParticle.prefab"--小弹窗路径
+
 function  GameMainInterfaceCtrl:bundleName()
     return "Assets/CityGame/Resources/View/GameMainInterfacePanel.prefab"
 end
@@ -34,6 +36,8 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
+    --进入游戏后音效切换
+    PlayMus(1001)
     --Event.AddListener("m_MainCtrlShowGroundAuc",self.SaveData,self)
 end
 
@@ -51,7 +55,14 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
     --Event.AddListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
 
-    GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11020005)
+    GameMainInterfacePanel.city.text = GetLanguage(10050002)
+    GameMainInterfacePanel.smallMapText.text = GetLanguage(11010005)
+    GameMainInterfacePanel.cityInfoText.text = GetLanguage(11010004)
+    GameMainInterfacePanel.guideText.text = GetLanguage(11010003)
+    GameMainInterfacePanel.buildButtonText.text = GetLanguage(11010002)
+    GameMainInterfacePanel.evaText.text = GetLanguage(11010001)
+    GameMainInterfacePanel.grossVolume.text = GetLanguage(11010006)
+    GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11010009)
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -75,6 +86,8 @@ function GameMainInterfaceCtrl:Close()
     self:RemoveUpdata()
     UIPanel.Close(self)
     Event.RemoveListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
+    Event.RemoveListener("updatePlayerName",self.updateNameFunc,self)  --改变名字
+    Event.RemoveListener("SmallPop",self.c_SmallPop,self)
     self = nil
 end
 
@@ -84,10 +97,28 @@ function GameMainInterfaceCtrl:c_ChangeMoney(money)
     GameMainInterfacePanel.money.text = self.money
 end
 
+---小弹窗
+function GameMainInterfaceCtrl:c_SmallPop(string,spacing)
+    if  not self.prefab then
+        local function callback(prefab)
+            self.prefab = prefab
+            SmallPopItem:new(string,spacing,prefab ,self);
+        end
+        createPrefab(GameMainInterfaceCtrl.SmallPop_Path,self.root, callback)
+    else
+        SmallPopItem:new(string,spacing,self.prefab ,self);
+    end
+end
+
 function GameMainInterfaceCtrl:SaveData(ownerData)
     if self.groundOwnerDatas then
         table.insert(self.groundOwnerDatas,ownerData[1])
     end
+end
+
+--改变名字
+function GameMainInterfaceCtrl:updateNameFunc(name)
+    GameMainInterfacePanel.name.text = name
 end
 
 --全城Npc数量
@@ -134,13 +165,16 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
 
     if dataInfo.buyer == "PLAYER" then
         if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
+            GameMainInterfacePanel.income.text = GetLanguage(11010010)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/landx1.png", GameMainInterfacePanel.simplePicture, true)
             GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
         elseif dataInfo.type == "INSHELF" then
+            GameMainInterfacePanel.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         elseif dataInfo.type == "PROMO" then
             if dataInfo.itemId == 1300 then
+                GameMainInterfacePanel.income.text = GetLanguage(41020004)
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
             elseif dataInfo.itemId == 1400 then
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
@@ -149,16 +183,23 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
             end
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
         elseif dataInfo.type == "LAB" then
-            --if dataInfo.itemId then
-            --    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
-            --end
-            --GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
+            GameMainInterfacePanel.income.text = GetLanguage(41020006)
+            if dataInfo.itemId == 51 then
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-food.png", GameMainInterfacePanel.simplePicture, true)
+            elseif dataInfo.itemId == 52 then
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-clothes.png",GameMainInterfacePanel.simplePicture, true)
+            else
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-EVA-s.png", GameMainInterfacePanel.simplePicture, true)
+            end
+            GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
         end
         elseif dataInfo.buyer == "NPC" then
         if dataInfo.type == "RENT_ROOM" then
+            GameMainInterfacePanel.income.text = GetLanguage(11010011)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", GameMainInterfacePanel.simplePicture, true)
             GameMainInterfacePanel.simplePictureText.text = "X1"
         elseif dataInfo.type == "INSHELF" then
+            GameMainInterfacePanel.income.text =  GetLanguage(11010012)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         end
@@ -365,8 +406,12 @@ end
 
 function GameMainInterfaceCtrl:Awake()
     --PlayerTempModel.tempTestCreateAll()
+    self.root=self.gameObject.transform.root:Find("FixedRoot");
     Event.AddListener("c_OnConnectTradeSuccess",self.c_OnSSSuccess,self)        --連接ss成功回調
     Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
+    Event.AddListener("updatePlayerName",self.updateNameFunc,self)  --改变名字
+    -----小弹窗
+    Event.AddListener("SmallPop",self.c_SmallPop,self)
     CityEngineLua.login_tradeapp(true)
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
@@ -392,6 +437,7 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.clearBtn,self.OnClearBtn,self); --点击ClearBtn
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.clearBg,self.OnClearBg,self); --点击ClearBg
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.simple,self.OnSimple,self); --点击简单收益面板
+
 
     --todo 城市广播
     --gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.leftRadioBtn,self.OnLeftRadioBtn,self);
@@ -481,7 +527,6 @@ function GameMainInterfaceCtrl:initInsData()
     --    GameMainInterfacePanel.male.localScale = Vector3.zero
     --    GameMainInterfacePanel.woman.localScale = Vector3.one
     --end
-    GameMainInterfacePanel.city.text = GetLanguage(10030003)
 end
 
 local date
@@ -573,6 +618,7 @@ end
 
 --更新邮件
 function GameMainInterfaceCtrl:c_RefreshMails(mails)
+    PlayMusEff(1003)
     GameMainInterfacePanel.noticeItem.localScale = Vector3.one
     if Mails == nil then
         Mails = {}

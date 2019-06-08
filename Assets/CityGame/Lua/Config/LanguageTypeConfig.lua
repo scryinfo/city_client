@@ -5,11 +5,11 @@
 --- 多语言类型
 LanguageTypeConfig = {
     [1] = {
-        name = "简体中文",
+        name = 10020010,
         id = 0,
     },
     [2] = {
-        name = "English",
+        name = 10020011,
         id = 1,
     },
 }

@@ -6,7 +6,7 @@ RollItem = class('RollItem')
 function RollItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab=prefab
     local transform = prefab.transform
-
+    self.data = data
     self.oddsText=findByName(transform,"Text"):GetComponent("Text")
 
     luaBehaviour:AddClick(prefab.gameObject,self.c_OnClick_roll,self);
@@ -15,7 +15,13 @@ end
 ---==========================================================================================点击函数=============================================================================
 --开箱
 function RollItem:c_OnClick_roll(ins)
-    DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId,"m_ReqLabRoll",ins.data.lineId)
+    if ins.data.availableRoll < 5 then
+        RollPanel.resultRoot.localScale = Vector3.one
+        RollPanel.evanotenough.localScale = Vector3.one
+        RollPanel.Evaresultbg.localScale = Vector3.zero
+    else
+        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId,"m_ReqLabRoll",ins.data.lineId)
+    end
 end
 ---==========================================================================================业务逻辑=============================================================================
 
@@ -29,8 +35,8 @@ function RollItem:updateUI(data)
 end
 
 function RollItem:Refresh(data)
-        self:updateData(data)
-        self:updateUI(data)
+    self:updateData(data)
+    self:updateUI(data)
 end
 
 

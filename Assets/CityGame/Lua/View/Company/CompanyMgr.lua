@@ -235,17 +235,17 @@ end
 -- 设置品牌大小
 function CompanyMgr:SetBrandSizeNum(brandSizeNum)
     if brandSizeNum == 1 then
-        CompanyPanel.sizeBtnText.text = "Small"
-        CompanyPanel.choiceOBtnText.text = "Medium"
-        CompanyPanel.choiceTBtnText.text = "Large"
+        CompanyPanel.sizeBtnText.text = GetLanguage(18040001) -- "Small"
+        CompanyPanel.choiceOBtnText.text = GetLanguage(18040002) -- "Medium"
+        CompanyPanel.choiceTBtnText.text = GetLanguage(18040003) -- "Large"
     elseif brandSizeNum == 2 then
-        CompanyPanel.sizeBtnText.text = "Medium"
-        CompanyPanel.choiceOBtnText.text = "Small"
-        CompanyPanel.choiceTBtnText.text = "Large"
+        CompanyPanel.sizeBtnText.text = GetLanguage(18040002) -- "Medium"
+        CompanyPanel.choiceOBtnText.text = GetLanguage(18040001) -- "Small"
+        CompanyPanel.choiceTBtnText.text = GetLanguage(18040003) -- "Large"
     elseif brandSizeNum == 3 then
-        CompanyPanel.sizeBtnText.text = "Large"
-        CompanyPanel.choiceOBtnText.text = "Small"
-        CompanyPanel.choiceTBtnText.text = "Medium"
+        CompanyPanel.sizeBtnText.text = GetLanguage(18040003) -- "Large"
+        CompanyPanel.choiceOBtnText.text = GetLanguage(18040001) -- "Small"
+        CompanyPanel.choiceTBtnText.text = GetLanguage(18040002) -- "Medium"
     end
     CompanyPanel.sizeBg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic)
     CompanyPanel.sizeBtnImage:DORotate(Vector3.New(0,0,180),0.1):SetEase(DG.Tweening.Ease.OutCubic)
@@ -321,4 +321,14 @@ function CompanyMgr:SetBrandName(modyfyMyBrandName)
             end
         end
     end
+end
+
+-- 获得当前人的id
+function CompanyMgr:GetId()
+    return self.nowId
+end
+
+-- 设置当前人的id
+function CompanyMgr:SetId(nowId)
+    self.nowId = nowId
 end

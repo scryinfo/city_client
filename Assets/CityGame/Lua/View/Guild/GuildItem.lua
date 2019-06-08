@@ -19,6 +19,7 @@ function GuildItem:initialize(prefab, data)
     self.timeText = transform:Find("TimeText"):GetComponent("Text")
     self.introductionText = transform:Find("IntroductionText"):GetComponent("Text")
     self.applyBtn = transform:Find("ApplyBtn"):GetComponent("Button")
+    transform:Find("ApplyBtn/Text"):GetComponent("Text").text = GetLanguage(12010009)
 
     self.nameText.text = self.data.name
 
@@ -45,11 +46,10 @@ end
 function GuildItem:_applyGuild()
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = "REMINDER"
-    data.tipInfo = "Please input Verification information!"
+    data.titleInfo = GetLanguage(12010010)
+    data.tipInfo = GetLanguage(12010011)
     data.inputInfo = ""
     data.btnCallBack = function(text)
-        ct.log("tina_w8_friends", "向服务器发送加好友信息")
         DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_JoinSociety', { id = self.data.id, desc = text })
     end
     ct.OpenCtrl("CommonDialogCtrl", data)

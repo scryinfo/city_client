@@ -106,4 +106,12 @@ function CompanyPanel.InitPanel()
     -- 没内容提示
     this.noContentRoot = transform:Find("BottomRoot/NoContentRoot")
     this.tipsText = transform:Find("BottomRoot/NoContentRoot/TipsText"):GetComponent("Text")
+
+    -- 多语言
+    this.infoBtnText = transform:Find("BottomRoot/LeftRoot/InfoBtn/Text"):GetComponent("Text")
+    this.landBtnText = transform:Find("BottomRoot/LeftRoot/LandBtn/Text"):GetComponent("Text")
+    this.buildingBtnText = transform:Find("BottomRoot/LeftRoot/BuildingBtn/Text"):GetComponent("Text")
+    this.brandBtnText = transform:Find("BottomRoot/LeftRoot/BrandBtn/Text"):GetComponent("Text")
+    this.incomeTitleText = transform:Find("BottomRoot/InfoRoot/IERoot/IncomeTitleText"):GetComponent("Text")
+    this.expenditureTitleText = transform:Find("BottomRoot/InfoRoot/IERoot/ExpenditureTitleText"):GetComponent("Text")
 end

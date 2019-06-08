@@ -79,10 +79,12 @@ function CompanyCtrl:Active()
     self:_addListener()
 
     -- 多语言适配
-    --CompanyPanel.incomeTitle.text = GetLanguage(17010002)
-    --CompanyPanel.expenditureTitle.text = GetLanguage(17010003)
-    --CompanyPanel.tips.text = GetLanguage(17010005)
-    --CompanyPanel.tipsTextCom.text = GetLanguage(17010006)
+    CompanyPanel.infoBtnText.text = GetLanguage(18010002)
+    CompanyPanel.incomeTitleText.text = GetLanguage(18010003)
+    CompanyPanel.expenditureTitleText.text = GetLanguage(18010004)
+    CompanyPanel.landBtnText.text = GetLanguage(18020001)
+    CompanyPanel.buildingBtnText.text = GetLanguage(18030001)
+    CompanyPanel.brandBtnText.text = GetLanguage(18030001)
 end
 
 function CompanyCtrl:Refresh()
@@ -329,11 +331,11 @@ end
 function CompanyCtrl:OnCompanyRename(go)
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = "改名"
-    data.tipInfo = "Modified every seven days!"
+    data.titleInfo = GetLanguage(18010006)
+    data.tipInfo = GetLanguage(18010007)
     data.btnCallBack = function(text)
         if text == nil or text == "" then
-            Event.Brocast("SmallPop", "输入为空",80)
+            Event.Brocast("SmallPop", GetLanguage(18010010),80)
             return
         end
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_ModifyCompanyName', { pid = DataManager.GetMyOwnerID(), newName = text })
@@ -422,14 +424,14 @@ function CompanyCtrl:_updateData()
     if self.m_data.id == DataManager.GetMyOwnerID() then
         --CompanyPanel.evaBtn.transform.localScale = Vector3.one
         CompanyPanel.companyRenameBtn.localScale = Vector3.one
-        CompanyPanel.titleText.text = GetLanguage(17010001)
+        CompanyPanel.titleText.text = GetLanguage(18010001)
         --CompanyPanel.coinBg:SetActive(true)
         --CompanyPanel.coinText.text = DataManager.GetMoneyByString()
         CompanyCtrl.static.companyMgr:SetIsOwn(true)
     else
         --CompanyPanel.evaBtn.transform.localScale = Vector3.zero
         CompanyPanel.companyRenameBtn.localScale = Vector3.zero
-        CompanyPanel.titleText.text = GetLanguage(17010007)
+        CompanyPanel.titleText.text = GetLanguage(18010009)
         --CompanyPanel.coinBg:SetActive(false)
         CompanyCtrl.static.companyMgr:SetIsOwn(false)
     end
@@ -440,10 +442,11 @@ function CompanyCtrl:_updateData()
     CompanyPanel.companyNameText.text = self.m_data.companyName
     CompanyPanel.nameText.text = self.m_data.name
     CompanyCtrl.static.companyMgr:SetCompanyName(self.m_data.companyName)
+    CompanyCtrl.static.companyMgr:SetId(self.m_data.id)
     local sexPath = self.m_data.male and "Assets/CityGame/Resources/Atlas/Company/male.png" or "Assets/CityGame/Resources/Atlas/Company/famale.png"
     LoadSprite(sexPath, CompanyPanel.sexImage, true)
     local timeTable = getFormatUnixTime(self.m_data.createTs/1000)
-    CompanyPanel.foundingTimeText.text = string.format(GetLanguage(17010004) .."%s", timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day)
+    CompanyPanel.foundingTimeText.text = string.format(GetLanguage(18010005) .."%s", timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day)
 
     self:OnInfo(self)
 end
@@ -542,7 +545,7 @@ function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
     else
         -- 当没有土地需要显示时，各项数据皆为零
         CompanyPanel.noContentRoot.localScale = Vector3.one
-        CompanyPanel.tipsText.text = "You don't have any land yet. You can get land through land auctions, land purchases, and land leases!"
+        CompanyPanel.tipsText.text = GetLanguage(18020011)
         CompanyPanel.landScroll:ActiveLoopScroll(self.landSource, 0, "View/Company/LandInfoItem")
         local landTitleItemMgrTab = CompanyCtrl.static.companyMgr:GetLandTitleItem()
         for i, v in ipairs(landTitleItemMgrTab) do
@@ -608,7 +611,7 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
         CompanyPanel.buildingScroll:RefillCells()
     else
         CompanyPanel.noContentRoot.localScale = Vector3.one
-        CompanyPanel.tipsText.text = "You don't have a building yet!"
+        CompanyPanel.tipsText.text = GetLanguage(18030002)
 
         -- 当没有建筑需要显示时，各项数据皆为零
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, 0, "View/Company/BuildingInfoItem")
@@ -672,6 +675,7 @@ end
 -- 公司改名
 function CompanyCtrl:c_OnModifyCompanyName(roleInfo)
     CompanyPanel.companyNameText.text = roleInfo.companyName
+    Event.Brocast("SmallPop",GetLanguage(18010008),80)
     DataManager.SetMyPersonalHomepageInfo(1,{roleInfo})
 end
 
@@ -691,7 +695,7 @@ function CompanyCtrl:c_OnModyfyMyBrandName(modyfyMyBrandName)
 
     -- 刷新数据
     CompanyCtrl.static.companyMgr:SetBrandName(modyfyMyBrandName)
-    Event.Brocast("SmallPop","修改成功",80)
+    Event.Brocast("SmallPop",GetLanguage(18040007),80)
 end
 
 -- 刷新Eva滑动选项2的信息

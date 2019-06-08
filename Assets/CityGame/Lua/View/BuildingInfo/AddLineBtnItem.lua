@@ -7,7 +7,7 @@ function AddLineBtnItem:initialize(viewRect, data, toggleGroup)
     self.chooseTran = viewRect:Find("choose")
     self.nameText = viewRect:Find("nameText"):GetComponent("Text")
 
-    self.nameText.text = data.name
+    self.nameText.text = GetLanguage(data.name)
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:showState(isOn)
         if isOn then

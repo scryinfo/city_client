@@ -542,7 +542,7 @@ function BuildingInformationCtrl:setBuildingNameSucceed(dataInfo)
     if dataInfo then
         UIPanel.ClosePage()
         self.buildingName.text = dataInfo.name
-        Event.Brocast("SmallPop","建筑名字修改成功", 300)
+        Event.Brocast("SmallPop",GetLanguage(30010016), 300)
     end
 end
 ----------------------------------------------------------------事件函数---------------------------------------------------------------------------

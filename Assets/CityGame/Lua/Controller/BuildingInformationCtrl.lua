@@ -459,7 +459,7 @@ function BuildingInformationCtrl:_clickSwitchBtn(ins)
             Event.Brocast("m_ReqDemolitionBuilding",ins.m_data.id)
             DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
             UIPanel.CloseAllPageExceptMain()
-            Event.Brocast("SmallPop","拆除成功", 300)
+            Event.Brocast("SmallPop",GetLanguage(30010015), 300)
         end}
         ct.OpenCtrl('ReminderTipsCtrl',data)
     end
@@ -469,7 +469,7 @@ function BuildingInformationCtrl:_clickBuildingName(ins)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(30010006)
-    data.inputDefaultStr = GetLanguage(37030002)
+    data.inputDefaultStr = GetLanguage(17020002)
     data.btnCallBack = function(name)
         Event.Brocast("m_ReqSetBuildingName",ins.m_data.id,name)
     end

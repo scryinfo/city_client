@@ -104,6 +104,8 @@ end
 
 function BuildingShelfDetailPart:_initFunc()
     self:_language()
+    --暂时隐藏货架分类按钮
+    self.sortingBtn.transform.localScale = Vector3.zero
     self:initializeUiInfoData(self.m_data.shelf.good)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -126,7 +126,7 @@ function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
     local line
     for i, v in ipairs(self.data.inProcess) do
         if LabRollACK.lineId == v.id  then
-            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 5
+            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 1
             self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll+1
             line = self.data.inProcess[i]
             break

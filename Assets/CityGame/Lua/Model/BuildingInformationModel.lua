@@ -51,12 +51,8 @@ function BuildingInformationModel:Close()
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryLaboratoryInfo","gs.LaboratoryInfo",self.n_LaboratoryInfo,self)
     --推广
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryPromotionCompanyInfo","gs.PromotionCompanyInfo",self.n_PromoteInfo,self)
-<<<<<<< HEAD
     --研究所
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryLaboratoryInfo","gs.LaboratoryInfo",self.n_LaboratoryInfo,self)
-=======
-
->>>>>>> 39b4053db0bd0ba38ce99e1c3db0a9b83dc66259
 end
 
 ---客户端请求----

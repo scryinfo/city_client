@@ -110,6 +110,8 @@ end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
+    --暂时隐藏仓库分类按钮
+    self.sortingBtn.transform.localScale = Vector3.zero
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -175,7 +177,7 @@ function BuildingWarehouseDetailPart:addTransportList(data)
         table.insert(self.transportTab,data)
         self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop",GetLanguage(25030010), 300)
+        Event.Brocast("SmallPop",GetLanguage(28040022), 300)
     else
         for key,value in pairs(self.transportTab) do
             if value.itemId == data.itemId then
@@ -186,7 +188,7 @@ function BuildingWarehouseDetailPart:addTransportList(data)
         table.insert(self.transportTab,data)
         --self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop",GetLanguage(25030010), 300)
+        Event.Brocast("SmallPop",GetLanguage(28040022), 300)
     end
 end
 --删除运输列表
@@ -299,7 +301,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
     self.number.transform.localScale = Vector3.zero
     self.transportTab = {}
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop", GetLanguage(21040003), 300)
+    Event.Brocast("SmallPop", GetLanguage(25020020), 300)
 end
 --销毁成功后回调
 function BuildingWarehouseDetailPart:deleteSucceed(data)

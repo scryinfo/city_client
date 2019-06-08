@@ -33,11 +33,12 @@ function CreateRoleCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_SameName",self.c_SameName,self)
 
-    CreateRolePanel.nicknameText.text = GetLanguage(10040008)
-    CreateRolePanel.companynameText.text = GetLanguage(10040009)
-    CreateRolePanel.name.text = GetLanguage(10040001)
-    CreateRolePanel.duplicateText.text = GetLanguage(10040004)
-    CreateRolePanel.Companyname.text = GetLanguage(10040005)
+    CreateRolePanel.nicknameText.text = GetLanguage(10070002)
+    CreateRolePanel.companynameText.text = GetLanguage(10070003)
+    CreateRolePanel.name.text = GetLanguage(10070002)
+    CreateRolePanel.CompanyName.text = GetLanguage(10070003)
+    CreateRolePanel.nameText.text = GetLanguage(10070001)
+    CreateRolePanel.create.text = GetLanguage(10070008)
 end
 
 function CreateRoleCtrl:_initInsData()
@@ -65,7 +66,8 @@ function CreateRoleCtrl:OnCreateRole(go)
     local nickname = CreateRolePanel.nickname:GetComponent('InputField').text;
     local companyname = CreateRolePanel.companyname:GetComponent('InputField').text;
     if nickname == "" or companyname == "" then
-        Event.Brocast("SmallPop",GetLanguage(10040006),300)
+        CreateRolePanel.duplicateText.transform.localScale = Vector3.one
+        CreateRolePanel.duplicateText.text = GetLanguage(10070009)
     else
         local data = {}
         data.nickname = nickname
@@ -79,4 +81,5 @@ end
 --重名
 function CreateRoleCtrl:c_SameName()
     CreateRolePanel.duplicateText.transform.localScale = Vector3.one
+    CreateRolePanel.duplicateText.text = GetLanguage(10070005)
 end

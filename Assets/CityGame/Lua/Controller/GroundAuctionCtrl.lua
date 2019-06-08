@@ -261,7 +261,7 @@ function GroundAuctionCtrl:BidGround(ins)
     if ins.highestPrice == nil then
         ins.highestPrice = tonumber(GetClientPriceString(GroundAucConfig[ins.m_data.id].basePrice))
     end
-    if tonumber(bidPrice) > tonumber(ins.highestPrice) then
+    if GetServerPriceNumber(tonumber(bidPrice)) > GetServerPriceNumber(tonumber(ins.highestPrice)) then
         Event.Brocast("m_PlayerBidGround", ins.m_data.id, GetServerPriceNumber(bidPrice))
     else
         --打开弹框

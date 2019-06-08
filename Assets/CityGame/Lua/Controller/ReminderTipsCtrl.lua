@@ -49,15 +49,15 @@ function ReminderTipsCtrl:initializeUiInfoData()
     if self.m_data.isbool == true then
         --停业
         self.tipsText.transform.localScale = Vector3.zero
-        self.contentText.text = GetLanguage(40010009).."？"
+        self.contentText.text = GetLanguage(30010011).."？"
     else
         --拆除
         self.tipsText.transform.localScale = Vector3.one
-        self.contentText.text = GetLanguage(40010013).."？"
-        self.oneText.text = "1."..GetLanguage(40010010)
-        self.secondText.text = "2."..GetLanguage(40010011)
-        self.thirdText.text = "3."..GetLanguage(40010012)
-        self.fourthText.text = "4."..GetLanguage(40010019)
+        self.contentText.text = GetLanguage(30010017).."？"
+        self.oneText.text = "1."..GetLanguage(30010012)
+        self.secondText.text = "2."..GetLanguage(30010018)
+        self.thirdText.text = "3."..GetLanguage(30010019)
+        self.fourthText.text = "4."..GetLanguage(30010020)
     end
 end
 -------------------------------------------------------------点击函数------------------------------------------------------------------------------
@@ -75,5 +75,5 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --多语言
 function ReminderTipsCtrl:language()
-    self.topName.text = GetLanguage(40010008)
+    self.topName.text = GetLanguage(30010006)
 end

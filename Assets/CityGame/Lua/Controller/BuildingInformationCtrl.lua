@@ -266,7 +266,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         elseif self.m_data.mId == 1500003 then
             self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         end
-        self.tipText.text = GetLanguage(23020006)
+        self.tipText.text = GetLanguage("30070005")
         local function callback(obj)
             self.buildingInfoItem = laboratoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end

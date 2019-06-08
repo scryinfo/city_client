@@ -164,9 +164,9 @@ function ResearchDetailPart:switchRoot(panelTrans)
 end
 
 function ResearchDetailPart:updateLanguage()
-    --self.timesText
-    --self.priceText
-    --self.oodsText
+    self.timesText = GetLanguage(28040027)
+    self.priceText=  GetLanguage(28040028)
+    self.oodsText = GetLanguage(28040003)
     --self.nameText
     --self.timeText
 
@@ -174,8 +174,9 @@ function ResearchDetailPart:updateLanguage()
     --self.goodsText
     --self.evaBtnText
     --self.evaText
-    --self.bgtitleText
-    --self.inventEvaText
+    self.bgtitleText.text = GetLanguage(28040026)
+    self.inventEvaText.text = GetLanguage(28040032)
+    self.evaTips.text = GetLanguage(28040014)
 end
 
 ---===================================================================================释放==============================================================================================

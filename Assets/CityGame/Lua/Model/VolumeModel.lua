@@ -50,7 +50,7 @@ function VolumeModel:m_GoodsNpcNum(time)
     local msgId = pbl.enum("sscode.OpCode","queryNpcNum")
     local lMsg = { time = time ,type = 1 }
     local pMsg = assert(pbl.encode("ss.QueryNpcNum", lMsg))
-    local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
+    --local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 
@@ -106,7 +106,7 @@ function VolumeModel:n_OnGetNpcNum(lMsg)
 end
 
 function VolumeModel:n_OnGoodsNpcNum(lMsg)
-    Event.Brocast("c_OnGoodsNpcNum",lMsg.goodNpcNumInfo)
+    Event.Brocast("c_OnGoodsNpcNum",lMsg.numInfo)
 end
 
 function VolumeModel:n_OnNpcExchangeAmount(lMsg)

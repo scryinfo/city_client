@@ -18,10 +18,19 @@ end
 
 --初始化面板--
 function RegisterPanel.InitPanel()
+    this.name = transform:Find("nameBg/name"):GetComponent('Text');
     this.phone = transform:Find("phone"):GetComponent('InputField');
+    this.phonePlaceholder = transform:Find("phone/Placeholder"):GetComponent('Text');
+    this.phoneText = transform:Find("phone/phoneBg/phoneText"):GetComponent('Text');
     this.password = transform:Find("password"):GetComponent('InputField');
+    this.passwordPlaceholder = transform:Find("password/Placeholder"):GetComponent('Text');
+    this.passwordText = transform:Find("password/passwordBg/passwordText"):GetComponent('Text');
     this.confirm = transform:Find("confirm"):GetComponent('InputField');
+    this.confirmPlaceholder = transform:Find("confirm/Placeholder"):GetComponent('Text');
+    this.confirmText = transform:Find("confirm/confirmBg/confirmText"):GetComponent('Text');
     this.authCode = transform:Find("authCode"):GetComponent('InputField');
+    this.authCodePlaceholder = transform:Find("authCode/Placeholder"):GetComponent('Text');
+    this.authCodeText = transform:Find("authCode/authCodeBg/authCodeText"):GetComponent('Text');
 
     this.gain = transform:Find("authCode/gain").gameObject;    --获取验证码
     this.gainText = transform:Find("authCode/gain/Text"):GetComponent("Text");
@@ -35,4 +44,5 @@ function RegisterPanel.InitPanel()
 
     this.back = transform:Find("back").gameObject; --返回
     this.register = transform:Find("register").gameObject;  --注册
+    this.registerText = transform:Find("register/Text"):GetComponent("Text");  --注册
 end

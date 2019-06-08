@@ -28,24 +28,38 @@ function AdvertisementPart:RefreshData(data)
         return
     end
     self.m_data = data
+    self.priceText.text = GetLanguage(27010006)
+    self.waitingTimeText.text = GetLanguage(27010007)
+    self.advertisementText.text = GetLanguage(27010005)
+    self.unAdvertisementText.text = GetLanguage(27010005)
     self:_initFunc()
 end
 --
 function AdvertisementPart:ShowDetail(data)
     if data.info.ownerId ~= DataManager.GetMyOwnerID() then
         if not data.takeOnNewOrder then
-            Event.Brocast("SmallPop","广告商未开启推广",300)
+            Event.Brocast("SmallPop",GetLanguage(27040001),300)
             return
         end
     end
     BasePart.ShowDetail(self,data)
+
+    self.priceText.text = GetLanguage(27010006)
+    self.waitingTimeText.text = GetLanguage(27010007)
+    self.advertisementText.text = GetLanguage(27010005)
+    self.unAdvertisementText.text = GetLanguage(27010005)
+    self.notOpen.text = GetLanguage(27040001)
 end
 --
 function AdvertisementPart:_getComponent(transform)
+    self.priceText = transform:Find("top/open/price"):GetComponent("Text")
     self.price = transform:Find("top/open/price/priceText"):GetComponent("Text")
+    self.waitingTimeText = transform:Find("top/open/waitingTime"):GetComponent("Text")
     self.waitingTime = transform:Find("top/open/waitingTime/waitingTimeText"):GetComponent("Text")
     self.open = transform:Find("top/open")
     self.notOpen = transform:Find("top/notOpen"):GetComponent("Text")
+    self.advertisementText = transform:Find("SelectBtn/advertisementImage/advertisementText"):GetComponent("Text")
+    self.unAdvertisementText = transform:Find("UnselectBtn/advertisementImage/advertisementText"):GetComponent("Text")
 end
 --
 function AdvertisementPart:_initFunc()
@@ -57,6 +71,6 @@ function AdvertisementPart:_initFunc()
     else
         self.notOpen.transform.localScale = Vector3.one
         self.open.localScale = Vector3.zero
-        self.notOpen.text = "未对外"
+        self.notOpen.text = GetLanguage(27040001)
     end
 end

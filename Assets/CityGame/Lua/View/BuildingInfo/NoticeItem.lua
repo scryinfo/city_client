@@ -108,7 +108,13 @@ function NoticeItem:OnBg(go)
         startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
         go:GetPromote(go.uuidParas[1])
     elseif go.typeId == 6 then
-        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+        money = GetClientPriceString(go.goodsDataInfo.tparas[1])
+        time =go.goodsDataInfo.tparas[2] .. "h"
+        local timmer = tonumber(go.goodsDataInfo.tparas[3])
+        local ts = getFormatUnixTime(timmer/1000)
+        startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
+        go:GetLaboratory(go.uuidParas[1])
+        --GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 7 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 8 then
@@ -173,6 +179,11 @@ function NoticeItem:GetPromote(buildingId)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetPromote',buildingId)
 end
 
+--获取研究所建筑详情
+function NoticeItem:GetLaboratory(buildingId)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetLaboratory',buildingId)
+end
+
 --获取公会信息
 function NoticeItem:GetSocietyInfo(id)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetSocietyInfo',id)
@@ -185,6 +196,7 @@ function NoticeItem:_addListener()
     Event.AddListener("c_ProduceInfo", self.c_ProduceInfo, self) --加工厂建筑详情回调
     Event.AddListener("c_RetailShopInfo", self.c_RetailShopInfo, self) --零售店建筑详情回调
     Event.AddListener("c_PromoteInfo", self.c_PromoteInfo, self) --推广公司建筑详情回调
+    Event.AddListener("c_Laboratory", self.c_Laboratory, self) --研究所建筑详情回调
     Event.AddListener("c_SocietyInfo", self.c_SocietyInfo, self) --公会详情回调
 end
 
@@ -195,19 +207,20 @@ function NoticeItem:_removeListener()
     Event.RemoveListener("c_ProduceInfo", self.c_ProduceInfo, self)--加工厂建筑详情回调
     Event.RemoveListener("c_RetailShopInfo", self.c_RetailShopInfo, self)--零售店建筑详情回调
     Event.RemoveListener("c_PromoteInfo", self.c_PromoteInfo, self)--推广公司建筑详情回调
+    Event.RemoveListener("c_Laboratory", self.c_Laboratory, self)--研究所建筑详情回调
     Event.RemoveListener("c_SocietyInfo", self.c_SocietyInfo, self)--公会详情回调
 end
 
 function NoticeItem:c_OnReceivePlayerInfo(playerData)
     self.name = playerData[1].name
     if type == 11 then
-        self.content = GetLanguage(13010051,self.name)
+        self.content = GetLanguage(16020019,self.name)
         GameNoticePanel.rightContent.text = self.content
     elseif type == 12 then
-        self.content = GetLanguage(13010053,"(".. pos.x..","..pos.y .. ")",self.name)
+        self.content = GetLanguage(16020020,"(".. pos.x..","..pos.y .. ")",self.name)
         GameNoticePanel.rightContent.text = self.content
     elseif type == 13 then
-        self.content = GetLanguage(13010054,"(".. pos.x..","..pos.y .. ")",self.name)
+        self.content = GetLanguage(16020021,"(".. pos.x..","..pos.y .. ")",self.name)
         GameNoticePanel.rightContent.text = self.content
     end
     --NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)
@@ -215,41 +228,46 @@ end
 
 function NoticeItem:c_MaterialInfo(name)
     if type == 3 then
-        self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
+        self.content = GetLanguage(16020004,name,nameSize,goodsName,num)
         GameNoticePanel.rightContent.text = self.content
     elseif  type == 2 then
-        self.content = GetLanguage(13010017,name,nameSize)
+        self.content = GetLanguage(16020002,name,nameSize)
         GameNoticePanel.rightContent.text = self.content
     end
 end
 
 function NoticeItem:c_ProduceInfo(name)
     if type == 3 then
-        self.content = GetLanguage(13010019,name,nameSize,goodsName,num)
+        self.content = GetLanguage(16020004,name,nameSize,goodsName,num)
         GameNoticePanel.rightContent.text = self.content
     elseif  type == 2 then
-        self.content = GetLanguage(13010017,name,nameSize)
+        self.content = GetLanguage(16020002,name,nameSize)
         GameNoticePanel.rightContent.text = self.content
     end
 end
 
 function NoticeItem:c_RetailShopInfo(name)
-    self.content = GetLanguage(13010017,name,nameSize)
+    self.content = GetLanguage(16020002,name,nameSize)
     GameNoticePanel.rightContent.text = self.content
 end
 
 function NoticeItem:c_PromoteInfo(name)
-    self.content = GetLanguage(13010080,name,time,money,startTime)
+    self.content = GetLanguage(16020012,name,time,money,startTime)
+    GameNoticePanel.rightContent.text = self.content
+end
+
+function NoticeItem:c_Laboratory(name)
+    self.content = GetLanguage(16020013,name,time,money,startTime)
     GameNoticePanel.rightContent.text = self.content
 end
 
 function NoticeItem:c_SocietyInfo(name)
     if type == 14 then
-        self.content = GetLanguage(13010068,name)
+        self.content = GetLanguage(16020022,name)
     elseif type == 15 then
-        self.content = GetLanguage(13010066,name)
+        self.content = GetLanguage(16020023,name)
     elseif type == 16 then
-        self.content = GetLanguage(13010070,name)
+        self.content = GetLanguage(16020024,name)
     end
     GameNoticePanel.rightContent.text = self.content
 end

@@ -81,7 +81,7 @@ function GameNoticeCtrl:_initData()
     GameNoticePanel.jumpBtn:SetActive(false)
     GameNoticePanel.hedaer.text = ""
     GameNoticePanel.time.text = ""
-    GameNoticePanel.rightContent.text = GetLanguage(13010063)
+    GameNoticePanel.rightContent.text = GetLanguage(16010021)
 end
 
 --点击空白背景返回
@@ -131,7 +131,7 @@ function GameNoticeCtrl:c_OnMailRead(go)
     --GameNoticePanel.rightContent.text = Notice[go.typeId].content
     --GameNoticePanel.rightContent.text = go.content
     GameNoticePanel.timeLeft.transform.localScale = Vector3.one
-    GameNoticePanel.timeLeft.text = GetLanguage(13010003,go.day)
+    GameNoticePanel.timeLeft.text = GetLanguage(16010017 ,go.day)
     -- ]]
     if go.typeId ==1 then
         GameNoticePanel.GoodsScrollView:SetActive(true)
@@ -147,8 +147,8 @@ end
 function GameNoticeCtrl:OnDelete(go)
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = GetLanguage(13010061)
-    data.contentInfo = GetLanguage(13010062)
+    data.titleInfo = GetLanguage(16010019)
+    data.contentInfo = GetLanguage(16010020)
     data.tipInfo = ""
     data.btnCallBack = function ()
         DataManager.DetailModelRpcNoRet(go.insId , 'm_delMail',goId)
@@ -178,7 +178,7 @@ end
 --控制剩余时间显隐
 function GameNoticeCtrl:_setActiva(isShow)
     GameNoticePanel.hintItem:SetActive(isShow)
-    GameNoticePanel.hintText.text = GetLanguage(13010004)
+    GameNoticePanel.hintText.text = GetLanguage(16010018)
     isShowHint = isShow
 end
 

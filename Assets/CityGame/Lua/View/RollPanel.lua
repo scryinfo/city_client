@@ -20,6 +20,8 @@ function RollPanel.InitPanle()
     this.count2 = transform:Find("resultRoot/result/Image/count"):GetComponent("Text")
     this.nametexts = transform:Find("PopCommpent/Scroll/nametext"):GetComponent("Text")
     this.evanametexts = transform:Find("PopCommpent/EvaRoot/nameText"):GetComponent("Text")
+    this.congratulation1 = transform:Find("resultRoot/Evaresultbg/CONGRATULATIONS!"):GetComponent("Text")
+    this.congratulation2 = transform:Find("resultRoot/result/CONGRATULATIONS!"):GetComponent("Text")
 
     this.totalText = findByName(transform,"totalText"):GetComponent("Text")
     this.EvaRoot = findByName(transform,"EvaRoot")

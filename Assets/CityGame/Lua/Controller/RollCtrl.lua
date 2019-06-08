@@ -153,6 +153,8 @@ function RollCtrl:language()
     panel.count2.text = GetLanguage(28040024)
     panel.nametexts.text = GetLanguage(28040036)
     panel.evanametexts.text = GetLanguage(28040037)
+    panel.congratulation1.text = GetLanguage(28040020)
+    panel.congratulation2.text = GetLanguage(28040020)
 end
 
 function RollCtrl:c_creatRollItem( data )

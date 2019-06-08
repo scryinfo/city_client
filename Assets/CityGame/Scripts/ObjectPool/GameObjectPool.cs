@@ -36,11 +36,7 @@ namespace LuaFramework {
 
 		//o(1)
         private void AddObjectToPool(GameObject go) {
-            //add to pool
-            if (go == null)
-            {
-                return;
-            }
+			//add to pool
             go.SetActive(false);
             availableObjStack.Push(go);
             go.transform.SetParent(poolRoot, false);

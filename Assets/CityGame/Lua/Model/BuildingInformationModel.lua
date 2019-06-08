@@ -28,6 +28,8 @@ function BuildingInformationModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryRetailShopOrApartmentInfo","gs.RetailShopOrApartmentInfo",self.n_RetailShopInfo,self)
     --推广
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPromotionCompanyInfo","gs.PromotionCompanyInfo",self.n_PromoteInfo,self)
+    --研究所
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryLaboratoryInfo","gs.LaboratoryInfo",self.n_LaboratoryInfo,self)
 end
 
 function BuildingInformationModel:Close()
@@ -45,8 +47,16 @@ function BuildingInformationModel:Close()
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryProduceDepInfo","gs.ProduceDepInfo",self.n_ProcessingFactoryInfo,self)
     --零售店
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryRetailShopOrApartmentInfo","gs.RetailShopOrApartmentInfo",self.n_RetailShopInfo,self)
+   --研究所
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryLaboratoryInfo","gs.LaboratoryInfo",self.n_LaboratoryInfo,self)
     --推广
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryPromotionCompanyInfo","gs.PromotionCompanyInfo",self.n_PromoteInfo,self)
+<<<<<<< HEAD
+    --研究所
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryLaboratoryInfo","gs.LaboratoryInfo",self.n_LaboratoryInfo,self)
+=======
+
+>>>>>>> 39b4053db0bd0ba38ce99e1c3db0a9b83dc66259
 end
 
 ---客户端请求----
@@ -79,12 +89,11 @@ function BuildingInformationModel:m_ReqRetailShopInfo(buildingId,playerId)
     local lMsg = {buildingId = buildingId,playerId = playerId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryRetailShopOrApartmentInfo","gs.QueryBuildingInfo",lMsg)
 end
---研究中心建筑信息
-function BuildingInformationModel:m_ReqRetailLaboratoryInfo(buildingId,playerId)
+--研究所建筑信息
+function BuildingInformationModel:m_LaboratoryInfo(buildingId,playerId)
     local lMsg = {buildingId = buildingId,playerId = playerId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryLaboratoryInfo","gs.QueryBuildingInfo",lMsg)
 end
-
 --推广建筑信息
 function BuildingInformationModel:m_ReqPromoteInfo(buildingId,playerId)
     local lMsg = {buildingId = buildingId,playerId = playerId}

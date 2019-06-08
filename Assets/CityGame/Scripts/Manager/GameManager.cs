@@ -68,7 +68,6 @@ namespace LuaFramework
             progress = panel.transform.Find("HotfixPanel/contentBg/Slider/progress").GetComponent<Text>();
             speed = panel.transform.Find("HotfixPanel/contentBg/Slider/progress/speed").GetComponent<Text>();
             slider = panel.transform.Find("HotfixPanel/contentBg/Slider").GetComponent<Slider>();
-            contentBg.localScale = Vector3.one;
         }
 
         /// <summary>
@@ -249,18 +248,17 @@ namespace LuaFramework
             // 这里都是资源文件，用线程下载
 
             //判断是否需要更新
-            //if (m_ojects.Count >= 1)
-            //{
-            //    StartLoadReminderPanel();
-            //}
-            //else
-            //{
-            //    OnResourceInited();
-            //    yield return new WaitForSeconds(1.2f);
-            //    Destroy(panel);
-            //    Loadcanvas.SetActive(true);
-            //}
-            StartCoroutine(StartDownLoad(m_ojects));
+            if (m_ojects.Count >= 1)
+            {
+                StartLoadReminderPanel();
+            }
+            else
+            {
+                OnResourceInited();
+                yield return new WaitForSeconds(1.2f);
+                Destroy(panel);
+                Loadcanvas.SetActive(true);
+            }
         }
         //游戏加载提示界面
         private GameObject reminder;

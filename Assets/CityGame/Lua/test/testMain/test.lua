@@ -72,6 +72,10 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 local  pMsg = assert(pbl.encode("gs.HeartBeat", lMsg))
                 CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
             end
+            local timetest = uTime.time - ct.G_LAST_HARTBEAT
+            if timetest > 4 and ct.testUpdate and CityEngineLua._networkInterface.connected then
+                ct.log("system","心跳检测警告： 超过 3 秒未收到服务器响应数据")
+            end
         end, 90, 1)
         timerSendHartBeat:Start()
     end)

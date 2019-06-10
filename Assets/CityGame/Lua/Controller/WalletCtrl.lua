@@ -3,3 +3,120 @@
 --- Created by Fisher.
 --- DateTime: 2019/6/10 9:58
 ---钱包
+WalletCtrl = class('WalletCtrl',UIPanel)
+UIPanel:ResgisterOpen(WalletCtrl)
+
+function WalletCtrl:initialize()
+    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
+end
+
+function WalletCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/WalletPanel.prefab"
+end
+
+function WalletCtrl:OnCreate(obj)
+    UIPanel.OnCreate(self,obj)
+end
+
+function WalletCtrl:Awake(go)
+    self.gameObject = go
+    self:_getComponent(go)
+    self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+
+end
+
+function WalletCtrl:Refresh()
+    self:_language()
+    self:initializeUiInfoData()
+end
+
+function WalletCtrl:Hide()
+    UIPanel.Hide(self)
+end
+-------------------------------------------------------------获取组件-------------------------------------------------------------------------------
+function WalletCtrl:_getComponent(go)
+    --topRoot
+    self.closeBtn = go.transform:Find("topRoot/closeBtn")
+    self.detailsBtn = go.transform:Find("topRoot/detailsBtn")
+    self.topName = go.transform:Find("topRoot/topName")
+
+    --WalletContent   钱包首页
+    self.moneyText = go.transform:Find("WalletContent/moneyBg/moneyText"):GetComponent("Text")
+    self.withdrawBtn = go.transform:Find("WalletContent/withdrawBtn")
+    self.withdrawText = go.transform:Find("WalletContent/withdrawBtn/withdrawText"):GetComponent("Text")
+    self.topUpBtn = go.transform:Find("WalletContent/topUpBtn")
+
+    --DetailsContent   钱包详情
+    self.detailsCloseBtn = go.transform:Find("DetailsContent/top/closeBtn")
+    self.detailsTopName = go.transform:Find("DetailsContent/top/topName"):GetComponent("Text")
+    self.detailsContent = go.transform:Find("DetailsContent/content/ScrollView/Viewport/Content")
+    --钱包详情预制
+
+    --QRCodeContent   二维码
+    self.QRCodeCloseBtn = go.transform:Find("QRCodeContent/top/closeBtn")
+    self.QRCodeTopName = go.transform:Find("QRCodeContent/top/topName"):GetComponent("Text")
+    self.QRCodeImg = go.transform:Find("QRCodeContent/content/QRCode"):GetComponent("RawImage")
+    self.QRCodeAddressText = go.transform:Find("QRCodeContent/content/addressBg/addressText"):GetComponent("Text")
+    self.copyBtn = go.transform:Find("QRCodeContent/content/addressBg/copyBtn")
+    self.copyText = go.transform:Find("QRCodeContent/content/addressBg/copyBtn/Text"):GetComponent("Text")
+
+    --WithdrawContent   提币
+    self.withdrawCloseBtn = go.transform:Find("WithdrawContent/top/closeBtn")
+    self.withdrawTopName = go.transform:Find("WithdrawContent/top/topName"):GetComponent("Text")
+    --detailsRoot  提币详情
+    self.detailsRoot = go.transform:Find("WithdrawContent/content/detailsRoot")
+    self.detailsMoneyText = go.transform:Find("WithdrawContent/content/detailsRoot/withdrawMoneyText"):GetComponent("Text")
+    self.moneyInput = go.transform:Find("WithdrawContent/content/detailsRoot/moneyInput"):GetComponent("InputField")
+    self.moneyPlaceholder = go.transform:Find("WithdrawContent/content/detailsRoot/moneyInput/Placeholder"):GetComponent("Text")
+    self.poundageText = go.transform:Find("WithdrawContent/content/detailsRoot/poundageText"):GetComponent("Text")
+    self.tipText = go.transform:Find("WithdrawContent/content/detailsRoot/poundageText/tipText"):GetComponent("Text")
+    self.proportionMontyText = go.transform:Find("WithdrawContent/content/detailsRoot/proportionIcon/unitText/montyText"):GetComponent("Text")
+    self.detailsAddressText = go.transform:Find("WithdrawContent/content/detailsRoot/addressText"):GetComponent("Text")
+    self.addressInput = go.transform:Find("WithdrawContent/content/detailsRoot/addressInput"):GetComponent("InputField")
+    self.addressPlaceholder = go.transform:Find("WithdrawContent/content/detailsRoot/addressInput/Placeholder"):GetComponent("Text")
+    self.scanningBtn = go.transform:Find("WithdrawContent/content/detailsRoot/scanningBtn")
+    self.detailsConfirmBtn = go.transform:Find("WithdrawContent/content/detailsRoot/confirmBtn")
+    self.detailsConfirmText = go.transform:Find("WithdrawContent/content/detailsRoot/confirmBtn/confirmText"):GetComponent("Text")
+    --phoneRoot   提币验证
+    self.phoneRoot = go.transform:Find("WithdrawContent/content/phoneRoot")
+    self.phoneNumberText = go.transform:Find("WithdrawContent/content/phoneRoot/phoneIcon/phoneNumberText"):GetComponent("Text")
+    self.phoneText = go.transform:Find("WithdrawContent/content/phoneRoot/phoneBg/phoneText"):GetComponent("Text")
+    self.validationNumberText = go.transform:Find("WithdrawContent/content/phoneRoot/validationIcon/validationNumberText"):GetComponent("Text")
+    self.validationInput = go.transform:Find("WithdrawContent/content/phoneRoot/validationInput/"):GetComponent("InputField")
+    self.validationPlaceholder = go.transform:Find("WithdrawContent/content/phoneRoot/validationInput/Placeholder"):GetComponent("Text")
+    self.getBtn = go.transform:Find("WithdrawContent/content/phoneRoot/getBtn")
+    self.getText = go.transform:Find("WithdrawContent/content/phoneRoot/getBtn/getText"):GetComponent("Text")
+    self.countdownText = go.transform:Find("WithdrawContent/content/phoneRoot/countdownBg/countdown"):GetComponent("Text")
+    self.phoneRootTipIcon = go.transform:Find("WithdrawContent/content/phoneRoot/tipIcon")
+    self.phoneRootTipText = go.transform:Find("WithdrawContent/content/phoneRoot/tipIcon/tipText"):GetComponent("Text")
+    self.phoneRootConfirmBtn = go.transform:Find("WithdrawContent/content/phoneRoot/confirmBtn")
+    self.phoneRootConfirmText = go.transform:Find("WithdrawContent/content/phoneRoot/confirmBtn/confirmText"):GetComponent("Text")
+    --scanQRCodeRoot   扫描二维码
+    self.scanQRCodeRoot = go.transform:Find("WithdrawContent/content/scanQRCodeRoot")
+    self.cameraImg = go.transform:Find("WithdrawContent/content/scanQRCodeRoot/cameraImg"):GetComponent("RawImage")
+    self.scanCloseBtn = go.transform:Find("WithdrawContent/content/scanQRCodeRoot/topBg/closeBtn")
+    self.scanTopName = go.transform:Find("WithdrawContent/content/scanQRCodeRoot/topBg/topName"):GetComponent("Text")
+    self.scanTipText = go.transform:Find("WithdrawContent/content/scanQRCodeRoot/content/scanTipText"):GetComponent("Text")
+
+    --PasswordContent   支付密码
+    self.passwordCloseBtn = go.transform:Find("PasswordContent/top/closeBtn")
+    self.passwordTopName = go.transform:Find("PasswordContent/top/topName"):GetComponent("Text")
+    self.passwordTipText = go.transform:Find("PasswordContent/content/tipText"):GetComponent("Text")
+    self.settingPassword = go.transform:Find("PasswordContent/content/settingPassword"):GetComponent("Text")
+    self.settingInputField = go.transform:Find("PasswordContent/content/settingInputField"):GetComponent("InputField")
+    self.settingPlaceholder = go.transform:Find("PasswordContent/content/settingInputField/Placeholder"):GetComponent("Text")
+    self.confirmPassword = go.transform:Find("PasswordContent/content/confirmPassword"):GetComponent("Text")
+    self.confirmInputField = go.transform:Find("PasswordContent/content/confirmInputField"):GetComponent("InputField")
+    self.confirmPlaceholder = go.transform:Find("PasswordContent/content/confirmInputField/Placeholder"):GetComponent("Text")
+    self.passwordConfirmBtn = go.transform:Find("PasswordContent/content/confirmBtn")
+    self.passwordConfirmText = go.transform:Find("PasswordContent/content/confirmBtn/confirmText"):GetComponent("Text")
+end
+-------------------------------------------------------------初始化---------------------------------------------------------------------------------
+--初始化UI
+function WalletCtrl:initializeUiInfoData()
+
+end
+--设置多语言
+function WalletCtrl:_language()
+
+end

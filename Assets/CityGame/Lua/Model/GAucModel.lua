@@ -268,7 +268,10 @@ end
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GAucModel.n_OnReceiveBindGround(stream, msgId)
     if msgId == 0 then
-        ct.log("system", "土地拍卖出价：")
+        local info = {}
+        info.titleInfo = "报错"
+        info.contentInfo = "土地拍卖出价error："..stream.reason
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end
     if stream == nil or stream == "" then

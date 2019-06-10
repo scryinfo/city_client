@@ -49,19 +49,18 @@ function FlightMainCtrl:Awake(go)
     self.pageEvent.mRightEndFunc = FlightMainCtrl.static.RightEndFunc
     self.pageEvent.mBtnNomalFunc = FlightMainCtrl.static.BtnNormalFunc
 end
-
+--
 function FlightMainCtrl:Refresh()
     self:_initData()
 end
-
+--
 function FlightMainCtrl:Active()
     UIPanel.Active(self)
 end
-
+--
 function FlightMainCtrl:Hide()
     UIPanel.Hide(self)
 end
-
 --
 FlightMainCtrl.static.ProvideFunc = function(transform, idx)
     idx = idx + 1
@@ -104,7 +103,8 @@ function FlightMainCtrl:cleanItemList()
 end
 --
 function FlightMainCtrl:_language()
-
+    FlightMainPanel.titleText01.text = GetLanguage(32010001)
+    FlightMainPanel.recordText02.text = GetLanguage(32010002)
 end
 --
 function FlightMainCtrl:backFunc()

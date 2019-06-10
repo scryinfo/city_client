@@ -15,13 +15,7 @@ end
 ---==========================================================================================点击函数=============================================================================
 --开箱
 function RollItem:c_OnClick_roll(ins)
-    if ins.data.availableRoll < 5 then
-        RollPanel.resultRoot.localScale = Vector3.one
-        RollPanel.evanotenough.localScale = Vector3.one
-        RollPanel.Evaresultbg.localScale = Vector3.zero
-    else
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId,"m_ReqLabRoll",ins.data.lineId)
-    end
 end
 ---==========================================================================================业务逻辑=============================================================================
 

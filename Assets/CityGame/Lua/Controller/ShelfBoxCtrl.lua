@@ -185,6 +185,7 @@ function ShelfBoxCtrl:_language()
     self.tipContentText.text = "The goods will be sold as many as they aer in warehouse if you open the switch."
     self.priceTip.text = "价格"
     self.advicePrice.text = "参考价格:"
+    self.brandNameText.text = DataManager.GetCompanyName()
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------
 --关闭

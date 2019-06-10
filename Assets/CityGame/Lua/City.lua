@@ -24,7 +24,8 @@ local log = log
 
 --服务器
 CityEngineLua.ip = AppConst.asServerIp
-CityEngineLua.port = "9001";
+CityEngineLua.port = "9001";-- 国内
+--CityEngineLua.port = "4601";-- 国外
 
 -- Mobile(Phone, Pad)	= 1,
 -- Windows Application program	= 2,
@@ -1697,7 +1698,7 @@ CityEngineLua.onConnectionStateChange = function(state )
 		local okCallBack = function()
 			CityEngineLua.LoginOut()
 		end
-		ct.MsgBox(GetLanguage(4301012), GetLanguage(4301007), nil, okCallBack, okCallBack)
+		ct.MsgBox(GetLanguage(41010010), GetLanguage(41010007), nil, okCallBack, okCallBack)
 	else
 		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)

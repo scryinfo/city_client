@@ -126,7 +126,7 @@ function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
     local line
     for i, v in ipairs(self.data.inProcess) do
         if LabRollACK.lineId == v.id  then
-            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 5
+            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 1
             self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll+1
             line = self.data.inProcess[i]
             break
@@ -168,6 +168,6 @@ end
 function LaboratoryModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
         self:m_ReqLaboratoryDetailInfo(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
+        Event.Brocast("SmallPop", GetLanguage(24020018), 300)  --开业成功提示
     end
 end

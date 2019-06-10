@@ -87,8 +87,6 @@ end
 
 function RollCtrl:Awake(go)
     panel = RollPanel
-    panel.count1.text = GetLanguage(28040024)
-    panel.count2.text = GetLanguage(28040024)
     LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.LuaBehaviour=LuaBehaviour
     self.popCompent = PopCommpent:new(go,LuaBehaviour,self)
@@ -100,6 +98,7 @@ function RollCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.closeEvaBTn.gameObject, self._closeEvaBTn, self)
     --LuaBehaviour:AddClick(panel.closeBTn.gameObject, self._closeEva, self)
     self:closeAllRoot()
+    self:language()
 
 end
 ---====================================================================================点击函数==============================================================================================
@@ -148,6 +147,16 @@ end
 
 
 ---====================================================================================业务逻辑==============================================================================================
+--多语言
+function RollCtrl:language()
+    panel.count1.text = GetLanguage(28040024)
+    panel.count2.text = GetLanguage(28040024)
+    panel.nametexts.text = GetLanguage(28040036)
+    panel.evanametexts.text = GetLanguage(28040037)
+    panel.congratulation1.text = GetLanguage(28040020)
+    panel.congratulation2.text = GetLanguage(28040020)
+end
+
 function RollCtrl:c_creatRollItem( data )
     local moedelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
 

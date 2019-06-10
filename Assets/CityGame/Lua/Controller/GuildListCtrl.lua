@@ -289,7 +289,7 @@ function GuildListCtrl:c_JoinHandle(societyInfo)
     --打开弹框
     local showData = {}
     showData.titleInfo = "提示"
-    showData.contentInfo = string.format(GetLanguage( 12010013 ), societyInfo.name)  -- "申请商业联盟通过"
+    showData.contentInfo = GetLanguage( 12010013, societyInfo.name)  -- "申请商业联盟通过"
     showData.tipInfo = ""
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end

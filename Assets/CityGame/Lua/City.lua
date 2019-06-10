@@ -1698,7 +1698,7 @@ CityEngineLua.onConnectionStateChange = function(state )
 		local okCallBack = function()
 			CityEngineLua.LoginOut()
 		end
-		ct.MsgBox(GetLanguage(4301012), GetLanguage(4301007), nil, okCallBack, okCallBack)
+		ct.MsgBox(GetLanguage(41010010), GetLanguage(41010007), nil, okCallBack, okCallBack)
 	else
 		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)

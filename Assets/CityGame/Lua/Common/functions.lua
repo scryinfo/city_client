@@ -728,7 +728,7 @@ function GetEvaData(index, configData, lv)
 		if string.find(resultNum, ".") ~= nil then
 			resultNum = string.format( "%.4f", resultNum)
 		end
-		return resultNum .. "s/个"
+		return resultNum .. "个/s"
 	elseif configData.Btype == "PromotionAbility" then -- 推广能力
 		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
 	elseif configData.Btype == "InventionUpgrade" then -- 发明提升

@@ -245,7 +245,7 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     Event.AddListener("c_successBuilding",
         function ()
          func()
-         Event.Brocast("SmallPop",GetLanguage(40010020),300)
+         Event.Brocast("SmallPop",GetLanguage(24020018),300)
          end
     ,self)
 

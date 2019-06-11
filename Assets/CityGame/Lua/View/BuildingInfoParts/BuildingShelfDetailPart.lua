@@ -87,6 +87,7 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("buySucceed",self.buySucceed,self)
     Event.AddListener("replenishmentSucceed",self.replenishmentSucceed,self)
     Event.AddListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
+
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()

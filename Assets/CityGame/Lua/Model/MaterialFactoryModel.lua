@@ -150,6 +150,10 @@ end
 --function MaterialFactoryModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
 --    self.funModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
 --end
+--获取特定品牌
+function MaterialFactoryModel:m_ReqGetBrandName(playerId,itemId)
+    self.funModel:m_ReqGetBrandName(playerId,itemId)
+end
 ---服务器回调---
 --开业成功，再次请求建筑详情
 function MaterialFactoryModel:n_OnReceiveOpenBusiness(data)

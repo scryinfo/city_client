@@ -141,7 +141,7 @@ end
 function ProcessingFactoryModel:m_ReqSetLineOrder(buildingId,lineId,pos)
     self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
 end
-----自动补货
+--自动补货
 function ProcessingFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
     self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
 end

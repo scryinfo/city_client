@@ -29,7 +29,7 @@ function ResultOneItem:_initData(data, configData)
     if configData.Btype == "ProduceSpeed" then
         self.addText.text = GetLanguage(31010011) -- "Speed bonus"
     elseif configData.Btype == "Quality" then
-        self.addText.text = GetLanguage(31010018) -- "Quality bonus"
+        self.addText.text = GetLanguage(31010038) -- "Quality bonus"
     elseif configData.Btype == "PromotionAbility" then
         self.addText.text = GetLanguage(31010036) -- "Ability bonus"
     elseif configData.Btype == "InventionUpgrade" then

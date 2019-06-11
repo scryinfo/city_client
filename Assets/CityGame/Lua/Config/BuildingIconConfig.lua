@@ -22,9 +22,9 @@ BuildingIconConfig =
     [1300003] = "Assets/CityGame/Resources/Atlas/Common/BuildingIcon/SuperMarket_3x3.png",
 
     -- 住宅
-    [1400001] = "Assets/CityGame/Resources/Atlas/Common/BuildingIcon/HomeHouse1x1.png",
-    [1400002] = "Assets/CityGame/Resources/Atlas/Common/BuildingIcon/HomeHouse2x2.png",
-    [1400003] = "Assets/CityGame/Resources/Atlas/Common/BuildingIcon/HomeHouse3x3.png",
+    [1400001] = "Assets/CityGame/Resources/Atlas/Common/BuildingIcon/HomeHouse_1x1.png",
+    [1400002] = "Assets/CityGame/Resources/Atlas/Common/BuildingIcon/HomeHouse_2x2.png",
+    [1400003] = "Assets/CityGame/Resources/Atlas/Common/BuildingIcon/HomeHouse_3X3.png",
 
     -- 研究所
     [1500001] = "Assets/CityGame/Resources/Atlas/Common/BuildingIcon/Technology_1x1.png",

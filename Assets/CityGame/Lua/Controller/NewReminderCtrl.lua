@@ -61,12 +61,18 @@ function NewReminderCtrl:Hide()
 end
 
 --返回
-function NewReminderCtrl:OnClose()
+function NewReminderCtrl:OnClose(go)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
+    if go.m_data.close then
+        go.m_data:close()
+        go.m_data.close = nil
+    end
 end
 
 --点击具有选择性的确定（有取消按钮）
 function NewReminderCtrl:OnSelectConfirm(go)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
     if go.m_data.func then
         go.m_data:func()
@@ -76,6 +82,7 @@ end
 
 --点击不具有选择性的确定（没有取消按钮）
 function NewReminderCtrl:OnNotConfirm(go)
+    PlayMusEff(1002)
     UIPanel.ClosePage()
     if go.m_data.func then
         go.m_data:func()

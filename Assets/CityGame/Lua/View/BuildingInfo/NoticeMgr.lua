@@ -59,13 +59,3 @@ function NoticeMgr:_dleNotice()
     end
     self.notice = {}
 end
-
---生成预制
-function NoticeMgr:_createNoticePab(path,parent)
-    local prefab = UnityEngine.Resources.Load(path);
-    local go = UnityEngine.GameObject.Instantiate(prefab);
-    local rect = go.transform:GetComponent("RectTransform");
-    go.transform:SetParent(parent.transform);
-    rect.transform.localScale = Vector3.one;
-    return go
-end

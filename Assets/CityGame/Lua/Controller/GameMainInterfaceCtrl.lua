@@ -799,6 +799,7 @@ end
 --充值
 function GameMainInterfaceCtrl:OnAddGold()
     PlayMusEff(1002)
+    ct.OpenCtrl("WalletCtrl")
 end
 
 --联盟

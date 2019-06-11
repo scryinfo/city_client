@@ -185,6 +185,7 @@ public static class CustomSettings
         _GT(typeof(LayoutElement)),
         _GT(typeof(GridLayoutGroup)),
         _GT(typeof(RectOffset)),
+        _GT(typeof(UnityEngine.Input_BanChinse)),
 
 
         _GT(typeof(Util)),

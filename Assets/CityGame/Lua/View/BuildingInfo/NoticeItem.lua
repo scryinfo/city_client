@@ -15,12 +15,11 @@ local time
 local money
 local startTime
 --初始化方法   数据（读配置表）
-function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,typeId)
+function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,typeId)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
     self.state = goodsDataInfo.state
-    self.manager = mgr
     self.id = id
     self.typeId = typeId
     self.content = goodsDataInfo.contents
@@ -34,7 +33,7 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,type
     self.itemTime = self.prefab.transform:Find("bg/time").gameObject:GetComponent("Text");
     self.hint = self.prefab.transform:Find("hint")
     self.onBg = self.prefab.transform:Find("bg").gameObject;
-    self.newBg = self.prefab.transform:Find("newBg").gameObject;
+    self.newBg = self.prefab.transform:Find("newBg");
     self.newHedaer = self.prefab.transform:Find("newBg/newHedaer").gameObject:GetComponent("Text");
     self.newFrom = self.prefab.transform:Find("newBg/newFrom").gameObject:GetComponent("Text");
     self.newTime = self.prefab.transform:Find("newBg/newTime").gameObject:GetComponent("Text");
@@ -69,7 +68,7 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour, mgr, id,type
         self.hint.localScale = Vector3.one
     end
 
-    self.newBg:SetActive(false)
+    self.newBg.localScale = Vector3.zero
     GameNoticePanel.GoodsScrollView:SetActive(false)
 
     self._luabehaviour:AddClick(self.onBg, self.OnBg, self);

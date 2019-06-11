@@ -15,5 +15,6 @@ end
 function LoadingPanel.InitPanel()
     --按钮和滑动条
     this.rotateIconTrans = transform:Find("BackGround/rotateIcon").gameObject.transform
+    this.content = transform:Find("BackGround/Text"):GetComponent("Text")
 
 end

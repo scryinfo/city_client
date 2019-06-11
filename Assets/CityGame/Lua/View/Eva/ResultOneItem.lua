@@ -35,7 +35,7 @@ function ResultOneItem:_initData(data, configData)
     elseif configData.Btype == "InventionUpgrade" then
         self.addText.text = GetLanguage(31010034) -- "Upgrade bonus"
     elseif configData.Btype == "EvaUpgrade" then
-        self.addText.text = GetLanguage(31010031) -- "Upgrade bonus"
+        self.addText.text = GetLanguage(31010037) -- "Upgrade bonus"
     end
 end
 

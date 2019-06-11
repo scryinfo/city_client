@@ -4,7 +4,6 @@
 --- DateTime: 2019/5/27 11:37
 ---
 FlightMainPageItem = class('FlightMainPageItem')
-FlightMainPageItem.static.OccupancyTextColor = "#FFFFFF"
 
 --初始化方法
 function FlightMainPageItem:initialize(viewRect, data)
@@ -29,6 +28,7 @@ function FlightMainPageItem:initialize(viewRect, data)
         self:ClickFunc()
     end)
 
+    self:Language()
     self:initData(data)
 end
 --刷新数据

@@ -56,6 +56,7 @@ end
 --
 function FlightMainCtrl:Active()
     UIPanel.Active(self)
+    self:_language()
 end
 --
 function FlightMainCtrl:Hide()

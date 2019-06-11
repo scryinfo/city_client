@@ -49,6 +49,7 @@ end
 
 function FlightSearchCtrl:Active()
     UIPanel.Active(self)
+    self:_language()
 end
 
 function FlightSearchCtrl:Hide()
@@ -61,7 +62,11 @@ function FlightSearchCtrl:_initData()
 end
 --
 function FlightSearchCtrl:_language()
-
+    FlightSearchPanel.titleText01.text = GetLanguage(32010003)
+    FlightSearchPanel.titleText02.text = GetLanguage(32020001)
+    FlightSearchPanel.startText03.text = GetLanguage(32020002)
+    FlightSearchPanel.endText04.text = GetLanguage(32020003)
+    FlightSearchPanel.timeText05.text = GetLanguage(32020004)
 end
 --
 function FlightSearchCtrl:backFunc()

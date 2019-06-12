@@ -13,9 +13,9 @@ PropertyTrueItem.static.BTypeIcon = -- b类型显示配置
 {
     ["Quality"] = "Assets/CityGame/Resources/Atlas/Eva/icon-quality.png",
     ["ProduceSpeed"] = "Assets/CityGame/Resources/Atlas/Eva/icon-Productionspeed.png",
-    ["PromotionAbility"] = "Assets/CityGame/Resources/Atlas/Eva/icon-ad-w.png",
-    ["InventionUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-research.png",
-    ["EvaUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-eva-w-s.png",
+    ["PromotionAbility"] = "Assets/CityGame/Resources/Atlas/Eva/icon-popularize.png",
+    ["InventionUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-success-rate.png",
+    ["EvaUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-success-rate.png",
     --["WarehouseUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-warehouse-w.png",
 }
 

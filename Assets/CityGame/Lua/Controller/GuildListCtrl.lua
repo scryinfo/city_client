@@ -61,7 +61,7 @@ function GuildListCtrl:Active()
     GuildListPanel.createBtnText.text = GetLanguage(12010003)
     GuildListPanel.createTitleText.text = GetLanguage(12050001)
     GuildListPanel.nameInputFieldText.text = GetLanguage(12050002)
-    GuildListPanel.describeInputFieldText.text = GetLanguage(12050003)
+    GuildListPanel.describeInputFieldText.text = GetLanguage(12010008)
 end
 
 -- 监听Model层网络回调
@@ -209,13 +209,13 @@ function GuildListCtrl:OnSure(go)
         Event.Brocast("SmallPop", GetLanguage(12060022),80)
         return
     elseif string.len(describeInputText) == 0 or describeInputText == "" then
-        Event.Brocast("SmallPop", GetLanguage(12060026),80)
+        Event.Brocast("SmallPop", GetLanguage(12060024),80)
         return
     elseif string.len(guildNameInputText) > 21 then
         Event.Brocast("SmallPop",GetLanguage(12060023),80)
         return
-    elseif string.len(describeInputText) > 100 then
-        Event.Brocast("SmallPop",GetLanguage(12060027),80)
+    elseif string.len(describeInputText) > 30 then
+        Event.Brocast("SmallPop",GetLanguage(12060025),80)
         return
     end
 
@@ -229,7 +229,7 @@ function GuildListCtrl:OnSure(go)
     showData.contentInfo = GetLanguage(12050006)
     showData.tipInfo = ""
     showData.btnCallBack = function()
-        DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_CreateSociety', {name = guildNameInputText, declaration = describeInputText})
+        DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_CreateSociety', {name = guildNameInputText, introduction = describeInputText})
     end
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end

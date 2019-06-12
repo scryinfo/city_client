@@ -49,7 +49,7 @@ function FlightDetailPanel.InitPanel()
     this.ruleBtnText10 = transform:Find("topRoot/ruleBtn/Text"):GetComponent("Text")  --RULE
 end
 --
-function FlightDetailCtrl.SetState(state)
+function FlightDetailPanel.SetState(state)
     if state == 0 then
         this.betBtn.localScale = Vector3.one
         this.resultRoot.localScale = Vector3.zero

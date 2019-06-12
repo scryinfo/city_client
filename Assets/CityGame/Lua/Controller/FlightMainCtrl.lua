@@ -86,6 +86,10 @@ FlightMainCtrl.static.RightEndFunc = function()
 end
 --
 function FlightMainCtrl:_initData()
+    --temp
+    self.m_data = {}
+    self.m_data.valueList = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
     if self.m_data ~= nil then
         self:cleanItemList()
         FlightMainCtrl.listValue = self.m_data.valueList

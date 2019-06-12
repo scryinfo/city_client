@@ -13,6 +13,7 @@ ct ={
 	G_PERFORMANCETEST = false,	--是否打开性能测试
 	G_TIMEOUT_NET = 12,
 	G_LAST_HARTBEAT = uTime.time,
+	G_Last_SendHARTBEATTime = uTime.time,
 	log = function(logid,s,...)
 		if s == nil then
 			return

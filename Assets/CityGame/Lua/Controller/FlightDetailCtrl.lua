@@ -59,6 +59,7 @@ function FlightDetailCtrl:_language()
     FlightDetailPanel.value02Text07.text = GetLanguage(32030027)
     FlightDetailPanel.value03Text08.text = GetLanguage(32030028)
     FlightDetailPanel.betBtnText09.text = GetLanguage(32030020)
+    FlightDetailPanel.ruleBtnText10.text = GetLanguage(32030029)
 end
 --
 function FlightDetailCtrl:backFunc()

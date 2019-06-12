@@ -15,6 +15,7 @@ end
 
 function FlightDetailPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
+    this.ruleBtn = transform:Find("topRoot/ruleBtn")
 
     this.flightText = transform:Find("centerRoot/flightText"):GetComponent("Text")  --机场名字
     this.timeText = transform:Find("centerRoot/timeText"):GetComponent("Text")  --时间
@@ -45,6 +46,7 @@ function FlightDetailPanel.InitPanel()
     this.value02Text07 = transform:Find("centerRoot/resultRoot/02/Text"):GetComponent("Text")  --实际延误时间
     this.value03Text08 = transform:Find("centerRoot/resultRoot/03/Text"):GetComponent("Text")  --净赚积分
     this.betBtnText09 = transform:Find("centerRoot/betBtn/Text"):GetComponent("Text")  --BET
+    this.ruleBtnText10 = transform:Find("topRoot/ruleBtn/Text"):GetComponent("Text")  --RULE
 end
 --
 function FlightDetailCtrl.SetState(state)

@@ -44,8 +44,6 @@ function GameNoticeCtrl:Awake()
 
 
     self:_initData();
-
-    --self.NoticeMgr = NoticeMgr:new()
 end
 
 function GameNoticeCtrl:Active()
@@ -62,7 +60,6 @@ function GameNoticeCtrl:Refresh()
     hide = true
     --打开通知Model
     self:initializeData()
-    --NoticeMgr:_createNotice(GameNoticeBehaviour,self.m_data)
     if goId ~= nil and  noticeItems[goId]~= nil then
         noticeItems[goId].newBg.localScale = Vector3.one
         bg = noticeItems[goId].newBg
@@ -236,15 +233,8 @@ function GameNoticeCtrl:_deleteNotice(id)
     noticeItems[id].prefab.gameObject:SetActive(false)
     table.remove(noticeItems,id)
     local id = id
-    --NoticeMgr.notice.id = nil
-    -- ]]
-    -- [[刷新表中ID
---[[    local i = 1
-    for k,v in ipairs(NoticeMgr.notice)  do
-        NoticeMgr.notice[i]:RefreshID(i)
-        i = i + 1
-    end]]
-    -- ]]
+    noticeItems.id = nil
+
     id = nil
     if noticeItems == {} then
         UIPanel.ClosePage();

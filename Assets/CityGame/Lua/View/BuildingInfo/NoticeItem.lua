@@ -225,7 +225,6 @@ function NoticeItem:c_OnReceivePlayerInfo(playerData)
         self.content = GetLanguage(16020021,"(".. pos.x..","..pos.y .. ")",self.name)
         GameNoticePanel.rightContent.text = self.content
     end
-    --NoticeMgr:_createNotice(GameNoticeBehaviour,read,content,typeId,noticeId)
 end
 
 function NoticeItem:c_MaterialInfo(name)

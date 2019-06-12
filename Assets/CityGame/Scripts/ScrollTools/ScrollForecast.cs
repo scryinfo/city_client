@@ -26,6 +26,7 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     private float mDragDir = 0;  //滑动方向
     private Vector2 mCurrentPointPos = Vector2.zero;  //当前位置
+    private List<GameObject> mObjList = new List<GameObject>();
 
     //delta是一段时间内，所移动的距离，+代表上移，-代表下移，划得越快delta绝对值越大
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
@@ -41,8 +42,20 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         PointDownFunc(eventData);
     }
 
+    private bool mInitFinish = false;
+    private void InitComponent()
+    {
+        ScrollPool.GetInstance().InitPool(mTempRightPrefab, 26, transform);
+    }
+
     public void InitData(float screenRatio, string[] value)
     {
+        if (mInitFinish == false)
+        {
+            InitComponent();
+            mInitFinish = true;
+        }
+
         if (mRect == null)
         {
             mRect = transform.GetComponent<RectTransform>();
@@ -50,6 +63,14 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         mScreenRatio = screenRatio;
         mTempRightConfig = new List<string>(value);
         CreateRight(mTempRightConfig, mRect.rect.size.y);
+    }
+
+    public void CleanAll()
+    {
+        foreach (var item in mObjList)
+        {
+            ScrollPool.GetInstance().ReturnToPool(item);
+        }
     }
 
     //创建右侧导航
@@ -64,25 +85,19 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
         for (int i = 0; i < list.Count; i++)
         {
-            GameObject go = Instantiate(mTempRightPrefab);  //用对象池来做，不然退出页面时要做销毁处理
+            ////GameObject go = Instantiate(mTempRightPrefab);  //用对象池来做，不然退出页面时要做销毁处理
+            GameObject go = ScrollPool.GetInstance().GetValuableItem(mTempRightPrefab.name);
             go.transform.SetParent(transform);
             go.transform.localScale = Vector3.one;
+            mObjList.Add(go);
             Text temp = go.GetComponent<Text>();
             temp.rectTransform.anchoredPosition = new Vector3(0, -pos, 0);
             temp.text = list[i] + "  " + i;
             pos += elmH;
-            Vector3 uiPos = mScrollPos.WorldToScreenPoint(go.transform.position)/*WorldToScreenPoint(go.transform.position)*/;
+            Vector3 uiPos = mScrollPos.WorldToScreenPoint(go.transform.position);
             mRightTempPos.Add(uiPos);
         }
     }
-
-    //世界坐标转屏幕坐标
-    ////private Vector3 WorldToScreenPoint(Vector3 wprldPos)
-    ////{
-    ////    float offset = mScreenRatio;
-    ////    Vector3 screenV3 = RectTransformUtility.WorldToScreenPoint(Camera.main, wprldPos);
-    ////    return new Vector3(screenV3.x * offset, screenV3.y * offset);
-    ////}
 
     //按下
     private void PointDownFunc(PointerEventData eventData)

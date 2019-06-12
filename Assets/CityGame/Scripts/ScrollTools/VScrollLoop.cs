@@ -76,14 +76,19 @@ public class VScrollLoop : MonoBehaviour
         }
     }
 
-    private void CreateTempDetailConfig(string keyStr)
+    public void CleanAll()
     {
-        ////List<string> list = new List<string>()
-        ////{
-        ////    keyStr + "bc", keyStr + "lalla", keyStr + "grh", keyStr + "uy",
-        ////};
-        ////mTempDetailConfig.Add(keyStr, list);
-        ////mDetailConfig.AddRange(list);
+        for (int i = 0; i < mTitleObjs.Count; i++)
+        {
+            ScrollPool.GetInstance().ReturnToPool(mTitleObjs[i]);
+        }
+        mTitleObjs = new List<GameObject>();
+        foreach (var item in mShowItemList)
+        {
+            ScrollPool.GetInstance().ReturnToPool(item.Value.gameObject);
+        }
+        mShowItemList = new Dictionary<int, RectTransform>();
+        mScrollForecast.CleanAll();
     }
 
     private void OnScrollFunc(Vector2 value)

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class ScrollPoolItem : MonoBehaviour
+public class ScrollPoolItem
 {
     private Transform mParent;
     private GameObject mPrefab;

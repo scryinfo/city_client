@@ -108,6 +108,9 @@ end
 --服务器回调
 function PromoteCompanyModel:n_OnPublicFacility(info)
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_receivePromoteCompanyDetailInfo',info)
+    if info.promRemainTime <= 0 and info.takeOnNewOrder == true then
+        PromoteCompanyModel:m_PromotionSetting(info.info.id , false , info.curPromPricePerHour, 0)
+    end
 end
 
 --添加推广回调

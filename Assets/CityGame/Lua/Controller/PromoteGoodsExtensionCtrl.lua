@@ -53,8 +53,8 @@ function PromoteGoodsExtensionCtrl:Active()
     PromoteGoodsExtensionPanel.myTime:GetComponent("Text").text = GetLanguage(27040022)
     PromoteGoodsExtensionPanel.titleText.text = GetLanguage(27040014)
     PromoteGoodsExtensionPanel.otherTimeText.text = GetLanguage(27040022)
-    PromoteGoodsExtensionPanel.queueText.text = GetLanguage(27010008)
-    PromoteGoodsExtensionPanel.otherQueueText.text = GetLanguage(27010008)
+    PromoteGoodsExtensionPanel.queueText.text = GetLanguage(27050003)
+    PromoteGoodsExtensionPanel.otherQueueText.text = GetLanguage(27050003)
     PromoteGoodsExtensionPanel.select.text = GetLanguage(27040023)
 end
 

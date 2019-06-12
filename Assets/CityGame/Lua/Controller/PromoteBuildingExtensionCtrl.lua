@@ -51,11 +51,11 @@ function PromoteBuildingExtensionCtrl:Active()
 
     PromoteBuildingExtensionPanel.name.text = GetLanguage(27010005)
     PromoteBuildingExtensionPanel.popularityText.text = GetLanguage(27040013)
-    PromoteBuildingExtensionPanel.queueText.text = GetLanguage(27010008)
+    PromoteBuildingExtensionPanel.queueText.text = GetLanguage(27050003)
     PromoteBuildingExtensionPanel.myTime:GetComponent("Text").text = GetLanguage(27040022)
     PromoteBuildingExtensionPanel.titleText.text = GetLanguage(27040014)
     PromoteBuildingExtensionPanel.otherTimeText.text = GetLanguage(27040022)
-    PromoteBuildingExtensionPanel.otherQueueText.text = GetLanguage(27010008)
+    PromoteBuildingExtensionPanel.otherQueueText.text = GetLanguage(27050003)
     PromoteBuildingExtensionPanel.supermarketText.text = GetLanguage(42020003)
     PromoteBuildingExtensionPanel.houseText.text = GetLanguage(42020004)
 end

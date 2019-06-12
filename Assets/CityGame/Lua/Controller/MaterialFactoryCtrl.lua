@@ -115,7 +115,7 @@ end
 function MaterialFactoryCtrl:_openBubbleMessage(go)
     PlayMusEff(1002)
     if go.m_data.info.id then
-        ct.OpenCtrl("BubbleMessageCtrl", go.m_data.info.id)
+        ct.OpenCtrl("BubbleMessageCtrl", go.m_data.info)
     end
 end
 function MaterialFactoryCtrl:_refreshSalary(data)

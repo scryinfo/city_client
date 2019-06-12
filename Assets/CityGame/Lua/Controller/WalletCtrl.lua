@@ -282,11 +282,12 @@ end
 function WalletCtrl:closePaymentPassword()
     self.PasswordContent.transform.localScale = Vector3.zero
 end
---设置密码页面确定
+--设置密码页面确定后执行
 function WalletCtrl:confirmPasswordBtn()
     self.PasswordContent.transform.localScale = Vector3.zero
     self.WithoutWalletContent.transform.localScale = Vector3.zero
     self.WalletContent.transform.localScale = Vector3.one
+    self.moneyText.text = DataManager.GetMoney()
 end
 --打开详情
 function WalletCtrl:openDetails()

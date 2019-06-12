@@ -80,7 +80,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 ct.G_Last_SendHARTBEATTime =  uTime.time
             end
             if ct.testUpdate and CityEngineLua._networkInterface.connected then
-                ct.log("system","心跳检测服务器返回时间差=> "..timetest)
+                --ct.log("system","心跳检测服务器返回时间差=> "..timetest)
                 ---服务器心跳返回超过0.5秒/未收到服务器心跳返回，并且消息弱界面未打开的
                 if  (timetest < 0 or timetest >= HeartBeatTimeDifference ) and ( ct.HeartbeatDisconnection == nil or ct.HeartbeatDisconnection ~= true ) then
                     ct.log("system","心跳检测警告： 超过 0.5 秒未收到服务器响应数据=> "..timetest)

@@ -31,7 +31,10 @@ function FriendslistPanel.InitPanel()
     this.searchBtn = transform:Find("MiddleRoot/Bg/SearchInputField/SearchBtn").gameObject
 
     --好友群组滑动框显示
-    this.listScrollView = transform:Find("MiddleRoot/Bg/Scroll View"):GetComponent("RectTransform");
+    this.listScrollView = transform:Find("MiddleRoot/Bg/Scroll View"):GetComponent("RectTransform")
     this.friendsView = transform:Find("MiddleRoot/Bg/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
     this.listContent = transform:Find("MiddleRoot/Bg/Scroll View/Viewport/Content")
+
+    -- 空白显示
+    this.nullImage = transform:Find("MiddleRoot/Bg/NullImage")
 end

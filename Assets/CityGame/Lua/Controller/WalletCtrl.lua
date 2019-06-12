@@ -173,94 +173,72 @@ function WalletCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
---打开用户协议页面
+--打开用户协议
 function WalletCtrl:_clickCreateBtn(ins)
     PlayMusEff(1002)
-    ins.DeclarationContent.gameObject:SetActive(true)
-    --ins.declarationContent.transform.localPosition = Vector2(0,0)
-    --ins.DeclarationContent.transform.localScale = Vector3.one
-    --暂时默认打开用户协议就能点击下一步（后边可能要改成看完之后才能点击确定）
-    --LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",ins.agreeBtn,false)
-    --ins.agreeBtn:GetComponent("Button").interactable = false
+    ins:openUserAgreement()
 end
---关闭用户协议页面
+--关闭用户协议
 function WalletCtrl:_clickDeclarationCloseBtn(ins)
     PlayMusEff(1002)
-    --ins.DeclarationContent.transform.localScale = Vector3.zero
-    ins.DeclarationContent.gameObject:SetActive(false)
+    ins:closeUserAgreement()
 end
 --用户协议页面确定按钮打开设置密码
 function WalletCtrl:_clickAgreeBtn(ins)
     PlayMusEff(1002)
-    --ins.DeclarationContent.transform.localScale = Vector3.zero
-    ins.DeclarationContent.gameObject:SetActive(false)
-    ins.PasswordContent.transform.localScale = Vector3.one
-    LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-gray.png",ins.passwordConfirmBtn,false)
-    ins.passwordConfirmBtn:GetComponent("Button").interactable = false
+    ins:openPaymentPassword()
 end
 --设置密码页面确定
 function WalletCtrl:_clickPasswordConfirmBtn(ins)
-    ins.PasswordContent.transform.localScale = Vector3.zero
-    ins.WithoutWalletContent.transform.localScale = Vector3.zero
-    ins.WalletContent.transform.localScale = Vector3.one
+    PlayMusEff(1002)
+    ins:confirmPasswordBtn()
 end
---关闭设置密码页面
+--关闭设置密码
 function WalletCtrl:_clickPasswordCloseBtn(ins)
     PlayMusEff(1002)
-    ins.PasswordContent.transform.localScale = Vector3.zero
+    ins:closePaymentPassword()
 end
---打开详情页面
+--打开详情
 function WalletCtrl:_clickDetailsBtn(ins)
     PlayMusEff(1002)
-    ins.DetailsContent.transform.localScale = Vector3.one
+    ins:openDetails()
 end
---关闭详情页面
+--关闭详情
 function WalletCtrl:_clickDetailsCloseBtn(ins)
     PlayMusEff(1002)
-    ins.DetailsContent.transform.localScale = Vector3.zero
+    ins:closeDetails()
 end
---打开提币页面
+--打开提币
 function WalletCtrl:_clickWithdrawBtn(ins)
     PlayMusEff(1002)
-    ins.moneyInput.text = ""
-    ins.poundageText.text = "E".."0.0000".."(0.3%)"
-    ins.proportionMontyText.text = "0.0000"
-    ins.addressInput.text = ""
-    ins.WithdrawContent.transform.localScale = Vector3.one
-    ins.detailsRoot.transform.localScale = Vector3.one
-    ins.phoneRoot.transform.localScale = Vector3.zero
-    ins.scanQRCodeRoot.transform.localScale = Vector3.zero
-    LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-gray.png",ins.detailsConfirmBtn,false)
-    ins.detailsConfirmBtn:GetComponent("Button").interactable = false
+    ins:openWithdrawContent()
 end
---关闭提币页面
+--关闭提币
 function WalletCtrl:_clickWithdrawCloseBtn(ins)
     PlayMusEff(1002)
-    ins.WithdrawContent.transform.localScale = Vector3.zero
+    ins:closeWithdrawContent()
 end
---打开二维码页面
+--打开二维码
 function WalletCtrl:_clickTopUpBtn(ins)
     PlayMusEff(1002)
-    ins.QRCodeContent.transform.localScale = Vector3.one
-    --ins.QRCodeImg
-    ins.QRCodeAddressText.text = "钱包地址"
+    ins:openQRCode()
 end
---关闭二维码页面
+--关闭二维码
 function WalletCtrl:_clickQRCodeCloseBtn(ins)
     PlayMusEff(1002)
-    ins.QRCodeContent.transform.localScale = Vector3.zero
+    ins:closeQRCode()
 end
 --打开扫描二维码
 function WalletCtrl:_clickScanningBtn(ins)
     PlayMusEff(1002)
-    ins.scanQRCodeRoot.transform.localScale = Vector3.one
+    ins:openScanningQRCode()
 end
 --关闭扫描二维码
 function WalletCtrl:_clickScanCloseBtn(ins)
     PlayMusEff(1002)
-    ins.scanQRCodeRoot.transform.localScale = Vector3.zero
+    ins:closeScanningQRCode()
 end
--------------------------------------------------------------监听函数---------------------------------------------------------------------------------
+-----------------------------------------------------------------------监听函数-----------------------------------------------------------------------
 --检测两次输入密码是否相同
 function WalletCtrl:confirmInputButton()
     if self.settingInputField.text == nil or self.settingInputField.text == "" or self.confirmInputField.text == nil or self.confirmInputField.text == "" then
@@ -276,4 +254,80 @@ function WalletCtrl:confirmInputButton()
             self.passwordConfirmBtn:GetComponent("Button").interactable = false
         end
     end
+end
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+--打开用户协议
+function WalletCtrl:openUserAgreement()
+    self.DeclarationContent.gameObject:SetActive(true)
+    --ins.declarationContent.transform.localPosition = Vector2(0,0)
+    --ins.DeclarationContent.transform.localScale = Vector3.one
+    --暂时默认打开用户协议就能点击下一步（后边可能要改成看完之后才能点击确定）
+    --LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",ins.agreeBtn,false)
+    --ins.agreeBtn:GetComponent("Button").interactable = false
+end
+--关闭用户协议
+function WalletCtrl:closeUserAgreement()
+    --ins.DeclarationContent.transform.localScale = Vector3.zero
+    self.DeclarationContent.gameObject:SetActive(false)
+end
+--用户协议页面确定按钮打开设置密码
+function WalletCtrl:openPaymentPassword()
+    --ins.DeclarationContent.transform.localScale = Vector3.zero
+    self.DeclarationContent.gameObject:SetActive(false)
+    self.PasswordContent.transform.localScale = Vector3.one
+    LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-gray.png",self.passwordConfirmBtn,false)
+    self.passwordConfirmBtn:GetComponent("Button").interactable = false
+end
+--关闭设置密码
+function WalletCtrl:closePaymentPassword()
+    self.PasswordContent.transform.localScale = Vector3.zero
+end
+--设置密码页面确定
+function WalletCtrl:confirmPasswordBtn()
+    self.PasswordContent.transform.localScale = Vector3.zero
+    self.WithoutWalletContent.transform.localScale = Vector3.zero
+    self.WalletContent.transform.localScale = Vector3.one
+end
+--打开详情
+function WalletCtrl:openDetails()
+    self.DetailsContent.transform.localScale = Vector3.one
+end
+--关闭详情
+function WalletCtrl:closeDetails()
+    self.DetailsContent.transform.localScale = Vector3.zero
+end
+--打开提币
+function WalletCtrl:openWithdrawContent()
+    self.moneyInput.text = ""
+    self.poundageText.text = "E".."0.0000".."(0.3%)"
+    self.proportionMontyText.text = "0.0000"
+    self.addressInput.text = ""
+    self.WithdrawContent.transform.localScale = Vector3.one
+    self.detailsRoot.transform.localScale = Vector3.one
+    self.phoneRoot.transform.localScale = Vector3.zero
+    self.scanQRCodeRoot.transform.localScale = Vector3.zero
+    LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-gray.png",self.detailsConfirmBtn,false)
+    self.detailsConfirmBtn:GetComponent("Button").interactable = false
+end
+--关闭提币
+function WalletCtrl:closeWithdrawContent()
+    self.WithdrawContent.transform.localScale = Vector3.zero
+end
+--打开二维码
+function WalletCtrl:openQRCode()
+    self.QRCodeContent.transform.localScale = Vector3.one
+    --self.QRCodeImg
+    self.QRCodeAddressText.text = "钱包地址"
+end
+--关闭二维码
+function WalletCtrl:closeQRCode()
+    self.QRCodeContent.transform.localScale = Vector3.zero
+end
+--打开扫描二维码
+function WalletCtrl:openScanningQRCode()
+    self.scanQRCodeRoot.transform.localScale = Vector3.one
+end
+--关闭扫描二维码
+function WalletCtrl:closeScanningQRCode()
+    self.scanQRCodeRoot.transform.localScale = Vector3.zero
 end

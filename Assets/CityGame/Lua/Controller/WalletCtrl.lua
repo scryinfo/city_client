@@ -156,8 +156,9 @@ function WalletCtrl:_language()
     self.addressPlaceholder.text = "请输入钱包地址"
 
 end
---打开钱包时，暂时默认为设置支付密码
+--初始化打开钱包时
 function WalletCtrl:defaultPanel()
+    --暂时默认为创建钱包，后边根据服务器数据为准
     self.WithoutWalletContent.transform.localScale = Vector3.one
     self.WalletContent.transform.localScale = Vector3.zero
     self.DetailsContent.transform.localScale = Vector3.zero

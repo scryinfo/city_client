@@ -286,11 +286,11 @@ end
 --上架时检查操作是否成功
 function ShelfBoxCtrl:WhetherValidShelfOp(ins)
     if GetServerPriceNumber(ins.priceInput.text) == 0 or ins.priceInput.text == "" then
-        ct.log("fisher_w31_time","价格不能为0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        Event.Brocast("SmallPop", "请输入价格", 300)
         return false
     end
     if ins.numberSlider.value == 0 then
-        ct.log("fisher_w31_time","数量不能为0!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        Event.Brocast("SmallPop", "请输入数量", 300)
         return false
     end
     return true

@@ -66,11 +66,11 @@ function LandInfoItem:initialize(prefab, data)
 
             -- 出租天数显示
             self.timeLineImage.localScale = Vector3.one
-            self.rentTimeTitleText.text = GetLanguage(18020013)
+            self.rentTimeTitleText.text = GetLanguage(18020015)
             if data.rent.rentDaysMin == data.rent.rentDaysMax then
-                self.rentTimeText.text = data.rent.rentDaysMin -- "出租时间"
+                self.rentTimeText.text = GetLanguage(18020016, tostring(data.rent.rentDaysMin)) -- "出租时间"
             else
-                self.rentTimeText.text = data.rent.rentDaysMin .. "-" .. data.rent.rentDaysMax -- "出租时间"
+                self.rentTimeText.text = GetLanguage(18020016, data.rent.rentDaysMin .. "-" .. data.rent.rentDaysMax) -- "出租时间"
             end
         elseif data.sell then -- 出售中
             self.ownerNamText.text = CompanyCtrl.static.companyMgr:GetCompanyName()

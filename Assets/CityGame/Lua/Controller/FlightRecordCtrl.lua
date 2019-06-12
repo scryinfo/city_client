@@ -77,6 +77,10 @@ FlightRecordCtrl.static.RightEndFunc = function()
 end
 --
 function FlightRecordCtrl:_initData()
+    --temp
+    self.m_data = {}
+    self.m_data.valueList = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,}
+
     if self.m_data ~= nil then
         self:cleanItemList()
         FlightRecordCtrl.listValue = self.m_data.valueList
@@ -95,17 +99,20 @@ function FlightRecordCtrl:cleanItemList()
 end
 --
 function FlightRecordCtrl:_language()
-    FlightRecordPanel.titleText01.text = GetLanguage(32010001)
+    FlightRecordPanel.titleText01.text = GetLanguage(32010002)
 end
 --
 function FlightRecordCtrl:backFunc()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 --翻页左按钮
 function FlightRecordCtrl:leftPageFunc()
+    PlayMusEff(1002)
     FlightRecordPanel.scrollPage:PrevPage()
 end
 --右翻页
 function FlightRecordCtrl:rightPageFunc()
+    PlayMusEff(1002)
     FlightRecordPanel.scrollPage:NextPage()
 end

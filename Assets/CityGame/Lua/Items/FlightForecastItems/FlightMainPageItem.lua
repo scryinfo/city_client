@@ -47,7 +47,8 @@ function FlightMainPageItem:Language()
 end
 --
 function FlightMainPageItem:ClickFunc()
-
+    PlayMusEff(1002)
+    ct.OpenCtrl("FlightDetailCtrl")
 end
 --
 function FlightMainPageItem:Close()

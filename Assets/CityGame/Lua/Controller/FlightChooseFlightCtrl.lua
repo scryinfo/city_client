@@ -25,9 +25,6 @@ function FlightChooseFlightCtrl:Awake(go)
     behaviour:AddClick(FlightChooseFlightPanel.backBtn.gameObject, function ()
         self:backFunc()
     end , self)
-    behaviour:AddClick(FlightChooseFlightPanel.betBtn.gameObject, function ()
-        self:betFunc()
-    end , self)
 end
 --
 function FlightChooseFlightCtrl:Refresh()

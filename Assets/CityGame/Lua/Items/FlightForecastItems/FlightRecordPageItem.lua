@@ -34,7 +34,8 @@ function FlightRecordPageItem:initData(data)
 end
 --
 function FlightRecordPageItem:ClickFunc()
-
+    PlayMusEff(1002)
+    ct.OpenCtrl("FlightDetailCtrl")
 end
 --
 function FlightRecordPageItem:Close()

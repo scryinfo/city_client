@@ -108,32 +108,15 @@ function FlightChoosePlaceCtrl:_language()
 end
 --
 function FlightChoosePlaceCtrl:backFunc()
+    self.chooseScroll:CleanAll()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
-end
---选择起飞地
-function FlightChoosePlaceCtrl:startChooseFunc()
-    --ct.OpenCtrl()
-end
---选择目的地
-function FlightChoosePlaceCtrl:endChooseFunc()
-    --ct.OpenCtrl()
-end
---选择时间
-function FlightChoosePlaceCtrl:timeChooseFunc()
-
-end
---起始地目的地交换
-function FlightChoosePlaceCtrl:exchangeBtnFunc()
-
-end
---开始搜索
-function FlightChoosePlaceCtrl:checkBtnFunc()
-
 end
 
 --
 function FlightChoosePlaceCtrl:choosePlaceEvent(data)
     if data ~= nil and self.m_data.callback ~= nil then
         self.m_data.callback(data)
+        self:backFunc()
     end
 end

@@ -113,25 +113,31 @@ function FlightMainCtrl:_language()
 end
 --
 function FlightMainCtrl:backFunc()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 --点击搜索
 function FlightMainCtrl:searchFunc()
+    PlayMusEff(1002)
     ct.OpenCtrl("FlightSearchCtrl")
 end
 --点击充值
 function FlightMainCtrl:clickMoneyFunc()
+    PlayMusEff(1002)
     --ct.OpenCtrl()
 end
 --翻页左按钮
 function FlightMainCtrl:leftPageFunc()
+    PlayMusEff(1002)
     FlightMainPanel.scrollPage:PrevPage()
 end
 --右翻页
 function FlightMainCtrl:rightPageFunc()
+    PlayMusEff(1002)
     FlightMainPanel.scrollPage:NextPage()
 end
 --预测记录界面
 function FlightMainCtrl:recordFunc()
-    --ct.OpenCtrl()
+    PlayMusEff(1002)
+    ct.OpenCtrl("FlightRecordCtrl")
 end

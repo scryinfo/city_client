@@ -11,7 +11,7 @@ function FlightRuleDialogPageCtrl:initialize()
 end
 --
 function FlightRuleDialogPageCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/Common/FlightRulePanel.prefab"
+    return "Assets/CityGame/Resources/View/FlightRulePanel.prefab"
 end
 --
 function FlightRuleDialogPageCtrl:OnCreate(obj)

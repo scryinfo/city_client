@@ -96,36 +96,54 @@ function FlightBetCtrl:_initPanelData()
     FlightBetPanel.betValueText.text = self.betValue
 end
 --
-function FlightBetCtrl:_closeBtnFunc()
+function FlightBetCtrl:_backBtnFunc()
     PlayMusEff(1002)
     UIPanel:ClosePage()
 end
 --
 function FlightBetCtrl:_confirmBtnFunc()
+    --发送协议后，等待回调再关闭界面
+
     PlayMusEff(1002)
     UIPanel:ClosePage()
 end
 --
 function FlightBetCtrl:_timeReduceFunc()
+    PlayMusEff(1002)
     self.timeValue = self.timeValue - 1
+    if self.timeValue < FlightConfig.MinTime then
+        self.timeValue = FlightConfig.MinTime
+    end
     FlightBetPanel.timeValueText.text = self.timeValue
     FlightBetPanel.timeSlider.value = self.timeValue
 end
 --
 function FlightBetCtrl:_timeAddFunc()
+    PlayMusEff(1002)
     self.timeValue = self.timeValue + 1
+    if self.timeValue > FlightConfig.MaxTime then
+        self.timeValue = FlightConfig.MaxTime
+    end
     FlightBetPanel.timeValueText.text = self.timeValue
     FlightBetPanel.timeSlider.value = self.timeValue
 end
 --
 function FlightBetCtrl:_betReduceFunc()
+    PlayMusEff(1002)
     self.betValue = self.betValue - 1
+    if self.betValue < FlightConfig.MinBet then
+        self.betValue = FlightConfig.MinBet
+    end
     FlightBetPanel.betValueText.text = self.betValue
     FlightBetPanel.betSlider.value = self.betValue
 end
 --
 function FlightBetCtrl:_betAddFunc()
-    self.betValue = self.betValue - 1
+    PlayMusEff(1002)
+    self.betValue = self.betValue + 1
+    if self.betValue > FlightConfig.MaxBet then
+        self.betValue = FlightConfig.MaxBet
+    end
     FlightBetPanel.betValueText.text = self.betValue
     FlightBetPanel.betSlider.value = self.betValue
 end

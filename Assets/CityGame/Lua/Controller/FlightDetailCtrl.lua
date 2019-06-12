@@ -28,6 +28,9 @@ function FlightDetailCtrl:Awake(go)
     behaviour:AddClick(FlightDetailPanel.betBtn.gameObject, function ()
         self:betFunc()
     end , self)
+    behaviour:AddClick(FlightDetailPanel.ruleBtn.gameObject, function ()
+        self:ruleFunc()
+    end , self)
 end
 --
 function FlightDetailCtrl:Refresh()
@@ -69,4 +72,10 @@ end
 --下注，判断自己的钱
 function FlightDetailCtrl:betFunc()
     PlayMusEff(1002)
+    ct.OpenCtrl("FlightBetCtrl")
+end
+--
+function FlightDetailCtrl:ruleFunc()
+    PlayMusEff(1002)
+    ct.OpenCtrl("FlightRuleDialogPageCtrl")
 end

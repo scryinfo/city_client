@@ -58,7 +58,10 @@ end
 --
 function FlightSearchCtrl:_initData()
     --默认出发地为北京，目的地为上海
-    FlightSearchPanel.timeText.text = os.date("%w, %Y-%m-%d", os.time())
+    FlightSearchPanel.timeText.text = os.date("%W, %Y-%m-%d", os.time())
+    self.startCode = "SIC"
+    self.arriveCode = "SIC"
+    self.timeValue = os.time()
 end
 --
 function FlightSearchCtrl:_language()
@@ -70,44 +73,56 @@ function FlightSearchCtrl:_language()
 end
 --
 function FlightSearchCtrl:backFunc()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 --选择起飞地
 function FlightSearchCtrl:startChooseFunc()
+    PlayMusEff(1002)
     ct.OpenCtrl("FlightChoosePlaceCtrl", {callback = function(data)
         self:startChooseResult(data)
     end})
 end
 --选择目的地
 function FlightSearchCtrl:endChooseFunc()
+    PlayMusEff(1002)
     ct.OpenCtrl("FlightChoosePlaceCtrl", {callback = function(data)
         self:endChooseResult(data)
     end})
 end
 --选择时间
 function FlightSearchCtrl:timeChooseFunc()
+    PlayMusEff(1002)
     --ct.OpenCtrl("FlightChoosePlaceCtrl", {callback = self.timeChooseResult})
 end
 --起始地目的地交换
 function FlightSearchCtrl:exchangeBtnFunc()
-
+    PlayMusEff(1002)
+    local start = self.startCode
+    local arrive = self.arriveCode
+    self.startCode = arrive
+    self.arriveCode = start
+    FlightSearchPanel.startText.text = self.startCode
+    FlightSearchPanel.endText.text = self.arriveCode
 end
 --开始搜索
 function FlightSearchCtrl:checkBtnFunc()
-
+    PlayMusEff(1002)
+    --接到服务器回调之后再打开界面
+    ct.OpenCtrl("FlightChooseFlightCtrl")
 end
 --起点选择的回调
 function FlightSearchCtrl:startChooseResult(data)
+    self.startCode = data
     FlightSearchPanel.startText.text = data.value
-    UIPanel.ClosePage()
 end
 --终点选择的回调
 function FlightSearchCtrl:endChooseResult(data)
+    self.arriveCode = data
     FlightSearchPanel.endText.text = data.value
-    UIPanel.ClosePage()
 end
 --起点选择的回调
 function FlightSearchCtrl:timeChooseResult(data)
+    --self.timeValue = data
     FlightSearchPanel.timeText.text = data.value
-    UIPanel.ClosePage()
 end

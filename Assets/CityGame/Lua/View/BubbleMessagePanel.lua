@@ -30,7 +30,7 @@ end
 
 function BubbleMessagePanel.InitLanguage()
     this.emojiTitle.text = GetLanguage(29010001) --选择标签
-    this.titleText.text = GetLanguage(29010002) --panel的标题
+    this.titleText.text = GetLanguage(29010012) --panel的标题
     this.title.text = GetLanguage(29010001) --选择气泡的标题
     this.hideText.text = GetLanguage(29010011) --隐藏按钮
     this.inputFramePlaceholder.text = GetLanguage(29010008) --默认输入内容

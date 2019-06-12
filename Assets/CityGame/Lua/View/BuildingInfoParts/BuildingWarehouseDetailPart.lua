@@ -171,7 +171,7 @@ function BuildingWarehouseDetailPart:clickSortingBtn()
     if self.nowState == ItemScreening.all then
         --原料
         self.nowState = ItemScreening.material
-        self.nowStateText.text = "Material"
+        self.nowStateText.text = GetLanguage(20010002)
         if next(self.warehouseDatas) ~= nil then
             self:CloseDestroy(self.warehouseDatas)
         end
@@ -180,7 +180,7 @@ function BuildingWarehouseDetailPart:clickSortingBtn()
     elseif self.nowState == ItemScreening.material then
         --商品
         self.nowState = ItemScreening.goods
-        self.nowStateText.text = "Goods"
+        self.nowStateText.text = GetLanguage(20010003)
         if next(self.warehouseDatas) ~= nil then
             self:CloseDestroy(self.warehouseDatas)
         end
@@ -189,7 +189,7 @@ function BuildingWarehouseDetailPart:clickSortingBtn()
     elseif self.nowState == ItemScreening.goods then
         --全部
         self.nowState = ItemScreening.all
-        self.nowStateText.text = "All"
+        self.nowStateText.text = GetLanguage(18020002)
         if next(self.warehouseDatas) ~= nil then
             self:CloseDestroy(self.warehouseDatas)
         end
@@ -204,18 +204,18 @@ function BuildingWarehouseDetailPart:addTransportList(data)
         table.insert(self.transportTab,data)
         self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop","添加成功", 300)
+        Event.Brocast("SmallPop",GetLanguage(25020009), 300)
     else
         for key,value in pairs(self.transportTab) do
             if value.itemId == data.itemId then
-                Event.Brocast("SmallPop","不能重复添加同一种商品", 300)
+                Event.Brocast("SmallPop",GetLanguage(25070011), 300)
                 return
             end
         end
         table.insert(self.transportTab,data)
         --self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop","添加成功", 300)
+        Event.Brocast("SmallPop",GetLanguage(25020009), 300)
     end
 end
 --删除运输列表
@@ -232,7 +232,7 @@ function BuildingWarehouseDetailPart:deleTransportList(id)
             self.numberText.text = #self.transportTab
         end
     end
-    Event.Brocast("SmallPop","删除成功", 300)
+    Event.Brocast("SmallPop",GetLanguage(25020022), 300)
 end
 --开始运输
 function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
@@ -330,7 +330,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
     self.number.transform.localScale = Vector3.zero
     self.transportTab = {}
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop", GetLanguage(21040003), 300)
+    Event.Brocast("SmallPop", GetLanguage(25020020), 300)
 end
 --销毁成功后回调
 function BuildingWarehouseDetailPart:deleteSucceed(data)
@@ -365,7 +365,7 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
     self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop", GetLanguage(26030003), 300)
+    Event.Brocast("SmallPop", GetLanguage(25020012), 300)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取仓库里某个商品的数量

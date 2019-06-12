@@ -42,6 +42,7 @@ function FlightRecordCtrl:Awake(go)
 end
 --
 function FlightRecordCtrl:Refresh()
+    Event.AddListener("c_getFlightBetHistory", self._getFlightBetHistory, self)
     self:_initData()
 end
 --
@@ -51,7 +52,16 @@ function FlightRecordCtrl:Active()
 end
 --
 function FlightRecordCtrl:Hide()
+    Event.RemoveListener("c_getFlightBetHistory", self._getFlightBetHistory, self)
     UIPanel.Hide(self)
+end
+--
+function FlightRecordCtrl:_getFlightBetHistory(data)
+    if data ~= nil then
+        self.m_data.valueList = data
+        FlightRecordCtrl.listValue = self.m_data.valueList
+        FlightRecordPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
+    end
 end
 --
 FlightRecordCtrl.static.ProvideFunc = function(transform, idx)
@@ -77,15 +87,7 @@ FlightRecordCtrl.static.RightEndFunc = function()
 end
 --
 function FlightRecordCtrl:_initData()
-    --temp
-    self.m_data = {}
-    self.m_data.valueList = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,}
-
-    if self.m_data ~= nil then
-        self:cleanItemList()
-        FlightRecordCtrl.listValue = self.m_data.valueList
-        FlightRecordPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
-    end
+    FlightMainModel.m_ReqFlightBetHistory()
 end
 --
 function FlightRecordCtrl:cleanItemList()

@@ -52,6 +52,8 @@ function FlightBetCtrl:Awake(go)
 end
 --
 function FlightBetCtrl:Refresh()
+    Event.AddListener("c_betFlightEvent", self._betFlightEvent, self)
+
     self:_initPanelData()
 end
 --
@@ -75,7 +77,13 @@ function FlightBetCtrl:_language()
 end
 --
 function FlightBetCtrl:Hide()
+    Event.RemoveListener("c_betFlightEvent", self._betFlightEvent, self)
+
     UIPanel.Hide(self)
+end
+--
+function FlightBetCtrl:_betFlightEvent(data)
+    UIPanel.ClosePage()
 end
 --
 function FlightBetCtrl:Close()
@@ -103,9 +111,10 @@ end
 --
 function FlightBetCtrl:_confirmBtnFunc()
     --发送协议后，等待回调再关闭界面
+    --FlightMainModel.m_ReqBetFlight(id, delay, score)
+    UIPanel:ClosePage()
 
     PlayMusEff(1002)
-    UIPanel:ClosePage()
 end
 --
 function FlightBetCtrl:_timeReduceFunc()

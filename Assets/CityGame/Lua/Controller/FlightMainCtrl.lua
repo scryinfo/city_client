@@ -51,6 +51,9 @@ function FlightMainCtrl:Awake(go)
 end
 --
 function FlightMainCtrl:Refresh()
+    Event.AddListener("c_getAllFlight", self._getAllFlight, self)
+    Event.AddListener("c_flightScoreChange", self._flightScoreChange, self)
+
     self:_initData()
 end
 --
@@ -60,7 +63,22 @@ function FlightMainCtrl:Active()
 end
 --
 function FlightMainCtrl:Hide()
+    Event.RemoveListener("c_getAllFlight", self._getAllFlight, self)
+    Event.RemoveListener("c_flightScoreChange", self._flightScoreChange, self)
+
     UIPanel.Hide(self)
+end
+--
+function FlightMainCtrl:_getAllFlight(data)
+    if data ~= nil then
+        self.m_data.valueList = data
+        FlightMainCtrl.listValue = self.m_data.valueList
+        FlightMainPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
+    end
+end
+--
+function FlightMainCtrl:_flightScoreChange(data)
+    FlightMainPanel.moneyText.text = DataManager.GetMyFlightScore()
 end
 --
 FlightMainCtrl.static.ProvideFunc = function(transform, idx)
@@ -86,15 +104,8 @@ FlightMainCtrl.static.RightEndFunc = function()
 end
 --
 function FlightMainCtrl:_initData()
-    --temp
-    self.m_data = {}
-    self.m_data.valueList = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-
-    if self.m_data ~= nil then
-        self:cleanItemList()
-        FlightMainCtrl.listValue = self.m_data.valueList
-        FlightMainPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
-    end
+    FlightMainPanel.moneyText.text = DataManager.GetMyFlightScore()
+    FlightMainModel.m_ReqAllFlight()
 end
 --
 function FlightMainCtrl:cleanItemList()
@@ -113,6 +124,7 @@ function FlightMainCtrl:_language()
 end
 --
 function FlightMainCtrl:backFunc()
+    self:cleanItemList()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end

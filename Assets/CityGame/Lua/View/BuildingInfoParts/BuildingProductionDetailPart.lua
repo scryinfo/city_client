@@ -141,7 +141,7 @@ end
 --设置多语言
 function BuildingProductionDetailPart:_language()
     self.addTip.text = GetLanguage(25030001)
-    self.numberTipText.text = GetLanguage(25010009)
+    self.numberTipText.text = "数量"
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
@@ -152,7 +152,6 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.content.transform.localScale = Vector3.zero
         self.lineNumberText.text = 0 .."/"..PlayerBuildingBaseData[self.m_data.info.mId].lineNum
     else
-        self.brandNameText.text = DataManager.GetCompanyName()
         self.itemId = lineData[1].itemId
         self.ScrollView.gameObject:SetActive(true)
         self.content.transform.localScale = Vector3.one
@@ -210,7 +209,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                     UpdateBeat:Remove(self.Update,self)
                     self.oneTimeText.text = "00:00"
                     self.timeSlider.value = 0
-                    self.tipText.text = GetLanguage(25030007)
+                    self.tipText.text = "原料不足无法生产!!!"
                 end
             end
         end
@@ -312,7 +311,7 @@ function BuildingProductionDetailPart:Update()
                 UpdateBeat:Remove(self.Update,self)
                 self.oneTimeText.text = "00:00"
                 self.timeSlider.value = 0
-                self.tipText.text = GetLanguage(25030007)
+                self.tipText.text = "原料不足无法生产!!!"
                 return
             end
         end

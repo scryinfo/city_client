@@ -176,15 +176,15 @@ end
 --设置多语言
 function ShelfBoxCtrl:_language()
     self.topName.text = "详情"
-    self.popularityText.text = "知名度:"
-    self.qualityText.text = "品质:"
-    self.levelText.text = "奢侈等级:"
-    self.numberTip.text = "销售数量"
-    self.totalNumber.text = "销售数量"
-    self.tipText.text = "自动补货"
+    self.popularityText.text = GetLanguage(25020006)
+    self.qualityText.text = GetLanguage(25020005)
+    self.levelText.text = GetLanguage(25020007)
+    self.numberTip.text = GetLanguage(28040019)
+    self.totalNumber.text = GetLanguage(28040019)
+    self.tipText.text = GetLanguage(25060004)
     self.tipContentText.text = "The goods will be sold as many as they aer in warehouse if you open the switch."
-    self.priceTip.text = "价格"
-    self.advicePrice.text = "参考价格:"
+    self.priceTip.text = GetLanguage(25060003)
+    --self.advicePrice.text = "参考价格:"
     self.brandNameText.text = DataManager.GetCompanyName()
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------

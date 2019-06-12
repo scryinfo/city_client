@@ -55,7 +55,7 @@ function WarehouseItem:InitializeData()
         elseif Good[self.itemId].luxury == 3 then
             self.levelImg.color = getColorByVector3(threeLevel)
         end
-        self.brandNameText.text = self.dataInfo.key.brandName
+        self.brandNameText.text = DataManager.GetCompanyName()
         --self.brandValue
         --self.qualityValue
     end

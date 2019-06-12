@@ -75,7 +75,7 @@ function MapRightSelfBuildingPage:_sortInfoItems()
 end
 --
 function MapRightSelfBuildingPage:_createInfoByType(buildingType)
-    local inconme = string.format("<color=%s>E%s</color>/D", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(0))
+    local inconme = string.format("<color=%s>E%s</color>/%s", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(0), GetLanguage(20150004))
     local revenueData = {infoTypeStr = "Revenue", value = inconme}  --今日营收
     local revenueItem = self:_createShowItem(revenueData)
     self.items[#self.items + 1] = revenueItem
@@ -283,7 +283,7 @@ end
 --多语言
 function MapRightSelfBuildingPage:_language()
     self.goHereText01.text = GetLanguage(20010008)
-    self.notOpenText01.text = GetLanguage(20160009)
+    self.notOpenText01.text = GetLanguage(20120001)
 end
 --关闭
 function MapRightSelfBuildingPage:close()

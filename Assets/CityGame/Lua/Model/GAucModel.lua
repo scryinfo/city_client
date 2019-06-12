@@ -38,13 +38,19 @@ end
 
 --网络回调注册
 function GAucModel.registerNetMsg()
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundAuction"), GAucModel.n_OnReceiveQueryGroundAuctionInfo)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidGround"), GAucModel.n_OnReceiveBindGround)
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMetaGroundAuction"), GAucModel.n_OnReceivequeryMetaGroundAuctionInfo)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GAucModel.n_OnReceiveBidChangeInfor)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GAucModel.n_OnReceiveAuctionEnd)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidWinInform"), GAucModel.n_OnReceiveWinBid)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidFailInform"), GAucModel.n_OnReceiveFailBid)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundAuction"), GAucModel.n_OnReceiveQueryGroundAuctionInfo)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidGround"), GAucModel.n_OnReceiveBindGround)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidChangeInform"), GAucModel.n_OnReceiveBidChangeInfor)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","auctionEnd"), GAucModel.n_OnReceiveAuctionEnd)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidWinInform"), GAucModel.n_OnReceiveWinBid)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidFailInform"), GAucModel.n_OnReceiveFailBid)
+
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryGroundAuction","gs.GroundAuction",GAucModel.n_OnReceiveQueryGroundAuctionInfo)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidGround","gs.IntNum",GAucModel.n_OnReceiveBindGround)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidChangeInform","gs.BidChange",GAucModel.n_OnReceiveBidChangeInfor)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","auctionEnd","gs.Num",GAucModel.n_OnReceiveAuctionEnd)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidWinInform","gs.IntNum",GAucModel.n_OnReceiveWinBid)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidFailInform","gs.IntNum",GAucModel.n_OnReceiveFailBid)
 end
 
 function GAucModel.c_bubbleLateUpdate()
@@ -245,7 +251,8 @@ end
 
 --- 回调 ---
 --收到拍卖中的土地信息
-function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream)
+function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream, msgId)
+
     if stream == nil or stream == "" then
         local time = TimeSynchronized.GetTheCurrentTime()
         for i, value in ipairs(GroundAucConfig) do
@@ -256,7 +263,7 @@ function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream)
         end
         return
     end
-    local msgGroundAuc = assert(pbl.decode("gs.GroundAuction", stream), "GAucModel.n_OnReceiveQueryGroundAuctionInfo: stream == nil")
+    local msgGroundAuc = stream
     if msgGroundAuc == nil then
         return
     end
@@ -265,91 +272,92 @@ function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream)
 end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？
-function GAucModel.n_OnReceiveBindGround(stream)
+function GAucModel.n_OnReceiveBindGround(stream, msgId)
+    if msgId == 0 then
+        local info = {}
+        info.titleInfo = "Error"
+        info.contentInfo = "GAucModel.n_OnReceiveBindGround："..stream.reason
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        return
+    end
     if stream == nil or stream == "" then
         return
     end
 
-    local auctionInfo = assert(pbl.decode("gs.IntNum", stream), "GAucModel.n_OnReceiveBindGround: stream == nil")
-    if auctionInfo then
-        --this._updateAucBidInfo(auctionInfo)
-
-        local info = {}
-        info.titleInfo = GetLanguage(21010005)
-        info.contentInfo = GetLanguage(21010007)
-        info.tipInfo = string.format("(%s)", GetLanguage(21010006))
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
-    end
+    local info = {}
+    info.titleInfo = GetLanguage(21010005)
+    info.contentInfo = GetLanguage(21010007)
+    info.tipInfo = string.format("(%s)", GetLanguage(21010006))
+    ct.OpenCtrl("BtnDialogPageCtrl", info)
 end
 
 --收到服务器拍卖信息更新
-function GAucModel.n_OnReceiveBidChangeInfor(stream)
+function GAucModel.n_OnReceiveBidChangeInfor(stream, msgId)
+    if msgId == 0 then
+        local info = {}
+        info.titleInfo = "Error"
+        info.contentInfo = "GAucModel.n_OnReceiveBidChangeInfor："..stream.reason
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        return
+    end
     if stream == nil or stream == "" then
         return
     end
-    local bidInfo = assert(pbl.decode("gs.BidChange", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
+    local bidInfo = stream
     if bidInfo then
         this._updateAucBidInfo(bidInfo)
     end
 end
 
 --拍卖结束
-function GAucModel.n_OnReceiveAuctionEnd(stream)
+function GAucModel.n_OnReceiveAuctionEnd(stream, msgId)
+    if msgId == 0 then
+        local info = {}
+        info.titleInfo = "Error"
+        info.contentInfo = "GAucModel.n_OnReceiveAuctionEnd："..stream.reason
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        return
+    end
     if stream == nil or stream == "" then
         return
     end
 
-    local endId = assert(pbl.decode("gs.Num", stream), "GAucModel.n_OnReceiveAuctionEnd: stream == nil")
+    local endId = stream
     GAucModel.bindEndFunc(endId.num)
 end
 
 --拍卖成功
-function GAucModel.n_OnReceiveWinBid(stream)
+function GAucModel.n_OnReceiveWinBid(stream, msgId)
+    if msgId == 0 then
+        local info = {}
+        info.titleInfo = "Error"
+        info.contentInfo = "GAucModel.n_OnReceiveWinBid："..stream.reason
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        return
+    end
     if stream == nil or stream == "" then
         return
     end
 
     if stream then
-        Event.Brocast("SmallPop", "拍卖成功", 300)
+        Event.Brocast("SmallPop", GetLanguage(21010014), 300)
     end
 end
 --拍卖失败
-function GAucModel.n_OnReceiveFailBid(stream)
+function GAucModel.n_OnReceiveFailBid(stream, msgId)
+    if msgId == 0 then
+        local info = {}
+        info.titleInfo = "Error"
+        info.contentInfo = "GAucModel.n_OnReceiveFailBid："..stream.reason
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        return
+    end
     if stream == nil or stream == "" then
         return
     end
 
-    local bidInfo = assert(pbl.decode("gs.IntNum", stream), "GAucModel.n_OnReceiveBidChangeInfor: stream == nil")
+    local bidInfo = stream
     if bidInfo then
-        Event.Brocast("SmallPop", "出现更高的拍卖价格", 300)
+        Event.Brocast("SmallPop", GetLanguage(21010013), 300)
     end
-end
-
---接到新的meta拍卖信息
-function GAucModel.n_OnReceiveAddInform(stream)
-    --if stream == nil or stream == "" then
-    --    return
-    --end
-    --
-    --local addInfo = assert(pbl.decode("gs.MetaGroundAuction", stream), "GAucModel.n_OnReceiveAddInform: stream == nil")
-    --if #addInfo.auction == 0 then
-    --    return
-    --end
-    --
-    ----根据新的整个拍卖meta信息实例化气泡 --需要先清空之前存在的气泡
-    ----参照GAucModel.n_OnReceivequeryMetaGroundAuctionInfo
-    --for i, v in ipairs(addInfo.auction) do
-    --    v.bubbleType = BubblleType.GroundAuction
-    --    v.func = function(info)
-    --        if info.bubbleType ~= BubblleType.GroundAuction then
-    --            return
-    --        end
-    --        --GroundAuctionCtrl.OpenPanel(info)  --打开拍卖界面
-    --        UIPage:ShowPage(GroundAuctionCtrl, info)
-    --    end
-    --    GameBubbleManager.CreatBubble(v)
-    --end
-    --
-    ----实例化完之后，向服务器请求正在拍卖的土地
-    --this.m_ReqRueryMetaGroundAuction()
 end

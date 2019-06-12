@@ -152,9 +152,9 @@ function HouseCtrl:_refreshSalary(data)
 
         if self.groupMgr == nil then
             self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
-            self.groupMgr:AddParts(BuildingRentPart, 0.3)
-            self.groupMgr:AddParts(TurnoverPart, 0.3)
-            self.groupMgr:AddParts(BuildingSalaryPart, 0.4)
+            self.groupMgr:AddParts(BuildingRentPart, 0.3333)
+            self.groupMgr:AddParts(TurnoverPart, 0.3333)
+            self.groupMgr:AddParts(BuildingSalaryPart, 0.3334)
             --self.groupMgr:AddParts(BuildingSignPart, 0.25)
             HousePanel.groupTrans.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()

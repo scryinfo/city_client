@@ -11,7 +11,7 @@ function FlightMainPageItem:initialize(viewRect, data)
 
     self.btn = self.viewRect:Find("btn"):GetComponent("Button")
     --self.rateText = self.viewRect:Find("rateText"):GetComponent("Text")  --准点率
-    self.flightText = self.viewRect:Find("flightText"):GetComponent("Text")  --航班名称
+    self.flightText = self.viewRect:Find("flightText"):GetComponent("Text")  --航空公司
     self.numText = self.viewRect:Find("timeText/numText"):GetComponent("Text")  --航班号
     self.betMoneyText = self.viewRect:Find("betMoney"):GetComponent("Text")  --累积投注
     self.timeText = self.viewRect:Find("timeText"):GetComponent("Text")  --航班时间
@@ -33,10 +33,26 @@ function FlightMainPageItem:initialize(viewRect, data)
 end
 --刷新数据
 function FlightMainPageItem:initData(data)
+    if data == nil then
+        return
+    end
+    self.data = data
+    if data.myBet == nil then
+        self.alreadyTran.localScale = Vector3.zero
+    else
+        self.alreadyTran.localScale = Vector3.one
+    end
+    self.betMoneyText.text = data.sumBetAmount
+    local flightData = data.data
+    self.flightText.text = flightData.FlightCompany  --需要多语言
+    self.numText.text = flightData.FlightNo  --CA4506
+    self.endCodeText.text = flightData.FlightArrcode
+    self.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
+    self.startCodeText.text = flightData.FlightDepcode
+    self.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
+
     local trueWidth01 = self.timeText.preferredWidth
     self.timeText.rectTransform.sizeDelta = Vector2.New(trueWidth01, self.timeText.rectTransform.sizeDelta.y)
-
-    self.betMoneyText.text = data
     local trueWidth02 = self.betMoneyText.preferredWidth
     self.betMoneyText.rectTransform.sizeDelta = Vector2.New(trueWidth02, self.betMoneyText.rectTransform.sizeDelta.y)
 end
@@ -48,7 +64,7 @@ end
 --
 function FlightMainPageItem:ClickFunc()
     PlayMusEff(1002)
-    ct.OpenCtrl("FlightDetailCtrl")
+    ct.OpenCtrl("FlightDetailCtrl", self.data)
 end
 --
 function FlightMainPageItem:Close()

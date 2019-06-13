@@ -121,7 +121,7 @@ end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
     self.nowState = ItemScreening.all
-    self.nowStateText.text = "All"
+    self.nowStateText.text = GetLanguage(18020002)
     if not storeData or next(storeData) == nil then
         self.Capacity = 0
         self.number.transform.localScale = Vector3.zero

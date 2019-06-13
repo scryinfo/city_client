@@ -73,10 +73,6 @@ function FlightChoosePlaceCtrl:_getComponent(go)
 end
 --
 function FlightChoosePlaceCtrl:_initData()
-    --热门城市
-    if self.m_data.popularCity ~= nil then
-
-    end
     self:cleanItemList()
     self:_TempCreateConfig()
     self.chooseScroll:InitData(self.tempDetailDic, self.tempTitleData)
@@ -109,6 +105,8 @@ end
 --
 function FlightChoosePlaceCtrl:backFunc()
     self.chooseScroll:CleanAll()
+    self:cleanItemList()
+
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end

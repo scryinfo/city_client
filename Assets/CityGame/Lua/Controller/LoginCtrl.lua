@@ -108,6 +108,7 @@ end
 function LoginCtrl:Refresh()
 	--ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 	self:_initData()
+	UnitTest.Exec_now("cycle_0612_flightTest", "e_cycle_0612_flightTest")
 end
 
 function LoginCtrl:Hide()

@@ -71,6 +71,7 @@ end
 --
 function FlightMainCtrl:_getAllFlight(data)
     if data ~= nil then
+        FlightMainCtrl.static.itemsList = {}
         self.m_data.valueList = data
         FlightMainCtrl.listValue = self.m_data.valueList
         FlightMainPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
@@ -110,7 +111,6 @@ end
 --
 function FlightMainCtrl:cleanItemList()
     if FlightMainCtrl.static.itemsList == nil then
-        FlightMainCtrl.static.itemsList = {}
         return
     end
     for i, value in pairs(FlightMainCtrl.static.itemsList) do

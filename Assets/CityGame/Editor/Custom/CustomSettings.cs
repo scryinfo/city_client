@@ -224,9 +224,10 @@ public static class CustomSettings
         _GT(typeof(FunctionalGraph)),
         _GT(typeof(ScrollPageOptimize)),  //滑动翻页组件
         _GT(typeof(ScrollPageEventData)),  //滑动翻页事件
-        _GT(typeof(VScrollLoop)),  //滑动复用
-        _GT(typeof(VScrollEventData)),  //滑动复用事件
+        _GT(typeof(FlightScrollTool)),  //滑动复用
         _GT(typeof(Dictionary<string, string[]>)),  //
+        _GT(typeof(VScrollLoopTool)),  //滑动复用
+        _GT(typeof(VScrollEventData)),  //滑动复用事件
     };
 
     public static List<Type> dynamicList = new List<Type>()

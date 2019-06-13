@@ -15,7 +15,7 @@ public class VScrollEventData
     public DlgClearData mClearData = null;
 }
 
-public class VScrollLoop : MonoBehaviour
+public class FlightScrollTool : MonoBehaviour
 {
     public GameObject mLeftPrefab;  //左侧预制
     public GameObject mLeftTitlePrefab;  //左侧标题预制
@@ -273,15 +273,15 @@ public class VScrollLoop : MonoBehaviour
     //计算屏幕缩放
     private void InitScreenRatio()
     {
-        float screenRatio = Screen.width / Screen.height;
-        float targetRatio = 1920 / 1080;
+        float screenRatio = (float)Screen.width / (float)Screen.height;
+        float targetRatio = (float)1920 / (float)1080;
         if (mScreenRatio < targetRatio)
         {
-            mScreenRatio = 1920 / Screen.width;
+            mScreenRatio = (float)1920 / (float)Screen.width;
         }
         else
         {
-            mScreenRatio = 1080 / Screen.height;
+            mScreenRatio = (float)1080 / (float)Screen.height;
         }
     }
     //世界坐标转屏幕坐标

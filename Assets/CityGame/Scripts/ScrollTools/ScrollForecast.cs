@@ -15,7 +15,7 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     [SerializeField]
     private GameObject mTempRightPrefab;
     [SerializeField]
-    private VScrollLoop mScrollPos;
+    private FlightScrollTool mScrollPos;
     private RectTransform mRect;
 
     private List<string> mTempRightConfig;

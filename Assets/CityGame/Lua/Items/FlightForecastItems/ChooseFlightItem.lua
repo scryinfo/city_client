@@ -26,7 +26,7 @@ function ChooseFlightItem:initialize(viewRect, data)
 end
 --
 function ChooseFlightItem:initData(data)
-
+    self.flightCodeText.text = data
 end
 --
 function ChooseFlightItem:ClickFunc()

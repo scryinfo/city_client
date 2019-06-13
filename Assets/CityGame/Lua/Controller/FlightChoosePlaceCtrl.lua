@@ -68,7 +68,7 @@ function FlightChoosePlaceCtrl:_getComponent(go)
     end
     local trans = go.transform
     self.backBtn = trans:Find("topRoot/backBtn")
-    self.chooseScroll = trans:Find("scrollRoot/scroll"):GetComponent("VScrollLoop")
+    self.chooseScroll = trans:Find("scrollRoot/scroll"):GetComponent("FlightScrollTool")
     self.titleText01 = trans:Find("topRoot/Text"):GetComponent("Text")
 end
 --

@@ -23,7 +23,7 @@ function FlightChooseFlightPanel.InitPanel()
     this.endPlaceText = transform:Find("placeRoot/endPlaceText"):GetComponent("Text")
 
     this.prefab = transform:Find("itemRoot/ChooseFlightItem")
-    this.scroll = transform:Find("itemRoot/scroll")
+    this.scrollLoop = transform:Find("itemRoot/scroll"):GetComponent("VScrollLoopTool")
 
     this.titleText01 = transform:Find("topRoot/Text"):GetComponent("Text")
     this.valueText02 = transform:Find("itemRoot/01/Text"):GetComponent("Text")

@@ -25,7 +25,20 @@ function FlightChooseFlightCtrl:Awake(go)
     behaviour:AddClick(FlightChooseFlightPanel.backBtn.gameObject, function ()
         self:backFunc()
     end , self)
+
+    self.scrollEvent = VScrollEventData.New()
+    self.scrollEvent.mProvideData = FlightChooseFlightCtrl.static.ProvideFunc
+    self.scrollEvent.mClearData = FlightChooseFlightCtrl.static.ClearFunc
+    FlightChooseFlightPanel.scrollLoop:InitComponent(self.scrollEvent)
 end
+--
+FlightChooseFlightCtrl.static.ProvideFunc = function(transform, idx)
+    idx = idx + 1
+    local item = ChooseFlightItem:new(transform, FlightChooseFlightCtrl.listValue[idx])
+    FlightChooseFlightCtrl.static.itemsList[idx] = item
+end
+--
+FlightChooseFlightCtrl.static.ClearFunc = function(transform) end
 --
 function FlightChooseFlightCtrl:Refresh()
     self:_initData()
@@ -41,8 +54,23 @@ function FlightChooseFlightCtrl:Hide()
 end
 --
 function FlightChooseFlightCtrl:_initData()
-    if self.m_data ~= nil then
+    local temp = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30}
+    FlightChooseFlightCtrl.static.itemsList = {}
+    FlightChooseFlightCtrl.listValue = temp
+    FlightChooseFlightPanel.scrollLoop:InitData(#temp)
 
+    --if self.m_data ~= nil then
+    --    FlightChooseFlightCtrl.listValue = self.m_data.valueList
+    --    FlightChooseFlightPanel.scrollLoop:InitData(#self.m_data.valueList)
+    --end
+end
+--
+function FlightChooseFlightCtrl:cleanItemList()
+    if FlightChooseFlightCtrl.static.itemsList == nil then
+        return
+    end
+    for i, value in pairs(FlightChooseFlightCtrl.static.itemsList) do
+        value:Close()
     end
 end
 --
@@ -57,6 +85,7 @@ function FlightChooseFlightCtrl:_language()
 end
 --
 function FlightChooseFlightCtrl:backFunc()
+    self:cleanItemList()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end

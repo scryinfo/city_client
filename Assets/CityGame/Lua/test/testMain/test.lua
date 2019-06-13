@@ -857,4 +857,10 @@ UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  functio
     end)
 end)
 
+UnitTest.Exec("cycle_0612_flightTest", "e_cycle_0612_flightTest",  function ()
+    Event.AddListener("e_cycle_0612_flightTest", function ()
+        ct.OpenCtrl("FlightMainCtrl")
+    end)
+end)
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

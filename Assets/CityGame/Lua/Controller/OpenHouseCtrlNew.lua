@@ -7,7 +7,7 @@ OpenHouseCtrlNew = class('OpenHouseCtrlNew',UIPanel)
 UIPanel:ResgisterOpen(OpenHouseCtrlNew)
 
 function OpenHouseCtrlNew:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.Normal)
 end
 
 function OpenHouseCtrlNew:bundleName()
@@ -65,7 +65,7 @@ function OpenHouseCtrlNew:_language()
     self.standardWageText02.text = GetLanguage(24020002)
     self.standardWageText03.text = "/"..GetLanguage(24020003)
     self.staffNumText04.text = GetLanguage(24020004)..":"
-    self.totalText05.text = "-"..GetLanguage(24020007).."-"
+    self.totalText05.text = GetLanguage(24020007)
     self.rentInputText06.text = GetLanguage(24020017)
     self.rentText07.text = GetLanguage(24020014)
     self.rentText08.text = GetLanguage(24020015)..":"
@@ -87,8 +87,9 @@ function OpenHouseCtrlNew:_initData()
     else
         self.standardWageText.text = string.format("E%s", GetClientPriceString(standardWage))
         --local value = self.m_data.info.salary * staffNum * standardWage / 100
-        local value = staffNum * standardWage / 100  --temp修改
+        local value = staffNum * standardWage  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
+        self.totalValue = value
     end
 end
 --
@@ -97,17 +98,24 @@ function OpenHouseCtrlNew:_getStandardWage(data)
         DataManager.SetBuildingStandardWage(data.type, data.industryWages)
         self.standardWageText.text = string.format("E%s", GetClientPriceString(data.industryWages))
         --local value = self.m_data.info.salary * self.staffNum * data.industryWages / 100
-        local value = self.staffNum * data.industryWages / 100  --temp修改
+        local value = self.staffNum * data.industryWages  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
+        self.totalValue = value
     end
 end
 --
 function OpenHouseCtrlNew:_onClickConfirm(ins)
+    PlayMusEff(1002)
     if ins.rentInput.text == "" then
         ins.tipRoot.localScale = Vector3.one
         return
     end
-    PlayMusEff(1002)
+
+    if DataManager.GetMoney() < ins.totalValue then
+        Event.Brocast("SmallPop", GetLanguage(41010006), 300)
+        return
+    end
+
     if ins.m_data.callBackFunc ~= nil then
         local temp = os.date("%H:%M", os.time())
         local data = {salary = ins.totalText.text, time = temp, fun = function ()

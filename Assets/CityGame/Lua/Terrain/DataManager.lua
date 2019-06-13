@@ -1123,6 +1123,9 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_societyId = tempData.societyId
     --初始化自己的Eva点数
     PersonDataStack.m_evaPoint = tempData.eva
+    --初始化自己的预测积分
+    PersonDataStack.m_flightScore = tempData.score
+
     --初始化矿工费用及它的百分显示
     --PersonDataStack.m_minersCostRatio = tempData.minersCostRatio
 
@@ -1284,6 +1287,16 @@ function DataManager.SetBuildingStandardWage(buildingType, wage)
         DataManager.BuildingStandardWage = {}
     end
     DataManager.BuildingStandardWage[buildingType] = wage
+end
+
+--获取自已的预测积分
+function DataManager.GetMyFlightScore()
+    return PersonDataStack.m_flightScore
+end
+
+--更新自已的预测积分
+function DataManager.SetMyFlightScore(value)
+    PersonDataStack.m_flightScore = value
 end
 
 --获取自已的所有的建筑评分
@@ -1815,6 +1828,10 @@ function DataManager.Init()
     SystemDatas.GroundAuctionModel  = GAucModel.New()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
+    end
+    SystemDatas.FlightMainModel  = FlightMainModel.New()
+    if SystemDatas.FlightMainModel ~= nil then
+        SystemDatas.FlightMainModel:Awake()
     end
     DataManager.RegisterErrorNetMsg()
     --初始化自己的地块初始信息

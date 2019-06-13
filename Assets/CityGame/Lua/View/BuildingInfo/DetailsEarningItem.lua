@@ -51,7 +51,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", self.picture)
             self.pictureText.text = "X"..dataInfo.count
         elseif dataInfo.type == "PROMO" then
-            self.income.text = GetLanguage(41020004)
+            self.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
             if dataInfo.itemId == 1300 then
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-supermarket.png", self.picture, true)
             elseif dataInfo.itemId == 1400 then
@@ -61,7 +61,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             end
             self.pictureText.text = "X"..dataInfo.duration .. "h"
         elseif dataInfo.type == "LAB" then
-            self.income.text = GetLanguage(41020006)
+            self.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
             if dataInfo.itemId == 51 then
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-food.png", self.picture, true)
             elseif dataInfo.itemId == 52 then

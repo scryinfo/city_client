@@ -80,7 +80,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 ct.G_Last_SendHARTBEATTime =  uTime.time
             end
             if ct.testUpdate and CityEngineLua._networkInterface.connected then
-                ct.log("system","心跳检测服务器返回时间差=> "..timetest)
+                --ct.log("system","心跳检测服务器返回时间差=> "..timetest)
                 ---服务器心跳返回超过0.5秒/未收到服务器心跳返回，并且消息弱界面未打开的
                 if  (timetest < 0 or timetest >= HeartBeatTimeDifference ) and ( ct.HeartbeatDisconnection == nil or ct.HeartbeatDisconnection ~= true ) then
                     ct.log("system","心跳检测警告： 超过 0.5 秒未收到服务器响应数据=> "..timetest)
@@ -854,6 +854,12 @@ UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  functio
         local  pMsg = assert(pbl.encode("ccapi.Cc_createUser", lMsg))
         local msgRet = assert(pbl.decode("ccapi.Cc_createUser",pMsg), "pbl.decode decode failed")
         CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+    end)
+end)
+
+UnitTest.Exec("cycle_0612_flightTest", "e_cycle_0612_flightTest",  function ()
+    Event.AddListener("e_cycle_0612_flightTest", function ()
+        ct.OpenCtrl("FlightMainCtrl")
     end)
 end)
 

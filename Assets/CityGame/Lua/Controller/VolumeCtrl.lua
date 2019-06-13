@@ -8,7 +8,7 @@ UIPanel:ResgisterOpen(VolumeCtrl)
 --VolumeCtrl.static.Head_PATH = "View/GoodsItem/RoleHeadItem"
 
 local volumeBehaviour;
-local isClother = true
+local isClother = false
 local clothes
 local food
 local second
@@ -162,10 +162,14 @@ function VolumeCtrl:language()
    VolumePanel.player.text = GetLanguage(28040010)
    VolumePanel.Tradingname.text = GetLanguage(19030001)
    VolumePanel.Tradingnumname.text = GetLanguage(19030002)
-   VolumePanel.clotherBtnText.text = GetLanguage(20030002)
-   VolumePanel.clothes.text = GetLanguage(20030002)
-   VolumePanel.foodBtnText.text = GetLanguage(20030001)
-   VolumePanel.foodText.text = GetLanguage(20030001)
+   VolumePanel.clotherBtnText.text = GetLanguage(20030001)
+   VolumePanel.clotheText.text = GetLanguage(20030001)
+   VolumePanel.foodBtnText.text = GetLanguage(20030002)
+   VolumePanel.foodText.text = GetLanguage(20030002)
+   VolumePanel.undateTimeText.text = GetLanguage(19020019)  --秒后刷新
+   VolumePanel.requirement.text = GetLanguage(19020020)
+   VolumePanel.employed.text = GetLanguage(19020021)  --就业人口
+   VolumePanel.unemployed.text = GetLanguage(19020022)  --失业人口
 
 
 end
@@ -194,7 +198,7 @@ function VolumeCtrl:Update()
 end
 
 --NPC数量
-function VolumeCtrl:c_NpcNum(countNpc)
+function VolumeCtrl:c_NpcNum(countNpc,workNpcNum,unEmployeeNpcNum)
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local time = tonumber(ts.year..ts.month..ts.day)
@@ -213,9 +217,8 @@ function VolumeCtrl:c_NpcNum(countNpc)
             end
         end
     end
-    VolumePanel.adult.text = adult
-    VolumePanel.old.text = old
-    VolumePanel.youth.text = youth
+    VolumePanel.employedText.text = getMoneyString(workNpcNum)
+    VolumePanel.unemployedText.text = getMoneyString(unEmployeeNpcNum)
     VolumeCtrl:AssignmentDemand(clothes , countNpc , time)
     VolumeCtrl:AssignmentDemand(food , countNpc , time)
 
@@ -225,7 +228,7 @@ end
 function VolumeCtrl:c_OnGoodsNpcNum(info)
     VolumeCtrl:AssignmentDemandSupply(clothes , info )
     VolumeCtrl:AssignmentDemandSupply(food , info )
-    VolumePanel.scroll:ActiveLoopScroll(self.supplyDemand, #clothes)
+    VolumePanel.scroll:ActiveLoopScroll(self.supplyDemand, #food)
 end
 
 --所有npc交易量
@@ -271,6 +274,7 @@ end
 
 --返回
 function VolumeCtrl:OnBack()
+    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 
@@ -295,10 +299,10 @@ end
 
 --ClotherBtn
 function VolumeCtrl:OnClotherBtn(go)
+    PlayMusEff(1002)
     isClother = true
-    --VolumePanel.clotherBtn.transform.localScale = Vector3.zero
-    VolumePanel.clotherBtn:SetActive(false)
-    VolumePanel.foodBtn:SetActive(true)
+    VolumePanel.clothes.localScale = Vector3.one
+    VolumePanel.food.localScale = Vector3.zero
 
     VolumePanel.scroll:ActiveLoopScroll(go.supplyDemand, #clothes)
 
@@ -306,9 +310,10 @@ end
 
 --FoodBtn
 function VolumeCtrl:OnFoodBtn(go)
+    PlayMusEff(1002)
     isClother = false
-    VolumePanel.foodBtn:SetActive(false)
-    VolumePanel.clotherBtn:SetActive(true)
+    VolumePanel.clothes.localScale = Vector3.zero
+    VolumePanel.food.localScale = Vector3.one
     VolumePanel.scroll:ActiveLoopScroll(go.supplyDemand, #food)
 end
 

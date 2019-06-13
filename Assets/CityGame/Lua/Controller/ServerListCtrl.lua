@@ -54,7 +54,7 @@ function ServerListCtrl:c_OnBack()
     PlayMusEff(1002)
     local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
                 content = GetLanguage(10050004),func = function()
-            CityEngineLua.login_loginapp(true);
+            --CityEngineLua.login_loginapp(true);
             UIPanel.ClosePage()
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)
@@ -62,6 +62,7 @@ end
 
 function ServerListCtrl:_initInsData()
     DataManager.OpenDetailModel(ServerListModel,self.insId )
+    ServerListPanel.oKBtn:GetComponent("Button").enabled = true
 end
 
 function ServerListCtrl:Close()

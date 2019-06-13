@@ -135,6 +135,8 @@ function ChatPanel.InitPanel()
     this.worldNoContentRoot = transform:Find("LeftRoot/MiddleRoot/WorldRoot/NoContentRoot").gameObject
     this.worldNoContentText = transform:Find("LeftRoot/MiddleRoot/WorldRoot/NoContentRoot/Image/Bg/Text"):GetComponent("Text")
     this.chatRecordsTitleText = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/TitleText"):GetComponent("Text")
+    this.prevBtnText = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/PrevBtn/Text"):GetComponent("Text")
+    this.nextBtnText = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRecordsRoot/NextBtn/Text"):GetComponent("Text")
     this.friendsNoContentRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/NoContentRoot").gameObject
     this.friendsNoContentText = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/NoContentRoot/Image/Bg/Text"):GetComponent("Text")
     this.friendsChatNoContentRoot = transform:Find("LeftRoot/MiddleRoot/FriendsRoot/ChatRoot/NoContentRoot").gameObject

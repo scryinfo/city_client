@@ -61,6 +61,11 @@ function LoginCtrl:Awake(go)
 		self:_OnToggle(isOn)
 	end)
 
+    --密码不能输入中文
+	LoginPanel.inputPassword:GetComponent('InputField').onValueChanged:AddListener(function()
+		self:_OnPassword(self)
+	end)
+
 	--同意用户准则
 	--LoginPanel.norm.isOn = true
 end
@@ -108,6 +113,7 @@ end
 function LoginCtrl:Refresh()
 	--ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 	self:_initData()
+	UnitTest.Exec_now("cycle_0612_flightTest", "e_cycle_0612_flightTest")
 end
 
 function LoginCtrl:Hide()
@@ -126,6 +132,8 @@ end
 
 function LoginCtrl:_initData()
 	DataManager.OpenDetailModel(LoginModel,self.insId)
+	--连接as
+	CityEngineLua.login_loginapp(true)
 	if UnityEngine.PlayerPrefs.GetString("username") ~= "" then
 		LoginPanel.inputUsername:GetComponent('InputField').text = UnityEngine.PlayerPrefs.GetString("username")
 	end
@@ -171,6 +179,12 @@ function LoginCtrl:_OnToggle(isOn)
 		UnityEngine.PlayerPrefs.SetInt("remember",0)
 		UnityEngine.PlayerPrefs.SetString("password","")
 	end
+end
+
+--密码不能输入中文
+function LoginCtrl:_OnPassword()
+	local a = LoginPanel.inputPassword:GetComponent('InputField')
+	LoginPanel.input:BanChinese(a)
 end
 
 --是否显示密码

@@ -1714,6 +1714,16 @@ CityEngineLua.login_loginapp = function( noconnect )
 			this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
 		end, 10, 0)
 		timer:Start()
+	else
+		--local msgId = pbl.enum("ascode.OpCode","login")
+		------2、 填充 protobuf 内部协议数据
+		--local msglogion = {
+		--	account = this.username,pwd = this.password
+		--}
+		---- 序列化成二进制数据
+		--local pb_login = assert(pbl.encode("as.Account", msglogion))
+		----发包
+		--CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
 	end
 end
 

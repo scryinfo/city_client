@@ -13,9 +13,9 @@ PropertyTrueItem.static.BTypeIcon = -- b类型显示配置
 {
     ["Quality"] = "Assets/CityGame/Resources/Atlas/Eva/icon-quality.png",
     ["ProduceSpeed"] = "Assets/CityGame/Resources/Atlas/Eva/icon-Productionspeed.png",
-    ["PromotionAbility"] = "Assets/CityGame/Resources/Atlas/Eva/icon-ad-w.png",
-    ["InventionUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-research.png",
-    ["EvaUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-eva-w-s.png",
+    ["PromotionAbility"] = "Assets/CityGame/Resources/Atlas/Eva/icon-popularize.png",
+    ["InventionUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-success-rate.png",
+    ["EvaUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-success-rate.png",
     --["WarehouseUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-warehouse-w.png",
 }
 
@@ -29,7 +29,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.typeImage = transform:Find("TypeImage"):GetComponent("Image")
     self.levelText = transform:Find("LevelText"):GetComponent("Text")
     self.nameNumberText = transform:Find("NameNumberText"):GetComponent("Text")
-    transform:Find("ExperienceTitleText"):GetComponent("Text").text = GetLanguage(31020012)
+    transform:Find("ExperienceTitleText"):GetComponent("Text").text = GetLanguage(31010012)
     self.experienceText = transform:Find("ExperienceTitleText/ExperienceText"):GetComponent("Text")
     self.levelSlider = transform:Find("LevelSlider"):GetComponent("Slider")
     self.totalLevelNumberText = transform:Find("LevelSlider/TotalLevelNumberText"):GetComponent("Text")

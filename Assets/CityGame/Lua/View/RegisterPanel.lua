@@ -18,6 +18,7 @@ end
 
 --初始化面板--
 function RegisterPanel.InitPanel()
+    this.input = transform:GetComponent("Input_BanChinse")
     this.name = transform:Find("nameBg/name"):GetComponent('Text');
     this.phone = transform:Find("phone"):GetComponent('InputField');
     this.phonePlaceholder = transform:Find("phone/Placeholder"):GetComponent('Text');

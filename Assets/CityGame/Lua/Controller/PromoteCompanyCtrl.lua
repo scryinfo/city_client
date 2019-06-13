@@ -65,18 +65,22 @@ end
 --建筑个性签名
 function PromoteCompanyCtrl:OnOpen(go)
     PlayMusEff(1002)
-    ct.OpenCtrl("BubbleMessageCtrl",go.m_data.insId)
+    ct.OpenCtrl("BubbleMessageCtrl",go.m_data)
 end
 
 --点击队列
 function PromoteCompanyCtrl:OnQueue(go)
     PlayMusEff(1002)
+    if go.m_data.selledPromCount == 0 then
+        local data = {}
+        ct.OpenCtrl("QueneCtrl",data)
+    else
         if go.m_data.info.ownerId == myOwnerID then
-           DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
+            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
         else
-           DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
+            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
         end
-
+    end
 end
 
 --建筑详情回调

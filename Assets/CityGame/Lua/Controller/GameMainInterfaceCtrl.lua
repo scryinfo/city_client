@@ -174,7 +174,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         elseif dataInfo.type == "PROMO" then
             if dataInfo.itemId == 1300 then
-                GameMainInterfacePanel.income.text = GetLanguage(41020004)
+                GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
             elseif dataInfo.itemId == 1400 then
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
@@ -183,7 +183,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
             end
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
         elseif dataInfo.type == "LAB" then
-            GameMainInterfacePanel.income.text = GetLanguage(41020006)
+            GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
             if dataInfo.itemId == 51 then
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-food.png", GameMainInterfacePanel.simplePicture, true)
             elseif dataInfo.itemId == 52 then
@@ -451,25 +451,12 @@ function GameMainInterfaceCtrl:Awake()
     self.earnings.mProvideData = GameMainInterfaceCtrl.static.EarningsProvideData
     self.earnings.mClearData = GameMainInterfaceCtrl.static.EarningsClearData
 
-    --头像
-    local faceId = DataManager.GetFaceId()
-
-    AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.15)
     self.insId = OpenModelInsID.GameMainInterfaceCtrl
-    local info = DataManager.GetMyPersonalHomepageInfo()
-    self.name = info.name
-    self.company = info.companyName
-    --self.gender = info.male
-
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
 
     LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour) + 1], GameMainInterfacePanel.weather,true)
     GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour) + 1].."℃"
-
-    local gold = DataManager.GetMoneyByString()
-    self.money = "E"..getPriceString(gold,24,20)
-    GameMainInterfacePanel.money.text = self.money
 
     --收益倒计时条件
     self.isTimmer = false
@@ -517,6 +504,20 @@ function GameMainInterfaceCtrl:initInsData()
     DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
     self.m_Timer:Start()
+
+    --头像
+    local faceId = DataManager.GetFaceId()
+
+    AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.15)
+    local info = DataManager.GetMyPersonalHomepageInfo()
+    self.name = info.name
+    self.company = info.companyName
+    --self.gender = info.male
+
+    local gold = DataManager.GetMoneyByString()
+    self.money = "E"..getPriceString(gold,24,20)
+    GameMainInterfacePanel.money.text = self.money
+
     --初始化姓名,性别,公司名字
     GameMainInterfacePanel.name.text = self.name
     --GameMainInterfacePanel.company.text = self.company
@@ -799,6 +800,7 @@ end
 --充值
 function GameMainInterfaceCtrl:OnAddGold()
     PlayMusEff(1002)
+    ct.OpenCtrl("WalletCtrl")
 end
 
 --联盟

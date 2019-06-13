@@ -113,28 +113,6 @@ function GuildMenu:_onAppoint()
     PlayMusEff(1002)
     self:SetAppointRoot(true)
     self:SetAppointImageColor(false)
-    --local playerData = GuildOwnCtrl.static.guildMgr:GetPlayerData()
-    --if playerData.identity == "CHAIRMAN"then
-    --    self.identity4Btn:SetActive(false)
-    --    self.vicechairmanBtn:SetActive(true)
-    --    self.administratorBtn:SetActive(true)
-    --    self.memberBtn:SetActive(true)
-    --elseif playerData.identity == "VICE_CHAIRMAN"then
-    --    self.identity4Btn:SetActive(true)
-    --    self.vicechairmanBtn:SetActive(false)
-    --    self.administratorBtn:SetActive(true)
-    --    self.memberBtn:SetActive(true)
-    --elseif playerData.identity == "ADMINISTRATOR"then
-    --    self.identity4Btn:SetActive(true)
-    --    self.vicechairmanBtn:SetActive(true)
-    --    self.administratorBtn:SetActive(false)
-    --    self.memberBtn:SetActive(true)
-    --elseif playerData.identity == "MEMBER"then
-    --    self.identity4Btn:SetActive(true)
-    --    self.vicechairmanBtn:SetActive(true)
-    --    self.administratorBtn:SetActive(true)
-    --    self.memberBtn:SetActive(false)
-    --end
 end
 
 -- 点击加好友按钮
@@ -196,8 +174,18 @@ function GuildMenu:_SetIdentity()
     if playerDataIndex < ownIdentityIndex then
         self.outBtn.localScale  = Vector3.one
         self.appointBtn.localScale  = Vector3.one
-        self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 254)
-        self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 356)
+
+        -- 判断是否是自己的好友
+        local friendsBasicData = DataManager.GetMyFriends()
+        if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
+            self.addFriendsBtnRt.localScale = Vector3.one
+            self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 254)
+            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 356)
+        else
+            self.addFriendsBtnRt.localScale = Vector3.zero
+            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 254)
+        end
+
         if ownIdentityIndex == 4 then
             self.identity4Btn:SetActive(true)
             self.identity3Btn:SetActive(true)
@@ -216,8 +204,18 @@ function GuildMenu:_SetIdentity()
     else
         self.outBtn.localScale  = Vector3.zero
         self.appointBtn.localScale  = Vector3.zero
-        self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 50)
-        self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 152)
+
+        -- 判断是否是自己的好友
+        local friendsBasicData = DataManager.GetMyFriends()
+        if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
+            self.addFriendsBtnRt.localScale = Vector3.one
+            self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 50)
+            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 152)
+        else
+            self.addFriendsBtnRt.localScale = Vector3.zero
+            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 50)
+        end
+        --self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 152)
     end
 end
 

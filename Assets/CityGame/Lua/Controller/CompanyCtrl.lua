@@ -171,22 +171,74 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
         else
             time[i] = tostring(getFormatUnixTime(updataTime).day)
         end
-        incomeTab[i] = {}
-        incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-        incomeTab[i].flow = 0  --看具体字段
-        payTab[i] = {}
-        payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-        payTab[i].flow = 0  --看具体字段
-        if info ~= nil then
-            for k, v in pairs(info) do
-                if updataTime == v.time / 1000 then
-                    incomeTab[i].lift = v.income
-                    payTab[i].lift = v.pay
+        --incomeTab[i] = {}
+        --incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+        --incomeTab[i].flow = 0  --看具体字段
+        --payTab[i] = {}
+        --payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+        --payTab[i].flow = 0  --看具体字段
+        --if info ~= nil then
+        --    for k, v in pairs(info) do
+        --        if updataTime == v.time / 1000 then
+        --            incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
+        --            payTab[i].lift = tonumber(GetClientPriceString(v.pay))
+        --        end
+        --    end
+        --end
+        --
+        updataTime = updataTime + 86400
+    end
+   local buildingTs = math.floor(self.m_data.createTs/1000)
+    if tonumber(getFormatUnixTime(buildingTs).second) ~= 0 then
+        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).second)
+    end
+    if tonumber(getFormatUnixTime(buildingTs).minute) ~= 0 then
+        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).minute) * 60
+    end
+    if tonumber(getFormatUnixTime(buildingTs).hour) ~= 0 then
+        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).hour) * 3600
+    end
+    updataTime = monthAgo
+    local index = 1
+    if buildingTs >= monthAgo then
+        while(buildingTs <= currentTime)
+        do
+            incomeTab[index] = {}
+            incomeTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 140
+            incomeTab[index].flow = 0  --看具体字段
+            payTab[index] = {}
+            payTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 140
+            payTab[index].flow = 0  --看具体字段
+            if info ~= nil then
+                for k, v in pairs(info) do
+                    if updataTime == v.time / 1000 then
+                        incomeTab[index].lift = tonumber(GetClientPriceString(v.income))
+                        payTab[index].lift = tonumber(GetClientPriceString(v.pay))
+                    end
                 end
             end
+            buildingTs = buildingTs + 86400
+            index = index + 1
         end
+    else
+        for i = 1, 30 do
+            incomeTab[i] = {}
+            incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+            incomeTab[i].flow = 0  --看具体字段
+            payTab[i] = {}
+            payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+            payTab[i].flow = 0  --看具体字段
+            if info ~= nil then
+                for k, v in pairs(info) do
+                    if updataTime == v.time / 1000 then
+                        incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
+                        payTab[i].lift = tonumber(GetClientPriceString(v.pay))
+                    end
+                end
+            end
 
-        updataTime = updataTime + 86400
+            updataTime = updataTime + 86400
+        end
     end
 
     local income = {}
@@ -197,8 +249,8 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     for i, v in ipairs(payTab) do
         pay[i] = Vector2.New(v.coordinate,v.lift)  --
     end
-    income[#income].y= todayIncome
-    pay[#pay].y= todayPay
+    income[#income].y= tonumber(GetClientPriceString(todayIncome))
+    pay[#pay].y= tonumber(GetClientPriceString(todayPay))
     table.insert(time,1,"0")
     table.insert(boundaryLine,1,0)
     table.insert(income,1,Vector2.New(0,0))
@@ -238,10 +290,10 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     CompanyPanel.curveFunctionalGraph:BoundaryLine(boundaryLine)
 
     CompanyPanel.curveFunctionalGraph:DrawLine(incomeVet, getColorByInt(8, 139, 108),1) --收入
-    CompanyPanel.curveSlide:SetCoordinate(incomeVet, income, getColorByInt(255, 255, 255),1)
+    CompanyPanel.curveSlide:SetCoordinate(incomeVet, income, getColorByInt(41, 61, 108),1)
 
     CompanyPanel.curveFunctionalGraph:DrawLine(payVet, getColorByInt(213, 34, 76),2) --支出
-    CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(255, 255, 255),2)
+    CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(41, 61, 108),2)
 
     CompanyPanel.curve.localPosition = CompanyPanel.curve.localPosition + Vector3.New(0.01, 0,0)
     CompanyPanel.curve.sizeDelta = CompanyPanel.curve.sizeDelta + Vector2.New(0.01, 0)
@@ -651,9 +703,11 @@ end
 
 -- 收支返回
 function CompanyCtrl:c_OnQueryPlayerIncomePayCurve(curveInfo)
+    local pay = 0
+    local income = 0
+
+    -- 获得往期的收支
     if curveInfo.playerIncome then
-        local pay = 0
-        local income = 0
         for _, v in pairs(curveInfo.playerIncome) do
             if v.income then
                 income = income + v.income
@@ -662,13 +716,31 @@ function CompanyCtrl:c_OnQueryPlayerIncomePayCurve(curveInfo)
                 pay = pay + v.pay
             end
         end
+    end
 
-        CompanyPanel.incomeText.text = tostring(income)
-        CompanyPanel.expenditureText.text = tostring(pay)
+    -- 营收
+    if curveInfo.todayIncome then
+        income = income + curveInfo.todayIncome
+    end
+
+    -- 支出
+    if curveInfo.todayPay then
+        pay = pay + curveInfo.todayPay
+    end
+
+    -- 设置UI上的值
+    if income > 0 then
+        CompanyPanel.incomeText.text = GetClientPriceString(income)
     else
         CompanyPanel.incomeText.text = "0"
+    end
+    if pay > 0 then
+        CompanyPanel.expenditureText.text = GetClientPriceString(pay)
+    else
         CompanyPanel.expenditureText.text = "0"
     end
+
+    -- 生成曲线图
     self:c_PromoteSignCurve(curveInfo.playerIncome,curveInfo.todayIncome,curveInfo.todayPay)
 end
 

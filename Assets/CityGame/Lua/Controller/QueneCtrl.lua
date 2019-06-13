@@ -33,6 +33,7 @@ function QueneCtrl:Active()
     QuenePanel.goods.text = GetLanguage(27040016)
     QuenePanel.details.text = GetLanguage(27040017)
     QuenePanel.startTime.text = GetLanguage(27040018)
+    QuenePanel.contentText.text = GetLanguage(16010026)
 end
 --todo：刷新
 function QueneCtrl:Refresh()
@@ -124,10 +125,6 @@ end
 --多语言
 function QueneCtrl.ChangeLanguage()
     --panel.topicText.text = GetLanguage()
-    panel.player.text = GetLanguage(28040010)
-    panel.goods.text = GetLanguage(28040034)
-    panel.details.text = GetLanguage(28040035)
-    panel.startTime.text = GetLanguage(28040013)
     --panel.buildingInfoText
     --panel.buildingSelectedInfoText
     --panel.landInfomationText
@@ -149,6 +146,7 @@ end
 --刷新队列
 function QueneCtrl:c_updateQuque(data)
     if data.data  then
+        panel.empty.localScale = Vector3.zero
         if data.func then
             self.m_data.data = data.func(data.ins,data.data)
         else
@@ -160,6 +158,7 @@ function QueneCtrl:c_updateQuque(data)
         end
         panel.loopScrol:ActiveDiffItemLoop(self.loopScrollDataSource, dataName)
     else
+        panel.empty.localScale = Vector3.one
         panel.loopScrol:ActiveLoopScroll(self.loopScrollDataSource,0)
     end
     self.m_Timer:Start()

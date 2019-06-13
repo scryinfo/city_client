@@ -46,11 +46,11 @@ function GAucModel.registerNetMsg()
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidFailInform"), GAucModel.n_OnReceiveFailBid)
 
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryGroundAuction","gs.GroundAuction",GAucModel.n_OnReceiveQueryGroundAuctionInfo)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidGround","gs.IntNum",GAucModel.n_OnReceiveBindGround)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidGround","gs.BidGround",GAucModel.n_OnReceiveBindGround)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidChangeInform","gs.BidChange",GAucModel.n_OnReceiveBidChangeInfor)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","auctionEnd","gs.Num",GAucModel.n_OnReceiveAuctionEnd)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidWinInform","gs.IntNum",GAucModel.n_OnReceiveWinBid)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidFailInform","gs.IntNum",GAucModel.n_OnReceiveFailBid)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidWinInform","gs.BidGround",GAucModel.n_OnReceiveWinBid)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidFailInform","gs.BidGround",GAucModel.n_OnReceiveFailBid)
 end
 
 function GAucModel.c_bubbleLateUpdate()

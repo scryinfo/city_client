@@ -12,7 +12,7 @@ local timeColor = "#26f2ff"
 local timeSize = 24
 
 function OpenBuildingCheckCtrl:initialize()
-    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
+    UIPanel.initialize(self,UIType.PopUp,UIMode.HideOther,UICollider.Normal)
 end
 
 function OpenBuildingCheckCtrl:bundleName()

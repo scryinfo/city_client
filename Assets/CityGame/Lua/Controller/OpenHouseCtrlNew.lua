@@ -7,7 +7,7 @@ OpenHouseCtrlNew = class('OpenHouseCtrlNew',UIPanel)
 UIPanel:ResgisterOpen(OpenHouseCtrlNew)
 
 function OpenHouseCtrlNew:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.Normal)
 end
 
 function OpenHouseCtrlNew:bundleName()
@@ -89,6 +89,7 @@ function OpenHouseCtrlNew:_initData()
         --local value = self.m_data.info.salary * staffNum * standardWage / 100
         local value = staffNum * standardWage  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
+        self.totalValue = value
     end
 end
 --
@@ -99,6 +100,7 @@ function OpenHouseCtrlNew:_getStandardWage(data)
         --local value = self.m_data.info.salary * self.staffNum * data.industryWages / 100
         local value = self.staffNum * data.industryWages  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
+        self.totalValue = value
     end
 end
 --
@@ -109,7 +111,7 @@ function OpenHouseCtrlNew:_onClickConfirm(ins)
         return
     end
 
-    if DataManager.GetMoney() < tonumber(ins.totalText.text) then
+    if DataManager.GetMoney() < ins.totalValue then
         Event.Brocast("SmallPop", GetLanguage(41010006), 300)
         return
     end

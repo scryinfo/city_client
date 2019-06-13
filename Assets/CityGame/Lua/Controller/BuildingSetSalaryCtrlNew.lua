@@ -7,7 +7,7 @@ BuildingSetSalaryCtrlNew = class('BuildingSetSalaryCtrlNew',UIPanel)
 UIPanel:ResgisterOpen(BuildingSetSalaryCtrlNew)
 
 function BuildingSetSalaryCtrlNew:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.Normal)
 end
 
 function BuildingSetSalaryCtrlNew:bundleName()
@@ -78,6 +78,7 @@ function BuildingSetSalaryCtrlNew:_initData()
         --local value = self.m_data.info.salary * staffNum * standardWage / 100
         local value = staffNum * standardWage  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
+        self.totalValue = value
     end
 end
 --
@@ -88,12 +89,13 @@ function BuildingSetSalaryCtrlNew:_getStandardWage(data)
         --local value = self.m_data.info.salary * self.staffNum * data.industryWages / 100
         local value = self.staffNum * data.industryWages  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
+        self.totalValue = value
     end
 end
 --
 function BuildingSetSalaryCtrlNew:_onClickConfirm(ins)
     PlayMusEff(1002)
-    if DataManager.GetMoney() < tonumber(ins.totalText.text) then
+    if DataManager.GetMoney() < ins.totalValue then
         Event.Brocast("SmallPop", GetLanguage(41010006), 300)
         return
     end

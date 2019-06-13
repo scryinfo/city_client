@@ -11,11 +11,11 @@ function BubbleMessageModel:initialize(insId)
     self.insId = insId
     insID=insId
     self:OnCreate()
+    --DataManager.GetBaseBuildDataByID()
 end
 
 function BubbleMessageModel:OnCreate()
     Event.AddListener("m_setBuildingInfo", self.m_setBuildingInfo,self)--设置FaceId
-
 end
 ---================================================================================发包===========================================================================
 function BubbleMessageModel:m_setBuildingInfo(buildingId,des,emoticon,isShowBubble)

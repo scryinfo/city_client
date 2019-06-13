@@ -37,4 +37,5 @@ function FriendslistPanel.InitPanel()
 
     -- 空白显示
     this.nullImage = transform:Find("MiddleRoot/Bg/NullImage")
+    this.nullImageText = transform:Find("MiddleRoot/Bg/NullImage/Text"):GetComponent("Text")
 end

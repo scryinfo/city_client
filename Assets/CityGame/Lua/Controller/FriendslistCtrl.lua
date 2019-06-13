@@ -45,6 +45,7 @@ end
 function FriendslistCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
+    FriendslistPanel.nullImageText.text = GetLanguage(16010026)
 end
 
 -- 刷新

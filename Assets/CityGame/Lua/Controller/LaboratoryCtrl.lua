@@ -58,7 +58,7 @@ function LaboratoryCtrl:_centerBtnFunc(ins)
     if DataManager.GetMyOwnerID() ~= ins.m_data.info.ownerId then
         return
     end
-    ct.OpenCtrl("BubbleMessageCtrl",ins.m_data.insId)
+    ct.OpenCtrl("BubbleMessageCtrl",ins.m_data)
 end
 --点击开业按钮方法
 function LaboratoryCtrl:_openBuildingBtnFunc(ins)

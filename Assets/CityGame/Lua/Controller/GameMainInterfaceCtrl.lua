@@ -174,7 +174,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         elseif dataInfo.type == "PROMO" then
             if dataInfo.itemId == 1300 then
-                GameMainInterfacePanel.income.text = GetLanguage(41020004)
+                GameMainInterfacePanel.income.text = GetLanguage(42020005)
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
             elseif dataInfo.itemId == 1400 then
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
@@ -183,7 +183,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
             end
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
         elseif dataInfo.type == "LAB" then
-            GameMainInterfacePanel.income.text = GetLanguage(41020006)
+            GameMainInterfacePanel.income.text = GetLanguage(42020006)
             if dataInfo.itemId == 51 then
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-food.png", GameMainInterfacePanel.simplePicture, true)
             elseif dataInfo.itemId == 52 then
@@ -799,6 +799,7 @@ end
 --充值
 function GameMainInterfaceCtrl:OnAddGold()
     PlayMusEff(1002)
+    ct.OpenCtrl("WalletCtrl")
 end
 
 --联盟

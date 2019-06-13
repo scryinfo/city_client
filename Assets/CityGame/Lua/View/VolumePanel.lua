@@ -61,22 +61,24 @@ function VolumePanel.InitPanel()
     this.incomesText = transform:Find("leftBg/moneyBg/numberBg/city/title/expense/expenses/expensesText"):GetComponent("Text");
 
     --this.cityBg = transform:Find("leftBg/moneyBg/numberBg/city").gameObject; --城市市民Bg
-    this.city = transform:Find("leftBg/moneyBg/numberBg/city/hint/Text"):GetComponent("Text"); --城市市民
-    this.adult = transform:Find("leftBg/moneyBg/numberBg/adult/adultImage/adultText"):GetComponent("Text"); --成年人
-    this.old = transform:Find("leftBg/moneyBg/numberBg/old/oldImage/oldText"):GetComponent("Text"); --老人
-    this.youth = transform:Find("leftBg/moneyBg/numberBg/youth/youthImage/youthText"):GetComponent("Text"); --青年人
+    this.city = transform:Find("leftBg/moneyBg/numberBg/city/Text"):GetComponent("Text"); --城市市民
+    this.employed = transform:Find("leftBg/moneyBg/numberBg/employed/Text"):GetComponent("Text"); --就业人口
+    this.employedText = transform:Find("leftBg/moneyBg/numberBg/employed/employedBg/Text"):GetComponent("Text"); --就业人口
+    this.unemployed = transform:Find("leftBg/moneyBg/numberBg/unemployed/Text"):GetComponent("Text"); --失业人口
+    this.unemployedText = transform:Find("leftBg/moneyBg/numberBg/unemployed/unemployedBg/Text"):GetComponent("Text"); --失业人口
 
     --right
     this.clotherBtn = transform:Find("rightBg/clotherBtn").gameObject; --clotherBtn
     this.clotherBtnText = transform:Find("rightBg/clotherBtn/clotherBtnText"):GetComponent("Text");
     this.clothes = transform:Find("rightBg/clothes");    --clothes
-    this.clothes = transform:Find("rightBg/clothes/clothesText"):GetComponent("Text");
+    this.clotheText = transform:Find("rightBg/clothes/clothesText"):GetComponent("Text");
     this.foodBtn = transform:Find("rightBg/foodBtn").gameObject; --foodBtn
     this.foodBtnText = transform:Find("rightBg/foodBtn/foodBtnText"):GetComponent("Text");
     this.food = transform:Find("rightBg/food");    --food
     this.foodText = transform:Find("rightBg/food/foodText"):GetComponent("Text");
     this.requirement = transform:Find("rightBg/requirementLine/requirementText"):GetComponent("Text"); --Prospective requirement
     this.undateTime = transform:Find("rightBg/updateImage/undateTime"):GetComponent("Text"); --更新时间倒计时
+    this.undateTimeText = transform:Find("rightBg/updateImage/Text"):GetComponent("Text"); --更新时间倒计时
     this.content = transform:Find("rightBg/Scroll View/Viewport/Content");
     this.scroll = transform:Find("rightBg/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect");
 

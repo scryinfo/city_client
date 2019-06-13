@@ -26,6 +26,13 @@ function SetPasswordCtrl:Awake()
     setPasswordBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     setPasswordBehaviour:AddClick(SetPasswordPanel.back,self.OnBack,self)
     setPasswordBehaviour:AddClick(SetPasswordPanel.next,self.OnNext,self)
+
+    RegisterPanel.password.onValueChanged:AddListener(function()
+        self:_OnPassword()
+    end)
+    RegisterPanel.confirm.onValueChanged:AddListener(function()
+        self:_OnConfirm()
+    end)
 end
 
 function SetPasswordCtrl:Active()
@@ -54,6 +61,14 @@ function SetPasswordCtrl:OnBack()
     PlayMusEff(1002)
     Event.Brocast("m_CanCleModeFyPwd")  --取消修改密码
     UIPanel.ClosePage()
+end
+
+function SetPasswordCtrl:_OnPassword()
+    SetPasswordPanel.input:BanChinese(RegisterPanel.password)
+end
+
+function SetPasswordCtrl:_OnConfirm()
+    SetPasswordPanel.input:BanChinese(RegisterPanel.confirm)
 end
 
 --修改密码

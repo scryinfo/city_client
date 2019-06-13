@@ -32,7 +32,12 @@ function RegisterCtrl:Awake()
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self._Updata, self), 1, -1, true)
-
+    RegisterPanel.password.onValueChanged:AddListener(function()
+        self:_OnPassword()
+    end)
+    RegisterPanel.confirm.onValueChanged:AddListener(function()
+        self:_OnConfirm()
+    end)
 end
 
 function RegisterCtrl:Active()
@@ -82,6 +87,14 @@ function RegisterCtrl:OnBack(go)
             UIPanel.ClosePage()
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)
+end
+
+function RegisterCtrl:_OnPassword()
+    RegisterPanel.input:BanChinese(RegisterPanel.password)
+end
+
+function RegisterCtrl:_OnConfirm()
+    RegisterPanel.input:BanChinese(RegisterPanel.confirm)
 end
 
 --点击获取验证码

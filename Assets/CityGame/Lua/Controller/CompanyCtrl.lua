@@ -171,22 +171,74 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
         else
             time[i] = tostring(getFormatUnixTime(updataTime).day)
         end
-        incomeTab[i] = {}
-        incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-        incomeTab[i].flow = 0  --看具体字段
-        payTab[i] = {}
-        payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-        payTab[i].flow = 0  --看具体字段
-        if info ~= nil then
-            for k, v in pairs(info) do
-                if updataTime == v.time / 1000 then
-                    incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
-                    payTab[i].lift = tonumber(GetClientPriceString(v.pay))
+        --incomeTab[i] = {}
+        --incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+        --incomeTab[i].flow = 0  --看具体字段
+        --payTab[i] = {}
+        --payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+        --payTab[i].flow = 0  --看具体字段
+        --if info ~= nil then
+        --    for k, v in pairs(info) do
+        --        if updataTime == v.time / 1000 then
+        --            incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
+        --            payTab[i].lift = tonumber(GetClientPriceString(v.pay))
+        --        end
+        --    end
+        --end
+        --
+        updataTime = updataTime + 86400
+    end
+   local buildingTs = math.floor(self.m_data.createTs/1000)
+    if tonumber(getFormatUnixTime(buildingTs).second) ~= 0 then
+        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).second)
+    end
+    if tonumber(getFormatUnixTime(buildingTs).minute) ~= 0 then
+        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).minute) * 60
+    end
+    if tonumber(getFormatUnixTime(buildingTs).hour) ~= 0 then
+        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).hour) * 3600
+    end
+    updataTime = monthAgo
+    local index = 1
+    if buildingTs >= monthAgo then
+        while(buildingTs <= currentTime)
+        do
+            incomeTab[index] = {}
+            incomeTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 140
+            incomeTab[index].flow = 0  --看具体字段
+            payTab[index] = {}
+            payTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 140
+            payTab[index].flow = 0  --看具体字段
+            if info ~= nil then
+                for k, v in pairs(info) do
+                    if updataTime == v.time / 1000 then
+                        incomeTab[index].lift = tonumber(GetClientPriceString(v.income))
+                        payTab[index].lift = tonumber(GetClientPriceString(v.pay))
+                    end
                 end
             end
+            buildingTs = buildingTs + 86400
+            index = index + 1
         end
+    else
+        for i = 1, 30 do
+            incomeTab[i] = {}
+            incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+            incomeTab[i].flow = 0  --看具体字段
+            payTab[i] = {}
+            payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+            payTab[i].flow = 0  --看具体字段
+            if info ~= nil then
+                for k, v in pairs(info) do
+                    if updataTime == v.time / 1000 then
+                        incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
+                        payTab[i].lift = tonumber(GetClientPriceString(v.pay))
+                    end
+                end
+            end
 
-        updataTime = updataTime + 86400
+            updataTime = updataTime + 86400
+        end
     end
 
     local income = {}

@@ -9,6 +9,17 @@ UIPanel:ResgisterOpen(EvaCtrl)
 
 EvaCtrl.static.PropertyTrueItemPath = "View/Eva/PropertyTrueItem"  -- 可升级属性预制路径
 EvaCtrl.static.PropertyFalseItemPath = "View/Eva/PropertyFalseItem"  -- 不可升级属性预制路径
+EvaCtrl.static.brandIcon = -- icon显示配置
+{
+    [13] = "Assets/CityGame/Resources/Atlas/Company/SuperMarket_3x3.png",
+    [14] = "Assets/CityGame/Resources/Atlas/Company/HomeHouse_3X3.png",
+    [1613] = "Assets/CityGame/Resources/Atlas/Company/SuperMarket_3x3.png",
+    [1614] = "Assets/CityGame/Resources/Atlas/Company/HomeHouse_3X3.png",
+    [1651] = "Assets/CityGame/Resources/Atlas/Eva/icon-food.png",
+    [1652] = "Assets/CityGame/Resources/Atlas/Eva/icon-clothes.png",
+    [155] = "Assets/CityGame/Resources/Atlas/Eva/icon-Inventingnewgoods.png",
+    [156] = "Assets/CityGame/Resources/Atlas/Eva/icon-eva.png",
+}
 
 function EvaCtrl:initialize()
     UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -336,7 +347,7 @@ function EvaCtrl:CreatePropertyItem(propertyTab)
         imgPath = Good[propertyTab[1].Atype].img
         EvaPanel.iconTF.localScale = Vector3.New(0.5, 0.5, 1)
     else
-        imgPath = BrandItem.static.brandIcon[propertyTab[1].Atype]
+        imgPath = EvaCtrl.static.brandIcon[propertyTab[1].Atype]
         EvaPanel.iconTF.localScale = Vector3.New(1, 1, 1)
     end
     LoadSprite(imgPath, EvaPanel.iconImage, true)

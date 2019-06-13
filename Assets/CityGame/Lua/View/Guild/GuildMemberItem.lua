@@ -58,7 +58,7 @@ function GuildMemberItem:_openMenu()
     local position = self.prefab.transform.position
     GuildOwnCtrl.static.guildMgr:ShowGuildMenu(position)
     GuildOwnCtrl.static.guildMgr:SetSelectMemberItem(self)
-    GuildOwnCtrl.static.guildMgr:SetIdentity()
+    --GuildOwnCtrl.static.guildMgr:SetIdentity()
     self:_setButtonInteractable(false)
 end
 

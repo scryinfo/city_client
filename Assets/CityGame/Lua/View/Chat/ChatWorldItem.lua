@@ -19,5 +19,5 @@ end
 
 function ChatWorldItem:_ShowChatContent(data)
     self.data = data
-    self.chatText.text = string.format("<color=%s><b>[%s]:</b></color><color=%s>%s</color>",ChatWorldItem.static.NAME_COLOR, data.name, ChatWorldItem.static.MSG_COLOR, data.msg)
+    self.chatText.text = string.format("<color=%s>[%s]:</color><color=%s>%s</color>",ChatWorldItem.static.NAME_COLOR, data.name, ChatWorldItem.static.MSG_COLOR, data.msg)
 end

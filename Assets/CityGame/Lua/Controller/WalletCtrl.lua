@@ -259,9 +259,8 @@ end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开用户协议
 function WalletCtrl:openUserAgreement()
+    self.declarationContent.localPosition = Vector2(0,0)
     self.DeclarationContent.gameObject:SetActive(true)
-    --ins.declarationContent.transform.localPosition = Vector2(0,0)
-    --ins.DeclarationContent.transform.localScale = Vector3.one
     --暂时默认打开用户协议就能点击下一步（后边可能要改成看完之后才能点击确定）
     --LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",ins.agreeBtn,false)
     --ins.agreeBtn:GetComponent("Button").interactable = false
@@ -288,7 +287,7 @@ function WalletCtrl:confirmPasswordBtn()
     self.PasswordContent.transform.localScale = Vector3.zero
     self.WithoutWalletContent.transform.localScale = Vector3.zero
     self.WalletContent.transform.localScale = Vector3.one
-    self.moneyText.text = DataManager.GetMoney()
+    self.moneyText.text = DataManager.GetMoneyByString()
 end
 --打开详情
 function WalletCtrl:openDetails()

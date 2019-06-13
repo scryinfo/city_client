@@ -56,8 +56,8 @@ function WarehouseItem:InitializeData()
             self.levelImg.color = getColorByVector3(threeLevel)
         end
         self.brandNameText.text = DataManager.GetCompanyName()
-        --self.brandValue
-        --self.qualityValue
+        self.brandValue.text = self.dataInfo.key.brand
+        self.qualityValue.text = self.dataInfo.key.quality
     end
 end
 --打开详情

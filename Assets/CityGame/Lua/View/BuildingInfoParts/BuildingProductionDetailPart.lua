@@ -209,7 +209,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                     UpdateBeat:Remove(self.Update,self)
                     self.oneTimeText.text = "00:00"
                     self.timeSlider.value = 0
-                    self.tipText.text = "原料不足无法生产!!!"
+                    self.tipText.text = GetLanguage(25030020)
                 end
             end
         end
@@ -252,7 +252,7 @@ function BuildingProductionDetailPart:clickAddBtnBg()
         ct.OpenCtrl("AddProductionLineCtrl",self.m_data)
         self:CloseDestroy(self.waitingQueueIns)
     else
-        Event.Brocast("SmallPop",GetLanguage(35040013),300)
+        Event.Brocast("SmallPop",GetLanguage(20120001),300)
         return
     end
 end
@@ -311,7 +311,7 @@ function BuildingProductionDetailPart:Update()
                 UpdateBeat:Remove(self.Update,self)
                 self.oneTimeText.text = "00:00"
                 self.timeSlider.value = 0
-                self.tipText.text = "原料不足无法生产!!!"
+                self.tipText.text = GetLanguage(25030020)
                 return
             end
         end

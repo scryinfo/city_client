@@ -18,7 +18,7 @@ function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     self.qualityAdditionTextBtn = prefab.transform:Find("basicQualityText/symbol/qualityAdditionText"):GetComponent("Text")
     self.popolarityTextBtn = prefab.transform:Find("popolarityText"):GetComponent("Text")
 
-    self.scoreText.text = (self.dataInfo.score[1].val + self.dataInfo.score[4].val) / 2
+    self:getBuildingScore()
     self:language()
 
     luaBehaviour:AddClick(self.basicQualityTextBtn.gameObject,self._clickBasicQualityTextBtn,self)
@@ -34,10 +34,20 @@ function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
         self.popolarityTextBtn:GetComponent("Button").interactable = false
     end
 end
+function retailStoreItem:getBuildingScore()
+    --知名度评分
+    local famousScore = self.dataInfo.score[1].val / self.dataInfo.score[3].val * 100
+    --品质评分
+    local qualityScore = self.dataInfo.score[4].val * (1 + self.dataInfo.score[5].val) / self.dataInfo.score[6].val * 100
+    --建筑总评分
+    self.scoreText.text = math.ceil((famousScore + qualityScore) / 2)
+    --建筑当前品质
+    self.buildingQuality = self.dataInfo.score[4].val * (1 + self.dataInfo.score[5].val)
+end
 function retailStoreItem:language()
     self.symbol.transform.localScale = Vector3.zero
     self.retailStoreText.text = GetLanguage(30040001)
-    self.basicQualityTextBtn.text = GetLanguage(30040002).." "..self.dataInfo.score[4].val.."(".."+"..self.dataInfo.score[5].val.."%"..")"
+    self.basicQualityTextBtn.text = GetLanguage(30040002).." "..self.buildingQuality.."(".."+"..self.dataInfo.score[5].val.."%"..")"
     self.qualityAdditionTextBtn.transform.localScale = Vector3.zero
     self.popolarityTextBtn.text = GetLanguage(30040003).." "..self.dataInfo.score[1].val
 end

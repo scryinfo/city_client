@@ -10,7 +10,7 @@ TestGroup.active_TestGroup("abel_w11_showFps")
 TestGroup.active_TestGroup("abel_wk27_hartbeat")
 TestGroup.active_TestGroup("abel_TimefunPrecision")
 TestGroup.active_TestGroup("abel_w3")
-TestGroup.active_TestGroup("cycle_0612_flightTest")
+--TestGroup.active_TestGroup("cycle_0612_flightTest")
 
 --TestGroup.active_TestGroup("abel_0529_ddd_createUser")
 --TestGroup.active_TestGroup("abel_0512_materialConsumedInform")

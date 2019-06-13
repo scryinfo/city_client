@@ -370,11 +370,15 @@ end
 --返回
 function AvtarCtrl:c_OnClick_backBtn(ins)
     PlayMusEff(1002)
-    if DataManager.GetFaceId() then
-        UIPanel.ClosePage()
-    else
-        ins:Hide()
-    end
+    --if DataManager.GetFaceId() then
+    --    UIPanel.ClosePage()
+    --else
+    --    ins:Hide()
+    --end
+    --CityEngineLua._networkInterface:reset()
+    CityEngineLua:reset()
+    UIPanel.BackToPage(LoginCtrl)
+    --UIPanel.ClosePage()
 end
 
 --确定 TODO://

@@ -18,6 +18,7 @@ end
 
 --初始化面板--
 function SetPasswordPanel.InitPanel()
+    this.input = transform:GetComponent("Input_BanChinse")
     this.name = transform:Find("nameBg/name"):GetComponent('Text');
 
     this.password = transform:Find("password"):GetComponent('InputField');
@@ -32,5 +33,5 @@ function SetPasswordPanel.InitPanel()
 
     this.back = transform:Find("back").gameObject; --返回
     this.next = transform:Find("next").gameObject;
-    this.nextText = transform:Find("nextText"):GetComponent("Text");
+    this.nextText = transform:Find("next/Text"):GetComponent("Text");
 end

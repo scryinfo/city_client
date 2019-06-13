@@ -81,17 +81,12 @@ end
 
 --查看
 function GameNoticeModel:n_OnMailRead(lMsg)
-    --local lMsg = assert(pbl.decode("gs.Id", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
-    local go = NoticeMgr.notice[lMsg.id]
-    Event.Brocast("c_OnMailRead",go)
+    Event.Brocast("c_OnMailRead",lMsg.id)
 end
 
 --删除
 function GameNoticeModel:n_OnDeleMails(lMsg)
-    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_delMails',stream)
-    --local lMsg = assert(pbl.decode("gs.Id", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
-    local go = NoticeMgr.notice[lMsg.id]
-    Event.Brocast("c_OnDeleMails",go)
+    Event.Brocast("c_OnDeleMails",lMsg.id)
 end
 
 --原料厂建筑详情回调

@@ -34,7 +34,7 @@ function BuildingTopItem:initialize(viewRect)
     self.changeSignBtn.onClick:AddListener(function ()
         PlayMusEff(1002)
         if self.data.id ~= nil then
-            ct.OpenCtrl("BubbleMessageCtrl", self.data.id)
+            ct.OpenCtrl("BubbleMessageCtrl", self.data)
         end
     end)
 end

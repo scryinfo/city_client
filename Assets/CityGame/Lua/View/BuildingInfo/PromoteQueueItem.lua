@@ -93,10 +93,10 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
     end
     if dataInfo.buildingType == 1300 then
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-supermarket.png", self.goodsImage,true)
-        self.goodsText.text = GetLanguage(18030001)
+        self.goodsText.text = GetLanguage(42020003)
     elseif dataInfo.buildingType == 1400 then
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-house.png", self.goodsImage,true)
-        self.goodsText.text = GetLanguage(18030007)
+        self.goodsText.text = GetLanguage(42020004)
     else
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/goods/".. dataInfo.productionType .. ".png", self.goodsImage,true)
         self.goodsText.text = GetLanguage(dataInfo.productionType)

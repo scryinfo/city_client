@@ -290,10 +290,10 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     CompanyPanel.curveFunctionalGraph:BoundaryLine(boundaryLine)
 
     CompanyPanel.curveFunctionalGraph:DrawLine(incomeVet, getColorByInt(8, 139, 108),1) --收入
-    CompanyPanel.curveSlide:SetCoordinate(incomeVet, income, getColorByInt(255, 255, 255),1)
+    CompanyPanel.curveSlide:SetCoordinate(incomeVet, income, getColorByInt(41, 61, 108),1)
 
     CompanyPanel.curveFunctionalGraph:DrawLine(payVet, getColorByInt(213, 34, 76),2) --支出
-    CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(255, 255, 255),2)
+    CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(41, 61, 108),2)
 
     CompanyPanel.curve.localPosition = CompanyPanel.curve.localPosition + Vector3.New(0.01, 0,0)
     CompanyPanel.curve.sizeDelta = CompanyPanel.curve.sizeDelta + Vector2.New(0.01, 0)

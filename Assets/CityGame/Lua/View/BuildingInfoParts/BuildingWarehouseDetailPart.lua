@@ -111,6 +111,8 @@ end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
+    --隐藏仓库分类按钮
+    self.sortingBtn.localScale = Vector3.zero
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言

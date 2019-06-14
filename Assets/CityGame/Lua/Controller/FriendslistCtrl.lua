@@ -103,10 +103,10 @@ function FriendslistCtrl:_initState()
         end
     elseif type == 3 then
         FriendslistPanel.panelNameText.text = GetLanguage(13030001) --"BLACK LIST"
-        FriendslistPanel.blacklistNumberImage:SetActive(true)
+        FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.searchInputField:SetActive(false)
-        FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-88)
-        self:_showBlacklistNum()
+        FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-30) -- -88
+        --self:_showBlacklistNum()
 
         local blacklist = DataManager.GetMyBlacklist()
         if blacklist[1] then

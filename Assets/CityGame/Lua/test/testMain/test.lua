@@ -809,7 +809,7 @@ UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  functio
     local msgIdt2 = pbl.enum("gscode.OpCode","ct_disCharge")
 
     Event.AddListener("e_abel_0529_ddd_createUser", function (pid)
-        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.dddbind.ct_createUser",function(msg)
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",function(msg)
             local test = 100
         end)
         --发包测试ct_createUser
@@ -836,8 +836,8 @@ UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  functio
         }
 
         ----3、 序列化成二进制数据
-        local  pMsg = assert(pbl.encode("ccapi.dddbind.ct_createUser", lMsg))
-        local msgRet = assert(pbl.decode("ccapi.dddbind.ct_createUser",pMsg), "pbl.decode decode failed")
+        local  pMsg = assert(pbl.encode("ccapi.ct_createUser", lMsg))
+        local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
         CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
     end)
 end)
@@ -854,8 +854,8 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
                     ReqId = tostring(msgId),
                 }
             }
-            local  pMsg = assert(pbl.encode("ccapi.dddbind.ct_GenerateOrderReq", lMsg))
-            local msgRet = assert(pbl.decode("ccapi.dddbind.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
+            local  pMsg = assert(pbl.encode("ccapi.ct_GenerateOrderReq", lMsg))
+            local msgRet = assert(pbl.decode("ccapi.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
             CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
         end
 
@@ -893,17 +893,17 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
                     Signature = sm.ToHexString(sig)
                 }
             }
-            local  pMsg = assert(pbl.encode("ccapi.dddbind.ct_RechargeRequestReq", lMsg))
-            local msgRet = assert(pbl.decode("ccapi.dddbind.ct_RechargeRequestReq",pMsg), "pbl.decode decode failed")
+            local  pMsg = assert(pbl.encode("ccapi.ct_RechargeRequestReq", lMsg))
+            local msgRet = assert(pbl.decode("ccapi.ct_RechargeRequestReq",pMsg), "pbl.decode decode failed")
             CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
         end
         ct.cb = DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq"
-        ,"ccapi.dddbind.ct_GenerateOrderReq",function (msg)
+        ,"ccapi.ct_GenerateOrderReq",function (msg)
                     DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode","ct_GenerateOrderReq",ct.cb)
                     RechargeRequestReq(msg)
                 end)
         DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq"
-        ,"ccapi.dddbind.ct_RechargeRequestReq",function(msg)
+        ,"ccapi.ct_RechargeRequestReq",function(msg)
                     local test = 100
                     UnitTest.Exec_now("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",msg.PlayerId)
                 end)
@@ -923,8 +923,8 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
                     ReqId = tostring(msgId),
                 }
             }
-            local  pMsg = assert(pbl.encode("ccapi.dddbind.ct_GenerateOrderReq", lMsg))
-            local msgRet = assert(pbl.decode("ccapi.dddbind.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
+            local  pMsg = assert(pbl.encode("ccapi.ct_GenerateOrderReq", lMsg))
+            local msgRet = assert(pbl.decode("ccapi.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
             CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
         end
 
@@ -964,16 +964,16 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
                     Signature = sm.ToHexString(sig)
                 }
             }
-            local  pMsg = assert(pbl.encode("ccapi.dddbind.ct_DisChargeReq", lMsg))
-            local msgRet = assert(pbl.decode("ccapi.dddbind.ct_DisChargeReq",pMsg), "pbl.decode decode failed")
+            local  pMsg = assert(pbl.encode("ccapi.ct_DisChargeReq", lMsg))
+            local msgRet = assert(pbl.decode("ccapi.ct_DisChargeReq",pMsg), "pbl.decode decode failed")
             CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
         end
         DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq"
-        ,"ccapi.dddbind.ct_GenerateOrderReq",function (msg)
+        ,"ccapi.ct_GenerateOrderReq",function (msg)
                     ct_disCharge(msg)
                 end)
         DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_DisChargeReq"
-        ,"ccapi.dddbind.ct_DisChargeReq",function(msg)
+        ,"ccapi.ct_DisChargeReq",function(msg)
                     local test = 100
                 end)
         getOrderfunId(pid)

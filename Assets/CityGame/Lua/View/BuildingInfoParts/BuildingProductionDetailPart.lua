@@ -252,7 +252,7 @@ function BuildingProductionDetailPart:clickAddBtnBg()
         ct.OpenCtrl("AddProductionLineCtrl",self.m_data)
         self:CloseDestroy(self.waitingQueueIns)
     else
-        Event.Brocast("SmallPop",GetLanguage(20120001),300)
+        Event.Brocast("SmallPop",GetLanguage(20120001),ReminderType.Common)
         return
     end
 end
@@ -386,7 +386,7 @@ function BuildingProductionDetailPart:SettopSuccess(data)
             table.insert(self.waitingQueueIns,1,temporaryValue)
         end
     end
-    Event.Brocast("SmallPop",GetLanguage(25030013), 300)
+    Event.Brocast("SmallPop",GetLanguage(25030013), ReminderType.Succeed)
 end
 --刷新当前产量
 function BuildingProductionDetailPart:updateNowCount(data)
@@ -407,7 +407,7 @@ function BuildingProductionDetailPart:updateNowLine(data)
             end
             --重新初始化界面及数据
             self:initializeUiInfoData(self.m_data.line)
-            Event.Brocast("SmallPop",GetLanguage(25030011), 300)
+            Event.Brocast("SmallPop",GetLanguage(25030011), ReminderType.Succeed)
         else
             --清空生产队列Item数据
             if next(self.waitingQueueIns) ~= nil then

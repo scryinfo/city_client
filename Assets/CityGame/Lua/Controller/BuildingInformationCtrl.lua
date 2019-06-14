@@ -459,7 +459,7 @@ function BuildingInformationCtrl:_clickSwitchBtn(ins)
             Event.Brocast("m_ReqDemolitionBuilding",ins.m_data.id)
             DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
             UIPanel.CloseAllPageExceptMain()
-            Event.Brocast("SmallPop",GetLanguage(30010015), 300)
+            Event.Brocast("SmallPop",GetLanguage(30010015), ReminderType.Succeed)
         end}
         ct.OpenCtrl('ReminderTipsCtrl',data)
     end
@@ -534,7 +534,7 @@ function BuildingInformationCtrl:closedBuildingSucceed(dataInfo)
         UIPanel.ClosePage()
         self.switchBtn.text = GetLanguage(30010005)
         businessState = false
-        Event.Brocast("SmallPop",GetLanguage(30010013), 300)
+        Event.Brocast("SmallPop",GetLanguage(30010013), ReminderType.Succeed)
     end
 end
 --修改建筑名字成功
@@ -542,7 +542,7 @@ function BuildingInformationCtrl:setBuildingNameSucceed(dataInfo)
     if dataInfo then
         UIPanel.ClosePage()
         self.buildingName.text = dataInfo.name
-        Event.Brocast("SmallPop",GetLanguage(30010016), 300)
+        Event.Brocast("SmallPop",GetLanguage(30010016), ReminderType.Succeed)
     end
 end
 ----------------------------------------------------------------事件函数---------------------------------------------------------------------------

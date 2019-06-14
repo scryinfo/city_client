@@ -89,7 +89,7 @@ function RetailShelfCtrl:RefreshShelfData(dataInfo)
                         value.price = dataInfo.price
                     end
                 end
-                Event.Brocast("SmallPop",GetLanguage(27010005),300)
+                Event.Brocast("SmallPop",GetLanguage(29010010),ReminderType.Succeed)
                 return
             end
             if value.goodsDataInfo.n == dataInfo.item.n then

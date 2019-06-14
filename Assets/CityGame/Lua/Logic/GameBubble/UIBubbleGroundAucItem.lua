@@ -145,17 +145,29 @@ end
 --信息更新
 function UIBubbleGroundAucItem:_bidInfoUpdate(data)
     if data.id == self.data.id then
-        if self.data.bidHistory == nil then
-            self.data.bidHistory = {}
-        end
-        self.data.endTs = data.ts + GAucModel.BidTime
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.data.bidHistory, 1, temp)
+        self:_checkHighestPrice(data)
         self.isStartBid = true
         --self.noneBidText02.transform.localScale = Vector3.zero
         --self.nowBinding.localScale = Vector3.one
         self.noneBidText02.gameObject:SetActive(false)
         self.nowBinding.gameObject:SetActive(true)
+    end
+end
+--判断是否是最高价
+function UIBubbleGroundAucItem:_checkHighestPrice(data)
+    if self.data.bidHistory == nil then
+        self.data.bidHistory = {}
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.data.bidHistory, 1, temp)
+        self.data.endTs = data.ts + GAucModel.BidTime
+        return
+    end
+
+    local tempHigh = self.data.bidHistory[1]
+    if tempHigh.price < data.price then
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.data.bidHistory, 1, temp)
+        self.data.endTs = data.ts + GAucModel.BidTime
     end
 end
 --获取是否点击到对应地块

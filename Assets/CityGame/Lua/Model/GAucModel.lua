@@ -46,11 +46,11 @@ function GAucModel.registerNetMsg()
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidFailInform"), GAucModel.n_OnReceiveFailBid)
 
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryGroundAuction","gs.GroundAuction",GAucModel.n_OnReceiveQueryGroundAuctionInfo)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidGround","gs.IntNum",GAucModel.n_OnReceiveBindGround)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidGround","gs.BidGround",GAucModel.n_OnReceiveBindGround)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidChangeInform","gs.BidChange",GAucModel.n_OnReceiveBidChangeInfor)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","auctionEnd","gs.Num",GAucModel.n_OnReceiveAuctionEnd)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidWinInform","gs.IntNum",GAucModel.n_OnReceiveWinBid)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidFailInform","gs.IntNum",GAucModel.n_OnReceiveFailBid)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidWinInform","gs.BidGround",GAucModel.n_OnReceiveWinBid)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidFailInform","gs.BidGround",GAucModel.n_OnReceiveFailBid)
 end
 
 function GAucModel.c_bubbleLateUpdate()
@@ -86,6 +86,9 @@ end
 
 --拍卖信息更新 bidChangeInform
 function GAucModel._updateAucBidInfo(aucData)
+    if aucData.ts == nil then
+        aucData.ts = TimeSynchronized.GetTheCurrentServerTime()
+    end
     local data = {id = aucData.targetId, price = aucData.nowPrice, biderId = aucData.biderId, ts = aucData.ts}
     if data.biderId ~= nil then
         Event.Brocast("c_BidInfoUpdate", data)
@@ -274,10 +277,11 @@ end
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GAucModel.n_OnReceiveBindGround(stream, msgId)
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnReceiveBindGround："..stream.reason
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        local showData = {}
+        showData.titleInfo = GetLanguage(24020009)
+        showData.contentInfo = GetLanguage(21010010)
+        showData.tipInfo = ""
+        ct.OpenCtrl("BtnDialogPageCtrl", showData)
         return
     end
     if stream == nil or stream == "" then

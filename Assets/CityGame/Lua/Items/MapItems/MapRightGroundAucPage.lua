@@ -269,16 +269,30 @@ function MapRightGroundAucPage:_mapBidInfoUpdate(data)
     end
 
     self:setBidState(true)
-    if self.bidHistory == nil then
-        self.bidHistory = {}
-    end
-    self:_cleanHistory()  --清除history item
-    self.data.endTs = data.ts + GAucModel.BidTime
-    local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-    table.insert(self.bidHistory, 1, temp)
+    -- 做错误判断，当前历史最高价是否是对的 --
+    self:_checkHighestPrice(data)
+
+    self:_cleanHistory()
     self:_createHistory()
     self.startTimeDownForFinish = true
     self:NowTimeDownFunc()
+end
+--判断是否是最高价
+function MapRightGroundAucPage:_checkHighestPrice(data)
+    if self.bidHistory == nil then
+        self.bidHistory = {}
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.bidHistory, 1, temp)
+        self.data.endTs = data.ts + GAucModel.BidTime
+        return
+    end
+
+    local tempHigh = self.bidHistory[1]
+    if tempHigh.price < data.price then
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.bidHistory, 1, temp)
+        self.data.endTs = data.ts + GAucModel.BidTime
+    end
 end
 --清除历史item
 function MapRightGroundAucPage:_cleanHistory()

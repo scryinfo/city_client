@@ -20,11 +20,9 @@ function MapRightSelfBuildingPage:initialize(viewRect)
     self.notOpenText01 = tran:Find("notOpenTran/Text"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
-        PlayMusEff(1002)
         self:close()
     end)
     self.goHereBtn.onClick:AddListener(function ()
-        PlayMusEff(1002)
         self:_goHereBtn()
     end)
     --
@@ -75,14 +73,14 @@ function MapRightSelfBuildingPage:_sortInfoItems()
 end
 --
 function MapRightSelfBuildingPage:_createInfoByType(buildingType)
-    local inconme = string.format("<color=%s>E%s</color>/%s", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(0), GetLanguage(20150004))
+    local inconme = string.format("<color=%s>E%s</color>/D", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(0))
     local revenueData = {infoTypeStr = "Revenue", value = inconme}  --今日营收
     local revenueItem = self:_createShowItem(revenueData)
     self.items[#self.items + 1] = revenueItem
     self.revenueItem = revenueItem
 
-    --local salaryData = {infoTypeStr = "Salary", value = self.data.info.salary.."%"}  --工资
-    --self.items[#self.items + 1] = self:_createShowItem(salaryData)
+    local salaryData = {infoTypeStr = "Salary", value = self.data.info.salary.."%"}  --工资
+    self.items[#self.items + 1] = self:_createShowItem(salaryData)
 
     if buildingType == BuildingType.House then
         self:_createHouse()
@@ -104,12 +102,12 @@ function MapRightSelfBuildingPage:_createHouse()
     local occData = {infoTypeStr = "HouseOccupancy", value = occStr}  --入住率
     self.items[#self.items + 1] = self:_createShowItem(occData)
 
-    local rentStr = string.format("<color=%s>E%s</color>/%s", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(self.data.rent), GetLanguage(20150004))
+    local rentStr = string.format("<color=%s>E%s</color>/D", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(self.data.rent))
     local rentData = {infoTypeStr = "HouseRent", value = rentStr}  --租金
     self.items[#self.items + 1] = self:_createShowItem(rentData)
 
-    --local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
-    --self.items[#self.items + 1] = self:_createShowItem(data3)
+    local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
+    self.items[#self.items + 1] = self:_createShowItem(data3)
 end
 --原料厂
 function MapRightSelfBuildingPage:_createMaterial()
@@ -123,7 +121,7 @@ function MapRightSelfBuildingPage:_createMaterial()
 
     if self.data.line == nil then  --生产线
         --local str2 = GetLanguage(12345678)
-        local str2 = GetLanguage(20060005)
+        local str2 = "No production"
         local data2 = {infoTypeStr = "Production", value = str2}
         self.items[#self.items + 1] = self:_createShowItem(data2)
     else
@@ -148,8 +146,8 @@ function MapRightSelfBuildingPage:_createRetailShop()
     local data2 = {infoTypeStr = "OrderCenter", value = self:getShelfCount(self.data.shelf)}  --订单中心
     self.items[#self.items + 1] = self:_createShowItem(data2)
 
-    --local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
-    --self.items[#self.items + 1] = self:_createShowItem(data3)
+    local data3 = {infoTypeStr = "Sign", value = self:getSignState(self.data.contractInfo)}  --签约
+    self.items[#self.items + 1] = self:_createShowItem(data3)
 end
 --研究所
 function MapRightSelfBuildingPage:_createLab()
@@ -179,11 +177,11 @@ function MapRightSelfBuildingPage:_createPromotion()
             temp = hour
         end
     end
-    local data1 = {infoTypeStr = "Queued", value = temp..GetLanguage(20100003)}  --队列
+    local data1 = {infoTypeStr = "Queued", value = temp.."h"}  --队列
     self.items[#self.items + 1] = self:_createShowItem(data1)
 
-    --local data3 = {infoTypeStr = "ADSign", value = self.data.curflowPromoAbTotall.."%"}  --流量签约
-    --self.items[#self.items + 1] = self:_createShowItem(data3)
+    local data3 = {infoTypeStr = "ADSign", value = self.data.curflowPromoAbTotall.."%"}  --流量签约
+    self.items[#self.items + 1] = self:_createShowItem(data3)
 end
 --研究所队列
 function MapRightSelfBuildingPage:getLabQueued(line)
@@ -282,8 +280,10 @@ function MapRightSelfBuildingPage:openShow()
 end
 --多语言
 function MapRightSelfBuildingPage:_language()
-    self.goHereText01.text = GetLanguage(20010008)
-    self.notOpenText01.text = GetLanguage(20120001)
+    --正式代码
+    --self.goHereText01.text = GetLanguage()
+    self.goHereText01.text = "Go here"
+    self.notOpenText01.text = "Not open"
 end
 --关闭
 function MapRightSelfBuildingPage:close()

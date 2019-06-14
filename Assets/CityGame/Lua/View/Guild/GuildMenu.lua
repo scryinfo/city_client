@@ -4,7 +4,7 @@
 --- DateTime: 2019/2/28 15:26
 ---
 
-GuildMenu = class("GuildMenu")
+GuildMenu = class("GuildMemberItem")
 GuildMenu.static.NomalColor = Vector3.New(19, 27, 56) -- 默认的背景色
 GuildMenu.static.SelectColor = Vector3.New(46, 58, 100) -- 被选中的背景色
 GuildMenu.static.IdentityTable = -- 不同职位的匹配
@@ -20,28 +20,19 @@ function GuildMenu:initialize(prefab)
     local transform = prefab.transform
 
     self.outBtn = transform:Find("OutBtn")
-    self.outBtnText = transform:Find("OutBtn/Text"):GetComponent("Text")
     self.appointBtn = transform:Find("AppointBtn")
     self.appointImage = transform:Find("AppointBtn"):GetComponent("Image")
-    self.appointBtnText = transform:Find("AppointBtn/Text"):GetComponent("Text")
     self.addFriendsBtn = transform:Find("AddFriendsBtn"):GetComponent("Button")
     self.addFriendsBtnRt = transform:Find("AddFriendsBtn"):GetComponent("RectTransform")
-    self.addFriendsBtnText = transform:Find("AddFriendsBtn/Text"):GetComponent("Text")
     self.personalDataButton = transform:Find("PersonalDataButton"):GetComponent("Button")
     self.personalDataButtonRt = transform:Find("PersonalDataButton"):GetComponent("RectTransform")
-    self.personalDataButtonText = transform:Find("PersonalDataButton/Text"):GetComponent("Text")
     self.appointRoot = transform:Find("AppointRoot")
     self.identity4Btn = transform:Find("AppointRoot/Identity4Btn").gameObject
-    self.identity4BtnText = transform:Find("AppointRoot/Identity4Btn/Text"):GetComponent("Text")
     self.identity3Btn = transform:Find("AppointRoot/Identity3Btn").gameObject
-    self.identity3BtnText = transform:Find("AppointRoot/Identity3Btn/Text"):GetComponent("Text")
     self.identity2Btn = transform:Find("AppointRoot/Identity2Btn").gameObject
-    self.identity2BtnText = transform:Find("AppointRoot/Identity2Btn/Text"):GetComponent("Text")
     self.identity1Btn = transform:Find("AppointRoot/Identity1Btn").gameObject
-    self.identity1BtnText = transform:Find("AppointRoot/Identity1Btn/Text"):GetComponent("Text")
 
     self:SetAppointRoot(false)
-    self:_SetLanguage()
 
     self.outBtn:GetComponent("Button").onClick:AddListener(function ()
         self:_onOut()
@@ -99,8 +90,8 @@ function GuildMenu:_onOut()
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
     --打开弹框
     local showData = {}
-    showData.titleInfo = GetLanguage(12010014)
-    showData.contentInfo = GetLanguage(12060034)
+    showData.titleInfo = "提示"
+    showData.contentInfo = "确定踢出成员?"
     showData.tipInfo = ""
     showData.btnCallBack = function()
         DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_KickMember", {societyId = DataManager.GetGuildID(), playerId = GuildOwnCtrl.static.guildMgr:GetPlayerId()})
@@ -113,6 +104,28 @@ function GuildMenu:_onAppoint()
     PlayMusEff(1002)
     self:SetAppointRoot(true)
     self:SetAppointImageColor(false)
+    --local playerData = GuildOwnCtrl.static.guildMgr:GetPlayerData()
+    --if playerData.identity == "CHAIRMAN"then
+    --    self.identity4Btn:SetActive(false)
+    --    self.vicechairmanBtn:SetActive(true)
+    --    self.administratorBtn:SetActive(true)
+    --    self.memberBtn:SetActive(true)
+    --elseif playerData.identity == "VICE_CHAIRMAN"then
+    --    self.identity4Btn:SetActive(true)
+    --    self.vicechairmanBtn:SetActive(false)
+    --    self.administratorBtn:SetActive(true)
+    --    self.memberBtn:SetActive(true)
+    --elseif playerData.identity == "ADMINISTRATOR"then
+    --    self.identity4Btn:SetActive(true)
+    --    self.vicechairmanBtn:SetActive(true)
+    --    self.administratorBtn:SetActive(false)
+    --    self.memberBtn:SetActive(true)
+    --elseif playerData.identity == "MEMBER"then
+    --    self.identity4Btn:SetActive(true)
+    --    self.vicechairmanBtn:SetActive(true)
+    --    self.administratorBtn:SetActive(true)
+    --    self.memberBtn:SetActive(false)
+    --end
 end
 
 -- 点击加好友按钮
@@ -149,16 +162,16 @@ function GuildMenu:_onAppointerPost(index)
     --打开弹框
     local tips
     if index == 0 then
-        tips = GetLanguage(12060033)
+        tips = "确认退位让贤？"
     elseif index == 1 then
-        tips = GetLanguage(12060034)
+        tips = "确认任命为会员？"
     elseif index == 2 then
-        tips = GetLanguage(12060036)
+        tips = "确认任命为副会长？"
     elseif index == 3 then
-        tips = GetLanguage(12060037)
+        tips = "确认任命为管理？"
     end
     local showData = {}
-    showData.titleInfo = GetLanguage(12010014)
+    showData.titleInfo = "提示"
     showData.contentInfo = tips
     showData.tipInfo = ""
     showData.btnCallBack = function()
@@ -174,18 +187,8 @@ function GuildMenu:_SetIdentity()
     if playerDataIndex < ownIdentityIndex then
         self.outBtn.localScale  = Vector3.one
         self.appointBtn.localScale  = Vector3.one
-
-        -- 判断是否是自己的好友
-        local friendsBasicData = DataManager.GetMyFriends()
-        if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
-            self.addFriendsBtnRt.localScale = Vector3.one
-            self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 254)
-            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 356)
-        else
-            self.addFriendsBtnRt.localScale = Vector3.zero
-            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 254)
-        end
-
+        self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 254)
+        self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 356)
         if ownIdentityIndex == 4 then
             self.identity4Btn:SetActive(true)
             self.identity3Btn:SetActive(true)
@@ -204,29 +207,7 @@ function GuildMenu:_SetIdentity()
     else
         self.outBtn.localScale  = Vector3.zero
         self.appointBtn.localScale  = Vector3.zero
-
-        -- 判断是否是自己的好友
-        local friendsBasicData = DataManager.GetMyFriends()
-        if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
-            self.addFriendsBtnRt.localScale = Vector3.one
-            self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 50)
-            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 152)
-        else
-            self.addFriendsBtnRt.localScale = Vector3.zero
-            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 50)
-        end
-        --self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 152)
+        self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 50)
+        self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 152)
     end
-end
-
--- 设置多语言
-function GuildMenu:_SetLanguage()
-    self.outBtnText.text = GetLanguage(12060008)
-    self.appointBtnText.text = GetLanguage(12060007)
-    self.addFriendsBtnText.text = GetLanguage(12060006)
-    self.personalDataButtonText.text = GetLanguage(12060005)
-    self.identity4BtnText.text = GetLanguage(12030001)
-    self.identity3BtnText.text = GetLanguage(12030002)
-    self.identity2BtnText.text = GetLanguage(12030003)
-    self.identity1BtnText.text = GetLanguage(12030004)
 end

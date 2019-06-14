@@ -15,9 +15,6 @@ local  cost = {}          --重大交易金额
 local time = {}          --重大交易时间
 local index = 0
 local indexs = 0
-local chatItemNum = 3   -- 世界聊天的显示数量
-
-GameMainInterfaceCtrl.SmallPop_Path="Assets/CityGame/Resources/View/GoodsItem/TipsParticle.prefab"--小弹窗路径
 
 function  GameMainInterfaceCtrl:bundleName()
     return "Assets/CityGame/Resources/View/GameMainInterfacePanel.prefab"
@@ -36,8 +33,6 @@ function GameMainInterfaceCtrl:OnCreate(obj)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
-    --进入游戏后音效切换
-    PlayMus(1001)
     --Event.AddListener("m_MainCtrlShowGroundAuc",self.SaveData,self)
 end
 
@@ -55,14 +50,7 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
     --Event.AddListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
 
-    GameMainInterfacePanel.city.text = GetLanguage(10050002)
-    GameMainInterfacePanel.smallMapText.text = GetLanguage(11010005)
-    GameMainInterfacePanel.cityInfoText.text = GetLanguage(11010004)
-    GameMainInterfacePanel.guideText.text = GetLanguage(11010003)
-    GameMainInterfacePanel.buildButtonText.text = GetLanguage(11010002)
-    GameMainInterfacePanel.evaText.text = GetLanguage(11010001)
-    GameMainInterfacePanel.grossVolume.text = GetLanguage(11010006)
-    GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11010009)
+    GameMainInterfacePanel.noMessage:GetComponent("Text").text = GetLanguage(11020005)
 end
 
 function GameMainInterfaceCtrl:Hide()
@@ -86,8 +74,6 @@ function GameMainInterfaceCtrl:Close()
     self:RemoveUpdata()
     UIPanel.Close(self)
     Event.RemoveListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
-    Event.RemoveListener("updatePlayerName",self.updateNameFunc,self)  --改变名字
-    Event.RemoveListener("SmallPop",self.c_SmallPop,self)
     self = nil
 end
 
@@ -97,28 +83,10 @@ function GameMainInterfaceCtrl:c_ChangeMoney(money)
     GameMainInterfacePanel.money.text = self.money
 end
 
----小弹窗
-function GameMainInterfaceCtrl:c_SmallPop(string,spacing)
-    if  not self.prefab then
-        local function callback(prefab)
-            self.prefab = prefab
-            SmallPopItem:new(string,spacing,prefab ,self);
-        end
-        createPrefab(GameMainInterfaceCtrl.SmallPop_Path,self.root, callback)
-    else
-        SmallPopItem:new(string,spacing,self.prefab ,self);
-    end
-end
-
 function GameMainInterfaceCtrl:SaveData(ownerData)
     if self.groundOwnerDatas then
         table.insert(self.groundOwnerDatas,ownerData[1])
     end
-end
-
---改变名字
-function GameMainInterfaceCtrl:updateNameFunc(name)
-    GameMainInterfacePanel.name.text = name
 end
 
 --全城Npc数量
@@ -165,16 +133,13 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
 
     if dataInfo.buyer == "PLAYER" then
         if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
-            GameMainInterfacePanel.income.text = GetLanguage(11010010)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/landx1.png", GameMainInterfacePanel.simplePicture, true)
             GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
         elseif dataInfo.type == "INSHELF" then
-            GameMainInterfacePanel.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         elseif dataInfo.type == "PROMO" then
             if dataInfo.itemId == 1300 then
-                GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
             elseif dataInfo.itemId == 1400 then
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
@@ -183,23 +148,16 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
             end
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
         elseif dataInfo.type == "LAB" then
-            GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            if dataInfo.itemId == 51 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-food.png", GameMainInterfacePanel.simplePicture, true)
-            elseif dataInfo.itemId == 52 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-clothes.png",GameMainInterfacePanel.simplePicture, true)
-            else
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-EVA-s.png", GameMainInterfacePanel.simplePicture, true)
-            end
-            GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
+            --if dataInfo.itemId then
+            --    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
+            --end
+            --GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
         end
         elseif dataInfo.buyer == "NPC" then
         if dataInfo.type == "RENT_ROOM" then
-            GameMainInterfacePanel.income.text = GetLanguage(11010011)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", GameMainInterfacePanel.simplePicture, true)
             GameMainInterfacePanel.simplePictureText.text = "X1"
         elseif dataInfo.type == "INSHELF" then
-            GameMainInterfacePanel.income.text =  GetLanguage(11010012)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         end
@@ -245,7 +203,7 @@ function GameMainInterfaceCtrl:c_beginBuildingInfo(buildingInfo,func)
     Event.AddListener("c_successBuilding",
         function ()
          func()
-         Event.Brocast("SmallPop",GetLanguage(24020018),300)
+         Event.Brocast("SmallPop",GetLanguage(40010020),300)
          end
     ,self)
 
@@ -406,12 +364,8 @@ end
 
 function GameMainInterfaceCtrl:Awake()
     --PlayerTempModel.tempTestCreateAll()
-    self.root=self.gameObject.transform.root:Find("FixedRoot");
     Event.AddListener("c_OnConnectTradeSuccess",self.c_OnSSSuccess,self)        --連接ss成功回調
     Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
-    Event.AddListener("updatePlayerName",self.updateNameFunc,self)  --改变名字
-    -----小弹窗
-    Event.AddListener("SmallPop",self.c_SmallPop,self)
     CityEngineLua.login_tradeapp(true)
     gameMainInterfaceBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.noticeButton.gameObject,self.OnNotice,self);
@@ -438,7 +392,6 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.clearBg,self.OnClearBg,self); --点击ClearBg
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.simple,self.OnSimple,self); --点击简单收益面板
 
-
     --todo 城市广播
     --gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.leftRadioBtn,self.OnLeftRadioBtn,self);
     --gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.rightRadio,self.OnRightRadio,self);
@@ -451,12 +404,25 @@ function GameMainInterfaceCtrl:Awake()
     self.earnings.mProvideData = GameMainInterfaceCtrl.static.EarningsProvideData
     self.earnings.mClearData = GameMainInterfaceCtrl.static.EarningsClearData
 
+    --头像
+    local faceId = DataManager.GetFaceId()
+
+    AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.15)
     self.insId = OpenModelInsID.GameMainInterfaceCtrl
+    local info = DataManager.GetMyPersonalHomepageInfo()
+    self.name = info.name
+    self.company = info.companyName
+    --self.gender = info.male
+
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
 
     LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour) + 1], GameMainInterfacePanel.weather,true)
     GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour) + 1].."℃"
+
+    local gold = DataManager.GetMoneyByString()
+    self.money = "E"..getPriceString(gold,24,20)
+    GameMainInterfacePanel.money.text = self.money
 
     --收益倒计时条件
     self.isTimmer = false
@@ -469,16 +435,20 @@ function GameMainInterfaceCtrl:Awake()
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
 
-    -- 初始化三个世界聊天的item
-    self.worldChatItem = {}
-    for a = 1, chatItemNum do
+    -- 初始化两个世界聊天的item
+    self.worldChatDouble = {}
+    for a = 1, 2 do
         panelMgr:LoadPrefab_A("Assets/CityGame/Resources/View/Chat/ChatWorldItem.prefab", nil, nil, function(ins, obj )
             if obj ~= nil then
                 local go = ct.InstantiatePrefab(obj)
                 local rect = go.transform:GetComponent("RectTransform")
                 go.transform:SetParent(GameMainInterfacePanel.worldChatContent)
-                rect.transform.localScale = Vector3.one
-                self.worldChatItem[a] = ChatWorldItem:new(go)
+                if a == 1 then
+                    rect.transform.localScale = Vector3.New(0.8, 0.8, 0.8)
+                else
+                    rect.transform.localScale = Vector3.one
+                end
+                self.worldChatDouble[a] = ChatWorldItem:new(go)
             end
         end)
     end
@@ -504,20 +474,6 @@ function GameMainInterfaceCtrl:initInsData()
     DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
     self.m_Timer:Start()
-
-    --头像
-    local faceId = DataManager.GetFaceId()
-
-    AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.15)
-    local info = DataManager.GetMyPersonalHomepageInfo()
-    self.name = info.name
-    self.company = info.companyName
-    --self.gender = info.male
-
-    local gold = DataManager.GetMoneyByString()
-    self.money = "E"..getPriceString(gold,24,20)
-    GameMainInterfacePanel.money.text = self.money
-
     --初始化姓名,性别,公司名字
     GameMainInterfacePanel.name.text = self.name
     --GameMainInterfacePanel.company.text = self.company
@@ -528,6 +484,7 @@ function GameMainInterfaceCtrl:initInsData()
     --    GameMainInterfacePanel.male.localScale = Vector3.zero
     --    GameMainInterfacePanel.woman.localScale = Vector3.one
     --end
+    GameMainInterfacePanel.city.text = GetLanguage(10030003)
 end
 
 local date
@@ -619,7 +576,6 @@ end
 
 --更新邮件
 function GameMainInterfaceCtrl:c_RefreshMails(mails)
-    PlayMusEff(1003)
     GameMainInterfacePanel.noticeItem.localScale = Vector3.one
     if Mails == nil then
         Mails = {}
@@ -684,14 +640,25 @@ end
 -- 世界聊天显示
 function GameMainInterfaceCtrl:c_OnReceiveRoleCommunication(chatData)
     if chatData.channel == "WORLD" then
-        for i = 1, chatItemNum do
-            if i == 3 then
-                self.worldChatItem[i]:_ShowChatContent(chatData)
-            else
-                if self.worldChatItem[i + 1].data then
-                    self.worldChatItem[i]:_ShowChatContent(self.worldChatItem[i + 1].data)
-                end
-            end
+        if not self.ChatWorldData then
+            self.ChatWorldData = {}
+        end
+        if #self.ChatWorldData == 0 then
+            self.ChatWorldData[1] = chatData
+            self.worldChatDouble[1]:_ShowPrefab(false)
+            self.worldChatDouble[2]:_ShowPrefab(true)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[1])
+        elseif #self.ChatWorldData == 1 then
+            self.ChatWorldData[2] = chatData
+            self.worldChatDouble[2]:_ShowPrefab(true)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[2])
+            self.worldChatDouble[1]:_ShowPrefab(true)
+            self.worldChatDouble[1]:_ShowChatContent(self.ChatWorldData[1])
+        elseif #self.ChatWorldData == 2 then
+            self.ChatWorldData[3] = chatData
+            table.remove(self.ChatWorldData, 1)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[2])
+            self.worldChatDouble[1]:_ShowChatContent(self.ChatWorldData[1])
         end
     else
         GameMainInterfacePanel.chatItem.localScale = Vector3.one
@@ -727,10 +694,19 @@ function GameMainInterfaceCtrl:_showWorldChatNoticeItem()
     local data = DataManager.GetMyChatInfo(1)
     local worldInfoAllNum = #data
     if worldInfoAllNum >=1 then
-        for i = 1, chatItemNum do
-            if data[worldInfoAllNum - chatItemNum + i] then
-                self.worldChatItem[i]:_ShowChatContent(data[worldInfoAllNum - chatItemNum + i])
-            end
+        self.ChatWorldData = {}
+        if  worldInfoAllNum ==1 then
+            self.ChatWorldData[1] = data[1]
+            self.worldChatDouble[1]:_ShowPrefab(false)
+            self.worldChatDouble[2]:_ShowPrefab(true)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[1])
+        else
+            self.ChatWorldData[1] = data[worldInfoAllNum - 1]
+            self.ChatWorldData[2] = data[worldInfoAllNum]
+            self.worldChatDouble[2]:_ShowPrefab(true)
+            self.worldChatDouble[2]:_ShowChatContent(self.ChatWorldData[2])
+            self.worldChatDouble[1]:_ShowPrefab(true)
+            self.worldChatDouble[1]:_ShowChatContent(self.ChatWorldData[1])
         end
     end
 end
@@ -769,7 +745,7 @@ end
 --指南书--
 function GameMainInterfaceCtrl.OnGuideBool()
     PlayMusEff(1002)
-    --ct.OpenCtrl("GuidBookCtrl")
+    ct.OpenCtrl("GuidBookCtrl")
 end
 
 --小地图
@@ -781,26 +757,16 @@ end
 --城市信息
 function GameMainInterfaceCtrl:OnCityInfo()
     PlayMusEff(1002)
-    ct.OpenCtrl("VolumeCtrl")
 end
 
 --Eva
 function GameMainInterfaceCtrl:OnEva()
     PlayMusEff(1002)
-    local evaSaveKey = string.format("%sEvaOpen", DataManager.GetMyOwnerID())
-    local isOpenEva = UnityEngine.PlayerPrefs.HasKey(evaSaveKey)
-    if isOpenEva then -- 打开过Eva
-        ct.OpenCtrl("EvaCtrl")
-    else -- 没有打开过Eva
-        UnityEngine.PlayerPrefs.SetInt(evaSaveKey, 1)
-        ct.OpenCtrl("EvaJoinCtrl")
-    end
 end
 
 --充值
 function GameMainInterfaceCtrl:OnAddGold()
     PlayMusEff(1002)
-    ct.OpenCtrl("WalletCtrl")
 end
 
 --联盟

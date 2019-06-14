@@ -74,14 +74,12 @@ function AdvertisementPartDetail:_getComponent(transform)
     self.goodsText = transform:Find("bg/down/GoodsBg/goods/goodsText"):GetComponent("Text")
     self.goodsClickText = transform:Find("bg/down/GoodsBg/goods/goodsClickText"):GetComponent("Text")
     self.building = transform:Find("bg/down/GoodsBg/building/buildingBg").gameObject      --建筑
-    self.buildingText = transform:Find("bg/down/GoodsBg/building/buildingText"):GetComponent("Text")
     self.buildingClickText = transform:Find("bg/down/GoodsBg/building/buildingClickText"):GetComponent("Text")
-    self.openedOthers = transform:Find("bg/down/openOther/openBg/openedImage/openedOthers"):GetComponent("Text")
     self.open = transform:Find("bg/down/openOther/openBg/open").gameObject      --对外开放
     self.price = transform:Find("bg/down/openOther/openBg/priceImage/price"):GetComponent("Text")    --价格
-    self.priceText = transform:Find("bg/down/openOther/openBg/priceImage/priceImage/priceText"):GetComponent("Text")    --价格
+    self.priceText = transform:Find("bg/down/openOther/openBg/priceImage/price/priceImage/priceText"):GetComponent("Text")    --价格
     self.time = transform:Find("bg/down/openOther/openBg/timeImage/time"):GetComponent("Text")    --时间
-    self.timeText = transform:Find("bg/down/openOther/openBg/timeImage/timeImage/timeText"):GetComponent("Text")    --时间
+    self.timeText = transform:Find("bg/down/openOther/openBg/timeImage/time/timeImage/timeText"):GetComponent("Text")    --时间
     self.quene = transform:Find("bg/down/openOther/startTimeBg/quene").gameObject;      --队列
     self.queneText = transform:Find("bg/down/openOther/startTimeBg/quene/queneImage/queneText"):GetComponent("Text");
     self.queneValue = transform:Find("bg/down/openOther/startTimeBg/quene/queneImage/queneText/queneValue"):GetComponent("Text");
@@ -90,12 +88,7 @@ function AdvertisementPartDetail:_getComponent(transform)
     self.supermarket = transform:Find("bg/down/buildingBg/supermarket").gameObject;   --零售店
     self.house = transform:Find("bg/down/buildingBg/house").gameObject;   --住宅
     self.supermarketSpeed = transform:Find("bg/down/buildingBg/supermarket/center/speed"):GetComponent("Text");   --零售店
-    self.supermarketText = transform:Find("bg/down/buildingBg/supermarket/center/Image/popularity"):GetComponent("Text");   --零售店
-    self.supermarketName = transform:Find("bg/down/buildingBg/supermarket/icon/name"):GetComponent("Text");   --零售店
     self.houseSpeed = transform:Find("bg/down/buildingBg/house/center/speed"):GetComponent("Text");   --住宅
-    self.houseText = transform:Find("bg/down/buildingBg/house/center/Image/popularity"):GetComponent("Text");   --住宅
-    self.houseName = transform:Find("bg/down/buildingBg/house/icon/name"):GetComponent("Text");   --住宅
-    self.startTimeText = transform:Find("bg/down/openOther/startTimeBg/startTime"):GetComponent("Text");   --新推广开始时间
     self.startTime = transform:Find("bg/down/openOther/startTimeBg/startTime/timeImage/time"):GetComponent("Text");   --新推广开始时间
 
 end
@@ -129,22 +122,9 @@ function AdvertisementPartDetail:Show(data)
     self.m_data = data
     self:_initFunc()
     if data.selledPromCount == 0 then
-        self.startTime.text = GetLanguage(27040032)
+        local ts = getFormatUnixTime(TimeSynchronized.GetTheCurrentTime())
+        self.startTime.text = ts.hour .. ":" ..ts.minute .. " " .. ts.month .. "/" .. ts.day .. "/" .. ts.year
     end
-
-    self.goodsText.text = GetLanguage(27040008)
-    self.goodsClickText.text = GetLanguage(27040008)
-    self.buildingText.text = GetLanguage(27040007)
-    self.buildingClickText.text = GetLanguage(27040007)
-    self.openedOthers.text = GetLanguage(27040002)
-    self.time.text = GetLanguage(27040003)
-    self.price.text = GetLanguage(27040004)
-    self.queneText.text = GetLanguage(27040005)
-    self.startTimeText.text = GetLanguage(27040006)
-    self.supermarketText.text = GetLanguage(27040009)
-    self.houseText.text = GetLanguage(27040009)
-    self.houseName.text = GetLanguage(42020004)
-    self.supermarketName.text = GetLanguage(42020003)
 end
 
 function AdvertisementPartDetail:Hide()
@@ -153,7 +133,6 @@ end
 
 --点击商品
 function AdvertisementPartDetail:OnGoods(go)
-    PlayMusEff(1002)
     go.goods.transform.localScale = Vector3.zero
     go.goodsClickText.transform.localScale = Vector3.zero
     go.building.transform.localScale = Vector3.one
@@ -183,7 +162,6 @@ end
 
 --点击建筑
 function AdvertisementPartDetail:OnBuilding(go)
-    PlayMusEff(1002)
     go.goods.transform.localScale = Vector3.one
     go.goodsClickText.transform.localScale = Vector3.one
     go.building.transform.localScale = Vector3.zero
@@ -197,28 +175,20 @@ end
 
 --对外开放
 function AdvertisementPartDetail:OnOpen(go)
-    PlayMusEff(1002)
    ct.OpenCtrl("SetOpenUpCtrl",go.m_data)
 end
 
 --队列
 function AdvertisementPartDetail:OnQuene(go)
-    PlayMusEff(1002)
-    if go.m_data.selledPromCount == 0 then
-        local data = {}
-        ct.OpenCtrl("QueneCtrl",data)
+    if go.m_data.info.ownerId == myOwnerID then
+        DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
     else
-        if go.m_data.info.ownerId == myOwnerID then
-            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
-        else
-            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
-        end
+        DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
     end
 end
 
 --零售店
 function AdvertisementPartDetail:OnSupermarket(go)
-    PlayMusEff(1002)
     go.m_data.type = 1
     go.m_data.buildingId = 1300
    ct.OpenCtrl("PromoteBuildingExtensionCtrl",go.m_data)
@@ -226,7 +196,6 @@ end
 
 --住宅
 function AdvertisementPartDetail:OnHouse(go)
-    PlayMusEff(1002)
     go.m_data.type = 2
     go.m_data.buildingId = 1400
     ct.OpenCtrl("PromoteBuildingExtensionCtrl",go.m_data)

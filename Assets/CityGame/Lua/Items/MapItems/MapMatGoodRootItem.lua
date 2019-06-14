@@ -28,7 +28,9 @@ function MapMatGoodRootItem:resetState()
 end
 --多语言
 function MapMatGoodRootItem:_language()
-    self.typeNameText.text = GetLanguage(self.data.detailData[1].name)
+    --self.typeNameText.text = GetLanguage(self.data[1].name)
+
+    self.typeNameText.text = self.data.detailData[1].name
     local width = self.typeNameText.preferredWidth + 35
     self.bgImg.rectTransform.sizeDelta = Vector2.New(width, 50)
 end

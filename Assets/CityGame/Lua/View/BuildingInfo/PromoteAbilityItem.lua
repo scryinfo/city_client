@@ -11,7 +11,6 @@ PromoteAbilityItem = class('PromoteAbilityItem')
         self.name = self.prefab.transform:Find("icon/name").gameObject:GetComponent("Text");
         self.speed = self.prefab.transform:Find("center/speed").gameObject:GetComponent("Text");
         self.down = self.prefab.transform:Find("down").gameObject:GetComponent("Image");
-        self.popularity = self.prefab.transform:Find("center/Image/popularity").gameObject:GetComponent("Text");
 
         self.bg.onClick:AddListener(function()
         self:OnBG(self);
@@ -19,7 +18,6 @@ PromoteAbilityItem = class('PromoteAbilityItem')
 end
 
 function PromoteAbilityItem:OnBG(go)
-    PlayMusEff(1002)
     ct.OpenCtrl("PromoteGoodsExtensionCtrl",self.m_data)
 end
 
@@ -31,10 +29,9 @@ function PromoteAbilityItem:InitData(Data,DataInfo)
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-clothes.png", self.icon)
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/bg-clothes.png", self.down)
     end
-    self.name.text = GetLanguage(Data.name)
+    self.name.text = Data.name
     self.m_data = {}
     self.m_data.DataInfo = DataInfo
     self.m_data.Data = Data
     self.speed.text ="+".. Data.capacity .. "/h"
-    self.popularity.text = GetLanguage(27040009)
 end

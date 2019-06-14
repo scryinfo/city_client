@@ -26,25 +26,11 @@ function SetPasswordCtrl:Awake()
     setPasswordBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     setPasswordBehaviour:AddClick(SetPasswordPanel.back,self.OnBack,self)
     setPasswordBehaviour:AddClick(SetPasswordPanel.next,self.OnNext,self)
-
-    RegisterPanel.password.onValueChanged:AddListener(function()
-        self:_OnPassword()
-    end)
-    RegisterPanel.confirm.onValueChanged:AddListener(function()
-        self:_OnConfirm()
-    end)
 end
 
 function SetPasswordCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_ChangePassword",self.c_ChangePassword,self)
-
-    SetPasswordPanel.name.text = GetLanguage(10040006)
-    SetPasswordPanel.passwordPlaceholder.text = GetLanguage(10030007)
-    SetPasswordPanel.passwordText.text = GetLanguage(10030007)
-    SetPasswordPanel.confirmPlaceholder.text = GetLanguage(10030008)
-    SetPasswordPanel.confirmText.text = GetLanguage(10030008)
-    SetPasswordPanel.nextText.text = GetLanguage(10030003)
 end
 
 function SetPasswordCtrl:Hide()
@@ -58,39 +44,29 @@ end
 
 --返回
 function SetPasswordCtrl:OnBack()
-    PlayMusEff(1002)
     Event.Brocast("m_CanCleModeFyPwd")  --取消修改密码
     UIPanel.ClosePage()
 end
 
-function SetPasswordCtrl:_OnPassword()
-    SetPasswordPanel.input:BanChinese(RegisterPanel.password)
-end
-
-function SetPasswordCtrl:_OnConfirm()
-    SetPasswordPanel.input:BanChinese(RegisterPanel.confirm)
-end
-
 --修改密码
 function SetPasswordCtrl:OnNext()
-    PlayMusEff(1002)
     SetPasswordPanel.passwordHint.transform.localScale = Vector3.zero
     SetPasswordPanel.confirmHint.transform.localScale = Vector3.zero
     if SetPasswordPanel.password.text == "" then
         SetPasswordPanel.passwordHint.transform.localScale = Vector3.one
-        SetPasswordPanel.passwordHint.text = GetLanguage(10030021)
+        SetPasswordPanel.passwordHint.text = "请输入密码"
     elseif SetPasswordPanel.confirm.text == "" then
         SetPasswordPanel.confirmHint.transform.localScale = Vector3.one
-        SetPasswordPanel.confirmHint.text = GetLanguage(10030022)
+        SetPasswordPanel.confirmHint.text = "请确认密码"
     elseif string.find(SetPasswordPanel.password.text,"%s") ~= nil then
         SetPasswordPanel.passwordHint.transform.localScale = Vector3.one
-        SetPasswordPanel.passwordHint.text = GetLanguage(10030024)
+        SetPasswordPanel.passwordHint.text = "密码不能出现空格"
     elseif #SetPasswordPanel.password.text < 8 or #SetPasswordPanel.password.text > 12 then
         SetPasswordPanel.passwordHint.transform.localScale = Vector3.one
-        SetPasswordPanel.passwordHint.text = GetLanguage(10030013)
+        SetPasswordPanel.passwordHint.text = "密码格式错误(8到12个字符)"
     elseif SetPasswordPanel.password.text ~=SetPasswordPanel.confirm.text  then
         SetPasswordPanel.confirmHint.transform.localScale = Vector3.one
-        SetPasswordPanel.confirmHint.text = GetLanguage(10030012)
+        SetPasswordPanel.confirmHint.text = "两次输入密码不同"
     else
         Event.Brocast("m_ChangePassword",SetPasswordPanel.password.text)
     end
@@ -99,9 +75,8 @@ end
 --修改密码回调
 function SetPasswordCtrl:c_ChangePassword()
     local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                content = GetLanguage(10040003),func = function()
+                content = "修改密码成功!",func = function()
             ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0))
-            LoginPanel.inputPassword:GetComponent('InputField').text = ""
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)
 end

@@ -32,10 +32,10 @@ end
 
 function GroundTransOthersCheckInfoCtrl:Active()
     UIPanel.Active(self)
-    GroundTransOthersCheckInfoPanel.titleText01.text = GetLanguage(22060002)
-    GroundTransOthersCheckInfoPanel.noneText02.text = GetLanguage(22060003)
-    GroundTransOthersCheckInfoPanel.partAText03.text = GetLanguage(22060007)
-    GroundTransOthersCheckInfoPanel.partBText04.text = GetLanguage(22060006)
+    GroundTransOthersCheckInfoPanel.titleText01.text = GetLanguage(24060002)
+    GroundTransOthersCheckInfoPanel.noneText02.text = GetLanguage(24060003)
+    GroundTransOthersCheckInfoPanel.partAText03.text = GetLanguage(24060007)
+    GroundTransOthersCheckInfoPanel.partBText04.text = GetLanguage(24060006)
 end
 
 function GroundTransOthersCheckInfoCtrl:Hide()

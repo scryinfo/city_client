@@ -36,7 +36,7 @@ end
 function CreateRoleModel:n_CreateNewRole(pMsg, msgId)
     --异常处理
     if msgId == 0 then
-        if pMsg.reason == 'notAllow' then
+        if pMsg.reason == 'roleNameDuplicated' then
             Event.Brocast("c_SameName")
         end
         return

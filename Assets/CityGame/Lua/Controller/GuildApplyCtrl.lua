@@ -35,10 +35,6 @@ end
 function GuildApplyCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
-
-    -- 多语言
-    GuildApplyPanel.panelNameText.text = GetLanguage(12060015)
-    GuildApplyPanel.noContentText.text = GetLanguage(12060016)
 end
 
 -- 监听Model层网络回调
@@ -75,13 +71,6 @@ function GuildApplyCtrl:_showView()
     if societyInfo and societyInfo.reqs then
         GuildApplyCtrl.societyApplyInfo = societyInfo.reqs
         GuildApplyPanel.guildInfoScroll:ActiveLoopScroll(self.guildApplySource, #GuildApplyCtrl.societyApplyInfo, "View/Guild/GuildApplyItem")
-        if #GuildApplyCtrl.societyApplyInfo == 0 then
-            GuildApplyPanel.noContentImage.localScale = Vector3.one
-        else
-            GuildApplyPanel.noContentImage.localScale = Vector3.zero
-        end
-    else
-        GuildApplyPanel.noContentImage.localScale = Vector3.one
     end
 end
 
@@ -114,11 +103,6 @@ function GuildApplyCtrl:c_DelJoinReq(joinReq)
         end
     end
     GuildApplyPanel.guildInfoScroll:ActiveLoopScroll(self.guildApplySource, #GuildApplyCtrl.societyApplyInfo, "View/Guild/GuildApplyItem")
-    if #GuildApplyCtrl.societyApplyInfo == 0 then
-        GuildApplyPanel.noContentImage.localScale = Vector3.one
-    else
-        GuildApplyPanel.noContentImage.localScale = Vector3.zero
-    end
 end
 
 -- 新增入会请求

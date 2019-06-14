@@ -17,7 +17,7 @@ function GuildMgr:ShowGuildMenu(position)
         self.guildMenu:SetAppointRoot(false)
         self:SetGuildMenuShow(true)
         self.guildMenu:SetAppointImageColor(true)
-        self.guildMenu:_SetIdentity()
+
     else
         self:LoadGuildMenu(position)
     end
@@ -73,14 +73,8 @@ function GuildMgr:GetOwnGuildIdentity()
     return self.ownIdentity
 end
 
---function GuildMgr:SetIdentity()
---    if self.guildMenu then
---        self.guildMenu:_SetIdentity()
---    end
---end
-
-function GuildMgr:SetLanguage()
+function GuildMgr:SetIdentity()
     if self.guildMenu then
-        self.guildMenu:_SetLanguage()
+        self.guildMenu:_SetIdentity()
     end
 end

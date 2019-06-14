@@ -14,11 +14,10 @@ function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     self.retailStoreIntroduceBtn = prefab.transform:Find("retailStoreIntroduceBtn")
     self.retailStoreText = prefab.transform:Find("retailStoreIntroduceBtn/retailStoreText"):GetComponent("Text")
     self.basicQualityTextBtn = prefab.transform:Find("basicQualityText"):GetComponent("Text")
-    self.symbol = prefab.transform:Find("basicQualityText/symbol")
     self.qualityAdditionTextBtn = prefab.transform:Find("basicQualityText/symbol/qualityAdditionText"):GetComponent("Text")
     self.popolarityTextBtn = prefab.transform:Find("popolarityText"):GetComponent("Text")
 
-    self:getBuildingScore()
+    self.scoreText.text = 100
     self:language()
 
     luaBehaviour:AddClick(self.basicQualityTextBtn.gameObject,self._clickBasicQualityTextBtn,self)
@@ -34,25 +33,14 @@ function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
         self.popolarityTextBtn:GetComponent("Button").interactable = false
     end
 end
-function retailStoreItem:getBuildingScore()
-    --知名度评分
-    local famousScore = self.dataInfo.score[1].val / self.dataInfo.score[3].val * 100
-    --品质评分
-    local qualityScore = self.dataInfo.score[4].val * (1 + self.dataInfo.score[5].val) / self.dataInfo.score[6].val * 100
-    --建筑总评分
-    self.scoreText.text = math.ceil((famousScore + qualityScore) / 2)
-    --建筑当前品质
-    self.buildingQuality = self.dataInfo.score[4].val * (1 + self.dataInfo.score[5].val)
-end
 function retailStoreItem:language()
-    self.symbol.transform.localScale = Vector3.zero
-    self.retailStoreText.text = GetLanguage(30040001)
-    self.basicQualityTextBtn.text = GetLanguage(30040002).." "..self.buildingQuality.."(".."+"..self.dataInfo.score[5].val.."%"..")"
-    self.qualityAdditionTextBtn.transform.localScale = Vector3.zero
-    self.popolarityTextBtn.text = GetLanguage(30040003).." "..self.dataInfo.score[1].val
+    self.retailStoreText.text = "综合分数"
+    self.basicQualityTextBtn.text = "基本质量"
+    self.qualityAdditionTextBtn.text = "质量加成"
+    self.popolarityTextBtn.text = "知名度"
 end
 function retailStoreItem:_clickBasicQualityTextBtn(ins)
-    local stringKey = 30040004
+    local stringKey = 27010005
     Event.Brocast("openTipBox",stringKey,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
 end
 function retailStoreItem:_clickQualityAdditionTextBtn(ins)
@@ -60,6 +48,6 @@ function retailStoreItem:_clickQualityAdditionTextBtn(ins)
     Event.Brocast("openTipBox",stringKey,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
 end
 function retailStoreItem:_clickPopolarityTextBtn(ins)
-    local stringKey = 30040005
+    local stringKey = 27010005
     Event.Brocast("openTipBox",stringKey,ins.popolarityTextBtn.transform.localPosition,ins.popolarityTextBtn.transform)
 end

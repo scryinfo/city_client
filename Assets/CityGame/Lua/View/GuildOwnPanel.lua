@@ -48,10 +48,4 @@ function GuildOwnPanel.InitPanel()
     this.joinTimeBtnClose = transform:Find("MiddleRoot/SortRoot/JoinTimeBtn/Close")
     this.joinTimeBtnDefault1 = transform:Find("MiddleRoot/SortRoot/JoinTimeBtn/Default1")
     this.joinTimeBtnDefault2 = transform:Find("MiddleRoot/SortRoot/JoinTimeBtn/Default2")
-
-    -- 多语言
-    this.memberTitleText = transform:Find("MiddleRoot/SortRoot/MemberTitleText"):GetComponent("Text")
-    this.jobTitleText = transform:Find("MiddleRoot/SortRoot/JobTitleText"):GetComponent("Text")
-    this.staffNumberBtnText = transform:Find("MiddleRoot/SortRoot/StaffNumberBtn/Text"):GetComponent("Text")
-    this.joinTimeBtnText = transform:Find("MiddleRoot/SortRoot/JoinTimeBtn/Text"):GetComponent("Text")
 end

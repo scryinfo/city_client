@@ -21,7 +21,6 @@ function GameNoticeModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnProduceDepartment,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailRetailShop","gs.RetailShop",self.n_OnDetailRetailShop,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailPublicFacility","gs.PublicFacility",self.n_OnPromote,self)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnLaboratory,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getOneSocietyInfo","gs.SocietyInfo",self.n_OnSocietyInfo,self)
 end
 
@@ -67,11 +66,6 @@ function GameNoticeModel:m_GetPromote(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode","detailPublicFacility" ,"gs.Id",{id = buildingId})
 end
 
---获取研究所详情
-function GameNoticeModel:m_GetLaboratory(buildingId)
-    DataManager.ModelSendNetMes("gscode.OpCode","detailLaboratory" ,"gs.Id",{id = buildingId})
-end
-
 --获取公会名字
 function GameNoticeModel:m_GetSocietyInfo(id)
     DataManager.ModelSendNetMes("gscode.OpCode","getOneSocietyInfo" ,"gs.Id",{id = id})
@@ -81,12 +75,17 @@ end
 
 --查看
 function GameNoticeModel:n_OnMailRead(lMsg)
-    Event.Brocast("c_OnMailRead",lMsg.id)
+    --local lMsg = assert(pbl.decode("gs.Id", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
+    local go = NoticeMgr.notice[lMsg.id]
+    Event.Brocast("c_OnMailRead",go)
 end
 
 --删除
 function GameNoticeModel:n_OnDeleMails(lMsg)
-    Event.Brocast("c_OnDeleMails",lMsg.id)
+    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_delMails',stream)
+    --local lMsg = assert(pbl.decode("gs.Id", stream),"LoginModel.n_GsLoginSuccessfully stream == nil")
+    local go = NoticeMgr.notice[lMsg.id]
+    Event.Brocast("c_OnDeleMails",go)
 end
 
 --原料厂建筑详情回调
@@ -107,11 +106,6 @@ end
 --推广公司建筑详情回调
 function GameNoticeModel:n_OnPromote(info)
     Event.Brocast("c_PromoteInfo",info.info.name)
-end
-
---研究所建筑详情回调
-function GameNoticeModel:n_OnLaboratory(info)
-    Event.Brocast("c_Laboratory",info.info.name)
 end
 
 --公会详情回调

@@ -40,14 +40,6 @@ function RetrievePasswordCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_GetCode",self.c_GetCode,self)
     Event.AddListener("c_ModifyPwdVerify",self.c_ModifyPwdVerify,self)
-
-    RetrievePasswordPanel.name.text = GetLanguage(10040001)
-    RetrievePasswordPanel.phonePlaceholder.text = GetLanguage(10030006)
-    RetrievePasswordPanel.phoneText.text = GetLanguage(10030006)
-    RetrievePasswordPanel.authCodePlaceholder.text = GetLanguage(10030009)
-    RetrievePasswordPanel.authCodeText.text = GetLanguage(10030009)
-    RetrievePasswordPanel.gainText.text = GetLanguage(10030010)
-    RetrievePasswordPanel.nextText.text = GetLanguage(10030003)
 end
 
 function RetrievePasswordCtrl:Hide()
@@ -87,9 +79,8 @@ end
 
 --返回
 function RetrievePasswordCtrl:OnBack(go)
-    PlayMusEff(1002)
     local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
-                content = GetLanguage(10040005),func = function()
+                content = "Give up retrieving password?!",func = function()
             UIPanel.ClosePage()
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)
@@ -97,15 +88,14 @@ end
 
 --核对验证码
 function RetrievePasswordCtrl:OnNext()
-    PlayMusEff(1002)
     if RetrievePasswordPanel.phone.text == "" then
         RetrievePasswordPanel.authCode.transform.localScale = Vector3.zero
         RetrievePasswordPanel.phoneHint.transform.localScale = Vector3.one
-        RetrievePasswordPanel.phoneHint.text =  GetLanguage(10030020)
+        RetrievePasswordPanel.phoneHint.text = "请输入手机号"
     elseif RetrievePasswordPanel.authCode.text == "" then
         RetrievePasswordPanel.phoneHint.transform.localScale = Vector3.zero
         RetrievePasswordPanel.authCode.transform.localScale = Vector3.one
-        RetrievePasswordPanel.authCode.text = GetLanguage(10030023)
+        RetrievePasswordPanel.authCode.text = "请输入验证码"
     else
         RetrievePasswordPanel.authCodeHint.transform.localScale = Vector3.zero
         RetrievePasswordPanel.phoneHint.transform.localScale = Vector3.zero
@@ -118,10 +108,9 @@ end
 
 --获取验证码
 function RetrievePasswordCtrl:OnGain()
-    PlayMusEff(1002)
     if RetrievePasswordPanel.phone.text == "" then
         RetrievePasswordPanel.phoneHint.transform.localScale = Vector3.one
-        RetrievePasswordPanel.phoneHint.text =  GetLanguage(10030020)
+        RetrievePasswordPanel.phoneHint.text = "请输入手机号"
     else
         RetrievePasswordPanel.phoneHint.transform.localScale = Vector3.zero
         Event.Brocast("m_GetCode",RetrievePasswordPanel.phone.text)
@@ -134,11 +123,11 @@ function RetrievePasswordCtrl:c_GetCode(info,msgId)
         if info.reason == "highFrequency" then
             RetrievePasswordPanel.phoneHint.transform.localScale = Vector3.zero
             RetrievePasswordPanel.authCodeHint.transform.localScale = Vector3.one
-            RetrievePasswordPanel.authCodeHint.text =  GetLanguage(10030025)
+            RetrievePasswordPanel.authCodeHint.text = "请求过于频繁,请稍候重试"
         elseif info.reason == "paramError" then
             RetrievePasswordPanel.authCodeHint.transform.localScale = Vector3.zero
             RetrievePasswordPanel.phoneHint.transform.localScale = Vector3.one
-            RetrievePasswordPanel.phoneHint.text = GetLanguage(10040002)
+            RetrievePasswordPanel.phoneHint.text = "手机号格式错误"
         end
     else
         RetrievePasswordPanel.authCodeHint.transform.localScale = Vector3.zero
@@ -155,11 +144,11 @@ function RetrievePasswordCtrl:c_ModifyPwdVerify(info)
     if info.status == "FAIL_ACCOUNT_UNREGISTER" then
         RetrievePasswordPanel.authCodeHint.transform.localScale = Vector3.zero
         RetrievePasswordPanel.phoneHint.transform.localScale = Vector3.one
-        RetrievePasswordPanel.phoneHint.text = GetLanguage(10020018)
+        RetrievePasswordPanel.phoneHint.text = "账号未注册"
     elseif info.status == "FAIL_AUTHCODE_ERROR" then
         RetrievePasswordPanel.phoneHint.transform.localScale = Vector3.zero
         RetrievePasswordPanel.authCodeHint.transform.localScale = Vector3.one
-        RetrievePasswordPanel.authCodeHint.text = GetLanguage(10030014)
+        RetrievePasswordPanel.authCodeHint.text = "验证码错误"
     elseif info.status == "SUCCESS" then
         ct.OpenCtrl("SetPasswordCtrl")
     end

@@ -13,7 +13,6 @@ function MapSearchResultItem:_childInit()
     self.scaleRoot = self.viewRect.transform:Find("root")  --需要缩放的气泡
 
     self.btn.onClick:AddListener(function ()
-        PlayMusEff(1002)
         self:_clickFunc()
     end)
 

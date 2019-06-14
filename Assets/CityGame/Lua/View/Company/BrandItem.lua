@@ -32,9 +32,7 @@ function BrandItem:initialize(prefab, data)
     self.renameBtn = transform:Find("RenameBtn"):GetComponent("Button")
     self.qualityImage = transform:Find("QualityImage")
     self.reputationImage = transform:Find("ReputationImage")
-    transform:Find("QualityImage/QualityTitleText"):GetComponent("Text").text = GetLanguage(18040008)
     self.qualityText = transform:Find("QualityImage/QualityText"):GetComponent("Text")
-    transform:Find("ReputationImage/ReputationText"):GetComponent("Text").text = GetLanguage(18040009)
     self.reputationText = transform:Find("ReputationImage/ReputationText"):GetComponent("Text")
 
     self.brandTypeNum = CompanyCtrl.static.companyMgr:GetBrandTypeNum()
@@ -96,8 +94,8 @@ end
 function BrandItem:_ReName()
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = GetLanguage(18040005)
-    data.tipInfo = GetLanguage(18040006)
+    data.titleInfo = "改名"
+    data.tipInfo = "Modified every seven days!"
     data.btnCallBack = function(text)
         if text == nil or text == "" then
             Event.Brocast("SmallPop", "输入为空",80)

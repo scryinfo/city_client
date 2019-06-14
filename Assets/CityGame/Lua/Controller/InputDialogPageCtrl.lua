@@ -26,13 +26,12 @@ function InputDialogPageCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.closeBtn, self._onClickClose, self)
     self.luaBehaviour:AddClick(self.confimBtn, self._onClickConfim, self)
     self.rentInput.onValueChanged:AddListener(function ()
-        --ct.log("cycle_w12_hosueServer", "----")  --敏感词检测
+        ct.log("cycle_w12_hosueServer", "----")  --敏感词检测
     end)
 end
 function InputDialogPageCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("setBuildingNameFailure",self.setBuildingNameFailure,self)
-    Event.AddListener("c_SetPlayerNameEvent",self.setPlayerNameCallback,self)
 end
 function InputDialogPageCtrl:Refresh()
     self:_initData()
@@ -41,7 +40,6 @@ end
 function InputDialogPageCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("setBuildingNameFailure",self.setBuildingNameFailure,self)
-    Event.RemoveListener("c_SetPlayerNameEvent",self.setPlayerNameCallback,self)
 end
 ---寻找组件
 function InputDialogPageCtrl:_getComponent(go)
@@ -62,14 +60,12 @@ function InputDialogPageCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.rentInput.text = ""
     self.errorTipRoot.localScale = Vector3.zero
-    if self.m_data.inputDefaultStr ~= nil then
-        self.rentInputPlaceholderText.text = self.m_data.inputDefaultStr
-    else
-        self.rentInputPlaceholderText.text = GetLanguage(17020002)
-    end
+    --self.changeNameTipText.transform.localScale = Vector3.zero
 end
 
-function InputDialogPageCtrl:_language() end
+function InputDialogPageCtrl:_language()
+    self.rentInputPlaceholderText.text = GetLanguage(37030002)
+end
 
 ---点击确认按钮
 function InputDialogPageCtrl:_onClickConfim(ins)
@@ -94,20 +90,6 @@ end
 function InputDialogPageCtrl:setBuildingNameFailure(data)
     if data then
         self.errorTipRoot.localScale = Vector3.one
-        self.errorTipText.text = GetLanguage(17020005)
-    end
-end
---修改玩家姓名
-function InputDialogPageCtrl:setPlayerNameCallback(data)
-    if data.reason ~= nil then
-        self.errorTipRoot.localScale = Vector3.one
-        if data.reason == "roleNameDuplicated" then
-            self.errorTipText.text = GetLanguage(17020003)
-        elseif data.reason == "roleNameSetInCd" then
-            self.errorTipText.text = GetLanguage(17020005)
-        end
-    else
-        Event.Brocast("SmallPop", GetLanguage(17020006), 300)
-        UIPanel.ClosePage()
+        self.errorTipText.text = "Modified every seven days!"
     end
 end

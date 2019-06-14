@@ -30,14 +30,11 @@ function MapRightGroundAucPage:initialize(viewRect)
     self.minuteText02 = tran:Find("timeDownRoot/Text02"):GetComponent("Text")
     self.secondText03 = tran:Find("timeDownRoot/Text03"):GetComponent("Text")
     self.noneHistoryText04 = tran:Find("now/noneBid/noneBidText"):GetComponent("Text")
-    self.goHereBtnText05 = tran:Find("goHereBtn/Text"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
-        PlayMusEff(1002)
         self:close()
     end)
     self.goHereBtn.onClick:AddListener(function ()
-        PlayMusEff(1002)
         self:_goHereBtn()
     end)
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)
@@ -112,12 +109,10 @@ function MapRightGroundAucPage:openShow()
 end
 --多语言
 function MapRightGroundAucPage:_language()
-    self.hourText01.text = GetLanguage(20160004)
-    self.minuteText02.text = GetLanguage(20160005)
-    self.secondText03.text = GetLanguage(20160006)
-    self.noneHistoryText04.text = GetLanguage(20160009)
-    self.titleText.text = GetLanguage(21010001)
-    self.goHereBtnText05.text = GetLanguage(20010008)
+    self.hourText01.text = "hour"
+    self.minuteText02.text = "minute"
+    self.secondText03.text = "second"
+    self.noneHistoryText04.text = "Nobody bid"
 end
 --关闭
 function MapRightGroundAucPage:close()
@@ -269,30 +264,16 @@ function MapRightGroundAucPage:_mapBidInfoUpdate(data)
     end
 
     self:setBidState(true)
-    -- 做错误判断，当前历史最高价是否是对的 --
-    self:_checkHighestPrice(data)
-
-    self:_cleanHistory()
+    if self.bidHistory == nil then
+        self.bidHistory = {}
+    end
+    self:_cleanHistory()  --清除history item
+    self.data.endTs = data.ts + GAucModel.BidTime
+    local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+    table.insert(self.bidHistory, 1, temp)
     self:_createHistory()
     self.startTimeDownForFinish = true
     self:NowTimeDownFunc()
-end
---判断是否是最高价
-function MapRightGroundAucPage:_checkHighestPrice(data)
-    if self.bidHistory == nil then
-        self.bidHistory = {}
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.bidHistory, 1, temp)
-        self.data.endTs = data.ts + GAucModel.BidTime
-        return
-    end
-
-    local tempHigh = self.bidHistory[1]
-    if tempHigh.price < data.price then
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.bidHistory, 1, temp)
-        self.data.endTs = data.ts + GAucModel.BidTime
-    end
 end
 --清除历史item
 function MapRightGroundAucPage:_cleanHistory()

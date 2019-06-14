@@ -16,7 +16,6 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
     self.goodsImage = self.transform:Find("goods/goodsImage"):GetComponent("Image")
     self.goodsText = self.transform:Find("goods/goodsImage/goodsText"):GetComponent("Text")
     self.slider = self.transform:Find("details/Slider"):GetComponent("Slider")
-    self.progress = self.transform:Find("details/Slider/progress"):GetComponent("Text")
     self.move = self.transform:Find("details/Slider/Fill Area/Fill/move"):GetComponent("RectTransform")
     self.moves = self.transform:Find("details/Slider/Fill Area/Fill/moves"):GetComponent("RectTransform")
     self.nowTime = self.transform:Find("details/Slider/time"):GetComponent("Text")
@@ -33,8 +32,6 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
     self.speed = 0.4
     self.position = Vector3.New(-141,0,0)
     self.positions = Vector3.New(224,0,0)
-
-    self.progress.text = GetLanguage(27040024)
 
     local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
     self.delete.transform.localScale = Vector3.zero
@@ -93,10 +90,10 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
     end
     if dataInfo.buildingType == 1300 then
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-supermarket.png", self.goodsImage,true)
-        self.goodsText.text = GetLanguage(42020003)
+        self.goodsText.text = GetLanguage(18030001)
     elseif dataInfo.buildingType == 1400 then
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-house.png", self.goodsImage,true)
-        self.goodsText.text = GetLanguage(42020004)
+        self.goodsText.text = GetLanguage(18030007)
     else
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/goods/".. dataInfo.productionType .. ".png", self.goodsImage,true)
         self.goodsText.text = GetLanguage(dataInfo.productionType)
@@ -118,7 +115,7 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
 end
 
 function PromoteQueueItem:OnDelete(go)
-    local data={ins = go,content = GetLanguage(27040019),func = function()
+    local data={ins = go,content = "Make sure to take down all of the goods.",func = function()
         DataManager.DetailModelRpcNoRet(go.dataInfo.sellerBuildingId, 'm_RemovePromote',go.dataInfo.sellerBuildingId,go.id)
     end  }
     ct.OpenCtrl('ReminderCtrl',data)

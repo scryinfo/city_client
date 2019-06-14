@@ -22,5 +22,5 @@ end
 function NoMessagePanel.InitPanel()
     this.bgBtn = transform:Find("bg").gameObject;--背景
     this.xBtn = transform:Find("left/XButton").gameObject;
-    this.content = transform:Find("left/ContentText").gameObject:GetComponent("Text");
+    this.content = transform:Find("left/Content/ContentText").gameObject:GetComponent("Text");
 end

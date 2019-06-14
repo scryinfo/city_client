@@ -13,20 +13,15 @@ function LandInfoItem:initialize(prefab, data)
     self.data = data
 
     local transform = prefab.transform
-    transform:Find("OwnerNameTitleText"):GetComponent("Text").text = GetLanguage(18020009)
     self.ownerNamText = transform:Find("OwnerNameText"):GetComponent("Text")
-    self.rentNameTitleTextTF = transform:Find("RentNameTitleText")
-    transform:Find("RentNameTitleText"):GetComponent("Text").text = GetLanguage(18020010)
     self.rentNameText = transform:Find("RentNameText"):GetComponent("Text")
     self.moneyLineImage = transform:Find("MoneyLineImage")
     self.rentMoneyTitleText = transform:Find("MoneyLineImage/RentMoneyTitleText"):GetComponent("Text")
     self.rentMoneyText = transform:Find("MoneyLineImage/RentMoneyText"):GetComponent("Text")
     self.timeLineImage = transform:Find("TimeLineImage")
-    self.rentTimeTitleText = transform:Find("TimeLineImage/RentTimeTitleText"):GetComponent("Text")
     self.rentTimeText = transform:Find("TimeLineImage/RentTimeText"):GetComponent("Text")
     self.posText = transform:Find("PosText"):GetComponent("Text")
     self.goBtn = transform:Find("GoBtn"):GetComponent("Button")
-    --transform:Find("GoBtn/Text"):GetComponent("Text").text = GetLanguage(18020008)
 
     self.goBtn.onClick:RemoveAllListeners()
     self.goBtn.onClick:AddListener(function ()
@@ -42,59 +37,43 @@ function LandInfoItem:initialize(prefab, data)
     self.rentTimeText.text = ""
 
     -- 位置
-    self.posText.text = string.format("%s(%d,%d)",GetLanguage(18030003), self.data.x, self.data.y)
+    self.posText.text = string.format("coordinate(%d,%d)", self.data.x, self.data.y)
 
-    if data.ownerId == CompanyCtrl.static.companyMgr:GetId() then
+    if data.ownerId == DataManager.GetMyOwnerID() then
         if data.rent and data.rent.renterId then -- 已出租
             PlayerInfoManger.GetInfos({data.ownerId}, self._showOwnerName, self)
             PlayerInfoManger.GetInfos({data.rent.renterId}, self._showRenterName, self)
             self.moneyLineImage.localScale = Vector3.one
-            self.rentNameTitleTextTF.localScale = Vector3.one
-            self.rentMoneyTitleText.text = GetLanguage(18020012) -- "Rental/d"
+            self.rentMoneyTitleText.text = "Rental/d"
             self.rentMoneyText.text = GetClientPriceString(data.rent.rentPreDay) -- "租金：" ..
             local timeTable = getFormatUnixTime(data.rent.rentBeginTs/1000 + data.rent.rentDays * 24 * 60 * 60)
             self.timeLineImage.localScale = Vector3.one
-            self.rentTimeTitleText.text = GetLanguage(18020013)
             self.rentTimeText.text = timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day -- "到期时间：" ..
         elseif data.rent and not data.rent.renterId then -- 出租中
-            self.ownerNamText.text = CompanyCtrl.static.companyMgr:GetCompanyName()
-            self.rentNameTitleTextTF.localScale = Vector3.zero
-            --self.rentNameText.text = CompanyCtrl.static.companyMgr:GetCompanyName()
+            self.ownerNamText.text = DataManager.GetCompanyName()
+            self.rentNameText.text = DataManager.GetCompanyName()
             self.moneyLineImage.localScale = Vector3.one
-            self.rentMoneyTitleText.text = GetLanguage(18020012) -- "Rental/d"
+            self.rentMoneyTitleText.text = "Rental/d"
             self.rentMoneyText.text = GetClientPriceString(data.rent.rentPreDay) -- "租金：" ..
-
-            -- 出租天数显示
-            self.timeLineImage.localScale = Vector3.one
-            self.rentTimeTitleText.text = GetLanguage(18020015)
-            if data.rent.rentDaysMin == data.rent.rentDaysMax then
-                self.rentTimeText.text = GetLanguage(18020016, tostring(data.rent.rentDaysMin)) -- "出租时间"
-            else
-                self.rentTimeText.text = GetLanguage(18020016, data.rent.rentDaysMin .. "-" .. data.rent.rentDaysMax) -- "出租时间"
-            end
         elseif data.sell then -- 出售中
-            self.ownerNamText.text = CompanyCtrl.static.companyMgr:GetCompanyName()
-            self.rentNameTitleTextTF.localScale = Vector3.zero
-            --self.rentNameText.text = CompanyCtrl.static.companyMgr:GetCompanyName()
+            self.ownerNamText.text = DataManager.GetCompanyName()
+            self.rentNameText.text = DataManager.GetCompanyName()
             self.moneyLineImage.localScale = Vector3.one
-            self.rentMoneyTitleText.text = GetLanguage(18020014) -- "Price/d"
+            self.rentMoneyTitleText.text = "Price/d"
             self.rentMoneyText.text = GetClientPriceString(data.sell.price) -- "售价：" ..
         else -- 可使用
-            self.ownerNamText.text = CompanyCtrl.static.companyMgr:GetCompanyName()
-            self.rentNameTitleTextTF.localScale = Vector3.zero
-            --self.rentNameText.text = CompanyCtrl.static.companyMgr:GetCompanyName()
+            self.ownerNamText.text = DataManager.GetCompanyName()
+            self.rentNameText.text = DataManager.GetCompanyName()
         end
     else
         if data.rent and data.rent.renterId then  -- 租用中
             PlayerInfoManger.GetInfos({data.ownerId}, self._showOwnerName, self)
             PlayerInfoManger.GetInfos({data.rent.renterId}, self._showRenterName, self)
             self.moneyLineImage.localScale = Vector3.one
-            self.rentNameTitleTextTF.localScale = Vector3.one
-            self.rentMoneyTitleText.text = GetLanguage(18020012) --"Rental/d"
+            self.rentMoneyTitleText.text = "Rental/d"
             self.rentMoneyText.text = GetClientPriceString(data.rent.rentPreDay) -- "租金：" ..
             local timeTable = getFormatUnixTime(data.rent.rentBeginTs/1000 + data.rent.rentDays * 24 * 60 * 60)
             self.timeLineImage.localScale = Vector3.one
-            self.rentTimeTitleText.text = GetLanguage(18020013)
             self.rentTimeText.text = timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day -- "到期时间：" ..
         end
     end

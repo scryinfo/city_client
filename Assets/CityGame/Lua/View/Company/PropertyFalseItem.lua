@@ -9,7 +9,7 @@ PropertyFalseItem = class("PropertyFalseItem")
 PropertyFalseItem.static.NumberColor = "#5460AC" -- 数量特殊颜色
 PropertyFalseItem.static.BTypeIcon = -- b类型显示配置
 {
-    ["Brand"] = "Assets/CityGame/Resources/Atlas/Eva/icon-popularity.png",
+    ["Brand"] = "Assets/CityGame/Resources/Atlas/Company/icon-popularity-w.png",
 }
 
 -- 初始化
@@ -20,31 +20,30 @@ function PropertyFalseItem:initialize(prefab, data, name)
     local transform = prefab.transform
     self.typeImage = transform:Find("TypeImage"):GetComponent("Image")
     self.nameNumberText = transform:Find("NameNumberText"):GetComponent("Text")
-    --self.tipsBtn = transform:Find("TipsBtn"):GetComponent("Button")
-    --self.tipsImage = transform:Find("TipsImage")
+    self.tipsBtn = transform:Find("TipsBtn"):GetComponent("Button")
+    self.tipsImage = transform:Find("TipsImage")
     self.tipsText = transform:Find("TipsText")
 
---[[    self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",name, PropertyFalseItem.static.NumberColor, data.b)]]
-    self.nameNumberText.text = GetLanguage(name)
-    --self.tipsImage.localScale = Vector3.zero
-    --self.tipsText.transform.localScale = Vector3.zero
-    self.tipsText:GetComponent("Text").text = GetLanguage(31010024)
+    self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",name, PropertyFalseItem.static.NumberColor, data.b)
+    self.tipsImage.localScale = Vector3.zero
+    self.tipsText.transform.localScale = Vector3.zero
+    self.tipsText:GetComponent("Text").text = "Needs to be promoted through promotion company."
     LoadSprite(PropertyFalseItem.static.BTypeIcon[data.bt], self.typeImage, true)
 
     -- 点击按钮显示提示
-    --self.tipsBtn.onClick:AddListener(function ()
-    --    CompanyPanel.closeTipsBtn.localScale = Vector3.one
-    --    self:IsShowTips(true)
-    --end)
+    self.tipsBtn.onClick:AddListener(function ()
+        CompanyPanel.closeTipsBtn.localScale = Vector3.one
+        self:IsShowTips(true)
+    end)
 end
 
 -- 按钮切换
---function PropertyFalseItem:IsShowTips(isShow)
---    if isShow then
---        self.tipsImage.localScale = Vector3.one
---        self.tipsText.localScale = Vector3.one
---    else
---        self.tipsImage.localScale = Vector3.zero
---        self.tipsText.localScale = Vector3.zero
---    end
---end
+function PropertyFalseItem:IsShowTips(isShow)
+    if isShow then
+        self.tipsImage.localScale = Vector3.one
+        self.tipsText.localScale = Vector3.one
+    else
+        self.tipsImage.localScale = Vector3.zero
+        self.tipsText.localScale = Vector3.zero
+    end
+end

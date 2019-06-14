@@ -17,7 +17,6 @@ function MapAllSearchItem:initialize(data, viewRect)
     Event.AddListener("c_MapBubbleScale", self._changeScale, self)
 
     self.btn.onClick:AddListener(function ()
-        PlayMusEff(1002)
         self:_clickFunc()
     end)
 end

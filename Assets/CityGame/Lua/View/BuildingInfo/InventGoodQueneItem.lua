@@ -56,7 +56,7 @@ function InventGoodQueneItem:updateUI(data)
         end
     else
         LoadSprite("Assets/CityGame/Resources/Atlas/Laboratory/queue/icon-EVA-s.png" , self.goodsImage,true)
-        self.goodsText.text = GetLanguage(28040031)
+        self.goodsText.text = "EVA"
     end
     --类型名字和图片
     --goodCategory

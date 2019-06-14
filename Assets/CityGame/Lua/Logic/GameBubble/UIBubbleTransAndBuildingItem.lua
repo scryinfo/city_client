@@ -113,9 +113,9 @@ function UIBubbleTransAndBuildingItem:_showFunc()
 end
 function UIBubbleTransAndBuildingItem:_changeLanguageFunc()
     if self.data.groundState == GroundTransState.Sell then
-        self.sellText01.text = GetLanguage(22010004)
+        self.sellText01.text = GetLanguage(11020004)
     elseif self.data.groundState == GroundTransState.Rent then
-        self.rentText02.text = GetLanguage(22010003)
+        self.rentText02.text = GetLanguage(11020003)
     end
 end
 
@@ -127,7 +127,7 @@ function UIBubbleTransAndBuildingItem:_setBubbleState(state)
         self.groundSell.gameObject:SetActive(true)
         self.groundRent.gameObject:SetActive(false)
         self.selfBuilding.gameObject:SetActive(false)
-        self.sellText01.text = GetLanguage(22010004)
+        self.sellText01.text = GetLanguage(11020004)
     elseif state == GroundTransState.Rent then
         --self.groundRent.localScale = Vector3.one
         --self.groundSell.localScale = Vector3.zero
@@ -135,7 +135,7 @@ function UIBubbleTransAndBuildingItem:_setBubbleState(state)
         self.groundRent.gameObject:SetActive(true)
         self.groundSell.gameObject:SetActive(false)
         self.selfBuilding.gameObject:SetActive(false)
-        self.rentText02.text = GetLanguage(22010003)
+        self.rentText02.text = GetLanguage(11020003)
     elseif state == UIBubbleType.BuildingSelf then
         --self.selfBuilding.localScale = Vector3.one
         --self.groundRent.localScale = Vector3.zero

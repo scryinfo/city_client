@@ -13,11 +13,11 @@ function MapMatGoodSearchItem:childInit(viewRect)
 
     local mat = Material[self.data.itemId]
     if mat ~= nil then
-        self.nameText.text = GetLanguage(mat.name)
+        self.nameText.text = mat.name
         LoadSprite(mat.img, self.iconImg, false)
     else
         local good = Good[self.data.itemId]
-        self.nameText.text = GetLanguage(good.name)
+        self.nameText.text = good.name
         LoadSprite(good.img, self.iconImg, false)
     end
 end
@@ -39,6 +39,7 @@ function MapMatGoodSearchItem:setToggleGroup(toggle)
 end
 --
 function MapMatGoodSearchItem:getNameStr()
-    --return GetLanguage(self.data.itemId)
+    --return "wait"
+    --return GetLanguage(self.data.languageId)
     return self.nameText.text
 end

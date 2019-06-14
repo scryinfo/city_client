@@ -54,14 +54,14 @@ end
 
 function GroundTransRentAndBuyCtrl:Active()
     UIPanel.Active(self)
-    GroundTransRentAndBuyPanel.titleText01.text = GetLanguage(22040002)
-    GroundTransRentAndBuyPanel.sellPriceText02.text = GetLanguage(22040004)
-    GroundTransRentAndBuyPanel.tenancyText03.text = GetLanguage(22050005)
-    GroundTransRentAndBuyPanel.rentalText04.text = GetLanguage(22060004)
-    GroundTransRentAndBuyPanel.totalPriceText05.text = GetLanguage(22040005)
-    GroundTransRentAndBuyPanel.rentBtnText06.text = GetLanguage(22050001)
-    GroundTransRentAndBuyPanel.sellBtnText07.text = GetLanguage(22040001)
-    GroundTransRentAndBuyPanel.rentBtnText08.text = GetLanguage(22050001)
+    GroundTransRentAndBuyPanel.titleText01.text = GetLanguage(24040002)
+    GroundTransRentAndBuyPanel.sellPriceText02.text = GetLanguage(24040004)
+    GroundTransRentAndBuyPanel.tenancyText03.text = GetLanguage(24050005)
+    GroundTransRentAndBuyPanel.rentalText04.text = GetLanguage(24050006)
+    GroundTransRentAndBuyPanel.totalPriceText05.text = GetLanguage(24040005)
+    GroundTransRentAndBuyPanel.rentBtnText06.text = GetLanguage(24050001)
+    GroundTransRentAndBuyPanel.sellBtnText07.text = GetLanguage(24040001)
+    GroundTransRentAndBuyPanel.rentBtnText08.text = GetLanguage(24050001)
 end
 
 function GroundTransRentAndBuyCtrl:Hide()

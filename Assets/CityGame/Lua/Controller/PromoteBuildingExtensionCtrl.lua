@@ -48,16 +48,6 @@ end
 function PromoteBuildingExtensionCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_ClosePromoteBuildingExtension",self.c_ClosePromoteBuildingExtension,self)
-
-    PromoteBuildingExtensionPanel.name.text = GetLanguage(27010005)
-    PromoteBuildingExtensionPanel.popularityText.text = GetLanguage(27040013)
-    PromoteBuildingExtensionPanel.queueText.text = GetLanguage(27050003)
-    PromoteBuildingExtensionPanel.myTime:GetComponent("Text").text = GetLanguage(27040022)
-    PromoteBuildingExtensionPanel.titleText.text = GetLanguage(27040014)
-    PromoteBuildingExtensionPanel.otherTimeText.text = GetLanguage(27040022)
-    PromoteBuildingExtensionPanel.otherQueueText.text = GetLanguage(27050003)
-    PromoteBuildingExtensionPanel.supermarketText.text = GetLanguage(42020003)
-    PromoteBuildingExtensionPanel.houseText.text = GetLanguage(42020004)
 end
 
 function PromoteBuildingExtensionCtrl:Refresh()
@@ -100,7 +90,6 @@ end
 
 --返回
 function PromoteBuildingExtensionCtrl:OnXBtn()
-    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 
@@ -109,20 +98,19 @@ function PromoteBuildingExtensionCtrl:OnCurve(go)
     local Data = {}
     Data.typeId = go.m_data.buildingId
     if go.m_data.buildingId == 1300 then
-        Data.name = GetLanguage(42020003)
+        Data.name = "零售店"
     elseif go.m_data.buildingId == 1400 then
-        Data.name = GetLanguage(42020004)
+        Data.name = "住宅"
     end
     ct.OpenCtrl("PromoteCurveCtrl",{insId = go.m_data.insId,Data = Data})
 end
 
 --点击确定(自己)
 function PromoteBuildingExtensionCtrl:OnQueue(go)
-    PlayMusEff(1002)
     if PromoteBuildingExtensionPanel.time.text == "" then
-        Event.Brocast("SmallPop",GetLanguage(27040026),300)
+        Event.Brocast("SmallPop","请输入推广时间",300)
     elseif tonumber(PromoteBuildingExtensionPanel.time.text) == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040027),300)
+        Event.Brocast("SmallPop","推广时间不能为0",300)
     else
         DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_AddPromote',go.m_data.insId,tonumber(PromoteBuildingExtensionPanel.time.text),go.m_data.buildingId)
     end
@@ -130,11 +118,10 @@ end
 
 --点击确定(别人)
 function PromoteBuildingExtensionCtrl:OnOtherQueue(go)
-    PlayMusEff(1002)
     if PromoteBuildingExtensionPanel.otherTime.text == "" then
-        Event.Brocast("SmallPop",GetLanguage(27040026),300)
+        Event.Brocast("SmallPop","请输入推广时间",300)
     elseif tonumber(PromoteBuildingExtensionPanel.otherTime.text) == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040027),300)
+        Event.Brocast("SmallPop","推广时间不能为0",300)
     else
         DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_AddPromote',go.m_data.insId,tonumber(PromoteBuildingExtensionPanel.otherTime.text),go.m_data.buildingId)
     end

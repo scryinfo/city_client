@@ -47,15 +47,10 @@ function GameMainInterfacePanel.InitPanel()
     --this.chatNoticeItem = transform:Find("ChatBg/chat/chatItem").gameObject--世界聊天红点提示--
     
     this.smallMap = transform:Find("DownCreatePanel/SmallMap").gameObject;--小地图--
-    this.smallMapText = transform:Find("DownCreatePanel/SmallMap/Text"):GetComponent("Text");--小地图--
     this.cityInfo = transform:Find("DownCreatePanel/CityInfo").gameObject;--城市信息--
-    this.cityInfoText = transform:Find("DownCreatePanel/CityInfo/Text"):GetComponent("Text");--城市信息--
     this.guide = transform:Find("DownCreatePanel/Guide").gameObject;--说明书--
-    this.guideText = transform:Find("DownCreatePanel/Guide/Text"):GetComponent("Text");--说明书--
     this.buildButton = transform:Find("DownCreatePanel/Build").gameObject;--建筑--
-    this.buildButtonText = transform:Find("DownCreatePanel/Build/Text"):GetComponent("Text");--建筑--
     this.eva = transform:Find("DownCreatePanel/Eva").gameObject;--EVA--
-    this.evaText = transform:Find("DownCreatePanel/Eva/Text"):GetComponent("Text");--EVA--
 
     -- todo 收益
     this.open = transform:Find("LeftUpPanel/gold/open").gameObject; --打开收益详情
@@ -70,7 +65,6 @@ function GameMainInterfacePanel.InitPanel()
     this.clearBtn = transform:Find("EarningsPanel/bg/clearBtn").gameObject; --清空简易收益
     this.clearBg = transform:Find("EarningsPanel/bg/clearBg").gameObject; --清空简易收益背景
     this.simple = transform:Find("EarningsPanel/simpleEarning").gameObject; --简易收益面板
-    this.income = transform:Find("EarningsPanel/simpleEarning/income").gameObject:GetComponent("Text"); --建筑类型
     this.simpleMoney = transform:Find("EarningsPanel/simpleEarning/incomeText").gameObject:GetComponent("Text"); --简易收益面板金额
     this.simplePicture = transform:Find("EarningsPanel/simpleEarning/picture").gameObject:GetComponent("Image"); --简易收益面板图片
     this.simplePictureText = transform:Find("EarningsPanel/simpleEarning/picture/pictureText").gameObject:GetComponent("Text"); --简易收益面板图片内容
@@ -85,7 +79,6 @@ function GameMainInterfacePanel.InitPanel()
     --交易记录
     this.volume = transform:Find("LeftUpPanel/upBg/volumeBg").gameObject;    --交易记录
     this.volumeText = transform:Find("LeftUpPanel/upBg/volumeImage/volumeText"):GetComponent("Text");
-    this.grossVolume = transform:Find("LeftUpPanel/upBg/volumeImage/volum"):GetComponent("Text");
 
     ----广播
     --this.leftRadio = transform:Find("RadioCity/left"):GetComponent("RectTransform");

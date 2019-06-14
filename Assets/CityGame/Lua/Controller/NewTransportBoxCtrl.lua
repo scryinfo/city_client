@@ -79,9 +79,9 @@ function NewTransportBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function NewTransportBoxCtrl:_language()
-    self.topNameText.text = GetLanguage(25020013)
-    self.tipContentText.text = GetLanguage(25020023)
-    self.placeholderText.text = GetLanguage(25020015)
+    self.topNameText.text = "TRANSPORTATION LIST"
+    self.tipContentText.text = "Tgere is no goods yet!"
+    self.placeholderText.text = "请选择仓库"
     self.priceText.text = "0.0000"
 end
 -----------------------------------------------------------------点击函数----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ end
 function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
     PlayMusEff(1002)
     if not ins.itemTable or next(ins.itemTable) == nil then
-        Event.Brocast("SmallPop",GetLanguage(25020023), 300)
+        Event.Brocast("SmallPop","没有要运输的商品", 300)
         return
     end
     local data = {}
@@ -108,7 +108,7 @@ end
 --点击运输
 function NewTransportBoxCtrl:_clickStartBtn(ins)
     if not ins.itemTable or next(ins.itemTable) == nil then
-        Event.Brocast("SmallPop",GetLanguage(25020023), 300)
+        Event.Brocast("SmallPop","没有要运输的商品", 300)
         return
     end
     if ins.targetBuildingId == nil then

@@ -59,21 +59,19 @@ function SystemSettingPanel.InitPanel()
 end
 --数据初始化
 function SystemSettingPanel:InitDate(string)
-    this.titleText.text=GetLanguage(14010011)
-    this.outText.text=GetLanguage(14010012)
-    this.MusicText.text=GetLanguage(14010001)
+    this.titleText.text=GetLanguage(14010001)
+    this.outText.text=GetLanguage(14010005)
+    this.MusicText.text=GetLanguage(14010003)
     this.MusicEffectBtnText.text=GetLanguage(14010002)
-    this.LanguageText.text = GetLanguage(14010003)
-    this.LanguageBtnText.text = GetLanguage(14010013,string)
-    this.chineseBtnText.text = GetLanguage(14010004)
-    this.englishBtnText.text = GetLanguage(14010005)
-    this.bubbleText.text = GetLanguage(14010008)
-    this.bubbleShowText.text = GetLanguage(14010009)
-    this.bubbleCloseText.text = GetLanguage(14010010)
+    this.LanguageText.text=GetLanguage(14010004)
+    this.LanguageBtnText.text=GetLanguage(14010008,string)
+    this.chineseBtnText.text=GetLanguage(14010006)
+    this.englishBtnText.text=GetLanguage(14010007)
     --TODO:设置气泡多语言
     local music = UnityEngine.PlayerPrefs.GetInt("Music")
     local musicEffect = UnityEngine.PlayerPrefs.GetInt("MusicEffect")
     local bubble  = UnityEngine.PlayerPrefs.GetInt("BuildingBubble")
+
     if music==0 then
         this.MusicBtnyellosw.localScale=Vector3.one
         this.MusicBtngrey.localScale=Vector3.zero

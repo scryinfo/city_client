@@ -43,16 +43,4 @@ function GuildListPanel.InitPanel()
     this.timeBtnClose = transform:Find("MiddleRoot/ListTitleRoot/TimeBtn/Close")
     this.timeBtnDefault1 = transform:Find("MiddleRoot/ListTitleRoot/TimeBtn/Default1")
     this.timeBtnDefault2 = transform:Find("MiddleRoot/ListTitleRoot/TimeBtn/Default2")
-
-    -- 多语言
-    this.titleText = transform:Find("TopRoot/TitleText"):GetComponent("Text")
-    this.guildNameTitleText = transform:Find("MiddleRoot/ListTitleRoot/GuildNameTitleText"):GetComponent("Text")
-    this.jobTitleText = transform:Find("MiddleRoot/ListTitleRoot/JobTitleText"):GetComponent("Text")
-    this.introductionTitleText = transform:Find("MiddleRoot/ListTitleRoot/IntroductionTitleText"):GetComponent("Text")
-    this.memberNumberBtnText = transform:Find("MiddleRoot/ListTitleRoot/MemberNumberBtn/Text"):GetComponent("Text")
-    this.timeBtnText = transform:Find("MiddleRoot/ListTitleRoot/TimeBtn/Text"):GetComponent("Text")
-    this.createBtnText = transform:Find("MiddleRoot/CreateBtn/Text"):GetComponent("Text")
-    this.createTitleText = transform:Find("CreateRoot/MiddleRoot/TitleText"):GetComponent("Text")
-    this.nameInputFieldText = transform:Find("CreateRoot/MiddleRoot/NameInputField/Placeholder"):GetComponent("Text")
-    this.describeInputFieldText = transform:Find("CreateRoot/MiddleRoot/DescribeInputField/Placeholder"):GetComponent("Text")
 end

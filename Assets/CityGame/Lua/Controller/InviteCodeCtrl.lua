@@ -30,11 +30,7 @@ end
 
 function InviteCodeCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_InviteCodeStatus",self.c_InviteCodeStatus,self)
-    InviteCodePanel.name.text = GetLanguage(10030002)
-    InviteCodePanel.code.text = GetLanguage(10030002)
-    InviteCodePanel.placeholder.text = GetLanguage(10030018)
-    InviteCodePanel.btnText.text = GetLanguage(10030019)
+   Event.AddListener("c_InviteCodeStatus",self.c_InviteCodeStatus,self)
 end
 
 function InviteCodeCtrl:Hide()
@@ -46,15 +42,13 @@ end
 
 --返回
 function InviteCodeCtrl:OnBack()
-    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 
 function InviteCodeCtrl:OnBtn()
-    PlayMusEff(1002)
     if InviteCodePanel.inviteCode.text == "" then
         InviteCodePanel.error.transform.localScale = Vector3.one
-        InviteCodePanel.error.text = GetLanguage(10030018)
+        InviteCodePanel.error.text = "请输入邀请码"
     else
         InviteCodePanel.error.transform.localScale = Vector3.zero
         Event.Brocast("m_InviteCode",InviteCodePanel.inviteCode.text)
@@ -66,9 +60,9 @@ function InviteCodeCtrl:c_InviteCodeStatus(info)
         ct.OpenCtrl("RegisterCtrl",InviteCodePanel.inviteCode.text)
     elseif info.status == "USED"  then
         InviteCodePanel.error.transform.localScale = Vector3.one
-        InviteCodePanel.error.text = GetLanguage(10030005)
+        InviteCodePanel.error.text = "邀请码也过期"
     elseif info.status == "ERROR"  then
         InviteCodePanel.error.transform.localScale = Vector3.one
-        InviteCodePanel.error.text = GetLanguage(10030004)
+        InviteCodePanel.error.text = "邀请码错误"
     end
 end

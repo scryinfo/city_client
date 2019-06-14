@@ -108,9 +108,6 @@ end
 --服务器回调
 function PromoteCompanyModel:n_OnPublicFacility(info)
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_receivePromoteCompanyDetailInfo',info)
-    if info.promRemainTime <= 0 and info.takeOnNewOrder == true then
-        PromoteCompanyModel:m_PromotionSetting(info.info.id , false , info.curPromPricePerHour, 0)
-    end
 end
 
 --添加推广回调
@@ -206,6 +203,6 @@ end
 function PromoteCompanyModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
         self:m_detailPublicFacility(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(24020018), 300)  --开业成功提示
+        Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
     end
 end

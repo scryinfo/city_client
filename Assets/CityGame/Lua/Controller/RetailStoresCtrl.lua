@@ -111,7 +111,7 @@ end
 function RetailStoresCtrl:_openBubbleMessage(go)
     PlayMusEff(1002)
     if go.m_data.info.id then
-        ct.OpenCtrl("BubbleMessageCtrl", go.m_data.info)
+        ct.OpenCtrl("BubbleMessageCtrl", go.m_data.info.id)
     end
 end
 function RetailStoresCtrl:_refreshSalary(data)

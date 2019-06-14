@@ -72,8 +72,3 @@ function BuildingBaseModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,p
     local lMsg = {buildingId = buildingId,item = {key = {id = itemId,producerId = producerId,qty = qty},n = tonumber(number)},price = tonumber(price)}
     DataManager.ModelSendNetMes("gscode.OpCode","addShopCart","gs.GoodInfo",lMsg)
 end
---获取特定品牌
-function BuildingBaseModel:m_ReqGetBrandName(playerId,itemId)
-    local lMsg = {pId = playerId,typeId = itemId}
-    DataManager.ModelSendNetMes("gscode.OpCode","queryBrand","gs.queryBrand",lMsg)
-end

@@ -33,6 +33,7 @@ function GameMainInterfaceModel:OnCreate()
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
     UnitTest.Exec_now("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",DataManager.GetMyOwnerID())
+    UnitTest.Exec_now("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequestReq",DataManager.GetMyOwnerID())
 end
 
 function GameMainInterfaceModel:Close()

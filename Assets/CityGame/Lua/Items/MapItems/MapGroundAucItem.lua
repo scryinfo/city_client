@@ -32,13 +32,12 @@ function MapGroundAucItem:_childInit()
 
     self.clickBtn = tran:Find("root/btn"):GetComponent("Button")
     self.clickBtn.onClick:AddListener(function ()
-        PlayMusEff(1002)
         self:_openGroundAucFunc()
     end)
 
     Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
 
-    self.nowWaitStateText01.text = GetLanguage(21010001)
+    self.nowWaitStateText01.text = GetLanguage(22010001)
     self:initData(self.data)
 end
 --
@@ -72,7 +71,7 @@ function MapGroundAucItem:_toggleState(state)
     self.selectBgTran.localScale = Vector3.zero
 
     if state == EGAucState.NowBid then
-        self.typeText.text = GetLanguage(21010001)
+        self.typeText.text = "NOW"
         self.typeText.color = getColorByVector3(MapGroundAucItem.nowColor)
         self.bottomBgImg.color = getColorByVector3(MapGroundAucItem.nowColor)
         self.nowBgTran.localScale = Vector3.one
@@ -81,7 +80,7 @@ function MapGroundAucItem:_toggleState(state)
         self.nowWaitState.localScale = Vector3.zero  --状态切换，是待出价或者now/soon
 
     elseif state == EGAucState.Soon then
-        self.typeText.text = GetLanguage(21010009)
+        self.typeText.text = "Soon"
         self.typeText.color = getColorByVector3(MapGroundAucItem.soonColor)
         self.bottomBgImg.color = getColorByVector3(MapGroundAucItem.soonColor)
         self.nowBgTran.localScale = Vector3.zero
@@ -130,34 +129,15 @@ end
 --信息更新
 function MapGroundAucItem:_bidInfoUpdate(data)
     if data.id == self.data.detailData.id then
-        --if self.data.detailData.bidHistory == nil then
-        --    self.data.detailData.bidHistory = {}
-        --end
-        --self.data.detailData.endTs = data.ts + GAucModel.BidTime
-        --local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        --table.insert(self.data.detailData.bidHistory, 1, temp)
-
-        self:_checkHighestPrice(data)
+        if self.data.detailData.bidHistory == nil then
+            self.data.detailData.bidHistory = {}
+        end
+        self.data.detailData.endTs = data.ts + GAucModel.BidTime
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.data.detailData.bidHistory, 1, temp)
         self.isStartBid = true
         self.state = EGAucState.NowBid
         self:_toggleState(self.state)
-    end
-end
---判断是否是最高价
-function MapGroundAucItem:_checkHighestPrice(data)
-    if self.data.detailData.bidHistory == nil then
-        self.data.detailData.bidHistory = {}
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.data.detailData.bidHistory, 1, temp)
-        self.data.detailData.endTs = data.ts + GAucModel.BidTime
-        return
-    end
-
-    local tempHigh = self.data.detailData.bidHistory[1]
-    if tempHigh.price < data.price then
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.data.detailData.bidHistory, 1, temp)
-        self.data.detailData.endTs = data.ts + GAucModel.BidTime
     end
 end
 --

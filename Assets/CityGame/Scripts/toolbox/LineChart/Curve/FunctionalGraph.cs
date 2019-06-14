@@ -329,15 +329,7 @@ public class FunctionalGraph : MaskableGraphic
     {
         List<Vector2[]> line = new List<Vector2[]>();
         List<Color> lineColor = new List<Color>();
-        if (lines.Length == 2)
-        {
-            Vector2[] temp = { lines[0], lines[1],new Vector2(lines[1].x + 10f, lines[1].y) };
-            line.Add(temp);
-        }
-        else
-        {
-            line.Add(lines);
-        }       
+        line.Add(lines);
         lineColor.Add(color);
         Dictionary<List<Vector2[]>, List<Color>> dic = new Dictionary<List<Vector2[]>, List<Color>>();
         dic.Add(line, lineColor);

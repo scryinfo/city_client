@@ -29,9 +29,9 @@ function materialFactoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
 end
 --多语言
 function materialFactoryItem:language()
-    self.materialText.text = GetLanguage(30020001)
-    self.basisProduceRateTextBtn.text = GetLanguage(30020002)
-    self.produceBounusTextBtn.text = GetLanguage(30020003)
+    self.materialText.text = "原材料"
+    self.basisProduceRateTextBtn.text = "基本的生产速度"
+    self.produceBounusTextBtn.text = "生产加成"
 end
 function materialFactoryItem:_clickMaterialIntroduceBtn(ins)
     local data = {}
@@ -40,10 +40,10 @@ function materialFactoryItem:_clickMaterialIntroduceBtn(ins)
     ct.OpenCtrl("BuildingGoodsTypeCtrl",data)
 end
 function materialFactoryItem:_clickBasisProduceRateTextBtn(ins)
-    local stringKey = 30020004
+    local stringKey = 27010005
     Event.Brocast("openTipBox",stringKey,ins.basisProduceRateTextBtn.transform.localPosition,ins.basisProduceRateTextBtn.transform)
 end
 function materialFactoryItem:_clickProduceBounusTextBtn(ins)
-    local stringKey = 30020005
+    local stringKey = 27010005
     Event.Brocast("openTipBox",stringKey,ins.produceBounusTextBtn.transform.localPosition,ins.produceBounusTextBtn.transform)
 end

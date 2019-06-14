@@ -32,7 +32,7 @@ end
 function ServerListModel:m_chooseGameServer( data )
     local serverIndex = data.Index --测试服务器列表索引 1 是公共服务器 2 是李宁的服务器
     if data.serinofs[serverIndex].available == false then
-        ct.MsgBox(GetLanguage(41010010), GetLanguage(41010002))
+        ct.MsgBox(GetLanguage(4301012), GetLanguage(4301002))
         return
     end
     local sid =  data.serinofs[serverIndex].serverId
@@ -72,7 +72,7 @@ function ServerListModel:m_GsOK()
     --注册gs的网络回调
     ServerListModel:registerGsNetMsg()
     -----------------------------------------------------------------------------
-    ----临时单独处理的协议，后边统走datamanager
+    --临时单独处理的协议，后边统走datamanager
     StopAndBuildModel.Awake()
     -----------------------------------------------------------------------------
     GAucModel.registerNetMsg()  --拍卖的网络回调

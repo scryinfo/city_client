@@ -19,7 +19,7 @@ function VolumeModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcExchangeAmount","ss.NpcExchangeAmount",self.n_OnNpcExchangeAmount,self) --所有npc交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnExchangeAmount,self) --所有交易量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerExchangeAmount","ss.PlayExchangeAmount",self.n_OnPlayerTypeNum,self) --总量曲线
-    --DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnPlayerNumCurve,self) --购买数量
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnPlayerNumCurve,self) --购买数量
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getPlayerAmount","gs.PlayerAmount",self.n_OnPlayerCountCurve,self) --玩家数量
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OngetPlayerAmount,self) --玩家交易商品数量
 
@@ -50,7 +50,7 @@ function VolumeModel:m_GoodsNpcNum(time)
     local msgId = pbl.enum("sscode.OpCode","queryNpcNum")
     local lMsg = { time = time ,type = 1 }
     local pMsg = assert(pbl.encode("ss.QueryNpcNum", lMsg))
-    --local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
+    local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 
@@ -102,11 +102,11 @@ function VolumeModel:m_PlayerNumCurve(info)
 end
 -------------------服务器回调---------------------
 function VolumeModel:n_OnGetNpcNum(lMsg)
-    Event.Brocast("c_NpcNum",lMsg.countNpcMap,lMsg.workNpcNum,lMsg.unEmployeeNpcNum)
+    Event.Brocast("c_NpcNum",lMsg.countNpcMap)
 end
 
 function VolumeModel:n_OnGoodsNpcNum(lMsg)
-    Event.Brocast("c_OnGoodsNpcNum",lMsg.numInfo)
+    Event.Brocast("c_OnGoodsNpcNum",lMsg.goodNpcNumInfo)
 end
 
 function VolumeModel:n_OnNpcExchangeAmount(lMsg)
@@ -130,7 +130,7 @@ function VolumeModel:n_OnPlayerCountCurve(lMsg)
 end
 ----玩家购买数量折线图
 function VolumeModel:n_OngetPlayerAmount(lMsg)
-    if  lMsg.exchangeType == 2 or lMsg.exchangeType == 4 then
+    if lMsg.exchangeType == 4 or lMsg.exchangeType == 2 then
         Event.Brocast("c_ToggleBtnThreeItem",lMsg.playerGoodsCurveMap)
     else
         Event.Brocast("c_ToggleBtnTwoItem",lMsg.playerGoodsCurveMap)

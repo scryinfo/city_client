@@ -37,9 +37,6 @@ end
 
 function ServerListCtrl:Active()
     UIPanel.Active(self)
-
-    ServerListPanel.name.text = GetLanguage(10050001)
-    ServerListPanel.oKBtnText.text = GetLanguage(10030019)
 end
 
 function ServerListCtrl:Refresh()
@@ -51,10 +48,9 @@ function ServerListCtrl:Hide()
 end
 
 function ServerListCtrl:c_OnBack()
-    PlayMusEff(1002)
     local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
-                content = GetLanguage(10050004),func = function()
-            --CityEngineLua.login_loginapp(true);
+                content = "确定注销账号吗？",func = function()
+            CityEngineLua.login_loginapp(true);
             UIPanel.ClosePage()
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)
@@ -62,7 +58,6 @@ end
 
 function ServerListCtrl:_initInsData()
     DataManager.OpenDetailModel(ServerListModel,self.insId )
-    ServerListPanel.oKBtn:GetComponent("Button").enabled = true
 end
 
 function ServerListCtrl:Close()
@@ -129,4 +124,13 @@ function ServerListCtrl:c_GsLoginSuccess(playerId)
     --ct.OpenCtrl('LoadingCtrl',playerId)
     UIPanel:ClearAllPages()
     ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
+end
+--生成预制
+function ServerListCtrl:_createServerPab(path,parent)
+    local prefab = UnityEngine.Resources.Load(path);
+    local go = UnityEngine.GameObject.Instantiate(prefab);
+    local rect = go.transform:GetComponent("RectTransform");
+    go.transform:SetParent(parent.transform);
+    rect.transform.localScale = Vector3.one;
+    return go
 end

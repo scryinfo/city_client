@@ -25,13 +25,13 @@ function GameNoticePanel.InitPanel()
     this.hedaer = transform:Find("right/top/hedaer").gameObject:GetComponent("Text");
     this.xBtn = transform:Find("right/top/xButton").gameObject;
     this.time = transform:Find("right/down/time").gameObject:GetComponent("Text");
+    this.delete = transform:Find("right/down/time/delete").gameObject;
     this.rightContent = transform:Find("right/down/Scroll View/Viewport/Content").gameObject:GetComponent("Text");
     this.GoodsScrollView = transform:Find("right/down/GoodsScroll View").gameObject
     this.jumpBtn = transform:Find("right/down/jumpButton").gameObject;--跳转场景
     this.timeLeft = transform:Find("right/down/timeLeft").gameObject:GetComponent("Text");--剩余时间
     this.hint = transform:Find("right/down/hint").gameObject;
-    this.hintItem = transform:Find("right/down/hintItem");
+    this.hintItem = transform:Find("right/down/hintItem").gameObject;
     this.hintText = transform:Find("right/down/hintItem/Text").gameObject:GetComponent("Text");
-    this.noticeScroll = transform:Find("left/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
 
 end

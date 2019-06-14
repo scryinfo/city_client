@@ -20,21 +20,21 @@ function AvtarPanel.InitPanel()
     this.cofirmBtn = transform:Find("topRoot/confirmBtn")
     this.randomBtn = transform:Find("randomBtn")
 
-    this.showContent = transform:Find("showContent/bg/Image")
-    this.fiveContent = transform:Find("fiveScroll/Viewport/Content")
-    this.kindsContent = transform:Find("kindsScroll/Viewport/Content")
-    this.maleBtn = transform:Find("kindsScroll/male")
-    this.feMaleBtn = transform:Find("kindsScroll/faMale")
+    this.showContent=transform:Find("showContent/bg/Image")
+    this.fiveContent=transform:Find("fiveScroll/Viewport/Content")
+    this.kindsContent=transform:Find("kindsScroll/Viewport/Content")
+    this.maleBtn=transform:Find("kindsScroll/male")
+    this.feMaleBtn=transform:Find("kindsScroll/faMale")
 
-    this.maleSelect = transform:Find("kindsScroll/male/select")
-    this.feMaleSelect = transform:Find("kindsScroll/faMale/select")
+    this.maleSelect=transform:Find("kindsScroll/male/select")
+    this.feMaleSelect=transform:Find("kindsScroll/faMale/select")
 
-    this.topticText = transform:Find("topRoot/name"):GetComponent("Text")
+    this.topticText=transform:Find("topRoot/name"):GetComponent("Text")
 
 end
 --数据初始化
-function AvtarPanel.InitLanguage()
-    this.topticText.text = GetLanguage(10060011)
+function AvtarPanel.InitLanguage(MunicipalData)
+    --this.topticText.text=GetLanguage(14010001)
 end
 
 

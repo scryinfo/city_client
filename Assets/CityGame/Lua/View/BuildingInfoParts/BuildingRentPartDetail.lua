@@ -13,7 +13,6 @@ end
 --
 function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.confirmBtn.gameObject, function ()
-        PlayMusEff(1002)
         local rent = self.rentInputField.text
         if rent == nil or rent == ""then
             return
@@ -91,6 +90,6 @@ function BuildingRentPartDetail:_initFunc()
 end
 --
 function BuildingRentPartDetail:_language()
-    self.occupancyText01.text = GetLanguage(26040001)
-    self.rentText02.text = GetLanguage(26040002)
+    self.occupancyText01.text = "Occupancy rate:"
+    self.rentText02.text = "Adjust daily rent:"
 end

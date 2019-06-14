@@ -46,14 +46,6 @@ end
 function GuildOwnCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
-
-    -- 多语言
-    GuildOwnPanel.memberTitleText.text = GetLanguage(12020001)
-    GuildOwnPanel.jobTitleText.text = GetLanguage(12020002)
-    GuildOwnPanel.staffNumberBtnText.text = GetLanguage(12020003)
-    GuildOwnPanel.joinTimeBtnText.text = GetLanguage(12020005)
-
-    GuildOwnCtrl.static.guildMgr:SetLanguage()
 end
 
 -- 监听Model层网络回调
@@ -132,12 +124,12 @@ end
 -- 改公会名字
 function GuildOwnCtrl:OnModifyName(go)
     PlayMusEff(1002)
-    ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(12060019), btnCallBack = function (str)
+    ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = "不超过7字", btnCallBack = function (str)
         if str == "" or str == nil then
-            str = GetLanguage(12060022)
+            str = "请输入联盟名字"
             Event.Brocast("SmallPop",str,80)
         elseif string.len(str) > 21 then
-            str = GetLanguage(12060023)
+            str = "联盟名字过长"
             Event.Brocast("SmallPop",str,80)
         else
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifySocietyName", {societyId = DataManager.GetGuildID(), str = str})
@@ -149,12 +141,12 @@ end
 -- 改公会介绍
 function GuildOwnCtrl:OnModifyIntroduction(go)
     PlayMusEff(1002)
-    ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(12060020), btnCallBack = function (str)
+    ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = "不超过10字", btnCallBack = function (str)
         if str == "" or str == nil then
-            str = GetLanguage(12060024)
+            str = "请输入联盟介绍"
             Event.Brocast("SmallPop",str,80)
         elseif string.len(str) > 30 then
-            str = GetLanguage(12060025)
+            str = "联盟介绍过长"
             Event.Brocast("SmallPop",str,80)
         else
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifyIntroduction", {societyId = DataManager.GetGuildID(), str = str})
@@ -167,10 +159,10 @@ function GuildOwnCtrl:OnModifyDeclaration(go)
     PlayMusEff(1002)
     ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
         if str == "" or str == nil then
-            str = GetLanguage(12060026)
+            str = "请输入联盟宣言"
             Event.Brocast("SmallPop",str,80)
         elseif string.len(str) > 100 then
-            str = GetLanguage(12060027)
+            str = "联盟宣言过长"
             Event.Brocast("SmallPop",str,80)
         else
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifyDeclaration", {societyId = DataManager.GetGuildID(), str = str})
@@ -312,7 +304,7 @@ end
 function GuildOwnCtrl:c_ModifySocietyName(bytesStrings)
     GuildOwnPanel.guildNameText.text = bytesStrings.str
     if bytesStrings.createId and bytesStrings.createId == DataManager.GetMyOwnerID() then
-        Event.Brocast("SmallPop",GetLanguage(12060028),80)
+        Event.Brocast("SmallPop","公会名称更绚丽了！",80)
     end
 end
 
@@ -320,7 +312,7 @@ end
 function GuildOwnCtrl:c_ModifyIntroduction(bytesStrings)
     GuildOwnPanel.introduceText.text = bytesStrings.str
     if bytesStrings.createId and bytesStrings.createId == DataManager.GetMyOwnerID() then
-        Event.Brocast("SmallPop",GetLanguage(12060029),80)
+        Event.Brocast("SmallPop","成功修改联盟介绍！",80)
     end
 end
 
@@ -328,21 +320,21 @@ end
 function GuildOwnCtrl:c_ModifyDeclaration(bytesStrings)
     GuildOwnPanel.declarationText.text = bytesStrings.str
     if bytesStrings.createId and bytesStrings.createId == DataManager.GetMyOwnerID() then
-        Event.Brocast("SmallPop",GetLanguage(12060004),80)
+        Event.Brocast("SmallPop","成功修改联盟介宣言",80)
     end
 end
 
 -- 踢人返回
 function GuildOwnCtrl:c_KickMember(ids)
-    Event.Brocast("SmallPop",GetLanguage(12060010),80)
+    Event.Brocast("SmallPop","成功踢出成员",80)
 end
 
 -- 职位任命返回
 function GuildOwnCtrl:c_AppointerPost(appointerReq)
     if appointerReq.identity == "CHAIRMAN" then
-        Event.Brocast("SmallPop",GetLanguage(12060030),80)
+        Event.Brocast("SmallPop","退位让贤成功",80)
     else
-        Event.Brocast("SmallPop",GetLanguage(12060012),80)
+        Event.Brocast("SmallPop","任命成功",80)
     end
 end
 
@@ -360,12 +352,12 @@ end
 function GuildOwnCtrl:c_OwnSociety(byteBool)
     UIPanel.ClosePage()
     if byteBool.b then -- 自己主动退出
-        Event.Brocast("SmallPop",GetLanguage(12060031),80)
+        Event.Brocast("SmallPop","退出联盟成功！",80)
     else -- 被踢
         --打开弹框
         local showData = {}
-        showData.titleInfo = GetLanguage(12010014)
-        showData.contentInfo = GetLanguage(12060032)
+        showData.titleInfo = "提示"
+        showData.contentInfo = "已被踢出联盟"
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
     end

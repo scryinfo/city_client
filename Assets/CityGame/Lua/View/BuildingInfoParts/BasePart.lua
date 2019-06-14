@@ -40,14 +40,12 @@ end
 function BasePart:_InitClick(mainPanelLuaBehaviour)
     --点击打开界面
     mainPanelLuaBehaviour:AddClick(self.go, function()
-        PlayMusEff(1002)
         self.groupClass.SwitchingOptions(self.groupClass,self.partIndex)
     end)
     --点击关闭界面
     mainPanelLuaBehaviour:AddClick(self.selectTransform.gameObject, function()
         --注：暂定方案为不做处理
         --关闭所有界面
-        PlayMusEff(1002)
         self.groupClass.TurnOffAllOptions(self.groupClass)
     end)
     self:_InitChildClick(mainPanelLuaBehaviour)

@@ -22,13 +22,13 @@ function GuildMemberItem:initialize(prefab, data)
 
     --self.nameText.text = self.data.id
     if self.data.identity == "CHAIRMAN" then
-        self.jobText.text = GetLanguage( 12030001) -- "会长"
+        self.jobText.text = "会长"
     elseif self.data.identity == "VICE_CHAIRMAN" then
-        self.jobText.text = GetLanguage( 12030002) --"副会长"
+        self.jobText.text = "副会长"
     elseif self.data.identity == "ADMINISTRATOR" then
-        self.jobText.text = GetLanguage( 12030003) -- "管理"
+        self.jobText.text = "管理"
     elseif self.data.identity == "MEMBER" then
-        self.jobText.text = GetLanguage( 12030004) -- "成员"
+        self.jobText.text = "成员"
     end
     self.staffNumberText.text = self.data.staffCount
     local timeTab = getFormatUnixTime(self.data.joinTs/1000)
@@ -58,7 +58,7 @@ function GuildMemberItem:_openMenu()
     local position = self.prefab.transform.position
     GuildOwnCtrl.static.guildMgr:ShowGuildMenu(position)
     GuildOwnCtrl.static.guildMgr:SetSelectMemberItem(self)
-    --GuildOwnCtrl.static.guildMgr:SetIdentity()
+    GuildOwnCtrl.static.guildMgr:SetIdentity()
     self:_setButtonInteractable(false)
 end
 

@@ -5,11 +5,10 @@
 ---建筑主界面仓库详情界面
 BuildingWarehouseDetailPart = class('BuildingWarehouseDetailPart',BuildingBaseDetailPart)
 
-local ToNumber = tonumber
-local StringSun = string.sub
 function BuildingWarehouseDetailPart:PrefabName()
     return "BuildingWarehouseDetailPart"
 end
+
 function BuildingWarehouseDetailPart:_InitTransform()
     self:_getComponent(self.transform)
     --仓库数据
@@ -34,9 +33,7 @@ function BuildingWarehouseDetailPart:RefreshData(data)
     end
     self.m_data = data
     self:_initFunc()
-    --合并两张表
-    self.warehouseDataInfo = self:mergeTables(self.m_data.store.inHand,self.m_data.store.locked)
-    self:initializeUiInfoData(self.warehouseDataInfo)
+    self:initializeUiInfoData(self.m_data.store.inHand)
 end
 
 function BuildingWarehouseDetailPart:_getComponent(transform)
@@ -68,9 +65,6 @@ function BuildingWarehouseDetailPart:_InitClick(mainPanelLuaBehaviour)
     end,self)
     mainPanelLuaBehaviour:AddClick(self.transportBtn.gameObject,function()
         self:clickTransportBtn()
-    end,self)
-    mainPanelLuaBehaviour:AddClick(self.sortingBtn.gameObject,function()
-        self:clickSortingBtn()
     end,self)
 end
 
@@ -111,8 +105,6 @@ end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
-    --隐藏仓库分类按钮
-    self.sortingBtn.localScale = Vector3.zero
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -122,9 +114,7 @@ function BuildingWarehouseDetailPart:_language()
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
-    self.nowState = ItemScreening.all
-    self.nowStateText.text = GetLanguage(18020002)
-    if not storeData or next(storeData) == nil then
+    if not storeData then
         self.Capacity = 0
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
@@ -142,7 +132,7 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        if next(self.warehouseDatas) ~= nil then
+        if #storeData == #self.warehouseDatas then
             return
         else
             if next(self.warehouseDatas) ~= nil then
@@ -168,36 +158,6 @@ function BuildingWarehouseDetailPart:clickTransportBtn()
     data.stateType = GoodsItemStateType.transport
     ct.OpenCtrl("NewTransportBoxCtrl",data)
 end
---切换分类
-function BuildingWarehouseDetailPart:clickSortingBtn()
-    if self.nowState == ItemScreening.all then
-        --原料
-        self.nowState = ItemScreening.material
-        self.nowStateText.text = GetLanguage(20010002)
-        if next(self.warehouseDatas) ~= nil then
-            self:CloseDestroy(self.warehouseDatas)
-        end
-        self.materialDataInfo = self:screeningTabInfo(self.warehouseDataInfo,self.nowState)
-        self:CreateGoodsItems(self.materialDataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
-    elseif self.nowState == ItemScreening.material then
-        --商品
-        self.nowState = ItemScreening.goods
-        self.nowStateText.text = GetLanguage(20010003)
-        if next(self.warehouseDatas) ~= nil then
-            self:CloseDestroy(self.warehouseDatas)
-        end
-        self.goodsDataInfo = self:screeningTabInfo(self.warehouseDataInfo,self.nowState)
-        self:CreateGoodsItems(self.goodsDataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
-    elseif self.nowState == ItemScreening.goods then
-        --全部
-        self.nowState = ItemScreening.all
-        self.nowStateText.text = GetLanguage(18020002)
-        if next(self.warehouseDatas) ~= nil then
-            self:CloseDestroy(self.warehouseDatas)
-        end
-        self:CreateGoodsItems(self.warehouseDataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
-    end
-end
 -----------------------------------------------------------------------------事件函数---------------------------------------------------------------------------------------
 --添加运输列表
 function BuildingWarehouseDetailPart:addTransportList(data)
@@ -206,18 +166,18 @@ function BuildingWarehouseDetailPart:addTransportList(data)
         table.insert(self.transportTab,data)
         self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop",GetLanguage(25020009), 300)
+        Event.Brocast("SmallPop","添加成功", 300)
     else
         for key,value in pairs(self.transportTab) do
             if value.itemId == data.itemId then
-                Event.Brocast("SmallPop",GetLanguage(25070011), 300)
+                Event.Brocast("SmallPop","不能重复添加同一种商品", 300)
                 return
             end
         end
         table.insert(self.transportTab,data)
         --self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop",GetLanguage(25020009), 300)
+        Event.Brocast("SmallPop","添加成功", 300)
     end
 end
 --删除运输列表
@@ -234,7 +194,7 @@ function BuildingWarehouseDetailPart:deleTransportList(id)
             self.numberText.text = #self.transportTab
         end
     end
-    Event.Brocast("SmallPop",GetLanguage(25020022), 300)
+    Event.Brocast("SmallPop","删除成功", 300)
 end
 --开始运输
 function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
@@ -253,6 +213,11 @@ function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
         for key,value in pairs(dataInfo) do
             Event.Brocast("m_RetailStoresTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
+    elseif self.m_data.buildingType == BuildingType.WareHouse then
+        --集散中心
+        for key,value in pairs(dataInfo) do
+            Event.Brocast("m_WareHourseTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
+        end
     end
 end
 --销毁商品
@@ -267,6 +232,8 @@ function BuildingWarehouseDetailPart:deleteWarehouseItem(dataInfo)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             Event.Brocast("m_ReqRetailStoresDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
+        elseif self.m_data.buildingType == BuildingType.TalentCenter then
+            --集散中心
         end
     end
 end
@@ -282,19 +249,10 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.iKey.id then
-                value.dataInfo.n = value.dataInfo.n + 1
+                --value.dataInfo.n = value.dataInfo.n + 1
                 value.numberText.text = "×"..value.dataInfo.n
-                return
             end
         end
-        --local dataInfo = {}
-        --local key = {}
-        --dataInfo.key = key
-        --dataInfo.key.id = data.iKey.id
-        --dataInfo.key.producerId = data.iKey.producerId
-        --dataInfo.key.qty = data.iKey.qty
-        --dataInfo.n = data.nowCount
-        --self:CreateGoodsItem(dataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
     end
 end
 --运输成功回调
@@ -332,7 +290,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
     self.number.transform.localScale = Vector3.zero
     self.transportTab = {}
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop", GetLanguage(25020020), 300)
+    Event.Brocast("SmallPop", GetLanguage(21040003), 300)
 end
 --销毁成功后回调
 function BuildingWarehouseDetailPart:deleteSucceed(data)
@@ -367,7 +325,7 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
     self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop", GetLanguage(25020012), 300)
+    Event.Brocast("SmallPop", GetLanguage(26030003), 300)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取仓库里某个商品的数量
@@ -386,43 +344,4 @@ function BuildingWarehouseDetailPart:getItemIdCount(itemId,callback)
         end
         callback(nowCount)
     end
-end
---合并两张表
-function BuildingWarehouseDetailPart:mergeTables(inHandTab,lockedTab)
-    local targetTab = {}
-    if inHandTab == nil and lockedTab == nil then
-        targetTab = {}
-    end
-    if inHandTab ~= nil then
-        for key,value in pairs(inHandTab) do
-            targetTab[value.key.id] = ct.deepCopy(value)
-        end
-    end
-    if lockedTab ~= nil then
-        for key,value in pairs(lockedTab) do
-            if targetTab[value.key.id] then
-                targetTab[value.key.id].n = targetTab[value.key.id].n + value.n
-            else
-                targetTab[value.key.id] = ct.deepCopy(value)
-            end
-        end
-    end
-    return targetTab
-end
---分类
-function BuildingWarehouseDetailPart:screeningTabInfo(data,type)
-    local materialKey,goodsKey = 21,22
-    local targetTable = {}
-    for key,value in pairs(data) do
-        if type == ItemScreening.material then
-            if ToNumber(StringSun(key,1,2)) == materialKey then
-                targetTable[#targetTable + 1] = ct.deepCopy(value)
-            end
-        elseif type == ItemScreening.goods then
-            if ToNumber(StringSun(key,1,2)) == goodsKey then
-                targetTable[#targetTable + 1] = ct.deepCopy(value)
-            end
-        end
-    end
-    return targetTable
 end

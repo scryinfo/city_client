@@ -18,7 +18,7 @@ function laboratoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
 
     --研究成功率加成
     self.qualityAdditionTextBtn = prefab.transform:Find("basisProduceRateText/symbol/produceBounusText"):GetComponent("Text")
-    --self.buildTimeText = prefab.transform:Find("basisProduceRateText/symbol/basisProduceRateText/produceBounusText")
+    --self.popolarityTextBtn = prefab.transform:Find("basisProduceRateText/symbol/basisProduceRateText/produceBounusText")
 
 
     self:language()  --self.scoreText.text = 100
@@ -35,9 +35,9 @@ function laboratoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     end
 end
 function laboratoryItem:language()
-    self.retailStoreText.text = GetLanguage("30070001")
-    self.basicQualityTextBtn.text = GetLanguage("30070002")
-    self.qualityAdditionTextBtn.text = GetLanguage("30070003")
+    self.retailStoreText.text = "研究成功率"
+    self.basicQualityTextBtn.text = "基础研究成功率"
+    self.qualityAdditionTextBtn.text = "基础成功率加成"
     --self.popolarityTextBtn.text = "知名度"
 end
 function laboratoryItem:_clickBasicQualityTextBtn(ins)

@@ -4,6 +4,7 @@ require('Controller/ServerListCtrl')
 LoginCtrl = class('LoginCtrl',UIPanel)
 UIPanel:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
 
+LoginCtrl.SmallPop_Path="View/GoodsItem/TipsParticle"--小弹窗路径
 require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
 --构建函数--
 function LoginCtrl:initialize()
@@ -32,12 +33,12 @@ function LoginCtrl:Awake(go)
 	LuaBehaviour:AddClick(LoginPanel.eye, self.OnEye,self);  --是否显示密码
 	LuaBehaviour:AddClick(LoginPanel.choose, self.OnChoose,self);  --打开多语言
 	LuaBehaviour:AddClick(LoginPanel.closeBg, self.OnCloseBg,self);  --关闭多语言
-	--LuaBehaviour:AddClick(LoginPanel.normText, self.OnNormText,self);  --用户准则
+	LuaBehaviour:AddClick(LoginPanel.normText, self.OnNormText,self);  --用户准则
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
-
 
 	self.showPassword = false
 
+	self.root=self.gameObject.transform.root:Find("FixedRoot");
 
 	--多语言
 	local languageId = UnityEngine.PlayerPrefs.GetInt("Language")
@@ -61,13 +62,8 @@ function LoginCtrl:Awake(go)
 		self:_OnToggle(isOn)
 	end)
 
-    --密码不能输入中文
-	LoginPanel.inputPassword:GetComponent('InputField').onValueChanged:AddListener(function()
-		self:_OnPassword(self)
-	end)
-
 	--同意用户准则
-	--LoginPanel.norm.isOn = true
+	LoginPanel.norm.isOn = true
 end
 
 function LoginCtrl:Active()
@@ -81,39 +77,24 @@ function LoginCtrl:Active()
 	Event.AddListener("c_Aslogin", self.c_Aslogin, self);
 	Event.AddListener("c_ChangeLanguage", self.c_ChangeLanguage, self);
 
+	-----小弹窗
+	Event.AddListener("SmallPop",self.c_SmallPop,self)
 	--多语言
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
-	LoginPanel.account.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
-	LoginPanel.password.text = GetLanguage(10020002)
-	LoginPanel.btnLoginText.text = GetLanguage(10020006)
-	LoginPanel.btnRegisterText.text = GetLanguage(10020005)
-	LoginPanel.forget:GetComponent("Text").text = GetLanguage(10020003)
-	LoginPanel.rememberText.text = GetLanguage(10020004)
-	--LoginPanel.normText:GetComponent("Text").text = GetLanguage(10020015)
-	--LoginPanel.agree.text = GetLanguage(10020014)
-	LoginPanel.languageText.text = GetLanguage(10020010)
+	LoginPanel.btnLoginText.text = GetLanguage(10020003)
 end
 
 function LoginCtrl:c_ChangeLanguage()
 	--多语言
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
-	LoginPanel.account.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
-	LoginPanel.password.text = GetLanguage(10020002)
-	LoginPanel.btnLoginText.text = GetLanguage(10020006)
-	LoginPanel.btnRegisterText.text = GetLanguage(10020005)
-	LoginPanel.forget:GetComponent("Text").text = GetLanguage(10020003)
-	LoginPanel.rememberText.text = GetLanguage(10020004)
-	--LoginPanel.normText:GetComponent("Text").text = GetLanguage(10020015)
-	--LoginPanel.agree.text = GetLanguage(10020014)
-	LoginPanel.languageText.text = GetLanguage(10020010)
+	LoginPanel.btnLoginText.text = GetLanguage(10020003)
 end
 
 function LoginCtrl:Refresh()
 	--ct.log("abel_w6_UIFrame_1","[LoginCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 	self:_initData()
-	UnitTest.Exec_now("cycle_0612_flightTest", "e_cycle_0612_flightTest")
 end
 
 function LoginCtrl:Hide()
@@ -123,6 +104,7 @@ function LoginCtrl:Hide()
 	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
 	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
 	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
+	Event.RemoveListener("SmallPop",self.c_SmallPop,self)
 	Event.RemoveListener("c_ChangeLanguage",self.c_ChangeLanguage,self)
 
 	LoginPanel.inputUsername:GetComponent('InputField').text = ""
@@ -132,8 +114,6 @@ end
 
 function LoginCtrl:_initData()
 	DataManager.OpenDetailModel(LoginModel,self.insId)
-	--连接as
-	CityEngineLua.login_loginapp(true)
 	if UnityEngine.PlayerPrefs.GetString("username") ~= "" then
 		LoginPanel.inputUsername:GetComponent('InputField').text = UnityEngine.PlayerPrefs.GetString("username")
 	end
@@ -181,12 +161,6 @@ function LoginCtrl:_OnToggle(isOn)
 	end
 end
 
---密码不能输入中文
-function LoginCtrl:_OnPassword()
-	local a = LoginPanel.inputPassword:GetComponent('InputField')
-	LoginPanel.input:BanChinese(a)
-end
-
 --是否显示密码
 function LoginCtrl:OnEye(go)
 	PlayMusEff(1002)
@@ -211,20 +185,17 @@ end
 
 --打开多语言
 function LoginCtrl:OnChoose(go)
-	PlayMusEff(1002)
     go:SwitchLanguage(true)
 end
 
 --关闭多语言
 function LoginCtrl:OnCloseBg(go)
-	PlayMusEff(1002)
 	go:SwitchLanguage(false)
 end
 
 --打开用户准则
 function LoginCtrl:OnNormText()
-	PlayMusEff(1002)
-	--ct.OpenCtrl("UserNanualCtrl")
+	ct.OpenCtrl("UserNanualCtrl")
 end
 
 --打开关闭多语言
@@ -248,10 +219,10 @@ function LoginCtrl:OnLogin(go)
 
 	if username == "" or pw == "" then
 		LoginPanel.textStatus.transform.localScale = Vector3.one
-		LoginPanel.textStatus:GetComponent('Text').text =GetLanguage(10020008)
-	--elseif LoginPanel.norm.isOn == false then
-	--	LoginPanel.textStatus.transform.localScale = Vector3.one
-	--	LoginPanel.textStatus:GetComponent('Text').text = GetLanguage(10020016)
+		LoginPanel.textStatus:GetComponent('Text').text =GetLanguage(10020004)
+	elseif LoginPanel.norm.isOn == false then
+		LoginPanel.textStatus.transform.localScale = Vector3.one
+		LoginPanel.textStatus:GetComponent('Text').text = "请同意用户手册"
 	else
 		Event.Brocast("m_OnAsLogin", username, pw, "lxq");
 	end
@@ -264,15 +235,15 @@ function LoginCtrl:c_Aslogin(info,msgId)
 	if msgId == 0 then
 		if info.reason == "accountInFreeze" then
 			LoginPanel.textStatus.transform.localScale = Vector3.one
-			LoginPanel.textStatus:GetComponent('Text').text = GetLanguage(10020017)
+			LoginPanel.textStatus:GetComponent('Text').text = "账号冻结"
 		end
 	else
 		if info.status == "FAIL_ACCOUNT_UNREGISTER" then
 			LoginPanel.textStatus.transform.localScale = Vector3.one
-			LoginPanel.textStatus:GetComponent('Text').text = GetLanguage(10020018)
+			LoginPanel.textStatus:GetComponent('Text').text = "账号未注册"
 		elseif info.status == "FAIL_ERROR" then
 			LoginPanel.textStatus.transform.localScale = Vector3.one
-			LoginPanel.textStatus:GetComponent('Text').text = GetLanguage(10020007)
+			LoginPanel.textStatus:GetComponent('Text').text = "账号或密码错误"
 		end
 	end
 end
@@ -395,4 +366,23 @@ function LoginCtrl:rpcTest(a,b)
 end
 
 UnitTest.TestBlockEnd()---------------------------------------------------------------
+
+--生成预制
+function LoginCtrl:c_creatGoods(path,parent)
+	local prefab = UnityEngine.Resources.Load(path);
+	local go = UnityEngine.GameObject.Instantiate(prefab);
+	local rect = go.transform:GetComponent("RectTransform");
+	go.transform:SetParent(parent);--.transform
+	rect.transform.localScale = Vector3.one;
+	rect.transform.localPosition=Vector3.zero
+	return go
+end
+---小弹窗
+function LoginCtrl:c_SmallPop(string,spacing)
+	if not self.prefab  then
+		self.prefab =self:c_creatGoods(self.SmallPop_Path,self.root)
+	end
+	SmallPopItem:new(string,spacing,self.prefab ,self);
+end
+
 

@@ -6,7 +6,7 @@ RollItem = class('RollItem')
 function RollItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab=prefab
     local transform = prefab.transform
-    self.data = data
+
     self.oddsText=findByName(transform,"Text"):GetComponent("Text")
 
     luaBehaviour:AddClick(prefab.gameObject,self.c_OnClick_roll,self);
@@ -15,7 +15,7 @@ end
 ---==========================================================================================点击函数=============================================================================
 --开箱
 function RollItem:c_OnClick_roll(ins)
-        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId,"m_ReqLabRoll",ins.data.lineId)
+    DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId,"m_ReqLabRoll",ins.data.lineId)
 end
 ---==========================================================================================业务逻辑=============================================================================
 
@@ -29,8 +29,8 @@ function RollItem:updateUI(data)
 end
 
 function RollItem:Refresh(data)
-    self:updateData(data)
-    self:updateUI(data)
+        self:updateData(data)
+        self:updateUI(data)
 end
 
 

@@ -45,7 +45,6 @@ end
 function FriendslistCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
-    FriendslistPanel.nullImageText.text = GetLanguage(16010026)
 end
 
 -- 刷新
@@ -81,13 +80,14 @@ end
 
 --初始首次进入所需数据
 function FriendslistCtrl:_initState()
+    --if
     local type = self.m_data.type
     FriendslistCtrl.type = self.m_data.type
     --好友界面数据刷新
     FriendslistCtrl.friendInfo = {}
 
     if type == 2 then
-        FriendslistPanel.panelNameText.text = GetLanguage(13020001) --"MANAGE"
+        FriendslistPanel.panelNameText.text = GetLanguage(12020001) --"MANAGE"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.blacklistNumberText.text = ""
         FriendslistPanel.searchInputField:SetActive(false)
@@ -95,14 +95,12 @@ function FriendslistCtrl:_initState()
 
         if FriendsCtrl.friendInfo then
             FriendslistCtrl.friendInfo = FriendsCtrl.friendInfo
-            self:_showNullImageByData()
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
         else
-            self:_showNullImage(true)
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
         end
     elseif type == 3 then
-        FriendslistPanel.panelNameText.text = GetLanguage(13030001) --"BLACK LIST"
+        FriendslistPanel.panelNameText.text = GetLanguage(12030001) --"BLACK LIST"
         FriendslistPanel.blacklistNumberImage:SetActive(true)
         FriendslistPanel.searchInputField:SetActive(false)
         FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-88)
@@ -111,17 +109,15 @@ function FriendslistCtrl:_initState()
         local blacklist = DataManager.GetMyBlacklist()
         if blacklist[1] then
             FriendslistCtrl.friendInfo = blacklist
-            self:_showNullImage(false)
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
         else
-            self:_showNullImage(true)
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
         end
     elseif type == 4 then
         if FriendslistCtrl.static.isAddfriends then
             FriendslistCtrl.static.isAddfriends = false
         else
-            FriendslistPanel.panelNameText.text = GetLanguage(13040001) --"ADD NEW FRIENDS"
+            FriendslistPanel.panelNameText.text = GetLanguage(12040001) --"ADD NEW FRIENDS"
             FriendslistPanel.blacklistNumberImage:SetActive(false)
             FriendslistPanel.blacklistNumberText.text = ""
             --显示和清空搜索框
@@ -130,10 +126,9 @@ function FriendslistCtrl:_initState()
             FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-120)
 
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
-            self:_showNullImage(false)
         end
     elseif type == 5 then
-        FriendslistPanel.panelNameText.text = GetLanguage(13050001) --"APPLICATION LIST"
+        FriendslistPanel.panelNameText.text = GetLanguage(12050001) --"APPLICATION LIST"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.blacklistNumberText.text = ""
         FriendslistPanel.searchInputField:SetActive(false)
@@ -141,9 +136,8 @@ function FriendslistCtrl:_initState()
 
         FriendslistCtrl.friendInfo = DataManager.GetMyFriendsApply()
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
-        self:_showNullImageByData()
+            end
     end
-end
 
 function FriendslistCtrl:OnSearch(go)
     PlayMusEff(1002)
@@ -152,20 +146,6 @@ function FriendslistCtrl:OnSearch(go)
         return
     end
     Event.Brocast("m_SearchPlayer", text)
-end
-
--- 设置空白的显示
-function FriendslistCtrl:_showNullImage(isShow)
-    FriendslistPanel.nullImage.localScale = isShow and Vector3.one or Vector3.zero
-end
-
--- 根据数据显示空白
-function FriendslistCtrl:_showNullImageByData()
-    if #FriendslistCtrl.friendInfo == 0 then
-        self:_showNullImage(true)
-    else
-        self:_showNullImage(false)
-    end
 end
 
 FriendslistCtrl.static.FriendsProvideData = function(transform, idx)
@@ -193,11 +173,9 @@ end
 function FriendslistCtrl:c_OnReceiveSearchPlayerInfo(friendsData)
     if friendsData and friendsData.info then
         FriendslistCtrl.friendInfo = friendsData.info
-        self:_showNullImage(false)
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
     else
         FriendslistCtrl.friendInfo = {}
-        self:_showNullImage(true)
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
     end
 end
@@ -209,24 +187,21 @@ function FriendslistCtrl:c_OnReceiveDeleteFriend(friendsId)
             break
         end
     end
-    self:_showNullImageByData()
     FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
-    Event.Brocast("SmallPop",GetLanguage(13020004),60)
+    Event.Brocast("SmallPop",GetLanguage(12020002),60)
 end
 
 function FriendslistCtrl:c_DeleteBlacklist(friendsId)
     if friendsId.id then
         self:_showBlacklistNum()
-        self:_showNullImageByData()
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
-        Event.Brocast("SmallPop",GetLanguage(13030004),60)
+        Event.Brocast("SmallPop",GetLanguage(12030004),60)
     end
 end
 
 function FriendslistCtrl:c_OnReceiveAddFriendReq(requestFriend)
     if self.m_data.type == 5 then
         FriendslistCtrl.friendInfo = DataManager.GetMyFriendsApply()
-        self:_showNullImageByData()
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
     end
 end

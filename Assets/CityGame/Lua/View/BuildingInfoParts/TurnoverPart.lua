@@ -23,9 +23,6 @@ end
 
 function TurnoverPart:ShowDetail(data)
     BasePart.ShowDetail(self,data)
-    self.today.text = GetLanguage(27010004)
-    self.turnoverText.text = GetLanguage(27010003)
-    self.unTurnoverText.text = GetLanguage(27010003)
     --Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 --
@@ -34,16 +31,10 @@ function TurnoverPart:RefreshData(data)
         return
     end
     self.m_data = data
-    self.today.text = GetLanguage(27010004)
-    self.turnoverText.text = GetLanguage(27010003)
-    self.unTurnoverText.text = GetLanguage(27010003)
     --self:_initFunc()
 end
 --
 function TurnoverPart:_getComponent(transform)
-    self.today = transform:Find("Top/Text"):GetComponent("Text")
-    self.turnoverText = transform:Find("SelectBtn/icon/Text"):GetComponent("Text")
-    self.unTurnoverText = transform:Find("UnselectBtn/icon/Text"):GetComponent("Text")
     if self.turnover == nil then
         self.turnover = transform:Find("Top/turnover"):GetComponent("Text")
     end

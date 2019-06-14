@@ -1123,11 +1123,6 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.m_societyId = tempData.societyId
     --初始化自己的Eva点数
     PersonDataStack.m_evaPoint = tempData.eva
-    --初始化自己的预测积分
-    PersonDataStack.m_flightScore = tempData.score
-
-    --初始化矿工费用及它的百分显示
-    --PersonDataStack.m_minersCostRatio = tempData.minersCostRatio
 
     --初始化自己的基本信息
     PersonDataStack.m_roleInfo =
@@ -1289,16 +1284,6 @@ function DataManager.SetBuildingStandardWage(buildingType, wage)
     DataManager.BuildingStandardWage[buildingType] = wage
 end
 
---获取自已的预测积分
-function DataManager.GetMyFlightScore()
-    return PersonDataStack.m_flightScore
-end
-
---更新自已的预测积分
-function DataManager.SetMyFlightScore(value)
-    PersonDataStack.m_flightScore = value
-end
-
 --获取自已的所有的建筑评分
 function DataManager.GetMyBuildingBrands()
     return PersonDataStack.m_buildingBrands
@@ -1351,11 +1336,6 @@ end
 --获取头像ID
 function DataManager.GetFaceId()
     return  PersonDataStack.m_faceId
-end
-
---设置头像ID
-function DataManager.SetFaceId(faceid)
-    PersonDataStack.m_faceId = faceid
 end
 
 function DataManager.GetMyPersonData()
@@ -1412,14 +1392,6 @@ function DataManager.SetMyPersonalHomepageInfo(this,info)
     PersonDataStack.m_roleInfo.faceId = data.faceId
     PersonDataStack.m_roleInfo.male = data.male
     PersonDataStack.m_roleInfo.createTs = data.createTs
-end
-
---设置玩家姓名
-function DataManager.SetPlayerName(str)
-    if str ~= nil then
-        PersonDataStack.m_name = str
-        PersonDataStack.m_roleInfo.name = str
-    end
 end
 
 --设置主页需要的显示信息--个人描述
@@ -1634,25 +1606,6 @@ end
 function DataManager.GetGuildMembers()
     return PersonDataStack.guildManager:GetGuildMembers()
 end
-
--- 获得矿工费用值的百分显示
-function DataManager.GetMinersCostRatioPercent()
-    if PersonDataStack.m_minersCostRatio == nil or PersonDataStack.m_minersCostRatio == "" or PersonDataStack.m_minersCostRatio <= 0 then
-        return
-    end
-    if not PersonDataStack.m_minersCostRatioPercent then
-        PersonDataStack.m_minersCostRatioPercent = string.format("%.2f", PersonDataStack.m_minersCostRatio * 100) .. "%"
-    end
-    return PersonDataStack.m_minersCostRatioPercent
-end
-
--- 获得实际所需的矿工费用
-function DataManager.GetMinersCostRatioMoney(number)
-    if number == nil or number == "" or tonumber(number) <= 0 or PersonDataStack.m_minersCostRatio <= 0 then
-        return 0
-    end
-    return PersonDataStack.m_minersCostRatio * tonumber(number)
-end
 ---------------------------------
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
@@ -1815,8 +1768,6 @@ function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyIntroduction","gs.BytesStrings", DataManager.n_ModifyIntroduction)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyDeclaration","gs.BytesStrings", DataManager.n_ModifyDeclaration)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getPrivateBuildingCommonInfo","gs.PrivateBuildingInfos",DataManager.n_OnGetPrivateBuildingCommonInfo)
-    --DataManager.RegisterErrorNetMsg()
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","setPlayerName","gs.Str",DataManager.n_OnReceiveNameData)
 end
 
 --DataManager初始化
@@ -1828,10 +1779,6 @@ function DataManager.Init()
     SystemDatas.GroundAuctionModel  = GAucModel.New()
     if SystemDatas.GroundAuctionModel ~= nil then
         SystemDatas.GroundAuctionModel:Awake()
-    end
-    SystemDatas.FlightMainModel  = FlightMainModel.New()
-    if SystemDatas.FlightMainModel ~= nil then
-        SystemDatas.FlightMainModel:Awake()
     end
     DataManager.RegisterErrorNetMsg()
     --初始化自己的地块初始信息
@@ -2255,15 +2202,4 @@ end
 --今日营业回调
 function DataManager.n_OnGetPrivateBuildingCommonInfo(info)
     RevenueDetailsMsg.GetPrivateBuildingCommonInfo(info.infos[1].todayIncome)
-end
-
---修改玩家名字
-function DataManager.n_OnReceiveNameData(data, msgId)
-    if msgId == 0 then
-        Event.Brocast("c_SetPlayerNameEvent", data)
-        return
-    end
-    DataManager.SetPlayerName(data.str)
-    Event.Brocast("c_SetPlayerNameEvent", data)
-    Event.Brocast("updatePlayerName", data.str)
 end

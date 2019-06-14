@@ -38,6 +38,7 @@ function MapRightMatGoodItem:refreshData(data)
     end
     self.data = data
     local itemId = data.item.key.id
+    self.nameText.text = GetLanguage(itemId)
     self.numberText.text = "×"..data.item.n
     self.priceText.text = GetClientPriceString(data.price)
 
@@ -46,12 +47,10 @@ function MapRightMatGoodItem:refreshData(data)
         self.goods.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3(-140, -100, 0)
         LoadSprite(Material[itemId].img, self.iconImg,false)
-        self.nameText.text = GetLanguage(Material[itemId].name)
 
     elseif tonumber(string.sub(itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
         LoadSprite(Good[itemId].img, self.iconImg,false)
-        self.nameText.text = GetLanguage(Good[itemId].name)
     end
 end
 

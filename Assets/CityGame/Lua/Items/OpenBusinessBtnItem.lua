@@ -27,11 +27,11 @@ function OpenBusinessBtnItem:initData(info, type)
             if info.ownerId == DataManager.GetMyOwnerID() then
                 self.openBtn.transform.localScale = Vector3.one
                 self.otherOpenImgTrans.localScale = Vector3.zero
-                self.showText.text = GetLanguage(24010001)
+                self.showText.text = "Open"
             else
                 self.openBtn.transform.localScale = Vector3.zero
                 self.otherOpenImgTrans.localScale = Vector3.one
-                self.showText.text = GetLanguage(24010002)
+                self.showText.text = "Not yet open"
             end
         end
     end

@@ -81,7 +81,6 @@ function StopAndBuildCtrl:OnClick_changeName(ins)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(25040001)
-    data.inputDefaultStr = GetLanguage(37030002)
     data.btnCallBack = function(name)
         if ins.m_data.id ~= nil then
             DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id = ins.m_data.id, name = name})

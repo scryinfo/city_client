@@ -133,7 +133,7 @@ end
 function RetailStoresModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
         self:m_ReqOpenRetailShop(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(24020018), 300)  --开业成功提示
+        Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
     end
 end
 --员工工资改变
@@ -164,7 +164,7 @@ function RetailStoresModel:n_OnModifyShelfInfo(data)
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenRetailShop(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(29010010), 300)
+        Event.Brocast("SmallPop", GetLanguage(27010005), 300)
     end
 end
 --下架
@@ -172,7 +172,7 @@ function RetailStoresModel:n_OnShelfDelInfo(data)
     Event.Brocast("downShelfSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenRetailShop(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(25060007), 300)
+        Event.Brocast("SmallPop", GetLanguage(27010003), 300)
     end
 end
 --添加生产线

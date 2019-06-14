@@ -19,13 +19,11 @@ function LanguageItem:initialize(prefab,data,id,LuaBehaviour)
     self.selected = self.prefab.transform:Find("selected")
     self.name = self.prefab.transform:Find("selected/name"):GetComponent("Text")
     LuaBehaviour:AddClick(self.unselected, self.OnUnselected,self);
-
-    self.unName.text = GetLanguage(data.name)
-    self.name.text = GetLanguage(data.name)
+    self.unName.text = data.name
+    self.name.text = data.name
 end
 
 function LanguageItem:OnUnselected(go)
-    PlayMusEff(1002)
     if last then
         last.localScale = Vector3.zero
     end

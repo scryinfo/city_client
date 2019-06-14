@@ -11,12 +11,12 @@ local ctrl
 function SmallBubbleItem:initialize(prefab,luaBehaviour,data,ctr)
     ctrl=ctr
     self.prefab=prefab
-    self.ima = prefab.transform:Find("icon"):GetComponent("Image")
-    self.frame = prefab.transform:Find("frame")
-    self.text = prefab.transform:Find("Text"):GetComponent("Text")
-    luaBehaviour:AddClick(prefab,self.c_OnClick_choose,self)
+    self.ima=prefab.transform:Find("icon"):GetComponent("Image");
+    self.frame=prefab.transform:Find("frame")
+
+    luaBehaviour:AddClick(prefab,self.c_OnClick_choose,self);
     self:saveData(data)
-    self.text.text = GetLanguage(data.nameID)
+
 end
 
 function SmallBubbleItem:updateData(data)

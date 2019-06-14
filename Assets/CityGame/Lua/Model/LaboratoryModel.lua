@@ -85,7 +85,7 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
             data.inProcess={}
         end
         for i, v in ipairs(data.completed) do
-            table.insert( data.inProcess ,v )
+             table.insert( data.inProcess ,v )
         end
     end
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', data)
@@ -120,20 +120,20 @@ function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
 
     prints("开箱回调")
     local info = LabRollACK .itemId or  LabRollACK .evaPoint
-    --DataManager.ControllerRpcNoRet(self.insId,"RollCtrl", '_evaResult', LabRollACK.labRollACK)
-    Event.Brocast("c_InventResult",LabRollACK.labResult)
+
+    Event.Brocast("c_InventResult",info)
 
     local line
     for i, v in ipairs(self.data.inProcess) do
         if LabRollACK.lineId == v.id  then
-            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 1
+            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll-1
             self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll+1
             line = self.data.inProcess[i]
             break
         end
     end
-    self:n_OnReceivelabLineChangeInform({line=line},false)
 
+    self:n_OnReceivelabLineChangeInform({line=line},false)
 end
 --更新箱子
 function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
@@ -168,6 +168,6 @@ end
 function LaboratoryModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
         self:m_ReqLaboratoryDetailInfo(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(24020018), 300)  --开业成功提示
+        Event.Brocast("SmallPop", GetLanguage(40010020), 300)  --开业成功提示
     end
 end

@@ -33,10 +33,10 @@ function CompanyCtrl:Awake()
     luaBehaviour:AddClick(CompanyPanel.infoBtn.gameObject, self.OnInfo, self)
     luaBehaviour:AddClick(CompanyPanel.landBtn.gameObject, self.OnLand, self)
     luaBehaviour:AddClick(CompanyPanel.buildingBtn.gameObject, self.OnBuilding, self)
-    --luaBehaviour:AddClick(CompanyPanel.evaBtn.gameObject, self.OnEva, self)
+    luaBehaviour:AddClick(CompanyPanel.evaBtn.gameObject, self.OnEva, self)
     luaBehaviour:AddClick(CompanyPanel.brandBtn.gameObject, self.OnBrand, self)
-    --luaBehaviour:AddClick(CompanyPanel.introductionBtn, self.OnIntroduction, self)
-    --luaBehaviour:AddClick(CompanyPanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
+    luaBehaviour:AddClick(CompanyPanel.introductionBtn, self.OnIntroduction, self)
+    luaBehaviour:AddClick(CompanyPanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
     luaBehaviour:AddClick(CompanyPanel.companyRenameBtn.gameObject, self.OnCompanyRename, self)
     luaBehaviour:AddClick(CompanyPanel.sizeBtn.gameObject, self.OnSize, self)
     luaBehaviour:AddClick(CompanyPanel.choiceOBtn.gameObject, self.OnChoiceO, self)
@@ -53,14 +53,14 @@ function CompanyCtrl:Awake()
     self.buildingSource.mClearData = CompanyCtrl.static.buildingClearData
 
     -- Eva节点2
-    --self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
-    --self.evaOptionTwoSource.mProvideData = CompanyCtrl.static.evaOptionTwoData
-    --self.evaOptionTwoSource.mClearData = CompanyCtrl.static.evaOptionTwoClearData
+    self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
+    self.evaOptionTwoSource.mProvideData = CompanyCtrl.static.evaOptionTwoData
+    self.evaOptionTwoSource.mClearData = CompanyCtrl.static.evaOptionTwoClearData
 
     -- Eva节点3
-    --self.evaOptionThereSource = UnityEngine.UI.LoopScrollDataSource.New()
-    --self.evaOptionThereSource.mProvideData = CompanyCtrl.static.evaOptionThereData
-    --self.evaOptionThereSource.mClearData = CompanyCtrl.static.evaOptionThereClearData
+    self.evaOptionThereSource = UnityEngine.UI.LoopScrollDataSource.New()
+    self.evaOptionThereSource.mProvideData = CompanyCtrl.static.evaOptionThereData
+    self.evaOptionThereSource.mClearData = CompanyCtrl.static.evaOptionThereClearData
 
     -- 品牌节点
     self.brandSource = UnityEngine.UI.LoopScrollDataSource.New()
@@ -79,12 +79,10 @@ function CompanyCtrl:Active()
     self:_addListener()
 
     -- 多语言适配
-    CompanyPanel.infoBtnText.text = GetLanguage(18010002)
-    CompanyPanel.incomeTitleText.text = GetLanguage(18010003)
-    CompanyPanel.expenditureTitleText.text = GetLanguage(18010004)
-    CompanyPanel.landBtnText.text = GetLanguage(18020001)
-    CompanyPanel.buildingBtnText.text = GetLanguage(18030001)
-    CompanyPanel.brandBtnText.text = GetLanguage(18030001)
+    --CompanyPanel.incomeTitle.text = GetLanguage(17010002)
+    --CompanyPanel.expenditureTitle.text = GetLanguage(17010003)
+    --CompanyPanel.tips.text = GetLanguage(17010005)
+    --CompanyPanel.tipsTextCom.text = GetLanguage(17010006)
 end
 
 function CompanyCtrl:Refresh()
@@ -105,7 +103,7 @@ end
 function CompanyCtrl:_addListener()
     Event.AddListener("c_OnGetGroundInfo", self.c_OnGetGroundInfo, self)
     Event.AddListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
-    --Event.AddListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
+    Event.AddListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
     Event.AddListener("c_OnUpdateMyEva", self.c_OnUpdateMyEva, self)
     Event.AddListener("c_OnQueryPlayerIncomePayCurve", self.c_OnQueryPlayerIncomePayCurve, self)
     Event.AddListener("c_OnModifyCompanyName", self.c_OnModifyCompanyName, self)
@@ -117,7 +115,7 @@ end
 function CompanyCtrl:_removeListener()
     Event.RemoveListener("c_OnGetGroundInfo", self.c_OnGetGroundInfo, self)
     Event.RemoveListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
-    --Event.RemoveListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
+    Event.RemoveListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
     Event.RemoveListener("c_OnUpdateMyEva", self.c_OnUpdateMyEva, self)
     Event.RemoveListener("c_OnQueryPlayerIncomePayCurve", self.c_OnQueryPlayerIncomePayCurve, self)
     Event.RemoveListener("c_OnModifyCompanyName", self.c_OnModifyCompanyName, self)
@@ -171,74 +169,22 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
         else
             time[i] = tostring(getFormatUnixTime(updataTime).day)
         end
-        --incomeTab[i] = {}
-        --incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-        --incomeTab[i].flow = 0  --看具体字段
-        --payTab[i] = {}
-        --payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-        --payTab[i].flow = 0  --看具体字段
-        --if info ~= nil then
-        --    for k, v in pairs(info) do
-        --        if updataTime == v.time / 1000 then
-        --            incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
-        --            payTab[i].lift = tonumber(GetClientPriceString(v.pay))
-        --        end
-        --    end
-        --end
-        --
-        updataTime = updataTime + 86400
-    end
-   local buildingTs = math.floor(self.m_data.createTs/1000)
-    if tonumber(getFormatUnixTime(buildingTs).second) ~= 0 then
-        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).second)
-    end
-    if tonumber(getFormatUnixTime(buildingTs).minute) ~= 0 then
-        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).minute) * 60
-    end
-    if tonumber(getFormatUnixTime(buildingTs).hour) ~= 0 then
-        buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).hour) * 3600
-    end
-    updataTime = monthAgo
-    local index = 1
-    if buildingTs >= monthAgo then
-        while(buildingTs <= currentTime)
-        do
-            incomeTab[index] = {}
-            incomeTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 140
-            incomeTab[index].flow = 0  --看具体字段
-            payTab[index] = {}
-            payTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 140
-            payTab[index].flow = 0  --看具体字段
-            if info ~= nil then
-                for k, v in pairs(info) do
-                    if updataTime == v.time / 1000 then
-                        incomeTab[index].lift = tonumber(GetClientPriceString(v.income))
-                        payTab[index].lift = tonumber(GetClientPriceString(v.pay))
-                    end
+        incomeTab[i] = {}
+        incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+        incomeTab[i].flow = 0  --看具体字段
+        payTab[i] = {}
+        payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
+        payTab[i].flow = 0  --看具体字段
+        if info ~= nil then
+            for k, v in pairs(info) do
+                if updataTime == v.time / 1000 then
+                    incomeTab[i].lift = v.income
+                    payTab[i].lift = v.pay
                 end
             end
-            buildingTs = buildingTs + 86400
-            index = index + 1
         end
-    else
-        for i = 1, 30 do
-            incomeTab[i] = {}
-            incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-            incomeTab[i].flow = 0  --看具体字段
-            payTab[i] = {}
-            payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-            payTab[i].flow = 0  --看具体字段
-            if info ~= nil then
-                for k, v in pairs(info) do
-                    if updataTime == v.time / 1000 then
-                        incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
-                        payTab[i].lift = tonumber(GetClientPriceString(v.pay))
-                    end
-                end
-            end
 
-            updataTime = updataTime + 86400
-        end
+        updataTime = updataTime + 86400
     end
 
     local income = {}
@@ -249,8 +195,8 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     for i, v in ipairs(payTab) do
         pay[i] = Vector2.New(v.coordinate,v.lift)  --
     end
-    income[#income].y= tonumber(GetClientPriceString(todayIncome))
-    pay[#pay].y= tonumber(GetClientPriceString(todayPay))
+    income[#income].y= todayIncome
+    pay[#pay].y= todayPay
     table.insert(time,1,"0")
     table.insert(boundaryLine,1,0)
     table.insert(income,1,Vector2.New(0,0))
@@ -290,10 +236,10 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     CompanyPanel.curveFunctionalGraph:BoundaryLine(boundaryLine)
 
     CompanyPanel.curveFunctionalGraph:DrawLine(incomeVet, getColorByInt(8, 139, 108),1) --收入
-    CompanyPanel.curveSlide:SetCoordinate(incomeVet, income, getColorByInt(41, 61, 108),1)
+    CompanyPanel.curveSlide:SetCoordinate(incomeVet, income, getColorByInt(255, 255, 255),1)
 
     CompanyPanel.curveFunctionalGraph:DrawLine(payVet, getColorByInt(213, 34, 76),2) --支出
-    CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(41, 61, 108),2)
+    CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(255, 255, 255),2)
 
     CompanyPanel.curve.localPosition = CompanyPanel.curve.localPosition + Vector3.New(0.01, 0,0)
     CompanyPanel.curve.sizeDelta = CompanyPanel.curve.sizeDelta + Vector2.New(0.01, 0)
@@ -337,33 +283,33 @@ function CompanyCtrl:OnBuilding(go)
 end
 
 -- Eva加点
---function CompanyCtrl:OnEva(go)
---    PlayMusEff(1002)
---    go:_showMainRoot(4)
---    go.isClickEva = true
---    go:ShowOptionTwo(0)
---    go:ShowOptionThere(0)
---    CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
---    if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
---        DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
---        CompanyPanel.optionOneScroll.anchoredPosition = Vector2.New(0,0)
---    else
---        CompanyCtrl.static.companyMgr:CreateEvaTitleItem()
---    end
---end
+function CompanyCtrl:OnEva(go)
+    PlayMusEff(1002)
+    go:_showMainRoot(4)
+    go.isClickEva = true
+    go:ShowOptionTwo(0)
+    go:ShowOptionThere(0)
+    CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
+    if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
+        DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
+        CompanyPanel.optionOneScroll.anchoredPosition = Vector2.New(0,0)
+    else
+        CompanyCtrl.static.companyMgr:CreateEvaTitleItem()
+    end
+end
 
 --显示eva介绍
---function CompanyCtrl:OnIntroduction(go)
---    PlayMusEff(1002)
---    ct.OpenCtrl("CompanyIntroductionCtrl")
---end
+function CompanyCtrl:OnIntroduction(go)
+    PlayMusEff(1002)
+    ct.OpenCtrl("CompanyIntroductionCtrl")
+end
 
 --关闭eva小提示
---function CompanyCtrl:OnCloseTips(go)
---    --PlayMusEff(1002)
---    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
---    CompanyCtrl.static.companyMgr:ClsoeTips()
---end
+function CompanyCtrl:OnCloseTips(go)
+    --PlayMusEff(1002)
+    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
+    CompanyCtrl.static.companyMgr:ClsoeTips()
+end
 
 -- 打开品牌
 function CompanyCtrl:OnBrand(go)
@@ -383,11 +329,11 @@ end
 function CompanyCtrl:OnCompanyRename(go)
     PlayMusEff(1002)
     local data = {}
-    data.titleInfo = GetLanguage(18010006)
-    data.tipInfo = GetLanguage(18010007)
+    data.titleInfo = "改名"
+    data.tipInfo = "Modified every seven days!"
     data.btnCallBack = function(text)
         if text == nil or text == "" then
-            Event.Brocast("SmallPop", GetLanguage(18010010),80)
+            Event.Brocast("SmallPop", "输入为空",80)
             return
         end
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_ModifyCompanyName', { pid = DataManager.GetMyOwnerID(), newName = text })
@@ -439,7 +385,7 @@ function CompanyCtrl:_initData()
         {btn = CompanyPanel.infoBtn, root = CompanyPanel.infoRoot, transform = CompanyPanel.infoBtn.transform},
         {btn = CompanyPanel.landBtn, root = CompanyPanel.landRoot, transform = CompanyPanel.landBtn.transform},
         {btn = CompanyPanel.buildingBtn, root = CompanyPanel.buildingRoot, transform = CompanyPanel.buildingBtn.transform},
-        --{btn = CompanyPanel.evaBtn, root = CompanyPanel.evaRoot, transform = CompanyPanel.evaBtn.transform},
+        {btn = CompanyPanel.evaBtn, root = CompanyPanel.evaRoot, transform = CompanyPanel.evaBtn.transform},
         {btn = CompanyPanel.brandBtn, root = CompanyPanel.brandRoot, transform = CompanyPanel.brandBtn.transform},
     }
 end
@@ -464,26 +410,26 @@ function CompanyCtrl:_showMainRoot(index)
     end
 
     -- 控制Eva标题的显示，解决设置content位置不成功的bug
-    --if index == 4 then
-    --    CompanyPanel.optionOneObj:SetActive(true)
-    --else
-    --    CompanyPanel.optionOneObj:SetActive(false)
-    --end
+    if index == 4 then
+        CompanyPanel.optionOneObj:SetActive(true)
+    else
+        CompanyPanel.optionOneObj:SetActive(false)
+    end
 end
 
 -- 初始化基本数据
 function CompanyCtrl:_updateData()
     if self.m_data.id == DataManager.GetMyOwnerID() then
-        --CompanyPanel.evaBtn.transform.localScale = Vector3.one
+        CompanyPanel.evaBtn.transform.localScale = Vector3.one
         CompanyPanel.companyRenameBtn.localScale = Vector3.one
-        CompanyPanel.titleText.text = GetLanguage(18010001)
+        CompanyPanel.titleText.text = GetLanguage(17010001)
         --CompanyPanel.coinBg:SetActive(true)
         --CompanyPanel.coinText.text = DataManager.GetMoneyByString()
         CompanyCtrl.static.companyMgr:SetIsOwn(true)
     else
-        --CompanyPanel.evaBtn.transform.localScale = Vector3.zero
+        CompanyPanel.evaBtn.transform.localScale = Vector3.zero
         CompanyPanel.companyRenameBtn.localScale = Vector3.zero
-        CompanyPanel.titleText.text = GetLanguage(18010009)
+        CompanyPanel.titleText.text = GetLanguage(17010007)
         --CompanyPanel.coinBg:SetActive(false)
         CompanyCtrl.static.companyMgr:SetIsOwn(false)
     end
@@ -494,11 +440,10 @@ function CompanyCtrl:_updateData()
     CompanyPanel.companyNameText.text = self.m_data.companyName
     CompanyPanel.nameText.text = self.m_data.name
     CompanyCtrl.static.companyMgr:SetCompanyName(self.m_data.companyName)
-    CompanyCtrl.static.companyMgr:SetId(self.m_data.id)
     local sexPath = self.m_data.male and "Assets/CityGame/Resources/Atlas/Company/male.png" or "Assets/CityGame/Resources/Atlas/Company/famale.png"
     LoadSprite(sexPath, CompanyPanel.sexImage, true)
     local timeTable = getFormatUnixTime(self.m_data.createTs/1000)
-    CompanyPanel.foundingTimeText.text = string.format(GetLanguage(18010005) .."%s", timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day)
+    CompanyPanel.foundingTimeText.text = string.format(GetLanguage(17010004) .."%s", timeTable.year .. "/" .. timeTable.month .. "/" ..timeTable.day)
 
     self:OnInfo(self)
 end
@@ -597,7 +542,7 @@ function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
     else
         -- 当没有土地需要显示时，各项数据皆为零
         CompanyPanel.noContentRoot.localScale = Vector3.one
-        CompanyPanel.tipsText.text = GetLanguage(18020011)
+        CompanyPanel.tipsText.text = "You don't have any land yet. You can get land through land auctions, land purchases, and land leases!"
         CompanyPanel.landScroll:ActiveLoopScroll(self.landSource, 0, "View/Company/LandInfoItem")
         local landTitleItemMgrTab = CompanyCtrl.static.companyMgr:GetLandTitleItem()
         for i, v in ipairs(landTitleItemMgrTab) do
@@ -663,7 +608,7 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
         CompanyPanel.buildingScroll:RefillCells()
     else
         CompanyPanel.noContentRoot.localScale = Vector3.one
-        CompanyPanel.tipsText.text = GetLanguage(18030002)
+        CompanyPanel.tipsText.text = "You don't have a building yet!"
 
         -- 当没有建筑需要显示时，各项数据皆为零
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, 0, "View/Company/BuildingInfoItem")
@@ -678,10 +623,10 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
 end
 
 -- 服务器查询Eva，并把Eva信息保存下來，并默认显示第一项
---function CompanyCtrl:c_OnQueryMyEva(evas)
---    CompanyCtrl.static.companyMgr:SetEvaData(evas)
---    CompanyCtrl.static.companyMgr:SetEvaDefaultState()
---end
+function CompanyCtrl:c_OnQueryMyEva(evas)
+    CompanyCtrl.static.companyMgr:SetEvaData(evas)
+    CompanyCtrl.static.companyMgr:SetEvaDefaultState()
+end
 
 -- 加点后，更新Eva信息
 function CompanyCtrl:c_OnUpdateMyEva(eva)
@@ -703,11 +648,9 @@ end
 
 -- 收支返回
 function CompanyCtrl:c_OnQueryPlayerIncomePayCurve(curveInfo)
-    local pay = 0
-    local income = 0
-
-    -- 获得往期的收支
     if curveInfo.playerIncome then
+        local pay = 0
+        local income = 0
         for _, v in pairs(curveInfo.playerIncome) do
             if v.income then
                 income = income + v.income
@@ -716,38 +659,19 @@ function CompanyCtrl:c_OnQueryPlayerIncomePayCurve(curveInfo)
                 pay = pay + v.pay
             end
         end
-    end
 
-    -- 营收
-    if curveInfo.todayIncome then
-        income = income + curveInfo.todayIncome
-    end
-
-    -- 支出
-    if curveInfo.todayPay then
-        pay = pay + curveInfo.todayPay
-    end
-
-    -- 设置UI上的值
-    if income > 0 then
-        CompanyPanel.incomeText.text = GetClientPriceString(income)
+        CompanyPanel.incomeText.text = tostring(income)
+        CompanyPanel.expenditureText.text = tostring(pay)
     else
         CompanyPanel.incomeText.text = "0"
-    end
-    if pay > 0 then
-        CompanyPanel.expenditureText.text = GetClientPriceString(pay)
-    else
         CompanyPanel.expenditureText.text = "0"
     end
-
-    -- 生成曲线图
     self:c_PromoteSignCurve(curveInfo.playerIncome,curveInfo.todayIncome,curveInfo.todayPay)
 end
 
 -- 公司改名
 function CompanyCtrl:c_OnModifyCompanyName(roleInfo)
     CompanyPanel.companyNameText.text = roleInfo.companyName
-    Event.Brocast("SmallPop",GetLanguage(18010008),80)
     DataManager.SetMyPersonalHomepageInfo(1,{roleInfo})
 end
 
@@ -767,22 +691,22 @@ function CompanyCtrl:c_OnModyfyMyBrandName(modyfyMyBrandName)
 
     -- 刷新数据
     CompanyCtrl.static.companyMgr:SetBrandName(modyfyMyBrandName)
-    Event.Brocast("SmallPop",GetLanguage(18040007),80)
+    Event.Brocast("SmallPop","修改成功",80)
 end
 
 -- 刷新Eva滑动选项2的信息
---function CompanyCtrl:ShowOptionTwo(itemNumber)
---    CompanyCtrl.optionTwoScript = {}
---    CompanyPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Company/EvaBtnTwoItem")
---    CompanyPanel.optionTwoScroll:RefillCells()
---end
+function CompanyCtrl:ShowOptionTwo(itemNumber)
+    CompanyCtrl.optionTwoScript = {}
+    CompanyPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Company/EvaBtnTwoItem")
+    CompanyPanel.optionTwoScroll:RefillCells()
+end
 
 -- 刷新Eva滑动选项3的信息
---function CompanyCtrl:ShowOptionThere(itemNumber)
---    CompanyCtrl.optionThereScript = {}
---    CompanyPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Company/EvaBtnThereItem")
---    CompanyPanel.optionThereScroll:RefillCells()
---end
+function CompanyCtrl:ShowOptionThere(itemNumber)
+    CompanyCtrl.optionThereScript = {}
+    CompanyPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Company/EvaBtnThereItem")
+    CompanyPanel.optionThereScroll:RefillCells()
+end
 
 -- 刷新品牌的信息
 function CompanyCtrl:ShowBrand(itemNumber)

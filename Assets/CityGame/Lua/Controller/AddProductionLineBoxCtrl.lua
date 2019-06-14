@@ -32,15 +32,7 @@ function AddProductionLineBoxCtrl:Active()
     addLineBox:AddClick(AddProductionLineBoxPanel.rightBtn.gameObject,self.clickRightBtn,self)
     addLineBox:AddClick(AddProductionLineBoxPanel.confirmBtn.gameObject,self.clickConfirmBtn,self)
 
-    AddProductionLineBoxPanel.topName.text = GetLanguage(25030003)
-    AddProductionLineBoxPanel.popularityText.text = GetLanguage(25020006)
-    AddProductionLineBoxPanel.qualityText.text = GetLanguage(25020005)
-    AddProductionLineBoxPanel.levelText.text = GetLanguage(25020007)
-    AddProductionLineBoxPanel.productionText.text = GetLanguage(25030004)
-    AddProductionLineBoxPanel.eachText.text = GetLanguage(25030015)
-    AddProductionLineBoxPanel.time.text = GetLanguage(25030005)
-    AddProductionLineBoxPanel.numberTip.text = GetLanguage(25030006)
-    AddProductionLineBoxPanel.brandNameText.text = DataManager.GetCompanyName()
+
     --addLineBox:AddClick(AddLineBoxPanel.leftBtn.gameObject,self.OnClick_leftBtn,self)
     --addLineBox:AddClick(AddLineBoxPanel.rightBtn.gameObject,self.OnClick_rightBtn,self)
     --addLineBox:AddClick(AddLineBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self)
@@ -136,7 +128,7 @@ function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             UIPanel.BackToPageInstance(ProcessingFactoryCtrl,self.m_data)
         end
-        Event.Brocast("SmallPop","数量不能为0",300)
+        Event.Brocast("SmallPop",GetLanguage(28010007),300)
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------

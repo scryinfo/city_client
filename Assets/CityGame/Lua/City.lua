@@ -24,8 +24,7 @@ local log = log
 
 --服务器
 CityEngineLua.ip = AppConst.asServerIp
-CityEngineLua.port = "9001";-- 国内
---CityEngineLua.port = "4601";-- 国外
+CityEngineLua.port = "9001";
 
 -- Mobile(Phone, Pad)	= 1,
 -- Windows Application program	= 2,
@@ -1698,7 +1697,7 @@ CityEngineLua.onConnectionStateChange = function(state )
 		local okCallBack = function()
 			CityEngineLua.LoginOut()
 		end
-		ct.MsgBox(GetLanguage(41010010), GetLanguage(41010007), nil, okCallBack, okCallBack)
+		ct.MsgBox(GetLanguage(4301012), GetLanguage(4301007), nil, okCallBack, okCallBack)
 	else
 		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
@@ -1714,16 +1713,6 @@ CityEngineLua.login_loginapp = function( noconnect )
 			this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
 		end, 10, 0)
 		timer:Start()
-	else
-		--local msgId = pbl.enum("ascode.OpCode","login")
-		------2、 填充 protobuf 内部协议数据
-		--local msglogion = {
-		--	account = this.username,pwd = this.password
-		--}
-		---- 序列化成二进制数据
-		--local pb_login = assert(pbl.encode("as.Account", msglogion))
-		----发包
-		--CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
 	end
 end
 

@@ -494,14 +494,7 @@ end
 function ChatMgr:ShowPageInfo(page)
     self:DestroyChatRecordsItem()
 
-    if page == 0 then
-        ChatPanel.prevButton.interactable = false
-        ChatPanel.prevClose:SetActive(true)
-        ChatPanel.prevOpen:SetActive(false)
-        ChatPanel.nextButton.interactable = false
-        ChatPanel.nextClose:SetActive(true)
-        ChatPanel.nextOpen:SetActive(false)
-    elseif page == 1 then
+    if page == 1 then
         ChatPanel.prevButton.interactable = false
         ChatPanel.prevClose:SetActive(true)
         ChatPanel.prevOpen:SetActive(false)

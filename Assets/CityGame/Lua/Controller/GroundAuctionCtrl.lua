@@ -31,12 +31,12 @@ end
 
 function GroundAuctionCtrl:Active()
     UIPanel.Active(self)
-    GroundAuctionPanel.hourText01.text = GetLanguage(20160004)
-    GroundAuctionPanel.minuteText02.text = GetLanguage(20160005)
-    GroundAuctionPanel.secondText03.text = GetLanguage(20160006)
-    GroundAuctionPanel.noneHistoryText04.text = GetLanguage(20160009)
-    GroundAuctionPanel.tipText05.text = GetLanguage(21010004)
-    GroundAuctionPanel.titleText.text = GetLanguage(21010001)
+    --GroundAuctionPanel.soonFloorText02.text = GetLanguage(22010002)
+    GroundAuctionPanel.hourText01.text = "hour"
+    GroundAuctionPanel.minuteText02.text = "minute"
+    GroundAuctionPanel.secondText03.text = "second"
+    GroundAuctionPanel.noneHistoryText04.text = "Nobody bid"
+    GroundAuctionPanel.tipText05.text = "The price will be locked"
 end
 
 function GroundAuctionCtrl:Refresh()
@@ -58,7 +58,7 @@ function GroundAuctionCtrl:Hide()
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
     self.highestPrice = nil
-    self.bidHistory = nil
+    self.bidHistory = {}
     self:_cleanHistoryObj()
 
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
@@ -245,8 +245,8 @@ function GroundAuctionCtrl:BidGround(ins)
     if bidPrice == "" then
         --打开弹框
         local showData = {}
-        showData.titleInfo = GetLanguage(24020009)
-        showData.contentInfo = GetLanguage(22070001)
+        showData.titleInfo = GetLanguage(40010008)
+        showData.contentInfo = GetLanguage(24070001)
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
         return
@@ -254,24 +254,24 @@ function GroundAuctionCtrl:BidGround(ins)
 
     local mMoney = tonumber(GetClientPriceString(DataManager.GetMoney()))
     if tonumber(bidPrice) > mMoney  then
-        Event.Brocast("SmallPop", GetLanguage(41010006), 300)
+        Event.Brocast("SmallPop", GetLanguage(22010003), 300)
         return
     end
 
     if ins.highestPrice == nil then
         ins.highestPrice = tonumber(GetClientPriceString(GroundAucConfig[ins.m_data.id].basePrice))
     end
-
-    if GetServerPriceNumber(tonumber(bidPrice)) > GetServerPriceNumber(tonumber(ins.highestPrice)) then
+    if tonumber(bidPrice) > tonumber(ins.highestPrice) then
         Event.Brocast("m_PlayerBidGround", ins.m_data.id, GetServerPriceNumber(bidPrice))
     else
         --打开弹框
         local showData = {}
-        showData.titleInfo = GetLanguage(24020009)
-        showData.contentInfo = GetLanguage(21010010)
+        showData.titleInfo = GetLanguage(40010008)
+        showData.contentInfo = GetLanguage(22030002)
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
     end
+
 end
 
 ---正在拍卖中的地块关闭了界面 --停止接收拍卖价格的更新
@@ -287,30 +287,16 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
     end
 
     GroundAuctionPanel.setBidState(true)
-    self:_checkHighestPrice(data)
-
+    self.highestPrice = GetClientPriceString(data.price)
+    if self.bidHistory == nil then
+        self.bidHistory = {}
+    end
     self:_cleanHistory()  --清除history item
+    self.m_data.endTs = data.ts + GAucModel.BidTime
+    local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+    table.insert(self.bidHistory, 1, temp)
     self:_createHistory()
     self.startTimeDownForFinish = true
-end
---判断是否是最高价
-function GroundAuctionCtrl:_checkHighestPrice(data)
-    if self.bidHistory == nil or #self.bidHistory == 0 then
-        self.bidHistory = {}
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        self.highestPrice = temp.price
-        table.insert(self.bidHistory, 1, temp)
-        self.m_data.endTs = data.ts + GAucModel.BidTime
-        return
-    end
-
-    local tempHigh = self.bidHistory[1]
-    if tempHigh.price < data.price then
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.bidHistory, 1, temp)
-        self.highestPrice = temp.price
-        self.m_data.endTs = data.ts + GAucModel.BidTime
-    end
 end
 --清除历史item
 function GroundAuctionCtrl:_cleanHistory()

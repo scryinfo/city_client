@@ -7,7 +7,7 @@ BuildingSetSalaryCtrlNew = class('BuildingSetSalaryCtrlNew',UIPanel)
 UIPanel:ResgisterOpen(BuildingSetSalaryCtrlNew)
 
 function BuildingSetSalaryCtrlNew:initialize()
-    UIPanel.initialize(self, UIType.PopUp, UIMode.HideOther, UICollider.Normal)
+    UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
 
 function BuildingSetSalaryCtrlNew:bundleName()
@@ -55,11 +55,11 @@ function BuildingSetSalaryCtrlNew:_getComponent(go)
 end
 --
 function BuildingSetSalaryCtrlNew:_language()
-    self.titleText01.text = GetLanguage(24020001)
-    self.standardWageText02.text = GetLanguage(24020002)
-    self.standardWageText03.text = "/"..GetLanguage(24020003)
-    self.staffNumText04.text = GetLanguage(24020004)..":"
-    self.totalText05.text = GetLanguage(24020007)
+    self.titleText01.text = "SETTING"
+    self.standardWageText02.text = "Employee single standard salary:"
+    self.standardWageText03.text = "/d"
+    self.staffNumText04.text = "number of staff:"
+    self.totalText05.text = "-DAILY WAGE-"
 end
 --
 function BuildingSetSalaryCtrlNew:_initData()
@@ -76,9 +76,8 @@ function BuildingSetSalaryCtrlNew:_initData()
     else
         self.standardWageText.text = string.format("E%s", GetClientPriceString(standardWage))
         --local value = self.m_data.info.salary * staffNum * standardWage / 100
-        local value = staffNum * standardWage  --temp修改
+        local value = staffNum * standardWage / 100  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
-        self.totalValue = value
     end
 end
 --
@@ -87,27 +86,16 @@ function BuildingSetSalaryCtrlNew:_getStandardWage(data)
         DataManager.SetBuildingStandardWage(data.type, data.industryWages)
         self.standardWageText.text = string.format("E%s", GetClientPriceString(data.industryWages))
         --local value = self.m_data.info.salary * self.staffNum * data.industryWages / 100
-        local value = self.staffNum * data.industryWages  --temp修改
+        local value = self.staffNum * data.industryWages / 100  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
-        self.totalValue = value
     end
 end
 --
 function BuildingSetSalaryCtrlNew:_onClickConfirm(ins)
-    PlayMusEff(1002)
-    if DataManager.GetMoney() < ins.totalValue then
-        Event.Brocast("SmallPop", GetLanguage(41010006), 300)
-        return
-    end
-
     if ins.m_data.callBackFunc ~= nil then
-        local temp = os.date("%H:%M", os.time())
-        local data = {salary = ins.totalText.text, time = temp, fun = function ()
-            ins.m_data.callBackFunc(100)
-            UIPanel.ClosePage()
-        end}
-        ct.OpenCtrl("OpenBuildingCheckCtrl", data)
+        ins.m_data.callBackFunc(100)
     end
+    UIPanel.ClosePage()
 end
 --
 function BuildingSetSalaryCtrlNew:_onClickCloseBtn()

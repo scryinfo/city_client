@@ -5,8 +5,8 @@
 ---
 
 ChatWorldItem = class('ChatWorldItem')
-ChatWorldItem.static.NAME_COLOR = "#4587FF"  -- 名字的颜色
-ChatWorldItem.static.MSG_COLOR = "#E5E5E5"  -- 聊天内容的颜色
+--ChatWorldItem.static.NAME_COLOR = "#8EADFF"  -- 名字的颜色
+--ChatWorldItem.static.MSG_COLOR = "#F0F0F0"  -- 聊天内容的颜色
 
 -- 初始化
 function ChatWorldItem:initialize(prefab)
@@ -14,10 +14,34 @@ function ChatWorldItem:initialize(prefab)
 
     self.transform = prefab.transform
     -- 聊天的内容
-    self.chatText = self.transform:GetComponent("Text")
+    --self.chatText = self.transform:Find("ChatText"):GetComponent("Text")
+    --self.headImage = self.transform:Find("HeadImage")
+
+    --self.chatText.text = string.format("<color=%s><b>[%s]:</b></color><color=%s>%s</color>",ChatWorldItem.static.NAME_COLOR, data.name, ChatWorldItem.static.MSG_COLOR, data.msg)
+    --self:_ShowPrefab(false)
+end
+
+function ChatWorldItem:_ShowPrefab(isShow)
+    self.prefab:SetActive(isShow)
 end
 
 function ChatWorldItem:_ShowChatContent(data)
-    self.data = data
-    self.chatText.text = string.format("<color=%s>[%s]:</color><color=%s>%s</color>",ChatWorldItem.static.NAME_COLOR, data.name, ChatWorldItem.static.MSG_COLOR, data.msg)
+    self.chatText.text = data.msg
+    local chatTextPreferredWidth = self.chatText.preferredWidth
+    if chatTextPreferredWidth > 470 then
+        local chatTextPreferredHeight = self.chatText.preferredHeight
+        --if chatTextPreferredHeight > 60 then
+            self.chatText.transform.sizeDelta = Vector2.New(470, chatTextPreferredHeight)
+            self.transform.sizeDelta = Vector2.New(624, chatTextPreferredHeight + 55)
+        --else
+        --    self.chatText.transform.sizeDelta = Vector2.New(470, 60)
+        --end
+    else
+        self.chatText.transform.sizeDelta = Vector2.New(chatTextPreferredWidth, 60)
+        self.transform.sizeDelta = Vector2.New(chatTextPreferredWidth + 154, 108)
+    end
+    for i = 1, self.headImage.childCount do
+        UnityEngine.GameObject.Destroy(self.headImage:GetChild(i-1).gameObject)
+    end
+    AvatarManger.GetSmallAvatar(data.image,self.headImage,0.1)
 end

@@ -16,12 +16,6 @@ function RollPanel.InitPanle()
 
     this.scrolParent = transform:Find("PopCommpent/Scroll/Viewport/Content")
     this.titleText = transform:Find("PopCommpent/titleText"):GetComponent("Text")
-    this.count1 = transform:Find("resultRoot/Evaresultbg/Image/count"):GetComponent("Text")
-    this.count2 = transform:Find("resultRoot/result/Image/count"):GetComponent("Text")
-    this.nametexts = transform:Find("PopCommpent/Scroll/nametext"):GetComponent("Text")
-    this.evanametexts = transform:Find("PopCommpent/EvaRoot/nameText"):GetComponent("Text")
-    this.congratulation1 = transform:Find("resultRoot/Evaresultbg/CONGRATULATIONS!"):GetComponent("Text")
-    this.congratulation2 = transform:Find("resultRoot/result/CONGRATULATIONS!"):GetComponent("Text")
 
     this.totalText = findByName(transform,"totalText"):GetComponent("Text")
     this.EvaRoot = findByName(transform,"EvaRoot")
@@ -44,18 +38,6 @@ function RollPanel.InitPanle()
     this.failtitleText = findByName(transform,"failtitleText"):GetComponent("Text")
     this.BigEVAtext = findByName(transform,"Text"):GetComponent("Text")
 
-    this.Evaresultbg = transform:Find("resultRoot/Evaresultbg")
-    this.Evaresult = transform:Find("resultRoot/Evaresultbg/Evaresult")
-    this.evacount = transform:Find("resultRoot/Evaresultbg/Image/count/Text"):GetComponent("Text")
-    this.EvaresultBtn = transform:Find("resultRoot/Evaresultbg/Evaresult"):GetComponent("Button")
-
-    this.result = transform:Find("resultRoot/result")
-    this.resultBtn = transform:Find("resultRoot/result/EvaRootBTn")
-    this.sum = transform:Find("resultRoot/result/sum"):GetComponent("Text")
-    this.count = transform:Find("resultRoot/result/Image/count/Text"):GetComponent("Text")
-
-    this.evanotenough = transform:Find("resultRoot/evanotenough")
-    this.closeEvaBTn = transform:Find("resultRoot/evanotenough/closeBTn"):GetComponent("Button")
 
 
     ---------------------------------------------

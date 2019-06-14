@@ -50,18 +50,6 @@ function GuildListCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
     GuildListPanel.createRoot.localScale =Vector3.zero
-
-    -- 多语言适配
-    GuildListPanel.titleText.text = GetLanguage(12010001)
-    GuildListPanel.guildNameTitleText.text = GetLanguage(12010004)
-    GuildListPanel.jobTitleText.text = GetLanguage(12010005)
-    GuildListPanel.introductionTitleText.text = GetLanguage(12010008)
-    GuildListPanel.memberNumberBtnText.text = GetLanguage(12010006)
-    GuildListPanel.timeBtnText.text = GetLanguage(12010007)
-    GuildListPanel.createBtnText.text = GetLanguage(12010003)
-    GuildListPanel.createTitleText.text = GetLanguage(12050001)
-    GuildListPanel.nameInputFieldText.text = GetLanguage(12050002)
-    GuildListPanel.describeInputFieldText.text = GetLanguage(12010008)
 end
 
 -- 监听Model层网络回调
@@ -205,17 +193,14 @@ end
 function GuildListCtrl:OnSure(go)
     local guildNameInputText = GuildListPanel.guildNameInput.text
     local describeInputText = GuildListPanel.describeInput.text
-    if string.len(guildNameInputText) == 0 or guildNameInputText == "" then
-        Event.Brocast("SmallPop", GetLanguage(12060022),80)
-        return
-    elseif string.len(describeInputText) == 0 or describeInputText == "" then
-        Event.Brocast("SmallPop", GetLanguage(12060024),80)
+    if string.len(guildNameInputText) == 0 or guildNameInputText == "" or string.len(describeInputText) == 0 or describeInputText == "" then
+        Event.Brocast("SmallPop", GetLanguage(15010017),80)
         return
     elseif string.len(guildNameInputText) > 21 then
-        Event.Brocast("SmallPop",GetLanguage(12060023),80)
+        Event.Brocast("SmallPop","联盟名字过长",80)
         return
-    elseif string.len(describeInputText) > 30 then
-        Event.Brocast("SmallPop",GetLanguage(12060025),80)
+    elseif string.len(describeInputText) > 100 then
+        Event.Brocast("SmallPop","联盟介绍过长",80)
         return
     end
 
@@ -225,11 +210,11 @@ function GuildListCtrl:OnSure(go)
 
     --打开弹框
     local showData = {}
-    showData.titleInfo = GetLanguage(12050005)
-    showData.contentInfo = GetLanguage(12050006)
+    showData.titleInfo = "提示"
+    showData.contentInfo = "确定创建公会?"
     showData.tipInfo = ""
     showData.btnCallBack = function()
-        DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_CreateSociety', {name = guildNameInputText, introduction = describeInputText})
+        DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_CreateSociety', {name = guildNameInputText, declaration = describeInputText})
     end
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
@@ -289,7 +274,7 @@ function GuildListCtrl:c_JoinHandle(societyInfo)
     --打开弹框
     local showData = {}
     showData.titleInfo = "提示"
-    showData.contentInfo = GetLanguage( 12010013, societyInfo.name)  -- "申请商业联盟通过"
+    showData.contentInfo = "申请商业联盟通过"
     showData.tipInfo = ""
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end

@@ -21,10 +21,12 @@ function SystemSettingCtrl:Refresh()
     --打开英文的
     local Languagenum = UnityEngine.PlayerPrefs.GetInt("Language")
     if Languagenum == 1 then
-        panel:InitDate(GetLanguage(14010005))
+        panel:InitDate(GetLanguage(14010006))
     elseif Languagenum == 0 then
-        panel:InitDate(GetLanguage(14010004))
+        panel:InitDate(GetLanguage(14010007))
     end
+
+
 end
 
 function  SystemSettingCtrl:Hide()
@@ -58,14 +60,12 @@ end
 ---========================================================点击==============================================================================================
 --气泡全开
 function SystemSettingCtrl:c_OnClick_BubbleShow(ins)
-    PlayMusEff(1002)
     panel.bubbleCloseBtn.gameObject:SetActive(false)
     Event.Brocast("c_BuildingBubbleShow")
     SaveBuildingBubbleSettings(BuildingBubbleType.show)
 end
 --气泡全关
 function SystemSettingCtrl:c_OnClick_BubbleClose(ins)
-    PlayMusEff(1002)
     panel.bubbleCloseBtn.gameObject:SetActive(true)
     Event.Brocast("c_BuildingBubbleHide")
     SaveBuildingBubbleSettings(BuildingBubbleType.close)
@@ -73,9 +73,6 @@ end
 
 --退出
 function SystemSettingCtrl:c_OnClickout(ins)
-    PlayMusEff(1002)
-    --退出游戏后音效切换
-    PlayMus(1000)
     CityEngineLua.LoginOut()
 end
 --开音乐
@@ -83,7 +80,6 @@ function SystemSettingCtrl:c_OnClickMusic(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicBtnyellosw.localScale=Vector3.one
     UnityEngine.PlayerPrefs.SetInt("Music",0)
-    PlayMusEff(1002)
     PlayMus(1001)
 end
 --开音效
@@ -98,7 +94,6 @@ function SystemSettingCtrl:c_OnClick_Music(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicBtngrey.localScale=Vector3.one
     UnityEngine.PlayerPrefs.SetInt("Music",1)
-    PlayMusEff(1002)
     PlayMus(1001)
 end
 --音效
@@ -130,15 +125,15 @@ end
 --改变语言
 function SystemSettingCtrl:c_OnClick_changeLanguage()
     PlayMusEff(1002)
-    panel.LanguagePanel.localScale = Vector3.one
-    panel.closeLan.localScale = Vector3.one
+    panel.LanguagePanel.localScale=Vector3.one
+    panel.closeLan.localScale=Vector3.one
 end
 --中文
 function SystemSettingCtrl:c_OnClick_chinese()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.Chinese)
-    panel:InitDate(GetLanguage(14010004))
+    panel:InitDate(GetLanguage(14010006))
     panel.closeLan.localScale=Vector3.zero
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end
@@ -147,7 +142,7 @@ function SystemSettingCtrl:c_OnClick_english()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.English)
-    panel:InitDate(GetLanguage(14010005))
+    panel:InitDate(GetLanguage(14010007))
     panel.closeLan.localScale=Vector3.zero
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end

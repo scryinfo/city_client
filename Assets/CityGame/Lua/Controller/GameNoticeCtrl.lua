@@ -11,8 +11,6 @@ local isShowHint =false
 local id = nil  -- 类型Id
 local goId = nil --实例Id
 local hide
-local noticeData = {}
-local noticeItems = {}
 
 function  GameNoticeCtrl:bundleName()
     return "Assets/CityGame/Resources/View/GameNoticePanel.prefab"
@@ -34,16 +32,13 @@ function GameNoticeCtrl:Awake()
     GameNoticeBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     GameNoticeBehaviour:AddClick(GameNoticePanel.bgBtn,self.OnBgBtn,self)
     GameNoticeBehaviour:AddClick(GameNoticePanel.xBtn,self.OnXBtn,self);
+    GameNoticeBehaviour:AddClick(GameNoticePanel.delete,self.OnDelete,self);
     GameNoticeBehaviour:AddClick(GameNoticePanel.jumpBtn,self.OnJumpBtn,self);
     GameNoticeBehaviour:AddClick(GameNoticePanel.hint,self.OnHint,self);
 
-    --滑动互用
-    self.notices = UnityEngine.UI.LoopScrollDataSource.New()  --行情
-    self.notices.mProvideData = GameNoticeCtrl.static.NoticeProvideData
-    self.notices.mClearData = GameNoticeCtrl.static.NoticeClearData
-
-
     self:_initData();
+
+    self.NoticeMgr = NoticeMgr:new()
 end
 
 function GameNoticeCtrl:Active()
@@ -52,17 +47,16 @@ function GameNoticeCtrl:Active()
     Event.AddListener("c_OnMailRead",self.c_OnMailRead,self)
     Event.AddListener("c_OnDeleMails",self.c_OnDeleMails,self)
 
-    GameNoticePanel.hintText.text = GetLanguage(16010018)
-
 end
 
 function GameNoticeCtrl:Refresh()
     hide = true
     --打开通知Model
     self:initializeData()
-    if goId ~= nil and  noticeItems[goId]~= nil then
-        noticeItems[goId].newBg.localScale = Vector3.one
-        bg = noticeItems[goId].newBg
+    NoticeMgr:_createNotice(GameNoticeBehaviour,self.m_data)
+    if goId ~= nil and  NoticeMgr.notice[goId]~= nil then
+        NoticeMgr.notice[goId].newBg:SetActive(true)
+        bg =  NoticeMgr.notice[goId].newBg
     end
 end
 
@@ -73,81 +67,34 @@ function GameNoticeCtrl:Hide()
     Event.RemoveListener("c_OnDeleMails",self.c_OnDeleMails,self)
 
     bg = nil
-    noticeData = {}
-    for i, v in pairs(noticeItems) do
-        destroy(v.prefab.gameObject)
-    end
-    noticeItems = {}
+    NoticeMgr:_dleNotice()
 end
 
 function GameNoticeCtrl:initializeData()
     if self.m_data then
         DataManager.OpenDetailModel(GameNoticeModel,self.insId )
-        for i, v in pairs(self.m_data) do
-            noticeData[i] = {}
-            noticeData[i].header = GetLanguage(Notice[v.type].header)
-            noticeData[i].content = Notice[v.type].content
-            noticeData[i].redirect = Notice[v.type].redirect
-            noticeData[i].state = v.read
-            noticeData[i].uuidParas = v.uuidParas
-            noticeData[i].intParasArr = v.intParasArr
-            noticeData[i].from = GetLanguage(16010023)
-            noticeData[i].time = v.ts
-            noticeData[i].paras = v.paras
-            noticeData[i].tparas = v.tparas
-            noticeData[i].id = v.id
-            noticeData[i].type = v.type
-        end
-        GameNoticePanel.noticeScroll:ActiveLoopScroll(self.notices, #noticeData,"View/GoodsItem/MessageItem")
     end
 end
 
 --初始化
 function GameNoticeCtrl:_initData()
-    GameNoticePanel.jumpBtn.transform.localScale = Vector3.zero
+    GameNoticePanel.jumpBtn:SetActive(false)
     GameNoticePanel.hedaer.text = ""
     GameNoticePanel.time.text = ""
-    GameNoticePanel.rightContent.text = GetLanguage(16010021)
-end
-
---滑动互用
-GameNoticeCtrl.static.NoticeProvideData = function(transform, idx)
-
-    idx = idx + 1
-    local item = NoticeItem:new(noticeData[#noticeData-idx+1],transform,GameNoticeBehaviour,noticeData[#noticeData-idx+1].id,noticeData[#noticeData-idx+1].type)
-    --local item = NoticeItem:new(noticeData[idx],transform,GameNoticeBehaviour,noticeData[idx].id,noticeData[idx].type)
-    noticeItems[item.id] = item
-end
-
-GameNoticeCtrl.static.NoticeClearData = function(transform)
-
+    GameNoticePanel.rightContent.text = GetLanguage(13010063)
 end
 
 --点击空白背景返回
 function GameNoticeCtrl:OnBgBtn()
     PlayMusEff(1002)
-    GameNoticePanel.hintItem.localScale = Vector3.zero
+    GameNoticePanel.hintItem:SetActive(false)
     UIPanel.ClosePage();
 end
 
 --点击xbutton
-function GameNoticeCtrl:OnXBtn(go)
+function GameNoticeCtrl:OnXBtn()
     PlayMusEff(1002)
-    --local data = {}
-    --data.titleInfo = GetLanguage(16010019)
-    --data.contentInfo = GetLanguage(16010020)
-    --data.tipInfo = ""
-    --data.btnCallBack = function ()
-    --    DataManager.DetailModelRpcNoRet(go.insId , 'm_delMail',goId)
-    --    --GameNoticeCtrl:c_OnDeleMails(go)
-    --end
-    --ct.OpenCtrl('BtnDialogPageCtrl',data)
-    local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
-                content = GetLanguage(16010020),func = function()
-            DataManager.DetailModelRpcNoRet(go.insId , 'm_delMail',goId)
-            --GameNoticeCtrl:c_OnDeleMails(go)
-        end  }
-    ct.OpenCtrl('NewReminderCtrl',data)
+    GameNoticeCtrl:OnBgBtn()
 end
 
 --读取邮件
@@ -155,44 +102,59 @@ function GameNoticeCtrl:c_onBg(go)
     if go.state == false then
         DataManager.DetailModelRpcNoRet(self.insId , 'm_mailRead',go.id)
     else
-        GameNoticeCtrl:c_OnMailRead(go.id)
+        GameNoticeCtrl:c_OnMailRead(go)
     end
 end
 
 --读取邮件回调
-function GameNoticeCtrl:c_OnMailRead(ids)
+function GameNoticeCtrl:c_OnMailRead(go)
     -- [[显示新背景
     if bg ~= nil then
-        bg.localScale = Vector3.zero
+        bg:SetActive(false)
     end
-    noticeItems[ids].newBg.localScale = Vector3.one
-    if  noticeItems[ids].hint ~= nil then
-        noticeItems[ids].hint.localScale = Vector3.zero
+    go.newBg:SetActive(true)
+    if go.hint ~= nil then
+        go.hint.localScale = Vector3.zero
     end
-    bg = noticeItems[ids].newBg
+    bg =  go.newBg
     --
     -- [[显示跳转按钮
-    if Notice[noticeItems[ids].typeId].redirect == "" then
-        GameNoticePanel.jumpBtn.transform.localScale = Vector3.zero
+    if Notice[go.typeId].redirect == "" then
+        GameNoticePanel.jumpBtn:SetActive(false)
     else
-        GameNoticePanel.jumpBtn.transform.localScale = Vector3.one
+        GameNoticePanel.jumpBtn:SetActive(true)
     end
     -- ]]
     -- [[显示内容
-    GameNoticePanel.hedaer.text = noticeItems[ids].itemHedaer.text
-    GameNoticePanel.time.text = noticeItems[ids].itemTime.text
+    GameNoticePanel.hedaer.text = go.itemHedaer.text
+    GameNoticePanel.time.text = go.itemTime.text
     --GameNoticePanel.rightContent.text = Notice[go.typeId].content
     --GameNoticePanel.rightContent.text = go.content
     GameNoticePanel.timeLeft.transform.localScale = Vector3.one
-    GameNoticePanel.timeLeft.text = GetLanguage(16010017 ,noticeItems[ids].day)
+    GameNoticePanel.timeLeft.text = GetLanguage(13010003,go.day)
     -- ]]
-    --if go.typeId ==1 then
-    --    GameNoticePanel.GoodsScrollView:SetActive(true)
-    --else
-    --    GameNoticePanel.GoodsScrollView:SetActive(false)
-    --end
-    id =  noticeItems[ids].typeId
-    goId = ids
+    if go.typeId ==1 then
+        GameNoticePanel.GoodsScrollView:SetActive(true)
+    else
+        GameNoticePanel.GoodsScrollView:SetActive(false)
+    end
+    id = go.typeId
+    goId = go.id
+    GameNoticePanel.delete:SetActive(true)
+end
+
+--删除通知
+function GameNoticeCtrl:OnDelete(go)
+    PlayMusEff(1002)
+    local data = {}
+    data.titleInfo = GetLanguage(13010061)
+    data.contentInfo = GetLanguage(13010062)
+    data.tipInfo = ""
+    data.btnCallBack = function ()
+        DataManager.DetailModelRpcNoRet(go.insId , 'm_delMail',goId)
+        --GameNoticeCtrl:c_OnDeleMails(go)
+    end
+    ct.OpenCtrl('BtnDialogPageCtrl',data)
 end
 
 --删除通知回调
@@ -215,31 +177,35 @@ end
 
 --控制剩余时间显隐
 function GameNoticeCtrl:_setActiva(isShow)
-    if isShow then
-        GameNoticePanel.hintItem.localScale = Vector3.one
-    else
-        GameNoticePanel.hintItem.localScale = Vector3.zero
-    end
+    GameNoticePanel.hintItem:SetActive(isShow)
+    GameNoticePanel.hintText.text = GetLanguage(13010004)
     isShowHint = isShow
 end
 
 --删除通知方法
-function GameNoticeCtrl:_deleteNotice(id)
+function GameNoticeCtrl:_deleteNotice(go)
     GameNoticePanel.timeLeft.transform.localScale = Vector3.zero
     --  [[删除邮件实例与表中数据
-    if id == nil then
+    if go == nil then
         return
     end
-    noticeItems[id].prefab.gameObject:SetActive(false)
-    table.remove(noticeItems,id)
-    local id = id
-    noticeItems.id = nil
-
+  go.prefab:SetActive(false)
+    local id = go.id
+    --NoticeMgr.notice.id = nil
+    -- ]]
+    -- [[刷新表中ID
+--[[    local i = 1
+    for k,v in ipairs(NoticeMgr.notice)  do
+        NoticeMgr.notice[i]:RefreshID(i)
+        i = i + 1
+    end]]
+    -- ]]
     id = nil
-    if noticeItems == {} then
+    if NoticeMgr.notice == nil then
         UIPanel.ClosePage();
         ct.OpenCtrl("NoMessageCtrl")
     end
     bg = nil
     self:_initData()
+    GameNoticePanel.delete:SetActive(false)
 end

@@ -15,7 +15,7 @@ end
 --启动事件--
 function LoginModel:OnCreate()
     --注册本地UI事件
-    --CityEngineLua.login_loginapp(true);
+    CityEngineLua.login_loginapp(true);
     Event.AddListener("m_OnAsLogin", self.m_OnAsLogin);
     Event.AddListener("m_OnRegister", self.m_OnRegister,self);
     Event.AddListener("m_onConnectionState", self.m_onConnectionState);

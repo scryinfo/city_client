@@ -29,9 +29,9 @@ function UIBubbleGroundAucItem:initialize(data)
     self.soonText02 = viewTrans:Find("soon/bgBtn/root/typeText"):GetComponent("Text")
     self.soonBgBtn = viewTrans:Find("soon/bgBtn"):GetComponent("Button")
 
-    self.nowText01.text = GetLanguage(21010001)
-    self.soonText02.text = GetLanguage(21010009)
-    self.noneBidText02.text = GetLanguage(21010001)
+    self.nowText01.text = GetLanguage(22010001)
+    self.soonText02.text = GetLanguage(22020003)
+    self.noneBidText02.text = GetLanguage(22010001)
 
     self.nowBgBtn.onClick:RemoveAllListeners()
     self.nowBgBtn.onClick:AddListener(function ()
@@ -145,29 +145,17 @@ end
 --信息更新
 function UIBubbleGroundAucItem:_bidInfoUpdate(data)
     if data.id == self.data.id then
-        self:_checkHighestPrice(data)
+        if self.data.bidHistory == nil then
+            self.data.bidHistory = {}
+        end
+        self.data.endTs = data.ts + GAucModel.BidTime
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.data.bidHistory, 1, temp)
         self.isStartBid = true
         --self.noneBidText02.transform.localScale = Vector3.zero
         --self.nowBinding.localScale = Vector3.one
         self.noneBidText02.gameObject:SetActive(false)
         self.nowBinding.gameObject:SetActive(true)
-    end
-end
---判断是否是最高价
-function UIBubbleGroundAucItem:_checkHighestPrice(data)
-    if self.data.bidHistory == nil then
-        self.data.bidHistory = {}
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.data.bidHistory, 1, temp)
-        self.data.endTs = data.ts + GAucModel.BidTime
-        return
-    end
-
-    local tempHigh = self.data.bidHistory[1]
-    if tempHigh.price < data.price then
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.data.bidHistory, 1, temp)
-        self.data.endTs = data.ts + GAucModel.BidTime
     end
 end
 --获取是否点击到对应地块
@@ -203,9 +191,9 @@ function UIBubbleGroundAucItem:_showFunc()
     end
 end
 function UIBubbleGroundAucItem:_changeLanguageFunc()
-    self.nowText01.text = GetLanguage(21010001)
-    self.soonText02.text = GetLanguage(21010009)
-    self.noneBidText02.text = GetLanguage(21010001)
+    self.nowText01.text = GetLanguage(22010001)
+    self.soonText02.text = GetLanguage(22020003)
+    self.noneBidText02.text = GetLanguage(22010001)
 end
 
 --小地图需要的数据

@@ -13,25 +13,23 @@ function BubbleMessagePanel.Awake(obj)
 end
 
 function BubbleMessagePanel.InitPanel()
-    this.closeBtn = transform:Find("PopCommpent/closeBtn")
-    this.cantconfirmBtn = transform:Find("PopCommpent/cantconfimBtn")
-    this.confirmBtn = transform:Find("PopCommpent/confimBtn")
-    this.hideBtn = transform:Find("PopCommpent/hideBtn")
-    this.hideText = transform:Find("PopCommpent/hideBtn/Text"):GetComponent("Text")
-    this.titleText = transform:Find("PopCommpent/titleText"):GetComponent("Text")
+    this.closeBtn=transform:Find("PopCommpent/closeBtn")
+    this.confirmBtn=transform:Find("PopCommpent/confimBtn")
+    this.titleText=transform:Find("PopCommpent/titleText"):GetComponent("Text")
 
-    this.scrollParent = transform:Find("PopCommpent/root/Scroll View/Viewport/Content")
-    this.inputFrame = transform:Find("PopCommpent/root/enter/InputField"):GetComponent("InputField")
-    this.inputFramePlaceholder = transform:Find("PopCommpent/root/enter/InputField/Placeholder"):GetComponent("Text")
-    this.title = transform:Find("PopCommpent/root/title"):GetComponent("Text")
+    this.scrollParent=transform:Find("PopCommpent/root/Scroll View/Viewport/Content")
+    this.inputFrame=transform:Find("PopCommpent/root/enter/InputField"):GetComponent("InputField")
 
-    this.emojiTitle = transform:Find("PopCommpent/root/emojiTitle"):GetComponent("Text")
+    this.isShow=transform:Find("PopCommpent/root/isShow")
+    this.noIcon=transform:Find("PopCommpent/root/isShow/no")
+    this.yesIcon=transform:Find("PopCommpent/root/isShow/yes")
+    this.topic=transform:Find("PopCommpent/root/isShow/topic"):GetComponent("Text")
+    this.title=transform:Find("PopCommpent/root/title"):GetComponent("Text")
+
 end
 
 function BubbleMessagePanel.InitLanguage()
-    this.emojiTitle.text = GetLanguage(29010001) --选择标签
-    this.titleText.text = GetLanguage(29010012) --panel的标题
-    this.title.text = GetLanguage(29010001) --选择气泡的标题
-    this.hideText.text = GetLanguage(29010011) --隐藏按钮
-    this.inputFramePlaceholder.text = GetLanguage(29010008) --默认输入内容
+   --     this.titleText.text=GetLanguage(14010001)--panel的标题
+    --     this.topic.text=GetLanguage(14010001)-- 提示
+    --     this.title.text=GetLanguage(14010001)--选择气泡的标题
 end

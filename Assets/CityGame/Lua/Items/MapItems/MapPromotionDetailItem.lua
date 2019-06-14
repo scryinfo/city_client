@@ -22,8 +22,8 @@ function MapPromotionDetailItem:initLanguage()
     if self.data.promotionIndex == nil then
         return
     end
-    self.typeText.text = GetLanguage(MapPromotionInfoConfig[self.data.promotionIndex].languageId)
-    --self.typeText.text = MapPromotionInfoConfig[self.data.promotionIndex].languageId
+    --self.typeText.text = GetLanguage(MapPromotionInfoConfig[self.data.promotionIndex].languageId)
+    self.typeText.text = MapPromotionInfoConfig[self.data.promotionIndex].languageId
     self.data.itemId = self.data.promotionIndex
 end
 --设置toggleGroup

@@ -13,7 +13,6 @@ local playerdata = {}
 local optionOneScript = {}
 local maxValue = 0
 local state
-local firstshow = nil
 local type = true
 ---初始化方法   数据（读配置表）
 function ToggleBtnTwoItem:initialize(prefab,luaBehaviour,data,ctrl)
@@ -41,18 +40,13 @@ function ToggleBtnTwoItem:initialize(prefab,luaBehaviour,data,ctrl)
 end
 
 ---==========================================================================================点击函数=============================================================================
-function ToggleBtnTwoItem:_firstclose(ins)
-    state = ins
-end
 --打开交易折线图
 function ToggleBtnTwoItem:_tradingOpenFunc(ins)
     VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
     VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
-
     if state ~= nil then
         state.localScale = Vector3.zero
     end
-
     state = ins.highlight
     ins.highlight.localScale = Vector3.one
     --optionTwoScript[ins.ctrl] = ToggleBtnThreeItem:new(transform, volumeBehaviour, DealConfig[idx].childs, idx)

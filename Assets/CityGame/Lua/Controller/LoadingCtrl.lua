@@ -48,10 +48,6 @@ function LoadingCtrl:Awake(...)
     RevenueDetailsMsg.Awake()
 end
 
-function LoadingCtrl:Active()
-    LoadingPanel.content.text = GetLanguage(10010001)
-end
-
 function LoadingCtrl:_Update()
     LoadingPanel.rotateIconTrans:Rotate( self.RotateDirection * self.RotateSpeed * UnityEngine.Time.deltaTime )
     if self.MinDurationTime <= 0 then

@@ -42,7 +42,7 @@ end
 
 --初始化
 function NoMessageCtrl:_initData()
-    NoMessagePanel.content.text = GetLanguage(16010026)
+    NoMessagePanel.content.text = GetLanguage(13010001)
 end
 
 --点击空白背景

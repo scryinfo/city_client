@@ -65,8 +65,8 @@ end
 function FriendsCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
-    FriendsPanel.titleText.text = GetLanguage(13010001)
-    FriendsPanel.NoContentText.text = GetLanguage(13010002)
+    FriendsPanel.titleText.text = GetLanguage(12010001)
+    FriendsPanel.NoContentText.text = GetLanguage(12010002)
 end
 
 -- 刷新

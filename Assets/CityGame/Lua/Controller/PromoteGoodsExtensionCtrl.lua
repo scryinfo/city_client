@@ -47,15 +47,6 @@ function PromoteGoodsExtensionCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_PromoteGoodsId",self.c_PromoteGoodsId,self)
     Event.AddListener("c_ClosePromoteGoodsExtension",self.c_ClosePromoteGoodsExtension,self)
-
-    PromoteGoodsExtensionPanel.name.text = GetLanguage(27010005)
-    PromoteGoodsExtensionPanel.popularityText.text = GetLanguage(27040013)
-    PromoteGoodsExtensionPanel.myTime:GetComponent("Text").text = GetLanguage(27040022)
-    PromoteGoodsExtensionPanel.titleText.text = GetLanguage(27040014)
-    PromoteGoodsExtensionPanel.otherTimeText.text = GetLanguage(27040022)
-    PromoteGoodsExtensionPanel.queueText.text = GetLanguage(27050003)
-    PromoteGoodsExtensionPanel.otherQueueText.text = GetLanguage(27050003)
-    PromoteGoodsExtensionPanel.select.text = GetLanguage(27040023)
 end
 
 function PromoteGoodsExtensionCtrl:Refresh()
@@ -65,7 +56,7 @@ function PromoteGoodsExtensionCtrl:Refresh()
     elseif self.m_data.Data.typeId == 2252 then
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-clothes.png", PromoteGoodsExtensionPanel.icon)
     end
-    PromoteGoodsExtensionPanel.iconText.text = GetLanguage(self.m_data.Data.name)
+    PromoteGoodsExtensionPanel.iconText.text = self.m_data.Data.name
     self:initData()
     --判断是自己还是别人打开了界面
     if self.m_data.DataInfo.info.ownerId == myOwnerID then
@@ -139,7 +130,6 @@ end
 
 --返回
 function PromoteGoodsExtensionCtrl:OnXBtn()
-    PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 
@@ -155,15 +145,14 @@ end
 
 --确定(自己)
 function PromoteGoodsExtensionCtrl:OnQueue(go)
-    PlayMusEff(1002)
     if not go.goodId then
-        Event.Brocast("SmallPop",GetLanguage(27040025),300)
+        Event.Brocast("SmallPop","请选择推广的商品",300)
         return
     end
     if PromoteGoodsExtensionPanel.time.text == "" then
-        Event.Brocast("SmallPop",GetLanguage(27040026),300)
+        Event.Brocast("SmallPop","请输入推广时间",300)
     elseif tonumber(PromoteGoodsExtensionPanel.time.text) == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040027),300)
+        Event.Brocast("SmallPop","推广时间不能为0",300)
     else
         DataManager.DetailModelRpcNoRet(go.m_data.DataInfo.insId, 'm_AddPromote',go.m_data.DataInfo.insId,tonumber(PromoteGoodsExtensionPanel.time.text),go.goodId)
     end
@@ -171,19 +160,18 @@ end
 
 --确定(别人)
 function PromoteGoodsExtensionCtrl:OnOtherQueue(go)
-    PlayMusEff(1002)
     if not go.goodId then
-        Event.Brocast("SmallPop",GetLanguage(27040025),300)
+        Event.Brocast("SmallPop","请选择推广的商品",300)
         return
     end
     if go.m_data.DataInfo.promRemainTime == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040028),300)
+        Event.Brocast("SmallPop","建筑上设置的推广时间也用完",300)
         return
     end
     if PromoteGoodsExtensionPanel.otherTime.text == "" then
-        Event.Brocast("SmallPop",GetLanguage(27040026),300)
+        Event.Brocast("SmallPop","请输入推广时间",300)
     elseif tonumber(PromoteGoodsExtensionPanel.otherTime.text) == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040027),300)
+        Event.Brocast("SmallPop","推广时间不能为0",300)
     else
         DataManager.DetailModelRpcNoRet(go.m_data.DataInfo.insId, 'm_AddPromote',go.m_data.DataInfo.insId,tonumber(PromoteGoodsExtensionPanel.otherTime.text),go.goodId)
     end

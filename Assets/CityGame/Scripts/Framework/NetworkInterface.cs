@@ -37,7 +37,8 @@
         private DateTime _connectionStart;
         private IAsyncResult _result;
 #if UNITY_EDITOR
-        private float _connectionTimeOut = 2000;
+        //private float _connectionTimeOut = 2000;
+        private float _connectionTimeOut = 8000;
 #else
         private float _connectionTimeOut = 8000;            
 #endif
@@ -204,8 +205,11 @@
                 //超时处理            
                 close();
                 _ConnectState.error = "Connection TimeOut";
-                Event.fireIn("_onConnectionState", new object[] { _ConnectState });
-                _connectDelegate.EndInvoke(_result);
+                Event.fireIn("_onConnectionState", new object[] { _ConnectState });        
+
+			    AsyncResult result = (AsyncResult)_result;
+                if(!result.EndInvokeCalled)
+                    _connectDelegate.EndInvoke(_result);
                 //Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = 'TimeOut'", _ConnectState.connectIP, _ConnectState.connectPort));
             }
         }

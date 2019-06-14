@@ -166,8 +166,10 @@
 		
 		private static void _onSent(IAsyncResult ar)
 		{
-			AsyncResult result = (AsyncResult)ar;
-			AsyncSendMethod caller = (AsyncSendMethod)result.AsyncDelegate;
+            AsyncResult result = (AsyncResult)ar;
+            if (result.EndInvokeCalled)
+                return;
+            AsyncSendMethod caller = (AsyncSendMethod)result.AsyncDelegate;
 			caller.EndInvoke(ar);
 		}
 	}

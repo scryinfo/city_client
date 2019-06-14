@@ -176,9 +176,14 @@
 
         private void _onRecv(IAsyncResult ar)
         {
-            AsyncResult result = (AsyncResult)ar;
-            AsyncReceiveMethod caller = (AsyncReceiveMethod)result.AsyncDelegate;
-            caller.EndInvoke(ar);
+            return;
+
+            /*AsyncResult result = (AsyncResult)ar;
+            if (result.EndInvokeCalled)
+                return;
+
+            AsyncReceiveMethod caller = (AsyncReceiveMethod)result.AsyncDelegate;            
+            caller.EndInvoke(ar);*/
         }
     }
 }

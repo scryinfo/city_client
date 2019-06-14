@@ -129,8 +129,7 @@ function AdvertisementPartDetail:Show(data)
     self.m_data = data
     self:_initFunc()
     if data.selledPromCount == 0 then
-        local ts = getFormatUnixTime(TimeSynchronized.GetTheCurrentTime())
-        self.startTime.text = ts.hour .. ":" ..ts.minute .. " " .. ts.month .. "/" .. ts.day .. "/" .. ts.year
+        self.startTime.text = GetLanguage(27040032)
     end
 
     self.goodsText.text = GetLanguage(27040008)
@@ -205,10 +204,15 @@ end
 --队列
 function AdvertisementPartDetail:OnQuene(go)
     PlayMusEff(1002)
-    if go.m_data.info.ownerId == myOwnerID then
-        DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
+    if go.m_data.selledPromCount == 0 then
+        local data = {}
+        ct.OpenCtrl("QueneCtrl",data)
     else
-        DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
+        if go.m_data.info.ownerId == myOwnerID then
+            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
+        else
+            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
+        end
     end
 end
 

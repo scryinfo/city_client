@@ -29,9 +29,9 @@ function PromoteItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
 end
 --多语言
 function PromoteItem:language()
-    self.promoteText.text = GetLanguage(27040031)
-    self.basisProduceRateTextBtn.text = GetLanguage(27040032)
-    self.produceBounusTextBtn.text = GetLanguage(27040033)
+    self.promoteText.text = GetLanguage(30060001)
+    self.basisProduceRateTextBtn.text = GetLanguage(30060002)
+    self.produceBounusTextBtn.text = GetLanguage(30060003)
 end
 function PromoteItem:_clickpromoteItemBtn(ins)
     local data = {}
@@ -40,10 +40,10 @@ function PromoteItem:_clickpromoteItemBtn(ins)
     --ct.OpenCtrl("BuildingGoodsTypeCtrl",data)
 end
 function PromoteItem:_clickBasisProduceRateTextBtn(ins)
-    local stringKey = 27040034
+    local stringKey = 30060004
     Event.Brocast("openTipBox",stringKey,ins.basisProduceRateTextBtn.transform.localPosition,ins.basisProduceRateTextBtn.transform)
 end
 function PromoteItem:_clickProduceBounusTextBtn(ins)
-    local stringKey = 27040035
+    local stringKey = 30060005
     Event.Brocast("openTipBox",stringKey,ins.produceBounusTextBtn.transform.localPosition,ins.produceBounusTextBtn.transform)
 end

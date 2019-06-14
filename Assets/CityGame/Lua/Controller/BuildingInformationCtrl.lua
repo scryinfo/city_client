@@ -252,7 +252,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         --推广公司
         local data = PlayerBuildingBaseData[self.m_data.mId]
         self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
-        self.tipText.text = GetLanguage(27040030)
+        self.tipText.text = GetLanguage(23020005)
         local function callback(obj)
             self.buildingInfoItem = PromoteItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
@@ -502,7 +502,7 @@ function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
     else
         self.mineLandInfo.transform.localScale = Vector3.zero
         self.otherLandInfo.transform.localScale = Vector3.one
-        AvatarManger.GetSmallAvatar(self.groundOwnerData[index].faceId,self.headImg.transform,0.2)
+        AvatarManger.GetSmallAvatar(self.groundOwnerData[index].faceId,self.headImg.transform,0.15)
         self.nameText.text = self.groundOwnerData[index].name
         self.companyText.text = self.groundOwnerData[index].companyName
         self.priceText.text = "E"..GetClientPriceString(self.groundData[index].Data.rent.rentPreDay)

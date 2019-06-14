@@ -33,6 +33,7 @@ end
 --初始化
 function GoodsTypeItem:initializeUiInfoData()
     self.nameText.text = GetLanguage(self.dataInfo.itemId)
+    self.speedText.text = self.dataInfo.numOneSec * 400
     if ToNumber(StringSun(self.dataInfo.itemId,1,2)) == 21 then
         --原料
         self.goods.transform.localScale = Vector3.zero
@@ -78,8 +79,14 @@ function ButtonTypeItem:initialize(dataInfo,prefab,luaBehaviour)
 end
 --初始化
 function ButtonTypeItem:initializeUiInfoData()
-    self.nomalText.text = self.dataInfo.name
-    self.chooseText.text = self.dataInfo.name
+    if self.dataInfo.typeId == 2251 then
+        self.nomalText.text = GetLanguage(20030002)
+        self.chooseText.text = GetLanguage(20030002)
+    elseif self.dataInfo.typeId == 2252 then
+        self.nomalText.text = GetLanguage(20030001)
+        self.chooseText.text = GetLanguage(20030001)
+    end
+
     if self.nomal.isOn then
         self.choose.transform.localScale = Vector3.one
     else

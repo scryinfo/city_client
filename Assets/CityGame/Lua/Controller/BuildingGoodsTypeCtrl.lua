@@ -21,7 +21,6 @@ function BuildingGoodsTypeCtrl:OnCreate(obj)
 end
 function BuildingGoodsTypeCtrl:Active()
     UIPanel.Active(self)
-    --self:_language()
     --存放商品分好类的实例
     self.GoodsTypeDatas = {}
     --存放分类button的实例
@@ -89,7 +88,7 @@ function BuildingGoodsTypeCtrl:createButtonInstance()
     end
     self.ButtonTypeData[1].nomal.isOn = true
 end
-----设置多语言
+----设置多语言  初始化UI数据
 --function BuildingGoodsTypeCtrl:_language()
 --    self.topName.text = GetLanguage(30020001)
 --end

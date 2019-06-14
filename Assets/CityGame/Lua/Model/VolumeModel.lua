@@ -102,7 +102,7 @@ function VolumeModel:m_PlayerNumCurve(info)
 end
 -------------------服务器回调---------------------
 function VolumeModel:n_OnGetNpcNum(lMsg)
-    Event.Brocast("c_NpcNum",lMsg.countNpcMap)
+    Event.Brocast("c_NpcNum",lMsg.countNpcMap,lMsg.workNpcNum,lMsg.unEmployeeNpcNum)
 end
 
 function VolumeModel:n_OnGoodsNpcNum(lMsg)

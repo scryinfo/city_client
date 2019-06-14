@@ -26,7 +26,6 @@ function ProcessingFactoryModel:OnCreate()
     Event.AddListener("m_ReqprocessingSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.AddListener("m_ReqprocessingSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
     Event.AddListener("m_ReqprocessingAddShoppingCart",self.m_ReqAddShoppingCart,self)
-    Event.AddListener("m_ReqGetBrandName",self.m_ReqGetBrandName,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
@@ -49,7 +48,6 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryBrand","gs.BrandInfo",self.n_OnGetBrandName,self)
 end
 
 function ProcessingFactoryModel:Close()
@@ -66,8 +64,6 @@ function ProcessingFactoryModel:Close()
     Event.RemoveListener("m_ReqprocessingSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.RemoveListener("m_ReqprocessingSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
     Event.RemoveListener("m_ReqprocessingAddShoppingCart",self.m_ReqAddShoppingCart,self)
-    Event.RemoveListener("m_ReqGetBrandName",self.m_ReqGetBrandName,self)
-
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
@@ -89,8 +85,6 @@ function ProcessingFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
-    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryBrand","gs.BrandInfo",self.n_OnGetBrandName)
-
 end
 ---客户端请求---
 --打开原料厂
@@ -149,10 +143,6 @@ end
 --function ProcessingFactoryModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
 --    self.funModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
 --end
---获取特定品牌
-function ProcessingFactoryModel:m_ReqGetBrandName(playerId,itemId)
-    self.funModel:m_ReqGetBrandName(playerId,itemId)
-end
 ---服务器回调---
 --开业成功，再次请求建筑详情
 function ProcessingFactoryModel:n_OnReceiveOpenBusiness(data)
@@ -167,12 +157,12 @@ function ProcessingFactoryModel:n_OnReceiveHouseSalaryChange(data)
 end
 --打开加工厂
 function ProcessingFactoryModel:n_OnOpenprocessing(stream)
+    DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", 'refreshprocessingDataInfo',stream)
     if stream ~= nil then
         if not self.funModel then
             self.funModel = BuildingBaseModel:new(self.insId)
         end
     end
-    DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", 'refreshprocessingDataInfo',stream)
 end
 --运输
 function ProcessingFactoryModel:n_OnBuildingTransportInfo(data)
@@ -229,10 +219,6 @@ end
 --生产线置顶
 function ProcessingFactoryModel:n_OnSetLineOrderInform(data)
     Event.Brocast("SettopSuccess",data)
-end
---获取特定品牌
-function ProcessingFactoryModel:n_OnGetBrandName(data)
-    Event.Brocast("getBrandNameSucceed",data)
 end
 ----自动补货
 --function ProcessingFactoryModel:n_OnSetAutoReplenish(data)

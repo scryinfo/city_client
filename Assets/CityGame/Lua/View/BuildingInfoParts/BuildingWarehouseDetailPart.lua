@@ -5,10 +5,11 @@
 ---建筑主界面仓库详情界面
 BuildingWarehouseDetailPart = class('BuildingWarehouseDetailPart',BuildingBaseDetailPart)
 
+local ToNumber = tonumber
+local StringSun = string.sub
 function BuildingWarehouseDetailPart:PrefabName()
     return "BuildingWarehouseDetailPart"
 end
-
 function BuildingWarehouseDetailPart:_InitTransform()
     self:_getComponent(self.transform)
     --仓库数据
@@ -31,12 +32,11 @@ function BuildingWarehouseDetailPart:RefreshData(data)
     if data == nil then
         return
     end
-    self.brandId = nil
-    self.BrandName = 0
-    self.BrandNameSucceed = 0
     self.m_data = data
     self:_initFunc()
-    self:initializeUiInfoData(self.m_data.store.inHand)
+    --合并两张表
+    self.warehouseDataInfo = self:mergeTables(self.m_data.store.inHand,self.m_data.store.locked)
+    self:initializeUiInfoData(self.warehouseDataInfo)
 end
 
 function BuildingWarehouseDetailPart:_getComponent(transform)
@@ -69,6 +69,9 @@ function BuildingWarehouseDetailPart:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.transportBtn.gameObject,function()
         self:clickTransportBtn()
     end,self)
+    mainPanelLuaBehaviour:AddClick(self.sortingBtn.gameObject,function()
+        self:clickSortingBtn()
+    end,self)
 end
 
 function BuildingWarehouseDetailPart:_ResetTransform()
@@ -94,7 +97,6 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.AddListener("deleteSucceed",self.deleteSucceed,self)
     Event.AddListener("getItemIdCount",self.getItemIdCount,self)
-    Event.AddListener("getBrandNameSucceed",self.getBrandNameSucceed,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
@@ -105,24 +107,24 @@ function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.RemoveListener("deleteSucceed",self.deleteSucceed,self)
     Event.RemoveListener("getItemIdCount",self.getItemIdCount,self)
-    Event.RemoveListener("getBrandNameSucceed",self.getBrandNameSucceed,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
-    --暂时隐藏仓库分类按钮
-    self.sortingBtn.transform.localScale = Vector3.zero
+    --隐藏仓库分类按钮
+    self.sortingBtn.localScale = Vector3.zero
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
 function BuildingWarehouseDetailPart:_language()
-    self.capacityText.text = GetLanguage(25010002)
-    self.tipText.text = GetLanguage(25020024)
+    self.capacityText.text = "容量"
+    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
-    self.storeData = storeData
-    if not self.storeData then
+    self.nowState = ItemScreening.all
+    self.nowStateText.text = GetLanguage(18020002)
+    if not storeData or next(storeData) == nil then
         self.Capacity = 0
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
@@ -140,27 +142,24 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         else
             self.number.transform.localScale = Vector3.one
         end
-        if #self.storeData == #self.warehouseDatas then
+        if next(self.warehouseDatas) ~= nil then
             return
         else
             if next(self.warehouseDatas) ~= nil then
                 self:CloseDestroy(self.warehouseDatas)
             end
             self.transportBool = GoodsItemStateType.transport
-            --获取品牌
-            self:getBrandName(self.storeData)
+            self:CreateGoodsItems(storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
         end
     end
 end
 -----------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------
 --关闭详情
 function BuildingWarehouseDetailPart:clickCloseBtn()
-    PlayMusEff(1002)
     self.groupClass.TurnOffAllOptions(self.groupClass)
 end
 --打开运输弹窗
 function BuildingWarehouseDetailPart:clickTransportBtn()
-    PlayMusEff(1002)
     local data = {}
     data.buildingId = self.m_data.insId
     data.buildingInfo = self.m_data.info
@@ -168,6 +167,36 @@ function BuildingWarehouseDetailPart:clickTransportBtn()
     data.itemPrefabTab = self.transportTab
     data.stateType = GoodsItemStateType.transport
     ct.OpenCtrl("NewTransportBoxCtrl",data)
+end
+--切换分类
+function BuildingWarehouseDetailPart:clickSortingBtn()
+    if self.nowState == ItemScreening.all then
+        --原料
+        self.nowState = ItemScreening.material
+        self.nowStateText.text = GetLanguage(20010002)
+        if next(self.warehouseDatas) ~= nil then
+            self:CloseDestroy(self.warehouseDatas)
+        end
+        self.materialDataInfo = self:screeningTabInfo(self.warehouseDataInfo,self.nowState)
+        self:CreateGoodsItems(self.materialDataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+    elseif self.nowState == ItemScreening.material then
+        --商品
+        self.nowState = ItemScreening.goods
+        self.nowStateText.text = GetLanguage(20010003)
+        if next(self.warehouseDatas) ~= nil then
+            self:CloseDestroy(self.warehouseDatas)
+        end
+        self.goodsDataInfo = self:screeningTabInfo(self.warehouseDataInfo,self.nowState)
+        self:CreateGoodsItems(self.goodsDataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+    elseif self.nowState == ItemScreening.goods then
+        --全部
+        self.nowState = ItemScreening.all
+        self.nowStateText.text = GetLanguage(18020002)
+        if next(self.warehouseDatas) ~= nil then
+            self:CloseDestroy(self.warehouseDatas)
+        end
+        self:CreateGoodsItems(self.warehouseDataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+    end
 end
 -----------------------------------------------------------------------------事件函数---------------------------------------------------------------------------------------
 --添加运输列表
@@ -177,18 +206,18 @@ function BuildingWarehouseDetailPart:addTransportList(data)
         table.insert(self.transportTab,data)
         self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop",GetLanguage(28040022), 300)
+        Event.Brocast("SmallPop",GetLanguage(25020009), 300)
     else
         for key,value in pairs(self.transportTab) do
             if value.itemId == data.itemId then
-                Event.Brocast("SmallPop",GetLanguage(25020025), 300)
+                Event.Brocast("SmallPop",GetLanguage(25070011), 300)
                 return
             end
         end
         table.insert(self.transportTab,data)
         --self.number.transform.localScale = Vector3.one
         self.numberText.text = #self.transportTab
-        Event.Brocast("SmallPop",GetLanguage(28040022), 300)
+        Event.Brocast("SmallPop",GetLanguage(25020009), 300)
     end
 end
 --删除运输列表
@@ -224,11 +253,6 @@ function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
         for key,value in pairs(dataInfo) do
             Event.Brocast("m_RetailStoresTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
-    elseif self.m_data.buildingType == BuildingType.WareHouse then
-        --集散中心
-        for key,value in pairs(dataInfo) do
-            Event.Brocast("m_WareHourseTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
-        end
     end
 end
 --销毁商品
@@ -243,8 +267,6 @@ function BuildingWarehouseDetailPart:deleteWarehouseItem(dataInfo)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             Event.Brocast("m_ReqRetailStoresDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
-        elseif self.m_data.buildingType == BuildingType.TalentCenter then
-            --集散中心
         end
     end
 end
@@ -260,10 +282,19 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.iKey.id then
-                --value.dataInfo.n = value.dataInfo.n + 1
+                value.dataInfo.n = value.dataInfo.n + 1
                 value.numberText.text = "×"..value.dataInfo.n
+                return
             end
         end
+        --local dataInfo = {}
+        --local key = {}
+        --dataInfo.key = key
+        --dataInfo.key.id = data.iKey.id
+        --dataInfo.key.producerId = data.iKey.producerId
+        --dataInfo.key.qty = data.iKey.qty
+        --dataInfo.n = data.nowCount
+        --self:CreateGoodsItem(dataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
     end
 end
 --运输成功回调
@@ -338,14 +369,6 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
     UIPanel.ClosePage()
     Event.Brocast("SmallPop", GetLanguage(25020012), 300)
 end
---获得特定品牌
-function BuildingWarehouseDetailPart:getBrandNameSucceed(data)
-    self.BrandNameSucceed = self.BrandNameSucceed + 1
-    self.storeData[self.brandId].key.brandName = data.brandName
-    if self.BrandName == self.BrandNameSucceed then
-        self:CreateGoodsItems(self.storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
-    end
-end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取仓库里某个商品的数量
 --(后边要修改)
@@ -364,16 +387,42 @@ function BuildingWarehouseDetailPart:getItemIdCount(itemId,callback)
         callback(nowCount)
     end
 end
---获取特定品牌
-function BuildingWarehouseDetailPart:getBrandName(dataInfo)
-    for key,value in pairs(dataInfo) do
-        if value.key.producerId ~= nil then
-            self.BrandName = self.BrandName + 1
-            self.brandId = key
-            Event.Brocast("m_ReqGetBrandName",value.key.producerId,value.key.id)
+--合并两张表
+function BuildingWarehouseDetailPart:mergeTables(inHandTab,lockedTab)
+    local targetTab = {}
+    if inHandTab == nil and lockedTab == nil then
+        targetTab = {}
+    end
+    if inHandTab ~= nil then
+        for key,value in pairs(inHandTab) do
+            targetTab[value.key.id] = ct.deepCopy(value)
         end
     end
-    if self.BrandName == 0 then
-        self:CreateGoodsItems(self.storeData,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
+    if lockedTab ~= nil then
+        for key,value in pairs(lockedTab) do
+            if targetTab[value.key.id] then
+                targetTab[value.key.id].n = targetTab[value.key.id].n + value.n
+            else
+                targetTab[value.key.id] = ct.deepCopy(value)
+            end
+        end
     end
+    return targetTab
+end
+--分类
+function BuildingWarehouseDetailPart:screeningTabInfo(data,type)
+    local materialKey,goodsKey = 21,22
+    local targetTable = {}
+    for key,value in pairs(data) do
+        if type == ItemScreening.material then
+            if ToNumber(StringSun(key,1,2)) == materialKey then
+                targetTable[#targetTable + 1] = ct.deepCopy(value)
+            end
+        elseif type == ItemScreening.goods then
+            if ToNumber(StringSun(key,1,2)) == goodsKey then
+                targetTable[#targetTable + 1] = ct.deepCopy(value)
+            end
+        end
+    end
+    return targetTable
 end

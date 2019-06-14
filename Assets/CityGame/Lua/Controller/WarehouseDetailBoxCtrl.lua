@@ -128,21 +128,8 @@ function WarehouseDetailBoxCtrl:addShelf(dataInfo)
                 Event.Brocast("m_ReqRetailStoresShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
             end
         end
-    elseif self.m_data.info.buildingType == BuildingType.WareHouse then
+    elseif self.m_data.info.buildingType == BuildingType.TalentCenter then
         --集散中心
-        if not self.m_data.info.shelf.good then
-            Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
-        else
-            --如果货架不是空的，检查货架上是否有这个商品
-            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId) == true then
-                --发送修改价格
-                Event.Brocast("m_ReqMaterialModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
-                --发送上架
-                Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
-            else
-                Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
-            end
-        end
     end
 end
 -------------------------------------------------------------回调函数-------------------------------------------------------------------------------
@@ -275,12 +262,6 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
                         table.insert(temporaryDataInfo,value)
                     end
                 end
-            end
-        end
-    elseif self.m_data.info.buildingType == BuildingType.WareHouse then
-        for key,value in pairs(dataInfo.inHand) do
-            if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
-                table.insert(temporaryDataInfo,value)
             end
         end
         if next(temporaryDataInfo) == nil then

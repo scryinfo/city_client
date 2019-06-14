@@ -198,7 +198,7 @@ function VolumeCtrl:Update()
 end
 
 --NPC数量
-function VolumeCtrl:c_NpcNum(countNpc)
+function VolumeCtrl:c_NpcNum(countNpc,workNpcNum,unEmployeeNpcNum)
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local time = tonumber(ts.year..ts.month..ts.day)
@@ -217,8 +217,8 @@ function VolumeCtrl:c_NpcNum(countNpc)
             end
         end
     end
-    VolumePanel.employedText.text = getMoneyString(adult)
-    VolumePanel.unemployedText.text = getMoneyString(old + youth)
+    VolumePanel.employedText.text = getMoneyString(workNpcNum)
+    VolumePanel.unemployedText.text = getMoneyString(unEmployeeNpcNum)
     VolumeCtrl:AssignmentDemand(clothes , countNpc , time)
     VolumeCtrl:AssignmentDemand(food , countNpc , time)
 

@@ -141,7 +141,7 @@ end
 --设置多语言
 function BuildingProductionDetailPart:_language()
     self.addTip.text = GetLanguage(25030001)
-    self.numberTipText.text = GetLanguage(25010009)
+    self.numberTipText.text = "数量"
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
@@ -152,7 +152,6 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.content.transform.localScale = Vector3.zero
         self.lineNumberText.text = 0 .."/"..PlayerBuildingBaseData[self.m_data.info.mId].lineNum
     else
-        self.brandNameText.text = DataManager.GetCompanyName()
         self.itemId = lineData[1].itemId
         self.ScrollView.gameObject:SetActive(true)
         self.content.transform.localScale = Vector3.one
@@ -210,7 +209,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                     UpdateBeat:Remove(self.Update,self)
                     self.oneTimeText.text = "00:00"
                     self.timeSlider.value = 0
-                    self.tipText.text = GetLanguage(25030007)
+                    self.tipText.text = GetLanguage(25030020)
                 end
             end
         end
@@ -253,7 +252,7 @@ function BuildingProductionDetailPart:clickAddBtnBg()
         ct.OpenCtrl("AddProductionLineCtrl",self.m_data)
         self:CloseDestroy(self.waitingQueueIns)
     else
-        Event.Brocast("SmallPop",GetLanguage(35040013),300)
+        Event.Brocast("SmallPop",GetLanguage(20120001),300)
         return
     end
 end
@@ -312,7 +311,7 @@ function BuildingProductionDetailPart:Update()
                 UpdateBeat:Remove(self.Update,self)
                 self.oneTimeText.text = "00:00"
                 self.timeSlider.value = 0
-                self.tipText.text = GetLanguage(25030007)
+                self.tipText.text = GetLanguage(25030020)
                 return
             end
         end

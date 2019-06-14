@@ -136,7 +136,7 @@ function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             UIPanel.BackToPageInstance(ProcessingFactoryCtrl,self.m_data)
         end
-        Event.Brocast("SmallPop",GetLanguage(25030010),300)
+        Event.Brocast("SmallPop","数量不能为0",300)
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------

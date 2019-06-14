@@ -112,7 +112,7 @@ function NewTransportBoxCtrl:_clickStartBtn(ins)
         return
     end
     if ins.targetBuildingId == nil then
-        Event.Brocast("SmallPop",GetLanguage(21020002), 300)
+        Event.Brocast("SmallPop",GetLanguage(25070012), 300)
         return
     end
     if ins.m_data.stateType == GoodsItemStateType.transport then

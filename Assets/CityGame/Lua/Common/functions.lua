@@ -721,14 +721,14 @@ function GetEvaData(index, configData, lv)
 		if configData.Atype < 2100000 then -- 建筑品质加成
 			return string.format( (1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
 		else -- 商品品质值
-			return string.format( EvaUp[lv].add / 1000 * configData.basevalue)
+			return string.format( (1 + EvaUp[lv].add / 100000) * configData.basevalue)
 		end
 	elseif configData.Btype == "ProduceSpeed" then -- 生产速度
-		local resultNum = tostring( ((1 + EvaUp[lv].add / 100000) * configData.basevalue) * brandSizeNum)
+		local resultNum = tostring( 1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue) * brandSizeNum)
 		if string.find(resultNum, ".") ~= nil then
 			resultNum = string.format( "%.4f", resultNum)
 		end
-		return resultNum .. "个/s"
+		return resultNum .. "s/per"
 	elseif configData.Btype == "PromotionAbility" then -- 推广能力
 		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
 	elseif configData.Btype == "InventionUpgrade" then -- 发明提升

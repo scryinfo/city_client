@@ -157,13 +157,13 @@ end
 function PromoteGoodsExtensionCtrl:OnQueue(go)
     PlayMusEff(1002)
     if not go.goodId then
-        Event.Brocast("SmallPop",GetLanguage(27040025),300)
+        Event.Brocast("SmallPop",GetLanguage(27040025))
         return
     end
     if PromoteGoodsExtensionPanel.time.text == "" then
-        Event.Brocast("SmallPop",GetLanguage(27040026),300)
+        Event.Brocast("SmallPop",GetLanguage(27040026))
     elseif tonumber(PromoteGoodsExtensionPanel.time.text) == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040027),300)
+        Event.Brocast("SmallPop",GetLanguage(27040027))
     else
         DataManager.DetailModelRpcNoRet(go.m_data.DataInfo.insId, 'm_AddPromote',go.m_data.DataInfo.insId,tonumber(PromoteGoodsExtensionPanel.time.text),go.goodId)
     end
@@ -173,17 +173,17 @@ end
 function PromoteGoodsExtensionCtrl:OnOtherQueue(go)
     PlayMusEff(1002)
     if not go.goodId then
-        Event.Brocast("SmallPop",GetLanguage(27040025),300)
+        Event.Brocast("SmallPop",GetLanguage(27040025))
         return
     end
     if go.m_data.DataInfo.promRemainTime == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040028),300)
+        Event.Brocast("SmallPop",GetLanguage(27040028))
         return
     end
     if PromoteGoodsExtensionPanel.otherTime.text == "" then
-        Event.Brocast("SmallPop",GetLanguage(27040026),300)
+        Event.Brocast("SmallPop",GetLanguage(27040026))
     elseif tonumber(PromoteGoodsExtensionPanel.otherTime.text) == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040027),300)
+        Event.Brocast("SmallPop",GetLanguage(27040027))
     else
         DataManager.DetailModelRpcNoRet(go.m_data.DataInfo.insId, 'm_AddPromote',go.m_data.DataInfo.insId,tonumber(PromoteGoodsExtensionPanel.otherTime.text),go.goodId)
     end

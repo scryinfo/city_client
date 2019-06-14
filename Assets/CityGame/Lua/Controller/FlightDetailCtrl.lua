@@ -48,7 +48,58 @@ end
 --
 function FlightDetailCtrl:_initData()
     if self.m_data ~= nil then
+        local flightData = self.m_data.data
 
+        if self.m_data.dataType == 0 then  --热门预测界面
+            flightData = self.m_data.detail.data
+        elseif self.m_data.dataType == 1 then  --历史界面
+
+        end
+
+        FlightDetailPanel.moneyText.text = self.m_data.sumBetAmount
+        FlightDetailPanel.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 --精确到天
+        FlightDetailPanel.flightText.text = flightData.FlightCompany  --需要多语言
+        FlightDetailPanel.numText.text = flightData.FlightNo  --CA4506
+        FlightDetailPanel.endCodeText.text = flightData.FlightArrcode
+        FlightDetailPanel.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
+        FlightDetailPanel.startCodeText.text = flightData.FlightDepcode
+        FlightDetailPanel.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
+
+        FlightDetailPanel.planTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
+        FlightDetailPanel.trueTimeText.text = flightData.FlightDeptimeDate
+        FlightDetailPanel.joinCountText.text = flightData.FlightDepAirport
+
+        local trueWidth01 = FlightDetailPanel.timeText.preferredWidth
+        FlightDetailPanel.timeText.rectTransform.sizeDelta = Vector2.New(trueWidth01, FlightDetailPanel.timeText.rectTransform.sizeDelta.y)
+        local trueWidth02 = FlightDetailPanel.moneyText.preferredWidth
+        FlightDetailPanel.moneyText.rectTransform.sizeDelta = Vector2.New(trueWidth02, FlightDetailPanel.moneyText.rectTransform.sizeDelta.y)
+
+        --判断航班状态
+        --可押注
+        if self.m_data.myBet == nil and flightData.FlightState == "计划" then
+            FlightDetailPanel.SetState(0)
+            return
+        end
+        --提示已参加预测  --判定需要看具体数据是否为""
+        if self.m_data.myBet ~= nil and flightData.FlightDeptimeDate == "" then
+            FlightDetailPanel.SetState(1)
+            FlightDetailPanel.infoText.text = GetLanguage(32030019, self.m_data.myBet.delay, self.m_data.myBet.amount)
+            return
+        end
+        --已出结果
+        if self.m_data.myBet ~= nil and flightData.FlightDeptimeDate ~= "" then
+            FlightDetailPanel.SetState(2)
+            local plan = getTimeUnixByFormat(flightData.FlightDeptimePlanDate)
+            local ture = getTimeUnixByFormat(flightData.FlightDeptimeDate)
+            local delay = (ture - plan) / 60  --只判断分钟
+            if delay > 0 then  --延误
+                FlightDetailPanel.value03Text.text = ""..self.m_data.myBet.amount  --净赚积分
+            end
+
+            FlightDetailPanel.value01Text.text = self.m_data.myBet.delay  --预测延误时间
+            FlightDetailPanel.value02Text.text = flightData.FlightDepAirport  --实际延误时间
+            return
+        end
     end
 end
 --

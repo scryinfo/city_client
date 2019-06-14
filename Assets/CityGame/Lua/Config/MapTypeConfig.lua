@@ -31,7 +31,7 @@ MapTypeConfig ={
     },
     [4] = {
         typeId = 4,  --推广
-        languageId = 20010005,
+        languageId = 20010009,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-ad-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-ad-grey.png",
     },

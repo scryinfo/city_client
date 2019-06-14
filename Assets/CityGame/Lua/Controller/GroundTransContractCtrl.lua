@@ -32,7 +32,7 @@ end
 function GroundTransContractCtrl:Active()
     UIPanel.Active(self)
     GroundTransContractPanel.AText02.text = GetLanguage(22060007)
-    GroundTransContractPanel.BText03.text = GetLanguage(22060006)
+    GroundTransContractPanel.BText03.text = GetLanguage(22060009)
     GroundTransContractPanel.buyAreaText04.text = GetLanguage(22010002)
     GroundTransContractPanel.rentAreaText05.text = GetLanguage(22040006)
     GroundTransContractPanel.rentTenancyText06.text = GetLanguage(22050005)

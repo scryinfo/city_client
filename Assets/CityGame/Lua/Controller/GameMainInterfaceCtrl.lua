@@ -124,11 +124,7 @@ end
 --全城Npc数量
 function GameMainInterfaceCtrl:c_AllNpcNum(info)
     local num = 0
-    if info then
-        for i, v in pairs(info) do
-            num = num + v.value
-        end
-    end
+    num = info.workNpcNum + info.unEmployeeNpcNum
     GameMainInterfacePanel.allNpcNum.text = getMoneyString(num)
 end
 

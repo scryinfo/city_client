@@ -8,9 +8,10 @@ UIPanel:ResgisterOpen(VolumeCtrl)
 --VolumeCtrl.static.Head_PATH = "View/GoodsItem/RoleHeadItem"
 
 local volumeBehaviour;
-local isClother = false
+local isClother
 local clothes
 local food
+local house
 local second
 local defaultPos_Y= -74
 local pool={}
@@ -20,6 +21,11 @@ local types = true
 local optionTwosScript = {}
 local isone = true
 local firstshow
+NpcShopType = {
+    clothes = 1,
+    food = 2,
+    house = 3,
+}
 local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
     if not pool[class] then
         pool[class]={}
@@ -68,6 +74,7 @@ function VolumeCtrl:Awake()
     volumeBehaviour:AddClick(VolumePanel.back,self.OnBack,self)
     volumeBehaviour:AddClick(VolumePanel.clotherBtn,self.OnClotherBtn,self)
     volumeBehaviour:AddClick(VolumePanel.foodBtn,self.OnFoodBtn,self)
+    volumeBehaviour:AddClick(VolumePanel.houseBtn,self.OnHouseBtn,self)
     --volumeBehaviour:AddClick(VolumePanel.cityBg,self.OnCityBg,self)
     volumeBehaviour:AddClick(VolumePanel.volume,self.OnVolume,self)
     volumeBehaviour:AddClick(VolumePanel.titleBg,self.OnTitleBg,self)
@@ -77,6 +84,8 @@ function VolumeCtrl:Awake()
 
 
     self.insId = OpenModelInsID.VolumeCtrl
+
+    isClother = NpcShopType.food
 
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
@@ -88,7 +97,8 @@ function VolumeCtrl:Awake()
         currentTime = math.floor(currentTime - (second % 10 + 10 ))
     end
 
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000) --每种商品购买的npc数量
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000,1) --每种商品购买的npc数量
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000,2) --每种商品购买的npc数量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
     DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
 
@@ -166,6 +176,8 @@ function VolumeCtrl:language()
    VolumePanel.clotheText.text = GetLanguage(20030001)
    VolumePanel.foodBtnText.text = GetLanguage(20030002)
    VolumePanel.foodText.text = GetLanguage(20030002)
+    VolumePanel.houseBtnText.text = GetLanguage(20050004)  --住宅
+   VolumePanel.houseText.text = GetLanguage(20050004)
    VolumePanel.undateTimeText.text = GetLanguage(19020019)  --秒后刷新
    VolumePanel.requirement.text = GetLanguage(19020020)
    VolumePanel.employed.text = GetLanguage(19020021)  --就业人口
@@ -183,7 +195,8 @@ function VolumeCtrl:Update()
         DataManager.DetailModelRpcNoRet(self.insId , 'm_NpcExchangeAmount') --所有npc交易量
         DataManager.DetailModelRpcNoRet(self.insId , 'm_ExchangeAmount') --所有交易量
         currentTime = math.floor(currentTime - 10)
-        DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000) --每种商品购买的npc数量
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000,1) --每种商品购买的npc数量
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNum',currentTime * 1000,2) --每种商品购买的npc数量
     end
     second = 10 - tonumber(ts.second) % 10
     if second < 10 then
@@ -203,32 +216,29 @@ function VolumeCtrl:c_NpcNum(countNpc,workNpcNum,unEmployeeNpcNum)
     local ts = getFormatUnixTime(currentTime)
     local time = tonumber(ts.year..ts.month..ts.day)
 
-   local adult = 0
-   local old = 0
-   local youth = 0
-    if countNpc ~= nil then
-        for i, v in pairs(countNpc) do
-            if v.key == 10 then
-                old = old + v.value
-            elseif v.key == 11 then
-                youth = youth + v.value
-            else
-                adult = adult + v.value
-            end
-        end
-    end
     VolumePanel.employedText.text = getMoneyString(workNpcNum)
     VolumePanel.unemployedText.text = getMoneyString(unEmployeeNpcNum)
     VolumeCtrl:AssignmentDemand(clothes , countNpc , time)
     VolumeCtrl:AssignmentDemand(food , countNpc , time)
-
+    house[1].demand = workNpcNum + unEmployeeNpcNum
 end
 
 --每种商品购买的npc数量
-function VolumeCtrl:c_OnGoodsNpcNum(info)
-    VolumeCtrl:AssignmentDemandSupply(clothes , info )
-    VolumeCtrl:AssignmentDemandSupply(food , info )
-    VolumePanel.scroll:ActiveLoopScroll(self.supplyDemand, #food)
+function VolumeCtrl:c_OnGoodsNpcNum(info,type)
+    if type == 1 then
+        VolumeCtrl:AssignmentDemandSupply(clothes , info )
+        VolumeCtrl:AssignmentDemandSupply(food , info )
+        if isClother == NpcShopType.clothes then
+            VolumePanel.scroll:ActiveLoopScroll(self.supplyDemand, #clothes)
+        elseif isClother == NpcShopType.food then
+            VolumePanel.scroll:ActiveLoopScroll(self.supplyDemand, #food)
+        elseif isClother == NpcShopType.house then
+            VolumePanel.scroll:ActiveLoopScroll(self.supplyDemand, #house)
+        end
+    elseif type == 2 then
+        --VolumeCtrl:AssignmentDemandSupply(house , info )
+        house[1].supply = info[1].total
+    end
 end
 
 --所有npc交易量
@@ -255,6 +265,7 @@ end
 function VolumeCtrl:initData()
     clothes = {}
     food = {}
+    house = {}
     local clothesIndex = 1
     local foodIndex = 1
     for i, v in pairs(Good) do
@@ -268,6 +279,8 @@ function VolumeCtrl:initData()
             clothesIndex = clothesIndex +1
         end
     end
+    house[1] = {}
+    house[1].itemId = 1400001
     VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
     VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end
@@ -300,9 +313,10 @@ end
 --ClotherBtn
 function VolumeCtrl:OnClotherBtn(go)
     PlayMusEff(1002)
-    isClother = true
+    isClother = NpcShopType.clothes
     VolumePanel.clothes.localScale = Vector3.one
     VolumePanel.food.localScale = Vector3.zero
+    VolumePanel.house.localScale = Vector3.zero
 
     VolumePanel.scroll:ActiveLoopScroll(go.supplyDemand, #clothes)
 
@@ -311,10 +325,20 @@ end
 --FoodBtn
 function VolumeCtrl:OnFoodBtn(go)
     PlayMusEff(1002)
-    isClother = false
+    isClother = NpcShopType.food
     VolumePanel.clothes.localScale = Vector3.zero
     VolumePanel.food.localScale = Vector3.one
+    VolumePanel.house.localScale = Vector3.zero
     VolumePanel.scroll:ActiveLoopScroll(go.supplyDemand, #food)
+end
+--houseBtn
+function VolumeCtrl:OnHouseBtn(go)
+    PlayMusEff(1002)
+    isClother = NpcShopType.house
+    VolumePanel.clothes.localScale = Vector3.zero
+    VolumePanel.food.localScale = Vector3.zero
+    VolumePanel.house.localScale = Vector3.one
+    VolumePanel.scroll:ActiveLoopScroll(go.supplyDemand, #house)
 end
 
 --滑动互用
@@ -322,12 +346,13 @@ VolumeCtrl.static.SupplyDemandProvideData = function(transform, idx)
 
     idx = idx + 1
     local item
-    if isClother then
+    if isClother == NpcShopType.clothes then
         item = SupplyDemandItem:new(clothes[idx],transform)
-    else
+    elseif isClother == NpcShopType.food then
         item = SupplyDemandItem:new(food[idx],transform)
+    elseif isClother == NpcShopType.house then
+        item = SupplyDemandItem:new(house[idx],transform)
     end
-
     local supplyDemand = {}
     supplyDemand[idx] = item
 
@@ -335,7 +360,7 @@ VolumeCtrl.static.SupplyDemandProvideData = function(transform, idx)
 end
 
 VolumeCtrl.static.SupplyDemandClearData = function(transform)
-    volumeBehaviour:RemoveClick( transform:Find("bg/headImage/head").gameObject, VolumeCtrl._OnHeadBtn)
+    volumeBehaviour:RemoveClick( transform:Find("bg").gameObject, VolumeCtrl.OnBg)
 end
 
 --点击背景

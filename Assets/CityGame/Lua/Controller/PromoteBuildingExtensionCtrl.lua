@@ -120,9 +120,9 @@ end
 function PromoteBuildingExtensionCtrl:OnQueue(go)
     PlayMusEff(1002)
     if PromoteBuildingExtensionPanel.time.text == "" then
-        Event.Brocast("SmallPop",GetLanguage(27040026),300)
+        Event.Brocast("SmallPop",GetLanguage(27040026))
     elseif tonumber(PromoteBuildingExtensionPanel.time.text) == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040027),300)
+        Event.Brocast("SmallPop",GetLanguage(27040027))
     else
         DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_AddPromote',go.m_data.insId,tonumber(PromoteBuildingExtensionPanel.time.text),go.m_data.buildingId)
     end
@@ -132,9 +132,9 @@ end
 function PromoteBuildingExtensionCtrl:OnOtherQueue(go)
     PlayMusEff(1002)
     if PromoteBuildingExtensionPanel.otherTime.text == "" then
-        Event.Brocast("SmallPop",GetLanguage(27040026),300)
+        Event.Brocast("SmallPop",GetLanguage(27040026))
     elseif tonumber(PromoteBuildingExtensionPanel.otherTime.text) == 0 then
-        Event.Brocast("SmallPop",GetLanguage(27040027),300)
+        Event.Brocast("SmallPop",GetLanguage(27040027))
     else
         DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_AddPromote',go.m_data.insId,tonumber(PromoteBuildingExtensionPanel.otherTime.text),go.m_data.buildingId)
     end

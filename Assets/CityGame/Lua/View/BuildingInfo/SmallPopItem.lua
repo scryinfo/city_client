@@ -12,21 +12,20 @@ local class = require 'Framework/class'
 SmallPopItem = class('SmallPopItem')
 
 
-SmallPopItem.endPOS=Vector2.New(0,-415)
+SmallPopItem.endPOS=Vector2.New(0,462)
 
-SmallPopItem.POS=Vector2.New(0,-750)
+SmallPopItem.POS=Vector2.New(0,797)
 
 local prefabTrans;
 
 
 ---初始化方法   数据（读配置表）
-function SmallPopItem:initialize(string,spacing,prefab,mgr)
-    self.spacing=spacing
+function SmallPopItem:initialize(string,type,prefab,mgr)
     prefabTrans=prefab.transform:GetComponent("RectTransform");
     self.tipText=prefab.transform:Find("textbg/tipText"):GetComponent("Text");
 
     self.textBgTrans=prefab.transform:Find("textbg"):GetComponent("RectTransform")
-    prefabTrans.anchoredPosition=Vector2.New(0,-750)
+    prefabTrans.anchoredPosition=Vector2.New(0,797)
     self.tipText.text=string
     self.tipTextTrans=prefab.transform:Find("textbg/tipText"):GetComponent("RectTransform")
 
@@ -34,16 +33,29 @@ function SmallPopItem:initialize(string,spacing,prefab,mgr)
 
     self.timenow=UnityEngine.Time.time+3
 
+    if type == ReminderType.Common then
+        self.textBgTrans.transform:GetComponent("Image").color = getColorByInt(243,243,243,230)
+        self.tipText.color = getColorByInt(68,68,68,255)
+    elseif type == ReminderType.Warning then
+        self.textBgTrans.transform:GetComponent("Image").color = getColorByInt(174,32,32,230)
+        self.tipText.color = getColorByInt(239,239,239,255)
+    elseif type == ReminderType.Succeed then
+        self.textBgTrans.transform:GetComponent("Image").color = getColorByInt(255,187,43,230)
+        self.tipText.color = getColorByInt(82,63,30,255)
+    else
+        self.textBgTrans.transform:GetComponent("Image").color = getColorByInt(243,243,243,230)
+        self.tipText.color = getColorByInt(68,68,68,255)
+    end
+
     UpdateBeat:Add(self._update, self);
 end
 
 
 function SmallPopItem:_update()
-    self.textBgTrans.sizeDelta=Vector2.New(self.tipTextTrans.sizeDelta.x+self.spacing,100)
 
     if  UnityEngine.Time.time>self.timenow  then
 
-        prefabTrans.anchoredPosition=Vector2.New(0,-750);
+        prefabTrans.anchoredPosition=Vector2.New(0,797);
 
         UpdateBeat:Remove(self._update, self);
     end

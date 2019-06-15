@@ -33,8 +33,10 @@ function LanguageItem:OnUnselected(go)
     last = go.selected
     if go.data.id == 0 then
         SaveLanguageSettings(LanguageType.Chinese)
+        LoginPanel.languageText.text = GetLanguage(10020010)
     elseif go.data.id == 1 then
         SaveLanguageSettings(LanguageType.English)
+        LoginPanel.languageText.text = GetLanguage(10020011)
     end
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end

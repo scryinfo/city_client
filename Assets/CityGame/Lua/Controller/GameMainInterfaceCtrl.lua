@@ -32,7 +32,6 @@ end
 function GameMainInterfaceCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
     Event.AddListener("c_beginBuildingInfo",self.c_beginBuildingInfo,self)
-    Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
     Event.AddListener("c_openBuildingInfo", self.c_openBuildingInfo,self)
     Event.AddListener("c_GetBuildingInfo", self.c_GetBuildingInfo,self)
     Event.AddListener("c_receiveOwnerDatas",self.SaveData,self)
@@ -88,6 +87,7 @@ function GameMainInterfaceCtrl:Close()
     Event.RemoveListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     Event.RemoveListener("updatePlayerName",self.updateNameFunc,self)  --改变名字
     Event.RemoveListener("SmallPop",self.c_SmallPop,self)
+    Event.RemoveListener("c_ChangeMoney",self.c_ChangeMoney,self)
     self = nil
 end
 
@@ -98,15 +98,15 @@ function GameMainInterfaceCtrl:c_ChangeMoney(money)
 end
 
 ---小弹窗
-function GameMainInterfaceCtrl:c_SmallPop(string,spacing)
+function GameMainInterfaceCtrl:c_SmallPop(string,type)
     if  not self.prefab then
         local function callback(prefab)
             self.prefab = prefab
-            SmallPopItem:new(string,spacing,prefab ,self);
+            SmallPopItem:new(string,type,prefab ,self);
         end
         createPrefab(GameMainInterfaceCtrl.SmallPop_Path,self.root, callback)
     else
-        SmallPopItem:new(string,spacing,self.prefab ,self);
+        SmallPopItem:new(string,type,self.prefab ,self);
     end
 end
 
@@ -124,11 +124,7 @@ end
 --全城Npc数量
 function GameMainInterfaceCtrl:c_AllNpcNum(info)
     local num = 0
-    if info then
-        for i, v in pairs(info) do
-            num = num + v.value
-        end
-    end
+    num = info.workNpcNum + info.unEmployeeNpcNum
     GameMainInterfacePanel.allNpcNum.text = getMoneyString(num)
 end
 
@@ -410,6 +406,7 @@ function GameMainInterfaceCtrl:Awake()
     Event.AddListener("c_OnConnectTradeSuccess",self.c_OnSSSuccess,self)        --連接ss成功回調
     Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     Event.AddListener("updatePlayerName",self.updateNameFunc,self)  --改变名字
+    Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
     -----小弹窗
     Event.AddListener("SmallPop",self.c_SmallPop,self)
     CityEngineLua.login_tradeapp(true)

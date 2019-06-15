@@ -26,6 +26,7 @@ function FlightMainModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getFlightBetHistory","gs.FlightBetHistory",FlightMainModel.n_OnGetBetHistory)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","flightBetInform","gs.FlightBetInform",FlightMainModel.n_OnGetBetResult)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","scoreChangeInform","gs.Num",FlightMainModel.n_OnFlightScoreChange)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","searchFlight","gs.FlightData",FlightMainModel.n_OnGetSearchFlight)
 
 end
 --关闭事件--
@@ -107,4 +108,15 @@ function FlightMainModel.n_OnFlightScoreChange(data, msgId)
     end
     DataManager.SetMyFlightScore(data.num)
     Event.Brocast("c_flightScoreChange", data)
+end
+--
+function FlightMainModel.n_OnGetSearchFlight(data, msgId)
+    if msgId == 0 then
+        local info = {}
+        info.titleInfo = "Error"
+        info.contentInfo = "GAucModel.n_OnGetSearchFlight："..data.reason
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        return
+    end
+    --Event.Brocast("c_flightScoreChange", data)
 end

@@ -72,8 +72,18 @@ function BuildingBaseModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,p
     local lMsg = {buildingId = buildingId,item = {key = {id = itemId,producerId = producerId,qty = qty},n = tonumber(number)},price = tonumber(price)}
     DataManager.ModelSendNetMes("gscode.OpCode","addShopCart","gs.GoodInfo",lMsg)
 end
---获取特定品牌
-function BuildingBaseModel:m_ReqGetBrandName(playerId,itemId)
-    local lMsg = {pId = playerId,typeId = itemId}
-    DataManager.ModelSendNetMes("gscode.OpCode","queryBrand","gs.queryBrand",lMsg)
+----获取特定品牌 TODO:协议修改，这个没有用到
+--function BuildingBaseModel:m_ReqGetBrandName(playerId,itemId)
+--    local lMsg = {pId = playerId,typeId = itemId}
+--    DataManager.ModelSendNetMes("gscode.OpCode","queryBrand","gs.queryBrand",lMsg)
+--end
+--查询原料信息
+function BuildingBaseModel:m_ReqBuildingMaterialInfo(buildingId)
+    local lMsg = {id = buildingId}
+    DataManager.ModelSendNetMes("gscode.OpCode","queryBuildingMaterialInfo","gs.Id",lMsg)
+end
+--查询商品信息
+function BuildingBaseModel:m_ReqBuildingGoodsInfo(buildingId)
+    local lMsg = {id = buildingId}
+    DataManager.ModelSendNetMes("gscode.OpCode","queryBuildingGoodInfo","gs.Id",lMsg)
 end

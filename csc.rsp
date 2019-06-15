@@ -1,3 +1,16 @@
--r:BouncyCastle.Crypto.dll
 -r:System.Security.dll
 -r:System.Numerics.dll
+-r:BouncyCastle.Crypto.dll
+-r:Nethereum.ABI.dll
+-r:Nethereum.Contracts.dll
+-r:Nethereum.Hex.dll
+-r:Nethereum.JsonRpc.Client.dll
+-r:Nethereum.KeyStore.dll
+-r:Nethereum.RLP.dll
+-r:Nethereum.RPC.dll
+-r:Nethereum.Signer.dll
+-r:Nethereum.Unity.dll
+-r:Nethereum.Util.dll
+-r:Newtonsoft.Json.dll
+-r:System.Threading.dll
+-r:UnityEngine.dll

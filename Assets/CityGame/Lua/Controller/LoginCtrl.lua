@@ -136,7 +136,7 @@ end
 function LoginCtrl:_initData()
 	DataManager.OpenDetailModel(LoginModel,self.insId)
 	--连接as
-	CityEngineLua.login_loginapp(true)
+	--CityEngineLua.login_loginapp(true)
 	if UnityEngine.PlayerPrefs.GetString("username") ~= "" then
 		LoginPanel.inputUsername:GetComponent('InputField').text = UnityEngine.PlayerPrefs.GetString("username")
 	end

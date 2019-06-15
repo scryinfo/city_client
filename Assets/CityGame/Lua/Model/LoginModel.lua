@@ -58,18 +58,11 @@ end
 
 --点击登录
 function LoginModel.m_OnAsLogin( username, password, data )
+    CityEngineLua.login_loginapp(true);
+    CityEngineLua.currserver = "loginapp"
     CityEngineLua.username = username;
     CityEngineLua.password = password;
     CityEngineLua._clientdatas = data;
-    local msgId = pbl.enum("ascode.OpCode","login")
-    ----2、 填充 protobuf 内部协议数据
-    local msglogion = {
-        account = username,pwd = password
-    }
-    -- 序列化成二进制数据
-    local pb_login = assert(pbl.encode("as.Account", msglogion))
-    --发包
-    CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
 end
 
 --点击注册

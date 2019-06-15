@@ -577,8 +577,9 @@ function ChatMgr:_scrollBottom()
         return
     end
 
-    if  UnityEngine.Time.time> self.timeNow then
+    if UnityEngine.Time.time <= self.timeNow then
         self.rootScrollbar.value = 0
+    else
         UpdateBeat:Remove(self._scrollBottom, self)
     end
 end

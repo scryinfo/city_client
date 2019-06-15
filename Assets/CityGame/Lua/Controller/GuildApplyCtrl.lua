@@ -105,12 +105,12 @@ function GuildApplyCtrl:c_DelJoinReq(joinReq)
     if joinReq.handleId == DataManager.GetMyOwnerID() then
         if joinReq.serverFlag then
             if joinReq.handleFlag then
-                Event.Brocast("SmallPop", "已同意申请", 80)
+                Event.Brocast("SmallPop", GetLanguage(12060039), 80) -- "已同意申请"
             else
-                Event.Brocast("SmallPop", "已拒绝申请", 80) --  .. joinReq.playerId
+                Event.Brocast("SmallPop", GetLanguage(12060040), 80) --  .. joinReq.playerId  "已拒绝申请"
             end
         else
-            Event.Brocast("SmallPop", "已有公会", 80)
+            Event.Brocast("SmallPop", GetLanguage(12060038), 80)
         end
     end
     GuildApplyPanel.guildInfoScroll:ActiveLoopScroll(self.guildApplySource, #GuildApplyCtrl.societyApplyInfo, "View/Guild/GuildApplyItem")

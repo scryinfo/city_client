@@ -121,13 +121,13 @@ function GuildMenu:_onAddFriends()
     self:SetPrefabShow(false)
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
     local data = {}
-    data.titleInfo = GetLanguage(12040002)
-    data.tipInfo = GetLanguage(12040003)
+    data.titleInfo = GetLanguage(13040002)
+    data.tipInfo = GetLanguage(13040003)
     data.inputInfo = GetLanguage(15010023)
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_AddFriends", { id = GuildOwnCtrl.static.guildMgr:GetPlayerId(), desc = text })
-        Event.Brocast("SmallPop", GetLanguage(12040004),80)
+        Event.Brocast("SmallPop", GetLanguage(13040004),80)
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end

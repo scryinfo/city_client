@@ -48,6 +48,7 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
+    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
 end
 
 function MaterialFactoryModel:Close()
@@ -85,6 +86,8 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
+    --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
+
 end
 ---客户端请求---
 --打开原料厂
@@ -135,10 +138,14 @@ end
 function MaterialFactoryModel:m_ReqSetLineOrder(buildingId,lineId,pos)
     self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
 end
+----查询原料信息
+--function MaterialFactoryModel:m_ReqBuildingMaterialInfo(buildingId)
+--    self.funModel:m_ReqBuildingMaterialInfo(buildingId)
+--end
 ----自动补货
-function MaterialFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
-    self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
-end
+--function MaterialFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
+--    self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
+--end
 ----添加购物车
 --function MaterialFactoryModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
 --    self.funModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
@@ -148,7 +155,7 @@ end
 function MaterialFactoryModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
         self:m_ReqOpenMaterial(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(24020018), 300)  --开业成功提示
+        Event.Brocast("SmallPop", GetLanguage(24020018), ReminderType.Succeed)  --开业成功提示
     end
 end
 --员工工资改变
@@ -163,6 +170,7 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
             self.funModel = BuildingBaseModel:new(self.insId)
         end
     end
+    --self:m_ReqBuildingMaterialInfo(self.insId)
     --UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",DataManager.GetMyPersonalHomepageInfo().id)
     UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",stream)
 end
@@ -181,7 +189,7 @@ function MaterialFactoryModel:n_OnModifyShelfInfo(data)
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(29010010), 300)
+        Event.Brocast("SmallPop", GetLanguage(29010010), ReminderType.Succeed)
     end
 end
 --下架
@@ -189,7 +197,7 @@ function MaterialFactoryModel:n_OnShelfDelInfo(data)
     Event.Brocast("downShelfSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(25060007), 300)
+        Event.Brocast("SmallPop", GetLanguage(25060007), ReminderType.Succeed)
     end
 end
 --添加生产线
@@ -227,6 +235,10 @@ end
 function MaterialFactoryModel:n_OnSetAutoReplenish(data)
     Event.Brocast("replenishmentSucceed",data)
 end
+----查询原料信息
+--function MaterialFactoryModel:n_OnBuildingMaterialInfo(data)
+--    Event.Brocast("saveMaterialOrGoodsInfo",data)
+--end
 ----添加购物车
 --function MaterialFactoryModel:n_OnAddShoppingCart(data)
 --

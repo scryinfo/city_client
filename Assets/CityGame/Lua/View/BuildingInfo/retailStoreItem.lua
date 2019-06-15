@@ -36,9 +36,11 @@ function retailStoreItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
 end
 function retailStoreItem:getBuildingScore()
     --知名度评分
-    local famousScore = self.dataInfo.score[1].val / self.dataInfo.score[3].val * 100
+    --local famousScore = self.dataInfo.score[1].val / self.dataInfo.score[3].val * 100
+    local famousScore = self.dataInfo.score[3].val
     --品质评分
-    local qualityScore = self.dataInfo.score[4].val * (1 + self.dataInfo.score[5].val) / self.dataInfo.score[6].val * 100
+    --local qualityScore = self.dataInfo.score[4].val * (1 + self.dataInfo.score[5].val) / self.dataInfo.score[6].val * 100
+    local qualityScore = self.dataInfo.score[6].val
     --建筑总评分
     self.scoreText.text = math.ceil((famousScore + qualityScore) / 2)
     --建筑当前品质

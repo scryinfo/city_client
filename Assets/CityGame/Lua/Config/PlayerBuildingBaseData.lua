@@ -53,7 +53,7 @@ PlayerBuildingBaseData=
         ["poolName"] = "MaterialBuilding_2",
     },
     [1100003] ={
-        ["sizeName"] =41010003,
+        ["sizeName"] =42010003,
         ["typeName"] =42020001,
         ["des"] ="大型原料厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/MaterialBuilding_3x3.png",
@@ -131,7 +131,7 @@ PlayerBuildingBaseData=
         ["poolName"] = "Factory_2",
     },
     [1200003] ={
-        ["sizeName"] =41010003,
+        ["sizeName"] =42010003,
         ["typeName"] =42020002 ,
         ["des"] ="大型加工厂的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Factory_3x3.png",
@@ -215,7 +215,7 @@ PlayerBuildingBaseData=
         ["poolName"] = "SuperMarket_2",
     },
     [1300003] ={
-        ["sizeName"] =41010003,
+        ["sizeName"] =42010003,
         ["typeName"] =42020003,
         ["des"] ="大型零售店的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/SuperMarket_3x3.png",
@@ -302,7 +302,7 @@ PlayerBuildingBaseData=
         ["poolName"] = "HomeHouse_2",
     },
     [1400003] ={
-        ["sizeName"] =41010003,
+        ["sizeName"] =42010003,
         ["typeName"] =42020004,
         ["des"] ="大型住宅的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/HomeHouse3x3.png",
@@ -383,7 +383,7 @@ PlayerBuildingBaseData=
         ["poolName"] = "TechnologyBuilding_2",
     },
     [1500003] ={
-        ["sizeName"] =41010003,
+        ["sizeName"] =42010003,
         ["typeName"] =42020006,
         ["des"] ="大型研究所的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/TechnologyBuilding3x3.png",
@@ -467,7 +467,7 @@ PlayerBuildingBaseData=
         ["poolName"] = "Park_2",
     },
     [1600003] ={
-        ["sizeName"] =41010003,
+        ["sizeName"] =42010003,
         ["typeName"] =42020005,
         ["des"] ="大型推广公司的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/Advertising_3x3.png",
@@ -548,7 +548,7 @@ PlayerBuildingBaseData=
         ["poolName"] = "ExpertTradingCenter_2",
     },
     [1700003] ={
-        ["sizeName"] =41010003,
+        ["sizeName"] =42010003,
         ["typeName"] =41020007,
         ["des"] ="大型集散中心的说明",
         ["imgPath"] ="Assets/CityGame/Resources/View/BuildIcon/ExpertTradingCenter-3x3.png",

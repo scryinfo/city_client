@@ -48,6 +48,9 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.leftBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.leftBtn.onClick:AddListener(function ()
             data.itemId = self.leftItemId
+            --data.mId = self.m_data.mId
+            --data.insId = self.m_data.buildingId
+            --data.buildingType = self.m_data.buildingType
             data.mId = self.m_data.info.mId
             data.insId = self.m_data.info.id
             data.buildingType = self.m_data.buildingType
@@ -60,6 +63,9 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
             data.itemId = self.rightItemId
+            --data.mId = self.m_data.mId
+            --data.insId = self.m_data.buildingId
+            --data.buildingType = self.m_data.buildingType
             data.mId = self.m_data.info.mId
             data.insId = self.m_data.info.id
             data.buildingType = self.m_data.buildingType

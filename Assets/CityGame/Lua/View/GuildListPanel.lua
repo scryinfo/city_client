@@ -55,4 +55,6 @@ function GuildListPanel.InitPanel()
     this.createTitleText = transform:Find("CreateRoot/MiddleRoot/TitleText"):GetComponent("Text")
     this.nameInputFieldText = transform:Find("CreateRoot/MiddleRoot/NameInputField/Placeholder"):GetComponent("Text")
     this.describeInputFieldText = transform:Find("CreateRoot/MiddleRoot/DescribeInputField/Placeholder"):GetComponent("Text")
+    this.nullImage = transform:Find("MiddleRoot/NullImage")
+    this.nullImageText = transform:Find("MiddleRoot/NullImage/Text"):GetComponent("Text")
 end

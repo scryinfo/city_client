@@ -1688,6 +1688,19 @@ CityEngineLua.onConnectionStateChange = function(state )
 	if state.error == '' then -- 默认成功
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	elseif state.error == 'Connect server succeed' then --连接成功
+		local timer = FrameTimer.New(function()
+			--AS连接成功后隔一帧再登录，因为要等接受和发送的线程开起来
+			if CityEngineLua.currserver == "loginapp" then
+				local msgId = pbl.enum("ascode.OpCode","login")
+				local msglogion = {
+					account = CityEngineLua.username,pwd = CityEngineLua.password
+				}
+				local pb_login = assert(pbl.encode("as.Account", msglogion))
+				--发包
+				CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
+			end
+		end, 1, 0)
+		timer:Start()
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	elseif state.error == 'Manual close connection' then --客户端主动断开成功（无需处理）
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
@@ -1710,20 +1723,7 @@ end
 CityEngineLua.login_loginapp = function( noconnect )
 	if noconnect then
 		this.reset();
-		local timer = FrameTimer.New(function()
-			this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
-		end, 10, 0)
-		timer:Start()
-	else
-		--local msgId = pbl.enum("ascode.OpCode","login")
-		------2、 填充 protobuf 内部协议数据
-		--local msglogion = {
-		--	account = this.username,pwd = this.password
-		--}
-		---- 序列化成二进制数据
-		--local pb_login = assert(pbl.encode("as.Account", msglogion))
-		----发包
-		--CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
+		this._networkInterface:connectTo(this.ip, this.port, this.onConnectTo_loginapp_callback, nil);
 	end
 end
 

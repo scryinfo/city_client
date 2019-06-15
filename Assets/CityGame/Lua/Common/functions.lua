@@ -147,7 +147,25 @@ function getFormatUnixTimeNumber(time)
 	tb.sec = tonumber(os.date("%S", time)) or 0
 	return tb
 end
-
+--把时间格式字符串转化成时间戳 --必须为yyyy-mm-dd hh:mm:ss格式
+function getTimeUnixByFormat(timeString)
+	if type(timeString) ~= 'string' then error('string2time: timeString is not a string') return 0 end
+	local fun = string.gmatch( timeString, "%d+")
+	local y = fun() or 0
+	if y == 0 then error('timeString is a invalid time string') return 0 end
+	local m = fun() or 0
+	if m == 0 then error('timeString is a invalid time string') return 0 end
+	local d = fun() or 0
+	if d == 0 then error('timeString is a invalid time string') return 0 end
+	local H = fun() or 0
+	if H == 0 then error('timeString is a invalid time string') return 0 end
+	local M = fun() or 0
+	if M == 0 then error('timeString is a invalid time string') return 0 end
+	local S = fun() or 0
+	if S == 0 then error('timeString is a invalid time string') return 0 end
+	return os.time({year=y, month=m, day=d, hour=H,min=M,sec=S})
+end
+--
 function convertTimeForm(second)
 	local data={}
 	data.day  = math.floor(second/86400)
@@ -721,14 +739,14 @@ function GetEvaData(index, configData, lv)
 		if configData.Atype < 2100000 then -- 建筑品质加成
 			return string.format( (1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
 		else -- 商品品质值
-			return string.format( EvaUp[lv].add / 1000 * configData.basevalue)
+			return string.format( (1 + EvaUp[lv].add / 100000) * configData.basevalue)
 		end
 	elseif configData.Btype == "ProduceSpeed" then -- 生产速度
-		local resultNum = tostring( ((1 + EvaUp[lv].add / 100000) * configData.basevalue) * brandSizeNum)
+		local resultNum = tostring( 1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue) * brandSizeNum)
 		if string.find(resultNum, ".") ~= nil then
 			resultNum = string.format( "%.4f", resultNum)
 		end
-		return resultNum .. "个/s"
+		return resultNum .. "s/per"
 	elseif configData.Btype == "PromotionAbility" then -- 推广能力
 		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
 	elseif configData.Btype == "InventionUpgrade" then -- 发明提升

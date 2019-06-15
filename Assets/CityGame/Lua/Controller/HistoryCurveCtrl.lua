@@ -98,7 +98,7 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
             time[i] = getFormatUnixTime(sevenDaysAgo).month .. "/" .. getFormatUnixTime(sevenDaysAgo).day
             table.insert(boundaryLine,(sevenDaysAgo - sevenDaysAgoTime )/3600 * 116)
         else
-            time[i] = tostring(getFormatUnixTime(sevenDaysAgo).hour)
+            time[i] = tostring(getFormatUnixTime(sevenDaysAgo).hour) .. "h"
         end
         if info == nil then
             demandNumTab[i].num = 0
@@ -107,6 +107,10 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
                 if math.floor(v.t/1000) == sevenDaysAgo then
                     demandNumTab[i].num = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
                             .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap.tp][self.m_data] / 10000 * v.npcTypeNumMap.n)
+                else
+                    if i > 1 then
+                        demandNumTab[i].num = demandNumTab[i-1].num
+                    end
                 end
             end
         end

@@ -106,6 +106,7 @@ function AvtarCtrl:ClearCasch()
     myCurrentHeadNum = nil
     AvatarOrganImageList = nil
     headPrefab = nil
+    pool = {}
 end
 
 
@@ -183,7 +184,6 @@ function AvtarCtrl:begin()
         --隐藏性别选项
         panel.maleBtn.gameObject:SetActive(false)
         panel.feMaleBtn.gameObject:SetActive(false)
-
     else--无ID，为初始建号
         --性别默认为男
         mySex = 1
@@ -370,15 +370,13 @@ end
 --返回
 function AvtarCtrl:c_OnClick_backBtn(ins)
     PlayMusEff(1002)
-    --if DataManager.GetFaceId() then
-    --    UIPanel.ClosePage()
-    --else
-    --    ins:Hide()
-    --end
-    --CityEngineLua._networkInterface:reset()
-    CityEngineLua:reset()
-    UIPanel.BackToPage(LoginCtrl)
-    --UIPanel.ClosePage()
+    if DataManager.GetFaceId() then
+        UIPanel.ClosePage()
+    else
+        --ins:Hide()
+        CityEngineLua:reset()
+        UIPanel.BackToPage(LoginCtrl)
+    end
 end
 
 --确定 TODO://

@@ -58,7 +58,7 @@ function GroundAuctionCtrl:Hide()
     self.startTimeDownForStart = false
     self.startTimeDownForFinish = false
     self.highestPrice = nil
-    self.bidHistory = {}
+    self.bidHistory = nil
     self:_cleanHistoryObj()
 
     Event.RemoveListener("c_BidInfoUpdate", self._bidInfoUpdate, self)
@@ -261,6 +261,7 @@ function GroundAuctionCtrl:BidGround(ins)
     if ins.highestPrice == nil then
         ins.highestPrice = tonumber(GetClientPriceString(GroundAucConfig[ins.m_data.id].basePrice))
     end
+
     if GetServerPriceNumber(tonumber(bidPrice)) > GetServerPriceNumber(tonumber(ins.highestPrice)) then
         Event.Brocast("m_PlayerBidGround", ins.m_data.id, GetServerPriceNumber(bidPrice))
     else
@@ -271,7 +272,6 @@ function GroundAuctionCtrl:BidGround(ins)
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
     end
-
 end
 
 ---正在拍卖中的地块关闭了界面 --停止接收拍卖价格的更新
@@ -287,16 +287,30 @@ function GroundAuctionCtrl:_bidInfoUpdate(data)
     end
 
     GroundAuctionPanel.setBidState(true)
-    self.highestPrice = GetClientPriceString(data.price)
-    if self.bidHistory == nil then
-        self.bidHistory = {}
-    end
+    self:_checkHighestPrice(data)
+
     self:_cleanHistory()  --清除history item
-    self.m_data.endTs = data.ts + GAucModel.BidTime
-    local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-    table.insert(self.bidHistory, 1, temp)
     self:_createHistory()
     self.startTimeDownForFinish = true
+end
+--判断是否是最高价
+function GroundAuctionCtrl:_checkHighestPrice(data)
+    if self.bidHistory == nil or #self.bidHistory == 0 then
+        self.bidHistory = {}
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        self.highestPrice = temp.price
+        table.insert(self.bidHistory, 1, temp)
+        self.m_data.endTs = data.ts + GAucModel.BidTime
+        return
+    end
+
+    local tempHigh = self.bidHistory[1]
+    if tempHigh.price < data.price then
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.bidHistory, 1, temp)
+        self.highestPrice = temp.price
+        self.m_data.endTs = data.ts + GAucModel.BidTime
+    end
 end
 --清除历史item
 function GroundAuctionCtrl:_cleanHistory()

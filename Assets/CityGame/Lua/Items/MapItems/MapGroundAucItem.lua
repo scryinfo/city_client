@@ -130,15 +130,34 @@ end
 --信息更新
 function MapGroundAucItem:_bidInfoUpdate(data)
     if data.id == self.data.detailData.id then
-        if self.data.detailData.bidHistory == nil then
-            self.data.detailData.bidHistory = {}
-        end
-        self.data.detailData.endTs = data.ts + GAucModel.BidTime
-        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        table.insert(self.data.detailData.bidHistory, 1, temp)
+        --if self.data.detailData.bidHistory == nil then
+        --    self.data.detailData.bidHistory = {}
+        --end
+        --self.data.detailData.endTs = data.ts + GAucModel.BidTime
+        --local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        --table.insert(self.data.detailData.bidHistory, 1, temp)
+
+        self:_checkHighestPrice(data)
         self.isStartBid = true
         self.state = EGAucState.NowBid
         self:_toggleState(self.state)
+    end
+end
+--判断是否是最高价
+function MapGroundAucItem:_checkHighestPrice(data)
+    if self.data.detailData.bidHistory == nil then
+        self.data.detailData.bidHistory = {}
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.data.detailData.bidHistory, 1, temp)
+        self.data.detailData.endTs = data.ts + GAucModel.BidTime
+        return
+    end
+
+    local tempHigh = self.data.detailData.bidHistory[1]
+    if tempHigh.price < data.price then
+        local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
+        table.insert(self.data.detailData.bidHistory, 1, temp)
+        self.data.detailData.endTs = data.ts + GAucModel.BidTime
     end
 end
 --

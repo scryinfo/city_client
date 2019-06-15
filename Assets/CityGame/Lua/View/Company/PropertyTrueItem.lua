@@ -81,11 +81,42 @@ function PropertyTrueItem:initialize(prefab, data, configData)
             self:_setBtnInteractable(false, false)
             return
         end
+        -- 使按钮可点
+        self:_setBtnInteractable(true, true)
+
+        -- 规范输入的点数
         local addNumber = tonumber(inputValue)
-        if addNumber < 0 or tonumber(inputValue) > DataManager.GetEvaPoint() then
+        if addNumber < 0 then
+            addNumber = 0
             self:_setAddExNumInputField("0")
-            return
         end
+
+        -- 本身的点数
+        local selfAddPoint = 0
+        if EvaCtrl.static.evaCtrl.addEvaLvData and EvaCtrl.static.evaCtrl.addEvaLvData[self.strId] then
+            local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
+            if #recordData == 1 then
+                if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] then
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                end
+            elseif #recordData == 2 then
+                if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] then
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value
+                end
+            elseif #recordData == 3 then
+                if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]then
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                end
+            end
+        end
+
+        -- 输入的点数不可大于可用点数
+        if addNumber > DataManager.GetEvaPoint() - EvaCtrl.static.evaCtrl.allEvaAddPoint + selfAddPoint then
+            self:_showMoneyOver()
+            addNumber = 0
+            self:_setAddExNumInputField("0")
+        end
+
         self:_preAddPoint(addNumber)
     end)
 end
@@ -131,13 +162,6 @@ end
 
 -- 设置按钮状态
 function PropertyTrueItem:_setBtnInteractable(isCan1, isCan2)
-    --local isCan
-    --local evaPoint = DataManager.GetEvaPoint()
-    --if evaPoint and evaPoint > 0 then
-    --    isCan = true
-    --else
-    --    isCan = false
-    --end
     self.subtractBtn.interactable = isCan1
     self.addBtn.interactable = isCan2
 end
@@ -175,9 +199,31 @@ function PropertyTrueItem:_onChangeInputNum(num)
     end
 
     -- 为最大数时，不能再加
-    if EvaCtrl.static.evaCtrl.allEvaAddPoint == DataManager.GetEvaPoint() and num == 1 then
-        self:_showMoneyOver()
-        return
+    if num == 1 then
+        -- 本身的点数
+        local selfAddPoint = 0
+        if EvaCtrl.static.evaCtrl.addEvaLvData and EvaCtrl.static.evaCtrl.addEvaLvData[self.strId] then
+            local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
+            if #recordData == 1 then
+                if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] then
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                end
+            elseif #recordData == 2 then
+                if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] then
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value
+                end
+            elseif #recordData == 3 then
+                if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]then
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                end
+            end
+        end
+
+        -- 输入的点数不可大于可用点数
+        if addNumber == DataManager.GetEvaPoint() - EvaCtrl.static.evaCtrl.allEvaAddPoint + selfAddPoint then
+            self:_showMoneyOver()
+            return
+        end
     end
 
     --if addNumber < 0 or tonumber(inputValue) > DataManager.GetEvaPoint() then
@@ -309,7 +355,7 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
     -- 总的加点数
     EvaCtrl.static.evaCtrl.allEvaAddPoint = 0
     for _, aChild in pairs(EvaCtrl.static.evaCtrl.addData) do
-        self.allEvaAddPoint = self.allEvaAddPoint + aChild.value
+        EvaCtrl.static.evaCtrl.allEvaAddPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint + aChild.value
     end
 
     -- 保存需要发送的eva数据

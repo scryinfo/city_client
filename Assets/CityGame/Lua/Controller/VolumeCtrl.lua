@@ -280,7 +280,7 @@ function VolumeCtrl:initData()
         end
     end
     house[1] = {}
-    house[1].itemId = 1400001
+    house[1].itemId = 20050004
     VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
     VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end

@@ -24,5 +24,5 @@ SupplyDemandGood = {
     [2252201] = "Assets/CityGame/Resources/Atlas/Volume/goods/2252201.png",
     [2252202] = "Assets/CityGame/Resources/Atlas/Volume/goods/2252202.png",
     [2252203] = "Assets/CityGame/Resources/Atlas/Volume/goods/2252203.png",
-    [1400001] = "Assets/CityGame/Resources/Atlas/Volume/goods/icon-house.png",
+    [20050004] = "Assets/CityGame/Resources/Atlas/Volume/goods/icon-house.png",
 }

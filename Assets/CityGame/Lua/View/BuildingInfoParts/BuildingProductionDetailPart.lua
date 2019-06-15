@@ -123,6 +123,7 @@ function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("SettopSuccess",self.SettopSuccess,self)
     Event.AddListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.AddListener("deleListLine",self.deleListLine,self)
+    --Event.AddListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
@@ -131,6 +132,7 @@ function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("SettopSuccess",self.SettopSuccess,self)
     Event.RemoveListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.RemoveListener("deleListLine",self.deleListLine,self)
+    --Event.RemoveListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
@@ -430,6 +432,14 @@ function BuildingProductionDetailPart:updateNowLine(data)
         end
     end
 end
+----缓存获取到当前建筑Eva加点后的生产速度(原料信息，商品信息)
+--function BuildingProductionDetailPart:saveMaterialOrGoodsInfo(data)
+--    if data then
+--        self.materialOrGoodsInfo = data
+--        self.materialOrGoodsInfo.buildingType = self.m_data.buildingType
+--        self.materialOrGoodsInfo.mId = self.m_data.info.mId
+--    end
+--end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --删除一条待生产的线
 function BuildingProductionDetailPart:updateListLine(id)

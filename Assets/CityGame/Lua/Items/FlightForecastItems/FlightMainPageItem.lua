@@ -44,6 +44,7 @@ function FlightMainPageItem:initData(data)
     end
     self.betMoneyText.text = data.sumBetAmount
     local flightData = data.data
+    self.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间
     self.flightText.text = flightData.FlightCompany  --需要多语言
     self.numText.text = flightData.FlightNo  --CA4506
     self.endCodeText.text = flightData.FlightArrcode
@@ -64,7 +65,7 @@ end
 --
 function FlightMainPageItem:ClickFunc()
     PlayMusEff(1002)
-    ct.OpenCtrl("FlightDetailCtrl", self.data)
+    ct.OpenCtrl("FlightDetailCtrl", {detail = self.data, dataType = 0})
 end
 --
 function FlightMainPageItem:Close()

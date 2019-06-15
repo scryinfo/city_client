@@ -54,12 +54,12 @@ function BaseGroundModel:CheckGroundTransSuccess(groundInfo)
     --之前的id~=自己，现在==自己，则购买成功
     if nil ~= DataManager.GetMyOwnerID() and self.Data.ownerId ~= DataManager.GetMyOwnerID() and groundInfo.ownerId == DataManager.GetMyOwnerID() then
         if self.groundState == GroundTransState.Sell and groundState == GroundTransState.None then
-            Event.Brocast("SmallPop", GetLanguage(24040007), 300)
+            Event.Brocast("SmallPop", GetLanguage(22040007), 300)
         end
     end
     if self.groundState == GroundTransState.Renting and groundState == GroundTransState.Rent then
         if groundInfo.rent.renterId == DataManager.GetMyOwnerID() then
-            Event.Brocast("SmallPop", GetLanguage(24050010), 300)
+            Event.Brocast("SmallPop", GetLanguage(22050010), 300)
         end
     end
 

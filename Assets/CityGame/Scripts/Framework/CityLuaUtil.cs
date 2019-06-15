@@ -17,6 +17,11 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 
 using LuaFramework;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Utilities.Encoders;
+using System.Security.Cryptography;
+using Nethereum.Signer;
+using Nethereum.Util;
 
 namespace City
 {
@@ -156,6 +161,12 @@ namespace City
         public static void Test()
         {
             Debug.Log("测试静态方法");
+            List<Byte[]> test = new List<byte[]>();
+            //字符串
+            //var publicKeyBytes = Hex.Decode(publicKey);
+            test.Add(Hex.Decode("he哈哈"));
+            //long
+            test.Add(Hex.Decode(BitConverter.GetBytes(LuaFramework.Util.GetTime())));
         }
 
         public static void Test1()
@@ -171,12 +182,23 @@ namespace City
     public static class CityLuaUtil
     {
 
+        public static string scientificNotation2Normal(double number) {
+            return number.ToString("f99").TrimEnd('0');
+        }
+        private static byte[] stringToKeccak256(string inStr)
+        {            
+            var privateKeyBytes = Encoding.UTF8.GetBytes(inStr);
+            SHA256 mySHA256 = SHA256.Create();
+            byte[] output = mySHA256.ComputeHash(privateKeyBytes);
+            return output;
+        }
+
         public static bool VerifySignature(string message, string publicKey, string signature)
         {
             var curve = SecNamedCurves.GetByName("secp256k1");
             var domain = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H);
 
-            var publicKeyBytes = Base58Encoding.Decode(publicKey);
+            var publicKeyBytes = Hex.Decode(publicKey);
 
             var q = curve.Curve.DecodePoint(publicKeyBytes);
 
@@ -189,11 +211,33 @@ namespace City
             signer.Init(false, keyParameters);
             signer.BlockUpdate(Encoding.ASCII.GetBytes(message), 0, message.Length);
 
-            var signatureBytes = Base58Encoding.Decode(signature);
+            //var signatureBytes = stringToKeccak256(signature);
+            var signatureBytes = Hex.Decode(signature);
 
             return signer.VerifySignature(signatureBytes);
         }
 
+        public static bool Verify(byte[] message, byte[] publicKey, byte[] signature)
+        {
+            var curve = SecNamedCurves.GetByName("secp256k1");
+            var domain = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H);
+
+            var q = curve.Curve.DecodePoint(publicKey);
+
+            var keyParameters = new
+                    Org.BouncyCastle.Crypto.Parameters.ECPublicKeyParameters(q,
+                    domain);
+
+            ISigner signer = SignerUtilities.GetSigner("SHA-256withECDSA");
+
+            signer.Init(false, keyParameters);
+            signer.BlockUpdate(message, 0, message.Length);
+
+            //var signatureBytes = stringToKeccak256(signature);
+            var signatureBytes = Hex.Decode(signature);
+
+            return signer.VerifySignature(signatureBytes);
+        }
 
         public static string GetSignature(string privateKey, string message)
         {
@@ -201,7 +245,7 @@ namespace City
             var domain = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H);
 
             var keyParameters = new
-                    ECPrivateKeyParameters(new Org.BouncyCastle.Math.BigInteger(privateKey),
+                    ECPrivateKeyParameters(new Org.BouncyCastle.Math.BigInteger(stringToKeccak256(privateKey)),
                     domain);
 
             ISigner signer = SignerUtilities.GetSigner("SHA-256withECDSA");
@@ -209,19 +253,60 @@ namespace City
             signer.Init(true, keyParameters);
             signer.BlockUpdate(Encoding.ASCII.GetBytes(message), 0, message.Length);
             var signature = signer.GenerateSignature();
-            return Base58Encoding.Encode(signature);
+            return BitConverter.ToString(signature).Replace("-", string.Empty);
         }
 
-        public static string GetPublicKeyFromPrivateKeyEx(string privateKey)
+        public static byte[] Sign(string privateKey, byte[] message)
         {
             var curve = SecNamedCurves.GetByName("secp256k1");
             var domain = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H);
 
-            var d = new Org.BouncyCastle.Math.BigInteger(privateKey);
-            var q = domain.G.Multiply(d);
+            var keyParameters = new
+                    ECPrivateKeyParameters(new Org.BouncyCastle.Math.BigInteger(stringToKeccak256(privateKey)),
+                    domain);
 
-            var publicKey = new ECPublicKeyParameters(q, domain);
-            return Base58Encoding.Encode(publicKey.Q.GetEncoded());
+            ISigner signer = SignerUtilities.GetSigner("SHA-256withECDSA");
+
+            signer.Init(true, keyParameters);
+            signer.BlockUpdate(message, 0, message.Length);
+            var signature = signer.GenerateSignature();
+            return signature;
+        }
+
+        public static EthECDSASignature sigFrom64ByteArray(byte[] array64)
+        {
+            byte[] first32 = ByteUtil.Slice(array64, 0, 32);
+            byte[] last32 = ByteUtil.Slice(array64, 32, 64);
+            EthECDSASignature retsig = new EthECDSASignature(new Org.BouncyCastle.Math.BigInteger(1,first32)
+                , new Org.BouncyCastle.Math.BigInteger(1,last32), null);
+            return retsig;
+        }
+
+        public static byte[] Sign_Eth(string privateKey, byte[] message)
+        {
+            EthECKey ek = new EthECKey(stringToKeccak256(privateKey), true );
+            EthECDSASignature signature = ek.Sign(message);
+            return signature.To64ByteArray();            
+        }
+
+        public static bool Verify_Eth(byte[] pk , byte[] sig64, byte[] message)
+        {
+            var sig = sigFrom64ByteArray(sig64);
+            EthECKey vk = new EthECKey(pk, false);
+            EthECDSASignature vsig = CityLuaUtil.sigFrom64ByteArray(sig64);
+            bool passv = vk.Verify(message, vsig);
+            return vk.Verify(message, vsig);
+        }
+
+        public static string GetPublicKeyFromPrivateKeyEx(string privateKeyStr)
+        {
+            var curve = SecNamedCurves.GetByName("secp256k1");
+            var domain = new ECDomainParameters(curve.Curve, curve.G, curve.N, curve.H);
+            var d = new Org.BouncyCastle.Math.BigInteger(stringToKeccak256(privateKeyStr));            
+            var q = domain.G.Multiply(d);
+            var publicKey = new ECPublicKeyParameters(q, domain);            
+            string s2 = BitConverter.ToString(publicKey.Q.GetEncoded()).Replace("-", string.Empty);
+            return BitConverter.ToString(publicKey.Q.GetEncoded()).Replace("-", string.Empty); 
         }
 
 

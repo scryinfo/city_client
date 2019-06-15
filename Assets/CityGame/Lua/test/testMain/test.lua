@@ -36,8 +36,6 @@ UnitTest.Exec("abel_TimefunPrecision", "test_timefunPrecision",  function ()
     ct.log("abel_TimefunPrecision","[test_timefunPrecision]  tolua.gettime(): ",tolua.gettime())
 end)
 
---心跳检测服务器返回时间差
-local HeartBeatTimeDifference = 0.5
 UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
     ct.testUpdate = false
     --UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")
@@ -51,7 +49,6 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
         end)
         --每x秒检查一次上次心跳是否超时，超时
         ct.G_LAST_HARTBEAT = uTime.time
-        ct.G_Last_SendHARTBEATTime = uTime.time
         local timerCheck = FrameTimer.New(function()
             local timetest = uTime.time - ct.G_LAST_HARTBEAT
             if timetest > ct.G_TIMEOUT_NET and ct.testUpdate and CityEngineLua._networkInterface.connected then
@@ -60,14 +57,12 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 local okCallBack = function()
                     CityEngineLua.LoginOut()
                 end
-                ct.MsgBox(GetLanguage(41010010), GetLanguage(41010008), nil, okCallBack, okCallBack)
+                ct.MsgBox(GetLanguage(4301012), GetLanguage(4301008), nil, okCallBack, okCallBack)
             end
         end, 270, 1)
         timerCheck:Start()
         --目前GS才有心跳协议，AS没有
         local timerSendHartBeat = FrameTimer.New(function()
-            --先计算时间差
-            local timetest =  ct.G_LAST_HARTBEAT - ct.G_Last_SendHARTBEATTime
             if CityEngineLua._networkInterface.connected  and ct.testUpdate then
                 --HeartBeat
                 local msgId = pbl.enum("gscode.OpCode","heartBeat")
@@ -76,23 +71,12 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 ----3、 序列化成二进制数据
                 local  pMsg = assert(pbl.encode("gs.HeartBeat", lMsg))
                 CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
-                ---记录发送数据时的时间差
-                ct.G_Last_SendHARTBEATTime =  uTime.time
             end
-            if ct.testUpdate and CityEngineLua._networkInterface.connected then
-                --ct.log("system","心跳检测服务器返回时间差=> "..timetest)
-                ---服务器心跳返回超过0.5秒/未收到服务器心跳返回，并且消息弱界面未打开的
-                if  (timetest < 0 or timetest >= HeartBeatTimeDifference ) and ( ct.HeartbeatDisconnection == nil or ct.HeartbeatDisconnection ~= true ) then
-                    ct.log("system","心跳检测警告： 超过 0.5 秒未收到服务器响应数据=> "..timetest)
-                    ct.HeartbeatDisconnection = true
-                    ct.OpenCtrl("HeartbeatDisconnectionCtrl")
-                ---服务器心跳返回在0.5秒内，并且消息弱界面已打开的
-                elseif timetest >= 0 and timetest < HeartBeatTimeDifference  and ct.HeartbeatDisconnection ~= nil and ct.HeartbeatDisconnection == true then
-                    ct.HeartbeatDisconnection = false
-                    Event.Brocast("HeartbeatIsConnect")
-                end
+            local timetest = uTime.time - ct.G_LAST_HARTBEAT
+            if timetest > 4 then
+                ct.log("system", "心跳检检测警告： 超过3秒未收到服务器心跳相应包")
             end
-        end, 30, 1)
+        end, 90, 1)
         timerSendHartBeat:Start()
     end)
 end)
@@ -601,19 +585,19 @@ UnitTest.Exec("abel_w4_proto_Role", "test_w4_proto_Role",  function ()
         ground = {
             {
                 ownerId = "asdf",
-                 x = 123,
-                 y = 2332,
-                 rent = {
-                     rentPreDay = 1,
-                     paymentCycleDays = 1,
-                     deposit = 3,
-                     rentDays = 4,
-                     renterId = "asdfs",
-                     rentBeginTs = 123123,
-                 },
-                 sell = {
-                     price = 1
-                 },
+                x = 123,
+                y = 2332,
+                rent = {
+                    rentPreDay = 1,
+                    paymentCycleDays = 1,
+                    deposit = 3,
+                    rentDays = 4,
+                    renterId = "asdfs",
+                    rentBeginTs = 123123,
+                },
+                sell = {
+                    price = 1
+                },
             },
         },
     }
@@ -819,17 +803,18 @@ UnitTest.Exec("abel_0521_scientificNotation2number", "abel_0521_scientificNotati
 end)
 
 UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  function ()
-    local msgIdt = pbl.enum("gscode.OpCode","cc_createUser")
-    local msgIdt1 = pbl.enum("gscode.OpCode","cc_rechargeRequest")
-    local msgIdt2 = pbl.enum("gscode.OpCode","cc_disCharge")
+    local msgId0 = pbl.enum("gscode.OpCode","login")
+    local msgIdt = pbl.enum("gscode.OpCode","ct_createUser")
+    local msgIdt1 = pbl.enum("gscode.OpCode","ct_RechargeRequestReq")
+    local msgIdt2 = pbl.enum("gscode.OpCode","ct_disCharge")
 
     Event.AddListener("e_abel_0529_ddd_createUser", function (pid)
-        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cc_createUser","ccapi.CreateUserReq",function(msg)
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",function(msg)
             local test = 100
         end)
-        --发包测试
+        --发包测试ct_createUser
         ----2、 填充 protobuf 内部协议数据
-        local msgId = pbl.enum("gscode.OpCode","cc_createUser")
+        local msgId = pbl.enum("gscode.OpCode","ct_createUser")
         local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
         --local ts = getFormatUnixTime(currentTime)
         --local tsHour = math.floor(currentTime/3600000)
@@ -851,16 +836,232 @@ UnitTest.Exec("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",  functio
         }
 
         ----3、 序列化成二进制数据
-        local  pMsg = assert(pbl.encode("ccapi.Cc_createUser", lMsg))
-        local msgRet = assert(pbl.decode("ccapi.Cc_createUser",pMsg), "pbl.decode decode failed")
+        local  pMsg = assert(pbl.encode("ccapi.ct_createUser", lMsg))
+        local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
         CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
     end)
 end)
 
-UnitTest.Exec("cycle_0612_flightTest", "e_cycle_0612_flightTest",  function ()
-    Event.AddListener("e_cycle_0612_flightTest", function ()
-        ct.OpenCtrl("FlightMainCtrl")
+UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequestReq",  function ()
+    Event.AddListener("e_abel_0531_ct_RechargeRequestReq", function (pid)
+        local t = 0
+        local getOrderfunId=function(pid)
+            local msgId = pbl.enum("gscode.OpCode","ct_GenerateOrderReq")
+            local lMsg ={
+                PlayerId = pid,
+                ReqHeader={
+                    Version = 1,
+                    ReqId = tostring(msgId),
+                }
+            }
+            local  pMsg = assert(pbl.encode("ccapi.ct_GenerateOrderReq", lMsg))
+            local msgRet = assert(pbl.decode("ccapi.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
+            CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+        end
+
+        local RechargeRequestReq = function(msg)
+            local sm = City.signer_ct.New()
+            local privateKeyStr = "asdfqwper234123412341234lkjlkj2342ghhg5j";
+            local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
+            local pubkeyStr = sm.ToHexString(pubkey);
+            sm:pushHexSting(msg.PurchaseId); --PurchaseId
+            sm:pushLong(1559911178647); --ts
+            sm:pushHexSting("123456");   --Amount
+            --sm:pushHexSting(pubkeyStr)
+            --sm:pushBtyes(pubkey)
+
+            --计算数据哈希
+            local datahash = sm:getDataHash();
+            local datahashstr = City.signer_ct.ToHexString(datahash);
+            --签名
+            --local sig = sm:signInString(privateKeyStr);
+            local sig = sm:sign(privateKeyStr);
+
+            local msgId = pbl.enum("gscode.OpCode","ct_RechargeRequestReq")
+            local lMsg ={
+                PlayerId = msg.PlayerId,
+                RechargeRequestReq={
+                    ReqHeader={
+                        Version = 1,
+                        ReqId = tostring(msgId),
+                    },
+                    PurchaseId=msg.PurchaseId,
+                    PubKey=pubkeyStr,
+                    Amount='123456',
+                    ExpireTime=0,
+                    Ts=1559911178647,
+                    Signature = sm.ToHexString(sig)
+                }
+            }
+            local  pMsg = assert(pbl.encode("ccapi.ct_RechargeRequestReq", lMsg))
+            local msgRet = assert(pbl.decode("ccapi.ct_RechargeRequestReq",pMsg), "pbl.decode decode failed")
+            CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+        end
+        ct.cb = DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq"
+        ,"ccapi.ct_GenerateOrderReq",function (msg)
+                    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode","ct_GenerateOrderReq",ct.cb)
+                    RechargeRequestReq(msg)
+                end)
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq"
+        ,"ccapi.ct_RechargeRequestReq",function(msg)
+                    local test = 100
+                    UnitTest.Exec_now("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",msg.PlayerId)
+                end)
+        getOrderfunId(pid)
     end)
+end)
+
+UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
+    Event.AddListener("e_abel_0603_ct_DisCharge", function (pid)
+        local t = 0
+        local getOrderfunId=function(pid)
+            local msgId = pbl.enum("gscode.OpCode","ct_GenerateOrderReq")
+            local lMsg ={
+                PlayerId = pid,
+                ReqHeader={
+                    Version = 1,
+                    ReqId = tostring(msgId),
+                }
+            }
+            local  pMsg = assert(pbl.encode("ccapi.ct_GenerateOrderReq", lMsg))
+            local msgRet = assert(pbl.decode("ccapi.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
+            CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+        end
+
+        local ct_disCharge = function(msg)
+            local sm = City.signer_ct.New()
+            local privateKeyStr = "asdfqwper234123412341234lkjlkj2342ghhg5j";
+            local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
+            local pubkeyStr = sm.ToHexString(pubkey);
+            local myEthAddr = "qwerqwerqwerqwoiuopi023121lkjfalskdjqoiwejrqlwer"
+            local amount = tostring(2000)
+            local ts = 1559911188888
+            sm:pushHexSting(msg.PurchaseId); --PurchaseId
+            sm:pushSha256Hex(myEthAddr); --//addr
+            sm:pushHexSting(amount);   --Amount
+            sm:pushLong(ts); --ts
+
+            --计算数据哈希
+            local datahash = sm:getDataHash();
+            local datahashstr = City.signer_ct.ToHexString(datahash);
+            --签名
+            local sig = sm:sign(privateKeyStr);
+
+            local msgId = pbl.enum("gscode.OpCode","ct_DisChargeReq")
+            local lMsg ={
+                PlayerId = msg.PlayerId,
+                DisChargeReq={
+                    ReqHeader={
+                        Version = 1,
+                        ReqId = tostring(msgId),
+                    },
+                    PurchaseId=msg.PurchaseId,
+                    PubKey=pubkeyStr,
+                    EthAddr = myEthAddr,
+                    Amount=amount,
+                    ExpireTime=0,
+                    Ts=ts,
+                    Signature = sm.ToHexString(sig)
+                }
+            }
+            local  pMsg = assert(pbl.encode("ccapi.ct_DisChargeReq", lMsg))
+            local msgRet = assert(pbl.decode("ccapi.ct_DisChargeReq",pMsg), "pbl.decode decode failed")
+            CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+        end
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq"
+        ,"ccapi.ct_GenerateOrderReq",function (msg)
+                    ct_disCharge(msg)
+                end)
+        DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_DisChargeReq"
+        ,"ccapi.ct_DisChargeReq",function(msg)
+                    local test = 100
+                end)
+        getOrderfunId(pid)
+    end)
+end)
+
+UnitTest.Exec("abel_0601_keyPair_sameKey", "e_abel_0601_keyPair_sameKey",  function ()
+    local privatekey1 = "asdfasdfasdfasdfasdfaaasiksi11ksiksksks"
+    local pubKey2_1 = CityLuaUtil.GetPublicKeyFromPrivateKeyEx(privatekey1)
+    local tt = 1
+end)
+
+UnitTest.Exec("abel_0614_scientificNotation2Normal", "e_scientificNotation2Normal",  function ()
+    local enumber = 0.00000000001
+    local normal = CityLuaUtil.scientificNotation2Normal(enumber)
+    local tt = 1
+end)
+
+function string.fromhex(str)
+    return (str:gsub('..', function (cc)
+        return string.char(tonumber(cc, 16))
+    end))
+end
+
+function string.tohex(str)
+    return (str:gsub('.', function (c)
+        return string.format('%02X', string.byte(c))
+    end))
+end
+
+UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  function ()
+
+    local privatekey1 = "asdfqwper234123412341234lkjlkj2342ghhg5j"
+    local privatekey2 = "13688162729201906011234567777"
+    local pubKey1 = CityLuaUtil.GetPublicKeyFromPrivateKeyEx(privatekey1)
+    local pubKey2 = CityLuaUtil.GetPublicKeyFromPrivateKeyEx(privatekey2)
+    local data = 'Hello motal'
+    local data1 = 'Hello motal oooo'
+    local signature1 = CityLuaUtil.GetSignature(privatekey1, data)
+    local signature2 = CityLuaUtil.GetSignature(privatekey2, data)
+    local Verify1 = CityLuaUtil.VerifySignature(data, pubKey1, signature1)
+    local Verify2 = CityLuaUtil.VerifySignature(data, pubKey2, signature2)
+    --篡改签名|公钥
+    local Verify = CityLuaUtil.VerifySignature(data, pubKey1, signature2)
+    Verify = CityLuaUtil.VerifySignature(data, pubKey2, signature1)
+    --篡改内容
+    Verify = CityLuaUtil.VerifySignature(data1, pubKey1, signature1)
+    Verify = CityLuaUtil.VerifySignature(data1, pubKey2, signature2)
+
+    --执行C#测试代码
+    City.signer_ct.test_signer_ct()
+
+    --lua测试
+    local sm = City.signer_ct.New()
+    local privateKeyStr = "asdfqwper234123412341234lkjlkj2342ghhg5j";
+    local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
+    local pubkeyStr = sm.ToHexString(pubkey);
+    sm:pushHexSting("0636ba40b4124c9babf8043f91ff9045"); --PurchaseId
+    sm:pushLong(1559911178647); --ts
+    sm:pushHexSting("123456");   --meta
+    sm:pushHexSting(pubkeyStr)
+    --计算数据哈希
+    local datahash = sm:getDataHash();
+    local datahashstr = City.signer_ct.ToHexString(datahash);
+    --签名
+    local sig = sm:sign(privateKeyStr);
+    local sigStr = City.signer_ct.ToHexString(sig);
+
+
+    --验证
+    local pass = sm:verifyByPbyKey(pubkey, sig);
+
+    --篡改pubkey
+    local pubkeyChange = sm.GetPublicKeyFromPrivateKey("bsdfqwper234123412341234lkjlkj2342ghhg5j");
+    pass = sm:verifyByPbyKey(pubkeyChange, sig);
+
+    --//篡改签名
+    local sigChange = sm:sign("bsdfqwper234123412341234lkjlkj2342ghhg5j");
+    pass = sm:verifyByPbyKey(pubkey, sigChange);
+
+    --//篡改数据
+    sm:reset();
+    sm:pushHexSting("2636ba40b4124c9babf8043f91ff9045"); --//PurchaseId
+    sm:pushLong(1559911178647); --//ts
+    sm:pushSha256Hex("bsdfqwper234123412341234lkjlkj2342ghhg5j"); --//addr
+    sm:pushHexSting(" ");   --//meta
+    pass = sm:verifyByPbyKey(pubkey, sig);
+    local tt = 1
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

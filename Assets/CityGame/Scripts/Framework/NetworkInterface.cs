@@ -201,11 +201,14 @@
             }
             if (_ConnectState.error != "Connect server succeed")
             {
-                //超时处理            
+                //超时处理
                 close();
                 _ConnectState.error = "Connection TimeOut";
                 Event.fireIn("_onConnectionState", new object[] { _ConnectState });
-                _connectDelegate.EndInvoke(_result);
+
+                AsyncResult result = (AsyncResult)_result;
+                if(!result.EndInvokeCalled)
+                    _connectDelegate.EndInvoke(_result);
                 //Dbg.DEBUG_MSG(string.Format("NetWorkInterface::_asyncConnect(), connect to '{0}:{1}' fault! error = 'TimeOut'", _ConnectState.connectIP, _ConnectState.connectPort));
             }
         }

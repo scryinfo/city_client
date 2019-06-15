@@ -62,6 +62,7 @@ function GuildListCtrl:Active()
     GuildListPanel.createTitleText.text = GetLanguage(12050001)
     GuildListPanel.nameInputFieldText.text = GetLanguage(12050002)
     GuildListPanel.describeInputFieldText.text = GetLanguage(12010008)
+    GuildListPanel.nullImageText.text = GetLanguage(16010026)
 end
 
 -- 监听Model层网络回调
@@ -251,6 +252,7 @@ end
 -- 网络回调
 function GuildListCtrl:c_OnSocietyList(societyList)
     if societyList.listInfo then
+        GuildListPanel.nullImage.localScale = Vector3.zero
         GuildListCtrl.societyList = societyList.listInfo
 
         if GuildListCtrl.rankId then
@@ -267,6 +269,8 @@ function GuildListCtrl:c_OnSocietyList(societyList)
             GuildListPanel.timeBtnDefault2.localScale =Vector3.one
             GuildListPanel.guildListScroll:ActiveLoopScroll(self.guildSource, #GuildListCtrl.societyList, "View/Guild/GuildItem")
         end
+    else
+        GuildListPanel.nullImage.localScale = Vector3.one
     end
 end
 

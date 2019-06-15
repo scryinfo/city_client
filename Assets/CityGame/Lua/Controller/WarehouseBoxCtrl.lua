@@ -93,14 +93,16 @@ function WarehouseBoxCtrl:initializeUiInfoData()
         --如果是商品，判断原料等级
         if Good[self.m_data.itemId].luxury == 1 then
             self.levelImg.color = getColorByVector3(oneLevel)
+            self.levelValue.text = GetLanguage(25020028)
         elseif Good[self.m_data.itemId].luxury == 2 then
             self.levelImg.color = getColorByVector3(twoLevel)
+            self.levelValue.text = GetLanguage(25020029)
         elseif Good[self.m_data.itemId].luxury == 3 then
             self.levelImg.color = getColorByVector3(threeLevel)
+            self.levelValue.text = GetLanguage(25020030)
         end
         --self.popularityValue.text =
         --self.qualityValue.text =
-        --self.levelValue.text =
     end
     local function callback(a)
         --暂时缓存仓库有的个数（后边要下架然后运输）

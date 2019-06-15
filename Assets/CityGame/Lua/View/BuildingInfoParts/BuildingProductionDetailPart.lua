@@ -123,6 +123,7 @@ function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("SettopSuccess",self.SettopSuccess,self)
     Event.AddListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.AddListener("deleListLine",self.deleListLine,self)
+    --Event.AddListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
@@ -131,6 +132,7 @@ function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("SettopSuccess",self.SettopSuccess,self)
     Event.RemoveListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.RemoveListener("deleListLine",self.deleListLine,self)
+    --Event.RemoveListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
@@ -252,7 +254,7 @@ function BuildingProductionDetailPart:clickAddBtnBg()
         ct.OpenCtrl("AddProductionLineCtrl",self.m_data)
         self:CloseDestroy(self.waitingQueueIns)
     else
-        Event.Brocast("SmallPop",GetLanguage(20120001),300)
+        Event.Brocast("SmallPop",GetLanguage(20120001),ReminderType.Common)
         return
     end
 end
@@ -386,7 +388,7 @@ function BuildingProductionDetailPart:SettopSuccess(data)
             table.insert(self.waitingQueueIns,1,temporaryValue)
         end
     end
-    Event.Brocast("SmallPop",GetLanguage(25030013), 300)
+    Event.Brocast("SmallPop",GetLanguage(25030013), ReminderType.Succeed)
 end
 --刷新当前产量
 function BuildingProductionDetailPart:updateNowCount(data)
@@ -407,7 +409,7 @@ function BuildingProductionDetailPart:updateNowLine(data)
             end
             --重新初始化界面及数据
             self:initializeUiInfoData(self.m_data.line)
-            Event.Brocast("SmallPop",GetLanguage(25030011), 300)
+            Event.Brocast("SmallPop",GetLanguage(25030011), ReminderType.Succeed)
         else
             --清空生产队列Item数据
             if next(self.waitingQueueIns) ~= nil then
@@ -430,6 +432,14 @@ function BuildingProductionDetailPart:updateNowLine(data)
         end
     end
 end
+----缓存获取到当前建筑Eva加点后的生产速度(原料信息，商品信息)
+--function BuildingProductionDetailPart:saveMaterialOrGoodsInfo(data)
+--    if data then
+--        self.materialOrGoodsInfo = data
+--        self.materialOrGoodsInfo.buildingType = self.m_data.buildingType
+--        self.materialOrGoodsInfo.mId = self.m_data.info.mId
+--    end
+--end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --删除一条待生产的线
 function BuildingProductionDetailPart:updateListLine(id)

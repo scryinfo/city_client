@@ -35,7 +35,7 @@ function GroundTransOthersCheckInfoCtrl:Active()
     GroundTransOthersCheckInfoPanel.titleText01.text = GetLanguage(22060002)
     GroundTransOthersCheckInfoPanel.noneText02.text = GetLanguage(22060003)
     GroundTransOthersCheckInfoPanel.partAText03.text = GetLanguage(22060007)
-    GroundTransOthersCheckInfoPanel.partBText04.text = GetLanguage(22060006)
+    GroundTransOthersCheckInfoPanel.partBText04.text = GetLanguage(22060009)
 end
 
 function GroundTransOthersCheckInfoCtrl:Hide()

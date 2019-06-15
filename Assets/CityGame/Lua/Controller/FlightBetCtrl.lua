@@ -39,11 +39,11 @@ function FlightBetCtrl:Awake(go)
     FlightBetPanel.timeSlider.onValueChanged:AddListener(function(value)
         self.timeValue = value
         FlightBetPanel.timeValueText.text = self.timeValue
-        if value < 0 then
-            FlightBetPanel.timeText05.text = GetLanguage(32030011)
-        else
-            FlightBetPanel.timeText05.text = GetLanguage(32030010)
-        end
+        --if value < 0 then
+        --    FlightBetPanel.timeText05.text = GetLanguage(32030011)
+        --else
+        --    FlightBetPanel.timeText05.text = GetLanguage(32030010)
+        --end
     end)
     FlightBetPanel.betSlider.onValueChanged:AddListener(function(value)
         self.betValue = value

@@ -123,7 +123,7 @@ function AddProductionLineBoxCtrl:clickConfirmBtn(go)
             Event.Brocast("m_ReqprocessingAddLine",go.m_data.insId,number,go.workerNum,go.m_data.itemId)
         end
     else
-        Event.Brocast("SmallPop",GetLanguage(26020003),300)
+        Event.Brocast("SmallPop",GetLanguage(25030025),ReminderType.Common)
     end
 end
 --------------------------------------------------------------------------回调函数--------------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             UIPanel.BackToPageInstance(ProcessingFactoryCtrl,self.m_data)
         end
-        Event.Brocast("SmallPop","数量不能为0",300)
+        Event.Brocast("SmallPop",GetLanguage(25030010),ReminderType.Common)
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------

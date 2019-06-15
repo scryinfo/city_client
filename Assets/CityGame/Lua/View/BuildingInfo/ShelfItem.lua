@@ -25,6 +25,7 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,st
     self.numberText = prefab.transform:Find("numberBg/numberText"):GetComponent("Text")
     self.noHaveBg = prefab.transform:Find("noHaveBg")
     self.automaticBg = prefab.transform:Find("automaticBg")
+    self.automaticNumberText = prefab.transform:Find("automaticBg/automaticNumberText"):GetComponent("Text")
 
     self.nameBg = prefab.transform:Find("nameBg")
     self.nameText = prefab.transform:Find("nameBg/nameText"):GetComponent("Text")
@@ -50,6 +51,7 @@ function ShelfItem:InitializeData()
             self.noHaveBg.transform.localScale = Vector3.one
         else
             self.automaticBg.transform.localScale = Vector3.one
+            self.automaticNumberText.text = "×"..self.dataInfo.n
             self.noHaveBg.transform.localScale = Vector3.zero
         end
     else
@@ -86,7 +88,7 @@ function ShelfItem:_clickDetailsBtn(ins)
     --如果是零售店
     if ins.buildingType == BuildingType.RetailShop then
         if ins.isOther == true then
-            Event.Brocast("SmallPop","零售店的商品只能出售给NPC市民", 300)
+            Event.Brocast("SmallPop","零售店的商品只能出售给NPC市民", ReminderType.Common)
             return
         end
     end

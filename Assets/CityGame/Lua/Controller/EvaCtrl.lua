@@ -99,6 +99,8 @@ function EvaCtrl:updateData()
     EvaPanel.startAddBtn.localScale = Vector3.zero
     -- 关闭eva小提示
     self:_showIntroduction( false )
+    -- eva界面上总的加点的点数值
+    self.allEvaAddPoint = 0
 
     -- 生成标题item
     if self.evaTitleItem then
@@ -145,7 +147,7 @@ function EvaCtrl:_clearEvaDataAndView()
 
     -- 关闭加点，并清理加点的界面数据
     for _, i in pairs(EvaCtrl.propertyScript) do
-        i:_setAddExNumInputField("")
+        i:_setAddExNumInputField("0")
     end
 end
 -------------------------------------------------------------- 按钮点击事件 --------------------------------------------------------
@@ -174,20 +176,6 @@ function EvaCtrl:OnBack(go)
         UIPanel.ClosePage()
     end
 end
-
--- 开始加点，打开加点界面
---function EvaCtrl:OnStartAdd(go)
---    PlayMusEff(1002)
-    --EvaPanel.startAddBtn.localScale = Vector3.zero
-    --EvaPanel.addBtn.localScale = Vector3.one
-    --go.isStartAdd = true
-
-    -- 打开加点
-    --for _, v in ipairs(EvaCtrl.propertyScript) do
-    --    v:_showBtnState(false)
-    --end
-
---end
 
 -- 加点，向服务器发起加点消息
 function EvaCtrl:OnAdd(go)
@@ -242,9 +230,13 @@ end
 -- 服务器查询Eva，并把Eva信息保存下來，并默认显示第一项
 function EvaCtrl:c_OnQueryMyEva(evas)
     self.evasData = evas.eva
+    -- 加点的点数数据，用于界面上显示
     self.addData = {}
+    -- 加点的eva数据，用于给服务器发加点的消息结构
     self.addEvaData = {}
+    -- 加点的eva的等级和当前经验数据，用于界面上显示
     self.addEvaLvData = {}
+    -- 默认打开第一个选项
     self.evaTitleItem[1]:_onClickBtn()
 end
 

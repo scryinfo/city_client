@@ -38,7 +38,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.addExNumInputField = transform:Find("AddExNumInputField"):GetComponent("InputField")
 
     self:_showBtnState(false)
-    self:_setBtnInteractable()
+    --self:_setBtnInteractable()
 
     self.strId = string.format("%d%s", self.configData.Atype, self.configData.Btype)
     if EvaCtrl.static.evaCtrl.addEvaLvData and EvaCtrl.static.evaCtrl.addEvaLvData[self.strId] then
@@ -59,7 +59,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
         end
     else
         self:ShowData(self.data.lv, self.data.cexp)
-        self:_setAddExNumInputField("")
+        self:_setAddExNumInputField("0")
     end
     LoadSprite(PropertyTrueItem.static.BTypeIcon[data.bt], self.typeImage, true)
 
@@ -78,11 +78,12 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.addExNumInputField.onEndEdit:RemoveAllListeners()
     self.addExNumInputField.onEndEdit:AddListener(function (inputValue)
         if inputValue == nil or inputValue == "" then
+            self:_setBtnInteractable(false, false)
             return
         end
         local addNumber = tonumber(inputValue)
         if addNumber < 0 or tonumber(inputValue) > DataManager.GetEvaPoint() then
-            self:_setAddExNumInputField("")
+            self:_setAddExNumInputField("0")
             return
         end
         self:_preAddPoint(addNumber)
@@ -129,16 +130,16 @@ function PropertyTrueItem:ShowData(lv, cexp)
 end
 
 -- 设置按钮状态
-function PropertyTrueItem:_setBtnInteractable()
-    local isCan
-    local evaPoint = DataManager.GetEvaPoint()
-    if evaPoint and evaPoint > 0 then
-        isCan = true
-    else
-        isCan = false
-    end
-    self.subtractBtn.interactable = isCan
-    self.addBtn.interactable = isCan
+function PropertyTrueItem:_setBtnInteractable(isCan1, isCan2)
+    --local isCan
+    --local evaPoint = DataManager.GetEvaPoint()
+    --if evaPoint and evaPoint > 0 then
+    --    isCan = true
+    --else
+    --    isCan = false
+    --end
+    self.subtractBtn.interactable = isCan1
+    self.addBtn.interactable = isCan2
 end
 
 -- 按钮切换
@@ -146,7 +147,7 @@ function PropertyTrueItem:_showBtnState(isShow)
     if isShow then
         self.subtractBtn.transform.localScale = Vector3.zero
         self.addExNumInputField.transform.localScale = Vector3.zero
-        self:_setAddExNumInputField("")
+        self:_setAddExNumInputField("0")
         self.addBtn.transform.localScale = Vector3.zero
     else
         self.subtractBtn.transform.localScale = Vector3.one
@@ -174,7 +175,8 @@ function PropertyTrueItem:_onChangeInputNum(num)
     end
 
     -- 为最大数时，不能再加
-    if addNumber == DataManager.GetEvaPoint() and num == 1 then
+    if EvaCtrl.static.evaCtrl.allEvaAddPoint == DataManager.GetEvaPoint() and num == 1 then
+        self:_showMoneyOver()
         return
     end
 
@@ -256,17 +258,6 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         EvaCtrl.static.evaCtrl.addData[recordData[1]].value = totalNum
         EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(totalNum)
     elseif #recordData == 3 then
-        --{
-        --    [1] =
-        --    {
-        --   value = 1,
-        --   optionValue =
-        --   {
-        --       {
-        --           optionValue = {},
-        --       }
-        --   } }
-        --}
         if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
             EvaCtrl.static.evaCtrl.addData[recordData[1]] = {}
         end
@@ -314,7 +305,13 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         end
         EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(totalNum1)
     end
-    --{
+
+    -- 总的加点数
+    EvaCtrl.static.evaCtrl.allEvaAddPoint = 0
+    for _, aChild in pairs(EvaCtrl.static.evaCtrl.addData) do
+        self.allEvaAddPoint = self.allEvaAddPoint + aChild.value
+    end
+
     -- 保存需要发送的eva数据
     if addNumber == 0 then
         EvaCtrl.static.evaCtrl.addEvaData[self.strId] = nil
@@ -344,13 +341,10 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         evaData.decEva = addNumber
         EvaCtrl.static.evaCtrl.addEvaData[self.strId] = evaData
     end
-    --    [1] = {value = 1, optionValue ={ } }, -- 原料厂
-    --    [2] = {value = 1, optionValue ={ { optionValue = {}} } -- 加工厂
-    --}
-    -- 保存界面数据，bing
-    --EvaCtrl.static.evaCtrl.addData[strId] = addNumber
-    --if EvaCtrl.static.evaCtrl.addData[strId] then
-    --
-    --end
-    --local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
+end
+
+-- 弹框提示eva成长值已耗尽
+function PropertyTrueItem:_showMoneyOver()
+    local data = {ReminderType = ReminderType.Common, ReminderSelectType = ReminderSelectType.NotChoose, content = GetLanguage(31010040)}
+    ct.OpenCtrl('NewReminderCtrl',data)
 end

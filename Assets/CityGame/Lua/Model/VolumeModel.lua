@@ -50,7 +50,7 @@ function VolumeModel:m_GoodsNpcNum(time,type)
     local msgId = pbl.enum("sscode.OpCode","queryNpcNum")
     local lMsg = { time = time ,type = type }
     local pMsg = assert(pbl.encode("ss.QueryNpcNum", lMsg))
-    local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
+    --local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 

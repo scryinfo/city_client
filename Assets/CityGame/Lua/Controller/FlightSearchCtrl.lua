@@ -44,6 +44,7 @@ function FlightSearchCtrl:Awake(go)
 end
 
 function FlightSearchCtrl:Refresh()
+    Event.AddListener("c_getSearchFlightResult", self._getSearchFlightResult, self)
     self:_initData()
 end
 
@@ -53,15 +54,16 @@ function FlightSearchCtrl:Active()
 end
 
 function FlightSearchCtrl:Hide()
+    Event.RemoveListener("c_getSearchFlightResult", self._getSearchFlightResult, self)
     UIPanel.Hide(self)
 end
 --
 function FlightSearchCtrl:_initData()
     --默认出发地为北京，目的地为上海
     FlightSearchPanel.timeText.text = os.date("%W, %Y-%m-%d", os.time())
-    self.startCode = "SIC"
-    self.arriveCode = "SIC"
-    self.timeValue = os.time()
+    self.startCode = "NKG"
+    self.arriveCode = "CTU"
+    self.timeValue = "2019-06-15"
 end
 --
 function FlightSearchCtrl:_language()
@@ -108,8 +110,7 @@ end
 --开始搜索
 function FlightSearchCtrl:checkBtnFunc()
     PlayMusEff(1002)
-    --接到服务器回调之后再打开界面
-    ct.OpenCtrl("FlightChooseFlightCtrl")
+    FlightMainModel.m_ReqSearchFlight(self.startCode, self.arriveCode, self.timeValue)
 end
 --起点选择的回调
 function FlightSearchCtrl:startChooseResult(data)
@@ -125,4 +126,11 @@ end
 function FlightSearchCtrl:timeChooseResult(data)
     --self.timeValue = data
     FlightSearchPanel.timeText.text = data.value
+end
+--服务器回调
+function FlightSearchCtrl:_getSearchFlightResult(data)
+    if data ~= nil and #data ~= 0 then
+        --接到服务器回调之后再打开界面
+        ct.OpenCtrl("FlightChooseFlightCtrl", data)
+    end
 end

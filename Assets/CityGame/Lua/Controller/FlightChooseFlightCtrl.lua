@@ -54,15 +54,20 @@ function FlightChooseFlightCtrl:Hide()
 end
 --
 function FlightChooseFlightCtrl:_initData()
-    local temp = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30}
-    FlightChooseFlightCtrl.static.itemsList = {}
-    FlightChooseFlightCtrl.listValue = temp
-    FlightChooseFlightPanel.scrollLoop:InitData(#temp)
+    if self.m_data ~= nil then
+        local flightData = self.m_data[1]
+        FlightChooseFlightPanel.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间
+        FlightChooseFlightPanel.flightText.text = flightData.FlightCompany  --需要多语言
+        FlightChooseFlightPanel.numText.text = flightData.FlightNo  --CA4506
+        FlightChooseFlightPanel.endCodeText.text = flightData.FlightArrcode
+        FlightChooseFlightPanel.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
+        FlightChooseFlightPanel.startCodeText.text = flightData.FlightDepcode
+        FlightChooseFlightPanel.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
 
-    --if self.m_data ~= nil then
-    --    FlightChooseFlightCtrl.listValue = self.m_data.valueList
-    --    FlightChooseFlightPanel.scrollLoop:InitData(#self.m_data.valueList)
-    --end
+        FlightChooseFlightCtrl.static.itemsList = {}
+        FlightChooseFlightCtrl.listValue = self.m_data
+        FlightChooseFlightPanel.scrollLoop:InitData(#self.m_data)
+    end
 end
 --
 function FlightChooseFlightCtrl:cleanItemList()

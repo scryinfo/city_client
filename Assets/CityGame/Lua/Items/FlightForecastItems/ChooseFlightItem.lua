@@ -26,11 +26,19 @@ function ChooseFlightItem:initialize(viewRect, data)
 end
 --
 function ChooseFlightItem:initData(data)
-    self.flightCodeText.text = data
+    self.data = data
+    self.flightCodeText = data.FlightNo  --航班号
+    self.planStartTimeText = data.FlightDeptimePlanDate  --计划起飞时间
+    self.trueStartTimeText = data.FlightDeptimeDate  --实际起飞时间
+    self.planArriveTimeText = data.FlightArrtimePlanDate  --计划到达时间
+    self.trueArriveTimeText = data.FlightArrtimeDate  --实际到达时间
+    self.stateText = data.FlightState  --状态
 end
 --
 function ChooseFlightItem:ClickFunc()
-
+    PlayMusEff(1002)
+    --0代表热门，1代表历史，2代表搜索
+    ct.OpenCtrl("FlightDetailCtrl", {detail = self.data, dataType = 3})
 end
 --
 function ChooseFlightItem:Close()

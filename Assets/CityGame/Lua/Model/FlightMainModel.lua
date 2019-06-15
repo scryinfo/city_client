@@ -26,7 +26,7 @@ function FlightMainModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getFlightBetHistory","gs.FlightBetHistory",FlightMainModel.n_OnGetBetHistory)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","flightBetInform","gs.FlightBetInform",FlightMainModel.n_OnGetBetResult)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","scoreChangeInform","gs.Num",FlightMainModel.n_OnFlightScoreChange)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","searchFlight","gs.FlightData",FlightMainModel.n_OnGetSearchFlight)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","searchFlight","gs.FlightSearchResult",FlightMainModel.n_OnGetSearchFlight)
 
 end
 --关闭事件--
@@ -41,9 +41,9 @@ function FlightMainModel.m_ReqAllFlight()
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 --
-function FlightMainModel.m_ReqBetFlight(id, delay, score)
+function FlightMainModel.m_ReqBetFlight(id, delay, score, date)
     local msgId = pbl.enum("gscode.OpCode","betFlight")
-    local lMsg = { id = id, delay = delay, score = score}
+    local lMsg = { id = id, delay = delay, score = score, date = date}
     local pMsg = assert(pbl.encode("gs.BetFlight", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
@@ -51,6 +51,13 @@ end
 function FlightMainModel.m_ReqFlightBetHistory()
     local msgId = pbl.enum("gscode.OpCode","getFlightBetHistory")
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+end
+--data格式为：2019-05-22
+function FlightMainModel.m_ReqSearchFlight(arrCode, depCode, date)
+    local msgId = pbl.enum("gscode.OpCode","searchFlight")
+    local lMsg = { arrCode = arrCode, depCode = depCode, date = date}
+    local pMsg = assert(pbl.encode("gs.SearchFlight", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --服务器回调---------------------------------------------------------------------------------
 --
@@ -62,7 +69,23 @@ function FlightMainModel.n_OnGetAllFlight(data, msgId)
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end
+    FlightMainModel._getDicValue(data)
     Event.Brocast("c_getAllFlight", data)
+end
+--将所有航班信息转存成字典
+function FlightMainModel._getDicValue(data)
+    FlightMainModel.allFlightDic = {}
+    for key, value in pairs(data) do
+        FlightMainModel.allFlightDic[value.id] = value
+    end
+end
+--通过id获取对应的航班数据
+function FlightMainModel.getFlightById(id)
+    if FlightMainModel.allFlightDic ~= nil then
+        local data = FlightMainModel.allFlightDic[id]
+        return data
+    end
+    return nil
 end
 --
 function FlightMainModel.n_OnBetFlight(data, msgId)
@@ -72,6 +95,10 @@ function FlightMainModel.n_OnBetFlight(data, msgId)
         info.contentInfo = "GAucModel.n_OnBetFlight："..data.reason
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
+    end
+    local temp = FlightMainModel.allFlightDic[data.id]
+    if temp ~= nil and temp.myBet == nil then
+        FlightMainModel.allFlightDic[data.id].myBet = {delay = data.delay, amount = data.score}
     end
     Event.Brocast("c_betFlightEvent", data)
 end
@@ -118,5 +145,5 @@ function FlightMainModel.n_OnGetSearchFlight(data, msgId)
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end
-    --Event.Brocast("c_flightScoreChange", data)
+    Event.Brocast("c_getSearchFlightResult", data)
 end

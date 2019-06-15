@@ -25,17 +25,32 @@ function FlightRecordPageItem:initialize(viewRect, data)
 end
 --刷新数据
 function FlightRecordPageItem:initData(data)
+    self.data = data
+    local flightData = data.data
+    self.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 --精确到天
+    self.flightText.text = flightData.FlightCompany  --需要多语言
+    self.numText.text = flightData.FlightNo  --CA4506
+
     local trueWidth01 = self.timeText.preferredWidth
     self.timeText.rectTransform.sizeDelta = Vector2.New(trueWidth01, self.timeText.rectTransform.sizeDelta.y)
+    --需要从Model.allFlight中获取自己已经投注的
 
-    self.moneyText.text = GetLanguage(32040001)  --已投注
-    self.moneyText.text = GetLanguage(32040002)  --输
-    self.moneyText.text = GetLanguage(32040003)  --赢
+    if data.win == nil then
+        self.betResultText.text = GetLanguage(32040001)  --已投注
+    end
+
+    if data.win == true then
+        self.betResultText.text = GetLanguage(32040003)  --赢
+        self.moneyText.text = data.amount  --净赚积分
+    else
+        self.betResultText.text = GetLanguage(32040002)  --输
+        self.moneyText.text = "-"..data.amount
+    end
 end
 --
 function FlightRecordPageItem:ClickFunc()
     PlayMusEff(1002)
-    ct.OpenCtrl("FlightDetailCtrl")
+    ct.OpenCtrl("FlightDetailCtrl", {detail = self.data, dataType = 3})
 end
 --
 function FlightRecordPageItem:Close()

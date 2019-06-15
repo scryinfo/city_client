@@ -73,6 +73,7 @@ function FlightMainCtrl:_getAllFlight(data)
     if data ~= nil then
         FlightMainCtrl.static.itemsList = {}
         self.m_data.valueList = data
+        self:_getDicValue(data)
         FlightMainCtrl.listValue = self.m_data.valueList
         FlightMainPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
     end

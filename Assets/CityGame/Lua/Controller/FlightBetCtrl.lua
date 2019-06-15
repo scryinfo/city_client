@@ -111,9 +111,7 @@ end
 --
 function FlightBetCtrl:_confirmBtnFunc()
     --发送协议后，等待回调再关闭界面
-    --FlightMainModel.m_ReqBetFlight(id, delay, score)
-    UIPanel:ClosePage()
-
+    --FlightMainModel.m_ReqBetFlight(id, delay, score, date)
     PlayMusEff(1002)
 end
 --

@@ -88,7 +88,7 @@ function ShelfItem:_clickDetailsBtn(ins)
     --如果是零售店
     if ins.buildingType == BuildingType.RetailShop then
         if ins.isOther == true then
-            Event.Brocast("SmallPop","零售店的商品只能出售给NPC市民", ReminderType.Common)
+            Event.Brocast("SmallPop",GetLanguage(25060011), ReminderType.Common)
             return
         end
     end

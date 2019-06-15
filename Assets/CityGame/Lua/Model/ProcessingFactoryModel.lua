@@ -48,6 +48,8 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingGoodInfo","gs.BuildingGoodInfo",self.n_OnBuildingGoodsInfo)
+
 end
 
 function ProcessingFactoryModel:Close()
@@ -85,6 +87,8 @@ function ProcessingFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryBuildingGoodInfo","gs.BuildingGoodInfo",self.n_OnBuildingGoodsInfo)
+
 end
 ---客户端请求---
 --打开原料厂
@@ -135,10 +139,14 @@ end
 function ProcessingFactoryModel:m_ReqSetLineOrder(buildingId,lineId,pos)
     self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
 end
-----自动补货
-function ProcessingFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
-    self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
+--查询商品信息
+function ProcessingFactoryModel:m_ReqBuildingGoodsInfo(buildingId)
+    self.funModel:m_ReqBuildingGoodsInfo(buildingId)
 end
+----自动补货
+--function ProcessingFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
+--    self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
+--end
 ----添加购物车
 --function ProcessingFactoryModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
 --    self.funModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
@@ -163,6 +171,7 @@ function ProcessingFactoryModel:n_OnOpenprocessing(stream)
             self.funModel = BuildingBaseModel:new(self.insId)
         end
     end
+    self:m_ReqBuildingGoodsInfo(self.insId)
 end
 --运输
 function ProcessingFactoryModel:n_OnBuildingTransportInfo(data)
@@ -219,6 +228,10 @@ end
 --生产线置顶
 function ProcessingFactoryModel:n_OnSetLineOrderInform(data)
     Event.Brocast("SettopSuccess",data)
+end
+--查询商品信息
+function ProcessingFactoryModel:n_OnBuildingGoodsInfo(data)
+    Event.Brocast("saveMaterialOrGoodsInfo",data)
 end
 ----自动补货
 --function ProcessingFactoryModel:n_OnSetAutoReplenish(data)

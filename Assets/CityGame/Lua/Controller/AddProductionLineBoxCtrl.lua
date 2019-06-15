@@ -40,7 +40,6 @@ function AddProductionLineBoxCtrl:Active()
     AddProductionLineBoxPanel.eachText.text = GetLanguage(25030015)
     AddProductionLineBoxPanel.time.text = GetLanguage(25030005)
     AddProductionLineBoxPanel.numberTip.text = GetLanguage(25030006)
-    AddProductionLineBoxPanel.brandNameText.text = DataManager.GetCompanyName()
     --addLineBox:AddClick(AddLineBoxPanel.leftBtn.gameObject,self.OnClick_leftBtn,self)
     --addLineBox:AddClick(AddLineBoxPanel.rightBtn.gameObject,self.OnClick_rightBtn,self)
     --addLineBox:AddClick(AddLineBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self)
@@ -76,7 +75,8 @@ function AddProductionLineBoxCtrl:InitializeData()
         AddProductionLineBoxPanel.quality.transform.localScale = Vector3.zero
         AddProductionLineBoxPanel.levelBg.transform.localScale = Vector3.zero
         LoadSprite(Material[self.m_data.itemId].img,AddProductionLineBoxPanel.iconImg,false)
-        local speed = 1 / (Material[self.m_data.itemId].numOneSec * self.workerNum)
+        --local speed = 1 / (Material[self.m_data.itemId].numOneSec * self.workerNum)
+        local speed = 1 / self.m_data.numOneSec
         AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed).."s"
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --如果是商品打开商品属性展示
@@ -84,16 +84,23 @@ function AddProductionLineBoxCtrl:InitializeData()
         AddProductionLineBoxPanel.quality.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.levelBg.transform.localScale = Vector3.one
         LoadSprite(Good[self.m_data.itemId].img,AddProductionLineBoxPanel.iconImg,false)
-        local speed = 1 / (Good[self.m_data.itemId].numOneSec * self.workerNum)
+        --local speed = 1 / (Good[self.m_data.itemId].numOneSec * self.workerNum)
+        local speed = 1 / self.m_data.info.numOneSec
         AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed).."s"
         --如果是商品，判断原料等级
         if Good[self.m_data.itemId].luxury == 1 then
             AddProductionLineBoxPanel.levelImg.color = getColorByVector3(oneLevel)
+            AddProductionLineBoxPanel.levelValue.text = GetLanguage(25020028)
         elseif Good[self.m_data.itemId].luxury == 2 then
             AddProductionLineBoxPanel.levelImg.color = getColorByVector3(twoLevel)
+            AddProductionLineBoxPanel.levelValue.text = GetLanguage(25020029)
         elseif Good[self.m_data.itemId].luxury == 3 then
             AddProductionLineBoxPanel.levelImg.color = getColorByVector3(threeLevel)
+            AddProductionLineBoxPanel.levelValue.text = GetLanguage(25020030)
         end
+        AddProductionLineBoxPanel.brandNameText.text = self.m_data.info.brandName
+        AddProductionLineBoxPanel.popularityValue.text = self.m_data.info.brand
+        AddProductionLineBoxPanel.qualityValue.text = self.m_data.info.qty
     end
 end
 ------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------
@@ -170,9 +177,11 @@ function AddProductionLineBoxCtrl:GetTime(targetCount,workerNum)
     end
     local time
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        time = targetCount / (Material[self.m_data.itemId].numOneSec * workerNum)
+        --time = targetCount / (Material[self.m_data.itemId].numOneSec * workerNum)
+        time = targetCount / self.m_data.numOneSec
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        time = targetCount / (Good[self.m_data.itemId].numOneSec * workerNum)
+        --time = targetCount / (Good[self.m_data.itemId].numOneSec * workerNum)
+        time = targetCount / self.m_data.info.numOneSec
     end
     local timeTable = getTimeBySec(time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second

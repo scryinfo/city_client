@@ -48,7 +48,7 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
 end
 
 function MaterialFactoryModel:Close()
@@ -86,7 +86,7 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnDeleteLineInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
-    --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
 
 end
 ---客户端请求---
@@ -138,10 +138,10 @@ end
 function MaterialFactoryModel:m_ReqSetLineOrder(buildingId,lineId,pos)
     self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
 end
-----查询原料信息
---function MaterialFactoryModel:m_ReqBuildingMaterialInfo(buildingId)
---    self.funModel:m_ReqBuildingMaterialInfo(buildingId)
---end
+--查询原料信息
+function MaterialFactoryModel:m_ReqBuildingMaterialInfo(buildingId)
+    self.funModel:m_ReqBuildingMaterialInfo(buildingId)
+end
 ----自动补货
 --function MaterialFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
 --    self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
@@ -170,7 +170,7 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
             self.funModel = BuildingBaseModel:new(self.insId)
         end
     end
-    --self:m_ReqBuildingMaterialInfo(self.insId)
+    self:m_ReqBuildingMaterialInfo(self.insId)
     --UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",DataManager.GetMyPersonalHomepageInfo().id)
     UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",stream)
 end
@@ -235,10 +235,10 @@ end
 function MaterialFactoryModel:n_OnSetAutoReplenish(data)
     Event.Brocast("replenishmentSucceed",data)
 end
-----查询原料信息
---function MaterialFactoryModel:n_OnBuildingMaterialInfo(data)
---    Event.Brocast("saveMaterialOrGoodsInfo",data)
---end
+--查询原料信息
+function MaterialFactoryModel:n_OnBuildingMaterialInfo(data)
+    Event.Brocast("saveMaterialOrGoodsInfo",data)
+end
 ----添加购物车
 --function MaterialFactoryModel:n_OnAddShoppingCart(data)
 --

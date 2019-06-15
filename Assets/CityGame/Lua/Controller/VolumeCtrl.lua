@@ -236,8 +236,11 @@ function VolumeCtrl:c_OnGoodsNpcNum(info,type)
             VolumePanel.scroll:ActiveLoopScroll(self.supplyDemand, #house)
         end
     elseif type == 2 then
-        --VolumeCtrl:AssignmentDemandSupply(house , info )
-        house[1].supply = info[1].total
+        if info == nil then
+            house[1].supply = 0
+        else
+            house[1].supply = info[1].total
+        end
     end
 end
 

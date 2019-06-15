@@ -133,6 +133,7 @@ function EvaCtrl:_clearEvaDataAndView()
     self.addData = {}
     self.addEvaData = {}
     self.addEvaLvData = {}
+    self.allEvaAddPoint = 0
 
     -- 界面上显示的加点多少
     for _, v in ipairs(self.evaTitleItem) do

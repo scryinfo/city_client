@@ -166,5 +166,5 @@ end
 
 --全城npc数量
 function GameMainInterfaceModel:n_OnGetNpcNum(info)
-    Event.Brocast("c_AllNpcNum",info.countNpcMap)
+    Event.Brocast("c_AllNpcNum",info)
 end

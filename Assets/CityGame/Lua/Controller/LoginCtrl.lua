@@ -41,6 +41,11 @@ function LoginCtrl:Awake(go)
 
 	--多语言
 	local languageId = UnityEngine.PlayerPrefs.GetInt("Language")
+	if languageId == 0 then
+		LoginPanel.languageText.text = GetLanguage(10020010)
+	elseif languageId == 1 then
+		LoginPanel.languageText.text = GetLanguage(10020011)
+	end
 	self.languageItem = {}
 	for i, v in pairs(LanguageTypeConfig) do
 		local function callback(prefab)
@@ -92,7 +97,6 @@ function LoginCtrl:Active()
 	LoginPanel.rememberText.text = GetLanguage(10020004)
 	--LoginPanel.normText:GetComponent("Text").text = GetLanguage(10020015)
 	--LoginPanel.agree.text = GetLanguage(10020014)
-	LoginPanel.languageText.text = GetLanguage(10020010)
 end
 
 function LoginCtrl:c_ChangeLanguage()
@@ -107,7 +111,6 @@ function LoginCtrl:c_ChangeLanguage()
 	LoginPanel.rememberText.text = GetLanguage(10020004)
 	--LoginPanel.normText:GetComponent("Text").text = GetLanguage(10020015)
 	--LoginPanel.agree.text = GetLanguage(10020014)
-	LoginPanel.languageText.text = GetLanguage(10020010)
 end
 
 function LoginCtrl:Refresh()

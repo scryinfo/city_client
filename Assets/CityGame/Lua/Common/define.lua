@@ -241,7 +241,7 @@ TouchStateType =
 --提示框类型
 ReminderType =
 {
-	Common = 0,    --普通提示框（蓝色）
+	Common = 0,    --普通提示框（蓝色或白色）
 	Warning = 1,    --警告提示框（红色）
 	Succeed = 2,    --成功提示框（黄色）
 }

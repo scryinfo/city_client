@@ -206,6 +206,6 @@ end
 function PromoteCompanyModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then
         self:m_detailPublicFacility(self.insId)
-        Event.Brocast("SmallPop", GetLanguage(24020018), 300)  --开业成功提示
+        Event.Brocast("SmallPop", GetLanguage(24020018), ReminderType.Succeed)  --开业成功提示
     end
 end

@@ -612,3 +612,5 @@ StreamingAssets
 /Assets/CityGame/PostProcessing/Utilities/CustomMotionTexture/Textures/WheelMotionVectors.png.meta
 >>>>>>> dbe7d230cbc291f23f2fa0740a208695e3661232
 /Assets/CityGame/Lua/*.meta
+/Assets/CityGame/Source/*.meta
+/Assets/*.meta

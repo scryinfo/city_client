@@ -48,15 +48,64 @@ end
 --
 function FlightDetailCtrl:_initData()
     if self.m_data ~= nil then
-        local flightData = self.m_data.data
+        local flightData
+
+        FlightDetailPanel.infoRoot.localScale = Vector3.zero
+        FlightDetailPanel.betBtn.localScale = Vector3.zero
+        FlightDetailPanel.resultRoot.localScale = Vector3.zero
 
         if self.m_data.dataType == 0 then  --热门预测界面
+            FlightDetailPanel.hotTran.localScale = Vector3.one
+            FlightDetailPanel.historyTran.localScale = Vector3.zero
             flightData = self.m_data.detail.data
-        elseif self.m_data.dataType == 1 then  --历史界面
+            FlightDetailPanel.hotMoneyText.text = self.m_data.detail.sumBetAmount
+            FlightDetailPanel.hotPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
+            FlightDetailPanel.hotTrueTimeText.text = flightData.FlightDeptimeDate
+            FlightDetailPanel.hotJoinCountText.text = flightData.FlightDepAirport
+            local trueWidth02 = FlightDetailPanel.hotMoneyText.preferredWidth
+            FlightDetailPanel.hotMoneyText.rectTransform.sizeDelta = Vector2.New(trueWidth02, FlightDetailPanel.hotMoneyText.rectTransform.sizeDelta.y)
 
+            --可押注
+            if self.m_data.detail.myBet == nil and flightData.FlightState == "计划" then
+                FlightDetailPanel.betBtn.localScale = Vector3.one
+            end
+            --提示已参加预测  --判定需要看具体数据是否为""
+            if self.m_data.detail.myBet ~= nil and flightData.FlightDeptimeDate == "" then
+                FlightDetailPanel.infoRoot.localScale = Vector3.one
+                FlightDetailPanel.infoText.text = GetLanguage(32030019, self.m_data.detail.myBet.delay, self.m_data.detail.myBet.amount)
+            end
+            --提示航班已过投注时间
+            if self.m_data.detail.myBet == nil and flightData.FlightDeptimeDate ~= "计划" then
+                FlightDetailPanel.infoRoot.localScale = Vector3.one
+                FlightDetailPanel.infoText.text = GetLanguage(32030023)
+            end
+        elseif self.m_data.dataType == 1 then  --历史界面
+            FlightDetailPanel.historyTran.localScale = Vector3.one
+            FlightDetailPanel.hotTran.localScale = Vector3.zero
+            flightData = self.m_data.detail.data
+            FlightDetailPanel.historyPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
+            FlightDetailPanel.historyTrueTimeText.text = flightData.FlightDeptimeDate
+
+            --还没起飞
+            if flightData.FlightDeptimeDate == "" then
+                FlightDetailPanel.infoRoot.localScale = Vector3.one
+                FlightDetailPanel.infoText.text = GetLanguage(32030019, self.m_data.detail.delay, self.m_data.detail.amount)
+            else
+                --已经有结果
+                if self.m_data.detail.win == true then
+                    FlightDetailPanel.value03Text.text = ""..self.m_data.detail.amount  --净赚积分
+                else
+                    FlightDetailPanel.value03Text.text = "-"..self.m_data.detail.amount
+                end
+                local plan = getTimeUnixByFormat(flightData.FlightDeptimePlanDate)
+                local ture = getTimeUnixByFormat(flightData.FlightDeptimeDate)
+                local delay = (ture - plan) / 60  --只判断分钟
+
+                FlightDetailPanel.value01Text.text = self.m_data.detail.delay..GetLanguage(20160005)  --预测延误时间
+                FlightDetailPanel.value02Text.text = delay..GetLanguage(20160005)  --实际延误时间
+            end
         end
 
-        FlightDetailPanel.moneyText.text = self.m_data.sumBetAmount
         FlightDetailPanel.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 --精确到天
         FlightDetailPanel.flightText.text = flightData.FlightCompany  --需要多语言
         FlightDetailPanel.numText.text = flightData.FlightNo  --CA4506
@@ -65,41 +114,8 @@ function FlightDetailCtrl:_initData()
         FlightDetailPanel.startCodeText.text = flightData.FlightDepcode
         FlightDetailPanel.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
 
-        FlightDetailPanel.planTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
-        FlightDetailPanel.trueTimeText.text = flightData.FlightDeptimeDate
-        FlightDetailPanel.joinCountText.text = flightData.FlightDepAirport
-
         local trueWidth01 = FlightDetailPanel.timeText.preferredWidth
         FlightDetailPanel.timeText.rectTransform.sizeDelta = Vector2.New(trueWidth01, FlightDetailPanel.timeText.rectTransform.sizeDelta.y)
-        local trueWidth02 = FlightDetailPanel.moneyText.preferredWidth
-        FlightDetailPanel.moneyText.rectTransform.sizeDelta = Vector2.New(trueWidth02, FlightDetailPanel.moneyText.rectTransform.sizeDelta.y)
-
-        --判断航班状态
-        --可押注
-        if self.m_data.myBet == nil and flightData.FlightState == "计划" then
-            FlightDetailPanel.SetState(0)
-            return
-        end
-        --提示已参加预测  --判定需要看具体数据是否为""
-        if self.m_data.myBet ~= nil and flightData.FlightDeptimeDate == "" then
-            FlightDetailPanel.SetState(1)
-            FlightDetailPanel.infoText.text = GetLanguage(32030019, self.m_data.myBet.delay, self.m_data.myBet.amount)
-            return
-        end
-        --已出结果
-        if self.m_data.myBet ~= nil and flightData.FlightDeptimeDate ~= "" then
-            FlightDetailPanel.SetState(2)
-            local plan = getTimeUnixByFormat(flightData.FlightDeptimePlanDate)
-            local ture = getTimeUnixByFormat(flightData.FlightDeptimeDate)
-            local delay = (ture - plan) / 60  --只判断分钟
-            if delay > 0 then  --延误
-                FlightDetailPanel.value03Text.text = ""..self.m_data.myBet.amount  --净赚积分
-            end
-
-            FlightDetailPanel.value01Text.text = self.m_data.myBet.delay  --预测延误时间
-            FlightDetailPanel.value02Text.text = flightData.FlightDepAirport  --实际延误时间
-            return
-        end
     end
 end
 --
@@ -114,6 +130,8 @@ function FlightDetailCtrl:_language()
     FlightDetailPanel.value03Text08.text = GetLanguage(32030028)
     FlightDetailPanel.betBtnText09.text = GetLanguage(32030020)
     FlightDetailPanel.ruleBtnText10.text = GetLanguage(32030029)
+    FlightDetailPanel.historyPlanTimeText11.text = GetLanguage(32030001)
+    FlightDetailPanel.historyTrueTimeText12.text = GetLanguage(32030002)
 end
 --
 function FlightDetailCtrl:backFunc()

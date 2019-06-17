@@ -46,9 +46,9 @@ function VolumeModel:m_GetNpcNum()
 end
 
 --每种商品购买的npc数量
-function VolumeModel:m_GoodsNpcNum(time)
+function VolumeModel:m_GoodsNpcNum(time,type)
     local msgId = pbl.enum("sscode.OpCode","queryNpcNum")
-    local lMsg = { time = time ,type = 1 }
+    local lMsg = { time = time ,type = type }
     local pMsg = assert(pbl.encode("ss.QueryNpcNum", lMsg))
     --local msg = assert(pbl.decode("ss.QueryNpcNum",pMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
@@ -106,7 +106,7 @@ function VolumeModel:n_OnGetNpcNum(lMsg)
 end
 
 function VolumeModel:n_OnGoodsNpcNum(lMsg)
-    Event.Brocast("c_OnGoodsNpcNum",lMsg.numInfo)
+    Event.Brocast("c_OnGoodsNpcNum",lMsg.numInfo,lMsg.type)
 end
 
 function VolumeModel:n_OnNpcExchangeAmount(lMsg)

@@ -90,6 +90,7 @@ function RetrievePasswordCtrl:OnBack(go)
     PlayMusEff(1002)
     local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
                 content = GetLanguage(10040005),func = function()
+            CityEngineLua:reset()
             UIPanel.ClosePage()
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)

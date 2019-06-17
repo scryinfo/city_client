@@ -134,6 +134,7 @@ function LoginCtrl:Hide()
 end
 
 function LoginCtrl:_initData()
+	LoginPanel.textStatus.transform.localScale = Vector3.zero
 	DataManager.OpenDetailModel(LoginModel,self.insId)
 	--连接as
 	--CityEngineLua.login_loginapp(true)
@@ -282,12 +283,14 @@ end
 --注册--
 function LoginCtrl:OnRegister(go)
 	PlayMusEff(1002)
+	CityEngineLua.login_loginapp(true)
 	ct.OpenCtrl("InviteCodeCtrl")
 end
 
 --找回密码
 function LoginCtrl:OnForget()
 	PlayMusEff(1002)
+	CityEngineLua.login_loginapp(true)
 	ct.OpenCtrl("RetrievePasswordCtrl")
 end
 ------------------回调--------------

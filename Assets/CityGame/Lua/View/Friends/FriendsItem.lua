@@ -244,8 +244,8 @@ function FriendsItem:OnRefuse(go)
     PlayMusEff(1002)
     Event.Brocast("m_AddFriendsReq", go.data.id, false)
     if FriendslistCtrl.friendInfo[go.itemId] then
-        DataManager.SetMyFriendsApply({id = go.data.id})
-        table.remove(FriendslistCtrl.friendInfo, go.itemId)
+        DataManager.SetMyFriendsApply({itemId = go.itemId})
+        --table.remove(FriendslistCtrl.friendInfo, go.itemId)
         FriendslistCtrl:_refreshItem(#FriendslistCtrl.friendInfo)
         Event.Brocast("SmallPop", GetLanguage(13050003, go.data.name),80)
     end

@@ -1064,4 +1064,19 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
     local tt = 1
 end)
 
+UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function ()
+    --生成
+    local privateKey = City.CityLuaUtil.NewGuid()
+
+    --保存
+    local path = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
+    ct.file_saveString(path,privateKey)
+    --读取
+    local str = ct.file_readString(path)
+
+    --生成公钥
+    local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
+    local f = 0
+end)
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

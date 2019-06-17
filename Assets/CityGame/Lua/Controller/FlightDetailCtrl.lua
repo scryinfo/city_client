@@ -64,7 +64,7 @@ function FlightDetailCtrl:_initData()
         end
         self.id = flightData.FlightNo
         self.date = flightData.FlightDeptimePlanDate  --bet界面所需数据
-        FlightDetailPanel.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 --精确到天
+        FlightDetailPanel.timeText.text = self:_getDayStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 --精确到天
         FlightDetailPanel.flightText.text = flightData.FlightCompany  --需要多语言
         FlightDetailPanel.numText.text = flightData.FlightNo  --CA4506
         FlightDetailPanel.endCodeText.text = flightData.FlightArrcode
@@ -76,6 +76,22 @@ function FlightDetailCtrl:_initData()
         FlightDetailPanel.timeText.rectTransform.sizeDelta = Vector2.New(trueWidth01, FlightDetailPanel.timeText.rectTransform.sizeDelta.y)
     end
 end
+--获得xx分xx秒格式的时间
+function FlightDetailCtrl:_getSecondStr(str)
+    if str == nil or str == "" then
+        return "--"
+    end
+    local temp = string.sub(str, 12, 16)
+    return temp
+end
+--获得2019-05-01格式的时间
+function FlightDetailCtrl:_getDayStr(str)
+    if str == nil or str == "" then
+        return "--"
+    end
+    local temp = string.sub(str, 1, 10)
+    return temp
+end
 --
 function FlightDetailCtrl:_hot(value)
     local flightData = value.data
@@ -83,11 +99,11 @@ function FlightDetailCtrl:_hot(value)
     FlightDetailPanel.historyTran.localScale = Vector3.zero
     flightData = value.data
     FlightDetailPanel.hotMoneyText.text = value.sumBetAmount
-    FlightDetailPanel.hotPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
+    FlightDetailPanel.hotPlanTimeText.text = self:_getSecondStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 精确到秒
     if flightData.FlightDeptimeDate == "" then
         FlightDetailPanel.hotTrueTimeText.text = "--"
     else
-        FlightDetailPanel.hotTrueTimeText.text = flightData.FlightDeptimeDate
+        FlightDetailPanel.hotTrueTimeText.text = self:_getSecondStr(flightData.FlightDeptimeDate)
     end
     FlightDetailPanel.hotJoinCountText.text = flightData.FlightDepAirport
     local trueWidth02 = FlightDetailPanel.hotMoneyText.preferredWidth
@@ -113,11 +129,11 @@ function FlightDetailCtrl:_history(value)
     local flightData = value.data
     FlightDetailPanel.historyTran.localScale = Vector3.one
     FlightDetailPanel.hotTran.localScale = Vector3.zero
-    FlightDetailPanel.historyPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
+    FlightDetailPanel.historyPlanTimeText.text = self:_getSecondStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 精确到秒
     if flightData.FlightDeptimeDate == "" then
         FlightDetailPanel.historyTrueTimeText.text = "--"
     else
-        FlightDetailPanel.historyTrueTimeText.text = flightData.FlightDeptimeDate
+        FlightDetailPanel.historyTrueTimeText.text = self:_getSecondStr(flightData.FlightDeptimeDate)
     end
 
     if value.win == nil then
@@ -144,11 +160,11 @@ function FlightDetailCtrl:_search(value)
     local flightData = value
     FlightDetailPanel.historyTran.localScale = Vector3.one
     FlightDetailPanel.hotTran.localScale = Vector3.zero
-    FlightDetailPanel.historyPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
+    FlightDetailPanel.historyPlanTimeText.text = self:_getSecondStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 精确到秒
     if flightData.FlightDeptimeDate == "" then
         FlightDetailPanel.historyTrueTimeText.text = "--"
     else
-        FlightDetailPanel.historyTrueTimeText.text = flightData.FlightDeptimeDate
+        FlightDetailPanel.historyTrueTimeText.text = self:_getSecondStr(flightData.FlightDeptimeDate)
     end
     --如果没有对应数据，则没下过注
     local tempBet = FlightMainModel.getFlightById(flightData.FlightNo)

@@ -56,7 +56,7 @@ end
 function FlightChooseFlightCtrl:_initData()
     if self.m_data ~= nil then
         local flightData = self.m_data[1]
-        FlightChooseFlightPanel.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间
+        FlightChooseFlightPanel.timeText.text = self:_getDayStr(flightData.FlightDeptimePlanDate)  --计划起飞时间
         --FlightChooseFlightPanel.flightText.text = flightData.FlightCompany  --需要多语言
         --FlightChooseFlightPanel.numText.text = flightData.FlightNo  --CA4506
         FlightChooseFlightPanel.endCodeText.text = flightData.FlightArrcode
@@ -68,6 +68,14 @@ function FlightChooseFlightCtrl:_initData()
         FlightChooseFlightCtrl.listValue = self.m_data
         FlightChooseFlightPanel.scrollLoop:InitData(#self.m_data)
     end
+end
+--获得2019-05-01格式的时间
+function FlightChooseFlightCtrl:_getDayStr(str)
+    if str == nil or str == "" then
+        return "--"
+    end
+    local temp = string.sub(str, 1, 10)
+    return temp
 end
 --
 function FlightChooseFlightCtrl:cleanItemList()

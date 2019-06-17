@@ -28,19 +28,19 @@ end
 function ChooseFlightItem:initData(data)
     self.data = data
     self.flightCodeText.text = data.FlightNo  --航班号
-    self.planStartTimeText.text = data.FlightDeptimePlanDate  --计划起飞时间
-    local trueArr = data.FlightArrtimeDate
-    local trueDep = data.FlightDeptimeDate
-    if data.FlightArrtimeDate == "" then
-        trueArr = "--"
-    end
-    if data.FlightDeptimeDate == "" then
-        trueDep = "--"
-    end
-    self.trueStartTimeText.text = trueDep  --实际起飞时间
-    self.planArriveTimeText.text = data.FlightArrtimePlanDate  --计划到达时间
-    self.trueArriveTimeText.text = trueArr  --实际到达时间
+    self.planStartTimeText.text = self:_getSecondStr(data.FlightDeptimePlanDate)  --计划起飞时间
+    self.trueStartTimeText.text = self:_getSecondStr(data.FlightDeptimeDate)  --实际起飞时间
+    self.planArriveTimeText.text = self:_getSecondStr(data.FlightArrtimePlanDate)  --计划到达时间
+    self.trueArriveTimeText.text = self:_getSecondStr(data.FlightArrtimeDate)  --实际到达时间
     self.stateText.text = data.FlightState  --状态
+end
+--获得xx分xx秒格式的时间
+function ChooseFlightItem:_getSecondStr(str)
+    if str == nil or str == "" then
+        return "--"
+    end
+    local temp = string.sub(str, 12, 16)
+    return temp
 end
 --
 function ChooseFlightItem:ClickFunc()

@@ -27,7 +27,7 @@ end
 function FlightRecordPageItem:initData(data)
     self.data = data
     local flightData = data.data
-    self.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 --精确到天
+    self.timeText.text = self:_getDayStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 --精确到天
     self.flightText.text = flightData.FlightCompany  --需要多语言
     self.numText.text = flightData.FlightNo  --CA4506
 
@@ -47,6 +47,14 @@ function FlightRecordPageItem:initData(data)
         self.betResultText.text = GetLanguage(32040002)  --输
         self.moneyText.text = "-"..data.amount
     end
+end
+--获得2019-05-01格式的时间
+function FlightRecordPageItem:_getDayStr(str)
+    if str == nil or str == "" then
+        return "--"
+    end
+    local temp = string.sub(str, 1, 10)
+    return temp
 end
 --
 function FlightRecordPageItem:ClickFunc()

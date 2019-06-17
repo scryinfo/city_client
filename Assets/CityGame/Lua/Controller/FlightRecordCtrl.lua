@@ -105,8 +105,8 @@ end
 function FlightRecordCtrl:_initData()
     if self.m_data == nil then
         self.m_data = {}
+        FlightMainModel.m_ReqFlightBetHistory()
     end
-    FlightMainModel.m_ReqFlightBetHistory()
 end
 --
 function FlightRecordCtrl:cleanItemList()
@@ -124,6 +124,7 @@ function FlightRecordCtrl:_language()
 end
 --
 function FlightRecordCtrl:backFunc()
+    self.m_data = nil
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end

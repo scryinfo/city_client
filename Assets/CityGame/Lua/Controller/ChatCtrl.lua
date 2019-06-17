@@ -502,22 +502,15 @@ function ChatCtrl:_showGuildPlayer()
     if guildMembers and guildMembers[1] then
         local idTemp = {}
         local onlineNum = 0
-        local myId = DataManager.GetMyOwnerID()
         for _, v in ipairs(guildMembers) do
-            if v.id ~= myId then
                 table.insert(idTemp, v.id)
                 ChatCtrl.guildMembersOnline[v.id] = v.online
                 if v.online then
                     onlineNum = onlineNum + 1
                 end
-            end
         end
-        if #idTemp == 0 then
-            ChatPanel.guildMemberNum.text = "0"
-        else
-            ChatPanel.guildMemberNum.text = string.format("%d/%d", onlineNum, #idTemp)
-            PlayerInfoManger.GetInfos(idTemp, self._showGuildPlayerItem, self)
-        end
+        ChatPanel.guildMemberNum.text = string.format("%d/%d", onlineNum, #idTemp)
+        PlayerInfoManger.GetInfos(idTemp, self._showGuildPlayerItem, self)
     else
         ChatPanel.guildMemberNum.text = "0"
     end

@@ -110,6 +110,12 @@ function FlightDetailCtrl:_history(value)
     FlightDetailPanel.historyPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
     FlightDetailPanel.historyTrueTimeText.text = flightData.FlightDeptimeDate
 
+    if value.win == nil then
+        FlightDetailPanel.infoRoot.localScale = Vector3.one
+        FlightDetailPanel.infoText.text = GetLanguage(32030019, value.delay, value.amount)
+        return
+    end
+
     --已经有结果
     if value.win == true then
         FlightDetailPanel.value03Text.text = ""..value.amount  --净赚积分

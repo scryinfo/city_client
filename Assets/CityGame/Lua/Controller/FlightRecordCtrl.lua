@@ -59,8 +59,19 @@ end
 function FlightRecordCtrl:_getFlightBetHistory(data)
     if data ~= nil then
         self.m_data.valueList = data
+        self:_getBetHistory()
         FlightRecordCtrl.listValue = self.m_data.valueList
         FlightRecordPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
+    end
+end
+--
+function FlightRecordCtrl:_getBetHistory()
+    local bet = FlightMainModel.getAllFlightData()
+    for key, value in pairs(bet) do
+        if value.myBet ~= nil then
+            local temp = {data = value.data, delay = value.myBet.delay, amount = value.myBet.amount}
+            table.insert(self.m_data.valueList, 1, temp)
+        end
     end
 end
 --

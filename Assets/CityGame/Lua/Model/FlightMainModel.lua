@@ -87,6 +87,10 @@ function FlightMainModel.getFlightById(id)
     end
     return nil
 end
+--获取所有的航班数据
+function FlightMainModel.getAllFlightData()
+    return FlightMainModel.allFlightDic
+end
 --
 function FlightMainModel.n_OnBetFlight(data, msgId)
     if msgId == 0 then

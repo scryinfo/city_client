@@ -33,10 +33,10 @@ function FlightRecordPageItem:initData(data)
 
     local trueWidth01 = self.timeText.preferredWidth
     self.timeText.rectTransform.sizeDelta = Vector2.New(trueWidth01, self.timeText.rectTransform.sizeDelta.y)
-    --需要从Model.allFlight中获取自己已经投注的
 
     if data.win == nil then
         self.betResultText.text = GetLanguage(32040001)  --已投注
+        self.moneyText.text = data.amount  --投注金额
     end
 
     if data.win == true then

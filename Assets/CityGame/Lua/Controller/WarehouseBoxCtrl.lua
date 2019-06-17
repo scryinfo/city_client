@@ -101,8 +101,9 @@ function WarehouseBoxCtrl:initializeUiInfoData()
             self.levelImg.color = getColorByVector3(threeLevel)
             self.levelValue.text = GetLanguage(25020030)
         end
-        --self.popularityValue.text =
-        --self.qualityValue.text =
+        self.brandNameText.text = self.m_data.dataInfo.key.brandName
+        self.popularityValue.text = self.m_data.dataInfo.key.brand
+        self.qualityValue.text = self.m_data.dataInfo.key.quality
     end
     local function callback(a)
         --暂时缓存仓库有的个数（后边要下架然后运输）

@@ -79,8 +79,8 @@ function ShelfItem:InitializeData()
             self.levelImg.color = getColorByVector3(threeLevel)
         end
         self.brandNameText.text = DataManager.GetCompanyName()
-        --self.brandValue
-        --self.qualityValue
+        self.brandValue.text = self.dataInfo.k.brand
+        self.qualityValue.text = self.dataInfo.k.quality
     end
 end
 --点击详情购买

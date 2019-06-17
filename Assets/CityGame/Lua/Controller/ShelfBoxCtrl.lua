@@ -125,8 +125,16 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.levelImg.color = getColorByVector3(threeLevel)
             self.levelValue.text = GetLanguage(25020030)
         end
-        --self.popularityValue.text =
-        --self.qualityValue.text =
+        if not self.m_data.dataInfo.k then
+            self.brandNameText.text = self.m_data.dataInfo.key.brandName
+            self.popularityValue.text = self.m_data.dataInfo.key.brand
+            self.qualityValue.text = self.m_data.dataInfo.key.quality
+        elseif not self.m_data.dataInfo.key then
+            self.brandNameText.text = self.m_data.dataInfo.k.brandName
+            self.popularityValue.text = self.m_data.dataInfo.k.brand
+            self.qualityValue.text = self.m_data.dataInfo.k.quality
+        end
+
     end
     local function callback(a)
         --缓存一个值，修改数量时使用
@@ -187,7 +195,6 @@ function ShelfBoxCtrl:_language()
     self.tipContentText.text = "The goods will be sold as many as they aer in warehouse if you open the switch."
     self.priceTip.text = GetLanguage(25060003)
     --self.advicePrice.text = "参考价格:"
-    self.brandNameText.text = DataManager.GetCompanyName()
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------
 --关闭

@@ -182,6 +182,11 @@ namespace City
     public static class CityLuaUtil
     {
 
+        public static string NewGuid()
+        {
+            return System.Guid.NewGuid().ToString();
+        }
+
         public static string scientificNotation2Normal(double number) {
             return number.ToString("f99").TrimEnd('0');
         }

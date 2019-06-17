@@ -209,6 +209,7 @@ public static class CustomSettings
         _GT(typeof(City.NetworkInterface.ConnectState)),
         _GT(typeof(City.MemoryStream)),
         _GT(typeof(City.CityLuaUtil)),        
+        _GT(typeof(System.Guid)),        
         _GT(typeof(City.CityTest)),
         //_GT(typeof(EffectFlying)),
         _GT(typeof(PieChartGraph)),

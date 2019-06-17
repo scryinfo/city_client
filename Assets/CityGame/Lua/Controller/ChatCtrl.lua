@@ -910,6 +910,7 @@ function ChatCtrl:c_OnReceiveAddFriendSucess(roleInfo)
             ChatCtrl.static.chatMgr:SetToggle()
             ChatCtrl.static.chatMgr:DestroyContentChildren(4)
             ChatCtrl.static.chatMgr:SetActivePlayerData({})
+            ChatPanel.playerInfoRoot:SetActive(false)
         end
         ChatCtrl.static.chatMgr:DestroyItem(2, roleInfo.id)
         ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)

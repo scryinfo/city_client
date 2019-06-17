@@ -864,6 +864,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
             local privateKeyStr = "asdfqwper234123412341234lkjlkj2342ghhg5j";
             local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
             local pubkeyStr = sm.ToHexString(pubkey);
+            --填充关键数据
             sm:pushHexSting(msg.PurchaseId); --PurchaseId
             sm:pushLong(1559911178647); --ts
             sm:pushHexSting("123456");   --Amount
@@ -875,6 +876,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
             local datahashstr = City.signer_ct.ToHexString(datahash);
             --签名
             --local sig = sm:signInString(privateKeyStr);
+            --生成签名（这个签名用于验证关键数据是否被篡改）
             local sig = sm:sign(privateKeyStr);
 
             local msgId = pbl.enum("gscode.OpCode","ct_RechargeRequestReq")
@@ -936,6 +938,7 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
             local myEthAddr = "qwerqwerqwerqwoiuopi023121lkjfalskdjqoiwejrqlwer"
             local amount = tostring(2000)
             local ts = 1559911188888
+            --填充关键数据
             sm:pushHexSting(msg.PurchaseId); --PurchaseId
             sm:pushSha256Hex(myEthAddr); --//addr
             sm:pushHexSting(amount);   --Amount

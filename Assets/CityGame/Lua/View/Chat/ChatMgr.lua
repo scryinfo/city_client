@@ -342,7 +342,14 @@ function ChatMgr:ShowPlayerInfo(index, data)
     end
     self.avatarData = AvatarManger.GetSmallAvatar(data.faceId, ChatPanel.headImage,0.5)
     if index == 1 then -- 世界界面陌生人信息显示
+        local blacklist = DataManager.GetMyBlacklist()
         ChatPanel.shieldBtn:SetActive(true)
+        for _, v in ipairs(blacklist) do
+            if v.id == data.id then
+                ChatPanel.shieldBtn:SetActive(false)
+                break
+            end
+        end
         ChatPanel.addFriendsBtn:SetActive(true)
         ChatPanel.chatBtn:SetActive(true)
         ChatPanel.shieldBtn:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, -292)

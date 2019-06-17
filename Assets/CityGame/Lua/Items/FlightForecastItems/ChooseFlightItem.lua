@@ -29,6 +29,12 @@ function ChooseFlightItem:initData(data)
     self.data = data
     self.flightCodeText.text = data.FlightNo  --航班号
     self.planStartTimeText.text = data.FlightDeptimePlanDate  --计划起飞时间
+    if data.FlightArrtimeDate == "" then
+        data.FlightArrtimeDate = "--"
+    end
+    if data.FlightDeptimeDate == "" then
+        data.FlightDeptimeDate = "--"
+    end
     self.trueStartTimeText.text = data.FlightDeptimeDate  --实际起飞时间
     self.planArriveTimeText.text = data.FlightArrtimePlanDate  --计划到达时间
     self.trueArriveTimeText.text = data.FlightArrtimeDate  --实际到达时间

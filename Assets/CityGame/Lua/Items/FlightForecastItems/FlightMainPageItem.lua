@@ -60,7 +60,7 @@ end
 --
 function FlightMainPageItem:Language()
     self.betMoneyText01.text = GetLanguage(32030005)
-    self.alreadyTranText02.text = GetLanguage(32030029)
+    self.alreadyTranText02.text = GetLanguage(32030032)
 end
 --
 function FlightMainPageItem:ClickFunc()

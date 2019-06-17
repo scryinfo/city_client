@@ -102,6 +102,10 @@ function FlightBetCtrl:_initPanelData()
     FlightBetPanel.betSlider.value = FlightBetPanel.betSlider.minValue
     self.betValue = FlightBetPanel.betSlider.value
     FlightBetPanel.betValueText.text = self.betValue
+
+    if self.m_data == nil then
+        return
+    end
 end
 --
 function FlightBetCtrl:_backBtnFunc()
@@ -110,8 +114,17 @@ function FlightBetCtrl:_backBtnFunc()
 end
 --
 function FlightBetCtrl:_confirmBtnFunc()
+    if self.m_data.id == nil or self.m_data.date == nil then
+        return
+    end
+    if self.betValue > DataManager.GetMyFlightScore() then
+        Event.Brocast("SmallPop", GetLanguage(32030022), ReminderType.Warning)
+        return
+    end
+
+    local temp = string.sub(self.m_data.date, 1, 10)
     --发送协议后，等待回调再关闭界面
-    --FlightMainModel.m_ReqBetFlight(id, delay, score, date)
+    FlightMainModel.m_ReqBetFlight(self.m_data.id, self.timeValue, self.betValue, temp)
     PlayMusEff(1002)
 end
 --

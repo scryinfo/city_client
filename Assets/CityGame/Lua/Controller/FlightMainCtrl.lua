@@ -72,7 +72,6 @@ end
 function FlightMainCtrl:_getAllFlight(data)
     if data ~= nil then
         FlightMainCtrl.static.itemsList = {}
-        self.m_data = {}
         self.m_data.valueList = data
         if #self.m_data.valueList > 0 then
             FlightMainCtrl.listValue = self.m_data.valueList
@@ -108,6 +107,9 @@ FlightMainCtrl.static.RightEndFunc = function()
 end
 --
 function FlightMainCtrl:_initData()
+    if self.m_data == nil then
+        self.m_data = {}
+    end
     FlightMainPanel.moneyText.text = DataManager.GetMyFlightScore()
     FlightMainModel.m_ReqAllFlight()
 end

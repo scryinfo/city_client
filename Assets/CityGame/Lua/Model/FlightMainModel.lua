@@ -69,8 +69,11 @@ function FlightMainModel.n_OnGetAllFlight(data, msgId)
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end
-    FlightMainModel._getDicValue(data)
-    Event.Brocast("c_getAllFlight", data)
+    FlightMainModel.allFlightDic = {}
+    if data.flight ~= nil then
+        FlightMainModel._getDicValue(data.flight)
+        Event.Brocast("c_getAllFlight", data.flight)
+    end
 end
 --将所有航班信息转存成字典
 function FlightMainModel._getDicValue(data)
@@ -96,7 +99,7 @@ function FlightMainModel.n_OnBetFlight(data, msgId)
     if msgId == 0 then
         local info = {}
         info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnBetFlight："..data.reason
+        info.contentInfo = "GAucModel.n_OnBetFlight："
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end

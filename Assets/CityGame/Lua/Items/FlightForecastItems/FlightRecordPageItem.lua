@@ -37,6 +37,7 @@ function FlightRecordPageItem:initData(data)
     if data.win == nil then
         self.betResultText.text = GetLanguage(32040001)  --已投注
         self.moneyText.text = data.amount  --投注金额
+        return
     end
 
     if data.win == true then
@@ -50,7 +51,7 @@ end
 --
 function FlightRecordPageItem:ClickFunc()
     PlayMusEff(1002)
-    ct.OpenCtrl("FlightDetailCtrl", {detail = self.data, dataType = 3})
+    ct.OpenCtrl("FlightDetailCtrl", {detail = self.data, dataType = 1})
 end
 --
 function FlightRecordPageItem:Close()

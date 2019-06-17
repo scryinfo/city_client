@@ -63,7 +63,7 @@ function FlightSearchCtrl:_initData()
     FlightSearchPanel.timeText.text = os.date("%W, %Y-%m-%d", os.time())
     self.startCode = "NKG"
     self.arriveCode = "CTU"
-    self.timeValue = "2019-06-15"
+    self.timeValue = "2019-06-17"
 end
 --
 function FlightSearchCtrl:_language()
@@ -132,5 +132,7 @@ function FlightSearchCtrl:_getSearchFlightResult(data)
     if data ~= nil and data.data ~= nil and #data.data > 0 then
         --接到服务器回调之后再打开界面
         ct.OpenCtrl("FlightChooseFlightCtrl", data.data)
+    else
+        Event.Brocast("SmallPop", GetLanguage(32030031))
     end
 end

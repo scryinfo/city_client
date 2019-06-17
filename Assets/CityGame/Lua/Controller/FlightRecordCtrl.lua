@@ -60,8 +60,13 @@ function FlightRecordCtrl:_getFlightBetHistory(data)
     if data ~= nil then
         self.m_data.valueList = data
         self:_getBetHistory()
-        FlightRecordCtrl.listValue = self.m_data.valueList
-        FlightRecordPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
+        if #self.m_data.valueList > 0 then
+            if FlightRecordCtrl.static.itemsList == nil then
+                FlightRecordCtrl.static.itemsList = {}
+            end
+            FlightRecordCtrl.listValue = self.m_data.valueList
+            FlightRecordPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
+        end
     end
 end
 --
@@ -98,6 +103,9 @@ FlightRecordCtrl.static.RightEndFunc = function()
 end
 --
 function FlightRecordCtrl:_initData()
+    if self.m_data == nil then
+        self.m_data = {}
+    end
     FlightMainModel.m_ReqFlightBetHistory()
 end
 --

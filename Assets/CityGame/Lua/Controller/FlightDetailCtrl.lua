@@ -62,6 +62,8 @@ function FlightDetailCtrl:_initData()
             flightData = self.m_data.detail
             self:_search(self.m_data.detail)
         end
+        self.id = flightData.FlightNo
+        self.date = flightData.FlightDeptimePlanDate  --bet界面所需数据
         FlightDetailPanel.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 --精确到天
         FlightDetailPanel.flightText.text = flightData.FlightCompany  --需要多语言
         FlightDetailPanel.numText.text = flightData.FlightNo  --CA4506
@@ -194,7 +196,7 @@ end
 --下注，判断自己的钱
 function FlightDetailCtrl:betFunc()
     PlayMusEff(1002)
-    ct.OpenCtrl("FlightBetCtrl")
+    ct.OpenCtrl("FlightBetCtrl", {id = self.id, date = self.date})
 end
 --
 function FlightDetailCtrl:ruleFunc()

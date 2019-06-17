@@ -102,6 +102,7 @@ function FriendslistCtrl:_initState()
             FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
         end
     elseif type == 3 then
+        FriendslistPanel.nullImageText.text = GetLanguage(13030005)
         FriendslistPanel.panelNameText.text = GetLanguage(13030001) --"BLACK LIST"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.searchInputField:SetActive(false)

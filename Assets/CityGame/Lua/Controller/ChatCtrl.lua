@@ -178,7 +178,7 @@ function ChatCtrl:_refreshState()
         self:_showChatNoticeItem()
     elseif self.m_data.toggleId == 2 then  -- 打开好友分页
         self.channel = 1 -- 聊天频道
-        ChatCtrl.static.isShowClickFriends = true
+        ChatCtrl.static.isShowClickFriends = 2
         if ChatPanel.friendsToggle.interactable then
             self:_showChatNoticeItem()
             ChatPanel.friendsToggle.isOn = true
@@ -343,7 +343,9 @@ function ChatCtrl:_friendsToggleValueChange(isOn)
         ChatCtrl.static.chatMgr:SetRootScrollbar(2)
         ChatCtrl.static.chatMgr:SetToggle()
         ChatPanel.friendsNoticeImage:SetActive(false)
-        ChatCtrl.static.chatMgr:SetActivePlayerData({})
+        if not ChatCtrl.static.isShowClickFriends or ChatCtrl.static.isShowClickFriends == 2 or ChatCtrl.static.isShowClickFriends == 0 then
+            ChatCtrl.static.chatMgr:SetActivePlayerData({})
+        end
         ChatPanel.playerInfoRoot:SetActive(false)
         ChatPanel.chatRecordsBtn:SetActive(false)
         ChatPanel.chatRecordsRoot:SetActive(false)
@@ -776,11 +778,13 @@ function ChatCtrl:c_OnReceivePlayerInfo(playerData)
             end
         end
         ChatPanel.friendsNum.text = tostring(#ChatCtrl.friendInfo)
-        if ChatCtrl.static.isShowClickFriends then
-            ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
+        if ChatCtrl.static.isShowClickFriends and ChatCtrl.static.isShowClickFriends ~= 0 then
+            if ChatCtrl.static.isShowClickFriends == 2 then
+                ChatCtrl.static.chatMgr:SetActivePlayerId(self.m_data.id)
+            end
             local friendsPlayerItem = ChatCtrl.static.chatMgr:GetActivePlayerItem()
             friendsPlayerItem.toggle.isOn = true
-            ChatCtrl.static.isShowClickFriends = false
+            ChatCtrl.static.isShowClickFriends = 0
             ChatPanel.friendsPlayerContent.anchoredPosition = Vector2.New(0,tonumber(127 * friendsPlayerItem.prefab.transform:GetSiblingIndex()))
         end
     elseif ChatPanel.strangersToggle.isOn then

@@ -181,6 +181,7 @@ FriendslistCtrl.static.FriendsClearData = function(transform)
 end
 
 function FriendslistCtrl:_refreshItem(data)
+    self:_showNullImageByData()
     FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, data)
 end
 

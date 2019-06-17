@@ -249,7 +249,7 @@ function EvaCtrl:c_OnUpdateMyEvas(evas)
         tempDecEva = tempDecEva + v.evasInfo.old_eva.decEva
         for j, k in ipairs(self.evasData) do
             if v.evasInfo.old_eva.id == k.id then
-                self.evasData[j] = v.evasInfo.old_eva
+                self.evasData[j] = v.evasInfo.new_eva
                 break
             end
         end

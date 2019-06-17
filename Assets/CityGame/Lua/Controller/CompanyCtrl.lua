@@ -384,7 +384,7 @@ function CompanyCtrl:OnCompanyRename(go)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(18010006)
-    data.tipInfo = GetLanguage(18010007)
+    data.tipInfo = GetLanguage(18010012)
     data.btnCallBack = function(text)
         if text == nil or text == "" then
             Event.Brocast("SmallPop", GetLanguage(18010010),80)

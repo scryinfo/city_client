@@ -129,8 +129,8 @@ function FlightSearchCtrl:timeChooseResult(data)
 end
 --服务器回调
 function FlightSearchCtrl:_getSearchFlightResult(data)
-    if data ~= nil and #data ~= 0 then
+    if data ~= nil and data.data ~= nil and #data.data > 0 then
         --接到服务器回调之后再打开界面
-        ct.OpenCtrl("FlightChooseFlightCtrl", data)
+        ct.OpenCtrl("FlightChooseFlightCtrl", data.data)
     end
 end

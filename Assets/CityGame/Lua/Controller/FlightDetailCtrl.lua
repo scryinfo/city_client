@@ -59,7 +59,7 @@ function FlightDetailCtrl:_initData()
             flightData = self.m_data.detail.data
             self:_history(self.m_data.detail)
         elseif self.m_data.dataType == 2 then  --从搜索过来的详情
-            flightData = self.m_data.detail.data
+            flightData = self.m_data.detail
             self:_search(self.m_data.detail)
         end
         FlightDetailPanel.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 --精确到天
@@ -131,7 +131,7 @@ function FlightDetailCtrl:_history(value)
 end
 --
 function FlightDetailCtrl:_search(value)
-    local flightData = value.data
+    local flightData = value
     FlightDetailPanel.historyTran.localScale = Vector3.one
     FlightDetailPanel.hotTran.localScale = Vector3.zero
     FlightDetailPanel.historyPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
@@ -143,7 +143,12 @@ function FlightDetailCtrl:_search(value)
         value.amount = tempBet.amount
         value.win = tempBet.win
     else
-        FlightDetailPanel.betBtn.localScale = Vector3.one  --可以下注
+        if flightData.FlightState == "计划" then
+            FlightDetailPanel.betBtn.localScale = Vector3.one  --可以下注
+        else
+            FlightDetailPanel.infoRoot.localScale = Vector3.one
+            FlightDetailPanel.infoText.text = GetLanguage(32030023)
+        end
         return
     end
 

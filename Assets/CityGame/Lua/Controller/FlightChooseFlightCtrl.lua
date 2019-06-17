@@ -57,8 +57,8 @@ function FlightChooseFlightCtrl:_initData()
     if self.m_data ~= nil then
         local flightData = self.m_data[1]
         FlightChooseFlightPanel.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间
-        FlightChooseFlightPanel.flightText.text = flightData.FlightCompany  --需要多语言
-        FlightChooseFlightPanel.numText.text = flightData.FlightNo  --CA4506
+        --FlightChooseFlightPanel.flightText.text = flightData.FlightCompany  --需要多语言
+        --FlightChooseFlightPanel.numText.text = flightData.FlightNo  --CA4506
         FlightChooseFlightPanel.endCodeText.text = flightData.FlightArrcode
         FlightChooseFlightPanel.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
         FlightChooseFlightPanel.startCodeText.text = flightData.FlightDepcode

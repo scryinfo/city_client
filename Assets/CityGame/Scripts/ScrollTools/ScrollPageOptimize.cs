@@ -73,6 +73,11 @@ public class ScrollPageOptimize : MonoBehaviour
 
         mEvent = data;
         mTotalItemCount = dataCount;
+        if (mTotalItemCount <= mGridCount)
+        {
+            mEvent.mLeftEndFunc();
+            mEvent.mRightEndFunc();
+        }
         InitShowPage();
     }
 

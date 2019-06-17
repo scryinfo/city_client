@@ -84,7 +84,11 @@ function FlightDetailCtrl:_hot(value)
     flightData = value.data
     FlightDetailPanel.hotMoneyText.text = value.sumBetAmount
     FlightDetailPanel.hotPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
-    FlightDetailPanel.hotTrueTimeText.text = flightData.FlightDeptimeDate
+    if flightData.FlightDeptimeDate == "" then
+        FlightDetailPanel.hotTrueTimeText.text = "--"
+    else
+        FlightDetailPanel.hotTrueTimeText.text = flightData.FlightDeptimeDate
+    end
     FlightDetailPanel.hotJoinCountText.text = flightData.FlightDepAirport
     local trueWidth02 = FlightDetailPanel.hotMoneyText.preferredWidth
     FlightDetailPanel.hotMoneyText.rectTransform.sizeDelta = Vector2.New(trueWidth02, FlightDetailPanel.hotMoneyText.rectTransform.sizeDelta.y)
@@ -110,7 +114,11 @@ function FlightDetailCtrl:_history(value)
     FlightDetailPanel.historyTran.localScale = Vector3.one
     FlightDetailPanel.hotTran.localScale = Vector3.zero
     FlightDetailPanel.historyPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
-    FlightDetailPanel.historyTrueTimeText.text = flightData.FlightDeptimeDate
+    if flightData.FlightDeptimeDate == "" then
+        FlightDetailPanel.historyTrueTimeText.text = "--"
+    else
+        FlightDetailPanel.historyTrueTimeText.text = flightData.FlightDeptimeDate
+    end
 
     if value.win == nil then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
@@ -137,7 +145,11 @@ function FlightDetailCtrl:_search(value)
     FlightDetailPanel.historyTran.localScale = Vector3.one
     FlightDetailPanel.hotTran.localScale = Vector3.zero
     FlightDetailPanel.historyPlanTimeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间 精确到秒
-    FlightDetailPanel.historyTrueTimeText.text = flightData.FlightDeptimeDate
+    if flightData.FlightDeptimeDate == "" then
+        FlightDetailPanel.historyTrueTimeText.text = "--"
+    else
+        FlightDetailPanel.historyTrueTimeText.text = flightData.FlightDeptimeDate
+    end
     --如果没有对应数据，则没下过注
     local tempBet = FlightMainModel.getFlightById(flightData.FlightNo)
     if tempBet ~= nil then

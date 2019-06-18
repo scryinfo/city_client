@@ -51,7 +51,13 @@ end
 function AdvertisementPartDetail:RefreshData(data)
     if data then
         if self.m_data then
+            self.m_data.takeOnNewOrder = data.takeOnNewOrder
         self.m_data.promRemainTime = data.promRemainTime
+        end
+        if data.takeOnNewOrder then
+            self.openedOthers.text = GetLanguage(27040002)
+        else
+            self.openedOthers.text = GetLanguage(27040001)
         end
         self.timeText.text = math.floor(data.promRemainTime/3600000)
         self.priceText.text = GetClientPriceString(data.curPromPricePerHour)
@@ -111,13 +117,18 @@ end
 --
 function AdvertisementPartDetail:_initFunc()
         local typeIds = {}
+        local goodIds = {}
         for i, v in pairs(GoodsTypeConfig) do
             typeIds[i] = v.typeId
+            for k, z in pairs(v.subclass) do
+                table.insert(goodIds,z)
+            end
         end
         local buildingType = {[1] = 1300, [2] = 1400}
 
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,typeIds)
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,buildingType)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromotionItemInfo',self.m_data.insId,goodIds) --获取商品推广能力
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,typeIds) --请求商品的推广能力
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,buildingType) --请求建筑的推广能力
 end
 --
 
@@ -131,12 +142,15 @@ function AdvertisementPartDetail:Show(data)
     if data.selledPromCount == 0 then
         self.startTime.text = GetLanguage(27040032)
     end
-
+    if data.takeOnNewOrder then
+        self.openedOthers.text = GetLanguage(27040002)
+    else
+        self.openedOthers.text = GetLanguage(27040001)
+    end
     self.goodsText.text = GetLanguage(27040008)
     self.goodsClickText.text = GetLanguage(27040008)
     self.buildingText.text = GetLanguage(27040007)
     self.buildingClickText.text = GetLanguage(27040007)
-    self.openedOthers.text = GetLanguage(27040002)
     self.time.text = GetLanguage(27040003)
     self.price.text = GetLanguage(27040004)
     self.queneText.text = GetLanguage(27040005)

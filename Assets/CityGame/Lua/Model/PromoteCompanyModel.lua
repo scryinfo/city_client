@@ -20,6 +20,7 @@ function PromoteCompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adAddNewPromoOrder","gs.AdAddNewPromoOrder",self.n_OnAddPromote) --添加推广
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adQueryPromotion","gs.AdQueryPromotion",self.n_OnQueryPromotion) -- 推广列表
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adQueryPromoCurAbilitys","gs.AdQueryPromoCurAbilitys",self.n_OnAdQueryPromoCurAbilitys) -- 推广能力列表
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryPromotionItemInfo","gs.PromotionItemInfo",self.n_OnPromotionItemInfo) -- 获取推广能力列表
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adjustPromoSellingSetting","gs.AdjustPromoSellingSetting",self.n_OnPromotionSetting) -- 推广设置
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adRemovePromoOrder","gs.AdRemovePromoOrder",self.n_OnRemovePromo) -- 删除推广
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",self.n_OnPromoAbilityHistory) -- 推广历史曲线
@@ -81,6 +82,11 @@ function PromoteCompanyModel:m_queryPromoCurAbilitys(buildingId,typeIds)
     DataManager.ModelSendNetMes("gscode.OpCode", "adQueryPromoCurAbilitys","gs.AdQueryPromoCurAbilitys",{sellerBuildingId = buildingId,typeIds= typeIds})
 end
 
+--获取推广能力列表
+function PromoteCompanyModel:m_queryPromotionItemInfo(buildingId,typeIds)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPromotionItemInfo","gs.QueryPromotionItemInfo",{buildingId = buildingId,typeIds= typeIds})
+end
+
 --推广历史曲线图
 function PromoteCompanyModel:m_PromoAbilityHistory(buildingId,typeIds)
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(毫秒)
@@ -109,7 +115,7 @@ end
 function PromoteCompanyModel:n_OnPublicFacility(info)
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_receivePromoteCompanyDetailInfo',info)
     if info.promRemainTime <= 0 and info.takeOnNewOrder == true then
-        PromoteCompanyModel:m_PromotionSetting(info.info.id , false , info.curPromPricePerHour, 0)
+        PromoteCompanyModel:m_PromotionSetting(info.info.id , false , 0, 0)
     end
 end
 
@@ -176,6 +182,11 @@ end
 
 --推广能力回调
 function PromoteCompanyModel:n_OnAdQueryPromoCurAbilitys(info)
+    DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_queryPromoCurAbilitys', info)
+end
+
+--获取推广能力回调
+function PromoteCompanyModel:n_OnPromotionItemInfo(info)
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_queryPromoCurAbilitys', info)
 end
 

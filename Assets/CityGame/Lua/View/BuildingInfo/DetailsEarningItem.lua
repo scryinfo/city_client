@@ -88,7 +88,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
         if dataInfo.type == "RENT_ROOM" then
             self.income.text = GetLanguage(11010011)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", self.picture, true)
-            self.pictureText.text = "X1"
+            self.pictureText.text = GetLanguage(11010016) .. "X1"
         elseif dataInfo.type == "INSHELF" then
             self.income.text = GetLanguage(11010012)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", self.picture)

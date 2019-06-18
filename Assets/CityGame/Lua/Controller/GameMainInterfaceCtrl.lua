@@ -149,13 +149,14 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
         if currentTime - lastTime > 60 then
             local ts = getFormatUnixTime(currentTime)
             GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
+        else
+            GameMainInterfacePanel.timeText.text = GetLanguage(11010015)
         end
         lastTime = currentTime
     end
     self.isTimmer = true
     self.timmer = 2
     GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.one
-    GameMainInterfacePanel.open.transform.localScale = Vector3.zero
 
     GameMainInterfacePanel.simpleMoney.text = "E"..GetClientPriceString(dataInfo.cost)
 

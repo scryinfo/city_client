@@ -105,6 +105,7 @@ end
 --初始化
 function GameNoticeCtrl:_initData()
     GameNoticePanel.jumpBtn.transform.localScale = Vector3.zero
+    GameNoticePanel.right.localScale = Vector3.zero
     GameNoticePanel.hedaer.text = ""
     GameNoticePanel.time.text = ""
     GameNoticePanel.rightContent.text = GetLanguage(16010021)
@@ -127,6 +128,7 @@ end
 function GameNoticeCtrl:OnBgBtn()
     PlayMusEff(1002)
     GameNoticePanel.hintItem.localScale = Vector3.zero
+    GameNoticePanel.right.localScale = Vector3.zero
     UIPanel.ClosePage();
 end
 
@@ -152,6 +154,7 @@ end
 
 --读取邮件
 function GameNoticeCtrl:c_onBg(go)
+    GameNoticePanel.right.localScale = Vector3.one
     if go.state == false then
         DataManager.DetailModelRpcNoRet(self.insId , 'm_mailRead',go.id)
     else
@@ -231,15 +234,12 @@ function GameNoticeCtrl:_deleteNotice(id)
         return
     end
     noticeItems[id].prefab.gameObject:SetActive(false)
-    table.remove(noticeItems,id)
-    local id = id
-    noticeItems.id = nil
-
+    noticeItems[id] = nil
     id = nil
-    if noticeItems == {} then
+    bg = nil
+    self:_initData()
+    if next(noticeItems )== nil then
         UIPanel.ClosePage();
         ct.OpenCtrl("NoMessageCtrl")
     end
-    bg = nil
-    self:_initData()
 end

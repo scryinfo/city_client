@@ -169,7 +169,7 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
             time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
             table.insert(boundaryLine,(updataTime - monthAgo + 86400) / 86400 * 140)
         else
-            time[i] = tostring(getFormatUnixTime(updataTime).day)
+            time[i] = tostring(getFormatUnixTime(updataTime).day) .. "d"
         end
         --incomeTab[i] = {}
         --incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140

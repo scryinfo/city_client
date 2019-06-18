@@ -198,6 +198,7 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     if tonumber(getFormatUnixTime(buildingTs).hour) ~= 0 then
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).hour) * 3600
     end
+    local buildingTime = buildingTs
     updataTime = monthAgo
     local index = 1
     if buildingTs >= monthAgo then
@@ -283,8 +284,24 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
             payVet[i] = Vector2.New(v.x,v.y / scale * 105)
         end
     end
-    incomeVet[#incomeVet].x = incomeVet[#incomeVet].x + (taday * (139 / 86400))
-    payVet[#payVet].x = payVet[#payVet].x + (taday * (139 / 86400))
+
+    if buildingTime == currentTime then
+        local incomeVetTemp = {}
+        local payVetTemp = {}
+        incomeVetTemp.x = incomeVet[#incomeVet].x + (taday * (139 / 86400))
+        incomeVetTemp.y = incomeVet[#incomeVet].y
+        payVetTemp.x = payVet[#payVet].x + (taday * (139 / 86400))
+        payVetTemp.y = payVet[#payVet].y
+        table.insert(incomeVet,Vector2.New(incomeVetTemp.x,incomeVetTemp.y))
+        table.insert(payVet,Vector2.New(payVetTemp.x,payVetTemp.y))
+        incomeVet[#incomeVet-1].y = 0
+        payVet[#payVet-1].y = 0
+        table.insert(income,#incomeVet-1,Vector2.New(incomeVet[#incomeVet-1].x,0))
+        table.insert(pay,#payVet-1,Vector2.New(payVet[#payVet-1].x,0))
+    else
+        incomeVet[#incomeVet].x = incomeVet[#incomeVet].x + (taday * (139 / 86400))
+        payVet[#payVet].x = payVet[#payVet].x + (taday * (139 / 86400))
+    end
 
     CompanyPanel.curveSlide:SetXScaleValue(time,140)
     CompanyPanel.curveFunctionalGraph:BoundaryLine(boundaryLine)

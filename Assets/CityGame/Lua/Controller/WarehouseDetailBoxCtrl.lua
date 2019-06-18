@@ -69,7 +69,7 @@ function WarehouseDetailBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function WarehouseDetailBoxCtrl:_language()
-    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
+    self.tipText.text = GetLanguage(25020024)
 end
 -------------------------------------------------------------点击函数-------------------------------------------------------------------------------
 --关闭
@@ -244,7 +244,7 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
         end
         if next(temporaryDataInfo) == nil then
             self.noTip.transform.localScale = Vector3.one
-            self.tipText.text = "没有符合上架的原料"
+            self.tipText.text = GetLanguage(25020024)
         end
     elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
         for key,value in pairs(dataInfo.inHand) do
@@ -266,7 +266,7 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
         end
         if next(temporaryDataInfo) == nil then
             self.noTip.transform.localScale = Vector3.one
-            self.tipText.text = "没有符合上架的商品"
+            self.tipText.text = GetLanguage(25020024)
         end
     elseif self.m_data.info.buildingType == BuildingType.RetailShop then
         for key,value in pairs(dataInfo.inHand) do
@@ -288,7 +288,7 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
         end
         if next(temporaryDataInfo) == nil then
             self.noTip.transform.localScale = Vector3.one
-            self.tipText.text = "没有符合上架的商品"
+            self.tipText.text = GetLanguage(25020024)
         end
     end
     for key,value in pairs(temporaryDataInfo) do

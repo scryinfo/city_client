@@ -50,7 +50,6 @@ end
 
 function ShelfBoxCtrl:Hide()
     UIPanel.Hide(self)
-
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function ShelfBoxCtrl:_getComponent(go)
@@ -185,14 +184,14 @@ function ShelfBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function ShelfBoxCtrl:_language()
-    self.topName.text = "详情"
+    self.topName.text = GetLanguage(28040035)
     self.popularityText.text = GetLanguage(25020006)
     self.qualityText.text = GetLanguage(25020005)
     self.levelText.text = GetLanguage(25020007)
     self.numberTip.text = GetLanguage(28040019)
     self.totalNumber.text = GetLanguage(28040019)
     self.tipText.text = GetLanguage(25060004)
-    self.tipContentText.text = "The goods will be sold as many as they aer in warehouse if you open the switch."
+    self.tipContentText.text = GetLanguage(25020027)
     self.priceTip.text = GetLanguage(25060003)
     --self.advicePrice.text = "参考价格:"
 end
@@ -223,7 +222,7 @@ end
 --点击下架
 function ShelfBoxCtrl:_clickDownShelfBtn(ins)
     if ins.m_data.dataInfo.autoReplenish == true then
-        Event.Brocast("SmallPop","请先关闭自动补货", 300)
+        Event.Brocast("SmallPop",GetLanguage(25030018), 300)
         return
     end
     local data = {}
@@ -295,11 +294,11 @@ end
 --上架时检查操作是否成功
 function ShelfBoxCtrl:WhetherValidShelfOp(ins)
     if GetServerPriceNumber(ins.priceInput.text) == 0 or ins.priceInput.text == "" then
-        Event.Brocast("SmallPop", "请输入价格", 300)
+        Event.Brocast("SmallPop", GetLanguage(25030023), 300)
         return false
     end
     if ins.numberSlider.value == 0 then
-        Event.Brocast("SmallPop", "请输入数量", 300)
+        Event.Brocast("SmallPop", GetLanguage(25030024), 300)
         return false
     end
     return true

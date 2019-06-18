@@ -51,7 +51,7 @@ function InventGoodQueneItem:updateUI(data)
         for i, configData in ipairs(InventConfig) do
             if configData.type == tostring(data.goodCategory) then
                 LoadSprite(configData.iconPath , self.goodsImage,true)
-                self.goodsText.text = configData.name
+                self.goodsText.text = GetLanguage(tonumber(configData.name))
             end
         end
     else

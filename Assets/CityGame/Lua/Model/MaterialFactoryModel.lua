@@ -87,7 +87,8 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
-    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
+    ----TODO:服务器还在改
+    --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
 
     --购物车
@@ -266,10 +267,10 @@ end
 function MaterialFactoryModel:n_OnGetShelfData(data)
     Event.Brocast("getShelfInfoData",data)
 end
---货架购买数量推送
-function MaterialFactoryModel:n_OnSalesNotice(data)
-    Event.Brocast("salesNotice",data)
-end
+----货架购买数量推送   TODO:服务器还在改
+--function MaterialFactoryModel:n_OnSalesNotice(data)
+--    Event.Brocast("salesNotice",data)
+--end
 ----添加购物车
 --function MaterialFactoryModel:n_OnAddShoppingCart(data)
 --

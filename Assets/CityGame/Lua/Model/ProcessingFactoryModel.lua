@@ -26,6 +26,8 @@ function ProcessingFactoryModel:OnCreate()
     Event.AddListener("m_ReqprocessingSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.AddListener("m_ReqprocessingSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
     Event.AddListener("m_ReqprocessingAddShoppingCart",self.m_ReqAddShoppingCart,self)
+    Event.AddListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
+    Event.AddListener("m_GetShelfData",self.m_GetShelfData,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
@@ -36,10 +38,14 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfSet","gs.ShelfSet",self.n_OnModifyShelfInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","delItem","gs.DelItem",self.n_OnDelItemInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getStorageData","gs.StorageData",self.n_OnGetWarehouseData)
+
     --货架
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
+
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
     --生产线
@@ -66,6 +72,8 @@ function ProcessingFactoryModel:Close()
     Event.RemoveListener("m_ReqprocessingSetLineOrder",self.m_ReqSetLineOrder,self)
     Event.RemoveListener("m_ReqprocessingSetAutoReplenish",self.m_ReqSetAutoReplenish,self)
     Event.RemoveListener("m_ReqprocessingAddShoppingCart",self.m_ReqAddShoppingCart,self)
+    Event.RemoveListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
+    Event.RemoveListener("m_GetShelfData",self.m_GetShelfData,self)
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
@@ -75,10 +83,14 @@ function ProcessingFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","transferItem","gs.TransferItem",self.n_OnBuildingTransportInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","shelfSet","gs.ShelfSet",self.n_OnModifyShelfInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","delItem","gs.DelItem",self.n_OnDelItemInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getStorageData","gs.StorageData",self.n_OnGetWarehouseData)
+
     --货架
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
+
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
     --生产线
@@ -143,6 +155,14 @@ end
 function ProcessingFactoryModel:m_ReqBuildingGoodsInfo(buildingId)
     self.funModel:m_ReqBuildingGoodsInfo(buildingId)
 end
+--获取仓库数据
+function ProcessingFactoryModel:m_GetWarehouseData(buildingId)
+    self.funModel:m_GetWarehouseData(buildingId)
+end
+--获取货架数据
+function ProcessingFactoryModel:m_GetShelfData(buildingId)
+    self.funModel:m_GetShelfData(buildingId)
+end
 ----自动补货
 --function ProcessingFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
 --    self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
@@ -165,12 +185,12 @@ function ProcessingFactoryModel:n_OnReceiveHouseSalaryChange(data)
 end
 --打开加工厂
 function ProcessingFactoryModel:n_OnOpenprocessing(stream)
-    DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", 'refreshprocessingDataInfo',stream)
     if stream ~= nil then
         if not self.funModel then
             self.funModel = BuildingBaseModel:new(self.insId)
         end
     end
+    DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", 'refreshprocessingDataInfo',stream)
     self:m_ReqBuildingGoodsInfo(self.insId)
 end
 --运输
@@ -232,6 +252,14 @@ end
 --查询商品信息
 function ProcessingFactoryModel:n_OnBuildingGoodsInfo(data)
     Event.Brocast("saveMaterialOrGoodsInfo",data)
+end
+--获取仓库数据
+function ProcessingFactoryModel:n_OnGetWarehouseData(data)
+    Event.Brocast("getWarehouseInfoData",data)
+end
+--获取货架数据
+function ProcessingFactoryModel:n_OnGetShelfData(data)
+    Event.Brocast("getShelfInfoData",data)
 end
 ----自动补货
 --function ProcessingFactoryModel:n_OnSetAutoReplenish(data)

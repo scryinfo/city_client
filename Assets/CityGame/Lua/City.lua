@@ -1685,6 +1685,9 @@ end
 CityEngineLua.onConnectionStateChange = function(state )
 	ct.log("system","[m_onConnectionState]",state.error)
 	Event.Brocast("c_ConnectionStateChange", state );
+	local okCallBack = function()
+		CityEngineLua.LoginOut()
+	end
 	if state.error == '' then -- 默认成功
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	elseif state.error == 'Connect server succeed' then --连接成功
@@ -1707,14 +1710,15 @@ CityEngineLua.onConnectionStateChange = function(state )
 	elseif state.error == 'Disconnect by server' then --服务器断开连接（需提示）
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 		--ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
-
-		local okCallBack = function()
-			CityEngineLua.LoginOut()
-		end
 		ct.MsgBox(GetLanguage(41010010), GetLanguage(41010007), nil, okCallBack, okCallBack)
 	else
-		ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
-		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
+		--统计服只提示，不退出
+		if CityEngineLua.tradeappIP == state.connectIP  and CityEngineLua.tradeappPort == tostring(state.connectPort) then
+			ct.MsgBox("NetworkingError", "resason：" ..state.connectIP..":"..state.connectPort.." "..state.error)
+		else
+			ct.MsgBox("NetworkingError", "resason：" ..state.connectIP..":"..state.connectPort.." "..state.error, nil, okCallBack, okCallBack)
+			ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
+		end
 	end
 end
 

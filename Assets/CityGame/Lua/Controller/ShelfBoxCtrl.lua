@@ -127,12 +127,12 @@ function ShelfBoxCtrl:initializeUiInfoData()
         end
         if not self.m_data.dataInfo.k then
             self.brandNameText.text = self.m_data.dataInfo.key.brandName
-            self.popularityValue.text = self.m_data.dataInfo.key.brand
-            self.qualityValue.text = self.m_data.dataInfo.key.quality
+            self.popularityValue.text = self.m_data.dataInfo.key.brandScore
+            self.qualityValue.text = self.m_data.dataInfo.key.qualityScore
         elseif not self.m_data.dataInfo.key then
             self.brandNameText.text = self.m_data.dataInfo.k.brandName
-            self.popularityValue.text = self.m_data.dataInfo.k.brand
-            self.qualityValue.text = self.m_data.dataInfo.k.quality
+            self.popularityValue.text = self.m_data.dataInfo.k.brandScore
+            self.qualityValue.text = self.m_data.dataInfo.k.qualityScore
         end
 
     end

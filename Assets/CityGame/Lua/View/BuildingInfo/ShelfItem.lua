@@ -78,9 +78,9 @@ function ShelfItem:InitializeData()
         elseif Good[self.itemId].luxury == 3 then
             self.levelImg.color = getColorByVector3(threeLevel)
         end
-        self.brandNameText.text = DataManager.GetCompanyName()
-        self.brandValue.text = self.dataInfo.k.brand
-        self.qualityValue.text = self.dataInfo.k.quality
+        self.brandNameText.text = self.dataInfo.k.brandName
+        self.brandValue.text = self.dataInfo.k.brandScore
+        self.qualityValue.text = self.dataInfo.k.qualityScore
     end
 end
 --点击详情购买

@@ -184,6 +184,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
             elseif Good[lineData[1].itemId].luxury == 3 then
                 self.levelImg.color = getColorByVector3(threeLevel)
             end
+            self.brandNameText.text = DataManager.GetCompanyName()
         end
         --当前生产中线开始的时间
         self.startTime = lineData[1].ts

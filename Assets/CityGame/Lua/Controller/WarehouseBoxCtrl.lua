@@ -102,8 +102,8 @@ function WarehouseBoxCtrl:initializeUiInfoData()
             self.levelValue.text = GetLanguage(25020030)
         end
         self.brandNameText.text = self.m_data.dataInfo.key.brandName
-        self.popularityValue.text = self.m_data.dataInfo.key.brand
-        self.qualityValue.text = self.m_data.dataInfo.key.quality
+        self.popularityValue.text = self.m_data.dataInfo.key.brandScore
+        self.qualityValue.text = self.m_data.dataInfo.key.qualityScore
     end
     local function callback(a)
         --暂时缓存仓库有的个数（后边要下架然后运输）

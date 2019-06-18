@@ -134,6 +134,7 @@ function FriendslistCtrl:_initState()
             self:_showNullImage(false)
         end
     elseif type == 5 then
+        FriendslistPanel.nullImageText.text = GetLanguage(13050004)
         FriendslistPanel.panelNameText.text = GetLanguage(13050001) --"APPLICATION LIST"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.blacklistNumberText.text = ""
@@ -199,6 +200,8 @@ function FriendslistCtrl:c_OnReceiveSearchPlayerInfo(friendsData)
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
     else
         FriendslistCtrl.friendInfo = {}
+
+        FriendslistPanel.nullImageText.text = GetLanguage(13040005)
         self:_showNullImage(true)
         FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, 0)
     end

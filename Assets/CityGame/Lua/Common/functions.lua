@@ -742,7 +742,7 @@ function GetEvaData(index, configData, lv)
 			return string.format( (1 + EvaUp[lv].add / 100000) * configData.basevalue)
 		end
 	elseif configData.Btype == "ProduceSpeed" then -- 生产速度
-		local resultNum = tostring( 1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue) * brandSizeNum)
+		local resultNum = tostring( 1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum))
 		if string.find(resultNum, ".") ~= nil then
 			resultNum = string.format( "%.4f", resultNum)
 		end

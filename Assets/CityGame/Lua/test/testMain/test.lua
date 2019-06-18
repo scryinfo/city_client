@@ -1044,11 +1044,16 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
     --签名
     local sig = sm:sign(privateKeyStr);
     local sigStr = City.signer_ct.ToHexString(sig);
+    ct.log('abel_0601_VerifySignature','sig = sm:sign(privateKeyStr), sig ='..sigStr)
 
 
     --验证
     local pass = sm:verifyByPbyKey(pubkey, sig);
-
+    if pass == true then
+        ct.log('abel_0601_VerifySignature','pass = sm:verifyByPbyKey(pubkey, sig), pass ='..'true')
+    else
+        ct.log('abel_0601_VerifySignature','pass = sm:verifyByPbyKey(pubkey, sig), pass ='..'false')
+    end
     --篡改pubkey
     local pubkeyChange = sm.GetPublicKeyFromPrivateKey("bsdfqwper234123412341234lkjlkj2342ghhg5j");
     pass = sm:verifyByPbyKey(pubkeyChange, sig);

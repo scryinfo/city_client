@@ -95,7 +95,8 @@ end
 -- 点击踢出按钮
 function GuildMenu:_onOut()
     PlayMusEff(1002)
-    self:SetPrefabShow(false)
+    --self:SetPrefabShow(false)
+    GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
     --打开弹框
     local showData = {}
@@ -118,7 +119,8 @@ end
 -- 点击加好友按钮
 function GuildMenu:_onAddFriends()
     PlayMusEff(1002)
-    self:SetPrefabShow(false)
+    --self:SetPrefabShow(false)
+    GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
     local data = {}
     data.titleInfo = GetLanguage(13040002)
@@ -135,7 +137,8 @@ end
 -- 显示个人信息
 function GuildMenu:_onPersonalData()
     PlayMusEff(1002)
-    self:SetPrefabShow(false)
+    --self:SetPrefabShow(false)
+    GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
     local playerInfo = GuildOwnCtrl.static.guildMgr:GetPlayerData().playerData
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", playerInfo)
@@ -144,14 +147,15 @@ end
 -- 任命某职位
 function GuildMenu:_onAppointerPost(index)
     PlayMusEff(1002)
-    self:SetPrefabShow(false)
+    --self:SetPrefabShow(false)
+    GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
     --打开弹框
     local tips
     if index == 0 then
         tips = GetLanguage(12060033)
     elseif index == 1 then
-        tips = GetLanguage(12060034)
+        tips = GetLanguage(12060035)
     elseif index == 2 then
         tips = GetLanguage(12060036)
     elseif index == 3 then

@@ -56,10 +56,11 @@ end
 -- 点击成员item打开操作菜单
 function GuildMemberItem:_openMenu()
     local position = self.prefab.transform.position
-    GuildOwnCtrl.static.guildMgr:ShowGuildMenu(position)
-    GuildOwnCtrl.static.guildMgr:SetSelectMemberItem(self)
-    --GuildOwnCtrl.static.guildMgr:SetIdentity()
     self:_setButtonInteractable(false)
+    GuildOwnCtrl.static.guildMgr:SetSelectMemberItem(self)
+    GuildOwnCtrl.static.guildMgr:ShowGuildMenu(position)
+    --GuildOwnCtrl.static.guildMgr:SetIdentity()
+    GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(true)
 end
 
 -- 设置item的背景色

@@ -13,7 +13,7 @@ end
 function GuildMgr:ShowGuildMenu(position)
     if self.guildMenu then
         self.guildMenu.prefab.transform.position = position
-        self:SetClickInteractable()
+        --self:SetClickInteractable()
         self.guildMenu:SetAppointRoot(false)
         self:SetGuildMenuShow(true)
         self.guildMenu:SetAppointImageColor(true)
@@ -58,8 +58,9 @@ function GuildMgr:GetPlayerData()
 end
 
 function GuildMgr:SetGuildMenuShow(isShow)
-    if self.guildMenu then
-        self.guildMenu:SetPrefabShow(isShow)
+    GuildOwnPanel.menuRoot.localScale = isShow and Vector3.one or Vector3.zero
+    if not isShow then
+        self:SetSelectMemberItem()
     end
 end
 

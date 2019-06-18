@@ -170,8 +170,8 @@ function ResearchDetailPart:updateLanguage()
     self.goodsBtnText.text = GetLanguage(28040002)
     self.goodsText.text = GetLanguage(28040002)
 
-    --self.nameText
-    --self.timeText
+    self.nameText.text = GetLanguage(28010008)
+    self.timeText.text = GetLanguage(28040037)
 
     self.evaBtnText.text  = GetLanguage(28040029)
     self.evaText.text  = GetLanguage(28040029)

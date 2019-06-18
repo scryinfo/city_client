@@ -151,8 +151,8 @@ end
 function RollCtrl:language()
     panel.count1.text = GetLanguage(28040024)
     panel.count2.text = GetLanguage(28040024)
-    panel.nametexts.text = GetLanguage(28040036)
-    panel.evanametexts.text = GetLanguage(28040037)
+    panel.nametexts.text = GetLanguage(28040024)
+    panel.evanametexts.text = GetLanguage(28040042)
     panel.congratulation1.text = GetLanguage(28040020)
     panel.congratulation2.text = GetLanguage(28040020)
 end
@@ -179,7 +179,7 @@ end
 
 function RollCtrl:updateText(data)
     panel.BigEVAtext.text = DataManager.GetEvaPoint()
-    -- panel.titleText.text = GetLanguage(40010009)
+     panel.titleText.text = GetLanguage(40010009)
 end
 
 --点击一次开启五个

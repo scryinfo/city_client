@@ -225,7 +225,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         end
         --判断当前有没有代生产队列
         if #lineData == 1 then
-            self.noLineTip.text = GetLanguage(25030012)
+            self.noLineTip.text = GetLanguage(20060005)
             self.noLineTip.transform.localScale = Vector3.one
         elseif #lineData > 1 then
             self.noLineTip.transform.localScale = Vector3.zero

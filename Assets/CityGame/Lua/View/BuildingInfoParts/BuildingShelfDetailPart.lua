@@ -16,13 +16,21 @@ function BuildingShelfDetailPart:_InitTransform()
     --购买列表(暂时购买成功后或退出建筑时清空)
     self.buyDatas = {}
 end
-
+function BuildingShelfDetailPart:Show(data)
+    BasePartDetail.Show(self,data)
+    --打开时清空Item数据
+    if next(self.shelfDatas) ~= nil then
+        self:CloseDestroy(self.shelfDatas)
+    end
+end
 function BuildingShelfDetailPart:RefreshData(data)
     if data == nil then
         return
     end
     self.m_data = data
     self:_initFunc()
+    --获取最新的货架数据
+    Event.Brocast("m_GetShelfData",data.insId)
 end
 
 function BuildingShelfDetailPart:_getComponent(transform)
@@ -87,7 +95,9 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("replenishmentSucceed",self.replenishmentSucceed,self)
     Event.AddListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.AddListener("modifyShelfInfo",self.modifyShelfInfo,self)
-    Event.AddListener("salesNotice",self.salesNotice,self)
+    Event.AddListener("getShelfInfoData",self.getShelfInfoData,self)
+    --推送
+    --Event.AddListener("salesNotice",self.salesNotice,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
@@ -101,12 +111,12 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("replenishmentSucceed",self.replenishmentSucceed,self)
     Event.RemoveListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.RemoveListener("modifyShelfInfo",self.modifyShelfInfo,self)
-    Event.RemoveListener("salesNotice",self.salesNotice,self)
+    Event.RemoveListener("getShelfInfoData",self.getShelfInfoData,self)
+    --Event.RemoveListener("salesNotice",self.salesNotice,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
     self:_language()
-    self:initializeUiInfoData(self.m_data.shelf.good)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -127,10 +137,12 @@ function BuildingShelfDetailPart:initializeUiInfoData(shelfData)
             self.buyBtn.transform.localScale = Vector3.one
         end
         self.number.transform.localScale = Vector3.zero
+        self.tipText.text = GetLanguage(25060012)
     else
         self.contentAddBg.gameObject:SetActive(true)
         self.buyBtn.transform.localScale = Vector3.zero
         self.number.transform.localScale = Vector3.zero
+        self.tipText.text = GetLanguage(25060001)
     end
     --货架是否是空的
     if not shelfData or next(shelfData) == nil then
@@ -280,6 +292,11 @@ function BuildingShelfDetailPart:refreshShelfDetailPart(dataInfo)
     self:initializeUiInfoData(self.m_data.shelf.good)
 end
 -----------------------------------------------------------------------------回调函数--------------------------------------------------------------------------------------
+--获取货架数据
+function BuildingShelfDetailPart:getShelfInfoData(data)
+    self.shelfInfoData = ct.deepCopy(data)
+    self:initializeUiInfoData(self.shelfInfoData.shelf.good)
+end
 --下架成功后
 function BuildingShelfDetailPart:downShelfSucceed(data)
     if data ~= nil then
@@ -294,7 +311,7 @@ function BuildingShelfDetailPart:downShelfSucceed(data)
         end
     end
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop",GetLanguage(25060007), 300)
+    Event.Brocast("SmallPop",GetLanguage(25060007), ReminderType.Succeed)
 end
 --购买成功
 function BuildingShelfDetailPart:buySucceed(data)
@@ -330,7 +347,7 @@ function BuildingShelfDetailPart:buySucceed(data)
     self.number.transform.localScale = Vector3.zero
     self.buyDatas = {}
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop",GetLanguage(25070005), 300)
+    Event.Brocast("SmallPop",GetLanguage(25070005), ReminderType.Succeed)
 end
 --自动补货
 function BuildingShelfDetailPart:replenishmentSucceed(data)
@@ -356,6 +373,7 @@ function BuildingShelfDetailPart:wareHouseNoGoods(data)
 end
 --货架购买成功后推送
 function BuildingShelfDetailPart:salesNotice(data)
+    ----TODO 服务器在改
     local aaa = ""
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -364,10 +382,10 @@ end
 function BuildingShelfDetailPart:getShelfItemIdCount(itemId,callback)
     if itemId ~= nil then
         local nowCount = 0
-        if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
+        if not self.shelfInfoData.shelf.good or next(self.shelfInfoData.shelf.good) == nil then
             nowCount = 0
         else
-            for key,value in pairs(self.m_data.shelf.good) do
+            for key,value in pairs(self.shelfInfoData.shelf.good) do
                 if value.k.id == itemId then
                     nowCount = value.n
                 end

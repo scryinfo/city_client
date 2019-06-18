@@ -151,7 +151,7 @@ end
 --function ProcessingFactoryModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
 --    self.funModel:m_ReqAddShoppingCart(buildingId,itemId,number,price,producerId,qty)
 --end
----服务器回调---
+-------------------------------------------------------------服务器回调------------------------------------------------------------------
 --开业成功，再次请求建筑详情
 function ProcessingFactoryModel:n_OnReceiveOpenBusiness(data)
     if data ~= nil and data.id == self.insId then

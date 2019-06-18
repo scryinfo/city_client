@@ -157,7 +157,7 @@ function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
     self:initializeUiInfoData()
     self:_clickCloseBtn()
     UIPanel.ClosePage()
-    Event.Brocast("SmallPop",GetLanguage(25060008), 300)
+    Event.Brocast("SmallPop",GetLanguage(25060008), ReminderType.Succeed)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --上架前检查货架上是否有这个商品  返回true有   返回false没有

@@ -19,14 +19,14 @@ function BuildingWarehouseDetailPart:_InitTransform()
 end
 function BuildingWarehouseDetailPart:Show(data)
     BasePartDetail.Show(self,data)
+    if next(self.warehouseDatas) ~= nil then
+        self:CloseDestroy(self.warehouseDatas)
+    end
     Event.AddListener("detailPartUpdateCapacity",self.updateCapacity,self)
 end
 function BuildingWarehouseDetailPart:Hide()
     BasePartDetail.Hide(self)
     Event.RemoveListener("detailPartUpdateCapacity",self.updateCapacity,self)
-    if next(self.warehouseDatas) ~= nil then
-        self:CloseDestroy(self.warehouseDatas)
-    end
     --暂时放到关闭页面时建筑是清空运输表
     if next(self.transportTab) ~= nil then
         self.transportTab = {}
@@ -38,9 +38,8 @@ function BuildingWarehouseDetailPart:RefreshData(data)
     end
     self.m_data = data
     self:_initFunc()
-    --合并两张表
-    self.warehouseDataInfo = self:mergeTables(self.m_data.store.inHand,self.m_data.store.locked)
-    self:initializeUiInfoData(self.warehouseDataInfo)
+    --获取最新的仓库数据
+    Event.Brocast("m_GetWarehouseData",data.insId)
 end
 
 function BuildingWarehouseDetailPart:_getComponent(transform)
@@ -83,7 +82,7 @@ function BuildingWarehouseDetailPart:_ResetTransform()
     if next(self.warehouseDatas) ~= nil then
         self:CloseDestroy(self.warehouseDatas)
     end
-    --退出建筑是清空运输表  TODO:考虑到添加运输列表后，关闭不清，上架后这个界面没有清，数量会有问题,暂时放到关闭页面时清空
+    ----退出建筑是清空运输表  TODO:考虑到添加运输列表后，关闭不清，上架后这个界面没有清，数量会有问题,暂时放到关闭页面时清空
     --if next(self.transportTab) ~= nil then
     --    self.transportTab = {}
     --end
@@ -101,6 +100,7 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.AddListener("deleteSucceed",self.deleteSucceed,self)
     Event.AddListener("getItemIdCount",self.getItemIdCount,self)
+    Event.AddListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
@@ -111,6 +111,7 @@ function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.RemoveListener("deleteSucceed",self.deleteSucceed,self)
     Event.RemoveListener("getItemIdCount",self.getItemIdCount,self)
+    Event.RemoveListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
@@ -121,8 +122,8 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
 function BuildingWarehouseDetailPart:_language()
-    self.capacityText.text = "容量"
-    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
+    self.capacityText.text = GetLanguage(25020031)
+    self.tipText.text = GetLanguage(25020024)
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
@@ -275,6 +276,13 @@ function BuildingWarehouseDetailPart:deleteWarehouseItem(dataInfo)
     end
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
+--获取仓库数据
+function BuildingWarehouseDetailPart:getWarehouseInfoData(data)
+    self.storeInfoData = ct.deepCopy(data.store)
+    --合并两张表
+    self.warehouseDataInfo = self:mergeTables(self.storeInfoData.inHand,self.storeInfoData.locked)
+    self:initializeUiInfoData(self.warehouseDataInfo)
+end
 --刷新生产线生产出来商品，当前的仓库容量
 function BuildingWarehouseDetailPart:updateCapacity(data)
     if data ~= nil then
@@ -282,7 +290,12 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
         self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
-
+        --刷新当前仓库最新数据，用来更新详情界面
+        for key,value in pairs(self.storeInfoData.inHand) do
+            if value.key.id == data.iKey.id then
+                value.n = value.n + 1
+            end
+        end
         --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.iKey.id then
@@ -316,10 +329,10 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
             end
         end
         --刷新建筑数据
-        for key,value in pairs(self.m_data.store.inHand) do
+        for key,value in pairs(self.storeInfoData.inHand) do
             if value.key.id == data.item.key.id then
                 if value.n == data.item.n then
-                    table.remove(self.m_data.store.inHand,key)
+                    table.remove(self.storeInfoData.inHand,key)
                 else
                     value.n = value.n - data.item.n
                 end
@@ -327,7 +340,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
         end
     end
     --运输成功后，如果仓库是空的
-    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+    if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil then
         self.noTip.transform.localScale = Vector3.one
     end
     self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
@@ -353,10 +366,10 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
             end
         end
         --刷新建筑数据
-        for key,value in pairs(self.m_data.store.inHand) do
+        for key,value in pairs(self.storeInfoData.inHand) do
             if value.key.id == data.item.key.id then
                 if value.n == data.item.n then
-                    table.remove(self.m_data.store.inHand,key)
+                    table.remove(self.storeInfoData.inHand,key)
                 else
                     value.n = value.n - data.item.n
                 end
@@ -364,7 +377,7 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
         end
     end
     --销毁成功后，如果仓库是空的
-    if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+    if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil then
         self.noTip.transform.localScale = Vector3.one
     end
     self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
@@ -379,10 +392,10 @@ end
 function BuildingWarehouseDetailPart:getItemIdCount(itemId,callback)
     if itemId ~= nil then
         local nowCount = 0
-        if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
+        if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil then
             nowCount = 0
         else
-            for key,value in pairs(self.m_data.store.inHand) do
+            for key,value in pairs(self.storeInfoData.inHand) do
                 if value.key.id == itemId then
                     nowCount = value.n
                 end

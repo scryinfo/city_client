@@ -61,9 +61,9 @@ end
 function FlightSearchCtrl:_initData()
     --默认出发地为北京，目的地为上海
     FlightSearchPanel.timeText.text = os.date("%W, %Y-%m-%d", os.time())
-    self.startCode = "NKG"
-    self.arriveCode = "CTU"
-    self.timeValue = "2019-06-17"
+    self.startCode = "CTU"
+    self.arriveCode = "NKG"
+    self.timeValue = "2019-06-18"
 end
 --
 function FlightSearchCtrl:_language()

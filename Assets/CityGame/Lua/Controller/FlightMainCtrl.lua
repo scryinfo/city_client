@@ -65,6 +65,7 @@ end
 function FlightMainCtrl:Hide()
     Event.RemoveListener("c_getAllFlight", self._getAllFlight, self)
     Event.RemoveListener("c_flightScoreChange", self._flightScoreChange, self)
+    FlightMainPanel.scrollPage:CleanAll()
 
     UIPanel.Hide(self)
 end
@@ -74,8 +75,11 @@ function FlightMainCtrl:_getAllFlight(data)
         FlightMainCtrl.static.itemsList = {}
         self.m_data.valueList = data
         if #self.m_data.valueList > 0 then
+            FlightMainPanel.noneTip.localScale = Vector3.zero
             FlightMainCtrl.listValue = self.m_data.valueList
             FlightMainPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
+        else
+            FlightMainPanel.noneTip.localScale = Vector3.one
         end
     end
 end
@@ -107,6 +111,8 @@ FlightMainCtrl.static.RightEndFunc = function()
 end
 --
 function FlightMainCtrl:_initData()
+    FlightMainPanel.rightBtn.localScale = Vector3.zero
+    FlightMainPanel.leftBtn.localScale = Vector3.zero
     if self.m_data == nil then
         self.m_data = {}
     end
@@ -126,6 +132,7 @@ end
 function FlightMainCtrl:_language()
     FlightMainPanel.titleText01.text = GetLanguage(32010001)
     FlightMainPanel.recordText02.text = GetLanguage(32010002)
+    FlightMainPanel.noneTipText03.text = GetLanguage(32030033)
 end
 --
 function FlightMainCtrl:backFunc()

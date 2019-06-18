@@ -34,6 +34,7 @@ function FlightDetailCtrl:Awake(go)
 end
 --
 function FlightDetailCtrl:Refresh()
+    Event.AddListener("c_getBetResult", self._getBetResult, self)
     self:_initData()
 end
 --
@@ -43,6 +44,7 @@ function FlightDetailCtrl:Active()
 end
 --
 function FlightDetailCtrl:Hide()
+    Event.RemoveListener("c_getBetResult", self._getBetResult, self)
     UIPanel.Hide(self)
 end
 --
@@ -105,7 +107,7 @@ function FlightDetailCtrl:_hot(value)
     else
         FlightDetailPanel.hotTrueTimeText.text = self:_getSecondStr(flightData.FlightDeptimeDate)
     end
-    FlightDetailPanel.hotJoinCountText.text = flightData.FlightDepAirport
+    FlightDetailPanel.hotJoinCountText.text = value.sumBetCount
     local trueWidth02 = FlightDetailPanel.hotMoneyText.preferredWidth
     FlightDetailPanel.hotMoneyText.rectTransform.sizeDelta = Vector2.New(trueWidth02, FlightDetailPanel.hotMoneyText.rectTransform.sizeDelta.y)
 
@@ -143,6 +145,7 @@ function FlightDetailCtrl:_history(value)
     end
 
     --已经有结果
+    FlightDetailPanel.resultRoot.localScale = Vector3.one
     if value.win == true then
         FlightDetailPanel.value03Text.text = ""..value.amount  --净赚积分
     else
@@ -230,4 +233,11 @@ end
 function FlightDetailCtrl:ruleFunc()
     PlayMusEff(1002)
     ct.OpenCtrl("FlightRuleDialogPageCtrl")
+end
+--下注回调
+function FlightDetailCtrl:_getBetResult(value)
+    if value.id == self.id and value.date == self.date then
+        FlightDetailPanel.infoRoot.localScale = Vector3.one
+        FlightDetailPanel.infoText.text = GetLanguage(32030019, value.delay, value.score)
+    end
 end

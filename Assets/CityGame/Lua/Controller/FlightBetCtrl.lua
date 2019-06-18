@@ -7,7 +7,7 @@ FlightBetCtrl = class('FlightBetCtrl',UIPanel)
 UIPanel:ResgisterOpen(FlightBetCtrl)
 
 function FlightBetCtrl:initialize()
-    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.DoNothing, UICollider.None)
 end
 --
 function FlightBetCtrl:bundleName()

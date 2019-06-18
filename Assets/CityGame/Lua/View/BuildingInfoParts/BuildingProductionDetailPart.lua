@@ -143,7 +143,7 @@ end
 --设置多语言
 function BuildingProductionDetailPart:_language()
     self.addTip.text = GetLanguage(25030001)
-    self.numberTipText.text = GetLanguage(19020023)
+    self.numberTipText.text = GetLanguage(25010009)
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)

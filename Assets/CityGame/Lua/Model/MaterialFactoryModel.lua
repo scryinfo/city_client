@@ -78,6 +78,7 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","shelfDel","gs.ShelfDel",self.n_OnShelfDelInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
     --生产线
@@ -238,6 +239,10 @@ end
 --查询原料信息
 function MaterialFactoryModel:n_OnBuildingMaterialInfo(data)
     Event.Brocast("saveMaterialOrGoodsInfo",data)
+end
+--货架购买数量推送
+function MaterialFactoryModel:n_OnSalesNotice(data)
+    Event.Brocast("salesNotice",data)
 end
 ----添加购物车
 --function MaterialFactoryModel:n_OnAddShoppingCart(data)

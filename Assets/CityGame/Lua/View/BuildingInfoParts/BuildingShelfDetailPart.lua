@@ -87,6 +87,7 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("replenishmentSucceed",self.replenishmentSucceed,self)
     Event.AddListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.AddListener("modifyShelfInfo",self.modifyShelfInfo,self)
+    Event.AddListener("salesNotice",self.salesNotice,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
@@ -100,6 +101,7 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("replenishmentSucceed",self.replenishmentSucceed,self)
     Event.RemoveListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.RemoveListener("modifyShelfInfo",self.modifyShelfInfo,self)
+    Event.RemoveListener("salesNotice",self.salesNotice,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -351,6 +353,10 @@ function BuildingShelfDetailPart:wareHouseNoGoods(data)
     goods.key.qty = data.item.key.qty
     goods.n = data.item.n
     self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
+end
+--货架购买成功后推送
+function BuildingShelfDetailPart:salesNotice(data)
+    local aaa = ""
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取仓库里某个商品的数量

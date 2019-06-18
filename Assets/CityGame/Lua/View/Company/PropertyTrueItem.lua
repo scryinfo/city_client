@@ -105,7 +105,8 @@ function PropertyTrueItem:initialize(prefab, data, configData)
                 end
             elseif #recordData == 3 then
                 if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]then
-                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                    --selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]
                 end
             end
         end
@@ -214,7 +215,7 @@ function PropertyTrueItem:_onChangeInputNum(num)
                 end
             elseif #recordData == 3 then
                 if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]then
-                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]
                 end
             end
         end
@@ -349,6 +350,7 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         for _, y in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
             totalNum1 = totalNum1 + y.value
         end
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].value = totalNum1
         EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(totalNum1)
     end
 

@@ -99,8 +99,8 @@ function AddProductionLineBoxCtrl:InitializeData()
             AddProductionLineBoxPanel.levelValue.text = GetLanguage(25020030)
         end
         AddProductionLineBoxPanel.brandNameText.text = self.m_data.info.brandName
-        AddProductionLineBoxPanel.popularityValue.text = self.m_data.info.brand
-        AddProductionLineBoxPanel.qualityValue.text = self.m_data.info.qty
+        AddProductionLineBoxPanel.popularityValue.text = self.m_data.info.brandScore
+        AddProductionLineBoxPanel.qualityValue.text = self.m_data.info.qtyScore
     end
 end
 ------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------

@@ -81,6 +81,24 @@ public class ScrollPageOptimize : MonoBehaviour
         InitShowPage();
     }
 
+    public void CleanAll()
+    {
+        mTotalPageCount = 0;
+        mCurrentPageId = 0;
+        mTotalItemCount = 0;
+        mNeedReuse = false;
+        mContentPos = Vector2.zero;
+        mShowPageIds = new List<int>();
+        foreach (var item in mCurrentPageDic)
+        {
+            for (int i = 0; i < item.Value.Count; i++)
+            {
+                ScrollPool.GetInstance().ReturnToPool(item.Value[i]);
+            }
+        }
+        mCurrentPageDic = new Dictionary<int, List<GameObject>>();
+    }
+
     public void NextPage()
     {
         SnapNext(mCurrentPageId + 1);

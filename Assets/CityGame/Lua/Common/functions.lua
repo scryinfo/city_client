@@ -165,6 +165,26 @@ function getTimeUnixByFormat(timeString)
 	if S == 0 then error('timeString is a invalid time string') return 0 end
 	return os.time({year=y, month=m, day=d, hour=H,min=M,sec=S})
 end
+--通过index获取对应的周显示
+function getWeekStrByIndex(value)
+	local str
+	if value == 1 then
+		str = GetLanguage(12345678)
+	elseif value == 2 then
+		str = GetLanguage(12345678)
+	elseif value == 3 then
+		str = GetLanguage(12345678)
+	elseif value == 4 then
+		str = GetLanguage(12345678)
+	elseif value == 5 then
+		str = GetLanguage(12345678)
+	elseif value == 6 then
+		str = GetLanguage(12345678)
+	elseif value == 7 then
+		str = GetLanguage(12345678)
+	end
+	return str
+end
 --
 function convertTimeForm(second)
 	local data={}

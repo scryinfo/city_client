@@ -59,9 +59,6 @@ end
 
 function GuildMgr:SetGuildMenuShow(isShow)
     GuildOwnPanel.menuRoot.localScale = isShow and Vector3.one or Vector3.zero
-    if not isShow then
-        self:SetSelectMemberItem()
-    end
 end
 
 function GuildMgr:SetOwnGuildIdentity(ownIdentity)

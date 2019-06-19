@@ -172,7 +172,7 @@ function FlightDetailCtrl:_search(value)
     --如果没有对应数据，则没下过注
     local tempBet = FlightMainModel.getFlightById(flightData.FlightNo)
     if tempBet == nil then
-        tempBet = FlightMainModel.getSearchFlightById(flightData.FlightNo).myBet
+        tempBet = FlightMainModel.getSearchFlightBetById(flightData.FlightNo)
     end
     if tempBet ~= nil then
         value.delay = tempBet.delay

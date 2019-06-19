@@ -92,9 +92,9 @@ function FlightMainModel.getFlightById(id)
     return nil
 end
 --通过id获取搜索数据
-function FlightMainModel.getSearchFlightById(id)
+function FlightMainModel.getSearchFlightBetById(id)
     if FlightMainModel.mSearchFlight ~= nil then
-        local data = FlightMainModel.mSearchFlight[id]
+        local data = FlightMainModel.mSearchFlight[id].myBet
         return data
     end
     return nil

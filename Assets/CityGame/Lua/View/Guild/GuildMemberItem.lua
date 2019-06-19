@@ -60,7 +60,7 @@ function GuildMemberItem:_openMenu()
     GuildOwnCtrl.static.guildMgr:SetSelectMemberItem(self)
     GuildOwnCtrl.static.guildMgr:ShowGuildMenu(position)
     --GuildOwnCtrl.static.guildMgr:SetIdentity()
-    GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(true)
+    --GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(true)
 end
 
 -- 设置item的背景色

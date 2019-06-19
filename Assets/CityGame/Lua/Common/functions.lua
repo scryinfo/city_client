@@ -750,9 +750,9 @@ function GetEvaData(index, configData, lv)
 	elseif configData.Btype == "PromotionAbility" then -- 推广能力
 		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
 	elseif configData.Btype == "InventionUpgrade" then -- 发明提升
-		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+		return string.format("%.2f", ((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
 	elseif configData.Btype == "EvaUpgrade" then -- Eva提示
-		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+		return string.format("%.2f", ((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
 	end
 end
 

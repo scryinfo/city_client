@@ -203,8 +203,8 @@ function GuildOwnCtrl:OnModifyDeclaration(go)
         if str == "" or str == nil then
             str = GetLanguage(12060026)
             Event.Brocast("SmallPop",str,80)
-        elseif string.len(str) > 100 then
-            str = GetLanguage(12060027)
+        elseif string.len(str) > 180 then
+            str = GetLanguage(12060042)
             Event.Brocast("SmallPop",str,80)
         else
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifyDeclaration", {societyId = DataManager.GetGuildID(), str = str})

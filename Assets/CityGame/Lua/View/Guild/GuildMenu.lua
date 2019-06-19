@@ -31,6 +31,7 @@ function GuildMenu:initialize(prefab)
     self.personalDataButtonRt = transform:Find("PersonalDataButton"):GetComponent("RectTransform")
     self.personalDataButtonText = transform:Find("PersonalDataButton/Text"):GetComponent("Text")
     self.appointRoot = transform:Find("AppointRoot")
+    self.appointRootRt = transform:Find("AppointRoot"):GetComponent("RectTransform")
     self.identity4Btn = transform:Find("AppointRoot/Identity4Btn").gameObject
     self.identity4BtnText = transform:Find("AppointRoot/Identity4Btn/Text"):GetComponent("Text")
     self.identity3Btn = transform:Find("AppointRoot/Identity3Btn").gameObject
@@ -176,32 +177,52 @@ function GuildMenu:_SetIdentity()
     local playerDataIndex = GuildMenu.static.IdentityTable[GuildOwnCtrl.static.guildMgr:GetPlayerData().identity].index
     local ownIdentityIndex = GuildMenu.static.IdentityTable[GuildOwnCtrl.static.guildMgr:GetOwnGuildIdentity()].index
     if playerDataIndex < ownIdentityIndex then
-        self.outBtn.localScale  = Vector3.one
-        self.appointBtn.localScale  = Vector3.one
+        if ownIdentityIndex == GuildMenu.static.IdentityTable["ADMINISTRATOR"].index then
+            self.outBtn.localScale  = Vector3.one
+            self.appointBtn.localScale  = Vector3.zero
 
-        -- 判断是否是自己的好友
-        local friendsBasicData = DataManager.GetMyFriends()
-        if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
-            self.addFriendsBtnRt.localScale = Vector3.one
-            self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 254)
-            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 356)
+            -- 判断是否是自己的好友
+            local friendsBasicData = DataManager.GetMyFriends()
+            if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
+                self.addFriendsBtnRt.localScale = Vector3.one
+                self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 152)
+                self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 254)
+            else  -- 是好友
+                self.addFriendsBtnRt.localScale = Vector3.zero
+                self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 152)
+            end
         else
-            self.addFriendsBtnRt.localScale = Vector3.zero
-            self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 254)
-        end
+            self.outBtn.localScale  = Vector3.one
+            self.appointBtn.localScale  = Vector3.one
 
-        if ownIdentityIndex == 4 then
-            self.identity4Btn:SetActive(true)
-            self.identity3Btn:SetActive(true)
-            self.identity2Btn:SetActive(true)
-            self.identity1Btn:SetActive(true)
-            self["identity".. tostring(playerDataIndex) .. "Btn"]:SetActive(false)
-        else
-            for i = 1, ownIdentityIndex - 1 do
-                if i == playerDataIndex then
-                    self["identity".. tostring(i) .. "Btn"]:SetActive(false)
-                else
-                    self["identity".. tostring(i) .. "Btn"]:SetActive(true)
+            -- 判断是否是自己的好友
+            local friendsBasicData = DataManager.GetMyFriends()
+            if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
+                self.addFriendsBtnRt.localScale = Vector3.one
+                self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 254)
+                self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 356)
+                self.appointRootRt.anchoredPosition = Vector2.New(212, 406)
+            else
+                self.addFriendsBtnRt.localScale = Vector3.zero
+                self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 254)
+                self.appointRootRt.anchoredPosition = Vector2.New(212, 304)
+            end
+
+            if ownIdentityIndex == 4 then  -- 自己是主席
+                self.identity4Btn:SetActive(true)
+                self.identity3Btn:SetActive(true)
+                self.identity2Btn:SetActive(true)
+                self.identity1Btn:SetActive(true)
+                self["identity".. tostring(playerDataIndex) .. "Btn"]:SetActive(false)
+            else
+                for i = 1, 4 do
+                    if i == playerDataIndex then
+                        self["identity".. tostring(i) .. "Btn"]:SetActive(false)
+                    elseif i >= ownIdentityIndex then
+                        self["identity".. tostring(i) .. "Btn"]:SetActive(false)
+                    else
+                        self["identity".. tostring(i) .. "Btn"]:SetActive(true)
+                    end
                 end
             end
         end

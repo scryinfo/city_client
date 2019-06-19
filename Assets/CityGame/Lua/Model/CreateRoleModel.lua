@@ -46,6 +46,8 @@ function CreateRoleModel:n_CreateNewRole(pMsg, msgId)
     logDebug(pMsg.name)
     --登录
     Event.Brocast("m_loginRole",pMsg)
+    --创建钱包
+
 end
 
 

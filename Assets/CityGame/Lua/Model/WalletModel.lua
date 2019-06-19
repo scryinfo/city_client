@@ -4,3 +4,33 @@
 --- DateTime: 2019/6/19 11:41
 ---
 WalletModel = class("WalletModel",ModelBase)
+
+function WalletModel:initialize(insId)
+    self.insId = insId
+    self:OnCreate()
+end
+
+function WalletModel:OnCreate()
+    --本地事件
+    Event.AddListener("ReqCreateWallet",self.ReqCreateWalletm,self)
+
+    --网络事件
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
+
+end
+
+function WalletModel:Close()
+    --本地事件
+    Event.RemoveListener("ReqCreateWallet",self.ReqCreateWalletm,self)
+end
+
+---客户端请求----
+--创建钱包
+function WalletModel:ReqCreateWallet(playerId)
+
+end
+---服务器回调---
+--创建钱包
+function WalletModel:ReceiveCreateWallet(data)
+
+end

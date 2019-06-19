@@ -136,6 +136,8 @@ function AdvertisementPartDetail:Show(data)
     BasePartDetail.Show(self)
     if data.info.ownerId ~= myOwnerID then
         self.open.transform.localScale = Vector3.zero
+    else
+        self.open.transform.localScale = Vector3.one
     end
     self.m_data = data
     self:_initFunc()

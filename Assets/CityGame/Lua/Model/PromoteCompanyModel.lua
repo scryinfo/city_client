@@ -187,7 +187,7 @@ end
 
 --获取推广能力回调
 function PromoteCompanyModel:n_OnPromotionItemInfo(info)
-    DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_queryPromoCurAbilitys', info)
+    DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_queryPromoCurItemInfo', info)
 end
 
 --推广历史曲线回调

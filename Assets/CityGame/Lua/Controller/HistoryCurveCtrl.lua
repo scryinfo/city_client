@@ -29,6 +29,7 @@ end
 function HistoryCurveCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图（供应）
+    Event.AddListener("c_HouseNpcNumCurve",self.c_HouseNpcNumCurve,self) --每种住宅购买的npc数量曲线图（供应）
     Event.AddListener("c_GoodsNpcTypeNum",self.c_GoodsNpcTypeNum,self) --每种商品购买的npc数量曲线图(需求)
     LoadSprite(SupplyDemandGood[self.m_data], HistoryCurvePanel.goods, true)
 
@@ -43,12 +44,17 @@ end
 function HistoryCurveCtrl:Refresh()
     DataManager.OpenDetailModel(HistoryCurveModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcTypeNum')
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNumCurve',self.m_data)
+    if self.m_data == 20050004 then
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_HouseNpcNumCurve')
+    else
+        DataManager.DetailModelRpcNoRet(self.insId , 'm_GoodsNpcNumCurve',self.m_data)
+    end
 end
 
 function HistoryCurveCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图(供应)
+    Event.RemoveListener("c_HouseNpcNumCurve",self.c_HouseNpcNumCurve,self) --每种住宅购买的npc数量曲线图(供应)
     Event.RemoveListener("c_GoodsNpcTypeNum",self.c_GoodsNpcTypeNum,self) --每种商品购买的npc数量曲线图（需求）
 
     maxValue = 0
@@ -93,6 +99,7 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
     local demandNumTab = {}
     local sevenDaysAgo = currentTime - 604800
     local sevenDaysAgoTime = sevenDaysAgo
+    local sevenDaysAgoTime = sevenDaysAgo
     local time = {}
     local boundaryLine = {}
     for i = 1, 168 do
@@ -111,11 +118,14 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
         else
             for k, v in ipairs(info) do
                 if math.floor(v.t/1000) == sevenDaysAgo then
-                    demandNumTab[i].num = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
-                            .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap.tp][self.m_data] / 10000 * v.npcTypeNumMap.n)
-                else
-                    if i > 1 then
-                        demandNumTab[i].num = demandNumTab[i-1].num
+                    if self.m_data == 20050004 then    --住宅
+                        demandNumTab[i].num = v.npcTypeNumMap[1].n + v.npcTypeNumMap[2].n
+                    else   --商品
+                        local temp1 = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
+                                .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap[1].tp][self.m_data] / 10000 * v.npcTypeNumMap[1].n)
+                        local temp2 = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
+                                .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap[2].tp][self.m_data] / 10000 * v.npcTypeNumMap[2].n)
+                        demandNumTab[i].num = temp1 + temp2
                     end
                 end
             end
@@ -153,6 +163,15 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
 end
 --每种商品购买的npc数量曲线图  (供应)
 function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
+    HistoryCurveCtrl:SupplyCurve(info)
+end
+
+function HistoryCurveCtrl:c_HouseNpcNumCurve(info)
+    HistoryCurveCtrl:SupplyCurve(info)
+end
+
+--供应曲线
+function HistoryCurveCtrl:SupplyCurve(info)
     if info == nil then
         info = {}
     end
@@ -186,7 +205,7 @@ function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
         for i, v in ipairs(supplyNum) do
             temp[i] = {}
             for k, z in ipairs(info) do
-                if v.ts == z.key then
+                if v.ts == z.key/1000 then
                     temp[i].num = z.value
                 else
                     temp[i].num = 0
@@ -213,8 +232,8 @@ function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
     end
     local scale = scaleValue
     if max > maxValue then
-       maxValue = max
-        scale =  SetYScale(HistoryCurvePanel.yScale,maxValue)
+        maxValue = max
+        scale =  SetYScale(maxValue,6,HistoryCurvePanel.yScale)
     end
     local supplyNumVet = {}
     for i, v in ipairs(supplyNumValue) do
@@ -243,4 +262,3 @@ function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)
     HistoryCurvePanel.graph:DrawLine(supplyNumVet,Color.New(13 / 255, 179 / 255, 169 / 255, 255 / 255),2)
     HistoryCurvePanel.slide:SetCoordinate(supplyNumVet,supplyNumValue,Color.New(13 / 255, 79 / 255, 169 / 255, 255 / 255),2)
 end
-

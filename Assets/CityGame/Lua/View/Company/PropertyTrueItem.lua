@@ -369,7 +369,7 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         local evaData = {}
         evaData.id = self.data.id
         evaData.at = self.data.at
-        evaData.b = self.data.b
+        evaData.b = -1 --self.data.b
         evaData.cexp = self.data.cexp + addNumber
         evaData.lv = self.data.lv
         evaData.pid = self.data.pid

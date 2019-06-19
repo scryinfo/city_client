@@ -155,6 +155,7 @@ end
 
 function ChatCtrl:Hide()
     self:_removeListener()
+    ChatCtrl.static.chatMgr:RemoveScrollBottom()
     UIPanel.Hide(self)
 end
 
@@ -169,6 +170,7 @@ end
 -- 刷新界面的状态
 function ChatCtrl:_refreshState()
     self:_closePlayerInfo()
+    ChatCtrl.static.chatMgr:AddScrollBottom()
     ChatPanel.expressionRoot:SetActive(false)
     self:_showWorldInfo()
     self:_showGuildToggle()
@@ -609,9 +611,14 @@ function ChatCtrl:OnAddFriends(go)
     data.inputInfo = GetLanguage(15010023)
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
-        Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
-        Event.Brocast("SmallPop", GetLanguage(15010008),80)
-        go:_closePlayerInfo()
+        if string.len(text) > 30 then
+            text = GetLanguage(15010018)
+            Event.Brocast("SmallPop",text,80)
+        else
+            Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
+            Event.Brocast("SmallPop", GetLanguage(15010008),80)
+            go:_closePlayerInfo()
+        end
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end

@@ -47,7 +47,18 @@ function CreateRoleModel:n_CreateNewRole(pMsg, msgId)
     --登录
     Event.Brocast("m_loginRole",pMsg)
     --创建钱包
-
+    self:creatKey()
+    Event.Brocast("ReqCreateWallet",pMsg.id,pMsg.name,self.pubkey)
 end
+--生成公钥
+function CreateRoleModel:creatKey()
+    --生成
+    local privateKey = City.CityLuaUtil.NewGuid()
+    --保存
+    local path = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
+    ct.file_saveString(path,privateKey)
 
+    --生成公钥
+    self.pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
+end
 

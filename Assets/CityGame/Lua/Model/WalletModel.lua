@@ -5,6 +5,7 @@
 ---
 WalletModel = class("WalletModel",ModelBase)
 
+local pbl = pbl
 function WalletModel:initialize(insId)
     self.insId = insId
     self:OnCreate()
@@ -26,11 +27,16 @@ end
 
 ---客户端请求----
 --创建钱包
-function WalletModel:ReqCreateWallet(playerId)
-
+function WalletModel:ReqCreateWallet(userId,userName,pubKey)
+    local msgId = pbl.enum("gscode.OpCode","ct_createUser")
+    local lMsg = {PlayerId = userId,CreateUserReq={ReqHeader = {Version = 1,ReqId = tostring(msgId)}},CityUserName = userName,PubKey = pubKey}
+    local pMsg = assert(pbl.encode("ccapi.ct_createUser", lMsg))
+    --local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
+
 ---服务器回调---
 --创建钱包
 function WalletModel:ReceiveCreateWallet(data)
-
+    local aaa = data
 end

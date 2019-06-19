@@ -77,6 +77,9 @@ function FlightMainCtrl:_getAllFlight(data)
         if #self.m_data.valueList > 0 then
             FlightMainPanel.noneTip.localScale = Vector3.zero
             FlightMainCtrl.listValue = self.m_data.valueList
+            if #self.m_data.valueList > 4 then
+                FlightMainPanel.rightBtn.localScale = Vector3.one
+            end
             FlightMainPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
         else
             FlightMainPanel.noneTip.localScale = Vector3.one

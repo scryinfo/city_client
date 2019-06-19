@@ -67,6 +67,9 @@ function FlightRecordCtrl:_getFlightBetHistory(data)
             FlightRecordCtrl.static.itemsList = {}
         end
         FlightRecordCtrl.listValue = self.m_data.valueList
+        if #self.m_data.valueList > 4 then
+            FlightRecordPanel.rightBtn.localScale = Vector3.one
+        end
         FlightRecordPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
     else
         FlightRecordPanel.noneTip.localScale = Vector3.one

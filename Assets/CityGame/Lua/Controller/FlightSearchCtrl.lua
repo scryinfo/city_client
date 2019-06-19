@@ -63,7 +63,7 @@ function FlightSearchCtrl:_initData()
     FlightSearchPanel.timeText.text = os.date("%W, %Y-%m-%d", os.time())
     self.startCode = "CTU"
     self.arriveCode = "NKG"
-    self.timeValue = "2019-06-18"
+    self.timeValue = "2019-06-19"
 end
 --
 function FlightSearchCtrl:_language()

@@ -768,3 +768,12 @@ function GetEvaPercent(lv)
 		return tostring(EvaUp[lv].add / 1000) .. "%"
 	end
 end
+
+--限制字符输入长度
+function ct.LimitInputLength(tempInputField , maxLength)
+	if tempInputField == nil or typeof(UnityEngine.UI.InputField) ~= type(tempInputField) or maxLength == nil or type(maxLength) ~= 'number' or maxLength < 1 then
+		return false
+	end
+	tempInputField.characterLimit = maxLength
+	return true
+end

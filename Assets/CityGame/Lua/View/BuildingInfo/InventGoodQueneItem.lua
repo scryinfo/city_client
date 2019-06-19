@@ -4,9 +4,9 @@ InventGoodQueneItem = class('InventGoodQueneItem')
 local second
 
 ---初始化方法   数据（读配置表）
-function InventGoodQueneItem:initialize(data,prefab,luaBehaviour)
+function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
     self.prefab=prefab.gameObject
-
+    self.data = data
     self.transform = prefab.transform;
     self.bg = self.transform:Find("bg")
     self.myBg = self.transform:Find("myBg")
@@ -24,14 +24,27 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour)
     self.rollBtn = self.transform:Find("startTime/rollBtn")
     self.rollBtnText = self.transform:Find("startTime/rollBtn/rollBtnText"):GetComponent("Text")
     self.counttimetext = self.transform:Find("details/counttime"):GetComponent("Text")
-
+    self.waiting = 0
     luaBehaviour:AddClick(self.delete,self.c_OnClick_Delete,self)
     luaBehaviour:AddClick(self.rollBtn.gameObject,self.c_OnClick_Roll,self)
 
     self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
-    local ts = getTimeBySec((self.currentTime - data.beginProcessTs)/1000)
-    self.counttimetext.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(data.beginProcessTs/3600000 ).. "h"
-
+    if self.currentTime >= self.data.beginProcessTs and self.currentTime <= self.data.beginProcessTs + self.data.times*3600000  then
+        local  function UpData()
+            --倒计时
+            self.waiting = self.waiting -1
+            if self.waiting <= 0 then
+                self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+                local ts = math.abs((self.currentTime - self.data.beginProcessTs))
+                local downtime = getTimeBySec((self.data.times * 3600000 - ts)/1000)
+                self.counttimetext.text = downtime.hour.. ":" .. downtime.minute .. ":" .. downtime.second .. "/" .. math.floor(self.data.times).. "h"
+                self.waiting = 1
+            end
+                  end
+        ctrl:SetFunc(UpData)
+    else
+        self.counttimetext.text = nil
+    end
     self:Refresh(data)
 end
 ---==========================================================================================点击函数=============================================================================
@@ -47,6 +60,7 @@ function InventGoodQueneItem:c_OnClick_Roll(ins)
 end
 
 ---==========================================================================================业务逻辑=============================================================================
+
 
 function InventGoodQueneItem:updateData( data )
     self.data=data
@@ -123,6 +137,8 @@ function InventGoodQueneItem:updateUI(data)
 
 end
 
+
+
 function InventGoodQueneItem:Refresh(data)
     self:updateData(data)
     self:updateUI(data)
@@ -133,7 +149,6 @@ function InventGoodQueneItem:c_OnHead(info)
     self.name.text = info[1].name
 end
 
-local currTime
 function InventGoodQueneItem:updateSlider(data)
     currTime = TimeSynchronized.GetTheCurrentServerTime()
     local remmindTime = currTime - data.beginProcessTs

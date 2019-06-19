@@ -3,52 +3,63 @@
 --- Created by xuyafang.
 --- DateTime: 2019/5/27 11:37
 ---
-FlightDateYearItem = class('FlightDateYearItem')
+FlightDateYearItem = class('FlightDateYearItem', FlightDateBase)
 
 --初始化方法
-function FlightDateYearItem:initialize(viewRect)
+function FlightDateYearItem:initialize(viewRect, data)
     self.viewRect = viewRect.transform
     self.rect = viewRect.transform:GetComponent("RectTransform")
+    self.data = data
     local trans = self.viewRect
 
-    self.toggle = trans:GetComponent("Toggle")
+    self.btn = trans:Find("unSelect/btn"):GetComponent("Button")
     self.select = trans:Find("select")
     self.selectValue = trans:Find("select/Text"):GetComponent("Text")
     self.unSelect = trans:Find("unSelect")
     self.unSelectValue = trans:Find("unSelect/Text"):GetComponent("Text")
 
-    self.toggle.onClick:RemoveAllListeners()
-    self.toggle.onValueChanged:AddListener(function ()
-        self:toggleFunc()
+    self.btn.onClick:RemoveAllListeners()
+    self.btn.onClick:AddListener(function ()
+        self:btnFunc()
     end)
 end
 --
-function FlightDateYearItem:setState(data)
-    if data.isSelect == true then
-        self.select.localScale = Vector3.one
-        self.unSelect.localScale = Vector3.zero
-    else
-        self.select.localScale = Vector3.zero
-        self.unSelect.localScale = Vector3.one
-    end
-    self.data = data
-    self.selectValue.text = data.value
-    self.unSelectValue.text = data.value
+function FlightDateYearItem:setValue(value)
+    self.data.value = value
+    self.selectValue.text = value
+    self.unSelectValue.text = value
 end
---
-function FlightDateYearItem:toggleFunc(isOn)
-    if isOn == true then
-        self.select.localScale = Vector3.one
-        self.unSelect.localScale = Vector3.zero
-        PlayMusEff(1002)
-        Event.Brocast("c_dateYearSelect", self.data.value)
-    else
-        self.select.localScale = Vector3.zero
-        self.unSelect.localScale = Vector3.one
-    end
-end
---
-function FlightDateYearItem:Close()
 
-end
+--function FlightDateYearItem:setState(value, isSelect)
+--    if isSelect == true then
+--        self.select.localScale = Vector3.one
+--        self.unSelect.localScale = Vector3.zero
+--    else
+--        self.select.localScale = Vector3.zero
+--        self.unSelect.localScale = Vector3.one
+--    end
+--    self.data.value = value
+--    self.selectValue.text = value
+--    self.unSelectValue.text = value
+--end
+----
+--function FlightDateYearItem:setToggle(isOn)
+--    self.toggle = isOn
+--end
+----
+--function FlightDateYearItem:btnFunc(isOn)
+--    if isOn == true then
+--        self.select.localScale = Vector3.one
+--        self.unSelect.localScale = Vector3.zero
+--        PlayMusEff(1002)
+--        self.data.callBack(self.data.value)
+--    else
+--        self.select.localScale = Vector3.zero
+--        self.unSelect.localScale = Vector3.one
+--    end
+--end
+----
+--function FlightDateYearItem:Close()
+--
+--end
 

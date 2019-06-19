@@ -1064,4 +1064,11 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
     local tt = 1
 end)
 
+
+UnitTest.Exec("cycle_0619_flightDate", "e_cycle_0619_flightDate",  function ()
+    Event.AddListener("e_cycle_0619_flightDate", function ()
+        ct.OpenCtrl("FlightSearchCtrl")
+    end)
+end)
+
 UnitTest.TestBlockEnd()-----------------------------------------------------------

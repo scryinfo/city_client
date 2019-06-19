@@ -60,10 +60,14 @@ end
 --
 function FlightSearchCtrl:_initData()
     --默认出发地为北京，目的地为上海
-    FlightSearchPanel.timeText.text = os.date("%W, %Y-%m-%d", os.time())
+    FlightSearchPanel.timeText.text = os.date("%w, %Y-%m-%d", os.time())
     self.startCode = "CTU"
     self.arriveCode = "NKG"
-    self.timeValue = "2019-06-19"
+
+    local year = tonumber(os.date("%Y", os.time()))
+    local month = tonumber(os.date("%m", os.time()))
+    local day = tonumber(os.date("%d", os.time()))
+    self.timeValue = os.time({year = year, month = month, day = day})  --时间戳
 end
 --
 function FlightSearchCtrl:_language()
@@ -95,7 +99,9 @@ end
 --选择时间
 function FlightSearchCtrl:timeChooseFunc()
     PlayMusEff(1002)
-    --ct.OpenCtrl("FlightChoosePlaceCtrl", {callback = self.timeChooseResult})
+    ct.OpenCtrl("FlightChooseDateCtrl", {selectDate = self.timeValue, callback = function(data)
+        self:timeChooseResult(data)
+    end})
 end
 --起始地目的地交换
 function FlightSearchCtrl:exchangeBtnFunc()
@@ -110,7 +116,8 @@ end
 --开始搜索
 function FlightSearchCtrl:checkBtnFunc()
     PlayMusEff(1002)
-    FlightMainModel.m_ReqSearchFlight(self.startCode, self.arriveCode, self.timeValue)
+    local time = os.date("%Y-%m-%d", self.timeValue)
+    FlightMainModel.m_ReqSearchFlight(self.startCode, self.arriveCode, time)
 end
 --起点选择的回调
 function FlightSearchCtrl:startChooseResult(data)
@@ -124,8 +131,26 @@ function FlightSearchCtrl:endChooseResult(data)
 end
 --起点选择的回调
 function FlightSearchCtrl:timeChooseResult(data)
-    --self.timeValue = data
-    FlightSearchPanel.timeText.text = data.value
+    self.timeValue = data
+    local weekDay = tonumber(os.date("%w", self.timeValue))
+    local weekDayStr
+    if weekDay == 1 then
+        weekDayStr = GetLanguage(34020001)
+    elseif weekDay == 2 then
+        weekDayStr = GetLanguage(34020002)
+    elseif weekDay == 3 then
+        weekDayStr = GetLanguage(34020003)
+    elseif weekDay == 4 then
+        weekDayStr = GetLanguage(34020004)
+    elseif weekDay == 5 then
+        weekDayStr = GetLanguage(34020005)
+    elseif weekDay == 6 then
+        weekDayStr = GetLanguage(34020006)
+    elseif weekDay == 0 then
+        weekDayStr = GetLanguage(34020007)
+    end
+    local dateStr = os.date("%Y-%m-%d", self.timeValue)
+    FlightSearchPanel.timeText.text = string.format("%s, %s", weekDayStr, dateStr)
 end
 --服务器回调
 function FlightSearchCtrl:_getSearchFlightResult(data)

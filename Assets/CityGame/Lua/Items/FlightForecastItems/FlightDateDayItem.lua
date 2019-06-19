@@ -3,43 +3,72 @@
 --- Created by xuyafang.
 --- DateTime: 2019/5/27 11:37
 ---
-FlightDateDayItem = class('FlightDateDayItem')
+FlightDateDayItem = class('FlightDateDayItem', FlightDateBase)
 
 --初始化方法
-function FlightDateDayItem:initialize(viewRect)
+function FlightDateDayItem:initialize(viewRect, data)
     self.viewRect = viewRect.transform
-    self.rect = viewRect.transform:GetComponent("RectTransform")
+    if self.data == nil then self.data = {} end
+    self.data = data
     local trans = self.viewRect
 
-    self.btn = trans:GetComponent("Button")
-    self.text = trans:GetComponent("Text")
+    self.btn = trans:Find("unSelect/btn"):GetComponent("Button")
+    self.select = trans:Find("select")
+    self.selectValue = trans:Find("select/Text"):GetComponent("Text")
+    self.unSelect = trans:Find("unSelect")
+    self.unSelectValue = trans:Find("unSelect/Text"):GetComponent("Text")
 
     self.btn.onClick:RemoveAllListeners()
     self.btn.onClick:AddListener(function ()
-        self:ClickFunc()
+        self:btnFunc()
     end)
 end
 --
-function FlightDateDayItem:setState(data)
-    if data.isShow == true then
-        self.viewRect.localScale = Vector3.one
-    else
-        self.viewRect.localScale = Vector3.zero
-    end
-    if data.isSelect == true then
-        Event.Brocast("c_dateDaySelect", data)
-    end
-    self.data = data
+function FlightDateDayItem:hide()
+    self.viewRect.localScale = Vector3.zero
 end
 --
-function FlightDateDayItem:ClickFunc()
-    PlayMusEff(1002)
-    if self.data ~= nil then
-        Event.Brocast("c_dateDaySelect", self.data)
-    end
+function FlightDateDayItem:show()
+    self.viewRect.localScale = Vector3.one
 end
 --
-function FlightDateDayItem:Close()
-
+function FlightDateDayItem:setValue(value)
+    self.data.value = value
+    self.selectValue.text = value
+    self.unSelectValue.text = value
 end
+----
+--function FlightDateDayItem:setState(value, isSelect)
+--    self.selectValue.text = value
+--    self.unSelectValue.text = value
+--    self.viewRect.localScale = Vector3.one
+--    if isSelect == true then
+--        self.select.localScale = Vector3.one
+--        self.unSelect.localScale = Vector3.zero
+--    else
+--        self.select.localScale = Vector3.zero
+--        self.unSelect.localScale = Vector3.one
+--    end
+--    self.data.value = value
+--end
+----
+--function FlightDateDayItem:setToggle(isOn)
+--    self.toggle = isOn
+--end
+----
+--function FlightDateDayItem:btnFunc(isOn)
+--    if isOn == true then
+--        self.select.localScale = Vector3.one
+--        self.unSelect.localScale = Vector3.zero
+--        PlayMusEff(1002)
+--        self.data.callBack(self.data.value)
+--    else
+--        self.select.localScale = Vector3.zero
+--        self.unSelect.localScale = Vector3.one
+--    end
+--end
+----
+--function FlightDateDayItem:Close()
+--
+--end
 

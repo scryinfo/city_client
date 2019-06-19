@@ -62,6 +62,7 @@ end
 --服务器回调---------------------------------------------------------------------------------
 --
 function FlightMainModel.n_OnGetAllFlight(data, msgId)
+    FlightMainModel.mSearchFlight = {}  --清掉之前的搜索数据
     if msgId == 0 then
         local info = {}
         info.titleInfo = "Error"
@@ -90,6 +91,14 @@ function FlightMainModel.getFlightById(id)
     end
     return nil
 end
+--通过id获取搜索数据
+function FlightMainModel.getSearchFlightById(id)
+    if FlightMainModel.mSearchFlight ~= nil then
+        local data = FlightMainModel.mSearchFlight[id]
+        return data
+    end
+    return nil
+end
 --获取所有的航班数据
 function FlightMainModel.getAllFlightData()
     return FlightMainModel.allFlightDic
@@ -103,9 +112,9 @@ function FlightMainModel.n_OnBetFlight(data, msgId)
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end
-    local temp = FlightMainModel.allFlightDic[data.id]
-    if temp ~= nil and temp.myBet == nil then
-        FlightMainModel.allFlightDic[data.id].myBet = {delay = data.delay, amount = data.score}
+    --从搜索押注
+    if FlightMainModel.mSearchFlight ~= nil and FlightMainModel.mSearchFlight[data.id] ~= nil then
+        FlightMainModel.mSearchFlight[data.id].myBet = {delay = data.delay, date = data.date, amount = data.score}
     end
     Event.Brocast("c_betFlightEvent", data)
 end
@@ -152,5 +161,6 @@ function FlightMainModel.n_OnGetSearchFlight(data, msgId)
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end
+    FlightMainModel.mSearchFlight = data.data
     Event.Brocast("c_getSearchFlightResult", data)
 end

@@ -3,52 +3,48 @@
 --- Created by xuyafang.
 --- DateTime: 2019/5/27 11:37
 ---
-FlightDateMonthItem = class('FlightDateMonthItem')
+FlightDateMonthItem = class('FlightDateMonthItem', FlightDateBase)
 
 --初始化方法
-function FlightDateMonthItem:initialize(viewRect)
+function FlightDateMonthItem:initialize(viewRect, data)
     self.viewRect = viewRect.transform
+    self.data = data
     self.rect = viewRect.transform:GetComponent("RectTransform")
     local trans = self.viewRect
 
-    self.toggle = trans:GetComponent("Toggle")
+    self.btn = trans:Find("unSelect/btn"):GetComponent("Button")
     self.select = trans:Find("select")
     self.selectValue = trans:Find("select/Text"):GetComponent("Text")
     self.unSelect = trans:Find("unSelect")
     self.unSelectValue = trans:Find("unSelect/Text"):GetComponent("Text")
 
-    self.toggle.onClick:RemoveAllListeners()
-    self.toggle.onValueChanged:AddListener(function ()
-        self:toggleFunc()
-    end)
-end
---
-function FlightDateMonthItem:setState(data)
-    if data.isSelect == true then
-        self.select.localScale = Vector3.one
-        self.unSelect.localScale = Vector3.zero
-    else
-        self.select.localScale = Vector3.zero
-        self.unSelect.localScale = Vector3.one
-    end
-    self.data = data
     self.selectValue.text = data.value
     self.unSelectValue.text = data.value
-end
---
-function FlightDateMonthItem:toggleFunc(isOn)
-    if isOn == true then
-        self.select.localScale = Vector3.one
-        self.unSelect.localScale = Vector3.zero
-        PlayMusEff(1002)
-        Event.Brocast("c_dateMonthSelect", self.data.value)
-    else
-        self.select.localScale = Vector3.zero
-        self.unSelect.localScale = Vector3.one
-    end
-end
---
-function FlightDateMonthItem:Close()
 
+    self.btn.onClick:RemoveAllListeners()
+    self.btn.onClick:AddListener(function ()
+        self:btnFunc()
+    end)
 end
+----
+--function FlightDateMonthItem:setState(isSelect)
+--    if isSelect == true then
+--        self.select.localScale = Vector3.one
+--        self.unSelect.localScale = Vector3.zero
+--    else
+--        self.select.localScale = Vector3.zero
+--        self.unSelect.localScale = Vector3.one
+--    end
+--    self.isSelect = isSelect
+--end
+----
+--function FlightDateMonthItem:btnFunc()
+--    self.select.localScale = Vector3.one
+--    self.unSelect.localScale = Vector3.zero
+--    self.data.callBack(self)
+--end
+----
+--function FlightDateMonthItem:Close()
+--
+--end
 

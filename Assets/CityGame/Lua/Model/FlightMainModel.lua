@@ -26,7 +26,7 @@ function FlightMainModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getFlightBetHistory","gs.FlightBetHistory",FlightMainModel.n_OnGetBetHistory)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","flightBetInform","gs.FlightBetInform",FlightMainModel.n_OnGetBetResult)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","scoreChangeInform","gs.Num",FlightMainModel.n_OnFlightScoreChange)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","searchFlight","gs.FlightData",FlightMainModel.n_OnGetSearchFlight)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","searchFlight","gs.FlightSearchResult",FlightMainModel.n_OnGetSearchFlight)
 
 end
 --关闭事件--
@@ -41,9 +41,9 @@ function FlightMainModel.m_ReqAllFlight()
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 --
-function FlightMainModel.m_ReqBetFlight(id, delay, score)
+function FlightMainModel.m_ReqBetFlight(id, delay, score, date)
     local msgId = pbl.enum("gscode.OpCode","betFlight")
-    local lMsg = { id = id, delay = delay, score = score}
+    local lMsg = { id = id, delay = delay, score = score, date = date}
     local pMsg = assert(pbl.encode("gs.BetFlight", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
@@ -52,9 +52,17 @@ function FlightMainModel.m_ReqFlightBetHistory()
     local msgId = pbl.enum("gscode.OpCode","getFlightBetHistory")
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
+--data格式为：2019-05-22
+function FlightMainModel.m_ReqSearchFlight(arrCode, depCode, date)
+    local msgId = pbl.enum("gscode.OpCode","searchFlight")
+    local lMsg = { arrCode = arrCode, depCode = depCode, date = date}
+    local pMsg = assert(pbl.encode("gs.SearchFlight", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
 --服务器回调---------------------------------------------------------------------------------
 --
 function FlightMainModel.n_OnGetAllFlight(data, msgId)
+    FlightMainModel.mSearchFlight = {}  --清掉之前的搜索数据
     if msgId == 0 then
         local info = {}
         info.titleInfo = "Error"
@@ -62,16 +70,54 @@ function FlightMainModel.n_OnGetAllFlight(data, msgId)
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end
-    Event.Brocast("c_getAllFlight", data)
+    FlightMainModel.allFlightDic = {}
+    if data.flight ~= nil then
+        FlightMainModel._getDicValue(data.flight)
+        Event.Brocast("c_getAllFlight", data.flight)
+    end
+end
+--将所有航班信息转存成字典
+function FlightMainModel._getDicValue(data)
+    FlightMainModel.allFlightDic = {}
+    for key, value in pairs(data) do
+        FlightMainModel.allFlightDic[value.id] = value
+    end
+end
+--通过id获取对应的航班数据
+function FlightMainModel.getFlightById(id)
+    if FlightMainModel.allFlightDic ~= nil then
+        local data = FlightMainModel.allFlightDic[id]
+        return data
+    end
+    return nil
+end
+--通过id获取搜索数据
+function FlightMainModel.getSearchFlightBetById(id)
+    if FlightMainModel.mSearchFlight ~= nil then
+        local data = FlightMainModel.mSearchFlight[id]
+        if data ~= nil then
+            local bet = data.myBet
+            return bet
+        end
+    end
+    return nil
+end
+--获取所有的航班数据
+function FlightMainModel.getAllFlightData()
+    return FlightMainModel.allFlightDic
 end
 --
 function FlightMainModel.n_OnBetFlight(data, msgId)
     if msgId == 0 then
         local info = {}
         info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnBetFlight："..data.reason
+        info.contentInfo = "GAucModel.n_OnBetFlight："
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
+    end
+    --从搜索押注
+    if FlightMainModel.mSearchFlight ~= nil and FlightMainModel.mSearchFlight[data.id] ~= nil then
+        FlightMainModel.mSearchFlight[data.id].myBet = {delay = data.delay, date = data.date, amount = data.score}
     end
     Event.Brocast("c_betFlightEvent", data)
 end
@@ -118,5 +164,11 @@ function FlightMainModel.n_OnGetSearchFlight(data, msgId)
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end
-    --Event.Brocast("c_flightScoreChange", data)
+    FlightMainModel.mSearchFlight = {}
+    if data.data ~= nil then
+        for i, value in ipairs(data.data) do
+            FlightMainModel.mSearchFlight[value.FlightNo] = value
+        end
+    end
+    Event.Brocast("c_getSearchFlightResult", data)
 end

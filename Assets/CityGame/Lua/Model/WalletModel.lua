@@ -13,30 +13,90 @@ end
 
 function WalletModel:OnCreate()
     --本地事件
-    Event.AddListener("ReqCreateWallet",self.ReqCreateWalletm,self)
+    Event.AddListener("ReqCreateWallet",self.ReqCreateWallet,self)
+    Event.AddListener("ReqCreateOrder",self.ReqCreateOrder,self)
 
     --网络事件
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
-
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.RechargeRequestRes",self.ReqTopUpSucceed,self)
 end
 
 function WalletModel:Close()
     --本地事件
-    Event.RemoveListener("ReqCreateWallet",self.ReqCreateWalletm,self)
+    Event.RemoveListener("ReqCreateWallet",self.ReqCreateWallet,self)
+    Event.RemoveListener("ReqCreateOrder",self.ReqCreateOrder,self)
+
+    --网络事件
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.RechargeRequestRes",self.ReqTopUpSucceed,self)
 end
 
 ---客户端请求----
 --创建钱包
 function WalletModel:ReqCreateWallet(userId,userName,pubKey)
     local msgId = pbl.enum("gscode.OpCode","ct_createUser")
-    local lMsg = {PlayerId = userId,CreateUserReq={ReqHeader = {Version = 1,ReqId = tostring(msgId)}},CityUserName = userName,PubKey = pubKey}
+    local lMsg ={PlayerId = userId,CreateUserReq={ReqHeader={Version = 1,ReqId = tostring(msgId),},CityUserId = userId,CityUserName = userName,PubKey=City.signer_ct.ToHexString(pubKey),PayPassword=''}}
     local pMsg = assert(pbl.encode("ccapi.ct_createUser", lMsg))
     --local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
-
+--生成订单
+function WalletModel:ReqCreateOrder(userId,Amount)
+    self.Amount = tostring(Amount)
+    local msgId = pbl.enum("gscode.OpCode","ct_GenerateOrderReq")
+    local lMsg ={PlayerId = userId,ReqHeader = {Version = 1,ReqId = tostring(msgId),}}
+    local pMsg = assert(pbl.encode("ccapi.ct_GenerateOrderReq", lMsg))
+    local msgRet = assert(pbl.decode("ccapi.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
+--充值
+function WalletModel:ReqTopUp(userId,PurchaseId,PubKey,Amount,Ts,Signature)
+    local msgId = pbl.enum("gscode.OpCode","ct_RechargeRequestReq")
+    local lMsg ={PlayerId = userId,RechargeRequestReq={ReqHeader={Version = 1,ReqId = tostring(msgId),},PurchaseId = PurchaseId,PubKey=PubKey,Amount=Amount,ExpireTime=9,Ts=Ts,Signature = Signature}}
+    local pMsg = assert(pbl.encode("ccapi.ct_RechargeRequestReq", lMsg))
+    local msgRet = assert(pbl.decode("ccapi.ct_RechargeRequestReq",pMsg), "pbl.decode decode failed")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
 ---服务器回调---
 --创建钱包
 function WalletModel:ReceiveCreateWallet(data)
-    local aaa = data
+    if data ~= nil then
+        Event.Brocast("createWalletSucceed",data)
+    end
+end
+--生成订单
+function WalletModel:ReceiveCreateOrder(data)
+    if data ~= nil then
+        local serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
+        local privateKeyStr = self:parsing()
+        local sm = City.signer_ct.New()
+        local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr)
+        local pubkeyStr = sm.ToHexString(pubkey)
+        sm:pushHexSting(data.PurchaseId)
+        --暂时发秒
+        local second = math.ceil(serverNowTime / 1000)
+        sm:pushLong(second)
+        sm:pushHexSting(self.Amount)
+        --生成签名(用于验证关键数据是否被篡改)
+        local sig = sm:sign(privateKeyStr);
+        self:ReqTopUp(data.PlayerId,data.PurchaseId,pubkeyStr,self.Amount,second,sm.ToHexString(sig))
+    end
+end
+--充值成功
+function WalletModel:ReqTopUpSucceed(data)
+    if data ~= nil then
+        Event.Brocast("reqTopUpSucceed",data)
+    end
+end
+------------------------------------------------------------------------解析-----------------------------------------------------------------------------
+--解析支付密码和私钥
+function WalletModel:parsing()
+    local privateKeyPath = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
+    local privateKeyStr = ct.file_readString(privateKeyPath)
+    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
+    local passWordStr = ct.file_readString(passWordPath)
+    local privateKeyNewEncrypted = City.signer_ct.Decrypt(passWordStr, privateKeyStr)
+    return privateKeyNewEncrypted
 end

@@ -58,8 +58,18 @@ function WalletBoxCtrl:_clickUndoBtn()
     UIPanel.ClosePage()
 end
 --确认
-function WalletBoxCtrl:_clickConfirmBtn()
+function WalletBoxCtrl:_clickConfirmBtn(ins)
     PlayMusEff(1002)
-    UIPanel.ClosePage()
-    Event.Brocast("openQRCode")
+    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
+    local str = ct.file_readString(passWordPath)
+    if ins.passwordInput.text == str then
+        Event.Brocast("ReqCreateOrder",ins.m_data.userId,ins.m_data.amount)
+        UIPanel.ClosePage()
+        --在充值成功后打开这个  赋值钱包地址
+        --Event.Brocast("openQRCode")
+    else
+        ins.passwordInput.text = ""
+        Event.Brocast("SmallPop","密码输入错误", ReminderType.Warning)
+        return
+    end
 end

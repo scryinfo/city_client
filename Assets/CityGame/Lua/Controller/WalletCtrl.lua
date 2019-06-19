@@ -45,17 +45,24 @@ function WalletCtrl:Awake(go)
 end
 
 function WalletCtrl:Active()
+    UIPanel.Active(self)
     Event.AddListener("openQRCode",self.openQRCode,self)
+    Event.AddListener("createWalletSucceed",self.createWalletSucceed,self)
+    Event.AddListener("reqTopUpSucceed",self.reqTopUpSucceed,self)
 end
 
 function WalletCtrl:Refresh()
     self:_language()
     self:initializeUiInfoData()
+    self.userId = DataManager.GetMyOwnerID()
+    DataManager.OpenDetailModel(WalletModel,self.userId)
 end
 
 function WalletCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("openQRCode",self.openQRCode,self)
+    Event.RemoveListener("createWalletSucceed",self.createWalletSucceed,self)
+    Event.RemoveListener("reqTopUpSucceed",self.reqTopUpSucceed,self)
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WalletCtrl:_getComponent(go)
@@ -177,16 +184,30 @@ function WalletCtrl:_language()
 end
 --初始化打开钱包时
 function WalletCtrl:defaultPanel()
-    --暂时默认为创建钱包，后边根据服务器数据为准
-    self.WithoutWalletContent.transform.localScale = Vector3.one
-    self.WalletContent.transform.localScale = Vector3.zero
-    self.DetailsContent.transform.localScale = Vector3.zero
-    self.RechargeAmountContent.transform.localScale = Vector3.zero
-    self.QRCodeContent.transform.localScale = Vector3.zero
-    self.WithdrawContent.transform.localScale = Vector3.zero
-    self.PasswordContent.transform.localScale = Vector3.zero
-    --self.DeclarationContent.transform.localScale = Vector3.zero
-    self.DeclarationContent.gameObject:SetActive(false)
+    --读取路径
+    local path = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
+    local str = ct.file_readString(path)
+    if str == nil then
+        self.WithoutWalletContent.transform.localScale = Vector3.one
+        self.WalletContent.transform.localScale = Vector3.zero
+        self.DetailsContent.transform.localScale = Vector3.zero
+        self.RechargeAmountContent.transform.localScale = Vector3.zero
+        self.QRCodeContent.transform.localScale = Vector3.zero
+        self.WithdrawContent.transform.localScale = Vector3.zero
+        self.PasswordContent.transform.localScale = Vector3.zero
+        --self.DeclarationContent.transform.localScale = Vector3.zero
+        self.DeclarationContent.gameObject:SetActive(false)
+    else
+        self.WithoutWalletContent.transform.localScale = Vector3.zero
+        self.WalletContent.transform.localScale = Vector3.one
+        self.DetailsContent.transform.localScale = Vector3.zero
+        self.RechargeAmountContent.transform.localScale = Vector3.zero
+        self.QRCodeContent.transform.localScale = Vector3.zero
+        self.WithdrawContent.transform.localScale = Vector3.zero
+        self.PasswordContent.transform.localScale = Vector3.zero
+        --self.DeclarationContent.transform.localScale = Vector3.zero
+        self.DeclarationContent.gameObject:SetActive(false)
+    end
 end
 -------------------------------------------------------------点击函数---------------------------------------------------------------------------------
 --退出钱包
@@ -243,9 +264,13 @@ end
 function WalletCtrl:_clickRechargeConfirmBtn(ins)
     PlayMusEff(1002)
     if ins.rechargeMoneyInput.text == "" or ins.rechargeMoneyInput.text == 0 then
+        Event.Brocast("SmallPop","请输入充值金额", ReminderType.Warning)
         return
     end
-    ct.OpenCtrl("WalletBoxCtrl")
+    local data = {}
+    data.userId = ins.userId
+    data.amount = tostring(ins.rechargeMoneyInput.text)
+    ct.OpenCtrl("WalletBoxCtrl",data)
 end
 --关闭密码弹窗（新加）
 function WalletCtrl:_clickRechargeCloseBtn(ins)
@@ -315,12 +340,14 @@ end
 function WalletCtrl:closePaymentPassword()
     self.PasswordContent.transform.localScale = Vector3.zero
 end
---设置密码页面确定后执行
+--设置密码页面确定
 function WalletCtrl:confirmPasswordBtn()
-    self.PasswordContent.transform.localScale = Vector3.zero
-    self.WithoutWalletContent.transform.localScale = Vector3.zero
-    self.WalletContent.transform.localScale = Vector3.one
-    self.moneyText.text = DataManager.GetMoneyByString()
+    ---创建钱包
+    --生产密钥
+    self:creatKey()
+    local userName = DataManager.GetName()
+    local pubKey = self.pubkey
+    Event.Brocast("ReqCreateWallet",self.userId,userName,pubKey)
 end
 --打开详情
 function WalletCtrl:openDetails()
@@ -358,11 +385,11 @@ function WalletCtrl:closeRechargeAmountContent()
     self.RechargeAmountContent.transform.localScale = Vector3.zero
 end
 --打开二维码
-function WalletCtrl:openQRCode()
+function WalletCtrl:openQRCode(data)
     self:closeRechargeAmountContent()
     self.QRCodeContent.transform.localScale = Vector3.one
     --self.QRCodeImg
-    self.QRCodeAddressText.text = "钱包地址"
+    self.QRCodeAddressText.text = data.EthAddr
 end
 --关闭二维码
 function WalletCtrl:closeQRCode()
@@ -376,3 +403,56 @@ end
 function WalletCtrl:closeScanningQRCode()
     self.scanQRCodeRoot.transform.localScale = Vector3.zero
 end
+---------------------------------------------------------------------回调函数---------------------------------------------------------------------------
+--创建钱包成功回调
+function WalletCtrl:createWalletSucceed(data)
+    if data then
+        self.PasswordContent.transform.localScale = Vector3.zero
+        self.WithoutWalletContent.transform.localScale = Vector3.zero
+        self.WalletContent.transform.localScale = Vector3.one
+        self.moneyText.text = DataManager.GetMoneyByString()
+        Event.Brocast("SmallPop", GetLanguage(33010013), ReminderType.Succeed)
+    end
+end
+--充值请求成功回调
+function WalletCtrl:reqTopUpSucceed(data)
+    if data then
+        self:openQRCode(data)
+    end
+end
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+--生成密钥
+function WalletCtrl:creatKey()
+    --生成
+    local privateKey = City.CityLuaUtil.NewGuid()
+
+    --支付密码
+    local passWord = tostring(self.confirmInputField.text)
+    local privateKeyEncrypted = City.signer_ct.Encrypt(passWord, privateKey)
+
+    --保存密钥
+    local path = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
+    ct.file_saveString(path,privateKeyEncrypted)
+
+    --保存支付密码
+    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
+    ct.file_saveString(passWordPath,tostring(self.confirmInputField.text))
+
+    local privateKeyEncryptedSaved = ct.file_readString(path)
+    local privateKeyNewEncrypted = City.signer_ct.Decrypt(passWord, privateKeyEncryptedSaved)
+
+    --生成公钥
+    self.pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyNewEncrypted);
+end
+
+
+
+
+
+
+
+
+
+
+
+

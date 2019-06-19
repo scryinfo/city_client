@@ -1091,7 +1091,7 @@ UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  f
     --生成私钥
     local privateKey = City.CityLuaUtil.NewGuid()
     --密钥保护密码
-    local password = '123456'
+    local password = "123456"
 
     local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
     --保存

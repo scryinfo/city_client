@@ -162,10 +162,10 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.totalNumberText.text = "×"..self.m_data.dataInfo.n
             self.warehouseNumberText.text = "×"..0
             self.shelfNumberText.text = "×"..self.m_data.dataInfo.n
-
         else
             self.numberSlider.transform.localScale = Vector3.one
             self.totalNumber.transform.localScale = Vector3.zero
+            self.shelfNumberText.text = "×"..self.m_data.dataInfo.n
             self.numberSlider.maxValue = self.m_data.dataInfo.n + self.warehouseNumber
         end
     else

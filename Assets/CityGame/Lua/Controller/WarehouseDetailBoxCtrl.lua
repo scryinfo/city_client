@@ -157,6 +157,7 @@ function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
     self:initializeUiInfoData()
     self:_clickCloseBtn()
     UIPanel.ClosePage()
+    Event.Brocast("changeStoreInfoData",dataInfo)
     Event.Brocast("SmallPop",GetLanguage(25060008), ReminderType.Succeed)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------

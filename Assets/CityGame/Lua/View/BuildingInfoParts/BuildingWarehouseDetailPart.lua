@@ -101,6 +101,7 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("deleteSucceed",self.deleteSucceed,self)
     Event.AddListener("getItemIdCount",self.getItemIdCount,self)
     Event.AddListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
+    Event.AddListener("changeStoreInfoData",self.changeStoreInfoData,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
@@ -112,6 +113,7 @@ function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("deleteSucceed",self.deleteSucceed,self)
     Event.RemoveListener("getItemIdCount",self.getItemIdCount,self)
     Event.RemoveListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
+    Event.RemoveListener("changeStoreInfoData",self.changeStoreInfoData,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
@@ -272,6 +274,18 @@ function BuildingWarehouseDetailPart:deleteWarehouseItem(dataInfo)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             Event.Brocast("m_ReqRetailStoresDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
+        end
+    end
+end
+--上架成功改变数据表，货架详情查看
+function BuildingWarehouseDetailPart:changeStoreInfoData(data)
+    for key,value in pairs(self.storeInfoData.inHand) do
+        if value.key.id == data.item.key.id then
+            if value.n == data.item.n then
+                table.remove(self.storeInfoData.inHand,key)
+            else
+                value.n = value.n - data.item.n
+            end
         end
     end
 end

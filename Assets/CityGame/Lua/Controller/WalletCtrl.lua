@@ -36,10 +36,16 @@ function WalletCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.agreeBtn.gameObject,self._clickAgreeBtn,self)
     self.luaBehaviour:AddClick(self.declarationCloseBtn.gameObject,self._clickDeclarationCloseBtn,self)
     self.luaBehaviour:AddClick(self.passwordConfirmBtn.gameObject,self._clickPasswordConfirmBtn,self)
+    self.luaBehaviour:AddClick(self.rechargeConfirmBtn.gameObject,self._clickRechargeConfirmBtn,self)
+    self.luaBehaviour:AddClick(self.rechargeCloseBtn.gameObject,self._clickRechargeCloseBtn,self)
 
     self.confirmInputField.onValueChanged:AddListener(function()
         self:confirmInputButton()
     end)
+end
+
+function WalletCtrl:Active()
+    Event.AddListener("openQRCode",self.openQRCode,self)
 end
 
 function WalletCtrl:Refresh()
@@ -49,6 +55,7 @@ end
 
 function WalletCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("openQRCode",self.openQRCode,self)
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WalletCtrl:_getComponent(go)
@@ -82,6 +89,18 @@ function WalletCtrl:_getComponent(go)
     self.detailsCloseBtn = go.transform:Find("DetailsContent/top/closeBtn")
     self.detailsTopName = go.transform:Find("DetailsContent/top/topName"):GetComponent("Text")
     self.detailsContent = go.transform:Find("DetailsContent/content/ScrollView/Viewport/Content")
+
+    --RechargeAmountContent  输入充值金额（新加）
+    self.RechargeAmountContent = go.transform:Find("RechargeAmountContent")
+    self.rechargeCloseBtn = go.transform:Find("RechargeAmountContent/top/closeBtn")
+    self.rechargeTopName = go.transform:Find("RechargeAmountContent/top/topName"):GetComponent("Text")
+    self.rechargeText = go.transform:Find("RechargeAmountContent/content/rechargeText"):GetComponent("Text")
+    self.rechargeMoneyInput = go.transform:Find("RechargeAmountContent/content/moneyInput"):GetComponent("InputField")
+    self.DDDText = go.transform:Find("RechargeAmountContent/content/proportionIcon/DDDText"):GetComponent("Text")
+    self.proportionText = go.transform:Find("RechargeAmountContent/content/proportionText"):GetComponent("Text")
+    self.rechargeConfirmBtn = go.transform:Find("RechargeAmountContent/content/confirmBtn")
+    self.rechargeConfirmBtnText = go.transform:Find("RechargeAmountContent/content/confirmBtn/Text"):GetComponent("Text")
+    self.rechargeTipText = go.transform:Find("RechargeAmountContent/content/tipText"):GetComponent("Text")
 
     --QRCodeContent   二维码
     self.QRCodeContent = go.transform:Find("QRCodeContent")
@@ -162,6 +181,7 @@ function WalletCtrl:defaultPanel()
     self.WithoutWalletContent.transform.localScale = Vector3.one
     self.WalletContent.transform.localScale = Vector3.zero
     self.DetailsContent.transform.localScale = Vector3.zero
+    self.RechargeAmountContent.transform.localScale = Vector3.zero
     self.QRCodeContent.transform.localScale = Vector3.zero
     self.WithdrawContent.transform.localScale = Vector3.zero
     self.PasswordContent.transform.localScale = Vector3.zero
@@ -219,10 +239,23 @@ function WalletCtrl:_clickWithdrawCloseBtn(ins)
     PlayMusEff(1002)
     ins:closeWithdrawContent()
 end
+--打开密码弹框(新加)
+function WalletCtrl:_clickRechargeConfirmBtn(ins)
+    PlayMusEff(1002)
+    if ins.rechargeMoneyInput.text == "" or ins.rechargeMoneyInput.text == 0 then
+        return
+    end
+    ct.OpenCtrl("WalletBoxCtrl")
+end
+--关闭密码弹窗（新加）
+function WalletCtrl:_clickRechargeCloseBtn(ins)
+    PlayMusEff(1002)
+    ins:closeRechargeAmountContent()
+end
 --打开二维码
 function WalletCtrl:_clickTopUpBtn(ins)
     PlayMusEff(1002)
-    ins:openQRCode()
+    ins:openRechargeAmountContent()
 end
 --关闭二维码
 function WalletCtrl:_clickQRCodeCloseBtn(ins)
@@ -314,8 +347,19 @@ end
 function WalletCtrl:closeWithdrawContent()
     self.WithdrawContent.transform.localScale = Vector3.zero
 end
+--打开钱包充值金额（新加）
+function WalletCtrl:openRechargeAmountContent()
+    self.RechargeAmountContent.transform.localScale = Vector3.one
+    self.rechargeMoneyInput.text = ""
+    self.DDDText.text = "0.0000".."(DDD)"
+end
+--关闭钱包充值金额（新加）
+function WalletCtrl:closeRechargeAmountContent()
+    self.RechargeAmountContent.transform.localScale = Vector3.zero
+end
 --打开二维码
 function WalletCtrl:openQRCode()
+    self:closeRechargeAmountContent()
     self.QRCodeContent.transform.localScale = Vector3.one
     --self.QRCodeImg
     self.QRCodeAddressText.text = "钱包地址"

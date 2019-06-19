@@ -94,8 +94,11 @@ end
 --通过id获取搜索数据
 function FlightMainModel.getSearchFlightBetById(id)
     if FlightMainModel.mSearchFlight ~= nil then
-        local data = FlightMainModel.mSearchFlight[id].myBet
-        return data
+        local data = FlightMainModel.mSearchFlight[id]
+        if data ~= nil then
+            local bet = data.myBet
+            return bet
+        end
     end
     return nil
 end
@@ -161,6 +164,11 @@ function FlightMainModel.n_OnGetSearchFlight(data, msgId)
         ct.OpenCtrl("BtnDialogPageCtrl", info)
         return
     end
-    FlightMainModel.mSearchFlight = data.data
+    FlightMainModel.mSearchFlight = {}
+    if data.data ~= nil then
+        for i, value in ipairs(data.data) do
+            FlightMainModel.mSearchFlight[value.FlightNo] = value
+        end
+    end
     Event.Brocast("c_getSearchFlightResult", data)
 end

@@ -65,13 +65,13 @@ end
 function FlightBetCtrl:_language()
     FlightBetPanel.titleText01.text = GetLanguage(32030008)
     FlightBetPanel.timeText02.text = GetLanguage(32030009)
-    FlightBetPanel.timeText03.text = GetLanguage(32030012)
-    FlightBetPanel.timeText04.text = GetLanguage(32030013)
+    FlightBetPanel.timeText03.text = GetLanguage(32030013, FlightConfig.MinTime)
+    FlightBetPanel.timeText04.text = GetLanguage(32030013, FlightConfig.MaxTime)
     FlightBetPanel.timeText05.text = GetLanguage(32030010)  --延误/提前
 
     FlightBetPanel.betText06.text = GetLanguage(32030014)
-    FlightBetPanel.betText07.text = GetLanguage(32030016)
-    FlightBetPanel.betText08.text = GetLanguage(32030017)
+    FlightBetPanel.betText07.text = GetLanguage(32030016, FlightConfig.MinBet)
+    FlightBetPanel.betText08.text = GetLanguage(32030017, FlightConfig.MaxBet)
     FlightBetPanel.betText09.text = GetLanguage(32030015)
     FlightBetPanel.tipText10.text = GetLanguage(32030018)
 end

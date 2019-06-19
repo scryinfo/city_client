@@ -1088,18 +1088,20 @@ UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function 
 end)
 
 UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  function ()
-    --生成
+    --生成私钥
     local privateKey = City.CityLuaUtil.NewGuid()
+    --密钥保护密码
+    local password = '123456'
 
+    local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
     --保存
     local path = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
-    ct.file_saveString(path,privateKey)
+    ct.file_saveString(path,privateKeyEncrypted)
     --读取
-    local str = ct.file_readString(path)
-
-    --生成公钥
-    local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
-    local f = 0
+    local privateKeyEncryptedSaved = ct.file_readString(path)
+    --用密码解密私钥
+    local privateKeyNewEncrypted = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
+    local a = 0
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

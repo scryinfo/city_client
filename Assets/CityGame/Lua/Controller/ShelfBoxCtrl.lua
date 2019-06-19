@@ -151,7 +151,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.confirmBtn.transform.localScale = Vector3.one
         self.addShelfBtn.transform.localScale = Vector3.zero
         self.automaticSwitch.isOn = self.m_data.dataInfo.autoReplenish
-        self.numberSlider.maxValue = self.m_data.dataInfo.n + self.warehouseNumber
+        self.numberSlider.maxValue = self.m_data.dataInfo.n
         self.numberSlider.minValue = 1
         self.numberSlider.value = self.m_data.dataInfo.n
         self.numberText.text = "×"..self.numberSlider.value
@@ -159,11 +159,14 @@ function ShelfBoxCtrl:initializeUiInfoData()
         if self.automaticSwitch.isOn == true then
             self.numberSlider.transform.localScale = Vector3.zero
             self.totalNumber.transform.localScale = Vector3.one
-            self.totalNumberText.text = "×"..self.numberSlider.maxValue
+            self.totalNumberText.text = "×"..self.m_data.dataInfo.n
             self.warehouseNumberText.text = "×"..0
+            self.shelfNumberText.text = "×"..self.m_data.dataInfo.n
+
         else
             self.numberSlider.transform.localScale = Vector3.one
             self.totalNumber.transform.localScale = Vector3.zero
+            self.numberSlider.maxValue = self.m_data.dataInfo.n + self.warehouseNumber
         end
     else
         --上架的时候打开时

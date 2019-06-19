@@ -10,7 +10,16 @@ using System.Collections.Generic;
 using System.Text;
 using System;
 using Nethereum.Signer;
-
+using Org.BouncyCastle.Asn1.Pkcs;
+using Org.BouncyCastle.Asn1.X509;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Math;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.X509;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Crypto.Encodings;
+using System.IO;
 namespace City {
     public class signer_ct
     {
@@ -131,6 +140,12 @@ namespace City {
             return Hex.Decode(str);
         }
 
+        public static string GetPrivateKeyFromString(string privateKeyStr)
+        {
+            EthECKey ek = new EthECKey(stringToSHA256(privateKeyStr), true);
+            return Hex.ToHexString(ek.GetPrivateKeyAsBytes()) ;
+        }
+
         public static byte[] GetPublicKeyFromPrivateKey(string privateKeyStr) {
             EthECKey ek = new EthECKey(stringToSHA256(privateKeyStr), true);             
             return ek.GetPubKey(); 
@@ -155,6 +170,51 @@ namespace City {
             var vsig = CityLuaUtil.sigFrom64ByteArray(sig64);           //使用64byte字符串生成签名 
             return vk.Verify(hash, vsig);                               //验证通过
         }
+
+        static readonly string SaltKey = "S@LT&KEY";
+        static readonly string VIKey = "@1B2c3D4e5F6g7H8";
+
+        public static string Encrypt(string Password, string plainText)
+        {
+            byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+
+            byte[] keyBytes = new Rfc2898DeriveBytes(Password, Encoding.ASCII.GetBytes(SaltKey)).GetBytes(256 / 8);
+            var symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC, Padding = PaddingMode.Zeros };
+            var encryptor = symmetricKey.CreateEncryptor(keyBytes, Encoding.ASCII.GetBytes(VIKey));
+
+            byte[] cipherTextBytes;
+
+            using (var memoryStream = new System.IO.MemoryStream())
+            {
+                using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                {
+                    cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
+                    cryptoStream.FlushFinalBlock();
+                    cipherTextBytes = memoryStream.ToArray();
+                    cryptoStream.Close();
+                }
+                memoryStream.Close();
+            }
+            return Convert.ToBase64String(cipherTextBytes);
+        }
+
+        public static string Decrypt(string Password, string encryptedText)
+        {
+            byte[] cipherTextBytes = Convert.FromBase64String(encryptedText);
+            byte[] keyBytes = new Rfc2898DeriveBytes(Password, Encoding.ASCII.GetBytes(SaltKey)).GetBytes(256 / 8);
+            var symmetricKey = new RijndaelManaged() { Mode = CipherMode.CBC, Padding = PaddingMode.None };
+
+            var decryptor = symmetricKey.CreateDecryptor(keyBytes, Encoding.ASCII.GetBytes(VIKey));
+            var memoryStream = new System.IO.MemoryStream(cipherTextBytes);
+            var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
+            byte[] plainTextBytes = new byte[cipherTextBytes.Length];
+
+            int decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
+            memoryStream.Close();
+            cryptoStream.Close();
+            return Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount).TrimEnd("\0".ToCharArray());
+        }
+
         public static void test_signer_ct()
         {
             signer_ct sm = new signer_ct();
@@ -186,8 +246,22 @@ namespace City {
             EthECKey vk = new EthECKey(pk, false);              //使用公钥
             var vsig = CityLuaUtil.sigFrom64ByteArray(sig64);   //使用64byte字符串生成签名 
             var passv = vk.Verify(datahash, vsig);              //验证通过
-            //测试通过-----------------------------------------------------------------           
+            //测试通过-----------------------------------------------------------------       
 
+            byte[] sig64_1 = sm.sign(privateKeyStr);
+            bool pass = sm.verify(pk,sig64_1);
+
+            //本地私钥保护-------------------------------------------------------------测试尚未通过            
+            //1、 生成私钥的原始字符串,有这个字符串，就可以生成私钥，所以，只需要保护这个字符串就行
+            string privateKeyToProtect = GetPrivateKeyFromString(System.Guid.NewGuid().ToString().Replace("-", ""));
+            //2、 使用一个6位数字的密码来保护保护私钥字符串
+            string password = "123456";            
+            string Encryptedkey = signer_ct.Encrypt(password,privateKeyToProtect);
+
+            string privateKeyDecrypted = signer_ct.Decrypt(password, Encryptedkey);
+            string privateKeyDecryptedWrong = signer_ct.Decrypt("123123", Encryptedkey);
+
+            //本地私钥保护-------------------------------------------------------------
             int t = 1;
         }
     }

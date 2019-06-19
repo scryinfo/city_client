@@ -1048,11 +1048,11 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
 
 
     --验证
-    local pass = sm:verifyByPbyKey(pubkey, sig);
+    local pass = sm:verify(pubkey, sig);
     if pass == true then
-        ct.log('abel_0601_VerifySignature','pass = sm:verifyByPbyKey(pubkey, sig), pass ='..'true')
+        ct.log('abel_0601_VerifySignature','pass = sm:verify(pubkey, sig), pass ='..'true')
     else
-        ct.log('abel_0601_VerifySignature','pass = sm:verifyByPbyKey(pubkey, sig), pass ='..'false')
+        ct.log('abel_0601_VerifySignature','pass = sm:verify(pubkey, sig), pass ='..'false')
     end
     --篡改pubkey
     local pubkeyChange = sm.GetPublicKeyFromPrivateKey("bsdfqwper234123412341234lkjlkj2342ghhg5j");

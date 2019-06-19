@@ -266,8 +266,10 @@ namespace City {
             EthECKey vk = new EthECKey(pk, false);              //使用公钥
             var vsig = CityLuaUtil.sigFrom64ByteArray(sig64);   //使用64byte字符串生成签名 
             var passv = vk.Verify(datahash, vsig);              //验证通过
-                                                                //测试通过-----------------------------------------------------------------           
+            //测试通过-----------------------------------------------------------------       
 
+            byte[] sig64_1 = sm.sign(privateKeyStr);
+            bool pass = sm.verify(pk,sig64_1);
 
             //本地私钥保护-------------------------------------------------------------测试尚未通过            
             //1、 生成私钥的原始字符串,有这个字符串，就可以生成私钥，所以，只需要保护这个字符串就行

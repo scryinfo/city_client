@@ -43,6 +43,9 @@ function Game.OnInitOK()
     --初始化屏幕适配比例--
     InitScreenRatio()
 
+    --单元测试入口
+    lu.LuaUnit.run()
+
     ct.OpenCtrl('LoadingCtrl')--StopAndBuildCtrl--LoadingCtrl
     --ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 end

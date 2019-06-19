@@ -77,6 +77,7 @@ function ServerListModel:m_GsOK()
     -----------------------------------------------------------------------------
     GAucModel.registerNetMsg()  --拍卖的网络回调
     MapModel.registerNetMsg()  --小地图网络回调
+    FlightMainModel.registerNetMsg()  --航班预测网络回调
     --连接gs
     CityEngineLua.login_baseapp(true)
     --CityEngineLua.login_tradeapp(true)
@@ -135,6 +136,8 @@ function ServerListModel:n_OnRoleLogin(pMsg)
         Event.Brocast("m_RoleLoginInExchangeModel", stream)  ---测试，获取登录之后的信息 cycle week 11
         Event.Brocast("m_RoleLoginReqGroundAuction")  --请求拍卖信息
 
+        --上链测试，不要删除，要屏蔽请通过 test_group.lua 中注销对应注册即可
+        UnitTest.Exec_now("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequestReq",pMsg.id)
 
         --激活相机脚本
         --[[

@@ -57,10 +57,35 @@ function FlightRecordCtrl:Hide()
 end
 --
 function FlightRecordCtrl:_getFlightBetHistory(data)
-    if data ~= nil then
-        self.m_data.valueList = data
+    if data ~= nil and data.info ~= nil then
+        self.m_data.valueList = data.info
+    end
+    self:_getBetHistory()
+    if #self.m_data.valueList > 0 then
+        FlightRecordPanel.noneTip.localScale = Vector3.zero
+        if FlightRecordCtrl.static.itemsList == nil then
+            FlightRecordCtrl.static.itemsList = {}
+        end
         FlightRecordCtrl.listValue = self.m_data.valueList
+        if #self.m_data.valueList > 4 then
+            FlightRecordPanel.rightBtn.localScale = Vector3.one
+        end
         FlightRecordPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
+    else
+        FlightRecordPanel.noneTip.localScale = Vector3.one
+    end
+end
+--
+function FlightRecordCtrl:_getBetHistory()
+    if self.m_data.valueList == nil then
+        self.m_data.valueList = {}
+    end
+    local bet = FlightMainModel.getAllFlightData()
+    for key, value in pairs(bet) do
+        if value.myBet ~= nil then
+            local temp = {data = value.data, delay = value.myBet.delay, amount = value.myBet.amount}
+            table.insert(self.m_data.valueList, 1, temp)
+        end
     end
 end
 --
@@ -87,7 +112,12 @@ FlightRecordCtrl.static.RightEndFunc = function()
 end
 --
 function FlightRecordCtrl:_initData()
-    FlightMainModel.m_ReqFlightBetHistory()
+    FlightRecordPanel.rightBtn.localScale = Vector3.zero
+    FlightRecordPanel.leftBtn.localScale = Vector3.zero
+    if self.m_data == nil then
+        self.m_data = {}
+        FlightMainModel.m_ReqFlightBetHistory()
+    end
 end
 --
 function FlightRecordCtrl:cleanItemList()
@@ -102,9 +132,11 @@ end
 --
 function FlightRecordCtrl:_language()
     FlightRecordPanel.titleText01.text = GetLanguage(32010002)
+    FlightRecordPanel.noneTipText02.text = GetLanguage(32030034)
 end
 --
 function FlightRecordCtrl:backFunc()
+    self:clean()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
@@ -117,4 +149,10 @@ end
 function FlightRecordCtrl:rightPageFunc()
     PlayMusEff(1002)
     FlightRecordPanel.scrollPage:NextPage()
+end
+--
+function FlightRecordCtrl:clean()
+    FlightRecordPanel.scrollPage:CleanAll()
+    self.m_data = nil
+    self:cleanItemList()
 end

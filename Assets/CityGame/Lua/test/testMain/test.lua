@@ -1048,11 +1048,11 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
 
 
     --验证
-    local pass = sm:verifyByPbyKey(pubkey, sig);
+    local pass = sm:verify(pubkey, sig);
     if pass == true then
-        ct.log('abel_0601_VerifySignature','pass = sm:verifyByPbyKey(pubkey, sig), pass ='..'true')
+        ct.log('abel_0601_VerifySignature','pass = sm:verify(pubkey, sig), pass ='..'true')
     else
-        ct.log('abel_0601_VerifySignature','pass = sm:verifyByPbyKey(pubkey, sig), pass ='..'false')
+        ct.log('abel_0601_VerifySignature','pass = sm:verify(pubkey, sig), pass ='..'false')
     end
     --篡改pubkey
     local pubkeyChange = sm.GetPublicKeyFromPrivateKey("bsdfqwper234123412341234lkjlkj2342ghhg5j");
@@ -1072,6 +1072,11 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
     local tt = 1
 end)
 
+UnitTest.Exec("cycle_0619_flightDate", "e_cycle_0619_flightDate",  function ()
+    Event.AddListener("e_cycle_0619_flightDate", function ()
+        ct.OpenCtrl("FlightSearchCtrl")
+    end)
+end)
 UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function ()
     --生成
     local privateKey = City.CityLuaUtil.NewGuid()

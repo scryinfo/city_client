@@ -126,7 +126,7 @@ function PromoteQueueItem:OnDelete(go)
 end
 
 function PromoteQueueItem:c_OnHead(info)
-    AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.15)
+    AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.13)
     self.name.text = info[1].name
 end
 

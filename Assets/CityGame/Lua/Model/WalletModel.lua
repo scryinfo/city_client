@@ -3,3 +3,4 @@
 --- Created by Fisher.
 --- DateTime: 2019/6/19 11:41
 ---
+WalletModel = class("WalletModel",ModelBase)

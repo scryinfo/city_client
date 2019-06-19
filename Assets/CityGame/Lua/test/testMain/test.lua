@@ -1101,6 +1101,8 @@ UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  f
     local privateKeyEncryptedSaved = ct.file_readString(path)
     --用密码解密私钥
     local privateKeyNewDecrypted = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
+
+    --用私钥字符串生成公钥
     local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyNewDecrypted);
     local a = 0
 end)

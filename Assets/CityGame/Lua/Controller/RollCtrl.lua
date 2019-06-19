@@ -215,7 +215,7 @@ function  RollCtrl:handleGoodsResult(data)
     if data then
         panel.resultRoot.localScale = Vector3.one
         panel.GoodRoot.localScale =  Vector3.one
-
+        panel.Evaresultbg.localScale = Vector3.zero
         LoadSprite(Good[data[1]].img,panel.ima)
         panel.nameText.text =  Good[data[1]].name
 

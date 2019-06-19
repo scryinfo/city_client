@@ -63,7 +63,6 @@ function ToggleBtnItem:Refresh(data)
     --self:updateUI(data)
 end
 
-
 -- 第二层信息显示
 ToggleBtnItem.static.OptionTwoData = function(transform, idx)
     ToggleBtnItem.city = {}
@@ -79,6 +78,7 @@ ToggleBtnItem.static.OptionTwoData = function(transform, idx)
         optionTwoScript[1].highlight.localScale = Vector3.zero
         ToggleBtnItem.city = optionTwoScript[idx]
     end
+    optionTwoScript[idx].highlight.localScale = Vector3.zero
 end
 
 ToggleBtnItem.static.OptionTwoClearData = function(transform)

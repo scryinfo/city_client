@@ -1,6 +1,7 @@
 
 InventGoodQueneItem = class('InventGoodQueneItem')
 
+local second
 
 ---初始化方法   数据（读配置表）
 function InventGoodQueneItem:initialize(data,prefab,luaBehaviour)
@@ -22,9 +23,14 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour)
     self.delete = self.transform:Find("startTime/time/deleteBg").gameObject
     self.rollBtn = self.transform:Find("startTime/rollBtn")
     self.rollBtnText = self.transform:Find("startTime/rollBtn/rollBtnText"):GetComponent("Text")
+    self.counttimetext = self.transform:Find("details/counttime"):GetComponent("Text")
 
     luaBehaviour:AddClick(self.delete,self.c_OnClick_Delete,self)
     luaBehaviour:AddClick(self.rollBtn.gameObject,self.c_OnClick_Roll,self)
+
+    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+    local ts = getTimeBySec((self.currentTime - data.beginProcessTs)/1000)
+    self.counttimetext.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(data.beginProcessTs/3600000 ).. "h"
 
     self:Refresh(data)
 end
@@ -32,6 +38,7 @@ end
 --删除
 function InventGoodQueneItem:c_OnClick_Delete(ins)
     DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabDeleteLine',ins.data.id)
+    ct.OpenCtrl('ReminderCtrl',data)
 end
 
 --删除
@@ -96,7 +103,7 @@ function InventGoodQueneItem:updateUI(data)
     if playerId == data.proposerId then -- 自己的线
         self.myBg.localScale = Vector3.one
         if LaboratoryCtrl.static.buildingOwnerId == data.proposerId then -- 并且是自己的建筑
-            if data.beginProcessTs > 0  then -- 第一条线
+            if data.beginProcessTs > 0 then -- 第一条线
                 self.delete.transform.localScale = Vector3.zero
             else
                 self.delete.transform.localScale = Vector3.one

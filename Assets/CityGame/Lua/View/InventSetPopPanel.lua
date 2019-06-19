@@ -23,6 +23,8 @@ function InventSetPopPanel.InitPanle()
     this.close = transform:Find("set/close")
     this.confirm = transform:Find("set/confirm").gameObject
     this.referencePrice = findByName(transform,"referencePriceText"):GetComponent("Text")
+    this.pricee = transform:Find("set/price/Image/Placeholder"):GetComponent("Text")
+    this.timee = transform:Find("set/time/Image/Placeholder"):GetComponent("Text")
 
 end
 

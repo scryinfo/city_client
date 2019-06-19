@@ -66,6 +66,8 @@ end
 function InventSetPopCtrl:updateText(data)
     -- panel.mainText.text = GetLanguage(40010009)
     panel.referencePrice.text = data.recommendPrice
+    panel.pricee.text = GetLanguage(28040028)
+    panel.timee.text = GetLanguage(28040005)
 
 end
 

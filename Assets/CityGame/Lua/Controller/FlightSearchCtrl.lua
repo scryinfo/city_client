@@ -60,14 +60,16 @@ end
 --
 function FlightSearchCtrl:_initData()
     --默认出发地为北京，目的地为上海
-    FlightSearchPanel.timeText.text = os.date("%w, %Y-%m-%d", os.time())
     self.startCode = "CTU"
+    FlightSearchPanel.startText.text = self.startCode
     self.arriveCode = "NKG"
+    FlightSearchPanel.endText.text = self.arriveCode
 
     local year = tonumber(os.date("%Y", os.time()))
     local month = tonumber(os.date("%m", os.time()))
     local day = tonumber(os.date("%d", os.time()))
     self.timeValue = os.time({year = year, month = month, day = day})  --时间戳
+    self:showTimeText(self.timeValue)
 end
 --
 function FlightSearchCtrl:_language()
@@ -121,18 +123,24 @@ function FlightSearchCtrl:checkBtnFunc()
 end
 --起点选择的回调
 function FlightSearchCtrl:startChooseResult(data)
-    self.startCode = data
-    FlightSearchPanel.startText.text = data.value
+    --self.startCode = data
+    self.startCode = "CTU"
+    FlightSearchPanel.startText.text = self.startCode
 end
 --终点选择的回调
 function FlightSearchCtrl:endChooseResult(data)
-    self.arriveCode = data
-    FlightSearchPanel.endText.text = data.value
+    --self.arriveCode = data
+    self.arriveCode = "NKG"
+    FlightSearchPanel.endText.text = self.arriveCode
 end
 --起点选择的回调
 function FlightSearchCtrl:timeChooseResult(data)
     self.timeValue = data
-    local weekDay = tonumber(os.date("%w", self.timeValue))
+    self:showTimeText(self.timeValue)
+end
+--
+function FlightSearchCtrl:showTimeText(time)
+    local weekDay = tonumber(os.date("%w", time))
     local weekDayStr
     if weekDay == 1 then
         weekDayStr = GetLanguage(34020001)
@@ -149,7 +157,7 @@ function FlightSearchCtrl:timeChooseResult(data)
     elseif weekDay == 0 then
         weekDayStr = GetLanguage(34020007)
     end
-    local dateStr = os.date("%Y-%m-%d", self.timeValue)
+    local dateStr = os.date("%Y-%m-%d", time)
     FlightSearchPanel.timeText.text = string.format("%s, %s", weekDayStr, dateStr)
 end
 --服务器回调

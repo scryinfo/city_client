@@ -20,6 +20,7 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.RegisterErrorNetMsg()
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryWeatherInfo","gs.Weather",self.n_OnWeatherInfo,self)  --天气信息
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newMailInform","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","incomeNotify","gs.IncomeNotify",self.n_GsIncomeNotify,self)--自己的收益情况
@@ -71,6 +72,12 @@ function GameMainInterfaceModel:m_GetAllMails()
     ----4、 创建包，填入数据并发包
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
+
+--天气信息
+function GameMainInterfaceModel:m_WeatherInfo()
+    local msgId = pbl.enum("gscode.OpCode","queryWeatherInfo")
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
 ----全城玩家交易量
 function GameMainInterfaceModel:m_GetExchangeAmount()
     local msgId = pbl.enum("sscode.OpCode","queryPlayerExchangeAmount")
@@ -107,6 +114,11 @@ end
 function GameMainInterfaceModel:n_OnGetAllMails(lMsg)
     --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
     Event.Brocast("c_AllMails",lMsg.mail)
+end
+
+--天气信息
+function GameMainInterfaceModel:n_OnWeatherInfo(lMsg)
+    local a = lMsg
 end
 
 --邮件更新回调

@@ -25,6 +25,8 @@ function InventSetPopPanel.InitPanle()
     this.referencePrice = findByName(transform,"referencePriceText"):GetComponent("Text")
     this.pricee = transform:Find("set/price/Image/Placeholder"):GetComponent("Text")
     this.timee = transform:Find("set/time/Image/Placeholder"):GetComponent("Text")
+    this.external = transform:Find("set/open/external"):GetComponent("Text")
+    this.closeText = transform:Find("set/close/closeText"):GetComponent("Text")
 
 end
 

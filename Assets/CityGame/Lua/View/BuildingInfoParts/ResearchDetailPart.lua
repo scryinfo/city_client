@@ -145,7 +145,7 @@ function ResearchDetailPart:updateUI(data)
     else
         self.queneCountText.text = 0
         local ts = getFormatUnixTime(TimeSynchronized.GetTheCurrentServerTime()/1000)
-        self.dateText.text = ts.hour..":"..ts.minute.." ".. ts.month.."/"..ts.day.."/"..ts.year
+        self.dateText.text = GetLanguage(27040032)
 
     end
 

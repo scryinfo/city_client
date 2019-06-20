@@ -44,7 +44,7 @@ function BaseEvaTitleItem:_setAddNumber(number)
     if number and number > 0 then
         self.iconAddImage.localScale = Vector3.one
         self.iconAddTextTF.localScale = Vector3.one
-        self.iconAddText.text = string.format("E%s", number)
+        self.iconAddText.text = tostring(number) --string.format("E%s", number)
     else
         self.iconAddImage.localScale = Vector3.zero
         self.iconAddTextTF.localScale = Vector3.zero

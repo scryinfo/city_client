@@ -17,6 +17,7 @@ function GuildMessageModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","exitSociety","gs.ByteBool", self.n_ExitSociety, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delJoinReq","gs.JoinReq", self.n_DelJoinReq, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newJoinReq","gs.JoinReq", self.n_NewJoinReq, self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","memberChange", "gs.MemberChanges", self.n_MemberChanges, self)
 end
 
 function GuildMessageModel.Close()
@@ -46,4 +47,9 @@ end
 -- 新增入会请求
 function GuildMessageModel:n_NewJoinReq(joinReq)
     Event.Brocast("c_MessageNewJoinReq", joinReq)
+end
+
+-- 成员变更
+function GuildMessageModel:n_MemberChanges(memberChanges)
+    DataManager.ControllerRpcNoRet(self.insId,"GuildMessageCtrl", 'c_MemberChanges', memberChanges)
 end

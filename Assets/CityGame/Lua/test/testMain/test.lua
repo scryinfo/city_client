@@ -57,7 +57,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 local okCallBack = function()
                     CityEngineLua.LoginOut()
                 end
-                ct.MsgBox(GetLanguage(4301012), GetLanguage(4301008), nil, okCallBack, okCallBack)
+                ct.MsgBox(GetLanguage(41010010), GetLanguage(41010008), nil, okCallBack, okCallBack)
             end
         end, 270, 1)
         timerCheck:Start()
@@ -1073,6 +1073,11 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
     local tt = 1
 end)
 
+UnitTest.Exec("cycle_0619_flightDate", "e_cycle_0619_flightDate",  function ()
+    Event.AddListener("e_cycle_0619_flightDate", function ()
+        ct.OpenCtrl("FlightSearchCtrl")
+    end)
+end)
 UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function ()
     --生成
     local privateKey = City.CityLuaUtil.NewGuid()

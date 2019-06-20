@@ -44,7 +44,8 @@ function FlightMainPageItem:initData(data)
     end
     self.betMoneyText.text = data.sumBetAmount
     local flightData = data.data
-    self.timeText.text = flightData.FlightDeptimePlanDate  --计划起飞时间
+    local timeTemp = string.sub(flightData.FlightDeptimePlanDate, 1, 10)
+    self.timeText.text = timeTemp  --计划起飞时间
     self.flightText.text = flightData.FlightCompany  --需要多语言
     self.numText.text = flightData.FlightNo  --CA4506
     self.endCodeText.text = flightData.FlightArrcode
@@ -60,7 +61,7 @@ end
 --
 function FlightMainPageItem:Language()
     self.betMoneyText01.text = GetLanguage(32030005)
-    self.alreadyTranText02.text = GetLanguage(32030029)
+    self.alreadyTranText02.text = GetLanguage(32030032)
 end
 --
 function FlightMainPageItem:ClickFunc()

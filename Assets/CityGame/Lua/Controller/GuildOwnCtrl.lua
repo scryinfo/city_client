@@ -30,6 +30,7 @@ function GuildOwnCtrl:OnCreate(go)
     GuildOwnCtrl.luaBehaviour:AddClick(GuildOwnPanel.moreActionBtn, self.OnMoreAction, self)
     GuildOwnCtrl.luaBehaviour:AddClick(GuildOwnPanel.staffNumberBtn, self.OnStaffNumber, self)
     GuildOwnCtrl.luaBehaviour:AddClick(GuildOwnPanel.joinTimeBtn, self.OnJoinTime, self)
+    GuildOwnCtrl.luaBehaviour:AddClick(GuildOwnPanel.menuRoot.gameObject, self.OnClickMenu, self)
 end
 
 function GuildOwnCtrl:Awake()
@@ -132,7 +133,10 @@ end
 -- 改公会名字
 function GuildOwnCtrl:OnModifyName(go)
     PlayMusEff(1002)
-    ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(12060019), btnCallBack = function (str)
+    local data = {}
+    data.titleInfo = GetLanguage(12050002)
+    data.inputDefaultStr = GetLanguage(12060019)
+    data.btnCallBack = function(str)
         if str == "" or str == nil then
             str = GetLanguage(12060022)
             Event.Brocast("SmallPop",str,80)
@@ -142,14 +146,29 @@ function GuildOwnCtrl:OnModifyName(go)
         else
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifySocietyName", {societyId = DataManager.GetGuildID(), str = str})
         end
-
-    end})
+    end
+    ct.OpenCtrl("InputDialogPageCtrl",data)
+    --ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(12060019), btnCallBack = function (str)
+    --    if str == "" or str == nil then
+    --        str = GetLanguage(12060022)
+    --        Event.Brocast("SmallPop",str,80)
+    --    elseif string.len(str) > 21 then
+    --        str = GetLanguage(12060023)
+    --        Event.Brocast("SmallPop",str,80)
+    --    else
+    --        DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifySocietyName", {societyId = DataManager.GetGuildID(), str = str})
+    --    end
+    --
+    --end})
 end
 
 -- 改公会介绍
 function GuildOwnCtrl:OnModifyIntroduction(go)
     PlayMusEff(1002)
-    ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(12060020), btnCallBack = function (str)
+    local data = {}
+    data.titleInfo = GetLanguage(12010008)
+    data.inputDefaultStr = GetLanguage(12060020)
+    data.btnCallBack = function(str)
         if str == "" or str == nil then
             str = GetLanguage(12060024)
             Event.Brocast("SmallPop",str,80)
@@ -159,23 +178,50 @@ function GuildOwnCtrl:OnModifyIntroduction(go)
         else
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifyIntroduction", {societyId = DataManager.GetGuildID(), str = str})
         end
-    end})
+    end
+    ct.OpenCtrl("InputDialogPageCtrl",data)
+    --ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(12060020), btnCallBack = function (str)
+    --    if str == "" or str == nil then
+    --        str = GetLanguage(12060024)
+    --        Event.Brocast("SmallPop",str,80)
+    --    elseif string.len(str) > 30 then
+    --        str = GetLanguage(12060025)
+    --        Event.Brocast("SmallPop",str,80)
+    --    else
+    --        DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifyIntroduction", {societyId = DataManager.GetGuildID(), str = str})
+    --    end
+    --end})
 end
 
 -- 改公会宣言
 function GuildOwnCtrl:OnModifyDeclaration(go)
     PlayMusEff(1002)
-    ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
+    local data = {}
+    data.titleInfo = GetLanguage(12060041)
+    data.inputDefaultStr = GetLanguage(12060021)
+    data.btnCallBack = function(str)
         if str == "" or str == nil then
             str = GetLanguage(12060026)
             Event.Brocast("SmallPop",str,80)
-        elseif string.len(str) > 100 then
-            str = GetLanguage(12060027)
+        elseif string.len(str) > 180 then
+            str = GetLanguage(12060042)
             Event.Brocast("SmallPop",str,80)
         else
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifyDeclaration", {societyId = DataManager.GetGuildID(), str = str})
         end
-    end})
+    end
+    ct.OpenCtrl("InputDialogPageCtrl",data)
+    --ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
+    --    if str == "" or str == nil then
+    --        str = GetLanguage(12060026)
+    --        Event.Brocast("SmallPop",str,80)
+    --    elseif string.len(str) > 100 then
+    --        str = GetLanguage(12060027)
+    --        Event.Brocast("SmallPop",str,80)
+    --    else
+    --        DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifyDeclaration", {societyId = DataManager.GetGuildID(), str = str})
+    --    end
+    --end})
 end
 
 -- 打开公会信息面板
@@ -240,6 +286,13 @@ function GuildOwnCtrl:OnJoinTime(go)
         GuildOwnPanel.joinTimeBtnDefault2.localScale =Vector3.zero
     end
     go:_sort(GuildOwnCtrl.rankId)
+end
+
+-- 关闭菜单
+function GuildOwnCtrl:OnClickMenu(go)
+    GuildOwnCtrl.static.guildMgr:SetClickInteractable()
+    GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
+
 end
 
 -- 数据排序及显示公会成员
@@ -379,9 +432,11 @@ function GuildOwnCtrl:c_MemberChanges(memberChanges)
                 GuildOwnCtrl.static.guildMgr:SetOwnGuildIdentity(v.identity)
                 self:_showModifyBtn(v.identity)
                 GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
+                GuildOwnCtrl.static.guildMgr:SetClickInteractable()
             else
                 if v.playerId == GuildOwnCtrl.static.guildMgr:GetPlayerId() then
                     GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
+                    GuildOwnCtrl.static.guildMgr:SetClickInteractable()
                 end
             end
         end

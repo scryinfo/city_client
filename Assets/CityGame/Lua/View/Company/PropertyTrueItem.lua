@@ -105,7 +105,8 @@ function PropertyTrueItem:initialize(prefab, data, configData)
                 end
             elseif #recordData == 3 then
                 if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]then
-                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                    --selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]
                 end
             end
         end
@@ -171,7 +172,6 @@ function PropertyTrueItem:_showBtnState(isShow)
     if isShow then
         self.subtractBtn.transform.localScale = Vector3.zero
         self.addExNumInputField.transform.localScale = Vector3.zero
-        self:_setAddExNumInputField("0")
         self.addBtn.transform.localScale = Vector3.zero
     else
         self.subtractBtn.transform.localScale = Vector3.one
@@ -183,6 +183,9 @@ end
 -- 设置输入框的值
 function PropertyTrueItem:_setAddExNumInputField(str)
     self.addExNumInputField.text = str
+    if tonumber(str) and tonumber(str) >= 0 then
+        self:_setBtnInteractable(true, true)
+    end
 end
 
 -- 加/减一点
@@ -214,7 +217,7 @@ function PropertyTrueItem:_onChangeInputNum(num)
                 end
             elseif #recordData == 3 then
                 if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]then
-                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]
                 end
             end
         end
@@ -349,6 +352,7 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         for _, y in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
             totalNum1 = totalNum1 + y.value
         end
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].value = totalNum1
         EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(totalNum1)
     end
 
@@ -365,7 +369,7 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         local evaData = {}
         evaData.id = self.data.id
         evaData.at = self.data.at
-        evaData.b = self.data.b
+        evaData.b = -1 --self.data.b
         evaData.cexp = self.data.cexp + addNumber
         evaData.lv = self.data.lv
         evaData.pid = self.data.pid

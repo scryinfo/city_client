@@ -169,7 +169,7 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
             time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
             table.insert(boundaryLine,(updataTime - monthAgo + 86400) / 86400 * 140)
         else
-            time[i] = tostring(getFormatUnixTime(updataTime).day)
+            time[i] = tostring(getFormatUnixTime(updataTime).day) .. "d"
         end
         --incomeTab[i] = {}
         --incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
@@ -198,6 +198,7 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     if tonumber(getFormatUnixTime(buildingTs).hour) ~= 0 then
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).hour) * 3600
     end
+    local buildingTime = buildingTs
     updataTime = monthAgo
     local index = 1
     if buildingTs >= monthAgo then
@@ -283,8 +284,24 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
             payVet[i] = Vector2.New(v.x,v.y / scale * 105)
         end
     end
-    incomeVet[#incomeVet].x = incomeVet[#incomeVet].x + (taday * (139 / 86400))
-    payVet[#payVet].x = payVet[#payVet].x + (taday * (139 / 86400))
+
+    if buildingTime == currentTime then
+        local incomeVetTemp = {}
+        local payVetTemp = {}
+        incomeVetTemp.x = incomeVet[#incomeVet].x + (taday * (139 / 86400))
+        incomeVetTemp.y = incomeVet[#incomeVet].y
+        payVetTemp.x = payVet[#payVet].x + (taday * (139 / 86400))
+        payVetTemp.y = payVet[#payVet].y
+        table.insert(incomeVet,Vector2.New(incomeVetTemp.x,incomeVetTemp.y))
+        table.insert(payVet,Vector2.New(payVetTemp.x,payVetTemp.y))
+        incomeVet[#incomeVet-1].y = 0
+        payVet[#payVet-1].y = 0
+        table.insert(income,#incomeVet-1,Vector2.New(incomeVet[#incomeVet-1].x,0))
+        table.insert(pay,#payVet-1,Vector2.New(payVet[#payVet-1].x,0))
+    else
+        incomeVet[#incomeVet].x = incomeVet[#incomeVet].x + (taday * (139 / 86400))
+        payVet[#payVet].x = payVet[#payVet].x + (taday * (139 / 86400))
+    end
 
     CompanyPanel.curveSlide:SetXScaleValue(time,140)
     CompanyPanel.curveFunctionalGraph:BoundaryLine(boundaryLine)
@@ -384,7 +401,7 @@ function CompanyCtrl:OnCompanyRename(go)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(18010006)
-    data.tipInfo = GetLanguage(18010007)
+    data.tipInfo = GetLanguage(18010012)
     data.btnCallBack = function(text)
         if text == nil or text == "" then
             Event.Brocast("SmallPop", GetLanguage(18010010),80)

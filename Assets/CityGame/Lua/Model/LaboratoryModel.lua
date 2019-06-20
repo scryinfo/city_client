@@ -127,7 +127,7 @@ function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
     for i, v in ipairs(self.data.inProcess) do
         if LabRollACK.lineId == v.id  then
             self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 1
-            self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll+1
+            self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll + 1
             line = self.data.inProcess[i]
             break
         end
@@ -141,12 +141,11 @@ function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
     for i, v in ipairs(self.data.inProcess) do
         if v.id == lineData.line.id  then
             local isFinished = lineData.line.times ==  (lineData.line.availableRoll + lineData.line.usedRoll)
-            if --[[lineData.line.proposerId ~= DataManager.GetMyOwnerID() and --]]  isFinished then
+            if lineData.line.proposerId ~= DataManager.GetMyOwnerID() and   isFinished then
                 table.remove(self.data.inProcess,i)
             else
                 self.data.inProcess[i]=lineData.line
             end
-
             Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodQueneItem"})
             break
         end

@@ -41,7 +41,7 @@ end
 --刷新
 function PopCommpent:Refesh(m_data)
    --多语言
-    self.titleText.text=GetLanguage(40010008)
+    self.titleText.text=GetLanguage(10040004)
    --刷新回调
    self.m_data=m_data
 end

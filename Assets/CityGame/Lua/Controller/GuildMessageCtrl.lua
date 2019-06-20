@@ -25,7 +25,7 @@ function GuildMessageCtrl:OnCreate(go)
     end)
 
     GuildMessageCtrl.luaBehaviour:AddClick(GuildMessagePanel.guildListBtn, self.OnGuildList, self)
-    GuildMessageCtrl.luaBehaviour:AddClick(GuildMessagePanel.applyListBtn, self.OnApplyList, self)
+    GuildMessageCtrl.luaBehaviour:AddClick(GuildMessagePanel.applyListBtn.gameObject, self.OnApplyList, self)
     GuildMessageCtrl.luaBehaviour:AddClick(GuildMessagePanel.quitBtn, self.OnQuit, self)
 end
 
@@ -33,6 +33,9 @@ function GuildMessageCtrl:Awake()
     self.guildNoticeSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.guildNoticeSource.mProvideData = GuildMessageCtrl.static.GuildNoticeProvideData
     self.guildNoticeSource.mClearData = GuildMessageCtrl.static.GuildNoticeClearData
+
+    self.m_data = {}
+    self.m_data.insId = OpenModelInsID.GuildMessageCtrl
 end
 
 function GuildMessageCtrl:Active()
@@ -69,7 +72,6 @@ end
 -- 打开model
 function GuildMessageCtrl:initInsData()
     DataManager.OpenDetailModel(GuildMessageModel, OpenModelInsID.GuildMessageCtrl)
-    --DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildMessageCtrl, "m_GetSocietyInfo", {id = self.m_data})
 end
 
 function GuildMessageCtrl:Hide()
@@ -81,32 +83,24 @@ end
 function GuildMessageCtrl:_showView()
     local societyInfo = DataManager.GetGuildInfo()
     if societyInfo then
+        -- 显示公会的名字
         GuildMessagePanel.guildNameText.text = societyInfo.name
+        -- 显示公会的人数
         GuildMessagePanel.memberNumberText.text = societyInfo.allCount
+        -- 显示公会的时间
         local timeTab = getFormatUnixTime(societyInfo.createTs/1000)
         GuildMessagePanel.timeText.text = string.format("%s/%s/%s", timeTab.day, timeTab.month, timeTab.year)
+        -- 显示公会的消息提示
         GuildMessageCtrl.societyNotice = societyInfo.notice
         GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
-
-        --local idTemp = {}
-        --local id = {}
-        --for _, v in ipairs(societyInfo.notice) do
-        --    if v.createId then
-        --        id[v.createId] = true
-        --    end
-        --    if v.affectedId then
-        --        id[v.affectedId] = true
-        --    end
-        --end
-        --for j, k in pairs(id) do
-        --    table.insert(idTemp, j)
-        --end
-        --
-        --if idTemp[1] then
-        --    PlayerInfoManger.GetInfos(idTemp, self._showScroll, self)
-        --end
-
+        -- 显示公会的红点提示
         self:_showNotice()
+    end
+    local ownIdentity = GuildOwnCtrl.static.guildMgr:GetOwnGuildIdentity()
+    if ownIdentity == "MEMBER" then
+        GuildMessagePanel.applyListBtn.localScale = Vector3.zero
+    else
+        GuildMessagePanel.applyListBtn.localScale = Vector3.one
     end
 end
 
@@ -210,4 +204,17 @@ end
 -- 新增入会请求
 function GuildMessageCtrl:c_MessageNewJoinReq(joinReq)
     self:_showNotice()
+end
+
+-- 成员变更
+function GuildMessageCtrl:c_MemberChanges(memberChanges)
+    for _, v in ipairs(memberChanges.changeLists) do
+        if v.type == "IDENTITY" and v.playerId == DataManager.GetMyOwnerID() then
+            if v.identity == "MEMBER" then
+                GuildMessagePanel.applyListBtn.localScale = Vector3.zero
+            else
+                GuildMessagePanel.applyListBtn.localScale = Vector3.one
+            end
+        end
+    end
 end

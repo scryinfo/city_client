@@ -47,6 +47,7 @@ end
 --返回
 function InviteCodeCtrl:OnBack()
     PlayMusEff(1002)
+    CityEngineLua:reset()
     UIPanel.ClosePage()
 end
 

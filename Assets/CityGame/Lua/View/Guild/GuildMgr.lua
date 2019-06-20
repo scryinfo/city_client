@@ -12,10 +12,10 @@ end
 
 function GuildMgr:ShowGuildMenu(position)
     if self.guildMenu then
-        self.guildMenu.prefab.transform.position = position
-        self:SetClickInteractable()
-        self.guildMenu:SetAppointRoot(false)
         self:SetGuildMenuShow(true)
+        self.guildMenu.prefab.transform.position = position
+        --self:SetClickInteractable()
+        self.guildMenu:SetAppointRoot(false)
         self.guildMenu:SetAppointImageColor(true)
         self.guildMenu:_SetIdentity()
     else
@@ -28,6 +28,7 @@ function GuildMgr:LoadGuildMenu(position)
         if obj ~= nil then
             local go = ct.InstantiatePrefab(obj)
             local rect = go.transform:GetComponent("RectTransform")
+            self:SetGuildMenuShow(true)
             go.transform:SetParent(GuildOwnPanel.menuRoot)
             rect.transform.localScale = Vector3.one
             rect.transform.position = position
@@ -50,7 +51,9 @@ function GuildMgr:GetPlayerId()
 end
 
 function GuildMgr:SetClickInteractable()
-    self.memberItem:_setButtonInteractable(true)
+    if self.memberItem then
+        self.memberItem:_setButtonInteractable(true)
+    end
 end
 
 function GuildMgr:GetPlayerData()
@@ -58,9 +61,7 @@ function GuildMgr:GetPlayerData()
 end
 
 function GuildMgr:SetGuildMenuShow(isShow)
-    if self.guildMenu then
-        self.guildMenu:SetPrefabShow(isShow)
-    end
+    GuildOwnPanel.menuRoot.localScale = isShow and Vector3.one or Vector3.zero
 end
 
 function GuildMgr:SetOwnGuildIdentity(ownIdentity)

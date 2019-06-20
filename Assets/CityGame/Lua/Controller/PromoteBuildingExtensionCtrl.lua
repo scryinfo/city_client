@@ -151,6 +151,7 @@ function PromoteBuildingExtensionCtrl:onMyInputField(go)
     if PromoteBuildingExtensionPanel.time.text == "" then
         PromoteBuildingExtensionPanel.time.text = 0
     end
+    PromoteBuildingExtensionPanel.time.text = tonumber(PromoteBuildingExtensionPanel.time.text)
     if go.m_data.type == 1 then
         PromoteBuildingExtensionPanel.title.text = go.m_data.supermarketSpeed * tonumber(PromoteBuildingExtensionPanel.time.text)
     elseif go.m_data.type == 2 then
@@ -163,6 +164,7 @@ function PromoteBuildingExtensionCtrl:onInputField(go)
     if PromoteBuildingExtensionPanel.otherTime.text == "" then
         PromoteBuildingExtensionPanel.otherTime.text = 0
     end
+    PromoteBuildingExtensionPanel.otherTime.text = tonumber(PromoteBuildingExtensionPanel.otherTime.text)
     if tonumber(PromoteBuildingExtensionPanel.otherTime.text) > go.m_data.promRemainTime/3600000 then
         PromoteBuildingExtensionPanel.otherTime.text = go.m_data.promRemainTime/3600000
     end

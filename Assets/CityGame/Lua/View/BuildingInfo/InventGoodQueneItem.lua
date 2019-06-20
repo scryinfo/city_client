@@ -1,11 +1,12 @@
 
 InventGoodQueneItem = class('InventGoodQueneItem')
 
-
+local second
+local isUpdata
 ---初始化方法   数据（读配置表）
-function InventGoodQueneItem:initialize(data,prefab,luaBehaviour)
+function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
     self.prefab=prefab.gameObject
-
+    self.data = data
     self.transform = prefab.transform;
     self.bg = self.transform:Find("bg")
     self.myBg = self.transform:Find("myBg")
@@ -22,16 +23,44 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour)
     self.delete = self.transform:Find("startTime/time/deleteBg").gameObject
     self.rollBtn = self.transform:Find("startTime/rollBtn")
     self.rollBtnText = self.transform:Find("startTime/rollBtn/rollBtnText"):GetComponent("Text")
-
+    self.counttimetext = self.transform:Find("details/counttime"):GetComponent("Text")
+    self.waiting = 0
+    isUpdata = true
     luaBehaviour:AddClick(self.delete,self.c_OnClick_Delete,self)
     luaBehaviour:AddClick(self.rollBtn.gameObject,self.c_OnClick_Roll,self)
 
+    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+    if self.currentTime >= self.data.beginProcessTs and self.currentTime <= self.data.beginProcessTs + self.data.times*3600000  then
+        local  function UpData()
+            if not isUpdata then
+                return
+            end
+            if self.bg:Equals(nil) then
+                return
+            end
+            --倒计时
+            self.waiting = self.waiting -1
+            if self.waiting <= 0 then
+                self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+                local ts =getTimeBySec( (self.currentTime - self.data.beginProcessTs)/1000)
+                --local downtime = getTimeBySec((self.data.times * 3600000 - ts)/1000)
+                self.counttimetext.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.data.times).. "h"
+                self.waiting = 1
+            end
+        end
+        ctrl:SetFunc(UpData)
+    else
+        self.counttimetext.text = nil
+    end
     self:Refresh(data)
 end
 ---==========================================================================================点击函数=============================================================================
 --删除
-function InventGoodQueneItem:c_OnClick_Delete(ins)
-    DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabDeleteLine',ins.data.id)
+function InventGoodQueneItem:c_OnClick_Delete(go)
+    local data={ins = go,content = GetLanguage(28040043),func = function()
+        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabDeleteLine',go.data.id)
+    end  }
+    ct.OpenCtrl('ReminderCtrl',data)
 end
 
 --删除
@@ -40,6 +69,7 @@ function InventGoodQueneItem:c_OnClick_Roll(ins)
 end
 
 ---==========================================================================================业务逻辑=============================================================================
+
 
 function InventGoodQueneItem:updateData( data )
     self.data=data
@@ -51,7 +81,7 @@ function InventGoodQueneItem:updateUI(data)
         for i, configData in ipairs(InventConfig) do
             if configData.type == tostring(data.goodCategory) then
                 LoadSprite(configData.iconPath , self.goodsImage,true)
-                self.goodsText.text = configData.name
+                self.goodsText.text = GetLanguage(tonumber(configData.name))
             end
         end
     else
@@ -96,7 +126,7 @@ function InventGoodQueneItem:updateUI(data)
     if playerId == data.proposerId then -- 自己的线
         self.myBg.localScale = Vector3.one
         if LaboratoryCtrl.static.buildingOwnerId == data.proposerId then -- 并且是自己的建筑
-            if data.beginProcessTs > 0  then -- 第一条线
+            if data.availableRoll > 0 then -- 第一条线
                 self.delete.transform.localScale = Vector3.zero
             else
                 self.delete.transform.localScale = Vector3.one
@@ -116,6 +146,8 @@ function InventGoodQueneItem:updateUI(data)
 
 end
 
+
+
 function InventGoodQueneItem:Refresh(data)
     self:updateData(data)
     self:updateUI(data)
@@ -126,8 +158,11 @@ function InventGoodQueneItem:c_OnHead(info)
     self.name.text = info[1].name
 end
 
-local currTime
 function InventGoodQueneItem:updateSlider(data)
     currTime = TimeSynchronized.GetTheCurrentServerTime()
     local remmindTime = currTime - data.beginProcessTs
+end
+--关闭界面后关闭更新
+function InventGoodQueneItem:CloseUpdata()
+    isUpdata = false
 end

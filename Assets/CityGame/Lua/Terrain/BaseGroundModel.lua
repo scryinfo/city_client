@@ -59,7 +59,7 @@ function BaseGroundModel:CheckGroundTransSuccess(groundInfo)
     end
     if self.groundState == GroundTransState.Renting and groundState == GroundTransState.Rent then
         if groundInfo.rent.renterId == DataManager.GetMyOwnerID() then
-            Event.Brocast("SmallPop", GetLanguage(22050010), 300)
+            Event.Brocast("SmallPop", GetLanguage(22050009), 300)
         end
     end
 

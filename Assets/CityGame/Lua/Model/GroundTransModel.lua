@@ -19,8 +19,8 @@ end
 
 --网络回调注册
 function GroundTransModel.registerNetMsg()
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","rentOutGround","gs.GroundChange",GroundTransModel.n_OnReceiveRentOut)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","rentGround","gs.GroundChange",GroundTransModel.n_OnReceiveRentOut)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","rentOutGround","gs.GroundRent",GroundTransModel.n_OnReceiveRentOut)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","rentGround","gs.RentGround",GroundTransModel.n_OnReceiveRentOut)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","sellGround","gs.GroundChange",GroundTransModel.n_OnReceiveRentOut)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","buyGround","gs.GroundChange",GroundTransModel.n_OnReceiveRentOut)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cancelRentGround","gs.GroundChange",GroundTransModel.n_OnReceiveRentOut)

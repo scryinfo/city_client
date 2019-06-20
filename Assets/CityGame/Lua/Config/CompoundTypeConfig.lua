@@ -1,5 +1,4 @@
 CompoundTypeConfig={
-
 	[2101] = {
 		
 		[1] = {
@@ -26,9 +25,6 @@ CompoundTypeConfig={
 		itemType = 0,
 		},
 	},
-	
-	
-	
 	[2102] = {
 		
 		[1] = {
@@ -55,41 +51,38 @@ CompoundTypeConfig={
 		itemType = 0,
 		},
 	},
-	
 	[2251] = {
 		[1] = {
 		itemId = 2251101,
-		name = 20020001,
+		name = 20030002,
 		itemType = 1,
 		},
 		[2] = {
 		itemId = 2251102,
-		name = 20020001,
+		name = 20030002,
 		itemType = 1
 		},
 		[3] = {
 		itemId = 2251103,
-		name = 20020001,
+		name = 20030002,
 		itemType = 1,
 		},
 		[4] = {
 		itemId = 2251201,
-		name = 20020001,
+		name = 20030002,
 		itemType = 1,
 		},
 		[5] = {
 		itemId = 2251202,
-		name = 20020001,
+		name = 20030002,
 		itemType = 1,
 		},
 		[6] = {
 		itemId = 2251203,
-		name = 20020001,
+		name = 20030002,
 		itemType = 1,
 		}
 	},
-
-	
 	[2252] = {
 		[1] = {
 		itemId = 2252101,

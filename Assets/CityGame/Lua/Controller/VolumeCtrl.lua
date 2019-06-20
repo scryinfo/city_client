@@ -391,10 +391,10 @@ function VolumeCtrl:AssignmentDemand(table , countNpc , time)
         local temp = 0
         tempTable[i] = {}
         for k, z in pairs(npcConsumption[time]) do
-            if next(countNpc )== nil or countNpc[k % 9] == nil then
+            if next(countNpc )== nil or countNpc[k] == nil then
                 temp = temp + 0
             else
-                temp = temp + math.floor(countNpc[k % 9].value * z[v.itemId]/10000)
+                temp = temp + math.floor(countNpc[k].value * z[v.itemId]/10000)
             end
         end
         tempTable[i] = temp

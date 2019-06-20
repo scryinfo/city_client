@@ -14,6 +14,7 @@ function HistoryCurveModel:OnCreate()
     DataManager.RegisterErrorNetMsg()
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNumCurve","ss.GoodsNpcNumCurve",self.n_OnGoodsNpcNumCurve,self) --供应曲线
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryApartmentNpcNumCurve","ss.ApartmentNpcNumCurve",self.n_OnHouseNpcNumCurve,self) --供应曲线住宅
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcTypeNum","ss.NpcHourTypeNum",self.n_OnGoodsNpcTypeNum,self) --需求曲线
 end
 
@@ -30,16 +31,29 @@ function HistoryCurveModel:m_GoodsNpcNumCurve(itemId)
     local pMsg = assert(pbl.encode("ss.GoodsNpcNumCurve", lMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
+
+--曲线图数据 (供应 住宅)
+function HistoryCurveModel:m_HouseNpcNumCurve()
+    local msgId = pbl.enum("sscode.OpCode","queryApartmentNpcNumCurve")
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
+end
+
 --曲线图数据 (需求)
-function HistoryCurveModel:m_GoodsNpcTypeNum(itemId)
+function HistoryCurveModel:m_GoodsNpcTypeNum()
     local msgId = pbl.enum("sscode.OpCode","queryNpcTypeNum")
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
 end
 
 -------------------服务器回调---------------------
 
+--商品供应
 function HistoryCurveModel:n_OnGoodsNpcNumCurve(lMsg)
-    Event.Brocast("c_GoodsNpcNumCurve",lMsg.goodsNpcNumCurveMap)
+    Event.Brocast("c_GoodsNpcNumCurve",lMsg.npcNumCurveMap)
+end
+
+--住宅供应
+function HistoryCurveModel:n_OnHouseNpcNumCurve(lMsg)
+    Event.Brocast("c_HouseNpcNumCurve",lMsg.npcNumCurveMap)
 end
 
 function HistoryCurveModel:n_OnGoodsNpcTypeNum(lMsg)

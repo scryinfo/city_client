@@ -148,6 +148,26 @@ function PromoteCompanyCtrl:_queryPromoCurAbilitys(info)
     end
 end
 
+--获取推广能力回调
+function PromoteCompanyCtrl:_queryPromoCurItemInfo(info)
+    if info.items == nil then
+        return
+    end
+    GoodsTypeConfig[1].brand = {}
+    GoodsTypeConfig[2].brand = {}
+    for i, v in pairs(info.items) do
+        if math.floor(v.itemId/1000) == 2251 then
+            GoodsTypeConfig[1].brand[v.itemId] = {}
+            GoodsTypeConfig[1].brand[v.itemId].brand = v.brand
+            GoodsTypeConfig[1].brand[v.itemId].brandScore = v.brandScore
+        elseif math.floor(v.itemId/1000) == 2252 then
+            GoodsTypeConfig[2].brand[v.itemId] = {}
+            GoodsTypeConfig[2].brand[v.itemId].brand = v.brand
+            GoodsTypeConfig[2].brand[v.itemId].brandScore = v.brandScore
+        end
+    end
+end
+
 --员工工资改变
 function PromoteCompanyCtrl:_refreshSalary(data)
     if self.m_data ~= nil then

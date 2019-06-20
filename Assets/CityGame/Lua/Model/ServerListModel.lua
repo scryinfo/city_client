@@ -76,6 +76,7 @@ function ServerListModel:m_GsOK()
     StopAndBuildModel.Awake()
     -----------------------------------------------------------------------------
     GAucModel.registerNetMsg()  --拍卖的网络回调
+    GroundTransModel.registerNetMsg()  --土地交易网络回调
     MapModel.registerNetMsg()  --小地图网络回调
     FlightMainModel.registerNetMsg()  --航班预测网络回调
     --连接gs

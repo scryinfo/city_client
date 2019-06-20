@@ -17,6 +17,31 @@ function GroundTransModel.SetGroundBlockId(blockId)
     GroundTransModel.blockPos = {x = pos.x, y = pos.z}  --存一个位置信息
 end
 
+--网络回调注册
+function GroundTransModel.registerNetMsg()
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","rentOutGround","gs.GroundChange",GAucModel.n_OnReceiveRentOut)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","rentGround","gs.GroundChange",GAucModel.n_OnReceiveRentOut)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","sellGround","gs.GroundChange",GAucModel.n_OnReceiveRentOut)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","buyGround","gs.GroundChange",GAucModel.n_OnReceiveRentOut)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cancelRentGround","gs.GroundChange",GAucModel.n_OnReceiveRentOut)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cancelSellGround","gs.BidGround",GAucModel.n_OnReceiveRentOut)
+end
+--服务器回调
+function GroundTransModel.n_OnReceiveRentOut(stream, msgId)
+    if msgId == 0 then
+        local info = {}
+        info.titleInfo = "Error"
+        if stream.reason == nil then
+            info.contentInfo = "GAucModel.n_OnReceiveBidChangeInfor："
+        else
+            info.contentInfo = "GAucModel.n_OnReceiveBidChangeInfor："..stream.reason
+        end
+        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        return
+    end
+end
+
+
 --- 客户端请求 ---
 --出租
 function GroundTransModel.m_ReqRentOutGround(rentDaysMin, rentDaysMax, rentPreDay)

@@ -866,7 +866,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
             local pubkeyStr = sm.ToHexString(pubkey);
             --填充关键数据
             sm:pushHexSting(msg.PurchaseId); --PurchaseId
-            sm:pushLong(1559911178647); --ts
+            sm:pushLong(1559911178); --ts
             sm:pushHexSting("123456");   --Amount
             --sm:pushHexSting(pubkeyStr)
             --sm:pushBtyes(pubkey)
@@ -891,7 +891,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
                     PubKey=pubkeyStr,
                     Amount='123456',
                     ExpireTime=0,
-                    Ts=1559911178647,
+                    Ts=1559911178,
                     Signature = sm.ToHexString(sig)
                 }
             }
@@ -936,8 +936,8 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
             local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
             local pubkeyStr = sm.ToHexString(pubkey);
             local myEthAddr = "qwerqwerqwerqwoiuopi023121lkjfalskdjqoiwejrqlwer"
-            local amount = tostring(2000)
-            local ts = 1559911188888
+            local amount = tostring(11111)
+            local ts = 1559911188
             --填充关键数据
             sm:pushHexSting(msg.PurchaseId); --PurchaseId
             sm:pushSha256Hex(myEthAddr); --//addr
@@ -1073,6 +1073,19 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
 end)
 
 UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function ()
+    local sm = City.signer_ct.New()
+    local privateKeyStr = "asdfqwper234123412341234lkjlkj2342ghhg5j";
+    local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
+    local pubkeyStr = sm.ToHexString(pubkey);
+    local myEthAddr = "qwerqwerqwerqwoiuopi023121lkjfalskdjqoiwejrqlwer"
+    local amount = tostring(1111)
+    local ts = 1559911188
+    --填充关键数据
+    --sm:pushHexSting(msg.PurchaseId); --PurchaseId
+    sm:pushSha256Hex(myEthAddr); --//addr
+    sm:pushHexSting(amount);   --Amount
+    sm:pushLong(ts); --ts
+
     --生成
     local privateKey = City.CityLuaUtil.NewGuid()
 

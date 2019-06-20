@@ -30,7 +30,7 @@ function WalletCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.withdrawCloseBtn.gameObject,self._clickWithdrawCloseBtn,self)
     self.luaBehaviour:AddClick(self.topUpBtn.gameObject,self._clickTopUpBtn,self)
     self.luaBehaviour:AddClick(self.QRCodeCloseBtn.gameObject,self._clickQRCodeCloseBtn,self)
-    self.luaBehaviour:AddClick(self.scanningBtn.gameObject,self._clickScanningBtn,self)
+    --self.luaBehaviour:AddClick(self.scanningBtn.gameObject,self._clickScanningBtn,self)   扫码暂时关闭
     self.luaBehaviour:AddClick(self.scanCloseBtn.gameObject,self._clickScanCloseBtn,self)
     self.luaBehaviour:AddClick(self.passwordCloseBtn.gameObject,self._clickPasswordCloseBtn,self)
     self.luaBehaviour:AddClick(self.agreeBtn.gameObject,self._clickAgreeBtn,self)
@@ -38,9 +38,21 @@ function WalletCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.passwordConfirmBtn.gameObject,self._clickPasswordConfirmBtn,self)
     self.luaBehaviour:AddClick(self.rechargeConfirmBtn.gameObject,self._clickRechargeConfirmBtn,self)
     self.luaBehaviour:AddClick(self.rechargeCloseBtn.gameObject,self._clickRechargeCloseBtn,self)
+    self.luaBehaviour:AddClick(self.getBtn.gameObject,self._clickGetBtn,self)
+    self.luaBehaviour:AddClick(self.detailsConfirmBtn.gameObject,self._clickDetailsConfirmBtn,self)
+    self.luaBehaviour:AddClick(self.phoneRootConfirmBtn.gameObject,self._clickPhoneRootConfirmBtn,self)
 
     self.confirmInputField.onValueChanged:AddListener(function()
         self:confirmInputButton()
+    end)
+    self.moneyInput.onValueChanged:AddListener(function()
+        self:saveAmount()
+    end)
+    self.addressInput.onValueChanged:AddListener(function()
+        self:saveEthAddr()
+    end)
+    self.validationInput.onValueChanged:AddListener(function()
+        self:savePhoneCode()
     end)
 end
 
@@ -49,6 +61,8 @@ function WalletCtrl:Active()
     Event.AddListener("openQRCode",self.openQRCode,self)
     Event.AddListener("createWalletSucceed",self.createWalletSucceed,self)
     Event.AddListener("reqTopUpSucceed",self.reqTopUpSucceed,self)
+    Event.AddListener("reqDisChargeOrderSucceed",self.reqDisChargeOrderSucceed,self)
+    Event.AddListener("reqDisChargeSucceed",self.reqDisChargeSucceed,self)
 end
 
 function WalletCtrl:Refresh()
@@ -63,6 +77,8 @@ function WalletCtrl:Hide()
     Event.RemoveListener("openQRCode",self.openQRCode,self)
     Event.RemoveListener("createWalletSucceed",self.createWalletSucceed,self)
     Event.RemoveListener("reqTopUpSucceed",self.reqTopUpSucceed,self)
+    Event.RemoveListener("reqDisChargeOrderSucceed",self.reqDisChargeOrderSucceed,self)
+    Event.RemoveListener("reqDisChargeSucceed",self.reqDisChargeSucceed,self)
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WalletCtrl:_getComponent(go)
@@ -143,12 +159,13 @@ function WalletCtrl:_getComponent(go)
     self.validationNumberText = go.transform:Find("WithdrawContent/content/phoneRoot/validationIcon/validationNumberText"):GetComponent("Text")
     self.validationInput = go.transform:Find("WithdrawContent/content/phoneRoot/validationInput/"):GetComponent("InputField")
     self.validationPlaceholder = go.transform:Find("WithdrawContent/content/phoneRoot/validationInput/Placeholder"):GetComponent("Text")
-    self.getBtn = go.transform:Find("WithdrawContent/content/phoneRoot/getBtn")
+    self.getBtn = go.transform:Find("WithdrawContent/content/phoneRoot/getBtn"):GetComponent("Image")
     self.getText = go.transform:Find("WithdrawContent/content/phoneRoot/getBtn/getText"):GetComponent("Text")
+    self.countdownImage = go.transform:Find("WithdrawContent/content/phoneRoot/countdownBg")
     self.countdownText = go.transform:Find("WithdrawContent/content/phoneRoot/countdownBg/countdownText"):GetComponent("Text")
     self.phoneRootTipIcon = go.transform:Find("WithdrawContent/content/phoneRoot/tipIcon")
     self.phoneRootTipText = go.transform:Find("WithdrawContent/content/phoneRoot/tipIcon/tipText"):GetComponent("Text")
-    self.phoneRootConfirmBtn = go.transform:Find("WithdrawContent/content/phoneRoot/confirmBtn")
+    self.phoneRootConfirmBtn = go.transform:Find("WithdrawContent/content/phoneRoot/confirmBtn"):GetComponent("Image")
     self.phoneRootConfirmText = go.transform:Find("WithdrawContent/content/phoneRoot/confirmBtn/confirmText"):GetComponent("Text")
     --scanQRCodeRoot   扫描二维码
     self.scanQRCodeRoot = go.transform:Find("WithdrawContent/content/scanQRCodeRoot")
@@ -173,14 +190,12 @@ end
 -------------------------------------------------------------初始化---------------------------------------------------------------------------------
 --初始化UI
 function WalletCtrl:initializeUiInfoData()
-    --self.moneyText.text = CityEngineLua.username
     self:defaultPanel()
 end
 --设置多语言
 function WalletCtrl:_language()
     self.moneyPlaceholder.text = "请输入提币金额"
     self.addressPlaceholder.text = "请输入钱包地址"
-
 end
 --初始化打开钱包时
 function WalletCtrl:defaultPanel()
@@ -297,6 +312,31 @@ function WalletCtrl:_clickScanCloseBtn(ins)
     PlayMusEff(1002)
     ins:closeScanningQRCode()
 end
+--打开弹窗
+function WalletCtrl:_clickDetailsConfirmBtn(ins)
+    PlayMusEff(1002)
+    if ins.moneyInput.text == nil or ins.moneyInput.text == "" or ins.addressInput.text == nil or ins.addressInput.text == "" then
+        Event.Brocast("SmallPop","请输入正确的金额和地址", ReminderType.Warning)
+        return
+    end
+    local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
+                content = "确认提币金额",func = function()
+            Event.Brocast("ReqDisChargeOrder",ins.userId)
+        end}
+    ct.OpenCtrl("NewReminderCtrl",data)
+end
+--请求提币并获取验证码
+function WalletCtrl:_clickGetBtn(ins)
+    PlayMusEff(1002)
+    ins.timing = 60
+    ins.countdownImage.transform.localScale = Vector3.one
+    UpdateBeat:Add(ins.UpdateTiming,ins)
+    Event.Brocast("ReqDisCharge",ins.userId,ins.PurchaseId,ins.pubkeyStr,ins.ethAddr,ins.Amount,ins.second,ins.sm.ToHexString(ins.sig))
+end
+--点击NEXT发送验证码
+function WalletCtrl:_clickPhoneRootConfirmBtn(ins)
+    Event.Brocast("ReqValidationPhoneCode",ins.userId,ins.phoneCode)
+end
 -----------------------------------------------------------------------监听函数-----------------------------------------------------------------------
 --检测两次输入密码是否相同
 function WalletCtrl:confirmInputButton()
@@ -313,6 +353,18 @@ function WalletCtrl:confirmInputButton()
             self.passwordConfirmBtn:GetComponent("Button").interactable = false
         end
     end
+end
+--检测保存输入要提币的金额
+function WalletCtrl:saveAmount()
+    self.Amount = self.moneyInput.text
+end
+--检测保存输入的钱包地址
+function WalletCtrl:saveEthAddr()
+    self.ethAddr = self.addressInput.text
+end
+--检测保存输入的手机验证码
+function WalletCtrl:savePhoneCode()
+    self.phoneCode = self.validationInput.text
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开用户协议
@@ -367,12 +419,13 @@ function WalletCtrl:openWithdrawContent()
     self.detailsRoot.transform.localScale = Vector3.one
     self.phoneRoot.transform.localScale = Vector3.zero
     self.scanQRCodeRoot.transform.localScale = Vector3.zero
-    LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-gray.png",self.detailsConfirmBtn,false)
-    self.detailsConfirmBtn:GetComponent("Button").interactable = false
+    LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",self.detailsConfirmBtn,false)
+    self.detailsConfirmBtn:GetComponent("Button").interactable = true
 end
 --关闭提币
 function WalletCtrl:closeWithdrawContent()
     self.WithdrawContent.transform.localScale = Vector3.zero
+    UpdateBeat:Remove(self.UpdateTiming,self)
 end
 --打开钱包充值金额（新加）
 function WalletCtrl:openRechargeAmountContent()
@@ -389,7 +442,7 @@ function WalletCtrl:openQRCode(data)
     self:closeRechargeAmountContent()
     self.QRCodeContent.transform.localScale = Vector3.one
     --self.QRCodeImg
-    self.QRCodeAddressText.text = data.EthAddr
+    self.QRCodeAddressText.text = data.RechargeRequestRes.EthAddr
 end
 --关闭二维码
 function WalletCtrl:closeQRCode()
@@ -402,6 +455,16 @@ end
 --关闭扫描二维码
 function WalletCtrl:closeScanningQRCode()
     self.scanQRCodeRoot.transform.localScale = Vector3.zero
+end
+--关闭提币详情打开手机验证
+function WalletCtrl:openPhoneCode()
+    self.detailsRoot.transform.localScale = Vector3.zero
+    self.phoneRoot.transform.localScale = Vector3.one
+    self.phoneText.text = CityEngineLua.username
+    self.validationInput.text = ""
+    LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",self.phoneRootConfirmBtn,false)
+    self.countdownImage.transform.localScale = Vector3.zero
+    self.phoneRootTipIcon.transform.localScale = Vector3.zero
 end
 ---------------------------------------------------------------------回调函数---------------------------------------------------------------------------
 --创建钱包成功回调
@@ -418,6 +481,35 @@ end
 function WalletCtrl:reqTopUpSucceed(data)
     if data then
         self:openQRCode(data)
+        Event.Brocast("SmallPop", "操作成功", ReminderType.Succeed)
+    end
+end
+--提币订单请求成功
+function WalletCtrl:reqDisChargeOrderSucceed(data)
+    if data ~= nil then
+        ---封装一个方法，打开手机验证---
+        self:openPhoneCode()
+        -------------------------------------------------------------
+        self.PurchaseId = data.PurchaseId
+        local serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
+        local privateKeyStr = self:parsing()
+        self.sm = City.signer_ct.New()
+        local pubkey = self.sm.GetPublicKeyFromPrivateKey(privateKeyStr)
+        self.pubkeyStr = self.sm.ToHexString(pubkey)
+        --暂时发秒
+        self.second = math.ceil(serverNowTime / 1000)
+        self.sm:pushHexSting(data.PurchaseId)
+        self.sm:pushSha256Hex(self.ethAddr)
+        self.sm:pushHexSting(self.Amount)
+        self.sm:pushLong(self.second)
+        --生成签名(用于验证关键数据是否被篡改)
+        self.sig = self.sm:sign(privateKeyStr);
+    end
+end
+--提币成功
+function WalletCtrl:reqDisChargeSucceed(data)
+    if data ~= nil then
+        self:closeWithdrawContent()
     end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -444,9 +536,25 @@ function WalletCtrl:creatKey()
     --生成公钥
     self.pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyNewEncrypted);
 end
-
-
-
+--解析支付密码和私钥
+function WalletCtrl:parsing()
+    local privateKeyPath = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
+    local privateKeyStr = ct.file_readString(privateKeyPath)
+    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
+    local passWordStr = ct.file_readString(passWordPath)
+    local privateKeyNewEncrypted = City.signer_ct.Decrypt(passWordStr, privateKeyStr)
+    return privateKeyNewEncrypted
+end
+--刷新获取验证码时间
+function WalletCtrl:UpdateTiming()
+    if self.timing >= 1 then
+        self.timing = self.timing - UnityEngine.Time.unscaledDeltaTime
+        self.countdownText.text = math.floor(self.timing).."s..."
+    else
+        self.countdownImage.transform.localScale = Vector3.zero
+        UpdateBeat:Remove(self.UpdateTiming,self)
+    end
+end
 
 
 

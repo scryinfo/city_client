@@ -69,7 +69,7 @@ function WalletBoxCtrl:_clickConfirmBtn(ins)
         --Event.Brocast("openQRCode")
     else
         ins.passwordInput.text = ""
-        Event.Brocast("SmallPop","密码输入错误", ReminderType.Warning)
+        Event.Brocast("SmallPop","支付密码错误", ReminderType.Warning)
         return
     end
 end

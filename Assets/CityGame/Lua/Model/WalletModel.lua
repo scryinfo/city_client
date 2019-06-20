@@ -15,22 +15,28 @@ function WalletModel:OnCreate()
     --本地事件
     Event.AddListener("ReqCreateWallet",self.ReqCreateWallet,self)
     Event.AddListener("ReqCreateOrder",self.ReqCreateOrder,self)
+    Event.AddListener("ReqDisChargeOrder",self.ReqDisChargeOrder,self)
+    Event.AddListener("ReqDisCharge",self.ReqDisCharge,self)
+    Event.AddListener("ReqValidationPhoneCode",self.ReqValidationPhoneCode,self)
 
     --网络事件
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.RechargeRequestRes",self.ReqTopUpSucceed,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.ct_RechargeRequestRes",self.ReqTopUpSucceed,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_DisPaySmVefifyReq","ccapi.ct_DisPaySmVefifyReq",self.ReqValidationPhoneCodeSuccees,self)
 end
 
 function WalletModel:Close()
     --本地事件
     Event.RemoveListener("ReqCreateWallet",self.ReqCreateWallet,self)
     Event.RemoveListener("ReqCreateOrder",self.ReqCreateOrder,self)
+    Event.RemoveListener("ReqDisChargeOrder",self.ReqDisChargeOrder,self)
+    Event.RemoveListener("ReqDisCharge",self.ReqDisCharge,self)
+    Event.RemoveListener("ReqValidationPhoneCode",self.ReqValidationPhoneCode,self)
 
     --网络事件
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
-    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
-    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.RechargeRequestRes",self.ReqTopUpSucceed,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.ct_RechargeRequestRes",self.ReqTopUpSucceed,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_DisPaySmVefifyReq","ccapi.ct_DisPaySmVefifyReq",self.ReqValidationPhoneCodeSuccees,self)
 end
 
 ---客户端请求----
@@ -42,9 +48,19 @@ function WalletModel:ReqCreateWallet(userId,userName,pubKey)
     --local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
---生成订单
+--生成充值订单
 function WalletModel:ReqCreateOrder(userId,Amount)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
     self.Amount = tostring(Amount)
+    local msgId = pbl.enum("gscode.OpCode","ct_GenerateOrderReq")
+    local lMsg ={PlayerId = userId,ReqHeader = {Version = 1,ReqId = tostring(msgId),}}
+    local pMsg = assert(pbl.encode("ccapi.ct_GenerateOrderReq", lMsg))
+    --local msgRet = assert(pbl.decode("ccapi.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
+--生成提币订单
+function WalletModel:ReqDisChargeOrder(userId)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveDisChargeOrder,self)
     local msgId = pbl.enum("gscode.OpCode","ct_GenerateOrderReq")
     local lMsg ={PlayerId = userId,ReqHeader = {Version = 1,ReqId = tostring(msgId),}}
     local pMsg = assert(pbl.encode("ccapi.ct_GenerateOrderReq", lMsg))
@@ -56,7 +72,23 @@ function WalletModel:ReqTopUp(userId,PurchaseId,PubKey,Amount,Ts,Signature)
     local msgId = pbl.enum("gscode.OpCode","ct_RechargeRequestReq")
     local lMsg ={PlayerId = userId,RechargeRequestReq={ReqHeader={Version = 1,ReqId = tostring(msgId),},PurchaseId = PurchaseId,PubKey=PubKey,Amount=Amount,ExpireTime=9,Ts=Ts,Signature = Signature}}
     local pMsg = assert(pbl.encode("ccapi.ct_RechargeRequestReq", lMsg))
-    local msgRet = assert(pbl.decode("ccapi.ct_RechargeRequestReq",pMsg), "pbl.decode decode failed")
+    --local msgRet = assert(pbl.decode("ccapi.ct_RechargeRequestReq",pMsg), "pbl.decode decode failed")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
+--提币
+function WalletModel:ReqDisCharge(userId,PurchaseId,PubKey,EthAddr,Amount,Ts,Signature)
+    local msgId = pbl.enum("gscode.OpCode","ct_DisChargeReq")
+    local lMsg ={PlayerId = userId,DisChargeReq = {ReqHeader = {Version = 1,ReqId = tostring(msgId),},PurchaseId = PurchaseId,PubKey = PubKey,EthAddr = EthAddr,Amount = Amount,ExpireTime = 9,Ts = Ts,Signature = Signature}}
+    local pMsg = assert(pbl.encode("ccapi.ct_DisChargeReq", lMsg))
+    local msgRet = assert(pbl.decode("ccapi.ct_DisChargeReq",pMsg), "pbl.decode decode failed")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+end
+--验证手机验证码
+function WalletModel:ReqValidationPhoneCode(userId,authCode)
+    local msgId = pbl.enum("gscode.OpCode","ct_DisPaySmVefifyReq")
+    local lMsg ={PlayerId = userId,authCode = authCode}
+    local pMsg = assert(pbl.encode("ccapi.ct_DisPaySmVefifyReq", lMsg))
+    local msgRet = assert(pbl.decode("ccapi.ct_DisPaySmVefifyReq",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 ---服务器回调---
@@ -66,8 +98,9 @@ function WalletModel:ReceiveCreateWallet(data)
         Event.Brocast("createWalletSucceed",data)
     end
 end
---生成订单
+--生成充值订单
 function WalletModel:ReceiveCreateOrder(data)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
     if data ~= nil then
         local serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
         local privateKeyStr = self:parsing()
@@ -84,10 +117,39 @@ function WalletModel:ReceiveCreateOrder(data)
         self:ReqTopUp(data.PlayerId,data.PurchaseId,pubkeyStr,self.Amount,second,sm.ToHexString(sig))
     end
 end
+--生成提币订单
+function WalletModel:ReceiveDisChargeOrder(data)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveDisChargeOrder,self)
+    if data ~= nil then
+        Event.Brocast("reqDisChargeOrderSucceed",data)
+    end
+end
 --充值成功
 function WalletModel:ReqTopUpSucceed(data)
     if data ~= nil then
         Event.Brocast("reqTopUpSucceed",data)
+    end
+end
+--验证手机验证码并通过
+function WalletModel:ReqValidationPhoneCodeSuccees(data)
+    if data ~= nil then
+        if data.errorCode == 0 then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(33030011),func = function()
+                    Event.Brocast("reqDisChargeSucceed",data)
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+        elseif data.errorCode == 1 then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(10030015),func = function()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+        elseif data.errorCode == 2 then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(10030014),func = function()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+        end
     end
 end
 ------------------------------------------------------------------------解析-----------------------------------------------------------------------------

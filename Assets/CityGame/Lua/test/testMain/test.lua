@@ -36,6 +36,8 @@ UnitTest.Exec("abel_TimefunPrecision", "test_timefunPrecision",  function ()
     ct.log("abel_TimefunPrecision","[test_timefunPrecision]  tolua.gettime(): ",tolua.gettime())
 end)
 
+--心跳检测服务器返回时间差
+local HeartBeatTimeDifference = 0.5
 UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
     ct.testUpdate = false
     --UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")
@@ -49,6 +51,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
         end)
         --每x秒检查一次上次心跳是否超时，超时
         ct.G_LAST_HARTBEAT = uTime.time
+        ct.G_Last_SendHARTBEATTime = uTime.time
         local timerCheck = FrameTimer.New(function()
             local timetest = uTime.time - ct.G_LAST_HARTBEAT
             if timetest > ct.G_TIMEOUT_NET and ct.testUpdate and CityEngineLua._networkInterface.connected then
@@ -63,6 +66,8 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
         timerCheck:Start()
         --目前GS才有心跳协议，AS没有
         local timerSendHartBeat = FrameTimer.New(function()
+            --先计算时间差
+            local timetest =  ct.G_LAST_HARTBEAT - ct.G_Last_SendHARTBEATTime
             if CityEngineLua._networkInterface.connected  and ct.testUpdate then
                 --HeartBeat
                 local msgId = pbl.enum("gscode.OpCode","heartBeat")
@@ -71,19 +76,29 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 ----3、 序列化成二进制数据
                 local  pMsg = assert(pbl.encode("gs.HeartBeat", lMsg))
                 CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
+                ---记录发送数据时的时间差
+                ct.G_Last_SendHARTBEATTime =  uTime.time
             end
-            local timetest = uTime.time - ct.G_LAST_HARTBEAT
-            if timetest > 4 then
-                ct.log("system", "心跳检检测警告： 超过3秒未收到服务器心跳相应包")
+            if ct.testUpdate and CityEngineLua._networkInterface.connected then
+                --ct.log("system","心跳检测服务器返回时间差=> "..timetest)
+                ---服务器心跳返回超过0.5秒/未收到服务器心跳返回，并且消息弱界面未打开的
+                if  (timetest < 0 or timetest >= HeartBeatTimeDifference ) and ( ct.HeartbeatDisconnection == nil or ct.HeartbeatDisconnection ~= true ) then
+                    ct.log("system","心跳检测警告： 超过 0.5 秒未收到服务器响应数据=> "..timetest)
+                    ct.HeartbeatDisconnection = true
+                    ct.OpenCtrl("HeartbeatDisconnectionCtrl")
+                    ---服务器心跳返回在0.5秒内，并且消息弱界面已打开的
+                elseif timetest >= 0 and timetest < HeartBeatTimeDifference  and ct.HeartbeatDisconnection ~= nil and ct.HeartbeatDisconnection == true then
+                    ct.HeartbeatDisconnection = false
+                    Event.Brocast("HeartbeatIsConnect")
+                end
             end
-        end, 90, 1)
+        end, 30, 1)
         timerSendHartBeat:Start()
     end)
 end)
 
 UnitTest.Exec("abel_w27_processNetMsgError", "processNetMsgError",  function ()
     ct.log("abel_w27_processNetMsgError","[processNetMsgError]  balabalabalabala...............")
-
     --定义网络回调
     local netCallBack = function(protoData,msgid)
         if msgid == 0 then --如果 msgid 为 0 ，说明是错误码，需要处理
@@ -94,7 +109,6 @@ UnitTest.Exec("abel_w27_processNetMsgError", "processNetMsgError",  function ()
             --ct.MsgBox("提示", " abel_w27_processNetMsgError 测试 ")
         end
     end
-
     --注册网络回调和错误处理
     local msgId = pbl.enum("ascode.OpCode","login")
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",netCallBack,nil)--新版model网络注册
@@ -1079,6 +1093,19 @@ UnitTest.Exec("cycle_0619_flightDate", "e_cycle_0619_flightDate",  function ()
     end)
 end)
 UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function ()
+    local sm = City.signer_ct.New()
+    local privateKeyStr = "asdfqwper234123412341234lkjlkj2342ghhg5j";
+    local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
+    local pubkeyStr = sm.ToHexString(pubkey);
+    local myEthAddr = "qwerqwerqwerqwoiuopi023121lkjfalskdjqoiwejrqlwer"
+    local amount = tostring(1111)
+    local ts = 1559911188
+    --填充关键数据
+    --sm:pushHexSting(msg.PurchaseId); --PurchaseId
+    sm:pushSha256Hex(myEthAddr); --//addr
+    sm:pushHexSting(amount);   --Amount
+    sm:pushLong(ts); --ts
+
     --生成
     local privateKey = City.CityLuaUtil.NewGuid()
 

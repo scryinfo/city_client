@@ -48,12 +48,10 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.leftBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.leftBtn.onClick:AddListener(function ()
             data.itemId = self.leftItemId
-            --data.mId = self.m_data.mId
-            --data.insId = self.m_data.buildingId
-            --data.buildingType = self.m_data.buildingType
-            data.mId = self.m_data.info.mId
-            data.insId = self.m_data.info.id
+            data.mId = self.m_data.mId
+            data.insId = self.m_data.buildingId
             data.buildingType = self.m_data.buildingType
+            data.numOneSec = self:getPresentSpeed(data.itemId)
             ct.OpenCtrl("AddProductionLineBoxCtrl",data)
         end)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
@@ -63,12 +61,10 @@ function AddProductionLineCtrl:_initData()
         AddProductionLinePanel.rightBtn.onClick:RemoveAllListeners()
         AddProductionLinePanel.rightBtn.onClick:AddListener(function ()
             data.itemId = self.rightItemId
-            --data.mId = self.m_data.mId
-            --data.insId = self.m_data.buildingId
-            --data.buildingType = self.m_data.buildingType
-            data.mId = self.m_data.info.mId
-            data.insId = self.m_data.info.id
+            data.mId = self.m_data.mId
+            data.insId = self.m_data.buildingId
             data.buildingType = self.m_data.buildingType
+            data.info = self:getPresentSpeed(data.itemId)
             ct.OpenCtrl("AddProductionLineBoxCtrl",data)
         end)
     end
@@ -177,6 +173,22 @@ function AddProductionLineCtrl:_setLineDetailInfo(datas)
         AddProductionLinePanel.centerItems[1]:initData(datas[1])
         AddProductionLinePanel.centerItems[2]:initData(datas[2])
         AddProductionLinePanel.centerItems[3]:initData(datas[3])
+    end
+end
+--获取选中原料或商品当前的生产速度(含Eva加成值)
+function AddProductionLineCtrl:getPresentSpeed(itemId)
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        for key,value in pairs(self.m_data.items) do
+            if value.key == itemId then
+                return value.numOneSec
+            end
+        end
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        for key,value in pairs(self.m_data.items) do
+            if value.key == itemId then
+                return value
+            end
+        end
     end
 end
 function AddProductionLineCtrl:Hide()

@@ -45,7 +45,7 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,st
 end
 function ShelfItem:InitializeData()
     if self.dataInfo.autoReplenish == true then
-        self.numberBg.transform.localScale = Vector3.zero
+        self.numberBg.gameObject:SetActive(false)
         if self.dataInfo.n == 0 then
             self.automaticBg.transform.localScale = Vector3.zero
             self.noHaveBg.transform.localScale = Vector3.one
@@ -55,7 +55,7 @@ function ShelfItem:InitializeData()
             self.noHaveBg.transform.localScale = Vector3.zero
         end
     else
-        self.numberBg.transform.localScale = Vector3.one
+        self.numberBg.gameObject:SetActive(true)
         self.automaticBg.transform.localScale = Vector3.zero
         self.noHaveBg.transform.localScale = Vector3.zero
     end
@@ -78,9 +78,9 @@ function ShelfItem:InitializeData()
         elseif Good[self.itemId].luxury == 3 then
             self.levelImg.color = getColorByVector3(threeLevel)
         end
-        self.brandNameText.text = DataManager.GetCompanyName()
-        --self.brandValue
-        --self.qualityValue
+        self.brandNameText.text = self.dataInfo.k.brandName
+        self.brandValue.text = self.dataInfo.k.brandScore
+        self.qualityValue.text = self.dataInfo.k.qualityScore
     end
 end
 --点击详情购买
@@ -88,7 +88,7 @@ function ShelfItem:_clickDetailsBtn(ins)
     --如果是零售店
     if ins.buildingType == BuildingType.RetailShop then
         if ins.isOther == true then
-            Event.Brocast("SmallPop","零售店的商品只能出售给NPC市民", ReminderType.Common)
+            Event.Brocast("SmallPop",GetLanguage(25060011), ReminderType.Common)
             return
         end
     end

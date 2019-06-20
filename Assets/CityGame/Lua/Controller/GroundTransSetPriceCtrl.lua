@@ -194,7 +194,7 @@ function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
         Event.Brocast("SmallPop", GetLanguage(22070001), 300)
         return
     end
-    if minDay == ins.m_data.groundInfo.rent.rentDaysMin or maxDay == ins.m_data.groundInfo.rent.rentDaysMax or GetServerPriceNumber(dayRentalPrice) == ins.m_data.groundInfo.rent.rentPreDay then
+    if minDay == ins.m_data.groundInfo.rent.rentDaysMin and maxDay == ins.m_data.groundInfo.rent.rentDaysMax and GetServerPriceNumber(dayRentalPrice) == ins.m_data.groundInfo.rent.rentPreDay then
         Event.Brocast("SmallPop", GetLanguage(22070002), 300)
         return
     end

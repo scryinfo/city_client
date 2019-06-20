@@ -54,6 +54,7 @@ function QueneCtrl:Hide()
                v:CloseUpdata()
                 --v.m_Timer:Stop()
             end
+            v:CloseUpdata()
         end
         insTable = {}
     end

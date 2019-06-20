@@ -68,9 +68,9 @@ function ChatLeftItem:OnHeadClick(go)
     local friends = DataManager.GetMyFriends()
     if friends[go.data.id] ~= nil then -- 是好友，跳转好友界面
         --ChatCtrl.static.chatMgr:ShowPlayerInfo(1, go.data)
-        ChatCtrl.static.isShowClickFriends = true
-        ChatPanel.friendsToggle.isOn = true
+        ChatCtrl.static.isShowClickFriends = 1
         ChatCtrl.static.chatMgr:SetActivePlayerId(go.data.id)
+        ChatPanel.friendsToggle.isOn = true
     else -- 查询陌生人信息
         --ChatCtrl.static.chatMgr:ShowPlayerInfo(1, go.data)
         Event.Brocast("c_OnQueryWorldPlayerInfo", {go.data.id})

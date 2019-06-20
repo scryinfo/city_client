@@ -57,7 +57,7 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
                 local okCallBack = function()
                     CityEngineLua.LoginOut()
                 end
-                ct.MsgBox(GetLanguage(4301012), GetLanguage(4301008), nil, okCallBack, okCallBack)
+                ct.MsgBox(GetLanguage(41010010), GetLanguage(41010008), nil, okCallBack, okCallBack)
             end
         end, 270, 1)
         timerCheck:Start()

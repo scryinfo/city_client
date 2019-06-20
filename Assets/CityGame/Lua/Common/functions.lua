@@ -762,7 +762,7 @@ function GetEvaData(index, configData, lv)
 			return string.format( (1 + EvaUp[lv].add / 100000) * configData.basevalue)
 		end
 	elseif configData.Btype == "ProduceSpeed" then -- 生产速度
-		local resultNum = tostring( 1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue) * brandSizeNum)
+		local resultNum = tostring( 1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum))
 		if string.find(resultNum, ".") ~= nil then
 			resultNum = string.format( "%.4f", resultNum)
 		end
@@ -770,9 +770,9 @@ function GetEvaData(index, configData, lv)
 	elseif configData.Btype == "PromotionAbility" then -- 推广能力
 		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
 	elseif configData.Btype == "InventionUpgrade" then -- 发明提升
-		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+		return string.format("%.2f", ((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
 	elseif configData.Btype == "EvaUpgrade" then -- Eva提示
-		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+		return string.format("%.2f", ((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
 	end
 end
 

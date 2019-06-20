@@ -125,6 +125,12 @@ end
 --如果需要删除好友申请，ByteBool={ id = "XXXXXXXX",name = nil }
 function SocialityManager:SetMyFriendsApply(tempData)
     if tempData.id and tempData.name then
+        for i, v in ipairs(self.m_friendsApply) do
+            if v.id == tempData.id then
+                table.remove(self.m_friendsApply, i)
+                break
+            end
+        end
         table.insert(self.m_friendsApply, tempData)
     elseif tempData.itemId and not tempData.id then
         table.remove(self.m_friendsApply, tempData.itemId)

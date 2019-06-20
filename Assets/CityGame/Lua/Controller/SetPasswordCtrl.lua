@@ -27,10 +27,10 @@ function SetPasswordCtrl:Awake()
     setPasswordBehaviour:AddClick(SetPasswordPanel.back,self.OnBack,self)
     setPasswordBehaviour:AddClick(SetPasswordPanel.next,self.OnNext,self)
 
-    RegisterPanel.password.onValueChanged:AddListener(function()
+    SetPasswordPanel.password.onValueChanged:AddListener(function()
         self:_OnPassword()
     end)
-    RegisterPanel.confirm.onValueChanged:AddListener(function()
+    SetPasswordPanel.confirm.onValueChanged:AddListener(function()
         self:_OnConfirm()
     end)
 end
@@ -64,11 +64,11 @@ function SetPasswordCtrl:OnBack()
 end
 
 function SetPasswordCtrl:_OnPassword()
-    SetPasswordPanel.input:BanChinese(RegisterPanel.password)
+    SetPasswordPanel.input:BanChinese(SetPasswordPanel.password)
 end
 
 function SetPasswordCtrl:_OnConfirm()
-    SetPasswordPanel.input:BanChinese(RegisterPanel.confirm)
+    SetPasswordPanel.input:BanChinese(SetPasswordPanel.confirm)
 end
 
 --修改密码

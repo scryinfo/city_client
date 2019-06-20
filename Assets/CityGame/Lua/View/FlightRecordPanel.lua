@@ -17,9 +17,11 @@ function FlightRecordPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.leftBtn = transform:Find("leftBtn")
     this.rightBtn = transform:Find("rightBtn")
+    this.noneTip = transform:Find("noneTip")
 
     this.pageItem = transform:Find("pageRoot/FlightRecordPageItem")
     this.scrollPage = transform:Find("pageRoot/scroll"):GetComponent("ScrollPageOptimize")
 
     this.titleText01 = transform:Find("topRoot/Text"):GetComponent("Text")
+    this.noneTipText02 = transform:Find("noneTip/Text"):GetComponent("Text")
 end

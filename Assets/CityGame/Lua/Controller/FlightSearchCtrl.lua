@@ -44,6 +44,7 @@ function FlightSearchCtrl:Awake(go)
 end
 
 function FlightSearchCtrl:Refresh()
+    Event.AddListener("c_getSearchFlightResult", self._getSearchFlightResult, self)
     self:_initData()
 end
 
@@ -53,15 +54,22 @@ function FlightSearchCtrl:Active()
 end
 
 function FlightSearchCtrl:Hide()
+    Event.RemoveListener("c_getSearchFlightResult", self._getSearchFlightResult, self)
     UIPanel.Hide(self)
 end
 --
 function FlightSearchCtrl:_initData()
     --默认出发地为北京，目的地为上海
-    FlightSearchPanel.timeText.text = os.date("%W, %Y-%m-%d", os.time())
-    self.startCode = "SIC"
-    self.arriveCode = "SIC"
-    self.timeValue = os.time()
+    self.startCode = "CTU"
+    FlightSearchPanel.startText.text = self.startCode
+    self.arriveCode = "NKG"
+    FlightSearchPanel.endText.text = self.arriveCode
+
+    local year = tonumber(os.date("%Y", os.time()))
+    local month = tonumber(os.date("%m", os.time()))
+    local day = tonumber(os.date("%d", os.time()))
+    self.timeValue = os.time({year = year, month = month, day = day})  --时间戳
+    self:showTimeText(self.timeValue)
 end
 --
 function FlightSearchCtrl:_language()
@@ -93,7 +101,9 @@ end
 --选择时间
 function FlightSearchCtrl:timeChooseFunc()
     PlayMusEff(1002)
-    --ct.OpenCtrl("FlightChoosePlaceCtrl", {callback = self.timeChooseResult})
+    ct.OpenCtrl("FlightChooseDateCtrl", {selectDate = self.timeValue, callback = function(data)
+        self:timeChooseResult(data)
+    end})
 end
 --起始地目的地交换
 function FlightSearchCtrl:exchangeBtnFunc()
@@ -108,21 +118,54 @@ end
 --开始搜索
 function FlightSearchCtrl:checkBtnFunc()
     PlayMusEff(1002)
-    --接到服务器回调之后再打开界面
-    ct.OpenCtrl("FlightChooseFlightCtrl")
+    local time = os.date("%Y-%m-%d", self.timeValue)
+    FlightMainModel.m_ReqSearchFlight(self.startCode, self.arriveCode, time)
 end
 --起点选择的回调
 function FlightSearchCtrl:startChooseResult(data)
-    self.startCode = data
-    FlightSearchPanel.startText.text = data.value
+    --self.startCode = data
+    self.startCode = "CTU"
+    FlightSearchPanel.startText.text = self.startCode
 end
 --终点选择的回调
 function FlightSearchCtrl:endChooseResult(data)
-    self.arriveCode = data
-    FlightSearchPanel.endText.text = data.value
+    --self.arriveCode = data
+    self.arriveCode = "NKG"
+    FlightSearchPanel.endText.text = self.arriveCode
 end
 --起点选择的回调
 function FlightSearchCtrl:timeChooseResult(data)
-    --self.timeValue = data
-    FlightSearchPanel.timeText.text = data.value
+    self.timeValue = data
+    self:showTimeText(self.timeValue)
+end
+--
+function FlightSearchCtrl:showTimeText(time)
+    local weekDay = tonumber(os.date("%w", time))
+    local weekDayStr
+    if weekDay == 1 then
+        weekDayStr = GetLanguage(34020001)
+    elseif weekDay == 2 then
+        weekDayStr = GetLanguage(34020002)
+    elseif weekDay == 3 then
+        weekDayStr = GetLanguage(34020003)
+    elseif weekDay == 4 then
+        weekDayStr = GetLanguage(34020004)
+    elseif weekDay == 5 then
+        weekDayStr = GetLanguage(34020005)
+    elseif weekDay == 6 then
+        weekDayStr = GetLanguage(34020006)
+    elseif weekDay == 0 then
+        weekDayStr = GetLanguage(34020007)
+    end
+    local dateStr = os.date("%Y-%m-%d", time)
+    FlightSearchPanel.timeText.text = string.format("%s, %s", weekDayStr, dateStr)
+end
+--服务器回调
+function FlightSearchCtrl:_getSearchFlightResult(data)
+    if data ~= nil and data.data ~= nil and #data.data > 0 then
+        --接到服务器回调之后再打开界面
+        ct.OpenCtrl("FlightChooseFlightCtrl", data.data)
+    else
+        Event.Brocast("SmallPop", GetLanguage(32030031))
+    end
 end

@@ -32,7 +32,7 @@ function GuildMessagePanel.InitPanel()
     -- 联盟列表
     this.guildListBtn = transform:Find("TopRoot/GuildListBtn").gameObject
     -- 联盟申请
-    this.applyListBtn = transform:Find("TopRoot/Bg/ApplyListBtn").gameObject
+    this.applyListBtn = transform:Find("TopRoot/Bg/ApplyListBtn")
     this.applyListNotice = transform:Find("TopRoot/Bg/ApplyListBtn/Notice")
     -- 退出联盟
     this.quitBtn = transform:Find("TopRoot/Bg/QuitBtn").gameObject

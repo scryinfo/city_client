@@ -37,7 +37,7 @@ function HeartbeatDisconnectionCtrl:RefreshIcon()
 end
 
 function HeartbeatDisconnectionCtrl:Refresh()
-    HeartbeatDisconnectionPanel.Tipstext.text = GetLanguage(41010008)
+    HeartbeatDisconnectionPanel.Tipstext.text = GetLanguage(41010007)
     if self.m_Timer ~= nil then
         self.m_Timer:Start()
     end

@@ -116,156 +116,162 @@ EvaConfig = {
                         name = 2251101,
                         property = {
                             [1] = {
-                                name = 31010019,
-                                Atype = 2251101,
-                                Btype = "Quality",
-                                b = 0,
-                                basevalue = 100,
-                            },
-                            [2] = {
-                                name = 31010025,
-                                Atype = 2251101,
-                                Btype = "Brand",
-                                b = 1,
-                                basevalue = 0,
-                            },
-                            [3] = {
                                 name = 31010020,
                                 Atype = 2251101,
                                 Btype = "ProduceSpeed",
                                 b = 0,
                                 basevalue = 0.000225,
                             },
+							[2] = {
+                                name = 31010019,
+                                Atype = 2251101,
+                                Btype = "Quality",
+                                b = 0,
+                                basevalue = 100,
+                            },
+                            [3] = {
+                                name = 31010025,
+                                Atype = 2251101,
+                                Btype = "Brand",
+                                b = 1,
+                                basevalue = 0,
+                            },
+
                         },
                     },
                     [2] = {
                         name = 2251102,
                         property = {
-                            [1] = {
-                                name = 31010019,
-                                Atype = 2251102,
-                                Btype = "Quality",
-                                b = 0,
-                                basevalue = 100,
-                            },
-                            [2] = {
-                                name = 31010025,
-                                Atype = 2251102,
-                                Btype = "Brand",
-                                b = 1,
-                                basevalue = 0,
-                            },
-                            [3] = {
+						    [1] = {
                                 name = 31010020,
                                 Atype = 2251102,
                                 Btype = "ProduceSpeed",
                                 b = 0,
                                 basevalue = 0.00015,
                             },
+                            [2] = {
+                                name = 31010019,
+                                Atype = 2251102,
+                                Btype = "Quality",
+                                b = 0,
+                                basevalue = 100,
+                            },
+                            [3] = {
+                                name = 31010025,
+                                Atype = 2251102,
+                                Btype = "Brand",
+                                b = 1,
+                                basevalue = 0,
+                            },
+
                         },
                     },
                     [3] = {
                         name = 2251103,
                         property = {
-                            [1] = {
-                                name = 31010019,
-                                Atype = 2251103,
-                                Btype = "Quality",
-                                b = 0,
-                                basevalue = 100,
-                            },
-                            [2] = {
-                                name = 31010025,
-                                Atype = 2251103,
-                                Btype = "Brand",
-                                b = 1,
-                                basevalue = 0,
-                            },
-                            [3] = {
+							[1] = {
                                 name = 31010020,
                                 Atype = 2251103,
                                 Btype = "ProduceSpeed",
                                 b = 0,
                                 basevalue = 0.00009,
                             },
+                            [2] = {
+                                name = 31010019,
+                                Atype = 2251103,
+                                Btype = "Quality",
+                                b = 0,
+                                basevalue = 100,
+                            },
+                            [3] = {
+                                name = 31010025,
+                                Atype = 2251103,
+                                Btype = "Brand",
+                                b = 1,
+                                basevalue = 0,
+                            },
+                            
                         },
                     },
                     [4] = {
                         name = 2251201,
                         property = {
-                            [1] = {
-                                name = 31010019,
-                                Atype = 2251201,
-                                Btype = "Quality",
-                                b = 0,
-                                basevalue = 100,
-                            },
-                            [2] = {
-                                name = 31010025,
-                                Atype = 2251201,
-                                Btype = "Brand",
-                                b = 1,
-                                basevalue = 0,
-                            },
-                            [3] = {
+							[1] = {
                                 name = 31010020,
                                 Atype = 2251201,
                                 Btype = "ProduceSpeed",
                                 b = 0,
                                 basevalue = 0.0000365,
                             },
+                            [2] = {
+                                name = 31010019,
+                                Atype = 2251201,
+                                Btype = "Quality",
+                                b = 0,
+                                basevalue = 100,
+                            },
+                            [3] = {
+                                name = 31010025,
+                                Atype = 2251201,
+                                Btype = "Brand",
+                                b = 1,
+                                basevalue = 0,
+                            },
+                            
                         },
                     },
                     [5] = {
                         name = 2251202,
                         property = {
-                            [1] = {
-                                name = 31010019,
-                                Atype = 2251202,
-                                Btype = "Quality",
-                                b = 0,
-                                basevalue = 100,
-                            },
-                            [2] = {
-                                name = 31010025,
-                                Atype = 2251202,
-                                Btype = "Brand",
-                                b = 1,
-                                basevalue = 0,
-                            },
-                            [3] = {
+							[1] = {
                                 name = 31010020,
                                 Atype = 2251202,
                                 Btype = "ProduceSpeed",
                                 b = 0,
                                 basevalue = 0.000061,
                             },
+                            [2] = {
+                                name = 31010019,
+                                Atype = 2251202,
+                                Btype = "Quality",
+                                b = 0,
+                                basevalue = 100,
+                            },
+                            [3] = {
+                                name = 31010025,
+                                Atype = 2251202,
+                                Btype = "Brand",
+                                b = 1,
+                                basevalue = 0,
+                            },
+                            
                         },
                     },
                     [6] = {
                         name = 2251203,
                         property = {
-                            [1] = {
-                                name = 31010019,
-                                Atype = 2251203,
-                                Btype = "Quality",
-                                b = 0,
-                                basevalue = 100,
-                            },
-                            [2] = {
-                                name = 31010025,
-                                Atype = 2251203,
-                                Btype = "Brand",
-                                b = 1,
-                                basevalue = 0,
-                            },
-                            [3] = {
+							[1] = {
                                 name = 31010020,
                                 Atype = 2251203,
                                 Btype = "ProduceSpeed",
                                 b = 0,
                                 basevalue = 0.000033,
                             },
+                            [2] = {
+                                name = 31010019,
+                                Atype = 2251203,
+                                Btype = "Quality",
+                                b = 0,
+                                basevalue = 100,
+                            },
+                            [3] = {
+                                name = 31010025,
+                                Atype = 2251203,
+                                Btype = "Brand",
+                                b = 1,
+                                basevalue = 0,
+                            },
+                            
                         },
                     },
                 },},
@@ -277,104 +283,107 @@ EvaConfig = {
                     [1] = {
                         name = 2252101,
                         property = {
-                            [1] = {
-                                name = 31010019,
-                                Atype = 2252101,
-                                Btype = "Quality",
-                                b = 0,
-                                basevalue = 100,
-                            },
-                            [2] = {
-                                name = 31010025,
-                                Atype = 2252101,
-                                Btype = "Brand",
-                                b = 1,
-                                basevalue = 0,
-                            },
-                            [3] = {
+							[1] = {
                                 name = 31010020,
                                 Atype = 2252101,
                                 Btype = "ProduceSpeed",
                                 b = 0,
                                 basevalue = 0.00009,
                             },
+                            [2] = {
+                                name = 31010019,
+                                Atype = 2252101,
+                                Btype = "Quality",
+                                b = 0,
+                                basevalue = 100,
+                            },
+                            [3] = {
+                                name = 31010025,
+                                Atype = 2252101,
+                                Btype = "Brand",
+                                b = 1,
+                                basevalue = 0,
+                            },
+                           
                         },
                     },
                     [2] = {
                         name = 2252102,
                         property = {
-                            [1] = {
-                                name = 31010019,
-                                Atype = 2252102,
-                                Btype = "Quality",
-                                b = 0,
-                                basevalue = 100,
-                            },
-                            [2] = {
-                                name = 31010025,
-                                Atype = 2252102,
-                                Btype = "Brand",
-                                b = 1,
-                                basevalue = 0,
-                            },
-                            [3] = {
+							[1] = {
                                 name = 31010020,
                                 Atype = 2252102,
                                 Btype = "ProduceSpeed",
                                 b = 0,
                                 basevalue = 0.0000545,
                             },
+                            [2] = {
+                                name = 31010019,
+                                Atype = 2252102,
+                                Btype = "Quality",
+                                b = 0,
+                                basevalue = 100,
+                            },
+                            [3] = {
+                                name = 31010025,
+                                Atype = 2252102,
+                                Btype = "Brand",
+                                b = 1,
+                                basevalue = 0,
+                            },
+                            
                         },
                     },
                     [3] = {
                         name = 2252103,
                         property = {
-                            [1] = {
-                                name = 31010019,
-                                Atype = 2252103,
-                                Btype = "Quality",
-                                b = 0,
-                                basevalue = 100,
-                            },
-                            [2] = {
-                                name = 31010025,
-                                Atype = 2252103,
-                                Btype = "Brand",
-                                b = 1,
-                                basevalue = 0,
-                            },
-                            [3] = {
+							[1] = {
                                 name = 31010020,
                                 Atype = 2252103,
                                 Btype = "ProduceSpeed",
                                 b = 0,
                                 basevalue = 0.0000324,
                             },
+                            [2] = {
+                                name = 31010019,
+                                Atype = 2252103,
+                                Btype = "Quality",
+                                b = 0,
+                                basevalue = 100,
+                            },
+                            [3] = {
+                                name = 31010025,
+                                Atype = 2252103,
+                                Btype = "Brand",
+                                b = 1,
+                                basevalue = 0,
+                            },
+                            
                         },
                     },
                     [4] = {
                         name = 2252201,
                         property = {
                             [1] = {
+                                name = 31010020,
+                                Atype = 2252201,
+                                Btype = "ProduceSpeed",
+                                b = 0,
+                                basevalue = 0.000015,
+                            },
+                            [2] = {
                                 name = 31010019,
                                 Atype = 2252201,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
-                            [2] = {
+                            [3] = {
                                 name = 31010025,
                                 Atype = 2252201,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
-                            },
-                            [3] = {
-                                name = 31010020,
-                                Atype = 2252201,
-                                Btype = "ProduceSpeed",
-                                b = 0,
-                                basevalue = 0.000015,
                             },
                         },
                     },
@@ -382,25 +391,25 @@ EvaConfig = {
                         name = 2252202,
                         property = {
                             [1] = {
+                                name = 31010020,
+                                Atype = 2252202,
+                                Btype = "ProduceSpeed",
+                                b = 0,
+                                basevalue = 0.00002080,
+                            },
+                            [2] = {
                                 name = 31010019,
                                 Atype = 2252202,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
-                            [2] = {
+                            [3] = {
                                 name = 31010025,
                                 Atype = 2252202,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
-                            },
-                            [3] = {
-                                name = 31010020,
-                                Atype = 2252202,
-                                Btype = "ProduceSpeed",
-                                b = 0,
-                                basevalue = 0.00002080,
                             },
                         },
                     },
@@ -408,25 +417,25 @@ EvaConfig = {
                         name = 2252203,
                         property = {
                             [1] = {
+                                name = 31010020,
+                                Atype = 2252203,
+                                Btype = "ProduceSpeed",
+                                b = 0,
+                                basevalue = 0.00001339,
+                            },
+                            [2] = {
                                 name = 31010019,
                                 Atype = 2252203,
                                 Btype = "Quality",
                                 b = 0,
                                 basevalue = 100,
                             },
-                            [2] = {
+                            [3] = {
                                 name = 31010025,
                                 Atype = 2252203,
                                 Btype = "Brand",
                                 b = 1,
                                 basevalue = 0,
-                            },
-                            [3] = {
-                                name = 31010020,
-                                Atype = 2252203,
-                                Btype = "ProduceSpeed",
-                                b = 0,
-                                basevalue = 0.00001339,
                             },
                         },
                     },

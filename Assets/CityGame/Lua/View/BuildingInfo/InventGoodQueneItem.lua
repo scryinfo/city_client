@@ -35,9 +35,9 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
             self.waiting = self.waiting -1
             if self.waiting <= 0 then
                 self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
-                local ts = math.abs((self.currentTime - self.data.beginProcessTs))
-                local downtime = getTimeBySec((self.data.times * 3600000 - ts)/1000)
-                self.counttimetext.text = downtime.hour.. ":" .. downtime.minute .. ":" .. downtime.second .. "/" .. math.floor(self.data.times).. "h"
+                local ts =getTimeBySec( (self.currentTime - self.data.beginProcessTs)/100)
+                --local downtime = getTimeBySec((self.data.times * 3600000 - ts)/1000)
+                self.counttimetext.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.data.times).. "h"
                 self.waiting = 1
             end
                   end

@@ -555,12 +555,3 @@ function WalletCtrl:UpdateTiming()
         UpdateBeat:Remove(self.UpdateTiming,self)
     end
 end
-
-
-
-
-
-
-
-
-

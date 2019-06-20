@@ -797,3 +797,27 @@ function ct.LimitInputLength(tempInputField , maxLength)
 	tempInputField.characterLimit = maxLength
 	return true
 end
+
+--获取正确的有效价格：12345678.1234
+local maxInt = 8  --最大整数位
+local maxFloat = 4  --最大小数位
+function ct.getCorrectPrice(valueStr)
+	local index = string.find(valueStr, '%.')
+	if index ~= nil then
+		local intString = string.sub(valueStr, 1, index - 1)
+		local floatString = string.sub(valueStr, index + 1)
+		if #intString > maxInt then
+			intString = string.sub(intString, 1, maxInt)
+		end
+		if #floatString > maxFloat then
+			floatString = string.sub(floatString, 1, maxFloat)
+		end
+		return intString.."."..floatString
+	else
+		if #valueStr > maxInt then
+			return string.sub(valueStr, 1, maxInt)
+		end
+	end
+
+	return valueStr
+end

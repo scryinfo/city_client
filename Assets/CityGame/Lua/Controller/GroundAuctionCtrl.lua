@@ -22,6 +22,10 @@ function GroundAuctionCtrl:OnCreate(obj)
     local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.bidBtn.gameObject, self.BidGround, self)
     groundAuctionBehaviour:AddClick(GroundAuctionPanel.backBtn.gameObject, self.UnRegistGroundBid, self)
+    GroundAuctionPanel.bidInput.onValueChanged:AddListener(function (str)
+        local temp = ct.getCorrectPrice(str)
+        GroundAuctionPanel.bidInput.text = temp
+    end)
 end
 
 function GroundAuctionCtrl:Awake(go)

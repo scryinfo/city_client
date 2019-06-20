@@ -864,9 +864,10 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
             local privateKeyStr = "asdfqwper234123412341234lkjlkj2342ghhg5j";
             local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
             local pubkeyStr = sm.ToHexString(pubkey);
+            local ts = 1559911178
             --填充关键数据
             sm:pushHexSting(msg.PurchaseId); --PurchaseId
-            sm:pushLong(1559911178647); --ts
+            sm:pushLong(ts); --ts
             sm:pushHexSting("123456");   --Amount
             --sm:pushHexSting(pubkeyStr)
             --sm:pushBtyes(pubkey)
@@ -891,7 +892,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
                     PubKey=pubkeyStr,
                     Amount='123456',
                     ExpireTime=0,
-                    Ts=1559911178647,
+                    Ts=ts,
                     Signature = sm.ToHexString(sig)
                 }
             }
@@ -905,7 +906,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
                     RechargeRequestReq(msg)
                 end)
         DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq"
-        ,"ccapi.ct_RechargeRequestReq",function(msg)
+        ,"ccapi.ct_RechargeRequestRes",function(msg)
                     local test = 100
                     UnitTest.Exec_now("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",msg.PlayerId)
                 end)
@@ -937,7 +938,7 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
             local pubkeyStr = sm.ToHexString(pubkey);
             local myEthAddr = "qwerqwerqwerqwoiuopi023121lkjfalskdjqoiwejrqlwer"
             local amount = tostring(2000)
-            local ts = 1559911188888
+            local ts = 1559911188
             --填充关键数据
             sm:pushHexSting(msg.PurchaseId); --PurchaseId
             sm:pushSha256Hex(myEthAddr); --//addr
@@ -976,7 +977,7 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
                     ct_disCharge(msg)
                 end)
         DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_DisChargeReq"
-        ,"ccapi.ct_DisChargeReq",function(msg)
+        ,"ccapi.ct_DisChargeRes",function(msg)
                     local test = 100
                 end)
         getOrderfunId(pid)
@@ -1036,7 +1037,7 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
     local pubkeyStr = sm.ToHexString(pubkey);
     sm:pushHexSting("0636ba40b4124c9babf8043f91ff9045"); --PurchaseId
     sm:pushLong(1559911178647); --ts
-    sm:pushHexSting("123456");   --meta
+    sm:pushHexSting("-1");   --meta
     sm:pushHexSting(pubkeyStr)
     --计算数据哈希
     local datahash = sm:getDataHash();

@@ -135,7 +135,7 @@ function InventPopCtrl:other()
         end
         self.count = count
 
-        panel.priceText.text = (deatailBuildInfo.pricePreTime)*count
+        panel.priceText.text = (GetClientPriceString(deatailBuildInfo.pricePreTime))*count
 
     end)
 

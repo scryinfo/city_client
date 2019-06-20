@@ -25,7 +25,7 @@ function laboratoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
 
     luaBehaviour:AddClick(self.basicQualityTextBtn.gameObject,self._clickBasicQualityTextBtn,self)
     luaBehaviour:AddClick(self.qualityAdditionTextBtn.gameObject,self._clickQualityAdditionTextBtn,self)
-    luaBehaviour:AddClick(self.qualityAdditionTextBtn.gameObject,self._clickPopolarityTextBtn,self)
+    --luaBehaviour:AddClick(self.qualityAdditionTextBtn.gameObject,self._clickPopolarityTextBtn,self)
 
     --是否是建筑主人，如果不是则所有按钮不能点击
     if isOther ~= DataManager.GetMyOwnerID() then
@@ -35,20 +35,20 @@ function laboratoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     end
 end
 function laboratoryItem:language()
-    self.retailStoreText.text = GetLanguage("30070001")
-    self.basicQualityTextBtn.text = GetLanguage("30070002")
-    self.qualityAdditionTextBtn.text = GetLanguage("30070003")
+    self.retailStoreText.text = GetLanguage(30070001)
+    self.basicQualityTextBtn.text = GetLanguage(30070002)
+    self.qualityAdditionTextBtn.text = GetLanguage(30070003)
     --self.popolarityTextBtn.text = "知名度"
 end
 function laboratoryItem:_clickBasicQualityTextBtn(ins)
-    local stringKey = 27010005
+    local stringKey = 30070004
     Event.Brocast("openTipBox",stringKey,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
 end
 function laboratoryItem:_clickQualityAdditionTextBtn(ins)
-    local stringKey = 27010005
-    Event.Brocast("openTipBox",stringKey,ins.basicQualityTextBtn.transform.localPosition,ins.basicQualityTextBtn.transform)
+    local stringKey = 30070005
+    Event.Brocast("openTipBox",stringKey,ins.basicQualityTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
 end
 function laboratoryItem:_clickPopolarityTextBtn(ins)
-    local stringKey = 27010005
-    Event.Brocast("openTipBox",stringKey,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
+    --local stringKey = 27010005
+    --Event.Brocast("openTipBox",stringKey,ins.qualityAdditionTextBtn.transform.localPosition,ins.qualityAdditionTextBtn.transform)
 end

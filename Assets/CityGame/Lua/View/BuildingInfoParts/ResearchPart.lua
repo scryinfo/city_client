@@ -19,6 +19,8 @@ function ResearchPart:_InitTransform()
     --self.turnover = transform:Find("Top/turnover"):GetComponent("Text")
 
     self.queneBtn = transform:Find("Top/Button")
+    self.UnselectBtntext = transform:Find("UnselectBtn/icon/Text"):GetComponent("Text")
+    self.UnselectBtntext = transform:Find("UnselectBtn/icon/Text"):GetComponent("Text")
     self.hasImage = findByName(transform,"hasImage")
     self.queneCount = findByName(transform,"countText"):GetComponent("Text")
     self.queneText = findByName(transform,"queneText (1)"):GetComponent("Text")
@@ -115,9 +117,10 @@ function ResearchPart:updateUI(data)
 end
 
 function ResearchPart:updateLanguage()
-    --self.queneText
+    self.queneText.text = GetLanguage(28010008)
     --self.priceText
     --self.TimeText
-    --self.title
-    --self.title1
+    self.title.text = GetLanguage(20120001)
+    self.title1.text = GetLanguage(28040036)
+    self.UnselectBtntext.text = GetLanguage(28040036)
 end

@@ -614,3 +614,9 @@ StreamingAssets
 /Assets/CityGame/Lua/*.meta
 /Assets/CityGame/Source/*.meta
 /Assets/*.meta
+/Assets/CityGame/CameraPostProcess.meta
+/Assets/CityGame/CameraPostProcess
+/Assets/CityGame/Resources.meta
+/Assets/CityGame/SVGImporter.meta
+/Assets/CityGame/SVGImporter
+/Assets/CityGame/Scenes.meta

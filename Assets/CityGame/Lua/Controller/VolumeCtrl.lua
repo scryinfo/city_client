@@ -21,6 +21,7 @@ local types = true
 local optionTwosScript = {}
 local isone = true
 local firstshow
+
 NpcShopType = {
     clothes = 1,
     food = 2,
@@ -86,7 +87,6 @@ function VolumeCtrl:Awake()
     self.insId = OpenModelInsID.VolumeCtrl
 
     isClother = NpcShopType.food
-
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
@@ -115,9 +115,9 @@ function VolumeCtrl:Awake()
     self.playerOneInfo.mClearData = VolumeCtrl.static.OptionOneClearData
 
     -- 第二层信息展示
-    self.playerTwosInfo = UnityEngine.UI.LoopScrollDataSource.New()  --交易信息
-    self.playerTwosInfo.mProvideData = VolumeCtrl.static.OptionTwosData
-    self.playerTwosInfo.mClearData = VolumeCtrl.static.OptionTwosClearData
+    --self.playerTwosInfo = UnityEngine.UI.LoopScrollDataSource.New()  --交易信息
+    --self.playerTwosInfo.mProvideData = VolumeCtrl.static.OptionTwosData
+    --self.playerTwosInfo.mClearData = VolumeCtrl.static.OptionTwosClearData
 
     --初始化循环参数
     self.intTime = 1
@@ -391,10 +391,10 @@ function VolumeCtrl:AssignmentDemand(table , countNpc , time)
         local temp = 0
         tempTable[i] = {}
         for k, z in pairs(npcConsumption[time]) do
-            if next(countNpc )== nil or countNpc[k % 9] == nil then
+            if next(countNpc )== nil or countNpc[k] == nil then
                 temp = temp + 0
             else
-                temp = temp + math.floor(countNpc[k % 9].value * z[v.itemId]/10000)
+                temp = temp + math.floor(countNpc[k].value * z[v.itemId]/10000)
             end
         end
         tempTable[i] = temp
@@ -479,9 +479,11 @@ function VolumeCtrl:OnplayerRect(ins)
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 336),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
-    VolumePanel.firstScroll:ActiveLoopScroll(ins.playerOneInfo, #DealConfig, "View/Laboratory/ToggleBtnItem")
-
-    VolumePanel.trade.localScale = Vector3.one
+    if isone then
+        VolumePanel.firstScroll:ActiveLoopScroll(ins.playerOneInfo, #DealConfig, "View/Laboratory/ToggleBtnItem")
+        VolumePanel.secondScroll:ActiveLoopScroll(ins.playerTwosInfo, #DealConfig[1].childs, "View/Laboratory/ToggleBtnTwoItem")
+        VolumePanel.trade.localScale = Vector3.one
+    end
     --self:initPayerVolume()
 
 end
@@ -495,9 +497,8 @@ end
 VolumeCtrl.static.OptionOneData = function(transform, idx)
     idx = idx + 1
     optionOneScript[idx] = ToggleBtnItem:new(transform, volumeBehaviour, DealConfig[idx], idx)
-    if idx == 1 then
-        optionOneScript[idx].highlight.localScale = Vector3.one
-    end
+    optionOneScript[1].highlight.localScale = Vector3.one
+
     volumeBehaviour:AddClick(transform.transform:Find("bgBtn").gameObject,VolumeCtrl.c_OnClick_Delete,optionOneScript[idx])
     if isone then
         VolumeCtrl:initPayer( optionOneScript[idx] )
@@ -513,15 +514,15 @@ VolumeCtrl.static.OptionOneClearData = function(transform)
 end
 
 --第二层信息显示
-VolumeCtrl.static.OptionTwosData = function(transform, idx)
-    --ToggleBtnItem.city = {}
-    idx = idx + 1
-    optionTwosScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, DealConfig[1].childs[idx], idx)
-    --ToggleBtnItem.city = optionTwosScript[idx]
-end
+--VolumeCtrl.static.OptionTwosData = function(transform, idx)
+--    --ToggleBtnItem.city = {}
+--    idx = idx + 1
+--    optionTwosScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, DealConfig[1].childs[idx], idx)
+--    --ToggleBtnItem.city = optionTwosScript[idx]
+--end
 
-VolumeCtrl.static.OptionTwosClearData = function(transform)
-end
+--VolumeCtrl.static.OptionTwosClearData = function(transform)
+--end
 
 function VolumeCtrl:c_OnClick_Delete(ins)
     local item = {}

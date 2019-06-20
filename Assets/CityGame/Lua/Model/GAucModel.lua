@@ -227,9 +227,10 @@ end
 
 --出价
 function GAucModel.m_BidGround(id, price)
+    local temp = tonumber(CityLuaUtil.scientificNotation2Normal(price))
     local msgId = pbl.enum("gscode.OpCode","bidGround")
-    local lMsg = { id = id, num = price}
-    local pMsg = assert(pbl.encode("gs.IntNum", lMsg))
+    local lMsg = { id = id, num = temp}
+    local pMsg = assert(pbl.encode("gs.BidGround", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 

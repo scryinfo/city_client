@@ -44,7 +44,7 @@ end
 function InventItem:updateUI(data)
     LoadSprite(data.iconPath, self.icon,true)
     LoadSprite(data.bgIconPath, self.bgIcon,true)
-    self.goodName.text=data.name
+    self.goodName.text= GetLanguage(tonumber(data.name))
 end
 
 function InventItem:Refresh(data)

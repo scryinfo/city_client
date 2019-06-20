@@ -266,7 +266,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         elseif self.m_data.mId == 1500003 then
             self.buildingTypeText.text = GetLanguage(self.m_data.mId)
         end
-        self.tipText.text = GetLanguage("30070005")
+        self.tipText.text = GetLanguage(23020006)
         local function callback(obj)
             self.buildingInfoItem = laboratoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
         end
@@ -286,10 +286,12 @@ function BuildingInformationCtrl:initializeButtonInfo()
             self.switchBtn.text = GetLanguage(30010005)
             businessState = false
         end
+        self.buildingName.transform.localScale = Vector3.one
     else
         self.switchBtn.transform.localScale = Vector3.zero
         self.modifyImg.transform.localScale = Vector3.zero
-        self.buildingName:GetComponent("Button").interactable = false
+        --self.buildingName:GetComponent("Button").interactable = false
+        self.buildingName.localScale = Vector3.zero
     end
 end
 --默认打开建筑信息
@@ -469,7 +471,7 @@ function BuildingInformationCtrl:_clickBuildingName(ins)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(30010006)
-    data.inputDefaultStr = GetLanguage(17020002)
+    data.inputDefaultStr = GetLanguage(30010007)
     data.btnCallBack = function(name)
         Event.Brocast("m_ReqSetBuildingName",ins.m_data.id,name)
     end

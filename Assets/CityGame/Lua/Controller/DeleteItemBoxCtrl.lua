@@ -99,8 +99,8 @@ function DeleteItemBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function DeleteItemBoxCtrl:_language()
-    self.topName.text = "DESTROY"
-    self.tipText.text = "确认销毁，销毁后该商品将永久删除"
+    self.topName.text = GetLanguage(25020010)
+    self.tipText.text = GetLanguage(25020011)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 

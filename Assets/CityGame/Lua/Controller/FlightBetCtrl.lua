@@ -7,7 +7,7 @@ FlightBetCtrl = class('FlightBetCtrl',UIPanel)
 UIPanel:ResgisterOpen(FlightBetCtrl)
 
 function FlightBetCtrl:initialize()
-    UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
+    UIPanel.initialize(self, UIType.Normal, UIMode.DoNothing, UICollider.None)
 end
 --
 function FlightBetCtrl:bundleName()
@@ -65,13 +65,13 @@ end
 function FlightBetCtrl:_language()
     FlightBetPanel.titleText01.text = GetLanguage(32030008)
     FlightBetPanel.timeText02.text = GetLanguage(32030009)
-    FlightBetPanel.timeText03.text = GetLanguage(32030012)
-    FlightBetPanel.timeText04.text = GetLanguage(32030013)
+    FlightBetPanel.timeText03.text = GetLanguage(32030013, FlightConfig.MinTime)
+    FlightBetPanel.timeText04.text = GetLanguage(32030013, FlightConfig.MaxTime)
     FlightBetPanel.timeText05.text = GetLanguage(32030010)  --延误/提前
 
     FlightBetPanel.betText06.text = GetLanguage(32030014)
-    FlightBetPanel.betText07.text = GetLanguage(32030016)
-    FlightBetPanel.betText08.text = GetLanguage(32030017)
+    FlightBetPanel.betText07.text = GetLanguage(32030016, FlightConfig.MinBet)
+    FlightBetPanel.betText08.text = GetLanguage(32030017, FlightConfig.MaxBet)
     FlightBetPanel.betText09.text = GetLanguage(32030015)
     FlightBetPanel.tipText10.text = GetLanguage(32030018)
 end
@@ -102,6 +102,10 @@ function FlightBetCtrl:_initPanelData()
     FlightBetPanel.betSlider.value = FlightBetPanel.betSlider.minValue
     self.betValue = FlightBetPanel.betSlider.value
     FlightBetPanel.betValueText.text = self.betValue
+
+    if self.m_data == nil then
+        return
+    end
 end
 --
 function FlightBetCtrl:_backBtnFunc()
@@ -110,10 +114,17 @@ function FlightBetCtrl:_backBtnFunc()
 end
 --
 function FlightBetCtrl:_confirmBtnFunc()
-    --发送协议后，等待回调再关闭界面
-    --FlightMainModel.m_ReqBetFlight(id, delay, score)
-    UIPanel:ClosePage()
+    if self.m_data.id == nil or self.m_data.date == nil then
+        return
+    end
+    if self.betValue > DataManager.GetMyFlightScore() then
+        Event.Brocast("SmallPop", GetLanguage(32030022), ReminderType.Warning)
+        return
+    end
 
+    local temp = string.sub(self.m_data.date, 1, 10)
+    --发送协议后，等待回调再关闭界面
+    FlightMainModel.m_ReqBetFlight(self.m_data.id, self.timeValue, self.betValue, temp)
     PlayMusEff(1002)
 end
 --

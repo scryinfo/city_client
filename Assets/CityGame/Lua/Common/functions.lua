@@ -165,6 +165,26 @@ function getTimeUnixByFormat(timeString)
 	if S == 0 then error('timeString is a invalid time string') return 0 end
 	return os.time({year=y, month=m, day=d, hour=H,min=M,sec=S})
 end
+--通过index获取对应的周显示
+function getWeekStrByIndex(value)
+	local str
+	if value == 1 then
+		str = GetLanguage(12345678)
+	elseif value == 2 then
+		str = GetLanguage(12345678)
+	elseif value == 3 then
+		str = GetLanguage(12345678)
+	elseif value == 4 then
+		str = GetLanguage(12345678)
+	elseif value == 5 then
+		str = GetLanguage(12345678)
+	elseif value == 6 then
+		str = GetLanguage(12345678)
+	elseif value == 7 then
+		str = GetLanguage(12345678)
+	end
+	return str
+end
 --
 function convertTimeForm(second)
 	local data={}
@@ -742,7 +762,7 @@ function GetEvaData(index, configData, lv)
 			return string.format( (1 + EvaUp[lv].add / 100000) * configData.basevalue)
 		end
 	elseif configData.Btype == "ProduceSpeed" then -- 生产速度
-		local resultNum = tostring( 1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue) * brandSizeNum)
+		local resultNum = tostring( 1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum))
 		if string.find(resultNum, ".") ~= nil then
 			resultNum = string.format( "%.4f", resultNum)
 		end
@@ -750,9 +770,9 @@ function GetEvaData(index, configData, lv)
 	elseif configData.Btype == "PromotionAbility" then -- 推广能力
 		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
 	elseif configData.Btype == "InventionUpgrade" then -- 发明提升
-		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+		return string.format("%.2f", ((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
 	elseif configData.Btype == "EvaUpgrade" then -- Eva提示
-		return math.floor(((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
+		return string.format("%.2f", ((1 + EvaUp[lv].add / 100000) * (configData.basevalue / 100000)) * 100 * brandSizeNum) .. "%"
 	end
 end
 
@@ -767,4 +787,37 @@ function GetEvaPercent(lv)
 	else
 		return tostring(EvaUp[lv].add / 1000) .. "%"
 	end
+end
+
+--限制字符输入长度
+function ct.LimitInputLength(tempInputField , maxLength)
+	if tempInputField == nil or typeof(UnityEngine.UI.InputField) ~= type(tempInputField) or maxLength == nil or type(maxLength) ~= 'number' or maxLength < 1 then
+		return false
+	end
+	tempInputField.characterLimit = maxLength
+	return true
+end
+
+--获取正确的有效价格：12345678.1234
+local maxInt = 8  --最大整数位
+local maxFloat = 4  --最大小数位
+function ct.getCorrectPrice(valueStr)
+	local index = string.find(valueStr, '%.')
+	if index ~= nil then
+		local intString = string.sub(valueStr, 1, index - 1)
+		local floatString = string.sub(valueStr, index + 1)
+		if #intString > maxInt then
+			intString = string.sub(intString, 1, maxInt)
+		end
+		if #floatString > maxFloat then
+			floatString = string.sub(floatString, 1, maxFloat)
+		end
+		return intString.."."..floatString
+	else
+		if #valueStr > maxInt then
+			return string.sub(valueStr, 1, maxInt)
+		end
+	end
+
+	return valueStr
 end

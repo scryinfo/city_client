@@ -113,8 +113,8 @@ function BuyBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function BuyBoxCtrl:_language()
-    self.topName.text = "详情"
-    self.tipText.text = "购买数量"
+    self.topName.text = GetLanguage(28040035)
+    self.tipText.text = GetLanguage(25070001)
 end
 --滑动更新文本
 function BuyBoxCtrl:SlidingUpdateText()

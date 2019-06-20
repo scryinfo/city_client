@@ -342,7 +342,14 @@ function ChatMgr:ShowPlayerInfo(index, data)
     end
     self.avatarData = AvatarManger.GetSmallAvatar(data.faceId, ChatPanel.headImage,0.5)
     if index == 1 then -- 世界界面陌生人信息显示
+        local blacklist = DataManager.GetMyBlacklist()
         ChatPanel.shieldBtn:SetActive(true)
+        for _, v in ipairs(blacklist) do
+            if v.id == data.id then
+                ChatPanel.shieldBtn:SetActive(false)
+                break
+            end
+        end
         ChatPanel.addFriendsBtn:SetActive(true)
         ChatPanel.chatBtn:SetActive(true)
         ChatPanel.shieldBtn:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, -292)
@@ -573,18 +580,31 @@ end
 
 --滑动到底部
 function ChatMgr:_scrollBottom()
-    if not self.rootScrollbar then
+    if not self.isScrollBottom then
         return
     end
 
-    if UnityEngine.Time.time <= self.timeNow then
-        self.rootScrollbar.value = 0
+    if self.scrollBottomTime > 2 then
+        self.isScrollBottom = false
+        self.scrollBottomTime = 0
     else
-        UpdateBeat:Remove(self._scrollBottom, self)
+        self.scrollBottomTime = self.scrollBottomTime + 1
+        self.rootScrollbar.value = 0
     end
 end
 
+-- 打开滑动
 function ChatMgr:StartScrollBottom()
-    self.timeNow = UnityEngine.Time.time + 0.1
+    self.isScrollBottom = true
+    self.scrollBottomTime = 0
+end
+
+-- 添加更新事件
+function ChatMgr:AddScrollBottom()
     UpdateBeat:Add(self._scrollBottom, self)
+end
+
+-- 删除更新事件
+function ChatMgr:RemoveScrollBottom()
+    UpdateBeat:Remove(self._scrollBottom, self)
 end

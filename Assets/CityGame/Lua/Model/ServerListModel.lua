@@ -77,6 +77,7 @@ function ServerListModel:m_GsOK()
     -----------------------------------------------------------------------------
     GAucModel.registerNetMsg()  --拍卖的网络回调
     MapModel.registerNetMsg()  --小地图网络回调
+    FlightMainModel.registerNetMsg()  --航班预测网络回调
     --连接gs
     CityEngineLua.login_baseapp(true)
     --CityEngineLua.login_tradeapp(true)

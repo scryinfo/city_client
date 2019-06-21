@@ -133,32 +133,6 @@ local function changAparance(kind)
         currHead = headPool[sex][headTypeId]:GetAvailableGameObject()
 
         FindOrgan(currHead.transform)
-
-        --[[
-        --加载原来服饰
-        for key, value in pairs(appearance) do
-            if key ~= "head"  then
-                if appearance[key].path == "" then--部件不要的处理
-                    if appearance[key].ima and appearance[key].ima.transform then
-                        appearance[key].ima.transform.gameObject:SetActive(false)
-                    end
-                else--部件要的处理
-                    if appearance[key].ima and appearance[key].ima.transform and appearance[key].path then
-                        appearance[key].ima.transform.gameObject:SetActive(true)
-                        LoadSprite(appearance[key].path,appearance[key].ima)
-                    end
-                end
-                if key=="frontHat" then
-                    if appearance["backHat"].path=="" then--部件不要的处理
-                        appearance["backHat"].ima.transform.gameObject:SetActive(false)
-                    else--部件不要的处理
-                        appearance["backHat"].ima.transform.gameObject:SetActive(true)
-                        LoadSprite(appearance["backHat"].path,appearance["backHat"].ima)
-                    end
-                end
-            end
-        end
-        --]]
     elseif type=="frontHat" then
         if arr[3]=="" then
             appearance[arr[4]].ima.transform.gameObject:SetActive(false)
@@ -173,16 +147,13 @@ local function changAparance(kind)
     appearance[type].typeId = nums
     appearance[type].type = type
     appearance[type].path = path
-
     table.insert(recordPath,path)
-
     if path=="" then
         appearance[type].ima.transform.gameObject:SetActive(false)
     else
         appearance[type].ima.transform.gameObject:SetActive(true)
         LoadSprite(path,appearance[type].ima)
     end
-
 end
 
 --获取Avatar的gameObject
@@ -237,7 +208,7 @@ end
 function AvatarManger.GetSmallAvatar(faceId , parent , size)
     local AvatarData = GetAvatar(faceId,true)
     AvatarData.size = 1 / size
-    AvatarData.go.transform:SetParent(parent);
+    AvatarData.go.transform:SetParent(parent)
     AvatarManger.setSize(AvatarData.go,size)
     return AvatarData
 end

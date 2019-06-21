@@ -821,6 +821,7 @@ function ct.getCorrectPrice(valueStr)
 
 	return valueStr
 end
+
 --获取带...的string，航班预测
 local cnDefaultLength = 27  --默认显示的中文字符长度，一个中字占3length
 local enDefaultLength = 16

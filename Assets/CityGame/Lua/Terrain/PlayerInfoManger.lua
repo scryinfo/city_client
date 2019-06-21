@@ -5,16 +5,13 @@
 ---
 
 PlayerInfoManger={}
-local  cache,playerIDs,tempInfos
+local playerIDs
 local _classes,_funcs
 
 function PlayerInfoManger.Awake()
     _classes={}
     _funcs={}
-    tempInfos={}
-    cache={}
     playerIDs={}
-    Event.AddListener("m_QueryPlayerInfoChat", PlayerInfoManger.m_QueryPlayerInfoChat)
 end
 
 -- 向服务器查询好友信息
@@ -24,38 +21,19 @@ end
 
 ---==========================================================================================外部===================================================================================================
 
-function PlayerInfoManger.ClearCache()
-    for id, info in pairs(cache) do
-        id=nil
-        info=nil
-    end
-    cache={}
-end
-
-local recardNums=0
-local curr=0
+local recardNums = 0
+local curr = 0
 
 function PlayerInfoManger.GetInfos(playerIds,func,class)
-    for i, id in ipairs(playerIds) do
-        local info=cache[id]
-        if info then                            --有缓存
-            table.insert(tempInfos,info)
-        else                                    --无缓存
-            recardNums=recardNums+1
-            playerIDs[recardNums]=playerIds
-            _funcs[recardNums]=func
-            _classes[recardNums]=class
-            Event.Brocast("m_QueryPlayerInfoChat",playerIds)
-            tempInfos={}
-            return
-        end
-    end
-    --有缓存  直接调用
-    func(class,tempInfos)
-    tempInfos={}
+    --记录玩家们信息返回的回调
+    recardNums = recardNums + 1
+    playerIDs[recardNums] = playerIds
+    _funcs[recardNums] = func
+    _classes[recardNums] = class
+    --向服务器查询玩家们的信息
+    PlayerInfoManger.m_QueryPlayerInfoChat(playerIds)
+    return
 end
-
-
 
 ---==========================================================================================回调===================================================================================================
 
@@ -64,17 +42,8 @@ function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
     if #playerIDs <= 0 then
         return
     end
-    curr = curr+1
-    for i, info in ipairs(stream.info) do
-        --写入缓存
-        local id = playerIDs[curr][i]
-        local infoId=info.id
-       -- prints("玩家管理器信息是否一致："..tostring(id==infoId))
-        cache[id]=info
-        table.insert(tempInfos,info)
-    end
-    _funcs[curr](_classes[curr],tempInfos)
-    tempInfos={}
+    curr = curr + 1
+    _funcs[curr](_classes[curr],stream.info)
     recardNums=recardNums-1
     if recardNums == 0 then
         playerIDs={}

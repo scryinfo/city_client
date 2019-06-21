@@ -70,6 +70,7 @@ end
 function AvtarCtrl:Close()
     UIPanel.Close(self)
     self:ClearCasch()
+    pool = {}
 end
 
 --【over】
@@ -89,6 +90,7 @@ end
 
 --清空缓存数据
 function AvtarCtrl:ClearCasch()
+    ct.log("system","清空Avatar缓存数据")
     if headPrefab~= nil then
         for tempSex, table in pairs(headPrefab) do
             for i, v in pairs(table) do
@@ -112,7 +114,7 @@ end
 
 --临时对象池                 --【over】
 local function InsAndObjectPool(config,class,prefabPath,parent,this)
-    if not pool[class] then
+    if nil == pool[class] then
         pool[class] = {}
     end
     local tempList = pool[class]
@@ -180,6 +182,11 @@ function AvtarCtrl:begin()
         else
             self:switchKinds(AvtarConfig.woMan[1].kinds)
         end
+        --左侧选到第一个
+        this.select.localScale = Vector3.zero
+        this.select = pool[FiveFaceItem][1].select
+        this.select.localScale = Vector3.one
+        --
         GetAvtar(faceId)
         --隐藏性别选项
         panel.maleBtn.gameObject:SetActive(false)

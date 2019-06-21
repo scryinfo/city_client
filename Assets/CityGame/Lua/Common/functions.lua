@@ -821,3 +821,5 @@ function ct.getCorrectPrice(valueStr)
 
 	return valueStr
 end
+
+

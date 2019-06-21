@@ -190,7 +190,10 @@ namespace City {
 
             return signer.VerifySignature(signature);
         }
-
+        public static string ToString(byte[] bts)
+        {
+            return Encoding.UTF8.GetString(bts);            
+        }
         public static string ToHexString(byte[] data) {
             return Hex.ToHexString(data);
         }

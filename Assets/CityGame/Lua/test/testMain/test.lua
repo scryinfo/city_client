@@ -1121,6 +1121,30 @@ UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function 
     local f = 0
 end)
 
+function VerifyPassword(password)
+    --验证密码
+    --1 从本地读取保存的公钥
+    local publicKeyPathToRead = ct.getCredentialPath(password).."pubKey.data"
+    --进一步验证，思路是使用新密码解密保存的私钥，然后生成一个公钥比对与保存的私钥是否相同
+    local pubkeyStrLoaded = ct.file_readString(publicKeyPathToRead)
+    --如果本地没有这个公钥，说明密码错误，返回
+    if pubkeyStrLoaded == nil then
+        return false
+    end
+    --2 从本地读取保存的私钥
+    --读取
+    local privateKeyPath = ct.getCredentialPath(password)..".data"
+    local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
+    if privateKeyEncryptedSaved == nil then
+        return false
+    end
+    --用密码解密私钥
+    local privateKeyToTest = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
+    local pubkeyToTest = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyToTest);
+    return City.signer_ct.ToString(pubkeyToTest) == pubkeyStrLoaded
+    --使用私钥生成公钥
+end
+
 UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  function ()
     --生成私钥
     local privateKey = City.CityLuaUtil.NewGuid()
@@ -1129,16 +1153,26 @@ UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  f
 
     local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
     --保存
-    local path = ct.getCredentialPath(password)
+    --获取私钥保存路径
+    local privateKeyPath = ct.getCredentialPath(password)..".data"
 
-    ct.file_saveString(path,privateKeyEncrypted)
+    ct.file_saveString(privateKeyPath,privateKeyEncrypted)
     --读取
-    local privateKeyEncryptedSaved = ct.file_readString(path)
+    local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
     --用密码解密私钥
     local privateKeyNewDecrypted = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
 
     --用私钥字符串生成公钥
     local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyNewDecrypted);
+    --获取公钥保存路径
+    local publicKeyPath = ct.getCredentialPath(password).."pubKey.data"
+    local pubkeyStr = City.signer_ct.ToString(pubkey); --转为字符保存
+    ct.file_saveString(publicKeyPath,pubkeyStr)
+
+    local rightPD = VerifyPassword("123456")
+    local WrongPD1 = VerifyPassword("1234567")
+    local WrongPD2 = VerifyPassword("123234567")
+    local WrongPD3 = VerifyPassword("223456")
     local a = 0
 end)
 

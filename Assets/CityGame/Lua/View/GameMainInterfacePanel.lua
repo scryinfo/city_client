@@ -70,10 +70,11 @@ function GameMainInterfacePanel.InitPanel()
     this.clearBtn = transform:Find("EarningsPanel/bg/clearBtn").gameObject; --清空简易收益
     this.clearBg = transform:Find("EarningsPanel/bg/clearBg").gameObject; --清空简易收益背景
     this.simple = transform:Find("EarningsPanel/simpleEarning").gameObject; --简易收益面板
-    this.income = transform:Find("EarningsPanel/simpleEarning/income").gameObject:GetComponent("Text"); --建筑类型
-    this.simpleMoney = transform:Find("EarningsPanel/simpleEarning/incomeText").gameObject:GetComponent("Text"); --简易收益面板金额
-    this.simplePicture = transform:Find("EarningsPanel/simpleEarning/picture").gameObject:GetComponent("Image"); --简易收益面板图片
-    this.simplePictureText = transform:Find("EarningsPanel/simpleEarning/picture/pictureText").gameObject:GetComponent("Text"); --简易收益面板图片内容
+    this.simpleEarningBg = transform:Find("EarningsPanel/simpleEarning/simpleEarningBg")
+    this.income = transform:Find("EarningsPanel/simpleEarning/simpleEarningBg/income").gameObject:GetComponent("Text"); --建筑类型
+    this.simpleMoney = transform:Find("EarningsPanel/simpleEarning/simpleEarningBg/incomeText").gameObject:GetComponent("Text"); --简易收益面板金额
+    this.simplePicture = transform:Find("EarningsPanel/simpleEarning/simpleEarningBg/picture").gameObject:GetComponent("Image"); --简易收益面板图片
+    this.simplePictureText = transform:Find("EarningsPanel/simpleEarning/simpleEarningBg/picture/pictureText").gameObject:GetComponent("Text"); --简易收益面板图片内容
 
     --滑动互用
     this.earningScroll = transform:Find("EarningsPanel/bg/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect"); --收益时间
@@ -122,5 +123,4 @@ function GameMainInterfacePanel.InitPanel()
     --this.bonuspoolNum = transform:Find("RadioCity/bg/radioImage/Bonuspoolbreak/bonuspoolNum"):GetComponent("Text");   --奖金池突破数量
     --this.bonuspoolTime = transform:Find("RadioCity/bg/radioImage/Bonuspoolbreak/bonuspoolTime"):GetComponent("Text");   --奖金池突破时间
     --this.bonuspoolConter = transform:Find("RadioCity/bg/radioImage/Bonuspoolbreak/bonuspoolConter"):GetComponent("Text");   --奖金池突破内容
-
 end

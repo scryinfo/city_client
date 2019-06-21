@@ -28,7 +28,7 @@ function VolumePanel.InitPanel()
 
     this.volumetitle = transform:Find("Volume/title")  --交易量提示
     this.total = transform:Find("Volume/title/total"):GetComponent("Text")
-    this.content = transform:Find("Volume/title/content"):GetComponent("Text")
+    this.totalContent = transform:Find("Volume/title/content"):GetComponent("Text")
     this.playercurrRoot = transform:Find("playercurr");
     --this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport/Content"):GetComponent("ActiveLoopScrollRect");
     this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport"):GetComponent("ActiveLoopScrollRect");

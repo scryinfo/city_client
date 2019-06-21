@@ -131,13 +131,8 @@ end
 
 --todo 收益详情
 function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
-    --incomeNotify = dataInfo
-    --local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-    --if currentTime - lastTime > 60 then
-    --    local ts = getFormatUnixTime(currentTime)
-    --    GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
-    --end
-    --lastTime = currentTime
+    GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.zero
+    GameMainInterfacePanel.simpleEarningBg.localScale = Vector3.one
     if incomeNotify == nil then
         incomeNotify = {}
         incomeNotify[1] = dataInfo
@@ -157,7 +152,9 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
     end
     self.isTimmer = true
     self.timmer = 2
-    GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.one
+    --GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.one
+    GameMainInterfacePanel.simpleEarning:GetComponent("RectTransform"):DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+    GameMainInterfacePanel.simpleEarning:GetComponent("Image"):DOFade(1,0.1):SetEase(DG.Tweening.Ease.OutCubic);
 
     GameMainInterfacePanel.simpleMoney.text = "E"..GetClientPriceString(dataInfo.cost)
 
@@ -565,7 +562,11 @@ function GameMainInterfaceCtrl:RefreshWeather()
     if  self.isTimmer then
         self.timmer = self.timmer -1
         if self.timmer <= 0 then
-            GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.zero
+            GameMainInterfacePanel.simpleEarningBg.localScale = Vector3.zero
+            GameMainInterfacePanel.simpleEarning:GetComponent("Image"):DOFade(0,0.1):SetEase(DG.Tweening.Ease.OutCubic):OnComplete(function ()
+                GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.zero
+            end);
+
             if GameMainInterfacePanel.bg.transform.localScale ~= Vector3.one then
                 GameMainInterfacePanel.open.transform.localScale = Vector3.one
             end

@@ -180,8 +180,10 @@ function VolumeCtrl:language()
    VolumePanel.houseText.text = GetLanguage(20050004)
    VolumePanel.undateTimeText.text = GetLanguage(19020019)  --秒后刷新
    VolumePanel.requirement.text = GetLanguage(19020020)
-   VolumePanel.employed.text = GetLanguage(19020021)  --就业人口
-   VolumePanel.unemployed.text = GetLanguage(19020022)  --失业人口
+   VolumePanel.employed.text = GetLanguage(19020004)  --就业人口
+   VolumePanel.unemployed.text = GetLanguage(19020005)  --失业人口
+   VolumePanel.total.text = GetLanguage(19020012)
+   VolumePanel.totalContent.text = GetLanguage(19020013)
 
 
 end

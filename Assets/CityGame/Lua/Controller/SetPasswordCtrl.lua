@@ -22,8 +22,10 @@ function SetPasswordCtrl:OnCreate(obj)
 
 end
 
-function SetPasswordCtrl:Awake()
+function SetPasswordCtrl:Awake(go)
+    UnityEngine.GameObject.AddComponent(go, ct.getType(UnityEngine.Input_BanChinse))
     setPasswordBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    self.input = self.gameObject:GetComponent('Input_BanChinse');
     setPasswordBehaviour:AddClick(SetPasswordPanel.back,self.OnBack,self)
     setPasswordBehaviour:AddClick(SetPasswordPanel.next,self.OnNext,self)
 
@@ -64,11 +66,11 @@ function SetPasswordCtrl:OnBack()
 end
 
 function SetPasswordCtrl:_OnPassword()
-    SetPasswordPanel.input:BanChinese(SetPasswordPanel.password)
+    self.input:BanChinese(SetPasswordPanel.password)
 end
 
 function SetPasswordCtrl:_OnConfirm()
-    SetPasswordPanel.input:BanChinese(SetPasswordPanel.confirm)
+    self.input:BanChinese(SetPasswordPanel.confirm)
 end
 
 --修改密码

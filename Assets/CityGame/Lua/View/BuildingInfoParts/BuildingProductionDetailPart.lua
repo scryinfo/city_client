@@ -123,7 +123,7 @@ function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("SettopSuccess",self.SettopSuccess,self)
     Event.AddListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.AddListener("deleListLine",self.deleListLine,self)
-    --Event.AddListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
+    Event.AddListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
@@ -132,7 +132,7 @@ function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("SettopSuccess",self.SettopSuccess,self)
     Event.RemoveListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.RemoveListener("deleListLine",self.deleListLine,self)
-    --Event.RemoveListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
+    Event.RemoveListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
@@ -143,7 +143,7 @@ end
 --设置多语言
 function BuildingProductionDetailPart:_language()
     self.addTip.text = GetLanguage(25030001)
-    self.numberTipText.text = "数量"
+    self.numberTipText.text = GetLanguage(25010009)
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
@@ -184,6 +184,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
             elseif Good[lineData[1].itemId].luxury == 3 then
                 self.levelImg.color = getColorByVector3(threeLevel)
             end
+            self.brandNameText.text = DataManager.GetCompanyName()
         end
         --当前生产中线开始的时间
         self.startTime = lineData[1].ts
@@ -224,7 +225,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         end
         --判断当前有没有代生产队列
         if #lineData == 1 then
-            self.noLineTip.text = GetLanguage(25030012)
+            self.noLineTip.text = GetLanguage(20060005)
             self.noLineTip.transform.localScale = Vector3.one
         elseif #lineData > 1 then
             self.noLineTip.transform.localScale = Vector3.zero
@@ -251,7 +252,7 @@ end
 function BuildingProductionDetailPart:clickAddBtnBg()
     PlayMusEff(1002)
     if self.m_data.info.state == "OPERATE" then
-        ct.OpenCtrl("AddProductionLineCtrl",self.m_data)
+        ct.OpenCtrl("AddProductionLineCtrl",self.materialOrGoodsInfo)
         self:CloseDestroy(self.waitingQueueIns)
     else
         Event.Brocast("SmallPop",GetLanguage(20120001),ReminderType.Common)
@@ -432,14 +433,18 @@ function BuildingProductionDetailPart:updateNowLine(data)
         end
     end
 end
-----缓存获取到当前建筑Eva加点后的生产速度(原料信息，商品信息)
---function BuildingProductionDetailPart:saveMaterialOrGoodsInfo(data)
---    if data then
---        self.materialOrGoodsInfo = data
---        self.materialOrGoodsInfo.buildingType = self.m_data.buildingType
---        self.materialOrGoodsInfo.mId = self.m_data.info.mId
---    end
---end
+--缓存获取到当前建筑Eva加点后的生产速度(原料信息，商品信息)
+function BuildingProductionDetailPart:saveMaterialOrGoodsInfo(data)
+    if data then
+        if not self.materialOrGoodsInfo then
+            self.materialOrGoodsInfo = data
+            self.materialOrGoodsInfo.buildingType = self.m_data.buildingType
+            self.materialOrGoodsInfo.mId = self.m_data.info.mId
+        else
+            return
+        end
+    end
+end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --删除一条待生产的线
 function BuildingProductionDetailPart:updateListLine(id)

@@ -87,3 +87,13 @@ function BuildingBaseModel:m_ReqBuildingGoodsInfo(buildingId)
     local lMsg = {id = buildingId}
     DataManager.ModelSendNetMes("gscode.OpCode","queryBuildingGoodInfo","gs.Id",lMsg)
 end
+--获取仓库数据
+function BuildingBaseModel:m_GetWarehouseData(buildingId)
+    local lMsg = {id = buildingId}
+    DataManager.ModelSendNetMes("gscode.OpCode","getStorageData","gs.Id",lMsg)
+end
+--获取货架数据
+function BuildingBaseModel:m_GetShelfData(buildingId)
+    local lMsg = {id = buildingId}
+    DataManager.ModelSendNetMes("gscode.OpCode","getShelfData","gs.Id",lMsg)
+end

@@ -503,6 +503,7 @@ end
 function GameMainInterfaceCtrl:initInsData()
     DataManager.OpenDetailModel(GameMainInterfaceModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetAllMails')
+    --DataManager.DetailModelRpcNoRet(self.insId , 'm_WeatherInfo')
     self.m_Timer:Start()
 
     --头像

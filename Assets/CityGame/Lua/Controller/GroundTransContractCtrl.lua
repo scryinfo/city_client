@@ -81,8 +81,8 @@ function GroundTransContractCtrl:_setShowState(data)
     GroundTransContractPanel.rentAreaText.text = "1x1"
     GroundTransContractPanel.buyAreaText.text = "1x1"
     if data.ownerInfo ~= nil then
-        self.partAAvatar = AvatarManger.GetSmallAvatar(data.ownerInfo.faceId, GroundTransContractPanel.APortraitImg.transform,0.5)
-        self.partBAvatar = AvatarManger.GetSmallAvatar(DataManager.GetMyPersonalHomepageInfo().faceId, GroundTransContractPanel.BPortraitImg.transform,0.5)
+        self.partAAvatar = AvatarManger.GetBigAvatar(data.ownerInfo.faceId, GroundTransContractPanel.APortraitImg.transform,0.5)
+        self.partBAvatar = AvatarManger.GetBigAvatar(DataManager.GetMyPersonalHomepageInfo().faceId, GroundTransContractPanel.BPortraitImg.transform,0.5)
         GroundTransContractPanel.ANameText.text = data.ownerInfo.name
         GroundTransContractPanel.BNameText.text = DataManager.GetMyPersonalHomepageInfo().name
     end

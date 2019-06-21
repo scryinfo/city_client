@@ -35,6 +35,7 @@ public class FlightScrollTool : MonoBehaviour
     private string[] mTempTitleConfig;  //索引字符list
     private Dictionary<string, string[]> mTempDetailConfig = new Dictionary<string, string[]>();  //key 为字母索引，list为具体字符
     private List<string> mDetailConfig = new List<string>();  //包含所有字符的集合，按顺序排列
+    private List<int> mDetailChangeIdList = new List<int>();  //需要切换位置的id
     private List<Vector2> mContentPosList = new List<Vector2>();  //定位需要用到
 
     private Dictionary<int, RectTransform> mShowItemList = new Dictionary<int, RectTransform>();  //在屏幕显示的item
@@ -64,10 +65,12 @@ public class FlightScrollTool : MonoBehaviour
         {
             mTempDetailConfig = detailDic;
             mTempTitleConfig = titleStr;
+            mDetailChangeIdList.Add(mDetailConfig.Count);
             for (int i = 0; i < titleStr.Length; i++)
             {
                 List<string> temp = new List<string>(detailDic[titleStr[i]]);
                 mDetailConfig.AddRange(temp);
+                mDetailChangeIdList.Add(mDetailConfig.Count);
             }
             mScrollForecast.InitData(mScreenRatio, titleStr);
 
@@ -89,6 +92,8 @@ public class FlightScrollTool : MonoBehaviour
         }
         mShowItemList = new Dictionary<int, RectTransform>();
         mScrollForecast.CleanAll();
+        mDetailConfig = new List<string>();
+        mDetailChangeIdList = new List<int>();
     }
 
     private void OnScrollFunc(Vector2 value)
@@ -121,6 +126,7 @@ public class FlightScrollTool : MonoBehaviour
         {
             GameObject go = ScrollPool.GetInstance().GetValuableItem(mLeftTitlePrefab.name);
             go.GetComponent<RectTransform>().anchoredPosition = currentPos;
+            go.transform.Find("valueText").GetComponent<Text>().text = mTempTitleConfig[i];
             mContentPosList.Add(currentPos);
             mTitleObjs.Add(go);
             currentPos.y -= mTitleHeight + (mDetailHeight + mDetailSpaceH) * mTempDetailConfig[mTempTitleConfig[i]].Length;
@@ -145,7 +151,7 @@ public class FlightScrollTool : MonoBehaviour
         idPosy.Add(ids[0], startPosY);
         for (int i = ids[0] + 1; i < ids[ids.Count - 1] + 1; i++)
         {
-            if (mDetailConfig[i - 1][0] == mDetailConfig[i][0])  //如果首字母不一样，则需要加上title的高度
+            if (!mDetailChangeIdList.Contains(i))  //如果首字母不一样，则需要加上title的高度
             {
                 startPosY -= mDetailHeight + mDetailSpaceH;
             }
@@ -197,7 +203,7 @@ public class FlightScrollTool : MonoBehaviour
         if (mEvent.mProvideData != null)
         {
             mEvent.mProvideData(rect.gameObject, index);
-            rect.transform.Find("Text").GetComponent<Text>().text = index.ToString();
+            ////rect.transform.Find("Text").GetComponent<Text>().text = index.ToString();
         }
         mShowItemList.Add(index, rect);
     }

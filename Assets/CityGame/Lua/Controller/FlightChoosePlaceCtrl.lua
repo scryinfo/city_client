@@ -51,7 +51,7 @@ end
 --
 FlightChoosePlaceCtrl.static.ProvideFunc = function(transform, idx)
     idx = idx + 1
-    local item = FlightSelectPlaceItem:new(transform, {value = FlightChoosePlaceCtrl.totalValue[idx]})
+    local item = FlightSelectPlaceItem:new(transform, FlightChoosePlaceCtrl.totalValue[idx])
     if FlightChoosePlaceCtrl.static.itemsList[idx] ~= nil then
         FlightChoosePlaceCtrl.static.itemsList[idx]:Close()
     end
@@ -94,9 +94,9 @@ function FlightChoosePlaceCtrl:_TempCreateConfig()
     self.tempDetailDic = System.Collections.Generic.Dictionary_string_strings.New()
     self.tempTitleData = {}
     for i, value in ipairs(searchDic) do
-        self.tempTitleData[#self.tempTitleData] = value.title
+        self.tempTitleData[#self.tempTitleData + 1] = value.title
         local tempValue = value.value
-        self.tempDetailDic:Add(value, tempValue)
+        self.tempDetailDic:Add(value.title, tempValue)
     end
 
     --self.tempTitleData = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",}

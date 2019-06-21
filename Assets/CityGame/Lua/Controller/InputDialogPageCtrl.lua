@@ -65,7 +65,7 @@ function InputDialogPageCtrl:_initData()
     if self.m_data.inputDefaultStr ~= nil then
         self.rentInputPlaceholderText.text = self.m_data.inputDefaultStr
     else
-        self.rentInputPlaceholderText.text = GetLanguage(17020002)
+        self.rentInputPlaceholderText.text = GetLanguage(18010007)
     end
 end
 

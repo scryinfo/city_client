@@ -50,7 +50,6 @@ end
 
 function ShelfBoxCtrl:Hide()
     UIPanel.Hide(self)
-
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function ShelfBoxCtrl:_getComponent(go)
@@ -125,8 +124,16 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.levelImg.color = getColorByVector3(threeLevel)
             self.levelValue.text = GetLanguage(25020030)
         end
-        --self.popularityValue.text =
-        --self.qualityValue.text =
+        if not self.m_data.dataInfo.k then
+            self.brandNameText.text = self.m_data.dataInfo.key.brandName
+            self.popularityValue.text = self.m_data.dataInfo.key.brandScore
+            self.qualityValue.text = self.m_data.dataInfo.key.qualityScore
+        elseif not self.m_data.dataInfo.key then
+            self.brandNameText.text = self.m_data.dataInfo.k.brandName
+            self.popularityValue.text = self.m_data.dataInfo.k.brandScore
+            self.qualityValue.text = self.m_data.dataInfo.k.qualityScore
+        end
+
     end
     local function callback(a)
         --缓存一个值，修改数量时使用
@@ -144,7 +151,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.confirmBtn.transform.localScale = Vector3.one
         self.addShelfBtn.transform.localScale = Vector3.zero
         self.automaticSwitch.isOn = self.m_data.dataInfo.autoReplenish
-        self.numberSlider.maxValue = self.m_data.dataInfo.n + self.warehouseNumber
+        self.numberSlider.maxValue = self.m_data.dataInfo.n
         self.numberSlider.minValue = 1
         self.numberSlider.value = self.m_data.dataInfo.n
         self.numberText.text = "×"..self.numberSlider.value
@@ -152,11 +159,14 @@ function ShelfBoxCtrl:initializeUiInfoData()
         if self.automaticSwitch.isOn == true then
             self.numberSlider.transform.localScale = Vector3.zero
             self.totalNumber.transform.localScale = Vector3.one
-            self.totalNumberText.text = "×"..self.numberSlider.maxValue
-
+            self.totalNumberText.text = "×"..self.m_data.dataInfo.n
+            self.warehouseNumberText.text = "×"..0
+            self.shelfNumberText.text = "×"..self.m_data.dataInfo.n
         else
             self.numberSlider.transform.localScale = Vector3.one
             self.totalNumber.transform.localScale = Vector3.zero
+            self.shelfNumberText.text = "×"..self.m_data.dataInfo.n
+            self.numberSlider.maxValue = self.m_data.dataInfo.n + self.warehouseNumber
         end
     else
         --上架的时候打开时
@@ -177,17 +187,16 @@ function ShelfBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function ShelfBoxCtrl:_language()
-    self.topName.text = "详情"
+    self.topName.text = GetLanguage(28040035)
     self.popularityText.text = GetLanguage(25020006)
     self.qualityText.text = GetLanguage(25020005)
     self.levelText.text = GetLanguage(25020007)
     self.numberTip.text = GetLanguage(28040019)
     self.totalNumber.text = GetLanguage(28040019)
     self.tipText.text = GetLanguage(25060004)
-    self.tipContentText.text = "The goods will be sold as many as they aer in warehouse if you open the switch."
+    self.tipContentText.text = GetLanguage(25020027)
     self.priceTip.text = GetLanguage(25060003)
     --self.advicePrice.text = "参考价格:"
-    self.brandNameText.text = DataManager.GetCompanyName()
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------
 --关闭
@@ -216,7 +225,7 @@ end
 --点击下架
 function ShelfBoxCtrl:_clickDownShelfBtn(ins)
     if ins.m_data.dataInfo.autoReplenish == true then
-        Event.Brocast("SmallPop","请先关闭自动补货", 300)
+        Event.Brocast("SmallPop",GetLanguage(25030018), 300)
         return
     end
     local data = {}
@@ -288,11 +297,11 @@ end
 --上架时检查操作是否成功
 function ShelfBoxCtrl:WhetherValidShelfOp(ins)
     if GetServerPriceNumber(ins.priceInput.text) == 0 or ins.priceInput.text == "" then
-        Event.Brocast("SmallPop", "请输入价格", 300)
+        Event.Brocast("SmallPop", GetLanguage(25030023), 300)
         return false
     end
     if ins.numberSlider.value == 0 then
-        Event.Brocast("SmallPop", "请输入数量", 300)
+        Event.Brocast("SmallPop", GetLanguage(25030024), 300)
         return false
     end
     return true

@@ -71,13 +71,12 @@ end
 --初始化UI
 function GoodsTypeBoxCtrl:initializeUiInfoData()
     self.topName.text = GetLanguage(self.m_data.itemId)..GetLanguage(30020008)
+    self.basicProduceRateValue.text = CityLuaUtil.scientificNotation2Normal(self.m_data.numOneSec)
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == 21 then
         --原料
         self.basicQuality.gameObject:SetActive(false)
         self.qualityAddition.gameObject:SetActive(false)
         self.popularity.gameObject:SetActive(false)
-
-        self.basicProduceRateValue.text = self.m_data.numOneSec
         self.produceBounusValue.text = (self.m_data.eva.lv - 1) / 100
         --self.produceBounusValue.text = 1 / (self.m_data.numOneSec * (1 + (self.m_data.eva.lv - 1) / 100))
     elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == 22 then
@@ -85,8 +84,6 @@ function GoodsTypeBoxCtrl:initializeUiInfoData()
         self.basicQuality.gameObject:SetActive(true)
         self.qualityAddition.gameObject:SetActive(true)
         self.popularity.gameObject:SetActive(true)
-
-        self.basicProduceRateValue.text = self.m_data.numOneSec
         self.produceBounusValue.text = self.m_data.addNumOneSec
         self.basicQualityValue.text = self.m_data.quality
         self.qualityAdditionValue.text = self.m_data.addQuality

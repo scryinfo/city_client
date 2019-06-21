@@ -127,6 +127,7 @@ function FlightSearchCtrl:checkBtnFunc()
     PlayMusEff(1002)
     local time = os.date("%Y-%m-%d", self.timeValue)
     FlightMainModel.m_ReqSearchFlight(self.arriveCode, self.startCode, time)
+    FlightMainModel.OpenFlightLoading()  --开始loading
 end
 --起点选择的回调
 function FlightSearchCtrl:startChooseResult(data)

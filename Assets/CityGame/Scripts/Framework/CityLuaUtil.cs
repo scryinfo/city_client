@@ -185,7 +185,7 @@ namespace City
         public static string NewGuid()
         {
             return System.Guid.NewGuid().ToString().Replace("-","");
-        }
+        }        
 
         public static string scientificNotation2Normal(double number) {
             return number.ToString("f99").TrimEnd('0');

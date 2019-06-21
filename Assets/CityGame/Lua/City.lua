@@ -129,6 +129,108 @@ CityEngineLua._tradeNetworkInterface1 = nil;
 
 CityEngineLua.deg2rad = Mathf.PI / 180;
 
+function ct.getCredentialPath()
+	local pathstr = CityEngineLua.ip..CityEngineLua.username
+	local hash = City.signer_ct.getHexStringHash(pathstr)
+	return CityLuaUtil.getAssetsPath().."/Lua/credential/"..hash
+end
+
+
+function ct.VerifyPassword(password)
+	--验证密码
+	--1 从本地读取保存的公钥
+	local publicKeyPathToRead = ct.getCredentialPath().."pubKey.data"
+	--进一步验证，思路是使用新密码解密保存的私钥，然后生成一个公钥比对与保存的私钥是否相同
+	local pubkeyStrLoaded = ct.file_readString(publicKeyPathToRead)
+	--如果本地没有这个公钥，说明密码错误，返回
+	if pubkeyStrLoaded == nil then
+		return false
+	end
+
+	local testpubkey = ct.GenPublicKeyString(password)
+	local teststr = City.signer_ct.ByteArrayToString(testpubkey)
+	return teststr == pubkeyStrLoaded
+
+--[[	--2 从本地读取保存的私钥
+	--读取
+	local privateKeyPath = ct.getCredentialPath(password).."priKey.data"
+	local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
+	if privateKeyEncryptedSaved == nil then
+		return false
+	end
+	--用密码解密私钥
+	local privateKeyToTest = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
+	local pubkeyToTest = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyToTest);
+	return City.signer_ct.ByteArrayToString(pubkeyToTest) == pubkeyStrLoaded
+	--使用私钥生成公钥]]
+end
+
+--输入密钥保护密码
+function ct.GenerateAndSaveKeyPair(password)
+	--生成并保存私钥
+	local privateKey = City.CityLuaUtil.NewGuid()
+	local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
+	--保存私钥
+	--获取私钥保存路径
+	local privateKeyPath = ct.getCredentialPath().."priKey.data"
+	ct.file_saveString(privateKeyPath,privateKeyEncrypted)
+
+	--用私钥字符串生成公钥并保存
+	local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
+	--获取公钥保存路径
+	local publicKeyPath = ct.getCredentialPath().."pubKey.data"
+	local pubkeyStr = City.signer_ct.ByteArrayToString(pubkey); --转为字符保存
+	ct.file_saveString(publicKeyPath,pubkeyStr)
+
+	local pk = ct.GetPublicKeyStringLocal()
+	return privateKey, pubkeyStr
+end
+
+--从本地读取保存的公钥
+function ct.GetPublicKeyStringLocal()
+	--获取私钥保存路径
+	local publicKeyPath = ct.getCredentialPath().."pubKey.data"
+	--读取
+	local pubkeyStr = ct.file_readString(publicKeyPath)
+	if pubkeyStr == nil then
+		return nil
+	end
+	--用密码解密私钥
+	return pubkeyStr
+end
+
+--使用密码获取私钥
+function ct.GetPrivateKeyLocal(password)
+	--获取私钥保存路径
+	local privateKeyPath = ct.getCredentialPath().."priKey.data"
+	--读取
+	local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
+	if privateKeyEncryptedSaved == nil then
+		return nil
+	end
+	--用密码解密私钥
+	return City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
+end
+
+--使用密码获取公钥
+function ct.GenPublicKeyString(password)
+	local privateKey = ct.GetPrivateKeyLocal(password)
+	if privateKey == nil then
+		return nil
+	end
+	return City.signer_ct.ByteArrayToString(City.signer_ct.GetPublicKeyFromPrivateKey(privateKey))
+end
+function ct.GenPublicKey(password)
+	local privateKey = ct.GetPrivateKeyLocal(password)
+	if privateKey == nil then
+		return nil
+	end
+	return City.signer_ct.GetPublicKeyFromPrivateKey(privateKey)
+end
+
+function ct.GenPublicKeyStringFromPrivateKey(key)
+	return City.signer_ct.ByteArrayToString(City.signer_ct.GetPublicKeyFromPrivateKey(key))
+end
 
 CityEngineLua.GetArgs = function()
 	return this.clientVersion, this.clientScriptVersion, this.ip, this.port;

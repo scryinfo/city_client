@@ -22,10 +22,12 @@ end
 function LoginCtrl:Awake(go)
 	ct.log("abel_w6_UIFrame","LoginCtrl:Awake--->>");
 	self.gameObject = go
+	UnityEngine.GameObject.AddComponent(go, ct.getType(UnityEngine.Input_BanChinse))
 	self.insId = OpenModelInsID.LoginCtrl
 
 	--注册点击事件
 	local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+	self.input =  self.gameObject:GetComponent('Input_BanChinse');
 	LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
 	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
 	LuaBehaviour:AddClick(LoginPanel.forget, self.OnForget,self);
@@ -188,7 +190,7 @@ end
 --密码不能输入中文
 function LoginCtrl:_OnPassword()
 	local a = LoginPanel.inputPassword:GetComponent('InputField')
-	LoginPanel.input:BanChinese(a)
+	self.input:BanChinese(a)
 end
 
 --是否显示密码
@@ -283,6 +285,7 @@ end
 --注册--
 function LoginCtrl:OnRegister(go)
 	PlayMusEff(1002)
+	CityEngineLua.currstate = "register"
 	CityEngineLua.login_loginapp(true)
 	ct.OpenCtrl("InviteCodeCtrl")
 end
@@ -290,6 +293,7 @@ end
 --找回密码
 function LoginCtrl:OnForget()
 	PlayMusEff(1002)
+	CityEngineLua.currstate = "forget"
 	CityEngineLua.login_loginapp(true)
 	ct.OpenCtrl("RetrievePasswordCtrl")
 end

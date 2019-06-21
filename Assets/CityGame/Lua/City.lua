@@ -132,7 +132,7 @@ CityEngineLua.deg2rad = Mathf.PI / 180;
 function ct.getCredentialPath(password)
 	local pathstr = CityEngineLua.ip..CityEngineLua.username..password
 	local hash = City.signer_ct.getHexStringHash(pathstr)
-	return CityLuaUtil.getAssetsPath().."/Lua/pb/"..hash
+	return CityLuaUtil.getAssetsPath().."/credential/"..hash
 end
 
 
@@ -148,7 +148,7 @@ function ct.VerifyPassword(password)
 	end
 	--2 从本地读取保存的私钥
 	--读取
-	local privateKeyPath = ct.getCredentialPath(password)..".data"
+	local privateKeyPath = ct.getCredentialPath(password).."priKey.data"
 	local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
 	if privateKeyEncryptedSaved == nil then
 		return false
@@ -167,7 +167,7 @@ function ct.GenerateAndSaveKeyPair(password)
 	local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
 	--保存私钥
 	--获取私钥保存路径
-	local privateKeyPath = ct.getCredentialPath(password)..".data"
+	local privateKeyPath = ct.getCredentialPath(password).."priKey.data"
 	ct.file_saveString(privateKeyPath,privateKeyEncrypted)
 
 	--用私钥字符串生成公钥并保存
@@ -181,7 +181,7 @@ end
 --使用密码获取私钥
 function ct.GetPrivateKey(password)
 	--获取私钥保存路径
-	local privateKeyPath = ct.getCredentialPath(password)..".data"
+	local privateKeyPath = ct.getCredentialPath(password).."priKey.data"
 	--读取
 	local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
 	--用密码解密私钥

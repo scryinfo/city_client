@@ -72,11 +72,14 @@ namespace City {
         }
 
         public static string getHexStringHash(string str)
-        {            
-            str = formatAmount(str);
-            string validstr = RemoveSpecialCharacters(str);
-            byte[] buffer = getDataHashIntenal(Encoding.UTF8.GetBytes(validstr));            
-            return RemoveSpecialCharacters(Encoding.UTF8.GetString(buffer, 0, buffer.Length));
+        {
+            return LuaFramework.Util.md5(str);
+            //str = formatAmount(str);
+            //string validstr = RemoveSpecialCharacters(str);
+            //byte[] buffer = getDataHashIntenal(Encoding.UTF8.GetBytes(validstr));
+            //string tt = buffer.ToString();
+            //tt = CityLuaUtil.bytesToString(buffer);
+            //return CityLuaUtil.bytesToString(buffer);
         }
 
         public static String formatAmount(String count)

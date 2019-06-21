@@ -123,14 +123,14 @@ function FlightSearchCtrl:checkBtnFunc()
 end
 --起点选择的回调
 function FlightSearchCtrl:startChooseResult(data)
-    --self.startCode = data
-    self.startCode = "CTU"
+    self.startCode = data.flightCode
+    --self.startCode = "CTU"
     FlightSearchPanel.startText.text = self.startCode
 end
 --终点选择的回调
 function FlightSearchCtrl:endChooseResult(data)
-    --self.arriveCode = data
-    self.arriveCode = "NKG"
+    self.arriveCode = data.flightCode
+    --self.arriveCode = "NKG"
     FlightSearchPanel.endText.text = self.arriveCode
 end
 --起点选择的回调

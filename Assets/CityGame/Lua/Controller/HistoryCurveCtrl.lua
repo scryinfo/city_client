@@ -204,11 +204,10 @@ function HistoryCurveCtrl:SupplyCurve(info)
         local temp = {}
         for i, v in ipairs(supplyNum) do
             temp[i] = {}
+            temp[i].num = 0
             for k, z in ipairs(info) do
                 if v.ts == z.key/1000 then
                     temp[i].num = z.value
-                else
-                    temp[i].num = 0
                 end
             end
         end

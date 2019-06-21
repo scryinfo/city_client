@@ -63,8 +63,7 @@ function AdvertisementPartDetail:RefreshData(data)
         self.priceText.text = GetClientPriceString(data.curPromPricePerHour)
         self.queneValue.text = data.selledPromCount
         if data.selledPromCount == 0 then
-            local ts = getFormatUnixTime(TimeSynchronized.GetTheCurrentTime())
-            self.startTime.text = ts.hour .. ":" ..ts.minute .. " " .. ts.month .. "/" .. ts.day .. "/" .. ts.year
+            self.startTime.text = GetLanguage(27040032)
             return
         end
         if data.newPromoStartTs ~= -1 then

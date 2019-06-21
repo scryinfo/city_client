@@ -95,7 +95,7 @@ namespace City {
         }
         public void pushSting(String str)
         {
-            byte[] bts = Encoding.UTF8.GetBytes(str);
+            byte[] bts = Encoding.UTF8.GetBytes(str);                
             _datas.Add(bts);
             _dataLen += bts.Length;
         }

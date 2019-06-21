@@ -132,7 +132,7 @@ CityEngineLua.deg2rad = Mathf.PI / 180;
 function ct.getCredentialPath(password)
 	local pathstr = CityEngineLua.ip..CityEngineLua.username..password
 	local hash = City.signer_ct.getHexStringHash(pathstr)
-	return CityLuaUtil.getAssetsPath().."/credential/"..hash
+	return CityLuaUtil.getAssetsPath().."/Lua/credential/"..hash
 end
 
 

@@ -39,9 +39,16 @@ namespace City {
             _dataLen = 0;
             _dataHash = null;
         }
+        public String formatAmount(String count)
+        {
+            if (count.Length % 2 == 1) count = "0" + count;
+            return count;
+        }
+
         public void pushHexSting(String str)
         {
             str = str.Replace("-","");
+            str = formatAmount(str);
             byte[] bts = Hex.Decode(str);
             _datas.Add(bts);
             _dataLen += bts.Length;

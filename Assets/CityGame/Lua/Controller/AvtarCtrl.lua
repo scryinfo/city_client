@@ -106,7 +106,7 @@ function AvtarCtrl:ClearCasch()
     myCurrentHeadNum = nil
     AvatarOrganImageList = nil
     headPrefab = nil
-    pool = {}
+    --pool = {}
 end
 
 

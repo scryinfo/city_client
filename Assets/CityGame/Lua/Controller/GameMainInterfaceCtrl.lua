@@ -436,8 +436,6 @@ function GameMainInterfaceCtrl:Awake()
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.clearBg,self.OnClearBg,self); --点击ClearBg
     gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.simple,self.OnSimple,self); --点击简单收益面板
 
-    gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.forecast,self.OnForecast,self); --预测
-
 
     --todo 城市广播
     --gameMainInterfaceBehaviour:AddClick(GameMainInterfacePanel.leftRadioBtn,self.OnLeftRadioBtn,self);
@@ -868,11 +866,6 @@ end
 function GameMainInterfaceCtrl:OnSimple()
     PlayMusEff(1002)
     GameMainInterfaceCtrl:OnClick_EarningBtn(true)
-end
-
---预测
-function GameMainInterfaceCtrl:OnForecast()
-    ct.OpenCtrl("FlightMainCtrl")
 end
 
 --滑动互用

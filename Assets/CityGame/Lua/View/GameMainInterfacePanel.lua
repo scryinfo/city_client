@@ -123,6 +123,4 @@ function GameMainInterfacePanel.InitPanel()
     --this.bonuspoolTime = transform:Find("RadioCity/bg/radioImage/Bonuspoolbreak/bonuspoolTime"):GetComponent("Text");   --奖金池突破时间
     --this.bonuspoolConter = transform:Find("RadioCity/bg/radioImage/Bonuspoolbreak/bonuspoolConter"):GetComponent("Text");   --奖金池突破内容
 
-    this.forecast = transform:Find("forecast").gameObject  --预测
-
 end

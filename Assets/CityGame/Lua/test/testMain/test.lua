@@ -882,7 +882,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
             --填充关键数据
             sm:pushHexSting(msg.PurchaseId); --PurchaseId
             sm:pushLong(ts); --ts
-            sm:pushHexSting("123456");   --Amount
+            sm:pushSting("123456");   --Amount
             --sm:pushHexSting(pubkeyStr)
             --sm:pushBtyes(pubkey)
 
@@ -956,7 +956,7 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
             --填充关键数据
             sm:pushHexSting(msg.PurchaseId); --PurchaseId
             sm:pushSha256Hex(myEthAddr); --//addr
-            sm:pushHexSting(amount);   --Amount
+            sm:pushSting(amount);   --Amount
             sm:pushLong(ts); --ts
 
             --计算数据哈希
@@ -1051,8 +1051,8 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
     local pubkeyStr = sm.ToHexString(pubkey);
     sm:pushHexSting("0636ba40b4124c9babf8043f91ff9045"); --PurchaseId
     sm:pushLong(1559911178647); --ts
-    sm:pushHexSting("-1");   --meta
-    sm:pushHexSting(pubkeyStr)
+    sm:pushSting("-1");   --meta
+    sm:pushSting(pubkeyStr)
     --计算数据哈希
     local datahash = sm:getDataHash();
     local datahashstr = City.signer_ct.ToHexString(datahash);
@@ -1103,7 +1103,7 @@ UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function 
     --填充关键数据
     --sm:pushHexSting(msg.PurchaseId); --PurchaseId
     sm:pushSha256Hex(myEthAddr); --//addr
-    sm:pushHexSting(amount);   --Amount
+    sm:pushSting(amount);   --Amount
     sm:pushLong(ts); --ts
 
     --生成

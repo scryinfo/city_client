@@ -93,6 +93,13 @@ namespace City {
             _datas.Add(bts);
             _dataLen += bts.Length;
         }
+        public void pushSting(String str)
+        {
+            byte[] bts = Encoding.UTF8.GetBytes(str);
+            _datas.Add(bts);
+            _dataLen += bts.Length;
+        }
+
         public void pushSha256Hex(String str)
         {
             var strBytes = Encoding.UTF8.GetBytes(str);

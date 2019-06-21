@@ -880,7 +880,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
             local pubkeyStr = sm.ToHexString(pubkey);
             local ts = 1559911178
             --填充关键数据
-            sm:pushHexSting(msg.PurchaseId); --PurchaseId
+            sm:pushSting(msg.PurchaseId); --PurchaseId
             sm:pushLong(ts); --ts
             sm:pushSting("123456");   --Amount
             --sm:pushHexSting(pubkeyStr)
@@ -954,7 +954,7 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
             local amount = tostring(2000)
             local ts = 1559911188
             --填充关键数据
-            sm:pushHexSting(msg.PurchaseId); --PurchaseId
+            sm:pushSting(msg.PurchaseId); --PurchaseId
             sm:pushSha256Hex(myEthAddr); --//addr
             sm:pushSting(amount);   --Amount
             sm:pushLong(ts); --ts

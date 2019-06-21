@@ -4,6 +4,7 @@ UIPanel:ResgisterOpen(GameMainInterfaceCtrl) --注册打开的方法
 local gameMainInterfaceBehaviour;
 local Mails
 local incomeNotify    --收益详情表
+local lastIncomeNotify  --打开收益面板前的收益表
 local lastTime = 0  --上一次时间
 --todo 城市广播
 local radioTime      --时间
@@ -77,7 +78,7 @@ function GameMainInterfaceCtrl:Hide()
     --Event.RemoveListener("c_majorTransaction", self.c_OnMajorTransaction, self) --重大交易
     Event.RemoveListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
     --Event.RemoveListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
-    GameMainInterfaceCtrl:OnClick_EarningBtn(false)
+    GameMainInterfaceCtrl:OnClick_EarningBtn(false,self)
     self:RemoveUpdata()
 end
 
@@ -201,9 +202,12 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         end
     end
+    if self.isOpen then
         if incomeNotify then
             GameMainInterfacePanel.earningScroll:ActiveLoopScroll(self.earnings, #incomeNotify)
+            lastIncomeNotify = ct.deepCopy(incomeNotify)
         end
+    end
 end
 
 --好友信息
@@ -822,21 +826,21 @@ end
 
 --todo  收益
 --打开
-function GameMainInterfaceCtrl:OnOpen()
+function GameMainInterfaceCtrl:OnOpen(go)
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:OnClick_EarningBtn(true)
+    GameMainInterfaceCtrl:OnClick_EarningBtn(true,go)
 end
 
 --点击收益背景
-function GameMainInterfaceCtrl:OnEarningsPanelBg()
+function GameMainInterfaceCtrl:OnEarningsPanelBg(go)
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:OnClick_EarningBtn(false)
+    GameMainInterfaceCtrl:OnClick_EarningBtn(false,go)
 end
 
 --关闭
-function GameMainInterfaceCtrl:OnClose()
+function GameMainInterfaceCtrl:OnClose(go)
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:OnClick_EarningBtn(false)
+    GameMainInterfaceCtrl:OnClick_EarningBtn(false,go)
 end
 
 --点击xBtn
@@ -863,9 +867,9 @@ function GameMainInterfaceCtrl:OnClearBg()
 end
 
 --点击简单收益面板
-function GameMainInterfaceCtrl:OnSimple()
+function GameMainInterfaceCtrl:OnSimple(go)
     PlayMusEff(1002)
-    GameMainInterfaceCtrl:OnClick_EarningBtn(true)
+    GameMainInterfaceCtrl:OnClick_EarningBtn(true,go)
 end
 
 --滑动互用
@@ -889,8 +893,15 @@ function GameMainInterfaceCtrl:_OnHeadBtn(go)
 end
 
 --打开关闭收益详情
-function GameMainInterfaceCtrl:OnClick_EarningBtn(isShow)
+function GameMainInterfaceCtrl:OnClick_EarningBtn(isShow,go)
     if isShow then
+        go.isOpen = true
+        if lastIncomeNotify ~= incomeNotify then
+            if incomeNotify then
+                GameMainInterfacePanel.earningScroll:ActiveLoopScroll(go.earnings, #incomeNotify)
+            end
+        end
+        lastIncomeNotify = ct.deepCopy(incomeNotify)
         GameMainInterfacePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         GameMainInterfacePanel.open.transform.localScale = Vector3.zero
         GameMainInterfacePanel.opens.transform.localScale = Vector3.zero
@@ -898,6 +909,7 @@ function GameMainInterfaceCtrl:OnClick_EarningBtn(isShow)
         GameMainInterfacePanel.closes.transform.localScale = Vector3.one
         GameMainInterfacePanel.earningsPanelBg.transform.localScale = Vector3.one
     else
+        go.isOpen = false
         GameMainInterfacePanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         GameMainInterfacePanel.open.transform.localScale = Vector3.one
         GameMainInterfacePanel.opens.transform.localScale = Vector3.one

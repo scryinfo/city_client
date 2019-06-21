@@ -60,15 +60,21 @@ end
 --
 function FlightSearchCtrl:_initData()
     --默认出发地为北京，目的地为上海
-    self.startCode = "CTU"
+    if self.startCode == nil then
+        self.startCode = "CTU"
+    end
+    if self.arriveCode == nil then
+        self.arriveCode = "NKG"
+    end
     FlightSearchPanel.startText.text = self.startCode
-    self.arriveCode = "NKG"
     FlightSearchPanel.endText.text = self.arriveCode
 
-    local year = tonumber(os.date("%Y", os.time()))
-    local month = tonumber(os.date("%m", os.time()))
-    local day = tonumber(os.date("%d", os.time()))
-    self.timeValue = os.time({year = year, month = month, day = day})  --时间戳
+    if self.timeValue == nil then
+        local year = tonumber(os.date("%Y", os.time()))
+        local month = tonumber(os.date("%m", os.time()))
+        local day = tonumber(os.date("%d", os.time()))
+        self.timeValue = os.time({year = year, month = month, day = day})  --时间戳
+    end
     self:showTimeText(self.timeValue)
 end
 --
@@ -81,6 +87,7 @@ function FlightSearchCtrl:_language()
 end
 --
 function FlightSearchCtrl:backFunc()
+    self:_clean()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
@@ -119,18 +126,16 @@ end
 function FlightSearchCtrl:checkBtnFunc()
     PlayMusEff(1002)
     local time = os.date("%Y-%m-%d", self.timeValue)
-    FlightMainModel.m_ReqSearchFlight(self.startCode, self.arriveCode, time)
+    FlightMainModel.m_ReqSearchFlight(self.arriveCode, self.startCode, time)
 end
 --起点选择的回调
 function FlightSearchCtrl:startChooseResult(data)
     self.startCode = data.flightCode
-    --self.startCode = "CTU"
     FlightSearchPanel.startText.text = self.startCode
 end
 --终点选择的回调
 function FlightSearchCtrl:endChooseResult(data)
     self.arriveCode = data.flightCode
-    --self.arriveCode = "NKG"
     FlightSearchPanel.endText.text = self.arriveCode
 end
 --起点选择的回调
@@ -168,4 +173,10 @@ function FlightSearchCtrl:_getSearchFlightResult(data)
     else
         Event.Brocast("SmallPop", GetLanguage(32030031))
     end
+end
+--
+function FlightSearchCtrl:_clean()
+    self.timeValue = nil
+    self.startCode = nil
+    self.arriveCode = nil
 end

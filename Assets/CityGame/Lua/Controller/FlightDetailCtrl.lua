@@ -114,16 +114,19 @@ function FlightDetailCtrl:_hot(value)
     --可押注
     if value.myBet == nil and flightData.FlightState == "计划" then
         FlightDetailPanel.betBtn.localScale = Vector3.one
+        return
     end
     --提示已参加预测  --判定需要看具体数据是否为""
     if value.myBet ~= nil and flightData.FlightDeptimeDate == "" then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
         FlightDetailPanel.infoText.text = GetLanguage(32030019, value.myBet.delay, value.myBet.amount)
+        return
     end
     --提示航班已过投注时间
     if value.myBet == nil and flightData.FlightDeptimeDate ~= "计划" then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
         FlightDetailPanel.infoText.text = GetLanguage(32030023)
+        return
     end
 end
 --
@@ -170,7 +173,7 @@ function FlightDetailCtrl:_search(value)
         FlightDetailPanel.historyTrueTimeText.text = self:_getSecondStr(flightData.FlightDeptimeDate)
     end
     --如果没有对应数据，则没下过注
-    local tempBet = FlightMainModel.getFlightById(flightData.FlightNo)
+    local tempBet = FlightMainModel.getFlightBetById(flightData.FlightNo)
     if tempBet == nil then
         tempBet = FlightMainModel.getSearchFlightBetById(flightData.FlightNo)
     end

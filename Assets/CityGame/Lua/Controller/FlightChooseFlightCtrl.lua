@@ -99,6 +99,7 @@ end
 --
 function FlightChooseFlightCtrl:backFunc()
     self:cleanItemList()
+    FlightChooseFlightPanel.scrollLoop:CleanAll()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end

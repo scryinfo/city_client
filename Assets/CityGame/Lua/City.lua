@@ -129,8 +129,8 @@ CityEngineLua._tradeNetworkInterface1 = nil;
 
 CityEngineLua.deg2rad = Mathf.PI / 180;
 
-function ct.getCredentialPath(password)
-	local pathstr = CityEngineLua.ip..CityEngineLua.username..password
+function ct.getCredentialPath()
+	local pathstr = CityEngineLua.ip..CityEngineLua.username
 	local hash = City.signer_ct.getHexStringHash(pathstr)
 	return CityLuaUtil.getAssetsPath().."/Lua/credential/"..hash
 end
@@ -139,7 +139,7 @@ end
 function ct.VerifyPassword(password)
 	--验证密码
 	--1 从本地读取保存的公钥
-	local publicKeyPathToRead = ct.getCredentialPath(password).."pubKey.data"
+	local publicKeyPathToRead = ct.getCredentialPath().."pubKey.data"
 	--进一步验证，思路是使用新密码解密保存的私钥，然后生成一个公钥比对与保存的私钥是否相同
 	local pubkeyStrLoaded = ct.file_readString(publicKeyPathToRead)
 	--如果本地没有这个公钥，说明密码错误，返回
@@ -172,24 +172,24 @@ function ct.GenerateAndSaveKeyPair(password)
 	local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
 	--保存私钥
 	--获取私钥保存路径
-	local privateKeyPath = ct.getCredentialPath(password).."priKey.data"
+	local privateKeyPath = ct.getCredentialPath().."priKey.data"
 	ct.file_saveString(privateKeyPath,privateKeyEncrypted)
 
 	--用私钥字符串生成公钥并保存
 	local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
 	--获取公钥保存路径
-	local publicKeyPath = ct.getCredentialPath(password).."pubKey.data"
+	local publicKeyPath = ct.getCredentialPath().."pubKey.data"
 	local pubkeyStr = City.signer_ct.ByteArrayToString(pubkey); --转为字符保存
 	ct.file_saveString(publicKeyPath,pubkeyStr)
 
-	local pk = ct.GetPublicKeyStringLocal(password)
+	local pk = ct.GetPublicKeyStringLocal()
 	return privateKey, pubkeyStr
 end
 
 --从本地读取保存的公钥
-function ct.GetPublicKeyStringLocal(password)
+function ct.GetPublicKeyStringLocal()
 	--获取私钥保存路径
-	local publicKeyPath = ct.getCredentialPath(password).."pubKey.data"
+	local publicKeyPath = ct.getCredentialPath().."pubKey.data"
 	--读取
 	local pubkeyStr = ct.file_readString(publicKeyPath)
 	if pubkeyStr == nil then
@@ -202,7 +202,7 @@ end
 --使用密码获取私钥
 function ct.GetPrivateKeyLocal(password)
 	--获取私钥保存路径
-	local privateKeyPath = ct.getCredentialPath(password).."priKey.data"
+	local privateKeyPath = ct.getCredentialPath().."priKey.data"
 	--读取
 	local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
 	if privateKeyEncryptedSaved == nil then

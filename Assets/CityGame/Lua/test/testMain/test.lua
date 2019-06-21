@@ -1135,7 +1135,7 @@ UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  f
     local pass1 = City.signer_ct.checkKeyEqual(pubKey,pubKey1)
 
     local pubKeyStr = ct.GenPublicKeyString(password)
-    local pubKeyRight = ct.GetPublicKeyStringLocal(password)
+    local pubKeyRight = ct.GetPublicKeyStringLocal()
     local pass = (pubKeyStr == pubKeyRight)
     local pubKeyFromGenLocal = City.signer_ct.StringToByteArray(pubKeyStr)
     local pubKeyFromLoad = City.signer_ct.StringToByteArray(pubKeyRight)

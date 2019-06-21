@@ -129,6 +129,11 @@ CityEngineLua._tradeNetworkInterface1 = nil;
 
 CityEngineLua.deg2rad = Mathf.PI / 180;
 
+function ct.getCredentialPath(password)
+	local pathstr = CityEngineLua.ip..CityEngineLua.username..password
+	local hash = City.signer_ct.getHexStringHash(pathstr)
+	return CityLuaUtil.getAssetsPath().."/Lua/pb/"..hash..".data"
+end
 
 CityEngineLua.GetArgs = function()
 	return this.clientVersion, this.clientScriptVersion, this.ip, this.port;

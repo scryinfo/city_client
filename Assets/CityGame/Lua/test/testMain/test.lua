@@ -1128,7 +1128,8 @@ UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  f
 
     local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
     --保存
-    local path = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
+    local path = ct.getCredentialPath(password)
+
     ct.file_saveString(path,privateKeyEncrypted)
     --读取
     local privateKeyEncryptedSaved = ct.file_readString(path)

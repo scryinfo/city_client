@@ -20,6 +20,7 @@ using Org.BouncyCastle.X509;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Crypto.Encodings;
 using System.IO;
+using System.Text.RegularExpressions;
 namespace City {
     public class signer_ct
     {
@@ -39,7 +40,46 @@ namespace City {
             _dataLen = 0;
             _dataHash = null;
         }
-        public String formatAmount(String count)
+
+        static string CleanInput(string strIn)
+        {
+            // Replace invalid characters with empty strings.
+            try
+            {
+                return Regex.Replace(strIn, @"[^\w\.@-]", "",
+                                     RegexOptions.None, TimeSpan.FromSeconds(1.5));
+            }
+            // If we timeout when replacing invalid characters, 
+            // we should return Empty.
+            catch (RegexMatchTimeoutException)
+            {
+                return String.Empty;
+            }
+        }
+        public static string RemoveSpecialCharacters(string str)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < str.Length; i++)
+            {
+                if ((str[i] >= '0' && str[i] <= '9')
+                    || (str[i] >= 'A' && str[i] <= 'z'))
+                {
+                    sb.Append(str[i]);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public static string getHexStringHash(string str)
+        {            
+            str = formatAmount(str);
+            string validstr = RemoveSpecialCharacters(str);
+            byte[] buffer = getDataHashIntenal(Encoding.UTF8.GetBytes(validstr));            
+            return RemoveSpecialCharacters(Encoding.UTF8.GetString(buffer, 0, buffer.Length));
+        }
+
+        public static String formatAmount(String count)
         {
             if (count.Length % 2 == 1) count = "0" + count;
             return count;
@@ -94,6 +134,13 @@ namespace City {
             return publicKey.Q.GetEncoded();
         }
 
+        private static byte[] getDataHashIntenal(byte[] hashOfdData)
+        {
+            SHA256 mySHA256 = SHA256.Create();
+            byte[] output = mySHA256.ComputeHash(hashOfdData);
+            return output;
+        }
+
         public byte[] getDataHash()
         {
             if (_dataHash != null)
@@ -109,9 +156,7 @@ namespace City {
                     Array.Copy(bts, 0, hashOfdData, pos, bts.Length);
                     pos += bts.Length;
                 }
-                SHA256 mySHA256 = SHA256.Create();
-                byte[] output = mySHA256.ComputeHash(hashOfdData);
-                return output;
+                return getDataHashIntenal(hashOfdData);                
             }
         }
         

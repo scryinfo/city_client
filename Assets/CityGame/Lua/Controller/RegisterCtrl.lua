@@ -22,8 +22,10 @@ function RegisterCtrl:OnCreate(obj)
 
 end
 
-function RegisterCtrl:Awake()
+function RegisterCtrl:Awake(go)
+    UnityEngine.GameObject.AddComponent(go, ct.getType(UnityEngine.Input_BanChinse))
     registerBehaviour = self.gameObject:GetComponent('LuaBehaviour');
+    self.input = self.gameObject:GetComponent('Input_BanChinse');
     registerBehaviour:AddClick(RegisterPanel.back,self.OnBack,self)  --获取
     registerBehaviour:AddClick(RegisterPanel.gain,self.OnGain,self)  --获取
     registerBehaviour:AddClick(RegisterPanel.register,self.OnRegister,self)  --注册
@@ -90,11 +92,11 @@ function RegisterCtrl:OnBack(go)
 end
 
 function RegisterCtrl:_OnPassword()
-    RegisterPanel.input:BanChinese(RegisterPanel.password)
+    self.input:BanChinese(RegisterPanel.password)
 end
 
 function RegisterCtrl:_OnConfirm()
-    RegisterPanel.input:BanChinese(RegisterPanel.confirm)
+    self.input:BanChinese(RegisterPanel.confirm)
 end
 
 --点击获取验证码

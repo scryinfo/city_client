@@ -769,7 +769,7 @@ end
 --指南书--
 function GameMainInterfaceCtrl.OnGuideBool()
     PlayMusEff(1002)
-    --ct.OpenCtrl("GuidBookCtrl")
+    ct.OpenCtrl("NoviceTutorialCtrl")
 end
 
 --小地图

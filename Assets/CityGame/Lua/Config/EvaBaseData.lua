@@ -355,14 +355,14 @@ EvaBaseData =
         Atype = 1613,
         Btype = "PromotionAbility",
         b = 0,
-        basevalue = 10,
+        basevalue = 1,
     },
     [52] = {
         name = 31010008,
         Atype = 1614,
         Btype = "PromotionAbility",
         b = 0,
-        basevalue = 10,
+        basevalue = 1,
     },
     [53] = {
         name = 31010008,
@@ -370,13 +370,13 @@ EvaBaseData =
         Btype = "PromotionAbility",
         b = 0,
         b = 0,
-        basevalue = 10,
+        basevalue = 1,
     },
     [54] = {
         name = 31010008,
         Atype = 1652,
         Btype = "PromotionAbility",
         b = 0,
-        basevalue = 10,
+        basevalue = 1,
     },
 }

@@ -130,7 +130,7 @@ function GuildMenu:_onAddFriends()
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
         if string.len(text) > 30 then
-            text = GetLanguage(15010018)
+            text = GetLanguage(13040006)
             Event.Brocast("SmallPop",text,80)
         else
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_AddFriends", { id = GuildOwnCtrl.static.guildMgr:GetPlayerId(), desc = text })

@@ -178,7 +178,7 @@ function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
     data.btnCallBack = function(text)
         --Event.Brocast("m_ChatAddFriends", { id = ins.m_data.id, desc = text })
         if string.len(text) > 30 then
-            text = GetLanguage(15010018)
+            text = GetLanguage(13040006)
             Event.Brocast("SmallPop",text,80)
         else
             DataManager.ModelSendNetMes("gscode.OpCode", "addFriend","gs.ByteStr", { id = ins.m_data.id, desc = text })

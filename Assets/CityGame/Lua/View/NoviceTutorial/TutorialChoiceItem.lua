@@ -34,7 +34,7 @@ function TutorialChoiceItem:SetSelect(isSelect)
     self.choiceNameText.color = getColorByVector3(isSelect and TutorialChoiceItem.static.NomalNameColor or TutorialChoiceItem.static.SelectNameColor)
 end
 
--- 设置按钮的是否可点
+-- 设置选择项的名字
 function TutorialChoiceItem:SetNameText()
     self.choiceNameText.text = "Land"
 end

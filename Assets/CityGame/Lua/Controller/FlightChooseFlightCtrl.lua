@@ -63,11 +63,19 @@ function FlightChooseFlightCtrl:_initData()
         FlightChooseFlightPanel.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
         FlightChooseFlightPanel.startCodeText.text = flightData.FlightDepcode
         FlightChooseFlightPanel.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
+        self:_updateText()
 
         FlightChooseFlightCtrl.static.itemsList = {}
         FlightChooseFlightCtrl.listValue = self.m_data
         FlightChooseFlightPanel.scrollLoop:InitData(#self.m_data)
     end
+end
+--
+function FlightChooseFlightCtrl:_updateText()
+    local str2 = FlightChooseFlightPanel.endPlaceText.text
+    FlightChooseFlightPanel.endPlaceText.text = ct.getFlightSubString(str2, 42, 24)
+    local str3 = FlightChooseFlightPanel.startPlaceText.text
+    FlightChooseFlightPanel.startPlaceText.text = ct.getFlightSubString(str3, 42, 24)
 end
 --获得2019-05-01格式的时间
 function FlightChooseFlightCtrl:_getDayStr(str)
@@ -99,6 +107,7 @@ end
 --
 function FlightChooseFlightCtrl:backFunc()
     self:cleanItemList()
+    FlightChooseFlightPanel.scrollLoop:CleanAll()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end

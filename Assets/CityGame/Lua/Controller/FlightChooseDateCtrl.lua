@@ -270,9 +270,9 @@ function FlightChooseDateCtrl:_showDay(year, month)
 end
 --
 function FlightChooseDateCtrl:_language()
-    self.yearToggleText01.text = GetLanguage(12345678)
-    self.monthToggleText02.text = GetLanguage(12345678)
-    self.dayToggleText03.text = GetLanguage(12345678)
+    self.yearToggleText01.text = GetLanguage(34010013)
+    self.monthToggleText02.text = GetLanguage(34010014)
+    self.dayToggleText03.text = GetLanguage(34010015)
     self:_weekLanguage()
 end
 --

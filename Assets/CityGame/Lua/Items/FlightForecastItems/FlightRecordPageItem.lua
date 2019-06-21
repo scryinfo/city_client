@@ -62,6 +62,14 @@ function FlightRecordPageItem:ClickFunc()
     ct.OpenCtrl("FlightDetailCtrl", {detail = self.data, dataType = 1})
 end
 --
+function FlightRecordPageItem:_updateText()
+    local str1 = self.flightText.text
+    if str1 == "" then
+        str1 = GetLanguage(32030035)  --暂无数据
+    end
+    self.flightText.text = ct.getFlightSubString(str1, 33, 18)
+end
+--
 function FlightRecordPageItem:Close()
 
 end

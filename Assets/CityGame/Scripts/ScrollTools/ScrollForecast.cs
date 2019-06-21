@@ -92,7 +92,7 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
             mObjList.Add(go);
             Text temp = go.GetComponent<Text>();
             temp.rectTransform.anchoredPosition = new Vector3(0, -pos, 0);
-            temp.text = list[i] + "  " + i;
+            temp.text = list[i];
             pos += elmH;
             Vector3 uiPos = mScrollPos.WorldToScreenPoint(go.transform.position);
             mRightTempPos.Add(uiPos);

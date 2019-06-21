@@ -120,9 +120,6 @@ function UIBubbleBuildingSignItem:updateData(data)
         self.desText.text=data.des
     end
     --赋值 姓名和 头像
-    if self.avatarData then
-        AvatarManger.CollectAvatar(self.avatarData)
-    end
     if not data.bubble then
         self:CloesBubble()
     else
@@ -191,9 +188,10 @@ function UIBubbleBuildingSignItem:changeLarge()
     if not self.data.bubble then
         return
     end
-    if self.avatarIsCreate == nil then
+    if self.data.ownerId == DataManager.GetMyOwnerID() then
+        self:LoadHeadImaAndName({[1] = {["name"] = DataManager.GetName(),["faceId"] = DataManager.GetFaceId()}})
+    else
         PlayerInfoManger.GetInfos({self.data.ownerId},self.LoadHeadImaAndName,self)
-        self.avatarIsCreate = true
     end
     self:Start()
     self.largeRec.gameObject:SetActive(true)
@@ -211,7 +209,13 @@ end
 
 function UIBubbleBuildingSignItem:LoadHeadImaAndName(info)
     self.nameText.text=info[1].name
-    self.avatarData= AvatarManger.GetSmallAvatar(info[1].faceId,self.headIma,0.2)
+    if self.m_faceID == nil or self.m_faceID ~= info[1].faceId then
+        self.m_faceID = info[1].faceId
+        if self.avatarData ~= nil then
+            AvatarManger.CollectAvatar(self.avatarData)
+        end
+        self.avatarData = AvatarManger.GetSmallAvatar(self.m_faceID,self.headIma,0.2)
+    end
 end
 
 function UIBubbleBuildingSignItem:LateUpdate()

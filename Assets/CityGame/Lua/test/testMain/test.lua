@@ -879,10 +879,11 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
             local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
             local pubkeyStr = sm.ToHexString(pubkey);
             local ts = 1559911178
+            local add = ""
             --填充关键数据
             sm:pushSting(msg.PurchaseId); --PurchaseId
+            sm:pushSting("123456");     --Amount
             sm:pushLong(ts); --ts
-            sm:pushSting("123456");   --Amount
             --sm:pushHexSting(pubkeyStr)
             --sm:pushBtyes(pubkey)
 
@@ -955,9 +956,9 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
             local ts = 1559911188
             --填充关键数据
             sm:pushSting(msg.PurchaseId); --PurchaseId
-            sm:pushSha256Hex(myEthAddr); --//addr
             sm:pushSting(amount);   --Amount
             sm:pushLong(ts); --ts
+            sm:pushSha256Hex(myEthAddr); --//addr
 
             --计算数据哈希
             local datahash = sm:getDataHash();

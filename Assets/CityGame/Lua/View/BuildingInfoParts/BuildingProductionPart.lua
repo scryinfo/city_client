@@ -97,6 +97,7 @@ end
 function BuildingProductionPart:_language()
     self.unselectTitleText.text = GetLanguage(25010003)
     self.selectTitleText.text = GetLanguage(25010003)
+    self.tipText.text = GetLanguage(25030027)
 end
 --计算总时间
 function BuildingProductionPart:GetTime(lineData)

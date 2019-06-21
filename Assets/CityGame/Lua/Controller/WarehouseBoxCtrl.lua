@@ -101,8 +101,9 @@ function WarehouseBoxCtrl:initializeUiInfoData()
             self.levelImg.color = getColorByVector3(threeLevel)
             self.levelValue.text = GetLanguage(25020030)
         end
-        --self.popularityValue.text =
-        --self.qualityValue.text =
+        self.brandNameText.text = self.m_data.dataInfo.key.brandName
+        self.popularityValue.text = self.m_data.dataInfo.key.brandScore
+        self.qualityValue.text = self.m_data.dataInfo.key.qualityScore
     end
     local function callback(a)
         --暂时缓存仓库有的个数（后边要下架然后运输）
@@ -121,11 +122,11 @@ function WarehouseBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function WarehouseBoxCtrl:_language()
-    self.topName.text = "详情"
-    self.popularityText.text = "知名度:"
-    self.qualityText.text = "品质:"
-    self.levelText.text = "奢侈等级:"
-    self.tipText.text = "运输数量"
+    self.topName.text = GetLanguage(28040035)
+    self.popularityText.text = GetLanguage(25020006)
+    self.qualityText.text = GetLanguage(25020005)
+    self.levelText.text = GetLanguage(25020007)
+    self.tipText.text = GetLanguage(25020008)
 end
 --滑动更新文本
 function WarehouseBoxCtrl:SlidingUpdateText()
@@ -146,7 +147,7 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     goods.qty = ins.m_data.dataInfo.key.qty
     goods.level = ins.m_data.dataInfo.key.level
     if ins.numberSlider.value == 0 then
-        Event.Brocast("SmallPop",GetLanguage(21020003), 300)
+        Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)
         return
     else
         goods.number = ins.numberSlider.value
@@ -160,6 +161,6 @@ function WarehouseBoxCtrl:_clickDeleBtn(ins)
     data.itemId = ins.m_data.itemId
     data.producerId = ins.m_data.dataInfo.key.producerId
     data.qty = ins.m_data.dataInfo.key.qty
-    data.n = ins.m_data.dataInfo.n
+    data.n = ins.warehouseCount
     ct.OpenCtrl("DeleteItemBoxCtrl",data)
 end

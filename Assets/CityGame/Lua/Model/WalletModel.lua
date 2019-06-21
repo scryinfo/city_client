@@ -45,7 +45,7 @@ function WalletModel:ReqCreateWallet(userId,userName,pubKey)
     local msgId = pbl.enum("gscode.OpCode","ct_createUser")
     local lMsg ={PlayerId = userId,CreateUserReq={ReqHeader={Version = 1,ReqId = tostring(msgId),},CityUserId = userId,CityUserName = userName,PubKey=City.signer_ct.ToHexString(pubKey),PayPassword=''}}
     local pMsg = assert(pbl.encode("ccapi.ct_createUser", lMsg))
-    --local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
+    local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --生成充值订单
@@ -107,11 +107,11 @@ function WalletModel:ReceiveCreateOrder(data)
         local sm = City.signer_ct.New()
         local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr)
         local pubkeyStr = sm.ToHexString(pubkey)
-        sm:pushHexSting(data.PurchaseId)
+        sm:pushSting(data.PurchaseId)
+        sm:pushSting(self.Amount)
         --暂时发秒
-        local second = math.ceil(serverNowTime / 1000)
+        local second = math.ceil(serverNowTime)
         sm:pushLong(second)
-        sm:pushHexSting(self.Amount)
         --生成签名(用于验证关键数据是否被篡改)
         local sig = sm:sign(privateKeyStr);
         self:ReqTopUp(data.PlayerId,data.PurchaseId,pubkeyStr,self.Amount,second,sm.ToHexString(sig))
@@ -131,21 +131,21 @@ function WalletModel:ReqTopUpSucceed(data)
     end
 end
 --验证手机验证码并通过
-function WalletModel:ReqValidationPhoneCodeSuccees(dataInfo)
-    if dataInfo ~= nil then
-        if dataInfo.errorCode == 0 then
+function WalletModel:ReqValidationPhoneCodeSuccees(data)
+    if data ~= nil then
+        if data.errorCode == 0 then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(33030011),func = function()
-                    Event.Brocast("reqDisChargeSucceed",dataInfo)
+                    Event.Brocast("reqDisChargeSucceed",data)
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
-        elseif dataInfo.errorCode == 1 then
-            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
+        elseif data.errorCode == 1 then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(10030015),func = function()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
-        elseif dataInfo.errorCode == 2 then
-            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
+        elseif data.errorCode == 2 then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(10030014),func = function()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
@@ -155,10 +155,8 @@ end
 ------------------------------------------------------------------------解析-----------------------------------------------------------------------------
 --解析支付密码和私钥
 function WalletModel:parsing()
-    local privateKeyPath = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
-    local privateKeyStr = ct.file_readString(privateKeyPath)
-    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWord.data"
+    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
     local passWordStr = ct.file_readString(passWordPath)
-    local privateKeyNewEncrypted = City.signer_ct.Decrypt(passWordStr, privateKeyStr)
+    local privateKeyNewEncrypted = ct.GetPrivateKeyLocal(passWordStr)
     return privateKeyNewEncrypted
 end

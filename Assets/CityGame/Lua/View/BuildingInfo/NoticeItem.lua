@@ -14,6 +14,7 @@ local num
 local time
 local money
 local startTime
+local bonus
 --初始化方法   数据（读配置表）
 function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,typeId)
     self.prefab = prefab;
@@ -100,24 +101,38 @@ function NoticeItem:OnBg(go)
     elseif go.typeId == 4 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 5 then
+        type = go.typeId
         money = GetClientPriceString(go.goodsDataInfo.tparas[1])
-        time =go.goodsDataInfo.tparas[2]/3600000
+        time = go.goodsDataInfo.tparas[2]/3600000
         local timmer = tonumber(go.goodsDataInfo.tparas[3])
         local ts = getFormatUnixTime(timmer/1000)
         startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
         go:GetPromote(go.uuidParas[1])
     elseif go.typeId == 6 then
+        type = go.typeId
         money = GetClientPriceString(go.goodsDataInfo.tparas[1])
         time =go.goodsDataInfo.tparas[2]
         local timmer = tonumber(go.goodsDataInfo.tparas[3])
         local ts = getFormatUnixTime(timmer/1000)
         startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
         go:GetLaboratory(go.uuidParas[1])
-        --GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 7 then
-        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+        type = go.typeId
+        time = go.goodsDataInfo.intParasArr[2]
+        bonus = go.goodsDataInfo.intParasArr[1]
+        go:GetPromote(go.uuidParas[1])
     elseif go.typeId == 8 then
-        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+        type = go.typeId
+        if go.goodsDataInfo.paras[3] == 51 then
+            goodsName = GetLanguage(20030002)
+        elseif go.goodsDataInfo.paras[3] == 52 then
+            goodsName = GetLanguage(20030001)
+        elseif go.goodsDataInfo.paras[3] == 0 then
+            goodsName = GetLanguage(11010001)
+        end
+        money = go.goodsDataInfo.paras[1]
+        num = go.goodsDataInfo.paras[2]
+        go:GetLaboratory(go.uuidParas[1])
     elseif go.typeId == 9 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 10 then
@@ -217,34 +232,30 @@ function NoticeItem:c_OnReceivePlayerInfo(playerData)
     self.name = playerData[1].name
     if type == 11 then
         self.content = GetLanguage(16020019,self.name)
-        GameNoticePanel.rightContent.text = self.content
     elseif type == 12 then
         self.content = GetLanguage(16020020,"(".. pos.x..","..pos.y .. ")",self.name)
-        GameNoticePanel.rightContent.text = self.content
     elseif type == 13 then
         self.content = GetLanguage(16020021,"(".. pos.x..","..pos.y .. ")",self.name)
-        GameNoticePanel.rightContent.text = self.content
     end
+    GameNoticePanel.rightContent.text = self.content
 end
 
 function NoticeItem:c_MaterialInfo(name)
     if type == 3 then
         self.content = GetLanguage(16020004,name,nameSize,goodsName,num)
-        GameNoticePanel.rightContent.text = self.content
     elseif  type == 2 then
         self.content = GetLanguage(16020002,name,nameSize)
-        GameNoticePanel.rightContent.text = self.content
     end
+    GameNoticePanel.rightContent.text = self.content
 end
 
 function NoticeItem:c_ProduceInfo(name)
     if type == 3 then
         self.content = GetLanguage(16020004,name,nameSize,goodsName,num)
-        GameNoticePanel.rightContent.text = self.content
     elseif  type == 2 then
         self.content = GetLanguage(16020002,name,nameSize)
-        GameNoticePanel.rightContent.text = self.content
     end
+    GameNoticePanel.rightContent.text = self.content
 end
 
 function NoticeItem:c_RetailShopInfo(name)
@@ -253,12 +264,20 @@ function NoticeItem:c_RetailShopInfo(name)
 end
 
 function NoticeItem:c_PromoteInfo(name)
-    self.content = GetLanguage(16020012,name,time,money,startTime)
+    if type == 5 then
+        self.content = GetLanguage(16020012,name,time,money,startTime)
+    elseif type == 7 then
+        self.content = GetLanguage(16020014,name,time,bonus)
+    end
     GameNoticePanel.rightContent.text = self.content
 end
 
 function NoticeItem:c_Laboratory(name)
-    self.content = GetLanguage(16020013,name,time,money,startTime)
+    if type == 6 then
+        self.content = GetLanguage(16020013,name,time,money,startTime)
+    elseif type == 8 then
+        self.content = GetLanguage(16020015,name,goodsName,money,num)
+    end
     GameNoticePanel.rightContent.text = self.content
 end
 

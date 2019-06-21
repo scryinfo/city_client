@@ -229,7 +229,7 @@ function CameraMove:TouchBuild()
             if tempSystem_TouchBuild ~= nil and tempSystem_TouchBuild[tempNodeID_TouchBuild] ~= nil then
                 --判断是否是中心建筑 --->是则打开
                 if tempSystem_TouchBuild[tempNodeID_TouchBuild] == 2000500 then
-                    ct.OpenCtrl("VolumeCtrl")
+                    ct.OpenCtrl("CenterBuildingCtrl")
                 end
                 --TODO:其他BUFF建筑
                 return

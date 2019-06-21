@@ -1699,13 +1699,15 @@ CityEngineLua.onConnectionStateChange = function(state )
 		local timer = FrameTimer.New(function()
 			--AS连接成功后隔一帧再登录，因为要等接受和发送的线程开起来
 			if CityEngineLua.currserver == "loginapp" then
-				local msgId = pbl.enum("ascode.OpCode","login")
-				local msglogion = {
-					account = CityEngineLua.username,pwd = CityEngineLua.password
-				}
-				local pb_login = assert(pbl.encode("as.Account", msglogion))
-				--发包
-				CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
+				if CityEngineLua.currstate == "login" then  --登录
+					local msgId = pbl.enum("ascode.OpCode","login")
+					local msglogion = {
+						account = CityEngineLua.username,pwd = CityEngineLua.password
+					}
+					local pb_login = assert(pbl.encode("as.Account", msglogion))
+					--发包
+					CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
+				end
 			end
 		end, 1, 0)
 		timer:Start()
@@ -1741,8 +1743,8 @@ CityEngineLua.onConnectTo_loginapp_callback = function( ip, port, success, netSt
 
 	this.onConnectionStateChange(netState)
 			
-	this.currserver = "loginapp";
-	this.currstate = "login";
+	--this.currserver = "loginapp";
+	--this.currstate = "login";
 			
 	ct.log("City::login_loginapp(): connect ".. ip.. ":"..port.." success!");
 

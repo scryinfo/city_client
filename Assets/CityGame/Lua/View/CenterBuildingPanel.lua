@@ -21,7 +21,12 @@ end
 --初始化面板--
 function CenterBuildingPanel.InitPanel()
     this.bg = transform:Find("bg").gameObject;
-    this.cityInfo = transform:Find("CityInfo").gameObject;
-    this.centerWarehouse = transform:Find("CenterWarehouse").gameObject;
-    this.technology = transform:Find("Technology").gameObject;
+    this.name = transform:Find("content/nameBg/name"):GetComponent("Text");
+    this.contentText = transform:Find("content/referralBg/contentBg/Scroll View/Viewport/Content"):GetComponent("Text");
+    this.btn = transform:Find("content/btn").gameObject;
+    this.btnText = transform:Find("content/btn/Text"):GetComponent("Text");
+    this.flight = transform:Find("content/down/flight").gameObject;
+    this.nameText = transform:Find("content/down/flight/nameText"):GetComponent("Text");
+    this.join = transform:Find("content/down/flight/join/joinText"):GetComponent("Text");
+    this.staytuned = transform:Find("content/down/staytuned/staytunedText"):GetComponent("Text");
 end

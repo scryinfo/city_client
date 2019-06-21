@@ -1145,30 +1145,41 @@ function VerifyPassword(password)
     --使用私钥生成公钥
 end
 
-UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  function ()
-    --生成私钥
+--输入密钥保护密码
+function GenerateAndSaveKeyPair(password)
+    --生成并保存私钥
     local privateKey = City.CityLuaUtil.NewGuid()
-    --密钥保护密码
-    local password = "123456"
-
     local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
-    --保存
+    --保存私钥
     --获取私钥保存路径
     local privateKeyPath = ct.getCredentialPath(password)..".data"
-
     ct.file_saveString(privateKeyPath,privateKeyEncrypted)
-    --读取
-    local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
-    --用密码解密私钥
-    local privateKeyNewDecrypted = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
 
-    --用私钥字符串生成公钥
+    --用私钥字符串生成公钥并保存
     local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyNewDecrypted);
     --获取公钥保存路径
     local publicKeyPath = ct.getCredentialPath(password).."pubKey.data"
     local pubkeyStr = City.signer_ct.ToString(pubkey); --转为字符保存
     ct.file_saveString(publicKeyPath,pubkeyStr)
+end
 
+--使用密码获取私钥
+function GetPrivateKey(password)
+    --获取私钥保存路径
+    local privateKeyPath = ct.getCredentialPath(password)..".data"
+    --读取
+    local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
+    --用密码解密私钥
+    return City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
+end
+
+UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  function ()
+    local password = "123456"
+    --生成并保存密钥
+    GenerateAndSaveKeyPair(password)
+    --获取私钥
+    local privateKey = GetPrivateKey(password)
+    --验证密码
     local rightPD = VerifyPassword("123456")
     local WrongPD1 = VerifyPassword("1234567")
     local WrongPD2 = VerifyPassword("123234567")

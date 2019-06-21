@@ -157,7 +157,7 @@ end
 function WalletModel:parsing()
     local privateKeyPath = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
     local privateKeyStr = ct.file_readString(privateKeyPath)
-    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
+    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWord.data"
     local passWordStr = ct.file_readString(passWordPath)
     local privateKeyNewEncrypted = City.signer_ct.Decrypt(passWordStr, privateKeyStr)
     return privateKeyNewEncrypted

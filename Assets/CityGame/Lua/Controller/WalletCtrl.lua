@@ -527,7 +527,7 @@ function WalletCtrl:creatKey()
     ct.file_saveString(path,privateKeyEncrypted)
 
     --保存支付密码
-    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
+    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWord.data"
     ct.file_saveString(passWordPath,tostring(self.confirmInputField.text))
 
     local privateKeyEncryptedSaved = ct.file_readString(path)
@@ -540,7 +540,7 @@ end
 function WalletCtrl:parsing()
     local privateKeyPath = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
     local privateKeyStr = ct.file_readString(privateKeyPath)
-    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
+    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWord.data"
     local passWordStr = ct.file_readString(passWordPath)
     local privateKeyNewEncrypted = City.signer_ct.Decrypt(passWordStr, privateKeyStr)
     return privateKeyNewEncrypted

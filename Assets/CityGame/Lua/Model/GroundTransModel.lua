@@ -37,7 +37,7 @@ function GroundTransModel.n_OnReceiveRentOut(stream, msgId)
         --    info.contentInfo = "GAucModel.n_OnReceiveBidChangeInfor："..stream.reason
         --end
         --ct.OpenCtrl("BtnDialogPageCtrl", info)
-        Event.Brocast("SmallPop", GetLanguage(220700023), ReminderType.Warning)
+        Event.Brocast("SmallPop", GetLanguage(22070003), ReminderType.Warning)
         return
     end
 end

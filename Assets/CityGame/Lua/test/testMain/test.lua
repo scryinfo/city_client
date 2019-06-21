@@ -1124,10 +1124,14 @@ end)
 UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  function ()
     local password = "123456"
     --生成并保存密钥
-    ct.GenerateAndSaveKeyPair(password)
-    --获取私钥
-    local privateKey = ct.GetPrivateKey(password)
-    local pubKey = ct.GetPublicKey(password)
+    local privateKeyLoc = ct.GetPrivateKeyLocal(password)
+    if privateKeyLoc == nil then
+        ct.GenerateAndSaveKeyPair(password)
+    end
+
+    local pubKey = ct.GenPublicKeyString(password)
+    local pubKeyRight = ct.GetPublicKeyStringLocal(password)
+    local pass = (pubKey == pubKeyRight)
     --验证密码
     local rightPD = ct.VerifyPassword("123456")
     local WrongPD1 = ct.VerifyPassword("1234567")

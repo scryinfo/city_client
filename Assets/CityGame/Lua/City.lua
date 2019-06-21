@@ -146,7 +146,12 @@ function ct.VerifyPassword(password)
 	if pubkeyStrLoaded == nil then
 		return false
 	end
-	--2 从本地读取保存的私钥
+
+	local testpubkey = ct.GenPublicKeyString(password)
+	local teststr = City.signer_ct.ToString(testpubkey)
+	return teststr == pubkeyStrLoaded
+
+--[[	--2 从本地读取保存的私钥
 	--读取
 	local privateKeyPath = ct.getCredentialPath(password).."priKey.data"
 	local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
@@ -157,7 +162,7 @@ function ct.VerifyPassword(password)
 	local privateKeyToTest = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
 	local pubkeyToTest = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyToTest);
 	return City.signer_ct.ToString(pubkeyToTest) == pubkeyStrLoaded
-	--使用私钥生成公钥
+	--使用私钥生成公钥]]
 end
 
 --输入密钥保护密码
@@ -171,27 +176,53 @@ function ct.GenerateAndSaveKeyPair(password)
 	ct.file_saveString(privateKeyPath,privateKeyEncrypted)
 
 	--用私钥字符串生成公钥并保存
-	local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyNewDecrypted);
+	local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
 	--获取公钥保存路径
 	local publicKeyPath = ct.getCredentialPath(password).."pubKey.data"
 	local pubkeyStr = City.signer_ct.ToString(pubkey); --转为字符保存
 	ct.file_saveString(publicKeyPath,pubkeyStr)
+
+	local pk = ct.GetPublicKeyStringLocal(password)
+	return privateKey, pubkeyStr
+end
+
+--从本地读取保存的公钥
+function ct.GetPublicKeyStringLocal(password)
+	--获取私钥保存路径
+	local publicKeyPath = ct.getCredentialPath(password).."pubKey.data"
+	--读取
+	local pubkeyStr = ct.file_readString(publicKeyPath)
+	if pubkeyStr == nil then
+		return nil
+	end
+	--用密码解密私钥
+	return pubkeyStr
 end
 
 --使用密码获取私钥
-function ct.GetPrivateKey(password)
+function ct.GetPrivateKeyLocal(password)
 	--获取私钥保存路径
 	local privateKeyPath = ct.getCredentialPath(password).."priKey.data"
 	--读取
 	local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
+	if privateKeyEncryptedSaved == nil then
+		return nil
+	end
 	--用密码解密私钥
 	return City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
 end
 
 --使用密码获取公钥
-function ct.GetPublicKey(password)
-	local privateKey = GetPrivateKey(password)
-	return City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
+function ct.GenPublicKeyString(password)
+	local privateKey = ct.GetPrivateKeyLocal(password)
+	if privateKey == nil then
+		return nil
+	end
+	return City.signer_ct.ToString(City.signer_ct.GetPublicKeyFromPrivateKey(privateKey))
+end
+
+function ct.GenPublicKeyStringFromPrivateKey(key)
+	return City.signer_ct.ToString(City.signer_ct.GetPublicKeyFromPrivateKey(key))
 end
 
 CityEngineLua.GetArgs = function()

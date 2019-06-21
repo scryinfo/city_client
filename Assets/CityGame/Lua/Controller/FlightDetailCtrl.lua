@@ -73,10 +73,23 @@ function FlightDetailCtrl:_initData()
         FlightDetailPanel.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
         FlightDetailPanel.startCodeText.text = flightData.FlightDepcode
         FlightDetailPanel.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
+        self:_updateText()
 
         local trueWidth01 = FlightDetailPanel.timeText.preferredWidth
         FlightDetailPanel.timeText.rectTransform.sizeDelta = Vector2.New(trueWidth01, FlightDetailPanel.timeText.rectTransform.sizeDelta.y)
     end
+end
+--
+function FlightDetailCtrl:_updateText()
+    local str1 = FlightDetailPanel.flightText.text
+    if str1 == "" then
+        str1 = GetLanguage(32030035)  --暂无数据
+    end
+    FlightDetailPanel.flightText.text = ct.getFlightSubString(str1, 60, 34)
+    local str2 = FlightDetailPanel.endPlaceText.text
+    FlightDetailPanel.endPlaceText.text = ct.getFlightSubString(str2, 36, 20)
+    local str3 = FlightDetailPanel.startPlaceText.text
+    FlightDetailPanel.startPlaceText.text = ct.getFlightSubString(str3, 36, 20)
 end
 --获得xx分xx秒格式的时间
 function FlightDetailCtrl:_getSecondStr(str)

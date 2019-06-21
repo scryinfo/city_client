@@ -46,12 +46,16 @@ function FlightMainPageItem:initData(data)
     local flightData = data.data
     local timeTemp = string.sub(flightData.FlightDeptimePlanDate, 1, 10)
     self.timeText.text = timeTemp  --计划起飞时间
+    --self.flightText.text = GetLanguage(FlightLanguageConfig[flightData.FlightCompany])  --需要多语言
     self.flightText.text = flightData.FlightCompany  --需要多语言
     self.numText.text = flightData.FlightNo  --CA4506
     self.endCodeText.text = flightData.FlightArrcode
+    --self.endPlaceText.text = GetLanguage(FlightLanguageConfig[flightData.FlightArrAirport])  --需要多语言
     self.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
     self.startCodeText.text = flightData.FlightDepcode
+    --self.startPlaceText.text = GetLanguage(FlightLanguageConfig[flightData.FlightDepAirport])  --需要多语言
     self.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
+    self:_updateText()
 
     local trueWidth01 = self.timeText.preferredWidth
     self.timeText.rectTransform.sizeDelta = Vector2.New(trueWidth01, self.timeText.rectTransform.sizeDelta.y)
@@ -67,6 +71,18 @@ end
 function FlightMainPageItem:ClickFunc()
     PlayMusEff(1002)
     ct.OpenCtrl("FlightDetailCtrl", {detail = self.data, dataType = 0})
+end
+--
+function FlightMainPageItem:_updateText()
+    local str1 = self.flightText.text
+    if str1 == "" then
+        str1 = GetLanguage(32030035)  --暂无数据
+    end
+    self.flightText.text = ct.getFlightSubString(str1)
+    local str2 = self.endPlaceText.text
+    self.endPlaceText.text = ct.getFlightSubString(str2)
+    local str3 = self.startPlaceText.text
+    self.startPlaceText.text = ct.getFlightSubString(str3)
 end
 --
 function FlightMainPageItem:Close()

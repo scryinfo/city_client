@@ -821,3 +821,23 @@ function ct.getCorrectPrice(valueStr)
 
 	return valueStr
 end
+--获取带...的string，航班预测
+local cnDefaultLength = 27  --默认显示的中文字符长度，一个中字占3length
+local enDefaultLength = 16
+function ct.getFlightSubString(value, cnLen, enLen)
+	local result = value
+	local language = currentLanguage
+	if language == chinese then
+		if cnLen == nil then cnLen = cnDefaultLength end
+		if #value > cnLen then
+			result = string.sub(value, 1, cnLen).."..."
+		end
+	elseif language == english then
+		if enLen == nil then enLen = enDefaultLength end
+		if #value > enLen then
+			result = string.sub(value, 1, enLen).."..."
+		end
+	end
+
+	return result
+end

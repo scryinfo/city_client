@@ -958,7 +958,7 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
             sm:pushSting(msg.PurchaseId); --PurchaseId
             sm:pushSting(amount);   --Amount
             sm:pushLong(ts); --ts
-            sm:pushSha256Hex(myEthAddr); --//addr
+            sm:pushSting(myEthAddr); --//addr
 
             --计算数据哈希
             local datahash = sm:getDataHash();
@@ -1053,7 +1053,7 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
     sm:pushHexSting("0636ba40b4124c9babf8043f91ff9045"); --PurchaseId
     sm:pushLong(1559911178647); --ts
     sm:pushSting("-1");   --meta
-    sm:pushSting(pubkeyStr)
+    sm:pushHexSting(pubkeyStr)
     --计算数据哈希
     local datahash = sm:getDataHash();
     local datahashstr = City.signer_ct.ToHexString(datahash);
@@ -1129,9 +1129,20 @@ UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  f
         ct.GenerateAndSaveKeyPair(password)
     end
 
-    local pubKey = ct.GenPublicKeyString(password)
+    local pubKey = ct.GenPublicKey(password)
+    local pubKeyStr1 = City.signer_ct.ByteArrayToString(pubKey)
+    local pubKey1 = City.signer_ct.StringToByteArray(pubKeyStr1)
+    local pass1 = City.signer_ct.checkKeyEqual(pubKey,pubKey1)
+
+    local pubKeyStr = ct.GenPublicKeyString(password)
     local pubKeyRight = ct.GetPublicKeyStringLocal(password)
-    local pass = (pubKey == pubKeyRight)
+    local pass = (pubKeyStr == pubKeyRight)
+    local pubKeyFromGenLocal = City.signer_ct.StringToByteArray(pubKeyStr)
+    local pubKeyFromLoad = City.signer_ct.StringToByteArray(pubKeyRight)
+    local passbyte = City.signer_ct.checkKeyEqual(pubKey,pubKeyFromGenLocal)
+    passbyte = City.signer_ct.checkKeyEqual(pubKey,pubKeyFromLoad)
+    passbyte = City.signer_ct.checkKeyEqual(pubKey,pubKey)
+
     --验证密码
     local rightPD = ct.VerifyPassword("123456")
     local WrongPD1 = ct.VerifyPassword("1234567")

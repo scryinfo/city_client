@@ -148,7 +148,7 @@ function ct.VerifyPassword(password)
 	end
 
 	local testpubkey = ct.GenPublicKeyString(password)
-	local teststr = City.signer_ct.ToString(testpubkey)
+	local teststr = City.signer_ct.ByteArrayToString(testpubkey)
 	return teststr == pubkeyStrLoaded
 
 --[[	--2 从本地读取保存的私钥
@@ -161,7 +161,7 @@ function ct.VerifyPassword(password)
 	--用密码解密私钥
 	local privateKeyToTest = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
 	local pubkeyToTest = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyToTest);
-	return City.signer_ct.ToString(pubkeyToTest) == pubkeyStrLoaded
+	return City.signer_ct.ByteArrayToString(pubkeyToTest) == pubkeyStrLoaded
 	--使用私钥生成公钥]]
 end
 
@@ -179,7 +179,7 @@ function ct.GenerateAndSaveKeyPair(password)
 	local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
 	--获取公钥保存路径
 	local publicKeyPath = ct.getCredentialPath(password).."pubKey.data"
-	local pubkeyStr = City.signer_ct.ToString(pubkey); --转为字符保存
+	local pubkeyStr = City.signer_ct.ByteArrayToString(pubkey); --转为字符保存
 	ct.file_saveString(publicKeyPath,pubkeyStr)
 
 	local pk = ct.GetPublicKeyStringLocal(password)
@@ -218,11 +218,18 @@ function ct.GenPublicKeyString(password)
 	if privateKey == nil then
 		return nil
 	end
-	return City.signer_ct.ToString(City.signer_ct.GetPublicKeyFromPrivateKey(privateKey))
+	return City.signer_ct.ByteArrayToString(City.signer_ct.GetPublicKeyFromPrivateKey(privateKey))
+end
+function ct.GenPublicKey(password)
+	local privateKey = ct.GetPrivateKeyLocal(password)
+	if privateKey == nil then
+		return nil
+	end
+	return City.signer_ct.GetPublicKeyFromPrivateKey(privateKey)
 end
 
 function ct.GenPublicKeyStringFromPrivateKey(key)
-	return City.signer_ct.ToString(City.signer_ct.GetPublicKeyFromPrivateKey(key))
+	return City.signer_ct.ByteArrayToString(City.signer_ct.GetPublicKeyFromPrivateKey(key))
 end
 
 CityEngineLua.GetArgs = function()

@@ -193,10 +193,19 @@ namespace City {
 
             return signer.VerifySignature(signature);
         }
-        public static string ToString(byte[] bts)
+        public static string ByteArrayToString(byte[] bts)
         {
-            return Encoding.UTF8.GetString(bts);            
+            return Encoding.ASCII.GetString(bts);            
         }
+        public static byte[] StringToByteArray(string str)
+        {
+            return Encoding.ASCII.GetBytes(str);
+        }
+        public static bool checkKeyEqual(byte[] a, byte[] b)
+        {
+            return a.Equals(b);
+        }
+
         public static string ToHexString(byte[] data) {
             return Hex.ToHexString(data);
         }

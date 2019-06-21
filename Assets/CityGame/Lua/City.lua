@@ -135,6 +135,13 @@ function ct.getCredentialPath()
 	return CityLuaUtil.getAssetsPath().."/Lua/credential/"..hash
 end
 
+--使用密码获取私钥
+function ct.CheckPrivateKeyLocal()
+	--获取私钥保存路径
+	local privateKeyPath = ct.getCredentialPath().."priKey.data"
+	--读取
+	return ct.file_readString(privateKeyPath) ~= nil
+end
 
 function ct.VerifyPassword(password)
 	--验证密码

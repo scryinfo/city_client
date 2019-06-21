@@ -140,12 +140,12 @@ function WalletModel:ReqValidationPhoneCodeSuccees(data)
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
         elseif data.errorCode == 1 then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(10030015),func = function()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
         elseif data.errorCode == 2 then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(10030014),func = function()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)

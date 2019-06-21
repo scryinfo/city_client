@@ -341,14 +341,14 @@ EvaBaseData =
         Atype = 155,
         Btype = "InventionUpgrade",
         b = 0,
-        basevalue = 10,
+        basevalue = 5,
     },
     [50] = {
         name = 31010031,
         Atype = 156,
         Btype = "EvaUpgrade",
         b = 0,
-        basevalue = 50,
+        basevalue = 10,
     },
     [51] = {
         name = 31010008,

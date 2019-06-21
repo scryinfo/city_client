@@ -13,7 +13,6 @@ end
 
 --初始化面板--
 function LoginPanel.InitPanel()
-	this.input = transform:GetComponent("Input_BanChinse")
 	this.btnLogin = transform:Find("Button_login").gameObject;
 	this.btnLoginText = transform:Find("Button_login/Text").gameObject:GetComponent('Text');
 	this.btnRegister = transform:Find("Button_register").gameObject;

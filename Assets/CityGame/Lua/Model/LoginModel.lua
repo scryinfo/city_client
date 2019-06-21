@@ -60,6 +60,7 @@ end
 function LoginModel.m_OnAsLogin( username, password, data )
     CityEngineLua.login_loginapp(true);
     CityEngineLua.currserver = "loginapp"
+    CityEngineLua.currstate = "login"
     CityEngineLua.username = username;
     CityEngineLua.password = password;
     CityEngineLua._clientdatas = data;

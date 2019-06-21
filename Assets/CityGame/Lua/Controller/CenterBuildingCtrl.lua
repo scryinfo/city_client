@@ -14,8 +14,7 @@ function  CenterBuildingCtrl:bundleName()
 end
 
 function CenterBuildingCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
 function CenterBuildingCtrl:OnCreate(obj)
@@ -26,18 +25,18 @@ end
 function CenterBuildingCtrl:Awake()
     centerBuildingBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     centerBuildingBehaviour:AddClick(CenterBuildingPanel.bg,self.OnBg,self)
-    centerBuildingBehaviour:AddClick(CenterBuildingPanel.cityInfo,self.OnCityInfo,self)
-    centerBuildingBehaviour:AddClick(CenterBuildingPanel.centerWarehouse,self.OnCenterWarehouse,self)
-    centerBuildingBehaviour:AddClick(CenterBuildingPanel.technology,self.OnTechnology,self)
+    centerBuildingBehaviour:AddClick(CenterBuildingPanel.flight,self.OnFlight,self)  --航班预测
+    centerBuildingBehaviour:AddClick(CenterBuildingPanel.btn,self.OnBtn,self)   --城市交易
 end
 
 function CenterBuildingCtrl:Active()
     UIPanel.Active(self)
-
-    local cityinfoPath,centerWarehousePath,technologyPath
-    LoadSprite(GetSprite("CBCityInfo"), CenterBuildingPanel.cityInfo:GetComponent("Image"), false)
-    LoadSprite(GetSprite("CBWareHouse"), CenterBuildingPanel.centerWarehouse:GetComponent("Image"), false)
-    LoadSprite(GetSprite("CBSoon"), CenterBuildingPanel.technology:GetComponent("Image"), false)
+    CenterBuildingPanel.name.text = GetLanguage(11030001)
+    CenterBuildingPanel.contentText.text = GetLanguage(11030002)
+    CenterBuildingPanel.btnText.text = GetLanguage(11030003)
+    CenterBuildingPanel.nameText.text = GetLanguage(11030004)
+    CenterBuildingPanel.join.text = GetLanguage(11030005)
+    CenterBuildingPanel.staytuned.text = GetLanguage(11030006)
 end
 
 function CenterBuildingCtrl:Hide()
@@ -49,19 +48,14 @@ function CenterBuildingCtrl:OnBg()
     UIPanel.ClosePage();
 end
 
---点击城市信息
-function CenterBuildingCtrl:OnCityInfo()
+--点击航班预测
+function CenterBuildingCtrl:OnFlight()
     PlayMusEff(1002)
-    --ct.OpenCtrl("CityInfoCtrl")
+    ct.OpenCtrl("FlightMainCtrl")
 end
 
---点击中心仓库
-function CenterBuildingCtrl:OnCenterWarehouse()
+--点击城市交易
+function CenterBuildingCtrl:OnBtn()
     PlayMusEff(1002)
-    ct.OpenCtrl("CenterWareHouseCtrl")
-end
-
---点击待定
-function CenterBuildingCtrl:OnTechnology()
-    PlayMusEff(1002)
+    ct.OpenCtrl("VolumeCtrl")
 end

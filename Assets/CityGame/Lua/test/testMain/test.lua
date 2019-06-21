@@ -1173,12 +1173,19 @@ function GetPrivateKey(password)
     return City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
 end
 
+--使用密码获取公钥
+function GetPublicKey(password)
+    local privateKey = GetPrivateKey(password)
+    return City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
+end
+
 UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  function ()
     local password = "123456"
     --生成并保存密钥
     GenerateAndSaveKeyPair(password)
     --获取私钥
     local privateKey = GetPrivateKey(password)
+    local pubKey = GetPublicKey(password)
     --验证密码
     local rightPD = VerifyPassword("123456")
     local WrongPD1 = VerifyPassword("1234567")

@@ -340,7 +340,7 @@ function ChatMgr:ShowPlayerInfo(index, data)
     if self.avatarData then
         AvatarManger.CollectAvatar(self.avatarData)
     end
-    self.avatarData = AvatarManger.GetSmallAvatar(data.faceId, ChatPanel.headImage,0.5)
+    self.avatarData = AvatarManger.GetBigAvatar(data.faceId, ChatPanel.headImage,0.5)
     if index == 1 then -- 世界界面陌生人信息显示
         local blacklist = DataManager.GetMyBlacklist()
         ChatPanel.shieldBtn:SetActive(true)

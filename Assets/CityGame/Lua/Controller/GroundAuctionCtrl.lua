@@ -302,7 +302,7 @@ function GroundAuctionCtrl:_checkHighestPrice(data)
     if self.bidHistory == nil or #self.bidHistory == 0 then
         self.bidHistory = {}
         local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
-        self.highestPrice = temp.price
+        self.highestPrice = GetClientPriceString(temp.price)
         table.insert(self.bidHistory, 1, temp)
         self.m_data.endTs = data.ts + GAucModel.BidTime
         return
@@ -312,7 +312,7 @@ function GroundAuctionCtrl:_checkHighestPrice(data)
     if tempHigh.price < data.price then
         local temp = {biderId = data.biderId, price = data.price, ts = data.ts}
         table.insert(self.bidHistory, 1, temp)
-        self.highestPrice = temp.price
+        self.highestPrice = GetClientPriceString(temp.price)
         self.m_data.endTs = data.ts + GAucModel.BidTime
     end
 end

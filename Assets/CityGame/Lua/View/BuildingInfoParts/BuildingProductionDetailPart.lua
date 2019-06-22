@@ -137,7 +137,6 @@ end
 
 function BuildingProductionDetailPart:_initFunc()
     self:_language()
-    self:initializeUiInfoData(self.m_data.line)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -171,11 +170,13 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
             self.goods.transform.localScale = Vector3.zero
             LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
             --生产一个需要的时间(毫秒)
-            self.oneTotalTime = self:GetOneNumTime(Material[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            --self.oneTotalTime = self:GetOneNumTime(Material[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            self.oneTotalTime = self:GetOneNumTime(self:getNumOneSec(lineData[1].itemId))
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
             --生产一个需要的时间(毫秒)
-            self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            --self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            self.oneTotalTime = self:GetOneNumTime(self:getNumOneSec(lineData[1].itemId))
             --如果是商品，判断原料等级
             if Good[lineData[1].itemId].luxury == 1 then
                 self.levelImg.color = getColorByVector3(oneLevel)
@@ -278,17 +279,19 @@ function BuildingProductionDetailPart:GetTime(lineData)
         return "00:00:00"
     end
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        self.time = remainingNum / (Material[lineData.itemId].numOneSec * lineData.workerNum)
+        --self.time = remainingNum / (Material[lineData.itemId].numOneSec * lineData.workerNum)
+        self.time = remainingNum / self:getNumOneSec(lineData.itemId)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        self.time = remainingNum / (Good[lineData.itemId].numOneSec * lineData.workerNum)
+        --self.time = remainingNum / (Good[lineData.itemId].numOneSec * lineData.workerNum)
+        self.time = remainingNum / self:getNumOneSec(lineData.itemId)
     end
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
     return timeStr
 end
 --计算当前生产一个需要的时间(毫秒级)
-function BuildingProductionDetailPart:GetOneNumTime(numOneSec,workerNum)
-    local seconds = 1 / (numOneSec * workerNum)
+function BuildingProductionDetailPart:GetOneNumTime(numOneSec)
+    local seconds = 1 / numOneSec
     local ms = seconds * 1000
     return ms
 end
@@ -440,6 +443,7 @@ function BuildingProductionDetailPart:saveMaterialOrGoodsInfo(data)
             self.materialOrGoodsInfo = data
             self.materialOrGoodsInfo.buildingType = self.m_data.buildingType
             self.materialOrGoodsInfo.mId = self.m_data.info.mId
+            self:initializeUiInfoData(self.m_data.line)
         else
             return
         end
@@ -517,4 +521,20 @@ function BuildingProductionDetailPart:getWarehouseCapacity()
         end
     end
     return warehouseNowCount + lockedNowCount
+end
+--获取当前生产中的秒产量(含Eva)
+function BuildingProductionDetailPart:getNumOneSec(itemId)
+    if not self.materialOrGoodsInfo or next(self.materialOrGoodsInfo) == nil then
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            return Material[itemId].numOneSec
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            return Good[itemId].numOneSec
+        end
+    else
+        for key,value in pairs(self.materialOrGoodsInfo.items) do
+            if value.key == itemId then
+                return value.numOneSec
+            end
+        end
+    end
 end

@@ -28,6 +28,7 @@ function ProcessingFactoryModel:OnCreate()
     Event.AddListener("m_ReqprocessingAddShoppingCart",self.m_ReqAddShoppingCart,self)
     Event.AddListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
     Event.AddListener("m_GetShelfData",self.m_GetShelfData,self)
+    Event.AddListener("m_ReqBuildingGoodsInfo",self.m_ReqBuildingGoodsInfo,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
@@ -74,6 +75,7 @@ function ProcessingFactoryModel:Close()
     Event.RemoveListener("m_ReqprocessingAddShoppingCart",self.m_ReqAddShoppingCart,self)
     Event.RemoveListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
     Event.RemoveListener("m_GetShelfData",self.m_GetShelfData,self)
+    Event.RemoveListener("m_ReqBuildingGoodsInfo",self.m_ReqBuildingGoodsInfo,self)
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
@@ -190,8 +192,8 @@ function ProcessingFactoryModel:n_OnOpenprocessing(stream)
             self.funModel = BuildingBaseModel:new(self.insId)
         end
     end
+    --self:m_ReqBuildingGoodsInfo(self.insId)
     DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", 'refreshprocessingDataInfo',stream)
-    self:m_ReqBuildingGoodsInfo(self.insId)
 end
 --运输
 function ProcessingFactoryModel:n_OnBuildingTransportInfo(data)
@@ -251,6 +253,7 @@ function ProcessingFactoryModel:n_OnSetLineOrderInform(data)
 end
 --查询商品信息
 function ProcessingFactoryModel:n_OnBuildingGoodsInfo(data)
+    Event.Brocast("saveMaterialOrGoodsInfoPart",data)
     Event.Brocast("saveMaterialOrGoodsInfo",data)
 end
 --获取仓库数据

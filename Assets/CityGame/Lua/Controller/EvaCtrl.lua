@@ -37,8 +37,8 @@ function EvaCtrl:Awake()
     local luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
 
     luaBehaviour:AddClick(EvaPanel.backBtn, self.OnBack, self)
-    luaBehaviour:AddClick(EvaPanel.startAddBtn.gameObject, self.OnStartAdd, self)
-    luaBehaviour:AddClick(EvaPanel.addBtn.gameObject, self.OnAdd, self)
+    --luaBehaviour:AddClick(EvaPanel.startAddBtn.gameObject, self.OnStartAdd, self)
+    luaBehaviour:AddClick(EvaPanel.addBtn, self.OnAdd, self)
     luaBehaviour:AddClick(EvaPanel.introductionBtn, self.OnIntroduction, self)
     --luaBehaviour:AddClick(EvaPanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
 
@@ -95,8 +95,8 @@ function EvaCtrl:updateData()
     -- Eva选择记录的个数
     self.evaRecordData = {}
     -- 打开开始加点，关闭加点
-    EvaPanel.addBtn.localScale = Vector3.one
-    EvaPanel.startAddBtn.localScale = Vector3.zero
+    --EvaPanel.addBtn.localScale = Vector3.one
+    --EvaPanel.startAddBtn.localScale = Vector3.zero
     -- 关闭eva小提示
     self:_showIntroduction( false )
     -- eva界面上总的加点的点数值

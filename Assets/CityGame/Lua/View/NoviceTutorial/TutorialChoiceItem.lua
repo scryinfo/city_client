@@ -25,6 +25,7 @@ function TutorialChoiceItem:initialize(prefab, index, ctrl)
     end)
 
     self:SetNameText()
+    self:SetSelect(true)
 end
 
 -- 设置按钮的是否可点

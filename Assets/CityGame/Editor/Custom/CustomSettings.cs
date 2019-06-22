@@ -44,6 +44,7 @@ public static class CustomSettings
         _DT(typeof(System.Action<int>)),
         _DT(typeof(System.Comparison<int>)),
         _DT(typeof(System.Func<int, int>)),
+        _DT(typeof(DG.Tweening.TweenCallback)),
     };
 
     //在这里添加你要导出注册到lua的类型列表

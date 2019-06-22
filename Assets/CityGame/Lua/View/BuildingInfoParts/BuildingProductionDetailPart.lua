@@ -124,6 +124,7 @@ function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.AddListener("deleListLine",self.deleListLine,self)
     Event.AddListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
+    Event.AddListener("lineAddSucceed",self.lineAddSucceed,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
@@ -133,6 +134,7 @@ function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.RemoveListener("deleListLine",self.deleListLine,self)
     Event.RemoveListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
+    Event.RemoveListener("lineAddSucceed",self.lineAddSucceed,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
@@ -186,6 +188,8 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                 self.levelImg.color = getColorByVector3(threeLevel)
             end
             self.brandNameText.text = DataManager.GetCompanyName()
+            self.brandValue.text = self:getLineInfo(lineData[1].itemId,true)
+            self.qualityValue.text = self:getLineInfo(lineData[1].itemId,false)
         end
         --当前生产中线开始的时间
         self.startTime = lineData[1].ts
@@ -339,7 +343,12 @@ function BuildingProductionDetailPart:Update()
 
     ---刷新单个时间
     --当前生产中线开始的时间
-    self.startTime = self.m_data.line[1].ts
+    local aaa = ""
+    if next(self.m_data.line) == nil then
+        self.startTime = 0
+    else
+        self.startTime = self.m_data.line[1].ts
+    end
     --当前服务器时间
     self.serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
     --当前生产中线已经生产的时间
@@ -377,6 +386,11 @@ function BuildingProductionDetailPart:deleListLine(data)
         --加工厂
         Event.Brocast("m_ReqprocessingDeleteLine",self.m_data.insId,data.lineId)
     end
+end
+--添加生产线成功
+function BuildingProductionDetailPart:lineAddSucceed(data)
+    UIPanel.ClosePage()
+    self:initializeUiInfoData(data.line)
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
 --置顶成功后调整位置
@@ -535,6 +549,16 @@ function BuildingProductionDetailPart:getNumOneSec(itemId)
             if value.key == itemId then
                 return value.numOneSec
             end
+        end
+    end
+end
+--获取正在生产或待生产的中的brandName,brandScore,qualityScore
+function BuildingProductionDetailPart:getLineInfo(itemId,isBool)
+    for key,value in pairs(self.materialOrGoodsInfo.items) do
+        if value.key == itemId and isBool == true then
+            return value.brandScore
+        elseif value.key == itemId and isBool == false then
+            return value.qtyScore
         end
     end
 end

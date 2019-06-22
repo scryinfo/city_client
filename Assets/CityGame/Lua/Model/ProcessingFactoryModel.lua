@@ -28,6 +28,7 @@ function ProcessingFactoryModel:OnCreate()
     Event.AddListener("m_ReqprocessingAddShoppingCart",self.m_ReqAddShoppingCart,self)
     Event.AddListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
     Event.AddListener("m_GetShelfData",self.m_GetShelfData,self)
+    Event.AddListener("m_GetLineData",self.m_GetLineData,self)
     Event.AddListener("m_ReqBuildingGoodsInfo",self.m_ReqBuildingGoodsInfo,self)
 
     --网络回调
@@ -56,7 +57,7 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingGoodInfo","gs.BuildingGoodInfo",self.n_OnBuildingGoodsInfo)
-
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
 end
 
 function ProcessingFactoryModel:Close()
@@ -76,6 +77,8 @@ function ProcessingFactoryModel:Close()
     Event.RemoveListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
     Event.RemoveListener("m_GetShelfData",self.m_GetShelfData,self)
     Event.RemoveListener("m_ReqBuildingGoodsInfo",self.m_ReqBuildingGoodsInfo,self)
+    Event.RemoveListener("m_GetLineData",self.m_GetLineData,self)
+
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
@@ -102,6 +105,8 @@ function ProcessingFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnLineChangeInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryBuildingGoodInfo","gs.BuildingGoodInfo",self.n_OnBuildingGoodsInfo)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
+
 
 end
 ---客户端请求---
@@ -164,6 +169,10 @@ end
 --获取货架数据
 function ProcessingFactoryModel:m_GetShelfData(buildingId)
     self.funModel:m_GetShelfData(buildingId)
+end
+--获取生产线
+function ProcessingFactoryModel:m_GetLineData(buildingId)
+    self.funModel:m_GetLineData(buildingId)
 end
 ----自动补货
 --function ProcessingFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
@@ -263,6 +272,10 @@ end
 --获取货架数据
 function ProcessingFactoryModel:n_OnGetShelfData(data)
     Event.Brocast("getShelfInfoData",data)
+end
+--获取生产线
+function ProcessingFactoryModel:n_OnBuildingLineInfo(data)
+    Event.Brocast("lineAddSucceed",data)
 end
 ----自动补货
 --function ProcessingFactoryModel:n_OnSetAutoReplenish(data)

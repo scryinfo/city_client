@@ -25,9 +25,11 @@ function processingFactoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     luaBehaviour:AddClick(self.qualityAdditionTextBtn.gameObject,self._clickQualityAdditionTextBtn,self)
     luaBehaviour:AddClick(self.popolarityTextBtn.gameObject,self._clickPopolarityTextBtn,self)
 
+    --暂时关闭这个点击
+    self.processingIntroduceBtn:GetComponent("Button").interactable = false
+
     --是否是建筑主人，如果不是则所有按钮不能点击
     if isOther ~= DataManager.GetMyOwnerID() then
-        self.processingIntroduceBtn:GetComponent("Button").interactable = false
         self.basicProduceRateTextBtn:GetComponent("Button").interactable = false
         self.produceBounusTextBtn:GetComponent("Button").interactable = false
         self.basicQualityTextBtn:GetComponent("Button").interactable = false

@@ -22,11 +22,12 @@ function FlightMainPanel.InitPanel()
     this.recordBtn = transform:Find("recordBtn")
     this.noneTip = transform:Find("noneTip")
 
-    this.moneyText = transform:Find("topRoot/moneyBg/Text"):GetComponent("Text")
+    this.moneyText = transform:Find("topRoot/moneyBg/Text/moneyText"):GetComponent("Text")
     this.pageItem = transform:Find("pageRoot/FlightMainPageItem")
     this.scrollPage = transform:Find("pageRoot/scroll"):GetComponent("ScrollPageOptimize")
 
     this.titleText01 = transform:Find("topRoot/Text"):GetComponent("Text")
     this.recordText02 = transform:Find("recordBtn/Text"):GetComponent("Text")
     this.noneTipText03 = transform:Find("noneTip/Text"):GetComponent("Text")
+    this.moneyText04 = transform:Find("noneTip/Text"):GetComponent("Text")
 end

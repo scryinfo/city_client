@@ -17,7 +17,7 @@ end
 --启动事件--
 function FlightMainModel.OnCreate()
     --本地的回调注册
-    --Event.AddListener("m_PlayerBidGround", this.m_BidGround)
+    --Event.AddListener("m_OpenFlightLoading", this.OpenFlightLoading)
 end
 --网络回调注册
 function FlightMainModel.registerNetMsg()
@@ -31,7 +31,16 @@ function FlightMainModel.registerNetMsg()
 end
 --关闭事件--
 function FlightMainModel.Close()
-    --Event.RemoveListener("m_PlayerBidGround", this.m_BidGround)
+    --Event.RemoveListener("m_OpenFlightLoading", this.OpenFlightLoading)
+end
+
+--
+function FlightMainModel.OpenFlightLoading()
+    ct.OpenCtrl("FlightLoadingCtrl")
+end
+--
+function FlightMainModel.CloseFlightLoading()
+    Event.Brocast("m_CloseFlightLoading")
 end
 
 --客户端请求---------------------------------------------------------------------------------
@@ -111,6 +120,7 @@ function FlightMainModel.getAllFlightData()
 end
 --
 function FlightMainModel.n_OnBetFlight(data, msgId)
+    FlightMainModel.CloseFlightLoading()  --结束loading
     if msgId == 0 then
         local info = {}
         info.titleInfo = "Error"
@@ -137,6 +147,7 @@ function FlightMainModel.n_OnGetBetHistory(data, msgId)
 end
 --
 function FlightMainModel.n_OnGetBetResult(data, msgId)
+    FlightMainModel.CloseFlightLoading()  --结束loading
     if msgId == 0 then
         local info = {}
         info.titleInfo = "Error"
@@ -160,6 +171,7 @@ function FlightMainModel.n_OnFlightScoreChange(data, msgId)
 end
 --
 function FlightMainModel.n_OnGetSearchFlight(data, msgId)
+    FlightMainModel.CloseFlightLoading()  --结束loading
     if msgId == 0 then
         local info = {}
         info.titleInfo = "Error"

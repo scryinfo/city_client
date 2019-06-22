@@ -26,7 +26,7 @@ UnitTest.Exec("abel_w11_showFps", "test_abel_w11_showFps",  function ()
         ct.log("abel_w11_showFps","[test_abel_w11_showFps]  not find ShowFPS")
         return
     end
-
+    testFPS.version = "v0.0.2"
 end)
 
 UnitTest.TestBlockEnd()

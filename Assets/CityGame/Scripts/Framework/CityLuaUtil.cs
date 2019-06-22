@@ -181,6 +181,38 @@ namespace City
     }
     public static class CityLuaUtil
     {
+        public static bool checkLocalCashboxExist() {
+            if (Application.platform == RuntimePlatform.Android) { 
+                using (AndroidJavaClass unity_player = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
+                    AndroidJavaObject intentObject = new AndroidJavaObject("android.content.Intent");
+                    intentObject.Call<AndroidJavaObject>("setClass", "info.scry.wallet", "info.scry.wallet.utils.AppStateActivityUtil");
+                    intentObject.Call<AndroidJavaObject>("putExtra", "version", "1.0");
+                    AndroidJavaObject current_activity = unity_player.GetStatic<AndroidJavaObject>("currentActivity");
+                    Boolean exist = current_activity.Call<Boolean>("StartActivtyForResult", intentObject, 1);
+                    return exist;
+                }
+            }
+            return false;
+        }
+
+        public static void openCashbox(string amount, string toAddr, string purchaseId)
+        {
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                using (AndroidJavaClass unity_player = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                {
+                    AndroidJavaObject intentObject = new AndroidJavaObject("android.content.Intent");
+                    intentObject.Call<AndroidJavaObject>("setClass", "info.scry.wallet", "info.scry.wallet.SendEthActivity");
+                    intentObject.Call<AndroidJavaObject>("putExtra", "isFromOtherApp", true);
+                    intentObject.Call<AndroidJavaObject>("putExtra", "value", amount);
+                    intentObject.Call<AndroidJavaObject>("putExtra", "toAddress", toAddr);
+                    intentObject.Call<AndroidJavaObject>("putExtra", "backup", purchaseId);
+
+                    AndroidJavaObject current_activity = unity_player.GetStatic<AndroidJavaObject>("currentActivity");
+                    current_activity.Call("startActivity", intentObject);
+                }
+            }
+        }
 
         public static string NewGuid()
         {

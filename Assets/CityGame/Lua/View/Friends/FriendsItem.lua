@@ -220,13 +220,8 @@ function FriendsItem:OnAddFriends(go)
     data.inputInfo = GetLanguage(15010023)
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
-        if string.len(text) > 30 then
-            text = GetLanguage(15010018)
-            Event.Brocast("SmallPop",text,80)
-        else
-            Event.Brocast("m_AddFriends", go.data.id, text)
-            Event.Brocast("SmallPop", GetLanguage(13040004),80)
-        end
+        Event.Brocast("m_AddFriends", go.data.id, text)
+        Event.Brocast("SmallPop", GetLanguage(13040004),80)
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end
@@ -235,6 +230,17 @@ end
 function FriendsItem:OnAgree(go)
     ct.log("tina_w8_friends", "向服务器发送同意好友申请请求")
     PlayMusEff(1002)
+
+    -- 如果这个人是屏蔽列表的，则不让添加
+    local blacklist = DataManager.GetMyBlacklist()
+    for _, v in ipairs(blacklist) do
+        if v.id == go.data.id then
+            Event.Brocast("SmallPop", GetLanguage(13040007),80)
+            return
+        end
+    end
+
+    -- 发送添加好友消息
     Event.Brocast("m_AddFriendsReq", go.data.id, true)
     if FriendslistCtrl.friendInfo[go.itemId] then
         DataManager.SetMyFriendsApply({itemId = go.itemId})

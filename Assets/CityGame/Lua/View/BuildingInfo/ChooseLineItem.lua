@@ -86,7 +86,7 @@ end
 function ChooseLineItem:OnLinePanelBG(go)
     if go.posX ~= 51 then
         if go.state ~= "OPERATE"  then
-            Event.Brocast("SmallPop",ReminderType.Warning)
+            Event.Brocast("SmallPop",GetLanguage(25030026),ReminderType.Warning)
             return
         end
     end

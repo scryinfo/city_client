@@ -155,12 +155,15 @@ function FriendsCtrl:c_OnReceiveAddFriendReq()
 end
 
 function FriendsCtrl:c_OnReceiveDeleteFriend(friendsId)
+    -- 删除数据
     for i, v in ipairs(FriendsCtrl.friendInfo) do
-        if v.id == friendsId.id then
+        if v.id == friendsId.fId then
             table.remove(FriendsCtrl.friendInfo, i)
             break
         end
     end
+
+    -- 刷新界面
     if #FriendsCtrl.friendInfo <= 0 then
         FriendsPanel.friendsNoContentRoot:SetActive(true)
     end

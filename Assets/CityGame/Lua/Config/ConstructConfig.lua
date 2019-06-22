@@ -1,3 +1,4 @@
+--建造表
 ConstructConfig ={
     [1] = {
         buildName = 23010001,

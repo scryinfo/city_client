@@ -134,6 +134,7 @@ function MapCtrl:Refresh()
 
     Event.AddListener("c_MapAllSearchToDetail", self._mapAllResearchToDetail, self)  --点击缩略，放大到AOI范围
 
+    self:_language()
     self:_reqAllBuildings()
 end
 --
@@ -221,6 +222,10 @@ function MapCtrl:_initUIData()
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, 3, true)
     MapPanel.loadingImgTran.transform.localScale = Vector3.zero
     MapPanel.loadingImgTran.transform.localEulerAngles = Vector3.zero
+end
+--
+function MapCtrl:_language()
+
 end
 --
 function MapCtrl:_itemTimer()

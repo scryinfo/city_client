@@ -138,11 +138,9 @@ end
 function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
     if dataInfo ~= nil then
         TimeSynchronized.SynchronizationServerTime(dataInfo.ts)
-        if self.m_data.buildingType == BuildingType.MaterialFactory then
-            UIPanel.BackToPageInstance(MaterialFactoryCtrl,self.m_data)
-        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            UIPanel.BackToPageInstance(ProcessingFactoryCtrl,self.m_data)
-        end
+        UIPanel.ClosePage()
+        --查询当前生产线
+        Event.Brocast("m_GetLineData",self.m_data.insId)
         Event.Brocast("SmallPop",GetLanguage(25030010),ReminderType.Common)
     end
 end

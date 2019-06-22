@@ -1802,7 +1802,7 @@ function DataManager.InitialNetMessages()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newItem","gs.IntNum",DataManager.n_OnReceiveNewItem)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleCommunication","gs.CommunicationProces",DataManager.n_OnReceiveRoleCommunication)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleStatusChange","gs.ByteBool",DataManager.n_OnReceiveRoleStatusChange)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","deleteFriend","gs.Id",DataManager.n_OnReceiveDeleteFriend)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","deleteFriend","gs.DeleteFriend",DataManager.n_OnReceiveDeleteFriend)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","deleteBlacklist","gs.Id",DataManager.n_DeleteBlacklist)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getSocietyInfo", "gs.SocietyInfo", DataManager.n_GetSocietyInfo)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delJoinReq", "gs.JoinReq", DataManager.n_JoinReq)
@@ -2087,7 +2087,7 @@ end
 -- 收到删除好友信息
 function DataManager.n_OnReceiveDeleteFriend(stream)
     local friendsId = stream
-    DataManager.SetMyFriends({ id = friendsId.id, b = nil })
+    DataManager.SetMyFriends({ id = friendsId.fId, b = nil })
     Event.Brocast("c_OnReceiveDeleteFriend", friendsId)
 end
 

@@ -132,7 +132,9 @@ function FlightDetailCtrl:_hot(value)
     --提示已参加预测  --判定需要看具体数据是否为""
     if value.myBet ~= nil and flightData.FlightDeptimeDate == "" then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
-        FlightDetailPanel.infoText.text = GetLanguage(32030019, value.myBet.delay, value.myBet.amount)
+        local tempDelay = string.format("<color=#68AFFF>%d</color>", value.myBet.delay)
+        local tempAmount = string.format("<color=#FFC000>%d</color>", value.myBet.amount)
+        FlightDetailPanel.infoText.text = GetLanguage(32030019, tempDelay, tempAmount)
         return
     end
     --提示航班已过投注时间
@@ -156,7 +158,9 @@ function FlightDetailCtrl:_history(value)
 
     if value.win == nil then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
-        FlightDetailPanel.infoText.text = GetLanguage(32030019, value.delay, value.amount)
+        local tempDelay = string.format("<color=#68AFFF>%d</color>", value.delay)
+        local tempAmount = string.format("<color=#FFC000>%d</color>", value.amount)
+        FlightDetailPanel.infoText.text = GetLanguage(32030019, tempDelay, tempAmount)
         return
     end
 
@@ -207,7 +211,9 @@ function FlightDetailCtrl:_search(value)
     --还没起飞
     if value.win == nil then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
-        FlightDetailPanel.infoText.text = GetLanguage(32030019, value.delay, value.amount)
+        local tempDelay = string.format("<color=#68AFFF>%d</color>", value.delay)
+        local tempAmount = string.format("<color=#FFC000>%d</color>", value.amount)
+        FlightDetailPanel.infoText.text = GetLanguage(32030019, tempDelay, tempAmount)
     else
         --已经有结果
         if value.win == true then
@@ -257,6 +263,8 @@ end
 function FlightDetailCtrl:_getBetResult(value)
     if value.id == self.id and value.date == self.date then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
-        FlightDetailPanel.infoText.text = GetLanguage(32030019, value.delay, value.score)
+        local tempDelay = string.format("<color=#68AFFF>%d</color>", value.delay)
+        local tempAmount = string.format("<color=#FFC000>%d</color>", value.score)
+        FlightDetailPanel.infoText.text = GetLanguage(32030019, tempDelay, tempAmount)
     end
 end

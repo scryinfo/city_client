@@ -97,3 +97,8 @@ function BuildingBaseModel:m_GetShelfData(buildingId)
     local lMsg = {id = buildingId}
     DataManager.ModelSendNetMes("gscode.OpCode","getShelfData","gs.Id",lMsg)
 end
+--获取生产线
+function BuildingBaseModel:m_GetLineData(buildingId)
+    local lMsg = {id = buildingId}
+    DataManager.ModelSendNetMes("gscode.OpCode","getLineData","gs.Id",lMsg)
+end

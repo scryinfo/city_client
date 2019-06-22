@@ -20,9 +20,10 @@ function materialFactoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     luaBehaviour:AddClick(self.basisProduceRateTextBtn.gameObject,self._clickBasisProduceRateTextBtn,self)
     luaBehaviour:AddClick(self.produceBounusTextBtn.gameObject,self._clickProduceBounusTextBtn,self)
 
+    --暂时关闭这个点击
+    self.materialIntroduceBtn:GetComponent("Button").interactable = false
     --是否是建筑主人，如果不是则所有按钮不能点击
     if isOther ~= DataManager.GetMyOwnerID() then
-        self.materialIntroduceBtn:GetComponent("Button").interactable = false
         self.basisProduceRateTextBtn:GetComponent("Button").interactable = false
         self.produceBounusTextBtn:GetComponent("Button").interactable = false
     end

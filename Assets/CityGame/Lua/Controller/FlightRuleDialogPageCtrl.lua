@@ -39,6 +39,7 @@ end
 --
 function FlightRuleDialogPageCtrl:_initData()
     self.titleText.text = GetLanguage(32030030)
+    self.rule01.text = GetLanguage()
 end
 --
 function FlightRuleDialogPageCtrl:_onClickClose()

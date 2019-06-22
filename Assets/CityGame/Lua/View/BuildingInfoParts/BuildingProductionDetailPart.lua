@@ -124,6 +124,7 @@ function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.AddListener("deleListLine",self.deleListLine,self)
     Event.AddListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
+    Event.AddListener("lineAddSucceed",self.lineAddSucceed,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
@@ -133,11 +134,11 @@ function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("detailPartUpdateNowLine",self.updateNowLine,self)
     Event.RemoveListener("deleListLine",self.deleListLine,self)
     Event.RemoveListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
+    Event.RemoveListener("lineAddSucceed",self.lineAddSucceed,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
     self:_language()
-    self:initializeUiInfoData(self.m_data.line)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
@@ -171,11 +172,13 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
             self.goods.transform.localScale = Vector3.zero
             LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
             --生产一个需要的时间(毫秒)
-            self.oneTotalTime = self:GetOneNumTime(Material[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            --self.oneTotalTime = self:GetOneNumTime(Material[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            self.oneTotalTime = self:GetOneNumTime(self:getNumOneSec(lineData[1].itemId))
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
             --生产一个需要的时间(毫秒)
-            self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            --self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
+            self.oneTotalTime = self:GetOneNumTime(self:getNumOneSec(lineData[1].itemId))
             --如果是商品，判断原料等级
             if Good[lineData[1].itemId].luxury == 1 then
                 self.levelImg.color = getColorByVector3(oneLevel)
@@ -185,6 +188,8 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                 self.levelImg.color = getColorByVector3(threeLevel)
             end
             self.brandNameText.text = DataManager.GetCompanyName()
+            self.brandValue.text = self:getLineInfo(lineData[1].itemId,true)
+            self.qualityValue.text = self:getLineInfo(lineData[1].itemId,false)
         end
         --当前生产中线开始的时间
         self.startTime = lineData[1].ts
@@ -278,17 +283,19 @@ function BuildingProductionDetailPart:GetTime(lineData)
         return "00:00:00"
     end
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        self.time = remainingNum / (Material[lineData.itemId].numOneSec * lineData.workerNum)
+        --self.time = remainingNum / (Material[lineData.itemId].numOneSec * lineData.workerNum)
+        self.time = remainingNum / self:getNumOneSec(lineData.itemId)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        self.time = remainingNum / (Good[lineData.itemId].numOneSec * lineData.workerNum)
+        --self.time = remainingNum / (Good[lineData.itemId].numOneSec * lineData.workerNum)
+        self.time = remainingNum / self:getNumOneSec(lineData.itemId)
     end
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
     return timeStr
 end
 --计算当前生产一个需要的时间(毫秒级)
-function BuildingProductionDetailPart:GetOneNumTime(numOneSec,workerNum)
-    local seconds = 1 / (numOneSec * workerNum)
+function BuildingProductionDetailPart:GetOneNumTime(numOneSec)
+    local seconds = 1 / numOneSec
     local ms = seconds * 1000
     return ms
 end
@@ -336,7 +343,11 @@ function BuildingProductionDetailPart:Update()
 
     ---刷新单个时间
     --当前生产中线开始的时间
-    self.startTime = self.m_data.line[1].ts
+    if next(self.m_data.line) == nil then
+        self.startTime = 0
+    else
+        self.startTime = self.m_data.line[1].ts
+    end
     --当前服务器时间
     self.serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
     --当前生产中线已经生产的时间
@@ -374,6 +385,11 @@ function BuildingProductionDetailPart:deleListLine(data)
         --加工厂
         Event.Brocast("m_ReqprocessingDeleteLine",self.m_data.insId,data.lineId)
     end
+end
+--添加生产线成功
+function BuildingProductionDetailPart:lineAddSucceed(data)
+    UIPanel.ClosePage()
+    self:initializeUiInfoData(data.line)
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
 --置顶成功后调整位置
@@ -440,6 +456,7 @@ function BuildingProductionDetailPart:saveMaterialOrGoodsInfo(data)
             self.materialOrGoodsInfo = data
             self.materialOrGoodsInfo.buildingType = self.m_data.buildingType
             self.materialOrGoodsInfo.mId = self.m_data.info.mId
+            self:initializeUiInfoData(self.m_data.line)
         else
             return
         end
@@ -517,4 +534,30 @@ function BuildingProductionDetailPart:getWarehouseCapacity()
         end
     end
     return warehouseNowCount + lockedNowCount
+end
+--获取当前生产中的秒产量(含Eva)
+function BuildingProductionDetailPart:getNumOneSec(itemId)
+    if not self.materialOrGoodsInfo or next(self.materialOrGoodsInfo) == nil then
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            return Material[itemId].numOneSec
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            return Good[itemId].numOneSec
+        end
+    else
+        for key,value in pairs(self.materialOrGoodsInfo.items) do
+            if value.key == itemId then
+                return value.numOneSec
+            end
+        end
+    end
+end
+--获取正在生产或待生产的中的brandName,brandScore,qualityScore
+function BuildingProductionDetailPart:getLineInfo(itemId,isBool)
+    for key,value in pairs(self.materialOrGoodsInfo.items) do
+        if value.key == itemId and isBool == true then
+            return value.brandScore
+        elseif value.key == itemId and isBool == false then
+            return value.qtyScore
+        end
+    end
 end

@@ -154,7 +154,7 @@ end
 --修改des
 function PersonalHomeDialogPageCtrl:_changeDesFunc(ins)
     PlayMusEff(1002)
-    ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
+    ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(17010003), btnCallBack = function (str)
         if str == "" or str == nil then
             str = GetLanguage(17020007)
         end

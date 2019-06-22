@@ -60,9 +60,7 @@ end
 --确认
 function WalletBoxCtrl:_clickConfirmBtn(ins)
     PlayMusEff(1002)
-    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
-    local str = ct.file_readString(passWordPath)
-    if ins.passwordInput.text == str then
+    if ct.VerifyPassword(ins.passwordInput.text) == true then
         Event.Brocast("ReqCreateOrder",ins.m_data.userId,ins.m_data.amount)
         UIPanel.ClosePage()
         --在充值成功后打开这个  赋值钱包地址

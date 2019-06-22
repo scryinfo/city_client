@@ -52,10 +52,21 @@ function GroundTransSelfCheckInfoCtrl:_initPanelData()
 end
 --
 function GroundTransSelfCheckInfoCtrl:_setShowState(rent)
-    GroundTransSelfCheckInfoPanel.rentalText.text = "E"..getPriceString(GetClientPriceString(rent.rentPreDay), 24, 20)
-    GroundTransSelfCheckInfoPanel.tenancyText.text = rent.rentDays.."d"
+    GroundTransSelfCheckInfoPanel.rentalText.text = "E"..GetClientPriceString(rent.rentPreDay)
+    GroundTransSelfCheckInfoPanel.tenancyText.text = GetLanguage(18020016, rent.rentDays)
+    local showStr
     local remainDay = math.floor(((rent.rentBeginTs / 1000 + rent.rentDays * 86400) - TimeSynchronized.GetTheCurrentTime()) / 86400)
-    GroundTransSelfCheckInfoPanel.remainDayText.text = remainDay.."d"
+    if remainDay <= 0 then
+        local remainHour = math.floor(((rent.rentBeginTs / 1000 + rent.rentDays * 86400) - TimeSynchronized.GetTheCurrentTime()) / 3600)
+        if remainHour <= 0 then
+            showStr = "<1"..GetLanguage(20100003)
+        else
+            showStr = remainHour..GetLanguage(20100003)
+        end
+    else
+        showStr = GetLanguage(18020016, remainDay)
+    end
+    GroundTransSelfCheckInfoPanel.remainDayText.text = showStr
 end
 
 ---按钮方法

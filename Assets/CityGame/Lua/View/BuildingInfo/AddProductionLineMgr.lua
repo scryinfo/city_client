@@ -33,7 +33,7 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
             local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
             go.transform:SetParent(self.typeContent.transform)
             go.transform.localScale = Vector3.one
-            local tempData = {name = typeItem[1].name, typeId = i, backFunc = function (typeId)
+            local tempData = {name = GetLanguage(typeItem[1].name), typeId = i, backFunc = function (typeId)
                 self:_showDetails(typeId)
             end}
             local item = AddLineBtnItem:new(go.transform, tempData, self.typeToggleGroup)

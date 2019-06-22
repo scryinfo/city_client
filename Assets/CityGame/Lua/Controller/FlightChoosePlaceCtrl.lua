@@ -50,9 +50,8 @@ function FlightChoosePlaceCtrl:Hide()
 end
 --
 FlightChoosePlaceCtrl.static.ProvideFunc = function(transform, idx)
-    --idx = idx + 1
-    --local item = FlightSelectPlaceItem:new(transform, {value = FlightChoosePlaceCtrl.totalValue[idx]})
-    local item = FlightSelectPlaceItem:new(transform, {value = "AAAAAAA"})
+    idx = idx + 1
+    local item = FlightSelectPlaceItem:new(transform, FlightChoosePlaceCtrl.totalValue[idx])
     if FlightChoosePlaceCtrl.static.itemsList[idx] ~= nil then
         FlightChoosePlaceCtrl.static.itemsList[idx]:Close()
     end
@@ -89,14 +88,39 @@ function FlightChoosePlaceCtrl:cleanItemList()
 end
 --
 function FlightChoosePlaceCtrl:_TempCreateConfig()
-    self.tempTitleData = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",}
+    local searchDic, searchDetail = self:_getCorrectConfig()
+    FlightChoosePlaceCtrl.totalValue = searchDetail
+
     self.tempDetailDic = System.Collections.Generic.Dictionary_string_strings.New()
-    FlightChoosePlaceCtrl.totalValue = {}
-    for i, value in ipairs(self.tempTitleData) do
-        local tempValue = {value.."aaa", value.."bbb", value.."ddd", value.."ccc", value.."vvv"}
-        --FlightChoosePlaceCtrl.totalValue:AddRange(tempValue)
-        self.tempDetailDic:Add(value, tempValue)
+    self.tempTitleData = {}
+    for i, value in ipairs(searchDic) do
+        self.tempTitleData[#self.tempTitleData + 1] = value.title
+        local tempValue = value.value
+        self.tempDetailDic:Add(value.title, tempValue)
     end
+
+    --self.tempTitleData = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",}
+    --self.tempDetailDic = System.Collections.Generic.Dictionary_string_strings.New()
+    --FlightChoosePlaceCtrl.totalValue = {}
+    --for i, value in ipairs(self.tempTitleData) do
+    --    local tempValue = {value.."aaa", value.."bbb", value.."ddd", value.."ccc", value.."vvv"}
+    --    --FlightChoosePlaceCtrl.totalValue:AddRange(tempValue)
+    --    self.tempDetailDic:Add(value, tempValue)
+    --end
+end
+--
+function FlightChoosePlaceCtrl:_getCorrectConfig()
+    local language = currentLanguage
+    local SearchDetail
+    local SearchDic
+    if language == chinese then
+        SearchDic = FlightSearchDicCnConfig
+        SearchDetail = FlightSearchDetailCnConfig
+    elseif language == english then
+        SearchDic = FlightSearchDicEnConfig
+        SearchDetail = FlightSearchDetailEnConfig
+    end
+    return SearchDic, SearchDetail
 end
 --
 function FlightChoosePlaceCtrl:_language()

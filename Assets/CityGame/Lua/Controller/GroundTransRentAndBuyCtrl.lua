@@ -44,6 +44,7 @@ function GroundTransRentAndBuyCtrl:Awake(go)
         if num == 0 then
             num = 1
         end
+        GroundTransRentAndBuyPanel.tenancyInput.text = num
         GroundTransRentAndBuyPanel.tenancySlider.value = num
     end)
 end

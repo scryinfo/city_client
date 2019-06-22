@@ -509,7 +509,15 @@ function GameMainInterfaceCtrl:initInsData()
     --头像
     local faceId = DataManager.GetFaceId()
 
-    AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.15)
+    --头像需要刷新
+    if self.my_avatarFaceID == nil or self.my_avatarFaceID ~= faceId then
+        self.my_avatarFaceID = faceId
+        if self.my_avatarData ~= nil then
+            AvatarManger.CollectAvatar(self.my_avatarData)
+            self.my_avatarData = nil
+        end
+        self.my_avatarData =  AvatarManger.GetSmallAvatar(faceId,GameMainInterfacePanel.headItem.transform,0.15)
+    end
     local info = DataManager.GetMyPersonalHomepageInfo()
     self.name = info.name
     self.company = info.companyName

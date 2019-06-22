@@ -83,6 +83,7 @@ function FlightBetCtrl:Hide()
 end
 --
 function FlightBetCtrl:_betFlightEvent(data)
+    Event.Brocast("SmallPop", GetLanguage(32030036), ReminderType.Succeed)
     UIPanel.ClosePage()
 end
 --

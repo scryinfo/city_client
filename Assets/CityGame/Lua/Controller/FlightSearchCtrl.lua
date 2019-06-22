@@ -125,6 +125,11 @@ end
 --开始搜索
 function FlightSearchCtrl:checkBtnFunc()
     PlayMusEff(1002)
+    if self.startCode == self.arriveCode then
+        Event.Brocast("SmallPop", GetLanguage(32020035))  --起始地和目的地相同
+        return
+    end
+
     local time = os.date("%Y-%m-%d", self.timeValue)
     FlightMainModel.m_ReqSearchFlight(self.arriveCode, self.startCode, time)
     FlightMainModel.OpenFlightLoading()  --开始loading

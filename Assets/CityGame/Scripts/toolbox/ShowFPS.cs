@@ -44,7 +44,7 @@ namespace LuaFramework
 
             //居中显示FPS
             //GUI.Label(new Rect((Screen.width / 2) - 40, 0, 200, 200), "FPS: " + m_FPS, bb);
-            GUI.Label(new Rect(Screen.width - 160 - offset , 0, 200, 200), "FPS: " + m_FPS, bb+ " "+ version);
+            GUI.Label(new Rect(Screen.width - 320 - offset , 0, 400, 200), version + " FPS: " + m_FPS , bb);
         }
     }
 

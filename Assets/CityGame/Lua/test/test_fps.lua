@@ -22,11 +22,11 @@ UnitTest.Exec("abel_w11_showFps", "test_abel_w11_showFps",  function ()
     --UnityEngine.GameObject.AddComponent(camera.gameObject, LuaHelper.GetType('LuaFramework.LuaBehaviour'))
     local testFPS = camera.gameObject:GetComponent('ShowFPS')
     testFPS.fpsMeasuringDelta = 0.1
+    testFPS.version = "Version v0.0.2  "
     if testFPS == nil then
         ct.log("abel_w11_showFps","[test_abel_w11_showFps]  not find ShowFPS")
         return
     end
-    testFPS.version = "v0.0.2"
 end)
 
 UnitTest.TestBlockEnd()

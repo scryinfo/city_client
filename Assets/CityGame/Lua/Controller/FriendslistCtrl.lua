@@ -45,7 +45,6 @@ end
 function FriendslistCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
-    FriendslistPanel.nullImageText.text = GetLanguage(16010026)
 end
 
 -- 刷新
@@ -87,6 +86,7 @@ function FriendslistCtrl:_initState()
     FriendslistCtrl.friendInfo = {}
 
     if type == 2 then
+        FriendslistPanel.nullImageText.text = GetLanguage(13020005)
         FriendslistPanel.panelNameText.text = GetLanguage(13020001) --"MANAGE"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.blacklistNumberText.text = ""

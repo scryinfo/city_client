@@ -878,10 +878,12 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
             local privateKeyStr = "asdfqwper234123412341234lkjlkj2342ghhg5j";
             local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
             local pubkeyStr = sm.ToHexString(pubkey);
+            local ts = 1559911178
+            local add = ""
             --填充关键数据
-            sm:pushHexSting(msg.PurchaseId); --PurchaseId
-            sm:pushLong(1559911178); --ts
-            sm:pushHexSting("123456");   --Amount
+            sm:pushSting(msg.PurchaseId); --PurchaseId
+            sm:pushSting("123456");     --Amount
+            sm:pushLong(ts); --ts
             --sm:pushHexSting(pubkeyStr)
             --sm:pushBtyes(pubkey)
 
@@ -905,7 +907,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
                     PubKey=pubkeyStr,
                     Amount='123456',
                     ExpireTime=0,
-                    Ts=1559911178,
+                    Ts=ts,
                     Signature = sm.ToHexString(sig)
                 }
             }
@@ -919,7 +921,7 @@ UnitTest.Exec("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequest
                     RechargeRequestReq(msg)
                 end)
         DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq"
-        ,"ccapi.ct_RechargeRequestReq",function(msg)
+        ,"ccapi.ct_RechargeRequestRes",function(msg)
                     local test = 100
                     UnitTest.Exec_now("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",msg.PlayerId)
                 end)
@@ -950,13 +952,13 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
             local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr);
             local pubkeyStr = sm.ToHexString(pubkey);
             local myEthAddr = "qwerqwerqwerqwoiuopi023121lkjfalskdjqoiwejrqlwer"
-            local amount = tostring(11111)
+            local amount = tostring(2000)
             local ts = 1559911188
             --填充关键数据
-            sm:pushHexSting(msg.PurchaseId); --PurchaseId
-            sm:pushSha256Hex(myEthAddr); --//addr
-            sm:pushHexSting(amount);   --Amount
+            sm:pushSting(msg.PurchaseId); --PurchaseId
+            sm:pushSting(amount);   --Amount
             sm:pushLong(ts); --ts
+            sm:pushSting(myEthAddr); --//addr
 
             --计算数据哈希
             local datahash = sm:getDataHash();
@@ -990,7 +992,7 @@ UnitTest.Exec("abel_0603_ct_DisCharge", "e_abel_0603_ct_DisCharge",  function ()
                     ct_disCharge(msg)
                 end)
         DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_DisChargeReq"
-        ,"ccapi.ct_DisChargeReq",function(msg)
+        ,"ccapi.ct_DisChargeRes",function(msg)
                     local test = 100
                 end)
         getOrderfunId(pid)
@@ -1050,7 +1052,7 @@ UnitTest.Exec("abel_0601_VerifySignature", "e_abel_0601_VerifySignature",  funct
     local pubkeyStr = sm.ToHexString(pubkey);
     sm:pushHexSting("0636ba40b4124c9babf8043f91ff9045"); --PurchaseId
     sm:pushLong(1559911178647); --ts
-    sm:pushHexSting("123456");   --meta
+    sm:pushSting("-1");   --meta
     sm:pushHexSting(pubkeyStr)
     --计算数据哈希
     local datahash = sm:getDataHash();
@@ -1102,7 +1104,7 @@ UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function 
     --填充关键数据
     --sm:pushHexSting(msg.PurchaseId); --PurchaseId
     sm:pushSha256Hex(myEthAddr); --//addr
-    sm:pushHexSting(amount);   --Amount
+    sm:pushSting(amount);   --Amount
     sm:pushLong(ts); --ts
 
     --生成
@@ -1120,19 +1122,32 @@ UnitTest.Exec("abel_0617_PrivateKeyGen", "e_abel_0617_PrivateKeyGen",  function 
 end)
 
 UnitTest.Exec("abel_0617_PrivateKeyEncrypt", "e_abel_0617_PrivateKeyEncrypt",  function ()
-    --生成私钥
-    local privateKey = City.CityLuaUtil.NewGuid()
-    --密钥保护密码
     local password = "123456"
+    --生成并保存密钥
+    local privateKeyLoc = ct.GetPrivateKeyLocal(password)
+    if privateKeyLoc == nil then
+        ct.GenerateAndSaveKeyPair(password)
+    end
 
-    local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
-    --保存
-    local path = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
-    ct.file_saveString(path,privateKeyEncrypted)
-    --读取
-    local privateKeyEncryptedSaved = ct.file_readString(path)
-    --用密码解密私钥
-    local privateKeyNewEncrypted = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
+    local pubKey = ct.GenPublicKey(password)
+    local pubKeyStr1 = City.signer_ct.ByteArrayToString(pubKey)
+    local pubKey1 = City.signer_ct.StringToByteArray(pubKeyStr1)
+    local pass1 = City.signer_ct.checkKeyEqual(pubKey,pubKey1)
+
+    local pubKeyStr = ct.GenPublicKeyString(password)
+    local pubKeyRight = ct.GetPublicKeyStringLocal()
+    local pass = (pubKeyStr == pubKeyRight)
+    local pubKeyFromGenLocal = City.signer_ct.StringToByteArray(pubKeyStr)
+    local pubKeyFromLoad = City.signer_ct.StringToByteArray(pubKeyRight)
+    local passbyte = City.signer_ct.checkKeyEqual(pubKey,pubKeyFromGenLocal)
+    passbyte = City.signer_ct.checkKeyEqual(pubKey,pubKeyFromLoad)
+    passbyte = City.signer_ct.checkKeyEqual(pubKey,pubKey)
+
+    --验证密码
+    local rightPD = ct.VerifyPassword("123456")
+    local WrongPD1 = ct.VerifyPassword("1234567")
+    local WrongPD2 = ct.VerifyPassword("123234567")
+    local WrongPD3 = ct.VerifyPassword("223456")
     local a = 0
 end)
 

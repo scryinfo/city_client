@@ -260,4 +260,7 @@ function HistoryCurveCtrl:SupplyCurve(info)
     --供应线
     HistoryCurvePanel.graph:DrawLine(supplyNumVet,Color.New(13 / 255, 179 / 255, 169 / 255, 255 / 255),2)
     HistoryCurvePanel.slide:SetCoordinate(supplyNumVet,supplyNumValue,Color.New(13 / 255, 79 / 255, 169 / 255, 255 / 255),2)
+
+    HistoryCurvePanel.curve.localPosition = HistoryCurvePanel.curve.localPosition + Vector3.New(0.01, 0,0)
+    HistoryCurvePanel.curve.sizeDelta = HistoryCurvePanel.curve.sizeDelta + Vector2.New(0.01, 0)
 end

@@ -13,6 +13,8 @@ function MapRightSystemPage:initialize(viewRect)
     --btn
     self.goHereBtn = self.viewRect.transform:Find("bottomRoot/goHereBtn"):GetComponent("Button")
     self.goHereText01 = self.viewRect.transform:Find("bottomRoot/goHereBtn/Text"):GetComponent("Text")
+    self.titleText02 = self.viewRect.transform:Find("topRoot/titleText"):GetComponent("Text")
+    self.valueText03 = self.viewRect.transform:Find("centerRoot/scroll/Viewport/Content/Text"):GetComponent("Text")
 
     self.closeBtn.onClick:AddListener(function ()
         PlayMusEff(1002)
@@ -37,6 +39,8 @@ end
 --多语言
 function MapRightSystemPage:_language()
     self.goHereText01.text = GetLanguage(20010008)
+    self.titleText02.text = GetLanguage(11030001)
+    self.valueText03.text = GetLanguage(11030002)
 end
 --关闭
 function MapRightSystemPage:close()

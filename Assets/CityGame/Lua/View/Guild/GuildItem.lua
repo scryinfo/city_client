@@ -48,7 +48,7 @@ function GuildItem:_applyGuild()
     local data = {}
     data.titleInfo = GetLanguage(12010010)
     data.tipInfo = GetLanguage(12010011)
-    data.inputInfo = ""
+    data.inputInfo = GetLanguage(12060043)
     data.btnCallBack = function(text)
         DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_JoinSociety', { id = self.data.id, desc = text })
     end

@@ -52,6 +52,10 @@ function MapRightMatGoodItem:refreshData(data)
         self.goods.transform.localScale = Vector3.one
         LoadSprite(Good[itemId].img, self.iconImg,false)
         self.nameText.text = GetLanguage(Good[itemId].name)
+
+        self.brandNameText.text = data.item.key.brandName
+        self.brandValue.text = data.item.key.brandScore
+        self.qualityValue.text = data.item.key.qualityScore
     end
 end
 

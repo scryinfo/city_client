@@ -764,7 +764,7 @@ function GetEvaData(index, configData, lv)
 	elseif configData.Btype == "ProduceSpeed" then -- 生产速度
 		local resultNum = tostring( 1 / ((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum))
 		if string.find(resultNum, ".") ~= nil then
-			resultNum = string.format( "%.4f", resultNum)
+			resultNum = string.format( "%.2f", resultNum)
 		end
 		return resultNum .. "s/per"
 	elseif configData.Btype == "PromotionAbility" then -- 推广能力

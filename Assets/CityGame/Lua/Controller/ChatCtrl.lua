@@ -151,6 +151,7 @@ function ChatCtrl:_addListener()
     Event.AddListener("c_OnReceiveAddBlacklist", self.c_OnReceiveAddBlacklist, self)
     Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.AddListener("c_OnReceiveRoleStatusChange", self.c_OnReceiveRoleStatusChange, self)
+    Event.AddListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
 end
 
 function ChatCtrl:Hide()
@@ -165,6 +166,7 @@ function ChatCtrl:_removeListener()
     Event.RemoveListener("c_OnReceiveAddBlacklist", self.c_OnReceiveAddBlacklist, self)
     Event.RemoveListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.RemoveListener("c_OnReceiveRoleStatusChange", self.c_OnReceiveRoleStatusChange, self)
+    Event.RemoveListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
 end
 
 -- 刷新界面的状态
@@ -611,14 +613,9 @@ function ChatCtrl:OnAddFriends(go)
     data.inputInfo = GetLanguage(15010023)
     data.btnCallBack = function(text)
         ct.log("tina_w8_friends", "向服务器发送加好友信息")
-        if string.len(text) > 30 then
-            text = GetLanguage(13040006)
-            Event.Brocast("SmallPop",text,80)
-        else
-            Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
-            Event.Brocast("SmallPop", GetLanguage(15010008),80)
-            go:_closePlayerInfo()
-        end
+        Event.Brocast("m_ChatAddFriends", { id = ChatCtrl.static.chatMgr:GetActivePlayerId(), desc = text })
+        Event.Brocast("SmallPop", GetLanguage(15010008),80)
+        go:_closePlayerInfo()
     end
     ct.OpenCtrl("CommonDialogCtrl", data)
 end
@@ -882,19 +879,27 @@ function ChatCtrl:c_OnReceiveAddBlacklist(roleInfo)
     if friendsPlayerItem[roleInfo.id] then
         ChatCtrl.static.chatMgr:DestroyItem(1, roleInfo.id)
         if activePlayerId == roleInfo.id then
+            ChatPanel.playerInfoRoot:SetActive(false)
             ChatCtrl.static.chatMgr:SetToggle()
             ChatCtrl.static.chatMgr:DestroyContentChildren(2)
             ChatCtrl.static.chatMgr:SetActivePlayerData({})
-            ChatPanel.friendsNum.text = tostring(#ChatCtrl.static.chatMgr:GetFriendsPlayer().id)
+        end
+        ChatPanel.friendsNum.text = tostring(#ChatCtrl.static.chatMgr:GetFriendsPlayer().id)
+        if #ChatCtrl.static.chatMgr:GetFriendsPlayer().id == 0 then
+            ChatPanel.friendsNoContentRoot:SetActive(true)
         end
     elseif strangersPlayerItem[roleInfo.id] then
         ChatCtrl.static.chatMgr:DestroyItem(2, roleInfo.id)
         DataManager.SetStrangersInfo(roleInfo.id)
         if activePlayerId == roleInfo.id then
+            ChatPanel.playerInfoRoot:SetActive(false)
             ChatCtrl.static.chatMgr:SetToggle()
             ChatCtrl.static.chatMgr:DestroyContentChildren(4)
             ChatCtrl.static.chatMgr:SetActivePlayerData({})
-            ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
+        end
+        ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
+        if #ChatCtrl.static.chatMgr:GetStrangersPlayer().id == 0 then
+            ChatPanel.strangersNoContentRoot:SetActive(true)
         end
     end
 end
@@ -934,7 +939,6 @@ function ChatCtrl:c_OnReceiveRoleStatusChange(roleData)
         else
             friendsItem:SetHeadColor(false)
             friendsItem.prefab.transform:SetSiblingIndex(ChatPanel.friendsPlayerContent.childCount - 1)
-
         end
     end
 end
@@ -942,4 +946,23 @@ end
 -- 查询世界陌生人的消息
 function ChatCtrl:c_OnQueryWorldPlayerInfo(idTemp)
     PlayerInfoManger.GetInfos(idTemp, self.c_OnReceivePlayerInfo, self)
+end
+
+-- 刪除好友的监听
+function ChatCtrl:c_OnReceiveDeleteFriend(friendsId)
+    local activePlayerId = ChatCtrl.static.chatMgr:GetActivePlayerId()
+    local friendsPlayerItem = ChatCtrl.static.chatMgr:GetFriendsPlayer().item
+    if friendsPlayerItem[friendsId.fId] then
+        ChatCtrl.static.chatMgr:DestroyItem(1, friendsId.fId)
+        if activePlayerId == friendsId.fId then
+            ChatPanel.playerInfoRoot:SetActive(false)
+            ChatCtrl.static.chatMgr:SetToggle()
+            ChatCtrl.static.chatMgr:DestroyContentChildren(2)
+            ChatCtrl.static.chatMgr:SetActivePlayerData({})
+        end
+        ChatPanel.friendsNum.text = tostring(#ChatCtrl.static.chatMgr:GetFriendsPlayer().id)
+        if #ChatCtrl.static.chatMgr:GetFriendsPlayer().id == 0 then
+            ChatPanel.friendsNoContentRoot:SetActive(true)
+        end
+    end
 end

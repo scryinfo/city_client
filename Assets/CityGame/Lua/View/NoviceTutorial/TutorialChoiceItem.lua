@@ -36,7 +36,7 @@ end
 
 -- 设置选择项的名字
 function TutorialChoiceItem:SetNameText()
-    self.choiceNameText.text = "Land"
+    self.choiceNameText.text = NoviceTutorialConfig[self.index].name
 end
 
 -- 按钮的点击事件

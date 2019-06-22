@@ -21,6 +21,7 @@ function EvaPanel.InitPanel()
     this.backBtn = transform:Find("TopRoot/BackBtn").gameObject
     this.startAddBtn = transform:Find("TopRoot/StartAddBtn")
     this.addBtn = transform:Find("TopRoot/AddBtn")
+    this.addButton = transform:Find("TopRoot/AddBtn"):GetComponent("Button")
 
     this.optionOneScroll = transform:Find("BottomRoot/LeftRoot/OptionOneScroll/Content")
     this.optionTwoScroll = transform:Find("BottomRoot/OptionRoot/OptionTwoScroll"):GetComponent("ActiveLoopScrollRect")

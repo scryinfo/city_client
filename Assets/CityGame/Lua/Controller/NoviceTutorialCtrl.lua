@@ -31,7 +31,7 @@ function NoviceTutorialCtrl:Awake()
     self.tutorialVideoSource.mClearData = NoviceTutorialCtrl.static.tutorialVideoClearData
 
     self.tutorialChoiceItems = {}
-    for i = 1, 5 do
+    for i = 1, #NoviceTutorialConfig do
         local function callback(obj)
             self.tutorialChoiceItems[i] = TutorialChoiceItem:new(obj, i, self)
             if i == 1 then
@@ -85,9 +85,6 @@ end
 
 -- 刷新Eva滑动选项2的信息
 function NoviceTutorialCtrl:ShowVideo(itemNumber)
-    NoviceTutorialCtrl.data = {}
-    for i = 1, 5 do
-        table.insert(NoviceTutorialCtrl.data, {url = "https://www.bilibili.com/video/av55335692/"})
-    end
+    NoviceTutorialCtrl.data = NoviceTutorialConfig[itemNumber].videos
     NoviceTutorialPanel.urlScroll:ActiveLoopScroll(self.tutorialVideoSource, #NoviceTutorialCtrl.data, "View/NoviceTutorial/TutorialVideoItem")
 end

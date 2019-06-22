@@ -70,10 +70,13 @@ function FlightMainCtrl:Hide()
     UIPanel.Hide(self)
 end
 --
-function FlightMainCtrl:_getAllFlight(data)
-    if data ~= nil then
+function FlightMainCtrl:_getAllFlight(value)
+    if value ~= nil then
         FlightMainCtrl.static.itemsList = {}
-        self.m_data.valueList = data
+        local sortList = table.sort(value, function (m, n)
+            return m.sumBetAmount > n.sumBetAmount
+        end)
+        self.m_data.valueList = value
         if #self.m_data.valueList > 0 then
             FlightMainPanel.noneTip.localScale = Vector3.zero
             FlightMainCtrl.listValue = self.m_data.valueList

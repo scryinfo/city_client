@@ -21,7 +21,7 @@ function FlightSelectPlaceItem:initialize(viewRect, data)
 end
 --刷新数据
 function FlightSelectPlaceItem:initData(data)
-    self.Text.text = data.value
+    self.Text.text = string.format("%s<size=%d>(%s)</size>", data.value, 30, data.flightCode)
 end
 --
 function FlightSelectPlaceItem:Close()

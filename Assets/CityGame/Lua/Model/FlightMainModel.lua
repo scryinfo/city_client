@@ -84,10 +84,13 @@ function FlightMainModel._getDicValue(data)
     end
 end
 --通过id获取对应的航班数据
-function FlightMainModel.getFlightById(id)
+function FlightMainModel.getFlightBetById(id)
     if FlightMainModel.allFlightDic ~= nil then
         local data = FlightMainModel.allFlightDic[id]
-        return data
+        if data ~= nil then
+            local bet = data.myBet
+            return bet
+        end
     end
     return nil
 end

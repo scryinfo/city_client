@@ -199,10 +199,8 @@ function WalletCtrl:_language()
 end
 --初始化打开钱包时
 function WalletCtrl:defaultPanel()
-    --读取路径
-    local path = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
-    local str = ct.file_readString(path)
-    if str == nil then
+    local whetherExist = ct.CheckPrivateKeyLocal()
+    if whetherExist == false then
         self.WithoutWalletContent.transform.localScale = Vector3.one
         self.WalletContent.transform.localScale = Vector3.zero
         self.DetailsContent.transform.localScale = Vector3.zero
@@ -398,7 +396,7 @@ function WalletCtrl:confirmPasswordBtn()
     --生产密钥
     self:creatKey()
     local userName = DataManager.GetName()
-    local pubKey = self.pubkey
+    local pubKey = self.pubKey
     Event.Brocast("ReqCreateWallet",self.userId,userName,pubKey)
 end
 --打开详情
@@ -497,11 +495,11 @@ function WalletCtrl:reqDisChargeOrderSucceed(data)
         local pubkey = self.sm.GetPublicKeyFromPrivateKey(privateKeyStr)
         self.pubkeyStr = self.sm.ToHexString(pubkey)
         --暂时发秒
-        self.second = math.ceil(serverNowTime / 1000)
-        self.sm:pushHexSting(data.PurchaseId)
-        self.sm:pushSha256Hex(self.ethAddr)
-        self.sm:pushHexSting(self.Amount)
+        self.second = math.ceil(serverNowTime)
+        self.sm:pushSting(data.PurchaseId)
+        self.sm:pushSting(self.Amount)
         self.sm:pushLong(self.second)
+        self.sm:pushSting(self.ethAddr)
         --生成签名(用于验证关键数据是否被篡改)
         self.sig = self.sm:sign(privateKeyStr);
     end
@@ -515,34 +513,15 @@ end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 --生成密钥
 function WalletCtrl:creatKey()
-    --生成
-    local privateKey = City.CityLuaUtil.NewGuid()
-
-    --支付密码
-    local passWord = tostring(self.confirmInputField.text)
-    local privateKeyEncrypted = City.signer_ct.Encrypt(passWord, privateKey)
-
-    --保存密钥
-    local path = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
-    ct.file_saveString(path,privateKeyEncrypted)
-
-    --保存支付密码
-    local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
-    ct.file_saveString(passWordPath,tostring(self.confirmInputField.text))
-
-    local privateKeyEncryptedSaved = ct.file_readString(path)
-    local privateKeyNewEncrypted = City.signer_ct.Decrypt(passWord, privateKeyEncryptedSaved)
-
-    --生成公钥
-    self.pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyNewEncrypted);
+    local passWore = tostring(self.confirmInputField.text)
+    ct.GenerateAndSaveKeyPair(passWore)
+    self.pubKey = ct.GenPublicKey(passWore)
 end
 --解析支付密码和私钥
 function WalletCtrl:parsing()
-    local privateKeyPath = CityLuaUtil.getAssetsPath().."/Lua/pb/credential.data"
-    local privateKeyStr = ct.file_readString(privateKeyPath)
     local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
     local passWordStr = ct.file_readString(passWordPath)
-    local privateKeyNewEncrypted = City.signer_ct.Decrypt(passWordStr, privateKeyStr)
+    local privateKeyNewEncrypted = ct.GetPrivateKeyLocal(passWordStr)
     return privateKeyNewEncrypted
 end
 --刷新获取验证码时间

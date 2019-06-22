@@ -86,11 +86,11 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
         self.headName.text = GetLanguage(11010008)
         self.name.localScale = Vector3.one
         if dataInfo.type == "RENT_ROOM" then
-            self.income.text = GetLanguage(11010011)
+            self.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", self.picture, true)
             self.pictureText.text = GetLanguage(11010016) .. "X1"
         elseif dataInfo.type == "INSHELF" then
-            self.income.text = GetLanguage(11010012)
+            self.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", self.picture)
             self.pictureText.text = GetLanguage(dataInfo.itemId) .. "X".. dataInfo.count
         end

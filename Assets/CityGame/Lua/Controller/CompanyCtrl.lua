@@ -74,8 +74,8 @@ end
 -- 注册监听事件
 function CompanyCtrl:Active()
     UIPanel.Active(self)
-    CompanyPanel.curve.anchoredPosition = Vector3.New(-2903, 47,0)
-    CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)
+    --CompanyPanel.curve.anchoredPosition = Vector3.New(-2903, 47,0)
+    --CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)
     self:_addListener()
 
     -- 多语言适配
@@ -97,8 +97,8 @@ function CompanyCtrl:Hide()
     --CityEngineLua.login_tradeapp(false)
     self:_removeListener()
     UIPanel.Hide(self)
-    CompanyPanel.curve.anchoredPosition = Vector3.New(-2903, 47,0)
-    CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)
+    --CompanyPanel.curve.anchoredPosition = Vector3.New(-2903, 47,0)
+    --CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)
 end
 
 -- 监听Model层网络回调
@@ -164,31 +164,7 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     local incomeTab = {}
     local payTab = {}
 
-    for i = 1, 30 do
-        if tonumber(getFormatUnixTime(updataTime).day) == 1 then
-            time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
-            table.insert(boundaryLine,(updataTime - monthAgo + 86400) / 86400 * 140)
-        else
-            time[i] = tostring(getFormatUnixTime(updataTime).day) .. "d"
-        end
-        --incomeTab[i] = {}
-        --incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-        --incomeTab[i].flow = 0  --看具体字段
-        --payTab[i] = {}
-        --payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-        --payTab[i].flow = 0  --看具体字段
-        --if info ~= nil then
-        --    for k, v in pairs(info) do
-        --        if updataTime == v.time / 1000 then
-        --            incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
-        --            payTab[i].lift = tonumber(GetClientPriceString(v.pay))
-        --        end
-        --    end
-        --end
-        --
-        updataTime = updataTime + 86400
-    end
-   local buildingTs = math.floor(self.m_data.createTs/1000)
+    local buildingTs = math.floor(self.m_data.createTs/1000)
     if tonumber(getFormatUnixTime(buildingTs).second) ~= 0 then
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).second)
     end
@@ -199,30 +175,43 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
         buildingTs = buildingTs - tonumber(getFormatUnixTime(buildingTs).hour) * 3600
     end
     local buildingTime = buildingTs
-    updataTime = monthAgo
-    local index = 1
     if buildingTs >= monthAgo then
-        while(buildingTs <= currentTime)
-        do
-            incomeTab[index] = {}
-            incomeTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 140
-            incomeTab[index].flow = 0  --看具体字段
-            payTab[index] = {}
-            payTab[index].coordinate = (buildingTs - monthAgo + 86400) / 86400 * 140
-            payTab[index].flow = 0  --看具体字段
+        updataTime = buildingTs
+        for i = 1, 30 do
+            if tonumber(getFormatUnixTime(updataTime).day) == 1 then
+                time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
+                table.insert(boundaryLine,(updataTime - buildingTs + 86400) / 86400 * 140)
+            else
+                time[i] = tostring(getFormatUnixTime(updataTime).day) .. "d"
+            end
+            incomeTab[i] = {}
+            incomeTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 140
+            incomeTab[i].flow = 0  --看具体字段
+            payTab[i] = {}
+            payTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 140
+            payTab[i].flow = 0  --看具体字段
             if info ~= nil then
                 for k, v in pairs(info) do
                     if updataTime == v.time / 1000 then
-                        incomeTab[index].lift = tonumber(GetClientPriceString(v.income))
-                        payTab[index].lift = tonumber(GetClientPriceString(v.pay))
+                        incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
+                        payTab[i].lift = tonumber(GetClientPriceString(v.pay))
                     end
                 end
             end
-            buildingTs = buildingTs + 86400
-            index = index + 1
+            if updataTime == currentTime then
+                incomeTab[i].lift = tonumber(GetClientPriceString(todayIncome))
+                payTab[i].lift = tonumber(GetClientPriceString(todayPay))
+            end
+            updataTime = updataTime + 86400
         end
     else
         for i = 1, 30 do
+            if tonumber(getFormatUnixTime(updataTime).day) == 1 then
+                time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
+                table.insert(boundaryLine,(updataTime - monthAgo + 86400) / 86400 * 140)
+            else
+                time[i] = tostring(getFormatUnixTime(updataTime).day) .. "d"
+            end
             incomeTab[i] = {}
             incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
             incomeTab[i].flow = 0  --看具体字段
@@ -237,7 +226,8 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
                     end
                 end
             end
-
+            incomeTab[#incomeTab].y= tonumber(GetClientPriceString(todayIncome))
+            payTab[#payTab].y= tonumber(GetClientPriceString(todayPay))
             updataTime = updataTime + 86400
         end
     end
@@ -250,8 +240,6 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     for i, v in ipairs(payTab) do
         pay[i] = Vector2.New(v.coordinate,v.lift)  --
     end
-    income[#income].y= tonumber(GetClientPriceString(todayIncome))
-    pay[#pay].y= tonumber(GetClientPriceString(todayPay))
     table.insert(time,1,"0")
     table.insert(boundaryLine,1,0)
     table.insert(income,1,Vector2.New(0,0))
@@ -285,22 +273,61 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
         end
     end
 
-    if buildingTime == currentTime then
-        local incomeVetTemp = {}
-        local payVetTemp = {}
-        incomeVetTemp.x = incomeVet[#incomeVet].x + (taday * (139 / 86400))
-        incomeVetTemp.y = incomeVet[#incomeVet].y
-        payVetTemp.x = payVet[#payVet].x + (taday * (139 / 86400))
-        payVetTemp.y = payVet[#payVet].y
-        table.insert(incomeVet,Vector2.New(incomeVetTemp.x,incomeVetTemp.y))
-        table.insert(payVet,Vector2.New(payVetTemp.x,payVetTemp.y))
-        incomeVet[#incomeVet-1].y = 0
-        payVet[#payVet-1].y = 0
-        table.insert(income,#incomeVet-1,Vector2.New(incomeVet[#incomeVet-1].x,0))
-        table.insert(pay,#payVet-1,Vector2.New(payVet[#payVet-1].x,0))
+    if buildingTs >= monthAgo then
+        if buildingTime == currentTime then
+            incomeVet[2].x = incomeVet[2].x + (taday * (140 / 86400))
+            payVet[2].x = payVet[2].x + (taday * (140 / 86400))
+            table.insert(incomeVet,2,Vector2.New(140,0))
+            table.insert(payVet,2,Vector2.New(140,0))
+            table.insert(income,2,Vector2.New(140,0))
+            table.insert(pay,2,Vector2.New(140,0))
+        else
+          local dis = (currentTime - buildingTime)/86400 *40
+            local id
+            for i, v in ipairs(incomeVet) do
+                if v.x == dis then
+                    id = i
+                end
+            end
+            if id then
+                incomeVet[id].x = incomeVet[id].x + (taday * (140 / 86400))
+                payVet[id].x = payVet[id].x + (taday * (140 / 86400))
+            end
+        end
     else
-        incomeVet[#incomeVet].x = incomeVet[#incomeVet].x + (taday * (139 / 86400))
-        payVet[#payVet].x = payVet[#payVet].x + (taday * (139 / 86400))
+        incomeVet[#incomeVet].x = incomeVet[#incomeVet].x + (taday * (140 / 86400))
+        payVet[#payVet].x = payVet[#payVet].x + (taday * (140 / 86400))
+    end
+    --if buildingTime == currentTime then
+    --    local incomeVetTemp = {}
+    --    local payVetTemp = {}
+    --    incomeVetTemp.x = incomeVet[#incomeVet].x + (taday * (140 / 86400))
+    --    incomeVetTemp.y = incomeVet[#incomeVet].y
+    --    payVetTemp.x = payVet[#payVet].x + (taday * (140 / 86400))
+    --    payVetTemp.y = payVet[#payVet].y
+    --    table.insert(incomeVet,Vector2.New(incomeVetTemp.x,incomeVetTemp.y))
+    --    table.insert(payVet,Vector2.New(payVetTemp.x,payVetTemp.y))
+    --    incomeVet[#incomeVet-1].y = 0
+    --    payVet[#payVet-1].y = 0
+    --    table.insert(income,#incomeVet-1,Vector2.New(incomeVet[#incomeVet-1].x,0))
+    --    table.insert(pay,#payVet-1,Vector2.New(payVet[#payVet-1].x,0))
+    --else
+    --    incomeVet[#incomeVet].x = incomeVet[#incomeVet].x + (taday * (140 / 86400))
+    --    payVet[#payVet].x = payVet[#payVet].x + (taday * (140 / 86400))
+    --end
+
+    local difference = (currentTime - buildingTs) / 86400  --距离开业的天数
+    if difference < 10 then
+        CompanyPanel.curve.anchoredPosition = Vector3.New(-95, 47,0)
+        CompanyPanel.curve.sizeDelta = Vector2.New(1528, 535)
+    elseif difference < 30 then
+        CompanyPanel.curve.anchoredPosition = Vector3.New(-95, 47,0)
+        CompanyPanel.curve.sizeDelta = Vector2.New(1528, 535)
+        CompanyPanel.curve.anchoredPosition = Vector3.New(CompanyPanel.curve.anchoredPosition.x - (difference - 10) * 140, 42,0)
+        CompanyPanel.curve.sizeDelta = Vector2.New(CompanyPanel.curve.sizeDelta.x + (difference - 10) * 140, 402)
+    else
+        CompanyPanel.curve.anchoredPosition = Vector3.New(-2902, 47,0)
+        CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)
     end
 
     CompanyPanel.curveSlide:SetXScaleValue(time,140)
@@ -312,8 +339,8 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     CompanyPanel.curveFunctionalGraph:DrawLine(payVet, getColorByInt(213, 34, 76),2) --支出
     CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(41, 61, 108),2)
 
-    CompanyPanel.curve.localPosition = CompanyPanel.curve.localPosition + Vector3.New(0.01, 0,0)
-    CompanyPanel.curve.sizeDelta = CompanyPanel.curve.sizeDelta + Vector2.New(0.01, 0)
+    --CompanyPanel.curve.localPosition = CompanyPanel.curve.localPosition + Vector3.New(0.01, 0,0)
+    --CompanyPanel.curve.sizeDelta = CompanyPanel.curve.sizeDelta + Vector2.New(0.01, 0)
 end
 
 

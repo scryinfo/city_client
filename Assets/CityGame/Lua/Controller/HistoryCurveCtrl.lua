@@ -158,8 +158,6 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
     HistoryCurvePanel.slide:SetXScaleValue(time,116)
     HistoryCurvePanel.graph:BoundaryLine(boundaryLine)
 
-    HistoryCurvePanel.curve.localPosition = HistoryCurvePanel.curve.localPosition + Vector3.New(0.01, 0,0)
-    HistoryCurvePanel.curve.sizeDelta = HistoryCurvePanel.curve.sizeDelta + Vector2.New(0.01, 0)
 end
 --每种商品购买的npc数量曲线图  (供应)
 function HistoryCurveCtrl:c_GoodsNpcNumCurve(info)

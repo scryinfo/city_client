@@ -1154,10 +1154,11 @@ end)
 UnitTest.Exec("abel_0622_cashbox", "e_abel_0622_cashbox",  function ()
     local cashboxExist = CityLuaUtil.checkLocalCashboxExist()
     ct.log("abel_0622_cashbox", "checkLocalCashboxExist() return "..(cashboxExist == true and "true" or "false"))
-    if cashboxExist then
-        ct.log("abel_0622_cashbox", "invoked CityLuaUtil.openCashbox------------------------------------------")
-        CityLuaUtil.openCashbox("0.5","0x9F5F3CFD7a32700C93F971637407ff17b91c7342","2636ba40b4124c9babf8043f91ff9045")
-    end
+end)
+
+UnitTest.Exec("abel_0622_cashboxOpen", "e_abel_0622_cashboxOpen",  function ()
+    ct.log("abel_0622_cashboxOpen", "invoked CityLuaUtil.openCashbox------------------------------------------")
+    CityLuaUtil.openCashbox("0.5","0x9F5F3CFD7a32700C93F971637407ff17b91c7342","2636ba40b4124c9babf8043f91ff9045")
 end)
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

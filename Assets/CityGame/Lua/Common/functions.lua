@@ -898,14 +898,14 @@ function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,RD
 		--推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
 		recommendedPricing =  15 * PRIDMagnification + RBtype
 		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
-		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
+		return CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
 	else
 		if RBtype == 5 then ---- 5是发明
 			--发明竞争力 = 推荐定价 / (定价/(发明能力*2)) * 10 (小数一位)
-			return  CalculationNBitAfterDecimalPoint((recommendedPricing / ( price / RDcapability * 2) * CPMagnification ))
+			return CalculationNBitAfterDecimalPoint((recommendedPricing / ( price /( RDcapability * 3 / 2)) * CPMagnification ))
 		elseif RBtype == 6 then --- 6是研究
 			--研究竞争力 = 推荐定价 / (定价/研究能力) * 10 (小数一位)
-			return  CalculationNBitAfterDecimalPoint((recommendedPricing / ( price / RDcapability ) * CPMagnification ))
+			return CalculationNBitAfterDecimalPoint((recommendedPricing / ( price /( RDcapability * 3 / 4)) * CPMagnification ))
 		end
 	end
 end

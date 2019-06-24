@@ -874,7 +874,7 @@ end
 ---计算推广公司竞争力
 --推荐定价:recommendedPricing
 --定价:price
---推广能力:competitivePower
+--推广能力:competitivePower  -- 所有不同类型推广能力和 / 4
 --推广类型:Advertisementtype  --2251食品推广  2252服饰推广   13零售店推广   14住宅推广
 function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,competitivePower,Advertisementtype)
 	if recommendedPricing <= 0 then
@@ -891,7 +891,7 @@ end
 ---计算研发公司竞争力【over】
 --推荐定价:recommendedPricing
 --定价:price
---研发能力:RDcapability
+--研发能力:RDcapability   --= (发明成功率 *2 + 研究成功率)/2
 --研究还是发明：RBtype    -- 5是发明，6是研究
 function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,RDcapability,RBtype)
 	if recommendedPricing <= 0 then
@@ -900,8 +900,13 @@ function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,RD
 		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
 		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
 	else
-		--竞争力 = 推荐定价 / (定价/研发能力) * 1000 (整数)
-		return  CalculationNBitAfterDecimalPoint((recommendedPricing / ( price / RDcapability) * CPMagnification ))
+		if RBtype == 5 then ---- 5是发明
+			--发明竞争力 = 推荐定价 / (定价/(发明能力*2)) * 10 (小数一位)
+			return  CalculationNBitAfterDecimalPoint((recommendedPricing / ( price / RDcapability * 2) * CPMagnification ))
+		elseif RBtype == 6 then --- 6是研究
+			--研究竞争力 = 推荐定价 / (定价/研究能力) * 10 (小数一位)
+			return  CalculationNBitAfterDecimalPoint((recommendedPricing / ( price / RDcapability ) * CPMagnification ))
+		end
 	end
 end
 

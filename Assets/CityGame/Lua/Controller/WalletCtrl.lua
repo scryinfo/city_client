@@ -443,8 +443,8 @@ end
 --关闭钱包充值金额（新加）
 function WalletCtrl:closeRechargeAmountContent()
     self.RechargeAmountContent.transform.localScale = Vector3.zero
-    os.remove("Assets/CityGame/Resources/Atlas/Wallet/1.png")
-    os.remove("Assets/CityGame/Resources/Atlas/Wallet/1.png.meta")
+    os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png")
+    os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png.meta")
 end
 --打开二维码
 function WalletCtrl:openQRCode(data)
@@ -461,9 +461,9 @@ function WalletCtrl:UpdateCode()
    self.timmer = self.timmer + UnityEngine.Time.unscaledDeltaTime
     if self.timmer >= 0.5 then
         self.timmer = 0
-        local path = os.execute("Assets/CityGame/Resources/Atlas/Wallet/1.png.meta")
+        local path = os.execute("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png.meta")
         if path == 1 then
-            LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/1.png", self.QRCodeImg)
+            LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png", self.QRCodeImg)
             UpdateBeat:Remove(self.UpdateCode,self)
         end
     end
@@ -471,8 +471,8 @@ end
 --关闭二维码
 function WalletCtrl:closeQRCode()
     self.QRCodeContent.transform.localScale = Vector3.zero
-    os.remove("Assets/CityGame/Resources/Atlas/Wallet/1.png")
-    os.remove("Assets/CityGame/Resources/Atlas/Wallet/1.png.meta")
+    os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png")
+    os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png.meta")
 end
 --打开扫描二维码
 function WalletCtrl:openScanningQRCode()

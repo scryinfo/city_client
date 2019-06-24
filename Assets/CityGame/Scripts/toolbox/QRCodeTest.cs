@@ -19,8 +19,6 @@ namespace UnityEngine
         //二维码写入内容
         private BarcodeWriter barcodeWriter;
         private string QRTexturePath ;
-        //生成二维码路径
-        private string QRPath;
         private void Awake()
         {
             QRTexturePath = Application.dataPath + "/CityGame/Resources/Atlas/Wallet";
@@ -68,18 +66,13 @@ namespace UnityEngine
             Texture2D tTexture = new Texture2D(256, 256);
             tTexture.SetPixels32(GetnQRCode(str, 256, 256));
             tTexture.Apply();
-            //Sprite sp = Sprite.Create(tTexture, new Rect(0, 0, tTexture.width, tTexture.height), new Vector2(0, 0));
-            //RQCodeImg.sprite = sp;
-            string fullpath = QRTexturePath + "/1.png";
+            string fullpath = QRTexturePath + "/QRCode.png";
             var bytes = tTexture.EncodeToPNG();
             if (!Directory.Exists(QRTexturePath))
             {
                 Directory.CreateDirectory(QRTexturePath);
             }
             File.WriteAllBytes(fullpath, bytes);
-
-            //QRPath = fullpath;
-            //RQCodeImg.texture = Resources.Load<Texture2D>(str);
         }
         //返回Color32图片颜色的方法
         Color32[] GetnQRCode(string formatStr, int width, int height)

@@ -21,7 +21,10 @@ end
 function WalletCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
+    UnityEngine.GameObject.AddComponent(go, ct.getType(UnityEngine.QRCodeTest))
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    self.scanQRCode = self.gameObject:GetComponent('QRCodeTest')
+    self.scanQRCode.cameraTexture = self.cameraImg
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.createBtn.gameObject,self._clickCreateBtn,self)
     self.luaBehaviour:AddClick(self.detailsBtn.gameObject,self._clickDetailsBtn,self)
@@ -30,7 +33,7 @@ function WalletCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.withdrawCloseBtn.gameObject,self._clickWithdrawCloseBtn,self)
     self.luaBehaviour:AddClick(self.topUpBtn.gameObject,self._clickTopUpBtn,self)
     self.luaBehaviour:AddClick(self.QRCodeCloseBtn.gameObject,self._clickQRCodeCloseBtn,self)
-    --self.luaBehaviour:AddClick(self.scanningBtn.gameObject,self._clickScanningBtn,self)   扫码暂时关闭
+    self.luaBehaviour:AddClick(self.scanningBtn.gameObject,self._clickScanningBtn,self)   --扫码暂时关闭
     self.luaBehaviour:AddClick(self.scanCloseBtn.gameObject,self._clickScanCloseBtn,self)
     self.luaBehaviour:AddClick(self.passwordCloseBtn.gameObject,self._clickPasswordCloseBtn,self)
     self.luaBehaviour:AddClick(self.agreeBtn.gameObject,self._clickAgreeBtn,self)
@@ -41,6 +44,11 @@ function WalletCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.getBtn.gameObject,self._clickGetBtn,self)
     self.luaBehaviour:AddClick(self.detailsConfirmBtn.gameObject,self._clickDetailsConfirmBtn,self)
     self.luaBehaviour:AddClick(self.phoneRootConfirmBtn.gameObject,self._clickPhoneRootConfirmBtn,self)
+
+
+    --初始化循环参数
+    self.intTime = 0
+    self.m_Timer = Timer.New(slot(self.UpData, self), 1, -1, true)
 
     self.confirmInputField.onValueChanged:AddListener(function()
         self:confirmInputButton()
@@ -129,7 +137,7 @@ function WalletCtrl:_getComponent(go)
     self.QRCodeContent = go.transform:Find("QRCodeContent")
     self.QRCodeCloseBtn = go.transform:Find("QRCodeContent/top/closeBtn")
     self.QRCodeTopName = go.transform:Find("QRCodeContent/top/topName"):GetComponent("Text")
-    self.QRCodeImg = go.transform:Find("QRCodeContent/content/QRCode"):GetComponent("RawImage")
+    self.QRCodeImg = go.transform:Find("QRCodeContent/content/QRCode"):GetComponent("Image")
     self.QRCodeAddressText = go.transform:Find("QRCodeContent/content/addressBg/addressText"):GetComponent("Text")
     self.copyBtn = go.transform:Find("QRCodeContent/content/addressBg/copyBtn")
     self.copyText = go.transform:Find("QRCodeContent/content/addressBg/copyBtn/Text"):GetComponent("Text")
@@ -171,6 +179,7 @@ function WalletCtrl:_getComponent(go)
     self.scanQRCodeRoot = go.transform:Find("WithdrawContent/content/scanQRCodeRoot")
     self.cameraImg = go.transform:Find("WithdrawContent/content/scanQRCodeRoot/cameraImg"):GetComponent("RawImage")
     self.scanCloseBtn = go.transform:Find("WithdrawContent/content/scanQRCodeRoot/topBg/closeBtn")
+    self.line = go.transform:Find("WithdrawContent/content/scanQRCodeRoot/content/QRCodebox/line"):GetComponent("RectTransform")
     self.scanTopName = go.transform:Find("WithdrawContent/content/scanQRCodeRoot/topBg/topName"):GetComponent("Text")
     self.scanTipText = go.transform:Find("WithdrawContent/content/scanQRCodeRoot/content/scanTipText"):GetComponent("Text")
 
@@ -434,25 +443,50 @@ end
 --关闭钱包充值金额（新加）
 function WalletCtrl:closeRechargeAmountContent()
     self.RechargeAmountContent.transform.localScale = Vector3.zero
+    os.remove("Assets/CityGame/Resources/Atlas/Wallet/1.png")
+    os.remove("Assets/CityGame/Resources/Atlas/Wallet/1.png.meta")
 end
 --打开二维码
 function WalletCtrl:openQRCode(data)
     self:closeRechargeAmountContent()
     self.QRCodeContent.transform.localScale = Vector3.one
     --self.QRCodeImg
+    self.scanQRCode:CreateQRCode(data.RechargeRequestRes.EthAddr)
+    self.timmer= 0
     self.QRCodeAddressText.text = data.RechargeRequestRes.EthAddr
+    UpdateBeat:Add(self.UpdateCode,self)
+end
+
+function WalletCtrl:UpdateCode()
+   self.timmer = self.timmer + UnityEngine.Time.unscaledDeltaTime
+    if self.timmer >= 0.5 then
+        self.timmer = 0
+        local path = os.execute("Assets/CityGame/Resources/Atlas/Wallet/1.png.meta")
+        if path == 1 then
+            LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/1.png", self.QRCodeImg)
+            UpdateBeat:Remove(self.UpdateCode,self)
+        end
+    end
 end
 --关闭二维码
 function WalletCtrl:closeQRCode()
     self.QRCodeContent.transform.localScale = Vector3.zero
+    os.remove("Assets/CityGame/Resources/Atlas/Wallet/1.png")
+    os.remove("Assets/CityGame/Resources/Atlas/Wallet/1.png.meta")
 end
 --打开扫描二维码
 function WalletCtrl:openScanningQRCode()
+    self.m_Timer:Start()
     self.scanQRCodeRoot.transform.localScale = Vector3.one
+    self.scanQRCode.qrStingText = self.addressInput
+    self.scanQRCode:StartScanQRCode()
 end
 --关闭扫描二维码
 function WalletCtrl:closeScanningQRCode()
     self.scanQRCodeRoot.transform.localScale = Vector3.zero
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
 end
 --关闭提币详情打开手机验证
 function WalletCtrl:openPhoneCode()
@@ -532,5 +566,16 @@ function WalletCtrl:UpdateTiming()
     else
         self.countdownImage.transform.localScale = Vector3.zero
         UpdateBeat:Remove(self.UpdateTiming,self)
+    end
+end
+
+--每秒刷新
+function WalletCtrl:UpData()
+    self.intTime = self.intTime - 1
+    if self.intTime <= 0 then
+        self.intTime = 2.5
+        self.line:DOLocalMove(Vector3.New(289,0,0),2.5):SetEase(DG.Tweening.Ease.Linear):OnComplete(function ()
+            self.line.localPosition = Vector3.New(-295,0,0)
+        end);
     end
 end

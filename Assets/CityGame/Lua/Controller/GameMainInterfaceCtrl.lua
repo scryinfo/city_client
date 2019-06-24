@@ -792,7 +792,7 @@ end
 --城市信息
 function GameMainInterfaceCtrl:OnCityInfo()
     PlayMusEff(1002)
-    ct.OpenCtrl("VolumeCtrl")
+    ct.OpenCtrl("CenterBuildingCtrl")
 end
 
 --Eva

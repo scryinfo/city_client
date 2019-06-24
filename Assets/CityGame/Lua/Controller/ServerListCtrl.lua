@@ -72,12 +72,13 @@ function ServerListCtrl:Close()
     Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.RemoveListener("c_OnServer",self.c_OnServer,self)
+    tempTag = nil
+    tempTag = nil
+    Index = nil
 end
 
 function ServerListCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    tempBg = nil
-
  end
 
 function ServerListCtrl:_initData()

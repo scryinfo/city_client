@@ -45,7 +45,6 @@ end
 function FriendslistCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
-    FriendslistPanel.nullImageText.text = GetLanguage(16010026)
 end
 
 -- 刷新
@@ -87,6 +86,7 @@ function FriendslistCtrl:_initState()
     FriendslistCtrl.friendInfo = {}
 
     if type == 2 then
+        FriendslistPanel.nullImageText.text = GetLanguage(13020005)
         FriendslistPanel.panelNameText.text = GetLanguage(13020001) --"MANAGE"
         FriendslistPanel.blacklistNumberImage:SetActive(false)
         FriendslistPanel.blacklistNumberText.text = ""
@@ -208,15 +208,22 @@ function FriendslistCtrl:c_OnReceiveSearchPlayerInfo(friendsData)
 end
 
 function FriendslistCtrl:c_OnReceiveDeleteFriend(friendsId)
+    -- 删除数据
     for i, v in ipairs(FriendslistCtrl.friendInfo) do
-        if v.id == friendsId.id then
+        if v.id == friendsId.fId then
             table.remove(FriendslistCtrl.friendInfo, i)
             break
         end
     end
+
+    -- 刷新界面
     self:_showNullImageByData()
     FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
-    Event.Brocast("SmallPop",GetLanguage(13020004),60)
+
+    -- 删除好友的多语言提示
+    if friendsId.id == DataManager.GetMyOwnerID() then
+        Event.Brocast("SmallPop",GetLanguage(13020004),60)
+    end
 end
 
 function FriendslistCtrl:c_DeleteBlacklist(friendsId)

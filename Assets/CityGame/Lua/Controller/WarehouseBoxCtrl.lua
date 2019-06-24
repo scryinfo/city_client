@@ -145,6 +145,9 @@ function WarehouseBoxCtrl:_clickAddTransportBtn(ins)
     goods.itemId = ins.m_data.dataInfo.key.id
     goods.producerId = ins.m_data.dataInfo.key.producerId
     goods.qty = ins.m_data.dataInfo.key.qty
+    goods.brandName = ins.m_data.dataInfo.key.brandName
+    goods.brandScore = ins.m_data.dataInfo.key.brandScore
+    goods.qualityScore = ins.m_data.dataInfo.key.qualityScore
     goods.level = ins.m_data.dataInfo.key.level
     if ins.numberSlider.value == 0 then
         Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)

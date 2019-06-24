@@ -19,11 +19,16 @@ function BuildingProductionPart:_InitTransform()
 end
 
 function BuildingProductionPart:RefreshData(data)
+    if data.buildingType == BuildingType.MaterialFactory then
+        Event.Brocast("m_ReqBuildingMaterialInfo",data.insId)
+    elseif data.buildingType == BuildingType.ProcessingFactory then
+        Event.Brocast("m_ReqBuildingGoodsInfo",data.insId)
+    end
     if data == nil then
         return
     end
     self.m_data = data
-    self:_initFunc()
+    self:_language()
 end
 
 function BuildingProductionPart:_ResetTransform()
@@ -31,6 +36,7 @@ function BuildingProductionPart:_ResetTransform()
     UpdateBeat:Remove(self.Update,self)
     Event.RemoveListener("partUpdateNowCount",self.updateNowCount,self)
     Event.RemoveListener("partUpdateNowLine",self.updateNowLine,self)
+    Event.RemoveListener("saveMaterialOrGoodsInfoPart",self.saveMaterialOrGoodsInfo,self)
 end
 
 function BuildingProductionPart:_getComponent(transform)
@@ -48,13 +54,12 @@ function BuildingProductionPart:_getComponent(transform)
 end
 
 function BuildingProductionPart:_InitChildClick(mainPanelLuaBehaviour)
-
     Event.AddListener("partUpdateNowCount",self.updateNowCount,self)
     Event.AddListener("partUpdateNowLine",self.updateNowLine,self)
+    Event.AddListener("saveMaterialOrGoodsInfoPart",self.saveMaterialOrGoodsInfo,self)
 end
 
 function BuildingProductionPart:_initFunc()
-    self:_language()
     self.Capacity = self:getWarehouseCapacity()
     if not self.m_data.line or next(self.m_data.line) == nil then
         self.TopLineInfo.transform.localScale = Vector3.zero
@@ -106,9 +111,11 @@ function BuildingProductionPart:GetTime(lineData)
         return "00:00:00"
     end
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        self.time = remainingNum / (Material[lineData.itemId].numOneSec * lineData.workerNum)
+        --self.time = remainingNum / (Material[lineData.itemId].numOneSec * lineData.workerNum)
+        self.time = remainingNum / self:getNumOneSec(lineData.itemId)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        self.time = remainingNum / (Good[lineData.itemId].numOneSec * lineData.workerNum)
+        --self.time = remainingNum / (Good[lineData.itemId].numOneSec * lineData.workerNum)
+        self.time = remainingNum / self:getNumOneSec(lineData.itemId)
     end
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
@@ -141,6 +148,19 @@ function BuildingProductionPart:Update()
     self.timeText.text = timeStr
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
+--缓存获取到当前建筑Eva加点后的生产速度(原料信息，商品信息)
+function BuildingProductionPart:saveMaterialOrGoodsInfo(data)
+    if data then
+        if not self.materialOrGoodsInfo then
+            self.materialOrGoodsInfo = data
+            self.materialOrGoodsInfo.buildingType = self.m_data.buildingType
+            self.materialOrGoodsInfo.mId = self.m_data.info.mId
+            self:_initFunc()
+        else
+            return
+        end
+    end
+end
 --刷新当前产量
 function BuildingProductionPart:updateNowCount(data)
     if data ~= nil then
@@ -211,4 +231,20 @@ function BuildingProductionPart:getWarehouseCapacity()
         end
     end
     return warehouseNowCount + lockedNowCount
+end
+--获取当前生产中的秒产量(含Eva)
+function BuildingProductionPart:getNumOneSec(itemId)
+    if not self.materialOrGoodsInfo or next(self.materialOrGoodsInfo) == nil then
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            return Material[itemId].numOneSec
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            return Good[itemId].numOneSec
+        end
+    else
+        for key,value in pairs(self.materialOrGoodsInfo.items) do
+            if value.key == itemId then
+                return value.numOneSec
+            end
+        end
+    end
 end

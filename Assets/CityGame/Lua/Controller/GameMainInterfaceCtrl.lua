@@ -152,7 +152,6 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
     end
     self.isTimmer = true
     self.timmer = 2
-    --GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.one
     GameMainInterfacePanel.simpleEarning:GetComponent("RectTransform"):DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
     GameMainInterfacePanel.simpleEarning:GetComponent("Image"):DOFade(1,0.1):SetEase(DG.Tweening.Ease.OutCubic);
 
@@ -190,11 +189,11 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
         end
         elseif dataInfo.buyer == "NPC" then
         if dataInfo.type == "RENT_ROOM" then
-            GameMainInterfacePanel.income.text = GetLanguage(11010011)
+            GameMainInterfacePanel.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", GameMainInterfacePanel.simplePicture, true)
             GameMainInterfacePanel.simplePictureText.text = "X1"
         elseif dataInfo.type == "INSHELF" then
-            GameMainInterfacePanel.income.text =  GetLanguage(11010012)
+            GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
             GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
         end
@@ -571,7 +570,7 @@ function GameMainInterfaceCtrl:RefreshWeather()
         self.timmer = self.timmer -1
         if self.timmer <= 0 then
             GameMainInterfacePanel.simpleEarningBg.localScale = Vector3.zero
-            GameMainInterfacePanel.simpleEarning:GetComponent("Image"):DOFade(0,0.1):SetEase(DG.Tweening.Ease.OutCubic):OnComplete(function ()
+            GameMainInterfacePanel.simpleEarning:GetComponent("Image"):DOFade(0,0.3):SetEase(DG.Tweening.Ease.OutCubic):OnComplete(function ()
                 GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.zero
             end);
 
@@ -781,7 +780,7 @@ end
 --指南书--
 function GameMainInterfaceCtrl.OnGuideBool()
     PlayMusEff(1002)
-    --ct.OpenCtrl("GuidBookCtrl")
+    ct.OpenCtrl("NoviceTutorialCtrl")
 end
 
 --小地图

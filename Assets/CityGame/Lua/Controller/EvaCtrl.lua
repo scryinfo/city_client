@@ -37,8 +37,8 @@ function EvaCtrl:Awake()
     local luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
 
     luaBehaviour:AddClick(EvaPanel.backBtn, self.OnBack, self)
-    luaBehaviour:AddClick(EvaPanel.startAddBtn.gameObject, self.OnStartAdd, self)
-    luaBehaviour:AddClick(EvaPanel.addBtn.gameObject, self.OnAdd, self)
+    --luaBehaviour:AddClick(EvaPanel.startAddBtn.gameObject, self.OnStartAdd, self)
+    luaBehaviour:AddClick(EvaPanel.addBtn, self.OnAdd, self)
     luaBehaviour:AddClick(EvaPanel.introductionBtn, self.OnIntroduction, self)
     --luaBehaviour:AddClick(EvaPanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
 
@@ -95,12 +95,14 @@ function EvaCtrl:updateData()
     -- Eva选择记录的个数
     self.evaRecordData = {}
     -- 打开开始加点，关闭加点
-    EvaPanel.addBtn.localScale = Vector3.one
-    EvaPanel.startAddBtn.localScale = Vector3.zero
+    --EvaPanel.addBtn.localScale = Vector3.one
+    --EvaPanel.startAddBtn.localScale = Vector3.zero
     -- 关闭eva小提示
     self:_showIntroduction( false )
     -- eva界面上总的加点的点数值
     self.allEvaAddPoint = 0
+    -- 刷新加点按钮显示
+    self:SetAddBtnState()
 
     -- 生成标题item
     if self.evaTitleItem then
@@ -243,7 +245,8 @@ end
 
 -- 服务器返回的Eva加点
 function EvaCtrl:c_OnUpdateMyEvas(evas)
-    ct.OpenCtrl("EvaPopCtrl", evas.resultInfo)
+    Event.Brocast("SmallPop", GetLanguage(31010041),80)
+    --ct.OpenCtrl("EvaPopCtrl", evas.resultInfo)
     local tempDecEva = 0
     for i, v in ipairs(evas.resultInfo) do
         tempDecEva = tempDecEva + v.evasInfo.old_eva.decEva
@@ -258,6 +261,7 @@ function EvaCtrl:c_OnUpdateMyEvas(evas)
     evaPoint = evaPoint - tempDecEva
     EvaPanel.myEvaText.text = tostring(evaPoint)
     DataManager.SetEvaPoint(evaPoint)
+    self:SetAddBtnState()
 end
 
 -------------------------------------------------------------- 滑动复用相关 --------------------------------------------------------
@@ -441,5 +445,15 @@ function EvaCtrl:SetBtnState(index)
         for _, v in ipairs(EvaCtrl.optionThereScript) do
             v:SetSelect(true)
         end
+    end
+end
+
+-- 加点按钮控制
+function EvaCtrl:SetAddBtnState()
+    local evaPoint = DataManager.GetEvaPoint()
+    if evaPoint > 0 then
+        EvaPanel.addButton.interactable = true
+    else
+        EvaPanel.addButton.interactable = false
     end
 end

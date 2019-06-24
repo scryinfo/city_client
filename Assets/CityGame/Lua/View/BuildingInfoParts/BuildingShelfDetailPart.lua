@@ -29,6 +29,7 @@ function BuildingShelfDetailPart:RefreshData(data)
     end
     self.m_data = data
     self:_initFunc()
+    self.shelfInfoData = {}
     --获取最新的货架数据
     Event.Brocast("m_GetShelfData",data.insId)
 end
@@ -179,6 +180,7 @@ end
 function BuildingShelfDetailPart:clickaddShelfBtn()
     local data = {}
     data.info = self.m_data
+    data.shelf = self.shelfInfoData
     ct.OpenCtrl("WarehouseDetailBoxCtrl",data)
 end
 --打开购买弹窗
@@ -289,7 +291,7 @@ function BuildingShelfDetailPart:refreshShelfDetailPart(dataInfo)
     if next(self.shelfDatas) ~= nil then
         self:CloseDestroy(self.shelfDatas)
     end
-    self:initializeUiInfoData(self.m_data.shelf.good)
+    self:initializeUiInfoData(dataInfo.shelf.shelf.good)
 end
 -----------------------------------------------------------------------------回调函数--------------------------------------------------------------------------------------
 --获取货架数据

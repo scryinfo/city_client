@@ -16,16 +16,19 @@ function ServerItem:initialize(inluabehaviour, prefab, mgr, goodsDataInfo ,id)
     self.id = id
 
     self.serverBtn = self.prefab.transform.gameObject;
-    self.bg = self.prefab.transform:Find("bg").gameObject;
+    --self.bg = self.prefab.transform:Find("bg").gameObject;
     self.tag = self.prefab.transform:Find("tag").gameObject;
     self.serverName = self.prefab.transform:Find("ServerName").gameObject:GetComponent("Text");
 
     if not goodsDataInfo.available  then
         self.serverBtn:GetComponent("Button").interactable = false
     end
-    self.bg:SetActive(false);
+    --self.bg:SetActive(false);
     self.tag:SetActive(false);
     self.serverName.text = goodsDataInfo.name
+    if goodsDataInfo.name == "ChengDu" then
+        LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/pic-chengdu.png",self.serverBtn:GetComponent("Image"))
+    end
     self._luabehaviour:AddClick(self.serverBtn, self.OnServerBtn, self);
 
 end

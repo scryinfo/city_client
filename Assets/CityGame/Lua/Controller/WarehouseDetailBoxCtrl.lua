@@ -173,23 +173,25 @@ end
 --上架成功后更新数据
 function WarehouseDetailBoxCtrl:addShelfGood(dataInfo)
     --如果shelf.good 是空的
-    if not self.m_data.info.shelf.good or next(self.m_data.info.shelf.good) == nil then
+    if not self.m_data.shelf.shelf.good or next(self.m_data.shelf.shelf.good) == nil then
         local goods = {}
         local k = {}
         goods.k = k
         goods.k.id = dataInfo.item.key.id
         goods.k.producerId = dataInfo.item.key.producerId
-        goods.k.qty = dataInfo.item.key.qty
+        goods.k.qualityScore = dataInfo.item.key.qualityScore
+        goods.k.brandName = dataInfo.item.key.brandName
+        goods.k.brandScore = dataInfo.item.key.brandScore
         goods.autoReplenish = dataInfo.autoRepOn
         goods.n = dataInfo.item.n
         goods.price = dataInfo.price
-        if not self.m_data.info.shelf.good then
-            self.m_data.info.shelf.good = {}
+        if not self.m_data.shelf.shelf.good then
+            self.m_data.shelf.shelf.good = {}
         end
-        self.m_data.info.shelf.good[#self.m_data.info.shelf.good + 1] = goods
+        self.m_data.shelf.shelf.good[#self.m_data.shelf.shelf.good + 1] = goods
     else
         --架子上有没有这个商品
-        for key,value in pairs(self.m_data.info.shelf.good) do
+        for key,value in pairs(self.m_data.shelf.shelf.good) do
             --如果架子上有,直接修改数量和价格
             if value.k.id == dataInfo.item.key.id then
                 value.n = value.n + dataInfo.item.n
@@ -204,11 +206,13 @@ function WarehouseDetailBoxCtrl:addShelfGood(dataInfo)
         goods.k = k
         goods.k.id = dataInfo.item.key.id
         goods.k.producerId = dataInfo.item.key.producerId
-        goods.k.qty = dataInfo.item.key.qty
+        goods.k.brandName = dataInfo.item.key.brandName
+        goods.k.brandScore = dataInfo.item.key.brandScore
+        goods.k.qualityScore = dataInfo.item.key.qualityScore
         goods.autoReplenish = dataInfo.autoRepOn
         goods.n = dataInfo.item.n
         goods.price = dataInfo.price
-        self.m_data.info.shelf.good[#self.m_data.info.shelf.good + 1] = goods
+        self.m_data.shelf.shelf.good[#self.m_data.shelf.shelf.good + 1] = goods
     end
     Event.Brocast("refreshShelfDetailPart",self.m_data)
 end

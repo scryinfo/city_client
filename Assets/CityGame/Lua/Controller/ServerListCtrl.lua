@@ -96,13 +96,13 @@ end
 
 --选择服务器--
 function ServerListCtrl:c_OnServer(go)
-    if tempBg ~= nil and tempTag ~= nil then
-        tempBg:SetActive(false);
+    if  tempTag ~= nil then
+        --tempBg:SetActive(false);
         tempTag:SetActive(false);
     end
-    go.bg:SetActive(true);
+    --go.bg:SetActive(true);
     go.tag:SetActive(true);
-    tempBg = go.bg;
+    --tempBg = go.bg;
     tempTag = go.tag
     Index = go.id;
 end

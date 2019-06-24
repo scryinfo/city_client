@@ -429,6 +429,7 @@ function CompanyCtrl:OnCompanyRename(go)
     local data = {}
     data.titleInfo = GetLanguage(18010006)
     data.tipInfo = GetLanguage(18010012)
+    data.characterLimit = 8
     data.btnCallBack = function(text)
         if text == nil or text == "" then
             Event.Brocast("SmallPop", GetLanguage(18010010),80)

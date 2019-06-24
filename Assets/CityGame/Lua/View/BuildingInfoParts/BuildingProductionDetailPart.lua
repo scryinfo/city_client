@@ -343,7 +343,7 @@ function BuildingProductionDetailPart:Update()
 
     ---刷新单个时间
     --当前生产中线开始的时间
-    if next(self.m_data.line) == nil then
+    if not self.m_data.line or next(self.m_data.line) == nil then
         self.startTime = 0
     else
         self.startTime = self.m_data.line[1].ts

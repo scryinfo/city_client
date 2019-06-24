@@ -181,15 +181,23 @@ namespace City
     }
     public static class CityLuaUtil
     {
-        public static bool checkLocalCashboxExist() {
-            if (Application.platform == RuntimePlatform.Android) { 
+        public static bool checkLocalCashboxExist() {            
+            Dbg.WARNING_MSG(string.Format("c# 调用 checkLocalCashboxExist"));
+            if (Application.platform == RuntimePlatform.Android) {
+                Dbg.WARNING_MSG(string.Format("c# 调用 checkLocalCashboxExist Application.platform == RuntimePlatform.Android"));
                 using (AndroidJavaClass unity_player = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
                     AndroidJavaObject intentObject = new AndroidJavaObject("android.content.Intent");
-                    intentObject.Call<AndroidJavaObject>("setClass", "info.scry.wallet", "info.scry.wallet.utils.AppStateActivityUtil");
+                    intentObject.Call<AndroidJavaObject>("SetClassName", "info.scry.wallet", "info.scry.wallet.utils.AppStateActivityUtil");
                     intentObject.Call<AndroidJavaObject>("putExtra", "version", "1.0");
                     AndroidJavaObject current_activity = unity_player.GetStatic<AndroidJavaObject>("currentActivity");
-                    Boolean exist = current_activity.Call<Boolean>("StartActivtyForResult", intentObject, 1);
-                    return exist;
+                    current_activity.Call<Boolean>("startActivityForResult", intentObject, 1);
+                    Dbg.WARNING_MSG(string.Format("c# 调用 checkLocalCashboxExist StartActivtyForResult"));
+                    /*if (exist == true)
+                        Dbg.WARNING_MSG(string.Format("c# 调用 checkLocalCashboxExist StartActivtyForResult return: true"));
+                    else
+                        Dbg.WARNING_MSG(string.Format("c# 调用 checkLocalCashboxExist StartActivtyForResult return: false"));                    
+                    return exist;*/
+                    return true;
                 }
             }
             return false;
@@ -200,16 +208,28 @@ namespace City
             if (Application.platform == RuntimePlatform.Android)
             {
                 using (AndroidJavaClass unity_player = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-                {
+                {                    
+                    Dbg.WARNING_MSG(string.Format("c# 调用 openCashbox"));
                     AndroidJavaObject intentObject = new AndroidJavaObject("android.content.Intent");
-                    intentObject.Call<AndroidJavaObject>("setClass", "info.scry.wallet", "info.scry.wallet.SendEthActivity");
-                    intentObject.Call<AndroidJavaObject>("putExtra", "isFromOtherApp", true);
-                    intentObject.Call<AndroidJavaObject>("putExtra", "value", amount);
-                    intentObject.Call<AndroidJavaObject>("putExtra", "toAddress", toAddr);
-                    intentObject.Call<AndroidJavaObject>("putExtra", "backup", purchaseId);
+                    Dbg.WARNING_MSG(string.Format("c# 调用 SetClassName -----------------------------------"));
+                    try
+                    {
+                        intentObject = intentObject.Call<AndroidJavaObject>("setClassName", "info.scry.wallet", "info.scry.wallet.SendEthActivity");
+                        Dbg.WARNING_MSG(string.Format("c# 调用 putExtra isFromOtherApp -----------------------------------"));
+                        intentObject.Call<AndroidJavaObject>("putExtra", "isFromOtherApp", true);
+                        intentObject.Call<AndroidJavaObject>("putExtra", "value", amount);
+                        intentObject.Call<AndroidJavaObject>("putExtra", "toAddress", toAddr);
+                        intentObject.Call<AndroidJavaObject>("putExtra", "backup", purchaseId);
 
-                    AndroidJavaObject current_activity = unity_player.GetStatic<AndroidJavaObject>("currentActivity");
-                    current_activity.Call("startActivity", intentObject);
+                        AndroidJavaObject current_activity = unity_player.GetStatic<AndroidJavaObject>("currentActivity");
+                        Dbg.WARNING_MSG(string.Format("c# 调用 startActivity -----------------------------------"));
+                        current_activity.Call("startActivity", intentObject);
+                        Dbg.WARNING_MSG(string.Format("c# 调用 openCashbox startActivity"));
+                    }
+                    catch (System.Exception e) {
+                        Dbg.WARNING_MSG("Error openCashbox:" + e.Message + " -- " + e.StackTrace );
+                    }
+                    
                 }
             }
         }

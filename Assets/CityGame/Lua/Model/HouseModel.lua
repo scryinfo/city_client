@@ -24,6 +24,8 @@ function HouseModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","settingContract","gs.ContractSetting",self.n_OnReceiveChangeContract)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","cancelContract","gs.Id",self.n_OnReceiveCancelContract)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","signContract","gs.Contract",self.n_OnReceiveSignContract)
+    --
+    DataManager.ModelRegisterNetMsg(self.insId, "gscode.OpCode", "apartmentGuidePrice", "gs.AartmentMsg", self.n_OnGetApartmentGuidePrice)
 
     --本地的回调注册
     Event.AddListener("m_ReqHouseChangeRent", self.m_ReqHouseChangeRent, self)
@@ -83,5 +85,11 @@ end
 function HouseModel:n_OnReceiveSignContract(data)
     if data ~= nil and data.buildingId == self.insId then
         DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_signSuccess', data)
+    end
+end
+--竞争力
+function HouseModel:n_OnGetApartmentGuidePrice(data)
+    if data ~= nil and data.buildingId == self.insId then
+        DataManager.ControllerRpcNoRet(self.insId,"HouseCtrl", '_getApartmentGuidePrice', data)
     end
 end

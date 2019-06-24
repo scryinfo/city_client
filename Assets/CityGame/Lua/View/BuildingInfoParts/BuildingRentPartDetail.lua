@@ -24,6 +24,14 @@ function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
         end
         self:_reqHouseChangeRent(price)
     end , self)
+    --
+    self.rentInputField.onValueChanged:AddListener(function (str)
+        if str == "" then
+            return
+        end
+        local temp = ct.CalculationHouseCompetitivePower(self.m_data.guideData.avgPrice, tonumber(str), self.guideData.score, self.guideData.avgScore)
+        self.competValueText.text = temp
+    end)
 end
 --
 function BuildingRentPartDetail:_ResetTransform()
@@ -56,15 +64,22 @@ function BuildingRentPartDetail:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.confirmBtn = transform:Find("Root/ConfirmBtn"):GetComponent("Button")
+    self.confirmBtn = transform:Find("Root/RentInputField/ConfirmBtn"):GetComponent("Button")
     self.rentInputField = transform:Find("Root/RentInputField"):GetComponent("InputField")
     self.rentInputFieldPlaceholder = transform:Find("Root/RentInputField/Placeholder"):GetComponent("Text")
     self.occupancyText = transform:Find("Root/OccupancyText"):GetComponent("Text")
     self.otherSee = transform:Find("Root/otherSee")
     self.otherSeeRentText = transform:Find("Root/otherSee/Text"):GetComponent("Text")
+    --
+    self.competValueText = transform:Find("Root/competRoot/valueText"):GetComponent("Text")
+    self.competBtn = transform:Find("Root/competRoot/infoBtn"):GetComponent("Button")
+    self.competitivenessBtn = transform:Find("Root/competitivenessRoot/btn"):GetComponent("Button")
 
     self.occupancyText01 = transform:Find("Root/Text01"):GetComponent("Text")
     self.rentText02 = transform:Find("Root/Text02"):GetComponent("Text")
+    self.competValueText03 = transform:Find("Root/competRoot/valueText"):GetComponent("Text")
+    self.competitivenessText04 = transform:Find("root/competitivenessRoot/Text01"):GetComponent("Text")
+    self.competitivenessText05 = transform:Find("root/competitivenessRoot/Text02"):GetComponent("Text")
 end
 --
 function BuildingRentPartDetail:clickCloseBtn()
@@ -76,6 +91,13 @@ function BuildingRentPartDetail:_reqHouseChangeRent(price)
 end
 -- 显示入住人数和总人数
 function BuildingRentPartDetail:_initFunc()
+    self.competitivenessRoot.localScale = Vector3.zero
+    if self.m_data.guideData ~= nil then
+        local value = self.m_data.guideData.apartmentPrice[1]
+        local temp = ct.CalculationHouseCompetitivePower(value.avgPrice, self.m_data.rent, value.score, value.avgScore)
+        self.competValueText.text = temp
+    end
+
     if self.m_data.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.otherSee.localScale = Vector3.one
         self.confirmBtn.transform.localScale = Vector3.zero
@@ -93,4 +115,7 @@ end
 function BuildingRentPartDetail:_language()
     self.occupancyText01.text = GetLanguage(26040001)
     self.rentText02.text = GetLanguage(26040002)
+    self.competValueText03.text = GetLanguage(43010001)
+    self.competitivenessText04.text = GetLanguage(43010002)
+    self.competitivenessText05.text = GetLanguage(43010003)
 end

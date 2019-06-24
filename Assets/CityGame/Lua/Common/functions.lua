@@ -951,13 +951,24 @@ end
 --定价:price
 --玩家店铺评分:shopScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
-function ct.CalculationFactoryCompetitivePower(recommendedPricing,price,shopScore,averageShopScore)
+function ct.CalculationHouseCompetitivePower(recommendedPricing,price,shopScore,averageShopScore)
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
-		recommendedPricing = 14 * PRIDMagnification
+		recommendedPricing = Competitive[14 * PRIDMagnification] / 10000
 		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
 		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification))
 	end
 	--竞争力 = (推荐定价 * 玩家店铺评分)/ (定价 * 全城销售均店铺评分) * 1000 (整数)
+	price = price / 10000
 	return  CalculationNBitAfterDecimalPoint(((recommendedPricing * shopScore)/ ( price * averageShopScore) * CPMagnification))
+end
+---计算住宅推荐定价
+--推荐定价:recommendedPricing
+function ct.CalculationHouseSuggestPrice(recommendedPricing)
+	if recommendedPricing <= 0 then
+		--推荐定价 = 推荐定价表
+		recommendedPricing = Competitive[14 * PRIDMagnification]
+		return recommendedPricing
+	end
+	return recommendedPricing
 end

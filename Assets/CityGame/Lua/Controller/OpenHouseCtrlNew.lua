@@ -48,6 +48,8 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.totalText = transform:Find("root/salary/total/totalText"):GetComponent("Text")
     self.rentInput = transform:Find("root/rent/rentInput"):GetComponent("InputField")
     self.tipRoot = transform:Find("root/tipRoot")
+    self.valueText = transform:Find("root/rent/priceBg/valueText"):GetComponent("Text")
+    self.infoBtn = transform:Find("root/rent/priceBg/infoBtn"):GetComponent("Button")
 
     self.titleText01 = transform:Find("root/titleText01"):GetComponent("Text")
     self.standardWageText02 = transform:Find("root/salary/wage/Text"):GetComponent("Text")
@@ -58,6 +60,7 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.rentText07 = transform:Find("root/rent/priceBg/Text"):GetComponent("Text")
     self.rentText08 = transform:Find("root/rent/Text01"):GetComponent("Text")
     self.tipText09 = transform:Find("root/tipRoot/Text"):GetComponent("Text")
+    self.competitivenessText10 = transform:Find("root/rent/priceBg/Text"):GetComponent("Text")
 end
 --
 function OpenHouseCtrlNew:_language()
@@ -70,6 +73,7 @@ function OpenHouseCtrlNew:_language()
     self.rentText07.text = GetLanguage(24020014)
     self.rentText08.text = GetLanguage(24020015)..":"
     self.tipText09.text = GetLanguage(24020016)
+    self.competitivenessText10.text = GetLanguage(43010001)
 end
 --
 function OpenHouseCtrlNew:_initData()

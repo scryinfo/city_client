@@ -26,8 +26,7 @@ function MapPromotionPageItem:createItems()
 end
 --
 function MapPromotionPageItem:initLanguage()
-    --self.text01.text = GetLanguage(12345678)
-    self.text01.text = "推广"
+    self.text01.text = GetLanguage(20010005)
     local width = self.text01.preferredWidth + 35
     self.bgImg.rectTransform.sizeDelta = Vector2.New(width, 50)
 end

@@ -242,18 +242,20 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
                 table.insert(boundaryLine,(updataTime - buildingTs + 86400) / 86400 * 142)
             end
             time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
-            turnoverTab[i] = {}
-            turnoverTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 142
-            turnoverTab[i].money = 0
-            if info.nodes ~= nil then
-                for k, v in pairs(info.nodes) do
-                    if updataTime == v.time /1000 then
-                        turnoverTab[i].money = tonumber(GetClientPriceString(v.income))
+            if updataTime <= currentTime then
+                turnoverTab[i] = {}
+                turnoverTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 142
+                turnoverTab[i].money = 0
+                if info.nodes ~= nil then
+                    for k, v in pairs(info.nodes) do
+                        if updataTime == v.time /1000 then
+                            turnoverTab[i].money = tonumber(GetClientPriceString(v.income))
+                        end
                     end
                 end
-            end
-            if updataTime == currentTime then
-                turnoverTab[i].money = tonumber(GetClientPriceString(self.turnover))
+                if updataTime == currentTime then
+                    turnoverTab[i].money = tonumber(GetClientPriceString(self.turnover))
+                end
             end
             updataTime = updataTime + 86400
         end

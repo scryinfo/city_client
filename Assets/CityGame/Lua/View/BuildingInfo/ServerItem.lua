@@ -16,18 +16,28 @@ function ServerItem:initialize(inluabehaviour, prefab, mgr, goodsDataInfo ,id)
     self.id = id
 
     self.serverBtn = self.prefab.transform.gameObject;
-    --self.bg = self.prefab.transform:Find("bg").gameObject;
-    self.tag = self.prefab.transform:Find("tag").gameObject;
+    self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Image");
+    self.tag = self.prefab.transform:Find("tag");
+    self.notOpen = self.prefab.transform:Find("notOpen");
     self.serverName = self.prefab.transform:Find("ServerName").gameObject:GetComponent("Text");
 
     if not goodsDataInfo.available  then
-        self.serverBtn:GetComponent("Button").interactable = false
+        self.notOpen.localScale = Vector3.one
+        self.serverBtn:GetComponent("Button").enabled = false
+    else
+        self.notOpen.localScale = Vector3.zero
+        self.serverBtn:GetComponent("Button").enabled = true
     end
-    --self.bg:SetActive(false);
-    self.tag:SetActive(false);
+    self.tag.localScale = Vector3.zero
     self.serverName.text = goodsDataInfo.name
     if goodsDataInfo.name == "ChengDu" then
-        LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/pic-chengdu.png",self.serverBtn:GetComponent("Image"))
+        LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/pic-chengdu.png",self.bg)
+    elseif goodsDataInfo.name == "NewYork" then
+        LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/NewYork.png",self.bg)
+    elseif goodsDataInfo.name == "Paris" then
+        LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/Paris.png",self.bg)
+    elseif goodsDataInfo.name == "Tokyo" then
+        LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/Tokyo.png",self.bg)
     end
     self._luabehaviour:AddClick(self.serverBtn, self.OnServerBtn, self);
 

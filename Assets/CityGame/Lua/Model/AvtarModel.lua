@@ -18,7 +18,7 @@ function AvtarModel:OnCreate()
     Event.AddListener("m_setRoleFaceId", self.m_setRoleFaceId,self)--设置FaceId
     --网络回调
     --DataManager.ModelRegisterNetMsg(insID,"gscode.OpCode","setRoleFaceId","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
-
+    DataManager.ModelRegisterNetMsg(insID,"gscode.OpCode","setRoleFaceId","gs.Bool",self.m_registerRoleFaceId,self)
 end
 ---================================================================================发包===========================================================================
 function AvtarModel:m_setRoleFaceId(faceId)
@@ -27,8 +27,13 @@ end
 
 ---================================================================================收包===========================================================================
 
-
-
+function AvtarModel:m_registerRoleFaceId(isSuccess)
+    if isSuccess == true then
+        ct.log("system","改变Avatar成功")
+    else
+        ct.log("system","改变Avatar失败")
+    end
+end
 
 
 

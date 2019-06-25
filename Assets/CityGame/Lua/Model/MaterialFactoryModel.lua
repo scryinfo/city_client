@@ -219,7 +219,7 @@ function MaterialFactoryModel:n_OnShelfAddInfo(data)
 end
 --修改货架属性
 function MaterialFactoryModel:n_OnModifyShelfInfo(data)
-    --Event.Brocast("replenishmentSucceed",data)
+    Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)
         Event.Brocast("SmallPop", GetLanguage(29010010), ReminderType.Succeed)
@@ -227,7 +227,7 @@ function MaterialFactoryModel:n_OnModifyShelfInfo(data)
 end
 --下架
 function MaterialFactoryModel:n_OnShelfDelInfo(data)
-    --Event.Brocast("downShelfSucceed",data)
+    Event.Brocast("downShelfSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)
         Event.Brocast("SmallPop", GetLanguage(25060007), ReminderType.Succeed)

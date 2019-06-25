@@ -124,7 +124,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置多语言
 function BuildingShelfDetailPart:_language()
-    self.tipText.text = "There is no product yet!".."\n".."just go to produce some.good luck."
+    self.tipText.text = GetLanguage(25060001)
 end
 --初始化UI数据
 function BuildingShelfDetailPart:initializeUiInfoData(shelfData)

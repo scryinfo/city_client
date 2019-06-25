@@ -253,18 +253,31 @@ end
 function ProcessingFactoryModel:n_OnBuyShelfGoodsInfo(data,msgId)
     if msgId == 0 then
         if data.reason == 16 then
-            Event.Brocast("SmallPop", "数量不足", ReminderType.Warning)
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = "货架数量不足",func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
             return
         elseif data.reason == 15 then
-            Event.Brocast("SmallPop", "货架设置失败", ReminderType.Warning)
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = "货架设置失败",func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
             return
         elseif data.reason == 17 then
-            Event.Brocast("SmallPop", "仓库不足", ReminderType.Warning)
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = "仓库不足",func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
             return
         end
+    else
+        Event.Brocast("buySucceed",data)
+        Event.Brocast("refreshShelfPartCount")
     end
-    Event.Brocast("buySucceed",data)
-    Event.Brocast("refreshShelfPartCount")
 end
 --销毁仓库原料或商品
 function ProcessingFactoryModel:n_OnDelItemInfo(data)

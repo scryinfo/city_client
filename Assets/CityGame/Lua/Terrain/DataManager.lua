@@ -947,6 +947,7 @@ function DataManager.RegisterErrorNetMsg()
                         end
                     end
                 end
+                return
         else
             info_RegisterErrorNetMsg = {}
             info_RegisterErrorNetMsg.titleInfo = "未注册处理方法的网络错误"

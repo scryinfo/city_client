@@ -137,6 +137,7 @@ end
 
 --删除推广回调
 function PromoteCompanyModel:n_OnRemovePromo(info)
+    PromoteCompanyModel:m_detailPublicFacility(info.buildingId)
     local newData = {}
     --newData = ct.deepCopy(self.data)
     newData = self.data

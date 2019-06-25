@@ -89,6 +89,7 @@ function PromoteGoodsExtensionCtrl:Hide()
         v:Close()
         destroy(v.prefab.gameObject)
     end
+    PromoteGoodsExtensionPanel.title.text = nil
     self.PromoteGoods = {}
     self.goodId = nil
 end

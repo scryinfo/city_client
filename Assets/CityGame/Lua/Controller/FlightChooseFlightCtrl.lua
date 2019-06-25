@@ -60,9 +60,9 @@ function FlightChooseFlightCtrl:_initData()
         --FlightChooseFlightPanel.flightText.text = flightData.FlightCompany  --需要多语言
         --FlightChooseFlightPanel.numText.text = flightData.FlightNo  --CA4506
         FlightChooseFlightPanel.endCodeText.text = flightData.FlightArrcode
-        FlightChooseFlightPanel.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
+        FlightChooseFlightPanel.endPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightArrcode])
         FlightChooseFlightPanel.startCodeText.text = flightData.FlightDepcode
-        FlightChooseFlightPanel.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
+        FlightChooseFlightPanel.startPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightDepAirport])
         self:_updateText()
 
         FlightChooseFlightCtrl.static.itemsList = {}

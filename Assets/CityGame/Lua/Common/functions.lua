@@ -971,3 +971,14 @@ function ct.CalculationHouseSuggestPrice(recommendedPricing)
 	end
 	return recommendedPricing
 end
+
+--航班预测根据机场二字码得到对应多语言
+function ct.GetFlightCompanyName(flightNo)
+	if flightNo == nil then return end
+	local code = string.sub(flightNo, 1,2)
+	local languageId = FlightCompanyConfig[code]
+	if languageId == nil then
+		languageId = 32030035
+	end
+	return GetLanguage(languageId)
+end

@@ -28,7 +28,7 @@ function FlightRecordPageItem:initData(data)
     self.data = data
     local flightData = data.data
     self.timeText.text = self:_getDayStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 --精确到天
-    self.flightText.text = flightData.FlightCompany  --需要多语言
+    self.flightText.text = ct.GetFlightCompanyName(flightData.FlightNo)
     self.numText.text = flightData.FlightNo  --CA4506
 
     local trueWidth01 = self.timeText.preferredWidth

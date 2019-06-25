@@ -46,15 +46,12 @@ function FlightMainPageItem:initData(data)
     local flightData = data.data
     local timeTemp = string.sub(flightData.FlightDeptimePlanDate, 1, 10)
     self.timeText.text = timeTemp  --计划起飞时间
-    --self.flightText.text = GetLanguage(FlightLanguageConfig[flightData.FlightCompany])  --需要多语言
-    self.flightText.text = flightData.FlightCompany  --需要多语言
+    self.flightText.text = ct.GetFlightCompanyName(flightData.FlightNo)
     self.numText.text = flightData.FlightNo  --CA4506
     self.endCodeText.text = flightData.FlightArrcode
-    --self.endPlaceText.text = GetLanguage(FlightLanguageConfig[flightData.FlightArrAirport])  --需要多语言
-    self.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
+    self.endPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightArrcode])
     self.startCodeText.text = flightData.FlightDepcode
-    --self.startPlaceText.text = GetLanguage(FlightLanguageConfig[flightData.FlightDepAirport])  --需要多语言
-    self.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
+    self.startPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightDepAirport])
     self:_updateText()
 
     local trueWidth01 = self.timeText.preferredWidth

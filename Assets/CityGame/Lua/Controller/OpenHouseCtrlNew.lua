@@ -35,7 +35,7 @@ end
 
 function OpenHouseCtrlNew:Refresh()
     DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "queryIndustryWages", "gs.QueryIndustryWages", self._getStandardWage, self)
-    DataManager.ModelRegisterNetMsg(self.m_data.info.id, "gscode.OpCode", "apartmentGuidePrice", "gs.AartmentMsg", self._getApartmentGuidePrice, self)
+    Event.AddListener("c_getHouseGuidePrice", self._getApartmentGuidePrice, self)
 
     self:_language()
     self:_initData()
@@ -44,7 +44,7 @@ end
 function OpenHouseCtrlNew:Hide()
     UIPanel.Hide(self)
     DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "queryIndustryWages", self)
-    DataManager.ModelRemoveNetMsg(self.m_data.info.id, "gscode.OpCode", "apartmentGuidePrice", "gs.AartmentMsg")
+    Event.RemoveListener("c_getHouseGuidePrice", self._getApartmentGuidePrice, self)
 end
 --
 function OpenHouseCtrlNew:_getComponent(go)
@@ -79,7 +79,7 @@ function OpenHouseCtrlNew:_getComponent(go)
         if str == "" then
             return
         end
-        local temp = ct.CalculationHouseCompetitivePower(self.guideData.avgPrice, tonumber(str), self.guideData.score, self.guideData.avgScore)
+        local temp = ct.CalculationHouseCompetitivePower(self.guideData.avgPrice, tonumber(str) * 10000, self.guideData.score, self.guideData.avgScore)
         self.valueText.text = temp
     end)
 end
@@ -107,6 +107,7 @@ function OpenHouseCtrlNew:_initData()
         return
     end
     DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)  --请求竞争力参数
+
     self.tipRoot.localScale = Vector3.zero
     local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
     self.staffNum = staffNum
@@ -133,7 +134,6 @@ function OpenHouseCtrlNew:_getStandardWage(data)
         local value = self.staffNum * data.industryWages  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
         self.totalValue = value
-        DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)  --请求竞争力参数
     end
 end
 --

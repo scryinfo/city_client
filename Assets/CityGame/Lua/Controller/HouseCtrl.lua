@@ -108,9 +108,6 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
             HousePanel.groupTrans.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
-
-            --
-            DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)
         else -- 未营业
             HousePanel.groupTrans.localScale = Vector3.zero
         end
@@ -209,9 +206,6 @@ function HouseCtrl:c_Revenue(info)
 end
 --竞争力
 function HouseCtrl:_getApartmentGuidePrice(data)
-    if self.groupMgr == nil then
-        return
-    end
-    self.m_data.guideData = data
-    self.groupMgr:RefreshData(self.m_data)
+    --BuildingRentPartDetail:_getGuidePrice(data)  --rent需要用
+    Event.Brocast("c_getHouseGuidePrice", data)
 end

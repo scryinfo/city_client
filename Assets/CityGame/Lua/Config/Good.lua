@@ -6,7 +6,7 @@ Good={
 ["luxury"]=1,
 ["des"]=2251101,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2251101.png",
-["numOneSec"]=0.000225
+["numOneSec"]=0.00284
 },
 [2251102]={
 ["itemId"]=2251102,
@@ -15,7 +15,7 @@ Good={
 ["luxury"]=1,
 ["des"]=2251102,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2251102.png",
-["numOneSec"]=0.00015
+["numOneSec"]=0.00227
 },
 [2251103]={
 ["itemId"]=2251103,
@@ -24,7 +24,7 @@ Good={
 ["luxury"]=1,
 ["des"]=2251103,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2251103.png",
-["numOneSec"]=0.00009
+["numOneSec"]=0.00189
 },
 [2251201]={
 ["itemId"]=2251201,
@@ -33,7 +33,7 @@ Good={
 ["luxury"]=2,
 ["des"]=2251201,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2251201.png",
-["numOneSec"]=0.0000365
+["numOneSec"]=0.00078
 },
 [2251202]={
 ["itemId"]=2251202,
@@ -42,7 +42,7 @@ Good={
 ["luxury"]=2,
 ["des"]=2251202,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2251202.png",
-["numOneSec"]=0.000061
+["numOneSec"]=0.00064
 },
 [2251203]={
 ["itemId"]=2251203,
@@ -51,7 +51,7 @@ Good={
 ["luxury"]=2,
 ["des"]=2251203,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2251203.png",
-["numOneSec"]=0.000033
+["numOneSec"]=0.00054
 },
 [2252101]={
 ["itemId"]=2252101,
@@ -60,7 +60,7 @@ Good={
 ["luxury"]=1,
 ["des"]=2252101,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2252101.png",
-["numOneSec"]=0.00009
+["numOneSec"]=0.00138
 },
 [2252102]={
 ["itemId"]=2252102,
@@ -69,7 +69,7 @@ Good={
 ["luxury"]=1,
 ["des"]=2252102,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2252102.png",
-["numOneSec"]=0.0000545
+["numOneSec"]=0.00115
 },
 [2252103]={
 ["itemId"]=2252103,
@@ -78,7 +78,7 @@ Good={
 ["luxury"]=1,
 ["des"]=2252103,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2252103.png",
-["numOneSec"]=0.0000324
+["numOneSec"]=0.00099
 },
 [2252201]={
 ["itemId"]=2252201,
@@ -87,7 +87,7 @@ Good={
 ["luxury"]=2,
 ["des"]=2252201,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2252201.png",
-["numOneSec"]=0.000015
+["numOneSec"]=0.00039
 },
 [2252202]={
 ["itemId"]=2252202,
@@ -96,7 +96,7 @@ Good={
 ["luxury"]=2,
 ["des"]=2252202,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2252202.png",
-["numOneSec"]=0.00002085
+["numOneSec"]=0.00032
 },
 [2252203]={
 ["itemId"]=2252203,
@@ -105,6 +105,6 @@ Good={
 ["luxury"]=2,
 ["des"]=2252203,
 ["img"]="Assets/CityGame/Resources/View/iconImg/2252203.png",
-["numOneSec"]=0.00001339
+["numOneSec"]=0.00027
 }
 }

@@ -52,12 +52,15 @@ function InventPopCtrl:Refresh()
     self.popCompent:RefeshData(data)
 
     if self.m_data.ins.type ~= "eva" then
-        panel.num.text = tostring(modelData.probGood).."%"
+        panel.num.text = tostring(modelData.probGood).."%".."("..tostring(modelData.probGoodAdd).."%"..")"
+
+
         InventPopPanel.iconNameText.text = GetLanguage(self.m_data.ins.name)
         InventPopPanel.evaTips.text = string.format("You will get new %s when succeed", GetLanguage(self.m_data.ins.name))
+        InventPopPanel.evaTips.text =GetLanguage(28040040)
         LoadSprite(self.m_data.ins.path, InventPopPanel.icon, true)
     else
-        panel.num.text = tostring(modelData.probEva).."%"
+        panel.num.text = tostring(modelData.probEva).."%".."("..tostring(modelData.probEvaAdd).."%"..")"
         InventPopPanel.iconNameText.text = GetLanguage(28040031)
         InventPopPanel.evaTips.text = GetLanguage(28040014)
         LoadSprite("Assets/CityGame/Resources/Atlas/Laboratory/chooseInventPop/EVA-100%.png", InventPopPanel.icon, true)
@@ -107,10 +110,10 @@ function InventPopCtrl:ChangeLan()
     panel.iconNameText.text = GetLanguage(28040031)
     panel.oddsText.text = GetLanguage(28040003)
     panel.evaTips.text  = GetLanguage(28040014)
-    panel.timeText.text = GetLanguage(28040027)
+    panel.timeText.text = GetLanguage(28040006)
     panel.tips.text  = GetLanguage(28040008)
     panel.confimBtnText.text = GetLanguage(28040033)
-   panel.timeText1.text = GetLanguage(28040028)
+    panel.timeText1.text = GetLanguage(28040004)
     panel.tips1.text =  GetLanguage(28040008)
 end
 

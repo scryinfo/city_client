@@ -19,11 +19,13 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
     self.timePrice = self.transform:Find("details/timePrice")
     self.time = self.transform:Find("details/timePrice/time/Text"):GetComponent("Text")
     self.price = self.transform:Find("details/timePrice/price/Text"):GetComponent("Text")
+    self.priceIma = self.transform:Find("details/timePrice/price")
     self.startTime = self.transform:Find("startTime/time"):GetComponent("Text")
     self.delete = self.transform:Find("startTime/time/deleteBg").gameObject
     self.rollBtn = self.transform:Find("startTime/rollBtn")
     self.rollBtnText = self.transform:Find("startTime/rollBtn/rollBtnText"):GetComponent("Text")
-    self.counttimetext = self.transform:Find("details/counttime"):GetComponent("Text")
+    self.counttimetext = self.transform:Find("details/Slider/counttime"):GetComponent("Text")
+    self.searching = self.transform:Find("details/Slider/searching")
     self.waiting = 0
     isUpdata = true
     luaBehaviour:AddClick(self.delete,self.c_OnClick_Delete,self)
@@ -49,8 +51,9 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
             end
         end
         ctrl:SetFunc(UpData)
+        self.searching.localScale = Vector3.one
     else
-        self.counttimetext.text = nil
+        self.counttimetext.transform.localScale = Vector3.zero
     end
     self:Refresh(data)
 end
@@ -98,7 +101,7 @@ function InventGoodQueneItem:updateUI(data)
         self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
     end
     --赋值Detail
-    if data.beginProcessTs > 0  then
+    if  self.currentTime >= data.beginProcessTs and self.currentTime <= data.beginProcessTs + data.times*3600000  then
         if data.availableRoll >0 then
             self.rollBtn.localScale = Vector3.one
             self.rollBtnText.text = "x" .. tostring(data.availableRoll)
@@ -108,14 +111,14 @@ function InventGoodQueneItem:updateUI(data)
 
         self.timePrice.localScale = Vector3.zero
         self.slider.transform.localScale = Vector3.one
-        self.nowTime.text = tostring((data.availableRoll + data.usedRoll)) .. "/" .. tostring(data.times)
         self.slider.value = ((data.availableRoll + data.usedRoll)/data.times)
     else
         self.rollBtn.localScale = Vector3.zero
         self.timePrice.localScale = Vector3.one
         self.slider.transform.localScale = Vector3.zero
         self.time.text = data.times
-        self.price.text =data.pay
+        self.priceIma.localScale = Vector3.zero
+
     end
 
     --加载头像和名字

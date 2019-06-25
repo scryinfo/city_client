@@ -29,9 +29,9 @@ function QueneCtrl:Active()
     Event.AddListener("c_updateQuque",self.c_updateQuque,self)
 
     QuenePanel.name.text = GetLanguage(27010008)
-    QuenePanel.player.text = GetLanguage(27040015)
-    QuenePanel.goods.text = GetLanguage(27040016)
-    QuenePanel.details.text = GetLanguage(27040017)
+    QuenePanel.player.text = GetLanguage(28040010)
+    QuenePanel.goods.text = GetLanguage(28040011)
+    QuenePanel.details.text = GetLanguage(28040012)
     QuenePanel.startTime.text = GetLanguage(27040018)
     QuenePanel.contentText.text = GetLanguage(16010026)
 end
@@ -51,7 +51,7 @@ function QueneCtrl:Hide()
         for i, v in pairs(insTable) do
             destroy(v.transform.gameObject)
             if v.m_Timer then
-               v:CloseUpdata()
+                v:CloseUpdata()
                 --v.m_Timer:Stop()
             end
             v:CloseUpdata()
@@ -89,10 +89,10 @@ end
 ---====================================================================================业务代码==============================================================================================
 --对数据处理
 local function handleData( data )
-   local reminderTime = TimeSynchronized.GetTheCurrentServerTime()
+    local reminderTime = TimeSynchronized.GetTheCurrentServerTime()
 
     local mselfData,others={},{}
-   table.sort(data,function (a,b)  return a.createTs <  b.createTs end)
+    table.sort(data,function (a,b)  return a.createTs <  b.createTs end)
 
     --处理时间
     if #data ~= 0 then
@@ -153,7 +153,7 @@ function QueneCtrl:c_updateQuque(data)
         else
             self.m_data.data = handleData(data.data)
         end
-       local dataName = {}
+        local dataName = {}
         for i, v in ipairs(self.m_data.data) do
             dataName[i] = self.m_data.name
         end

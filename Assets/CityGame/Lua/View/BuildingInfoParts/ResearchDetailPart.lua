@@ -165,17 +165,18 @@ end
 
 function ResearchDetailPart:updateLanguage()
     self.timesText.text = GetLanguage(28040005)
-    self.priceText.text =  GetLanguage(28040004)
+    self.priceText.text =  GetLanguage(27040004)
     self.oodsText.text = GetLanguage(28040003)
     self.goodsBtnText.text = GetLanguage(28040002)
     self.goodsText.text = GetLanguage(28040002)
 
-    self.nameText.text = GetLanguage(28010008)
+    self.nameText.text = GetLanguage(28040044)
     self.timeText.text = GetLanguage(28040037)
+    self.timesText.text = GetLanguage(28040006)
 
     self.evaBtnText.text  = GetLanguage(28040029)
     self.evaText.text  = GetLanguage(28040029)
-    self.bgtitleText.text = GetLanguage(28040026)
+    self.bgtitleText.text = GetLanguage(27040001)
     self.inventEvaText.text = GetLanguage(28040032)
     self.evaTips.text = GetLanguage(28040014)
 end
@@ -199,7 +200,7 @@ function ResearchDetailPart:onClick_good(ins)
     ins.evaRoot.localScale = Vector3.zero
     ins.goods.localScale = Vector3.one
     ins.evaIma.localScale = Vector3.zero
-    ins.oodsCountText.text = tostring(ins.m_data.probGood).."%"
+    ins.oodsCountText.text = tostring(ins.m_data.probGood.."%".."("..ins.m_data.probGoodAdd.."%"..")")
 end
 --研究eva
 function ResearchDetailPart:onClick_eva(ins)
@@ -207,7 +208,7 @@ function ResearchDetailPart:onClick_eva(ins)
     ins.type="eva"
     ins.goods.localScale = Vector3.zero
     ins.evaIma.localScale = Vector3.one
-    ins.oodsCountText.text = tostring(ins.m_data.probEva).."%"
+    ins.oodsCountText.text = tostring(ins.m_data.probEva.."%".."("..ins.m_data.probEvaAdd.."%"..")")
 end
 --设置
 function ResearchDetailPart:onClick_set(ins)
@@ -220,6 +221,7 @@ function ResearchDetailPart:onClick_set(ins)
     end  }
 
     ct.OpenCtrl("InventSetPopCtrl",data)
+    ins.bgtitleText.text = GetLanguage(27040002)
 end
 
 --研究eva
@@ -231,8 +233,8 @@ function ResearchDetailPart:onClick_inventEva(ins)
             return
         end
         if not count or count <= 0 then
-                return
-         end
+            return
+        end
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabAddLine',nil,count)
     end  }
 

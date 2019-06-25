@@ -4,7 +4,7 @@ DealConfig={
         name = "土地",--名字
         childs = {
             [1] = {
-                name = "土地租聘",
+                name = "土地租凭",
                 typeId = 888,
                 EX=3
             },
@@ -112,7 +112,7 @@ DealConfig={
             --        }
             --    }
             --},
-            [3] = {
+            [2] = {
                 name = "服饰",
                 childs = {
                     [1] = {
@@ -210,7 +210,7 @@ DealConfig={
                         --    typeId= 52,
                         --    EX=4
                         --},
-                        [3] = {
+                        [2] = {
                             name = "服装",
                             typeId= 53,
                             EX=4

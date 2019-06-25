@@ -13,10 +13,10 @@ EvaTitleItemOne.static.ImagePath = -- 标题图片显示
 {
     "Assets/CityGame/Resources/Atlas/Eva/icon-Material.png",
     "Assets/CityGame/Resources/Atlas/Eva/icon-Fatory.png",
-    "Assets/CityGame/Resources/Atlas/Eva/icon-HomeHouse.png",
     "Assets/CityGame/Resources/Atlas/Eva/icon-SuperMarket.png",
-    "Assets/CityGame/Resources/Atlas/Eva/icon-ad.png",
-    "Assets/CityGame/Resources/Atlas/Eva/icon-research.png"
+    "Assets/CityGame/Resources/Atlas/Eva/icon-HomeHouse.png",
+    "Assets/CityGame/Resources/Atlas/Eva/icon-research.png",
+    "Assets/CityGame/Resources/Atlas/Eva/icon-ad.png"
 }
 
 -- 子类继承实现自己的方法用以显示具体的内容

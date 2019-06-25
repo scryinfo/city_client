@@ -53,6 +53,11 @@ function CompanyInputCtrl:_initData()
     if self.m_data.inputInfo then
         self.input.text = self.m_data.inputInfo
     end
+    if self.m_data.characterLimit then
+        self.input.characterLimit = self.m_data.characterLimit
+    else
+        self.input.characterLimit = 0
+    end
 end
 
 --点击确认按钮

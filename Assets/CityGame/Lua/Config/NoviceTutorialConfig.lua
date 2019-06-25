@@ -10,13 +10,13 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "登录注册",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = "找回密码",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             }
         }
     },
@@ -25,23 +25,23 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "个人信息",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = "公司信息",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			[3] = {
                 videoName = "城市信息",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			[4] = {
                 videoName = "主界面基本操作",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             }
         }
     },
@@ -50,13 +50,13 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "充值",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = "提币",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             }
         }
     },
@@ -65,18 +65,18 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "土地拍卖",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = "出租土地",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			[3] = {
                 videoName = "出售土地",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             }
         }
     },
@@ -85,13 +85,13 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "建造开业",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = "停业拆除",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             }
         }
     },
@@ -100,33 +100,33 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "原料厂",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = "加工厂",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [3] = {
                 videoName = "住宅",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [4] = {
                 videoName = "零售店",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [5] = {
                 videoName = "广告公司",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [6] = {
                 videoName = "研究所",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             }
         }
     },
@@ -135,18 +135,18 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "好友",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = "聊天",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			[3] = {
                 videoName = "联盟",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             }
         }
     },
@@ -155,8 +155,8 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "城市居民行为",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
         }
     },
@@ -165,13 +165,13 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "小地图",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = "货架购买",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             }
         }
     },
@@ -180,18 +180,18 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "知名度与评分",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = "品质与评分",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [3] = {
                 videoName = "竞争力",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             }
         }
     },
@@ -200,18 +200,18 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = "Eva系统（AI助手）",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
         }
     },
 	[12] ={
-        name = "=预测",
+        name = "预测",
         videos ={
             [1] = {
                 videoName = "航班预测",
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/MaterialBuilding_1x1.png",
-                url = "www.baidu.com"
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/NoviceTutorialE.png",
+                url = "https://www.bilibili.com/video/av55335692/"
             },
         }
     },

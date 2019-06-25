@@ -78,6 +78,8 @@ function GameMainInterfaceCtrl:Hide()
     --Event.RemoveListener("c_majorTransaction", self.c_OnMajorTransaction, self) --重大交易
     Event.RemoveListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
     --Event.RemoveListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
+    Event.RemoveListener("TemperatureChange",self.c_TemperatureChange,self)
+    Event.RemoveListener("WeatherIconChange",self.c_WeatherIconChange,self)
     GameMainInterfaceCtrl:OnClick_EarningBtn(false,self)
     self:RemoveUpdata()
 end
@@ -400,6 +402,23 @@ end
 --
 --end
 
+--温度变化
+function GameMainInterfaceCtrl:c_TemperatureChange()
+    if ClimateManager.Temperature ~= nil then
+        GameMainInterfacePanel.temperature.text = ClimateManager.Temperature .."℃"
+    else
+        GameMainInterfacePanel.temperature.text = "0 ℃"
+    end
+end
+
+--天气变化
+function GameMainInterfaceCtrl:c_WeatherIconChange()
+    if ClimateManager.WeatherIcon ~= nil then
+        LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/".. ClimateManager.WeatherIcon ..".png", GameMainInterfacePanel.weather,true)
+    else
+        ct.log("system","服务器同步天气Icon失败")
+    end
+end
 
 function GameMainInterfaceCtrl:Awake()
     --PlayerTempModel.tempTestCreateAll()
@@ -408,6 +427,10 @@ function GameMainInterfaceCtrl:Awake()
     Event.AddListener("c_IncomeNotify",self.c_IncomeNotify,self) --收益详情
     Event.AddListener("updatePlayerName",self.updateNameFunc,self)  --改变名字
     Event.AddListener("c_ChangeMoney",self.c_ChangeMoney,self)
+    Event.AddListener("TemperatureChange",self.c_TemperatureChange,self)
+    Event.AddListener("WeatherIconChange",self.c_WeatherIconChange,self)
+    self.c_TemperatureChange()
+    self.c_WeatherIconChange()
     -----小弹窗
     Event.AddListener("SmallPop",self.c_SmallPop,self)
     CityEngineLua.login_tradeapp(true)
@@ -453,8 +476,8 @@ function GameMainInterfaceCtrl:Awake()
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
 
-    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour) + 1], GameMainInterfacePanel.weather,true)
-    GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour) + 1].."℃"
+    --LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/weather/"..WeatherConfig[tonumber(ts.year..ts.month..ts.day)].weather[tonumber(ts.hour) + 1], GameMainInterfacePanel.weather,true)
+    --GameMainInterfacePanel.temperature.text = WeatherConfig[tonumber(ts.year..ts.month..ts.day)].temperature[tonumber(ts.hour) + 1].."℃"
 
     --收益倒计时条件
     self.isTimmer = false
@@ -558,6 +581,7 @@ function GameMainInterfaceCtrl:RefreshWeather()
     if self.weatherHour == nil then
         self.weatherHour = hour
     end
+    --[[
     if self.weatherDay ~= date or  self.weatherHour ~= hour then
         self.weatherDay = date
         self.weatherHour = hour
@@ -566,6 +590,7 @@ function GameMainInterfaceCtrl:RefreshWeather()
             GameMainInterfacePanel.temperature.text = WeatherConfig[date].temperature[hour].."℃"
         end
     end
+    --]]
     if  self.isTimmer then
         self.timmer = self.timmer -1
         if self.timmer <= 0 then
@@ -605,9 +630,6 @@ function GameMainInterfaceCtrl:RefreshWeather()
     --        end
     --    end
     --end
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
-        PlayerTempModel.tempTestCreateAll()
-    end
 end
 
 --获取所有邮件
@@ -792,7 +814,7 @@ end
 --城市信息
 function GameMainInterfaceCtrl:OnCityInfo()
     PlayMusEff(1002)
-    ct.OpenCtrl("VolumeCtrl")
+    ct.OpenCtrl("CenterBuildingCtrl")
 end
 
 --Eva

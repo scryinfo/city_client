@@ -83,7 +83,12 @@ function FlightMainCtrl:_getAllFlight(value)
             if #self.m_data.valueList > 4 then
                 FlightMainPanel.rightBtn.localScale = Vector3.one
             end
-            FlightMainPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
+            --FlightMainPanel.scrollPage:InitData(self.pageEvent, #self.m_data.valueList)
+            local count = #self.m_data.valueList
+            if count > 12 then
+                count = 12
+            end
+            FlightMainPanel.scrollPage:InitData(self.pageEvent, count)  --策划改成最多只显示12个
         else
             FlightMainPanel.noneTip.localScale = Vector3.one
         end

@@ -199,8 +199,13 @@ function HouseCtrl:_signSuccess(data)
     self.m_data.contractInfo.contract = data
     self.groupMgr:RefreshData(self.m_data)
 end
-
+--
 function HouseCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)
+end
+--竞争力
+function HouseCtrl:_getApartmentGuidePrice(data)
+    --BuildingRentPartDetail:_getGuidePrice(data)  --rent需要用
+    Event.Brocast("c_getHouseGuidePrice", data)
 end

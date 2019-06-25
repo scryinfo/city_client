@@ -18,6 +18,7 @@ function MapDetailPageBase:resetState()
         for i, value in pairs(self.items) do
             value:resetState()
         end
+        self:initLanguage()
     end
 end
 --

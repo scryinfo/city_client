@@ -225,7 +225,19 @@ function MapCtrl:_initUIData()
 end
 --
 function MapCtrl:_language()
-
+    --page 多语言
+    if self.detailPageItems ~= nil then
+        for i, item in pairs(self.detailPageItems) do
+            item:resetState()
+        end
+    end
+    --左侧搜索type 多语言
+    if self.typeTable ~= nil then
+        for i, item in pairs(self.typeTable) do
+            item:_language()
+        end
+    end
+    MapBubbleManager.systemInit()
 end
 --
 function MapCtrl:_itemTimer()

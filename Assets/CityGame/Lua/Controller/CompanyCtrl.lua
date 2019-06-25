@@ -179,28 +179,28 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
         updataTime = buildingTs
         for i = 1, 30 do
             if tonumber(getFormatUnixTime(updataTime).day) == 1 then
-                time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
                 table.insert(boundaryLine,(updataTime - buildingTs + 86400) / 86400 * 140)
-            else
-                time[i] = tostring(getFormatUnixTime(updataTime).day) .. "d"
             end
-            incomeTab[i] = {}
-            incomeTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 140
-            incomeTab[i].flow = 0  --看具体字段
-            payTab[i] = {}
-            payTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 140
-            payTab[i].flow = 0  --看具体字段
-            if info ~= nil then
-                for k, v in pairs(info) do
-                    if updataTime == v.time / 1000 then
-                        incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
-                        payTab[i].lift = tonumber(GetClientPriceString(v.pay))
+            time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
+            if updataTime <= currentTime then
+                incomeTab[i] = {}
+                incomeTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 140
+                incomeTab[i].flow = 0  --看具体字段
+                payTab[i] = {}
+                payTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 140
+                payTab[i].flow = 0  --看具体字段
+                if info ~= nil then
+                    for k, v in pairs(info) do
+                        if updataTime == v.time / 1000 then
+                            incomeTab[i].lift = tonumber(GetClientPriceString(v.income))
+                            payTab[i].lift = tonumber(GetClientPriceString(v.pay))
+                        end
                     end
                 end
-            end
-            if updataTime == currentTime then
-                incomeTab[i].lift = tonumber(GetClientPriceString(todayIncome))
-                payTab[i].lift = tonumber(GetClientPriceString(todayPay))
+                if updataTime == currentTime then
+                    incomeTab[i].lift = tonumber(GetClientPriceString(todayIncome))
+                    payTab[i].lift = tonumber(GetClientPriceString(todayPay))
+                end
             end
             updataTime = updataTime + 86400
         end
@@ -429,6 +429,7 @@ function CompanyCtrl:OnCompanyRename(go)
     local data = {}
     data.titleInfo = GetLanguage(18010006)
     data.tipInfo = GetLanguage(18010012)
+    data.characterLimit = 8
     data.btnCallBack = function(text)
         if text == nil or text == "" then
             Event.Brocast("SmallPop", GetLanguage(18010010),80)

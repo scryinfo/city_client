@@ -19,8 +19,9 @@ function ServerItem:initialize(inluabehaviour, prefab, mgr, goodsDataInfo ,id)
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Image");
     self.tag = self.prefab.transform:Find("tag");
     self.notOpen = self.prefab.transform:Find("notOpen");
+    self.notOpenText = self.prefab.transform:Find("notOpen/Text").gameObject:GetComponent("Text");
     self.serverName = self.prefab.transform:Find("ServerName").gameObject:GetComponent("Text");
-
+    self.notOpenText.text = GetLanguage(11030006)
     if not goodsDataInfo.available  then
         self.notOpen.localScale = Vector3.one
         self.serverBtn:GetComponent("Button").enabled = false

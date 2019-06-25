@@ -229,5 +229,5 @@ end
 
 --推荐定价
 function PromoteCompanyModel:n_OnGuidePrice(info)
-    local a = info
+    Event.Brocast("c_GuidePrice",info)
 end

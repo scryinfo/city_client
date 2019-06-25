@@ -22,8 +22,14 @@ function SetOpenUpCtrl:Awake()
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.confirm,self.OnConfirm,self);
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.infoBtn,self.OnInfoBtn,self);
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.closeTooltip,self.OnCloseTooltip,self);
+
+    self.myOwnerID = DataManager.GetMyOwnerID()
+
     SetOpenUpPanel.open.onValueChanged:AddListener(function(isOn)
         self:OnOpen(isOn)
+    end)
+    SetOpenUpPanel.price.onValueChanged:AddListener(function()
+        self:OnPrice(self)
     end)
     self:initData()
 end
@@ -31,6 +37,7 @@ end
 function SetOpenUpCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_CloseSetOpenUp",self.c_CloseSetOpenUp,self)
+    Event.AddListener("c_GuidePrice",self.GuidePrice,self)
     if self.m_data.takeOnNewOrder then
         SetOpenUpPanel.price.text = GetClientPriceString(self.m_data.curPromPricePerHour)
         SetOpenUpPanel.time.text = math.floor(self.m_data.promRemainTime/3600000)
@@ -49,10 +56,12 @@ end
 function SetOpenUpCtrl:Refresh()
     self.openUp = self.m_data.takeOnNewOrder
     if self.openUp then
+        SetOpenUpPanel.conpetitivebess.localScale = Vector3.one
         SetOpenUpPanel.open.isOn = true
         SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(88, 0, 0)
         SetOpenUpPanel.close.localScale = Vector3.zero
     else
+        SetOpenUpPanel.conpetitivebess.localScale = Vector3.zero
         SetOpenUpPanel.open.isOn = false
         SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(2, 0, 0)
         SetOpenUpPanel.close.localScale = Vector3.one
@@ -62,6 +71,7 @@ end
 function SetOpenUpCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_CloseSetOpenUp",self.c_CloseSetOpenUp,self)
+    Event.RemoveListener("c_GuidePrice",self.GuidePrice,self)
 end
 
 function SetOpenUpCtrl:OnCreate(obj)
@@ -81,14 +91,25 @@ function SetOpenUpCtrl:OnOpen(isOn)
     PlayMusEff(1002)
     self.openUp = isOn
     if isOn then
+        SetOpenUpPanel.conpetitivebess.localScale = Vector3.one
         --SetOpenUpPanel.openBtn:DOMove(Vector3.New(88,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(88,0,0)
         SetOpenUpPanel.close.localScale = Vector3.zero
     else
+        SetOpenUpPanel.conpetitivebess.localScale = Vector3.zero
         --SetOpenUpPanel.openBtn:DOMove(Vector3.New(2,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(2,0,0)
         SetOpenUpPanel.close.localScale = Vector3.one
     end
+end
+
+--输入价格
+function SetOpenUpCtrl:OnPrice()
+    if SetOpenUpPanel.price.text == "" then
+        SetOpenUpPanel.price.text = 0
+    end
+    self.price = tonumber(SetOpenUpPanel.price.text)
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_promotionGuidePrice',self.m_data.insId,self.myOwnerID) --获取推荐价格
 end
 
 --点击确定
@@ -132,4 +153,20 @@ end
 --关闭界面
 function SetOpenUpCtrl:c_CloseSetOpenUp()
     UIPanel.ClosePage()
+end
+
+--竞争力
+function SetOpenUpCtrl:GuidePrice(info)
+    local value = info.proPrice[1].guidePrice
+    local curAbilitys = 0
+    if  info.proPrice[1].curAbilitys then
+        for i, v in pairs(info.proPrice[1].curAbilitys) do
+            curAbilitys = curAbilitys + v
+        end
+        curAbilitys = curAbilitys / #info.proPrice[1].curAbilitys
+    end
+    local competitive = ct.CalculationAdvertisementCompetitivePower(value,self.price,curAbilitys,2251)
+    SetOpenUpPanel.value.text = competitive
+    Event.Brocast("c_competitiveness",competitive)
+    UnityEngine.PlayerPrefs.SetInt("competitiveness",competitive)
 end

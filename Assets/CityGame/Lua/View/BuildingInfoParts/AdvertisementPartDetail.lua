@@ -21,6 +21,7 @@ end
 function  AdvertisementPartDetail:_InitEvent()
     Event.AddListener("c_PromoteCapacity",self.PromoteCapacity,self)
     Event.AddListener("c_PromoteBuildingCapacity",self.PromoteBuildingCapacity,self)
+    Event.AddListener("c_competitiveness",self.Competitiveness,self)
 end
 --
 function AdvertisementPartDetail:_InitClick(mainPanelLuaBehaviour)
@@ -42,6 +43,7 @@ end
 function AdvertisementPartDetail:_RemoveEvent()
     Event.RemoveListener("c_PromoteCapacity",self.PromoteCapacity,self)
     Event.RemoveListener("c_PromoteBuildingCapacity",self.PromoteBuildingCapacity,self)
+    Event.RemoveListener("c_competitiveness",self.Competitiveness,self)
 end
 --
 function AdvertisementPartDetail:_RemoveClick()
@@ -55,8 +57,12 @@ function AdvertisementPartDetail:RefreshData(data)
         self.m_data.promRemainTime = data.promRemainTime
         end
         if data.takeOnNewOrder then
+            self.openedOthers.transform.localScale = Vector3.zero
             self.openedOthers.text = GetLanguage(27040002)
+            self.openOther.localScale = Vector3.one
         else
+            self.openedOthers.transform.localScale = Vector3.one
+            self.openOther.localScale = Vector3.zero
             self.openedOthers.text = GetLanguage(27040001)
         end
         self.timeText.text = math.floor(data.promRemainTime/3600000)
@@ -82,11 +88,14 @@ function AdvertisementPartDetail:_getComponent(transform)
     self.buildingText = transform:Find("bg/down/GoodsBg/building/buildingText"):GetComponent("Text")
     self.buildingClickText = transform:Find("bg/down/GoodsBg/building/buildingClickText"):GetComponent("Text")
     self.openedOthers = transform:Find("bg/down/openOther/openBg/openedImage/openedOthers"):GetComponent("Text")
+    self.openOther = transform:Find("bg/down/openOther/openBg/openedImage/openOther")
+    self.competitiveness = transform:Find("bg/down/openOther/openBg/openedImage/openOther/Image/competitiveness"):GetComponent("Text")
+    self.openOtherText = transform:Find("bg/down/openOther/openBg/openedImage/openOther/Image/competitiveness/Text"):GetComponent("Text")
     self.open = transform:Find("bg/down/openOther/openBg/open").gameObject      --对外开放
     self.price = transform:Find("bg/down/openOther/openBg/priceImage/price"):GetComponent("Text")    --价格
-    self.priceText = transform:Find("bg/down/openOther/openBg/priceImage/priceImage/priceText"):GetComponent("Text")    --价格
+    self.priceText = transform:Find("bg/down/openOther/openBg/priceImage/priceText"):GetComponent("Text")    --价格
     self.time = transform:Find("bg/down/openOther/openBg/timeImage/time"):GetComponent("Text")    --时间
-    self.timeText = transform:Find("bg/down/openOther/openBg/timeImage/timeImage/timeText"):GetComponent("Text")    --时间
+    self.timeText = transform:Find("bg/down/openOther/openBg/timeImage/timeText"):GetComponent("Text")    --时间
     self.quene = transform:Find("bg/down/openOther/startTimeBg/quene").gameObject;      --队列
     self.queneText = transform:Find("bg/down/openOther/startTimeBg/quene/queneImage/queneText"):GetComponent("Text");
     self.queneValue = transform:Find("bg/down/openOther/startTimeBg/quene/queneImage/queneText/queneValue"):GetComponent("Text");
@@ -125,7 +134,6 @@ function AdvertisementPartDetail:_initFunc()
         end
         local buildingType = {[1] = 1300, [2] = 1400}
 
-        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_promotionGuidePrice',self.m_data.insId,myOwnerID) --获取推荐价格
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromotionItemInfo',self.m_data.insId,goodIds) --获取商品推广能力
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,typeIds) --请求商品的推广能力
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,buildingType) --请求建筑的推广能力
@@ -134,6 +142,8 @@ end
 
 function AdvertisementPartDetail:Show(data)
     BasePartDetail.Show(self)
+    local competitiveness = UnityEngine.PlayerPrefs.GetInt("competitiveness")
+    self.openOtherText.text = competitiveness
     if data.info.ownerId ~= myOwnerID then
         self.open.transform.localScale = Vector3.zero
     else
@@ -161,6 +171,7 @@ function AdvertisementPartDetail:Show(data)
     self.houseText.text = GetLanguage(27040009)
     self.houseName.text = GetLanguage(42020004)
     self.supermarketName.text = GetLanguage(42020003)
+    self.competitiveness.text = GetLanguage(43060003)
 end
 
 function AdvertisementPartDetail:Hide()
@@ -195,6 +206,11 @@ function AdvertisementPartDetail:PromoteBuildingCapacity(CurAbilitys)
     self.m_data.houseSpeed = CurAbilitys[2]
     self.supermarketSpeed.text = "+" .. CurAbilitys[1] .."/h"
     self.houseSpeed.text = "+" .. CurAbilitys[2] .."/h"
+end
+
+--竞争力赋值
+function AdvertisementPartDetail:Competitiveness(info)
+    self.openOtherText.text = info
 end
 
 --点击建筑

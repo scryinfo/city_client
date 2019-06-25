@@ -165,25 +165,38 @@ function VolumeCtrl:initInsData()
 end
 function VolumeCtrl:language()
 
-   VolumePanel.name.text = GetLanguage(11010006)
-   VolumePanel.citzen.text = GetLanguage(19020001)
-   VolumePanel.turnover.text = GetLanguage(19020002)
-   VolumePanel.city.text = GetLanguage(19020003)
-   VolumePanel.player.text = GetLanguage(28040010)
-   VolumePanel.Tradingname.text = GetLanguage(19030001)
-   VolumePanel.Tradingnumname.text = GetLanguage(19030002)
-   VolumePanel.clotherBtnText.text = GetLanguage(20030001)
-   VolumePanel.clotheText.text = GetLanguage(20030001)
-   VolumePanel.foodBtnText.text = GetLanguage(20030002)
-   VolumePanel.foodText.text = GetLanguage(20030002)
+    VolumePanel.name.text = GetLanguage(11010006)
+    VolumePanel.citzen.text = GetLanguage(19020001)
+    VolumePanel.turnover.text = GetLanguage(19020002)
+    VolumePanel.city.text = GetLanguage(19020003)
+    VolumePanel.player.text = GetLanguage(28040010)
+    VolumePanel.Tradingname.text = GetLanguage(19030001)
+    VolumePanel.Tradingnumname.text = GetLanguage(19030002)
+    VolumePanel.clotherBtnText.text = GetLanguage(20030001)
+    VolumePanel.clotheText.text = GetLanguage(20030001)
+    VolumePanel.foodBtnText.text = GetLanguage(20030002)
+    VolumePanel.foodText.text = GetLanguage(20030002)
     VolumePanel.houseBtnText.text = GetLanguage(20050004)  --住宅
-   VolumePanel.houseText.text = GetLanguage(20050004)
-   VolumePanel.undateTimeText.text = GetLanguage(19020019)  --秒后刷新
-   VolumePanel.requirement.text = GetLanguage(19020020)
-   VolumePanel.employed.text = GetLanguage(19020004)  --就业人口
-   VolumePanel.unemployed.text = GetLanguage(19020005)  --失业人口
-   VolumePanel.total.text = GetLanguage(19020012)
-   VolumePanel.totalContent.text = GetLanguage(19020013)
+    VolumePanel.houseText.text = GetLanguage(20050004)
+    VolumePanel.undateTimeText.text = GetLanguage(19020019)  --秒后刷新
+    VolumePanel.requirement.text = GetLanguage(19020020)
+
+    VolumePanel.employed.text = GetLanguage(19020021)  --就业人口
+    VolumePanel.unemployed.text = GetLanguage(19020022)  --失业人口
+    VolumePanel.ssum.text = GetLanguage(28030003)
+    VolumePanel.stime.text = GetLanguage(28030002)
+    VolumePanel.sbussiness.text = GetLanguage(19030003)
+    VolumePanel.stip.text = GetLanguage(19030023)
+    VolumePanel.tip.text = GetLanguage(19030023)
+    VolumePanel.bussiness.text = GetLanguage(19030003)
+    VolumePanel.sum.text = GetLanguage(28030003)
+    VolumePanel.time.text = GetLanguage(28030002)
+
+    VolumePanel.employed.text = GetLanguage(19020004)  --就业人口
+    VolumePanel.unemployed.text = GetLanguage(19020005)  --失业人口
+    VolumePanel.total.text = GetLanguage(19020012)
+    VolumePanel.totalContent.text = GetLanguage(19020013)
+
 
 
 end
@@ -440,7 +453,7 @@ function VolumeCtrl:OncitzenRect(ins)
     pos_Y= pos_Y- (102 + 460)
 
     VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, pos_Y),
-           0.5):SetEase(DG.Tweening.Ease.OutCubic);
+            0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     VolumePanel.infoBgrRect.localScale= Vector3.zero
     VolumePanel.playercurrRoot.gameObject:SetActive(false)
@@ -470,18 +483,22 @@ function VolumeCtrl:OnplayerRect(ins)
     DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNum')
     VolumePanel.infoBgrRect.localScale= Vector3.one
     VolumePanel.playercurrRoot.gameObject:SetActive(true)
-
+    if  VolumePanel.threeScrollcontent.transform.childCount == 0 then
+        VolumePanel.trade.localScale = Vector3.one
+    else
+        VolumePanel.strade.localScale = Vector3.one
+    end
     --点击之后初始化显示
-    local info = {}
-    info.id = 888
-    info.exchangeType = 3
-    info.type = types
-    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNumCurve',info)
 
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 336),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
     if isone then
+        local info = {}
+        info.id = 888
+        info.exchangeType = 3
+        info.type = types
+        DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNumCurve',info)
         VolumePanel.firstScroll:ActiveLoopScroll(ins.playerOneInfo, #DealConfig, "View/Laboratory/ToggleBtnItem")
         VolumePanel.secondScroll:ActiveLoopScroll(ins.playerTwosInfo, #DealConfig[1].childs, "View/Laboratory/ToggleBtnTwoItem")
         VolumePanel.trade.localScale = Vector3.one
@@ -538,11 +555,11 @@ function VolumeCtrl:c_OnClick_Delete(ins)
     state = ins.highlight
     ins.highlight.localScale = Vector3.one
     if firstshow == nil then                                                 ---第一次进入第一层关闭高亮
-        optionOneScript[1].highlight.localScale = Vector3.zero
+    optionOneScript[1].highlight.localScale = Vector3.zero
         firstshow = 1
     end
     if optionOneScript[ins.ctrl].city  then                                 ---点击第一层item清空二三层item
-        VolumePanel.threeScroll:ActiveLoopScroll(optionOneScript[ins.ctrl].city.ToggleBtnTwoItem, 0,"View/Laboratory/ToggleBtnThreeItem")
+    VolumePanel.threeScroll:ActiveLoopScroll(optionOneScript[ins.ctrl].city.ToggleBtnTwoItem, 0,"View/Laboratory/ToggleBtnThreeItem")
     end
     if ins.data.childs.childs ~= nil then
         VolumePanel.threeScroll:ActiveLoopScroll(ins.playerTwoInfo, #ins.data.childs,"View/Laboratory/ToggleBtnThreeItem")
@@ -568,9 +585,9 @@ function VolumeCtrl:c_GoodsplayerTypeNum(info)
     if minute ~= 0 then
         currentTime = currentTime - minute * 60
     end
-    if hour ~= 0 then
-        currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
-    end
+    --if hour ~= 0 then
+    --    currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
+    --end
     currentTime = math.floor(currentTime)
     local demandNumTab = {}
     local sevenDaysAgo = currentTime - 604800
@@ -579,14 +596,13 @@ function VolumeCtrl:c_GoodsplayerTypeNum(info)
     local boundaryLine = {}
     for i = 1, 168 do
         sevenDaysAgo = sevenDaysAgo + 3600
-        time[i] = sevenDaysAgo
         demandNumTab[i] = {}
         demandNumTab[i] .ts = (sevenDaysAgo - sevenDaysAgoTime)/3600 * 116
         if tonumber(getFormatUnixTime(sevenDaysAgo).hour) == 0 then
-            time[i] = getFormatUnixTime(sevenDaysAgo).month .. "/" .. getFormatUnixTime(sevenDaysAgo).day
+            time[i] = getFormatUnixTime(sevenDaysAgo).month .. "/" ..getFormatUnixTime(sevenDaysAgo).day
             table.insert(boundaryLine,(sevenDaysAgo - sevenDaysAgoTime )/3600 * 116)
         else
-            time[i] = tostring(getFormatUnixTime(sevenDaysAgo).hour)
+            time[i] = getFormatUnixTime(sevenDaysAgo).hour ..":00"
         end
         if info == nil then
             demandNumTab[i].num = 0

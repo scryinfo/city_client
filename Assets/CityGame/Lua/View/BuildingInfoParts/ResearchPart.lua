@@ -41,7 +41,7 @@ end
 
 --
 function  ResearchPart:_ResetTransform()
-   -- self.turnover.text = "0.0000"
+    -- self.turnover.text = "0.0000"
 end
 --
 function ResearchPart:RefreshData(data)
@@ -81,7 +81,7 @@ function ResearchPart:_InitClick(mainPanelLuaBehaviour)
 end
 
 function ResearchPart:onClick_set(ins)
-   ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodQueneItem",data = ins.m_data.inProcess ,insClass=InventGoodQueneItem})
+    ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodQueneItem",data = ins.m_data.inProcess ,insClass=InventGoodQueneItem})
 end
 
 --
@@ -117,10 +117,10 @@ function ResearchPart:updateUI(data)
 end
 
 function ResearchPart:updateLanguage()
-    self.queneText.text = GetLanguage(28010008)
+    self.queneText.text = GetLanguage(28040044)
     --self.priceText
     --self.TimeText
-    self.title.text = GetLanguage(20120001)
+    self.title.text = GetLanguage(28050002)
     self.title1.text = GetLanguage(28040036)
     self.UnselectBtntext.text = GetLanguage(28040036)
 end

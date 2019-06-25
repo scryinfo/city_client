@@ -18,6 +18,7 @@ function WalletModel:OnCreate()
     Event.AddListener("ReqDisChargeOrder",self.ReqDisChargeOrder,self)
     Event.AddListener("ReqDisCharge",self.ReqDisCharge,self)
     Event.AddListener("ReqValidationPhoneCode",self.ReqValidationPhoneCode,self)
+    Event.AddListener("ReqDetails",self.ReqDetails,self)
 
     --网络事件
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
@@ -32,6 +33,7 @@ function WalletModel:Close()
     Event.RemoveListener("ReqDisChargeOrder",self.ReqDisChargeOrder,self)
     Event.RemoveListener("ReqDisCharge",self.ReqDisCharge,self)
     Event.RemoveListener("ReqValidationPhoneCode",self.ReqValidationPhoneCode,self)
+    Event.RemoveListener("ReqDetails",self.ReqDetails,self)
 
     --网络事件
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
@@ -91,6 +93,20 @@ function WalletModel:ReqValidationPhoneCode(userId,authCode)
     local msgRet = assert(pbl.decode("ccapi.ct_DisPaySmVefifyReq",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
+
+--订单详情
+function WalletModel:ReqDetails(userId)
+    --local currentTime = TimeSynchronized.GetTheCurrentTime()
+    --local ts = getFormatUnixTime(currentTime)
+    --if tonumber(ts.second) ~= 0 then
+    --    currentTime = currentTime - tonumber(ts.second)
+    --end
+    --if tonumber(ts.minute) ~= 0 then
+    --    currentTime = currentTime - tonumber(ts.second)
+    --end
+
+end
+
 ---服务器回调---
 --创建钱包
 function WalletModel:ReceiveCreateWallet(data)

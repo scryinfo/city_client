@@ -129,9 +129,9 @@ function ToggleBtnTwoItem:c_GoodsplayerTypeNum(info)
     if minute ~= 0 then
         currentTime = currentTime - minute * 60
     end
-    if hour ~= 0 then
-        currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
-    end
+    --if hour ~= 0 then
+    --    currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
+    --end
     currentTime = math.floor(currentTime)
     local demandNumTab = {}
     local sevenDaysAgo = currentTime - 604800
@@ -140,14 +140,13 @@ function ToggleBtnTwoItem:c_GoodsplayerTypeNum(info)
     local boundaryLine = {}
     for i = 1, 168 do
         sevenDaysAgo = sevenDaysAgo + 3600
-        time[i] = sevenDaysAgo
         demandNumTab[i] = {}
         demandNumTab[i] .ts = (sevenDaysAgo - sevenDaysAgoTime)/3600 * 116
         if tonumber(getFormatUnixTime(sevenDaysAgo).hour) == 0 then
-            time[i] = getFormatUnixTime(sevenDaysAgo).month .. "/" .. getFormatUnixTime(sevenDaysAgo).day
+            time[i] = getFormatUnixTime(sevenDaysAgo).month .. "/" ..getFormatUnixTime(sevenDaysAgo).day
             table.insert(boundaryLine,(sevenDaysAgo - sevenDaysAgoTime )/3600 * 116)
         else
-            time[i] = tostring(getFormatUnixTime(sevenDaysAgo).hour)
+            time[i] = getFormatUnixTime(sevenDaysAgo).hour ..":00"
         end
         if info == nil then
             demandNumTab[i].num = 0

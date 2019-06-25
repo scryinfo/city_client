@@ -177,6 +177,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.confirmBtn.transform.localScale = Vector3.zero
         self.addShelfBtn.transform.localScale = Vector3.one
         self.numberSlider.maxValue = self.m_data.dataInfo.n
+        self.numberSlider.minValue = 1
         self.numberSlider.value = 1
         self.numberText.text = "×"..self.numberSlider.value
         self.priceInput.text = "0"

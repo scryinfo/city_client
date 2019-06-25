@@ -6,7 +6,6 @@ UIPanel:ResgisterOpen(ServerListCtrl)
 ServerListCtrl.static.Server_PATH = "Assets/CityGame/Resources/View/GoodsItem/ServerItem.prefab";
 
 local serverListBehaviour;
-local tempBg = nil;
 local tempTag = nil;
 local Index = nil
 
@@ -72,12 +71,12 @@ function ServerListCtrl:Close()
     Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.RemoveListener("c_OnServer",self.c_OnServer,self)
+    tempTag = nil
+    Index = nil
 end
 
 function ServerListCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    tempBg = nil
-
  end
 
 function ServerListCtrl:_initData()
@@ -97,12 +96,9 @@ end
 --选择服务器--
 function ServerListCtrl:c_OnServer(go)
     if  tempTag ~= nil then
-        --tempBg:SetActive(false);
-        tempTag:SetActive(false);
+        tempTag.localScale = Vector3.zero
     end
-    --go.bg:SetActive(true);
-    go.tag:SetActive(true);
-    --tempBg = go.bg;
+    go.tag.localScale = Vector3.one
     tempTag = go.tag
     Index = go.id;
 end
@@ -110,7 +106,6 @@ end
 --点击确定--
 function ServerListCtrl:c_OnOK(go)
     PlayMusEff(1002)
-    --Event.Brocast("m_chooseGameServer", Index,go.data);
     if Index == nil then
         return
     end
@@ -126,7 +121,6 @@ function ServerListCtrl:c_GsCreateRole()
 end
 
 function ServerListCtrl:c_GsLoginSuccess(playerId)
-    --ct.OpenCtrl('LoadingCtrl',playerId)
     UIPanel:ClearAllPages()
     ct.OpenCtrl('GameMainInterfaceCtrl',playerId)
 end

@@ -31,7 +31,7 @@ function SmallPopItem:initialize(string,type,prefab,mgr)
 
     prefabTrans:DOAnchorPos(SmallPopItem.endPOS, 0.5);
 
-    self.timenow=UnityEngine.Time.time+3
+    self.timenow= 3
 
     if type == ReminderType.Common then
         self.textBgTrans.transform:GetComponent("Image").color = getColorByInt(243,243,243,230)
@@ -46,17 +46,16 @@ function SmallPopItem:initialize(string,type,prefab,mgr)
         self.textBgTrans.transform:GetComponent("Image").color = getColorByInt(243,243,243,230)
         self.tipText.color = getColorByInt(68,68,68,255)
     end
-
+    UpdateBeat:Remove(self._update, self);
     UpdateBeat:Add(self._update, self);
 end
 
 
 function SmallPopItem:_update()
-
-    if  UnityEngine.Time.time>self.timenow  then
-
+    self.timenow = self.timenow - UnityEngine.Time.unscaledDeltaTime
+    if  self.timenow <= 0  then
+        self.timenow = 3
         prefabTrans.anchoredPosition=Vector2.New(0,797);
-
         UpdateBeat:Remove(self._update, self);
     end
 end

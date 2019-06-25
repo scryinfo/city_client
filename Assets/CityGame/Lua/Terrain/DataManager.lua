@@ -1774,6 +1774,15 @@ function DataManager.m_ReqStandardWage(buildingType)
     local pMsg = assert(pbl.encode("gs.QueryIndustryWages", {type = buildingType}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
+--获取住宅竞争力参数
+function DataManager.m_ReqHouseGuidPrice(buildingId)
+    if buildingId == nil then
+        return
+    end
+    local msgId = pbl.enum("gscode.OpCode","apartmentGuidePrice")
+    local pMsg = assert(pbl.encode("gs.AartmentMsg", {buildingId = buildingId, playerId = DataManager.GetMyOwnerID()}))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+end
 
 
 --注册所有消息回调

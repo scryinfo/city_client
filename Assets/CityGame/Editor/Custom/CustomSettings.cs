@@ -232,6 +232,7 @@ public static class CustomSettings
         _GT(typeof(Dictionary<string, string[]>)),  //
         _GT(typeof(VScrollLoopTool)),  //滑动复用
         _GT(typeof(VScrollEventData)),  //滑动复用事件
+        _GT(typeof(QRCodeTest)),  //二维码
     };
 
     public static List<Type> dynamicList = new List<Type>()

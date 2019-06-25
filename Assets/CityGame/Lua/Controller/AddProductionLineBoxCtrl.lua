@@ -139,9 +139,10 @@ function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
     if dataInfo ~= nil then
         TimeSynchronized.SynchronizationServerTime(dataInfo.ts)
         UIPanel.ClosePage()
-        --查询当前生产线
-        Event.Brocast("m_GetLineData",self.m_data.insId)
+        ----查询当前生产线
+        --Event.Brocast("m_GetLineData",self.m_data.insId)
         Event.Brocast("SmallPop",GetLanguage(25030010),ReminderType.Common)
+        UIPanel.ClosePage()
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------

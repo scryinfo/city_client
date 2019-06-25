@@ -61,10 +61,10 @@ end
 function FlightSearchCtrl:_initData()
     --默认出发地为北京，目的地为上海
     if self.startCode == nil then
-        self.startCode = "CTU"
+        self.startCode = FlightConfig.DefaultStartCode
     end
     if self.arriveCode == nil then
-        self.arriveCode = "NKG"
+        self.arriveCode = FlightConfig.DefaultArrCode
     end
     FlightSearchPanel.startText.text = self.startCode
     FlightSearchPanel.endText.text = self.arriveCode

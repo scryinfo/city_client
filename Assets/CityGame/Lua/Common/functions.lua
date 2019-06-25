@@ -766,7 +766,7 @@ function GetEvaData(index, configData, lv)
 		if string.find(resultNum, ".") ~= nil then
 			resultNum = string.format( "%.2f", resultNum)
 		end
-		return resultNum .. "s/per"
+		return resultNum .. GetLanguage(31010042)
 	elseif configData.Btype == "PromotionAbility" then -- 推广能力
 		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
 	elseif configData.Btype == "InventionUpgrade" then -- 发明提升
@@ -951,13 +951,23 @@ end
 --定价:price
 --玩家店铺评分:shopScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
-function ct.CalculationFactoryCompetitivePower(recommendedPricing,price,shopScore,averageShopScore)
+function ct.CalculationHouseCompetitivePower(recommendedPricing,price,shopScore,averageShopScore)
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
-		recommendedPricing = 14 * PRIDMagnification
+		recommendedPricing = Competitive[14 * PRIDMagnification]
 		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
 		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification))
 	end
 	--竞争力 = (推荐定价 * 玩家店铺评分)/ (定价 * 全城销售均店铺评分) * 1000 (整数)
 	return  CalculationNBitAfterDecimalPoint(((recommendedPricing * shopScore)/ ( price * averageShopScore) * CPMagnification))
+end
+---计算住宅推荐定价
+--推荐定价:recommendedPricing
+function ct.CalculationHouseSuggestPrice(recommendedPricing)
+	if recommendedPricing <= 0 then
+		--推荐定价 = 推荐定价表
+		recommendedPricing = Competitive[14 * PRIDMagnification]
+		return recommendedPricing
+	end
+	return recommendedPricing
 end

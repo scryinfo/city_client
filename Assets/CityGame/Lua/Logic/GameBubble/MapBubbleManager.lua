@@ -510,9 +510,13 @@ function MapBubbleManager.cleanAllBubbleItems()
 end
 --
 function MapBubbleManager.closePanelFunc()
-    this.centerItem:resetState()
+    --this.centerItem:resetState()
     this.cleanAllBubbleItems()
     this.cleanBuildingItems()
+end
+--
+function MapBubbleManager.systemInit()
+    this.centerItem:resetState()
 end
 ---传data.buildingBase
 function MapBubbleManager.GoHereFunc(pos)

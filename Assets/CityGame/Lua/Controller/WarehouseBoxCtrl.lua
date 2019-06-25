@@ -117,6 +117,7 @@ function WarehouseBoxCtrl:initializeUiInfoData()
     Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.numberSlider.maxValue = self.warehouseCount
+    self.numberSlider.minValue = 1
     self.numberSlider.value = 1
     self.numberText.text = "×"..self.numberSlider.value
 end

@@ -29,6 +29,7 @@ end
 function MapSystemItem:resetState()
     self.detailShowImg.enabled = false
     self.scaleRoot.localScale = Vector3.one
+    self:_language()
 end
 --
 function MapSystemItem:_clickFunc()

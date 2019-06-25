@@ -58,9 +58,9 @@ function LineItem:InitializeData()
         elseif Good[self.itemId].luxury == 3 then
             self.levelImg.color = getColorByVector3(threeLevel)
         end
-        --self.brandNameText.text
-        --self.brandValue
-        --self.qualityValue
+        self.brandNameText.text = self.lineDataInfo.brandName
+        self.brandValue.text = self.lineDataInfo.brandScore
+        self.qualityValue.text = self.lineDataInfo.qtyScore
     end
 end
 --置顶

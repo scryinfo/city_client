@@ -26,8 +26,7 @@ function MapTechnologyPageItem:createItems()
 end
 --
 function MapTechnologyPageItem:initLanguage()
-    --self.text01.text = GetLanguage(12345678)
-    self.text01.text = "科研"
+    self.text01.text = GetLanguage(20010004)
     local width = self.text01.preferredWidth + 35
     self.bgImg.rectTransform.sizeDelta = Vector2.New(width, 50)
 end

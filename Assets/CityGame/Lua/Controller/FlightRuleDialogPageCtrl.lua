@@ -30,16 +30,13 @@ end
 --
 function FlightRuleDialogPageCtrl:_getComponent(go)
     self.titleText = go.transform:Find("root/Text01"):GetComponent("Text")
-    self.rule01 = go.transform:Find("root/01/Text"):GetComponent("Text")
-    self.rule02 = go.transform:Find("root/02/Text"):GetComponent("Text")
-    self.rule03 = go.transform:Find("root/03/Text"):GetComponent("Text")
-    self.rule04 = go.transform:Find("root/04/Text"):GetComponent("Text")
+    self.valueText = go.transform:Find("root/bg04/valueText"):GetComponent("Text")
     self.checkBtn = go.transform:Find("root/checkBtn")
 end
 --
 function FlightRuleDialogPageCtrl:_initData()
     self.titleText.text = GetLanguage(32030030)
-    self.rule01.text = GetLanguage()
+    self.valueText.text = GetLanguage(32050001)
 end
 --
 function FlightRuleDialogPageCtrl:_onClickClose()

@@ -34,33 +34,33 @@ goodsNeedMatData = {}
 },
 [2251101] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2101001, num = 4}}
+goodsNeedMatData = {[1] = {itemId = 2101001, num = 5}}
 },
 [2251102] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2101001, num = 4},
-[2] = {itemId = 2101002, num = 1}}
+goodsNeedMatData = {[1] = {itemId = 2101001, num = 2},
+[2] = {itemId = 2101002, num = 2}}
 },
 [2251103] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2101001, num = 2},
-[2] = {itemId = 2101003, num = 2},
+goodsNeedMatData = {[1] = {itemId = 2101001, num = 1},
+[2] = {itemId = 2101003, num = 1},
 [3] = {itemId = 2101004, num = 1}}
 },
 [2251201] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2101001, num = 12},
-[2] = {itemId = 2101002, num = 6}}
+goodsNeedMatData = {[1] = {itemId = 2101001, num = 8},
+[2] = {itemId = 2101002, num = 5}}
 },
 [2251202] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2101002, num = 5},
-[2] = {itemId = 2101003, num = 5}}
+goodsNeedMatData = {[1] = {itemId = 2101002, num = 6},
+[2] = {itemId = 2101003, num = 6}}
 },
 [2251203] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2101004, num = 2},
-[2] = {itemId = 2101001, num = 9},
+goodsNeedMatData = {[1] = {itemId = 2101004, num = 3},
+[2] = {itemId = 2101001, num = 1},
 [3] = {itemId = 2101002, num = 5}}
 },
 [2252101] = {
@@ -69,8 +69,8 @@ goodsNeedMatData = {[1] = {itemId = 2102001, num = 4}}
 },
 [2252102] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2102002, num = 2},
-[2] = {itemId = 2102001, num = 3}}
+goodsNeedMatData = {[1] = {itemId = 2102002, num = 3},
+[2] = {itemId = 2102001, num = 1}}
 },
 [2252103] = {
 matCompoundGoods = {},
@@ -78,19 +78,19 @@ goodsNeedMatData = {[1] = {itemId = 2102004, num = 2}}
 },
 [2252201] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2102001, num = 12},
-[2] = {itemId = 2102003, num = 10}}
+goodsNeedMatData = {[1] = {itemId = 2102001, num = 5},
+[2] = {itemId = 2102003, num = 5}}
 },
 [2252202] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2102001, num = 5},
-[2] = {itemId = 2102002, num = 3},
-[3] = {itemId = 2102003, num = 4}}
+goodsNeedMatData = {[1] = {itemId = 2102001, num = 4},
+[2] = {itemId = 2102002, num = 6},
+[3] = {itemId = 2102003, num = 3}}
 },
 [2252203] = {
 matCompoundGoods = {},
-goodsNeedMatData = {[1] = {itemId = 2102004, num = 2},
-[2] = {itemId = 2102001, num = 10},
-[3] = {itemId = 2102003, num = 8}}
+goodsNeedMatData = {[1] = {itemId = 2102004, num = 4},
+[2] = {itemId = 2102001, num = 4},
+[3] = {itemId = 2102003, num = 3}}
 }
 }

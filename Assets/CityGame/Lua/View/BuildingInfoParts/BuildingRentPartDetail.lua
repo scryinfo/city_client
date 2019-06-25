@@ -24,6 +24,20 @@ function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
         end
         self:_reqHouseChangeRent(price)
     end , self)
+    --
+    self.rentInputField.onValueChanged:AddListener(function (str)
+        if str == "" or self.m_data.guideData == nil then
+            return
+        end
+        local temp = ct.CalculationHouseCompetitivePower(self.m_data.guideData.avgPrice, tonumber(str) * 10000, self.m_data.guideData.score, self.m_data.guideData.avgScore)
+        self.competValueText.text = temp
+    end)
+    mainPanelLuaBehaviour:AddClick(self.competBtn.gameObject, function ()
+        self.competitivenessRoot.localScale = Vector3.one
+    end , self)
+    mainPanelLuaBehaviour:AddClick(self.competitivenessBtn.gameObject, function ()
+        self.competitivenessRoot.localScale = Vector3.zero
+    end , self)
 end
 --
 function BuildingRentPartDetail:_ResetTransform()
@@ -33,10 +47,17 @@ function BuildingRentPartDetail:_ResetTransform()
 end
 --
 function BuildingRentPartDetail:_RemoveEvent()
+    Event.RemoveListener("c_getHouseGuidePrice", self._getGuidePrice, self)
+end
+--
+function BuildingRentPartDetail:_InitEvent()
+    Event.AddListener("c_getHouseGuidePrice", self._getGuidePrice, self)
 end
 --
 function BuildingRentPartDetail:_RemoveClick()
     self.confirmBtn.onClick:RemoveAllListeners()
+    self.competBtn.onClick:RemoveAllListeners()
+    self.competitivenessBtn.onClick:RemoveAllListeners()
 end
 --
 function BuildingRentPartDetail:RefreshData(data)
@@ -56,15 +77,23 @@ function BuildingRentPartDetail:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.confirmBtn = transform:Find("Root/ConfirmBtn"):GetComponent("Button")
+    self.confirmBtn = transform:Find("Root/RentInputField/ConfirmBtn"):GetComponent("Button")
     self.rentInputField = transform:Find("Root/RentInputField"):GetComponent("InputField")
     self.rentInputFieldPlaceholder = transform:Find("Root/RentInputField/Placeholder"):GetComponent("Text")
     self.occupancyText = transform:Find("Root/OccupancyText"):GetComponent("Text")
     self.otherSee = transform:Find("Root/otherSee")
     self.otherSeeRentText = transform:Find("Root/otherSee/Text"):GetComponent("Text")
+    --
+    self.competValueText = transform:Find("Root/competRoot/valueText"):GetComponent("Text")
+    self.competBtn = transform:Find("Root/competRoot/infoBtn"):GetComponent("Button")
+    self.competitivenessRoot = transform:Find("Root/competitivenessRoot")
+    self.competitivenessBtn = transform:Find("Root/competitivenessRoot/btn"):GetComponent("Button")
 
     self.occupancyText01 = transform:Find("Root/Text01"):GetComponent("Text")
     self.rentText02 = transform:Find("Root/Text02"):GetComponent("Text")
+    self.competValueText03 = transform:Find("Root/competRoot/valueText"):GetComponent("Text")
+    self.competitivenessText04 = transform:Find("Root/competitivenessRoot/Text01"):GetComponent("Text")
+    self.competitivenessText05 = transform:Find("Root/competitivenessRoot/Text02"):GetComponent("Text")
 end
 --
 function BuildingRentPartDetail:clickCloseBtn()
@@ -76,6 +105,9 @@ function BuildingRentPartDetail:_reqHouseChangeRent(price)
 end
 -- 显示入住人数和总人数
 function BuildingRentPartDetail:_initFunc()
+    DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)  --请求竞争力参数
+
+    self.competitivenessRoot.localScale = Vector3.zero
     if self.m_data.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.otherSee.localScale = Vector3.one
         self.confirmBtn.transform.localScale = Vector3.zero
@@ -93,4 +125,16 @@ end
 function BuildingRentPartDetail:_language()
     self.occupancyText01.text = GetLanguage(26040001)
     self.rentText02.text = GetLanguage(26040002)
+    self.competValueText03.text = GetLanguage(43010001)
+    self.competitivenessText04.text = GetLanguage(43010002)
+    self.competitivenessText05.text = GetLanguage(43010003)
+end
+--
+function BuildingRentPartDetail:_getGuidePrice(data)
+    if data ~= nil then
+        local value = data.apartmentPrice[1]
+        self.m_data.guideData = value
+        local temp = ct.CalculationHouseCompetitivePower(value.avgPrice, self.m_data.rent, value.score, value.avgScore)
+        self.competValueText.text = temp
+    end
 end

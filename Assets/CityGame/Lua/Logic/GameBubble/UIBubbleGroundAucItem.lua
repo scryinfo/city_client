@@ -69,7 +69,7 @@ function UIBubbleGroundAucItem:initialize(data)
         --self.soon.transform.localScale = Vector3.zero
         self.now.gameObject:SetActive(true)
         self.soon.gameObject:SetActive(false)
-        self.groundGo = GAucModel._getValuableStartAucObj(groundConfigData)  --设置场景中的拍卖gameobject
+        self.groundGo = GAucModel._getValuableStartAucObj(groundDataManagerConfigData)  --设置场景中的拍卖gameobject
     else
         --self.now.transform.localScale = Vector3.zero
         --self.soon.transform.localScale = Vector3.one

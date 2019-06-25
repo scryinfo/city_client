@@ -113,6 +113,7 @@ end
 ---客户端请求---
 --打开原料厂
 function MaterialFactoryModel:m_ReqOpenMaterial(buildingId)
+    --FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
 end
 --改变建筑名字
@@ -186,6 +187,7 @@ end
 -------------------------------------------------------------服务器回调------------------------------------------------------------------
 --开业成功，再次请求建筑详情
 function MaterialFactoryModel:n_OnReceiveOpenBusiness(data)
+    --FlightMainModel.CloseFlightLoading()
     if data ~= nil and data.id == self.insId then
         self:m_ReqOpenMaterial(self.insId)
         Event.Brocast("SmallPop", GetLanguage(24020018), ReminderType.Succeed)  --开业成功提示
@@ -250,7 +252,19 @@ function MaterialFactoryModel:n_OnLineChangeInform(data)
     Event.Brocast("detailPartUpdateCapacity",data)
 end
 --货架购买
-function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data)
+function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
+    if msgId == 0 then
+        if data.reason == 16 then
+            Event.Brocast("SmallPop", "数量不足", ReminderType.Warning)
+            return
+        elseif data.reason == 15 then
+            Event.Brocast("SmallPop", "货架设置失败", ReminderType.Warning)
+            return
+        elseif data.reason == 17 then
+            Event.Brocast("SmallPop", "仓库不足", ReminderType.Warning)
+            return
+        end
+    end
     Event.Brocast("buySucceed",data)
     Event.Brocast("refreshShelfPartCount")
 end

@@ -250,7 +250,19 @@ function ProcessingFactoryModel:n_OnLineChangeInform(data)
     Event.Brocast("detailPartUpdateCapacity",data)
 end
 --货架购买
-function ProcessingFactoryModel:n_OnBuyShelfGoodsInfo(data)
+function ProcessingFactoryModel:n_OnBuyShelfGoodsInfo(data,msgId)
+    if msgId == 0 then
+        if data.reason == 16 then
+            Event.Brocast("SmallPop", "数量不足", ReminderType.Warning)
+            return
+        elseif data.reason == 15 then
+            Event.Brocast("SmallPop", "货架设置失败", ReminderType.Warning)
+            return
+        elseif data.reason == 17 then
+            Event.Brocast("SmallPop", "仓库不足", ReminderType.Warning)
+            return
+        end
+    end
     Event.Brocast("buySucceed",data)
     Event.Brocast("refreshShelfPartCount")
 end

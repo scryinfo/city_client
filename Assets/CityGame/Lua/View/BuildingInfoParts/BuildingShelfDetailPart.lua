@@ -375,15 +375,22 @@ function BuildingShelfDetailPart:wareHouseNoGoods(data)
     goods.n = data.item.n
     self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
 end
---货架购买成功后推送
-function BuildingShelfDetailPart:salesNotice(data)
+--货架变化推送
+function BuildingShelfDetailPart:salesNotice(data, msgid)
     if data ~= nil then
         for key,value in pairs(self.shelfDatas) do
             if value.dataInfo.k.id == data.itemId then
                 value.dataInfo.n = data.selledCount
                 value.dataInfo.price = data.selledPrice
                 value.dataInfo.autoReplenish = data.autoRepOn
-                value.numberText.text = data.selledCount
+                if data.autoRepOn == true then
+                    value.automaticBg.transform.localScale = Vector3.one
+                    value.numberBg.gameObject:SetActive(false)
+                else
+                    value.automaticBg.transform.localScale = Vector3.zero
+                    value.numberBg.gameObject:SetActive(true)
+                end
+                value.numberText.text = "×"..data.selledCount
                 value.priceText.text = GetClientPriceString(data.selledPrice)
             end
         end

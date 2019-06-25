@@ -101,13 +101,23 @@ function ClimateManager.Init()
     m_Hour = -1
     m_Timer = Timer.New(RefreshWeather, 20, -1, true)
     m_Timer.time = 0
-    m_Timer:Start()
-
     m_Rain = UnityEngine.GameObject.Find("CameraRoot/Effect/Effect_Rain")
     m_Snow = UnityEngine.GameObject.Find("CameraRoot/Effect/Effect_Snow")
 
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWeatherInfo"),ReceviedWeatherInfo)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryWeatherInfo","gs.Weather",ReceviedWeatherInfo)
+end
+
+function ClimateManager.Star()
+    if m_Timer ~= nil then
+        m_Timer:Start()
+    end
+end
+
+function ClimateManager.Stop()
+    if m_Timer ~= nil then
+        m_Timer:Stop()
+    end
 end
 
 --改变温度

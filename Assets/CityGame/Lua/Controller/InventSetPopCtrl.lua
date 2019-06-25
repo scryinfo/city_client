@@ -43,7 +43,6 @@ function InventSetPopCtrl:OnConfirm(ins)
 
         local price = GetServerPriceNumber(panel.price.text)
         local count = tonumber(panel.time.text)
-
         Event.Brocast("c_UpdateInventSet",count,price)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSetting',price,count)
@@ -66,11 +65,11 @@ end
 function InventSetPopCtrl:updateText(data)
     -- panel.mainText.text = GetLanguage(40010009)
     panel.referencePrice.text = data.recommendPrice
-    panel.pricee.text = GetLanguage(28040028)
-    panel.timee.text = GetLanguage(28040005)
+    panel.pricee.text = GetLanguage(27040012)
+    panel.timee.text = GetLanguage(28040047)
     panel.name.text = GetLanguage(27040010)
-    panel.external.text = GetLanguage(28040041)
-    panel.closeText.text = GetLanguage(28040042)
+    panel.external.text = GetLanguage(27040002)
+    panel.closeText.text = GetLanguage(27040001)
 
 end
 

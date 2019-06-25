@@ -39,7 +39,7 @@ function LineItem:initialize(lineDataInfo,prefab,luaBehaviour,buildingType)
 end
 function LineItem:InitializeData()
     self.nameText.text = GetLanguage(self.itemId)
-    self.stateText.text = "waiting"
+    self.stateText.text = GetLanguage(25030017)
     self.numberText.text = self.lineDataInfo.nowCount.."/"..self.lineDataInfo.targetCount
 
     local materialKey,goodsKey = 21,22

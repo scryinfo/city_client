@@ -63,7 +63,8 @@ function AddProductionLineBoxCtrl:InitializeData()
     AddProductionLineBoxPanel.tipText.transform.localScale = Vector3.zero
     AddProductionLineBoxPanel.numberText.text = "0/0"
     AddProductionLineBoxPanel.timeText.text = "00:00:00"
-    AddProductionLineBoxPanel.numberSlider.value = 0
+    AddProductionLineBoxPanel.numberSlider.value = 1
+    AddProductionLineBoxPanel.numberSlider.minValue = 1
     AddProductionLineBoxPanel.numberSlider.maxValue = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
     AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.nameText.text = GetLanguage(self.m_data.itemId)

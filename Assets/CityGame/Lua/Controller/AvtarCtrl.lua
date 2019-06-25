@@ -420,10 +420,17 @@ function AvtarCtrl:c_OnClick_confirm()
 
     if DataManager.GetFaceId() then
         if faceId ~= DataManager.GetFaceId() then
-            Event.Brocast("m_setRoleFaceId",faceId)
-            DataManager.SetFaceId(faceId)
+            --打开提示弹窗
+            local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
+                        content = GetLanguage(10040005),func = function()
+                    Event.Brocast("m_setRoleFaceId",faceId)
+                    DataManager.SetFaceId(faceId)
+                    UIPanel.ClosePage()
+                end  }
+            ct.OpenCtrl('NewReminderCtrl',data)
+        else
+            UIPanel.ClosePage()
         end
-        UIPanel.ClosePage()
     else
         if mySex == 1 then
             temp.gender = true

@@ -49,7 +49,6 @@ function Game.OnInitOK()
     ct.OpenCtrl('LoadingCtrl')--StopAndBuildCtrl--LoadingCtrl
     --ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 
-    ClimateManager.Init()
 end
 
 function Game.OnPostInitOK()

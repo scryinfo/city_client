@@ -74,6 +74,7 @@ function DeleteItemBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.numberSlider.maxValue = self.m_data.n
+    self.numberSlider.minValue = 1
     self.numberSlider.value = 1
     self.numberText.text = "×"..self.numberSlider.value
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then

@@ -44,6 +44,8 @@ function BuildingProductionDetailPart:RefreshData(data)
     end
     self.m_data = data
     self:_initFunc()
+    --获取最新的生产线数据
+    Event.Brocast("m_GetLineData",data.insId)
 end
 
 function BuildingProductionDetailPart:_ResetTransform()
@@ -172,12 +174,10 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
             self.goods.transform.localScale = Vector3.zero
             LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
             --生产一个需要的时间(毫秒)
-            --self.oneTotalTime = self:GetOneNumTime(Material[lineData[1].itemId].numOneSec,lineData[1].workerNum)
             self.oneTotalTime = self:GetOneNumTime(self:getNumOneSec(lineData[1].itemId))
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
             --生产一个需要的时间(毫秒)
-            --self.oneTotalTime = self:GetOneNumTime(Good[lineData[1].itemId].numOneSec,lineData[1].workerNum)
             self.oneTotalTime = self:GetOneNumTime(self:getNumOneSec(lineData[1].itemId))
             --如果是商品，判断原料等级
             if Good[lineData[1].itemId].luxury == 1 then
@@ -188,8 +188,10 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                 self.levelImg.color = getColorByVector3(threeLevel)
             end
             self.brandNameText.text = DataManager.GetCompanyName()
-            self.brandValue.text = self:getLineInfo(lineData[1].itemId,true)
-            self.qualityValue.text = self:getLineInfo(lineData[1].itemId,false)
+            --self.brandValue.text = self:getLineInfo(lineData[1].itemId,true)
+            --self.qualityValue.text = self:getLineInfo(lineData[1].itemId,false)
+            self.brandValue.text = lineData[1].brandScore
+            self.qualityValue.text = lineData[1].qtyScore
         end
         --当前生产中线开始的时间
         self.startTime = lineData[1].ts
@@ -199,7 +201,8 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         self.pastTime = self.serverNowTime - self.startTime
 
         self.timeSlider.maxValue = Math_Ceil(self.oneTotalTime / 1000)
-        self.timeSlider.value = Math_Ceil((self.oneTotalTime - (self.pastTime % self.oneTotalTime)) / 1000)
+        --self.timeSlider.value = (self.oneTotalTime - (self.pastTime % self.oneTotalTime)) / 1000
+        self.timeSlider.value = (self.pastTime % self.oneTotalTime) / 1000
         self.oneTimeText.text = self:GetStringTime((self.timeSlider.maxValue - self.timeSlider.value) * 1000)
 
         if self.Capacity == PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity then
@@ -283,10 +286,8 @@ function BuildingProductionDetailPart:GetTime(lineData)
         return "00:00:00"
     end
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        --self.time = remainingNum / (Material[lineData.itemId].numOneSec * lineData.workerNum)
         self.time = remainingNum / self:getNumOneSec(lineData.itemId)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        --self.time = remainingNum / (Good[lineData.itemId].numOneSec * lineData.workerNum)
         self.time = remainingNum / self:getNumOneSec(lineData.itemId)
     end
     local timeTable = getTimeBySec(self.time)
@@ -386,25 +387,36 @@ function BuildingProductionDetailPart:deleListLine(data)
         Event.Brocast("m_ReqprocessingDeleteLine",self.m_data.insId,data.lineId)
     end
 end
---添加生产线成功
+--查询生产线成功
 function BuildingProductionDetailPart:lineAddSucceed(data)
-    UIPanel.ClosePage()
+    self.m_data.line = data.line
     self:initializeUiInfoData(data.line)
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
 --置顶成功后调整位置
 function BuildingProductionDetailPart:SettopSuccess(data)
     --调整gameObject位置,实例表位置
+    local temporaryKey = nil
+    local temporaryValue = nil
     self.waitingQueueIns[1].placedTopBtn.transform.localScale = Vector3.one
     for key,value in pairs(self.waitingQueueIns) do
         if value.lineId == data.lineId then
             value.prefab.transform:SetSiblingIndex(1)
             value.placedTopBtn.transform.localScale = Vector3.zero
-            local temporaryValue = value
-            table.remove(self.waitingQueueIns,key)
-            table.insert(self.waitingQueueIns,1,temporaryValue)
+            temporaryKey = key
+            temporaryValue = value
         end
     end
+    for key,value in pairs(self.m_data.line) do
+        if value.lineId == data.lineId then
+            temporaryKey = key
+            temporaryValue = value
+        end
+    end
+    table.remove(self.self.m_data.line,temporaryKey)
+    table.insert(self.self.m_data.line,2,temporaryValue)
+    table.remove(self.waitingQueueIns,temporaryKey)
+    table.insert(self.waitingQueueIns,1,temporaryValue)
     Event.Brocast("SmallPop",GetLanguage(25030013), ReminderType.Succeed)
 end
 --刷新当前产量
@@ -456,7 +468,7 @@ function BuildingProductionDetailPart:saveMaterialOrGoodsInfo(data)
             self.materialOrGoodsInfo = data
             self.materialOrGoodsInfo.buildingType = self.m_data.buildingType
             self.materialOrGoodsInfo.mId = self.m_data.info.mId
-            self:initializeUiInfoData(self.m_data.line)
+            --self:initializeUiInfoData(self.m_data.line)
         else
             return
         end

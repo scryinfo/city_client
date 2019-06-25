@@ -20,7 +20,8 @@ function AddProductionLineCtrl:Awake(go)
 
     self.luabehaviour:AddClick(AddProductionLinePanel.returnBtn.gameObject,function()
         --查询当前生产线
-        Event.Brocast("m_GetLineData",self.m_data.buildingId)
+        --Event.Brocast("m_GetLineData",self.m_data.buildingId)
+        UIPanel.ClosePage()
     end,self)
     self:_addListener()
 end

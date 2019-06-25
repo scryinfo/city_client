@@ -482,6 +482,7 @@ function WalletCtrl:openScanningQRCode()
     self.scanQRCode.codePanel = self.scanQRCodeRoot:GetComponent("RectTransform")
     self.scanQRCode.qrStingText = self.addressInput
     self.scanQRCode:StartScanQRCode()
+    self.EthAddr = self.scanQRCode.qrStingText
 end
 --关闭扫描二维码
 function WalletCtrl:closeScanningQRCode()

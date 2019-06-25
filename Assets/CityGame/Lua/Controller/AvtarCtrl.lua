@@ -194,7 +194,12 @@ function AvtarCtrl:begin()
         --打开幸运值展示
         panel.luckyRoot.localScale = Vector3.one
         panel.luckyValue.text = DataManager.GetMyFlightScore()
-
+        --判断是否需要有按钮 this.cofirmBtn
+        if DataManager.GetMyFlightScore() < 10 then
+            panel.cofirmBtn.localScale = Vector3.zero
+        else
+            panel.cofirmBtn.localScale = Vector3.one
+        end
     else--无ID，为初始建号
         --性别默认为男
         mySex = 1

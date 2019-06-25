@@ -14,7 +14,7 @@ ClimateManager.WeatherIcon = nil        --天气图片
 ClimateManager.TimeSlotType = nil       --时间段
 
 --收到天气返回数据,对数据进行更新
-local function ReceviedWeatherInfo(data)
+function ClimateManager.ReceviedWeatherInfo(data)
     if data ~= nil then
         ClimateManager.ChangeTemperature(data.temp)
         ClimateManager.ChangeWeatherType(data.icon)
@@ -104,8 +104,8 @@ function ClimateManager.Init()
     m_Rain = UnityEngine.GameObject.Find("CameraRoot/Effect/Effect_Rain")
     m_Snow = UnityEngine.GameObject.Find("CameraRoot/Effect/Effect_Snow")
 
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWeatherInfo"),ReceviedWeatherInfo)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryWeatherInfo","gs.Weather",ReceviedWeatherInfo)
+    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWeatherInfo"),ReceviedWeatherInfo)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryWeatherInfo","gs.Weather",ClimateManager.ReceviedWeatherInfo)
 end
 
 function ClimateManager.Star()

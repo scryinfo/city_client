@@ -20,7 +20,7 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.RegisterErrorNetMsg()
     --网络回调
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryWeatherInfo","gs.Weather",self.n_OnWeatherInfo,self)  --天气信息
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryWeatherInfo","gs.Weather",self.n_OnWeatherInfo,self)  --天气信息
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newMailInform","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","incomeNotify","gs.IncomeNotify",self.n_GsIncomeNotify,self)--自己的收益情况

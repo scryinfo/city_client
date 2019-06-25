@@ -766,7 +766,7 @@ function GetEvaData(index, configData, lv)
 		if string.find(resultNum, ".") ~= nil then
 			resultNum = string.format( "%.2f", resultNum)
 		end
-		return resultNum .. "s/per"
+		return resultNum .. GetLanguage(31010042)
 	elseif configData.Btype == "PromotionAbility" then -- 推广能力
 		return math.floor((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum) .. "/h"
 	elseif configData.Btype == "InventionUpgrade" then -- 发明提升

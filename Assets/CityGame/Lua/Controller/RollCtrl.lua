@@ -184,7 +184,7 @@ end
 function RollCtrl:language()
     panel.count1.text = GetLanguage(28040024)
     panel.count2.text = GetLanguage(28040024)
-    panel.nametexts.text = GetLanguage(28040047)
+    panel.nametexts.text = GetLanguage(28040049)
     panel.evanametexts.text = GetLanguage(28040024)
     panel.congratulation1.text = GetLanguage(28040020)
     panel.congratulation2.text = GetLanguage(28040020)

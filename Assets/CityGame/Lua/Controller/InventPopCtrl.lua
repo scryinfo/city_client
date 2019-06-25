@@ -113,7 +113,7 @@ function InventPopCtrl:ChangeLan()
     panel.timeText.text = GetLanguage(28040006)
     panel.tips.text  = GetLanguage(28040008)
     panel.confimBtnText.text = GetLanguage(28040033)
-    panel.timeText1.text = GetLanguage(28040004)
+    panel.timeText1.text = GetLanguage(28040048)
     panel.tips1.text =  GetLanguage(28040008)
 end
 

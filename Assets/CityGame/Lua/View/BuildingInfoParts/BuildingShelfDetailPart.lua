@@ -375,7 +375,6 @@ function BuildingShelfDetailPart:wareHouseNoGoods(data)
 end
 --货架购买成功后推送
 function BuildingShelfDetailPart:salesNotice(data)
-    ----TODO 服务器在改
     local aaa = ""
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------

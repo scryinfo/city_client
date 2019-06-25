@@ -47,6 +47,7 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
 
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -95,6 +96,8 @@ function ProcessingFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
+
 
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -276,6 +279,10 @@ end
 --获取生产线
 function ProcessingFactoryModel:n_OnBuildingLineInfo(data)
     Event.Brocast("lineAddSucceed",data)
+end
+--货架购买数量推送
+function ProcessingFactoryModel:n_OnSalesNotice(data)
+    Event.Brocast("salesNotice",data)
 end
 ----自动补货
 --function ProcessingFactoryModel:n_OnSetAutoReplenish(data)

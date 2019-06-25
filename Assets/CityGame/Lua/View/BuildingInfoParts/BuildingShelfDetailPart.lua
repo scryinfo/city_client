@@ -22,6 +22,11 @@ function BuildingShelfDetailPart:Show(data)
     if next(self.shelfDatas) ~= nil then
         self:CloseDestroy(self.shelfDatas)
     end
+    Event.AddListener("salesNotice",self.salesNotice,self)
+end
+function BuildingShelfDetailPart:Hide()
+    BasePartDetail.Hide(self)
+    Event.RemoveListener("salesNotice",self.salesNotice,self)
 end
 function BuildingShelfDetailPart:RefreshData(data)
     if data == nil then
@@ -97,7 +102,6 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.AddListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.AddListener("getShelfInfoData",self.getShelfInfoData,self)
-    Event.AddListener("salesNotice",self.salesNotice,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
@@ -112,7 +116,6 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.RemoveListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.RemoveListener("getShelfInfoData",self.getShelfInfoData,self)
-    Event.RemoveListener("salesNotice",self.salesNotice,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()

@@ -261,7 +261,7 @@ function ProcessingFactoryModel:n_OnBuyShelfGoodsInfo(data,msgId)
             return
         elseif data.reason == 15 then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架设置失败",func = function()
+                        content = "货架购买失败",func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)

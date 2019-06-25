@@ -8,7 +8,7 @@ local m_TimeOffset = nil
 --同步服务器时间
 function  TimeSynchronized.SynchronizationServerTime(ServerTime)
     if m_TimeOffset == nil then
-        ClimateManager.Init()
+        --ClimateManager.Init()
     end
     m_TimeOffset = ServerTime - tolua.gettime() * 1000
 

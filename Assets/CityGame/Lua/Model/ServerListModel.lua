@@ -153,6 +153,8 @@ function ServerListModel:n_OnRoleLogin(pMsg)
         --logDebug(pMsg.role.lockedMoney)
         --logDebug(pMsg.role.offlineTs)
         --logDebug(pMsg.role.position)
+        --启动天气
+        ClimateManager.Star()
     end
 end
 

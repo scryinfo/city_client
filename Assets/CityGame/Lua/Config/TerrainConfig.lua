@@ -12,7 +12,7 @@ TerrainConfig = {
         ["CameraScaleValueMax"] = 15,           --相机缩放y轴高度最远距离
     },
     ["CentralBuilding"] ={
-        ["CenterNodePos"] = Vector3.New(49 ,0,49),
+        ["CenterNodePos"] = Vector3.New(45 ,0,47),
         ["BuildingType"]  = 2000000,
     },
     ["MiniMap"] = {

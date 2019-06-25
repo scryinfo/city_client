@@ -411,6 +411,7 @@ end
 --打开详情
 function WalletCtrl:openDetails()
     self.DetailsContent.transform.localScale = Vector3.one
+    Event.Brocast("ReqDetails",self.userId)
 end
 --关闭详情
 function WalletCtrl:closeDetails()

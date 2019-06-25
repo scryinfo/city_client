@@ -125,6 +125,7 @@ function AdvertisementPartDetail:_initFunc()
         end
         local buildingType = {[1] = 1300, [2] = 1400}
 
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_promotionGuidePrice',self.m_data.insId,myOwnerID) --获取推荐价格
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromotionItemInfo',self.m_data.insId,goodIds) --获取商品推广能力
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,typeIds) --请求商品的推广能力
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_queryPromoCurAbilitys',self.m_data.insId,buildingType) --请求建筑的推广能力

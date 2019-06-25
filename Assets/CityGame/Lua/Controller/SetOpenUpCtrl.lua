@@ -20,6 +20,8 @@ function SetOpenUpCtrl:Awake()
     setOpenUpBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.xBtn,self.OnxBtn,self);
     setOpenUpBehaviour:AddClick(SetOpenUpPanel.confirm,self.OnConfirm,self);
+    setOpenUpBehaviour:AddClick(SetOpenUpPanel.infoBtn,self.OnInfoBtn,self);
+    setOpenUpBehaviour:AddClick(SetOpenUpPanel.closeTooltip,self.OnCloseTooltip,self);
     SetOpenUpPanel.open.onValueChanged:AddListener(function(isOn)
         self:OnOpen(isOn)
     end)
@@ -39,6 +41,9 @@ function SetOpenUpCtrl:Active()
     SetOpenUpPanel.pricePlaceholder.text = GetLanguage(27040012)
     SetOpenUpPanel.timePlaceholder.text = GetLanguage(27040011)
     SetOpenUpPanel.closeText.text = GetLanguage(27040001)
+    SetOpenUpPanel.conpetitivebessText.text = GetLanguage(43010001)
+    SetOpenUpPanel.title.text = GetLanguage(43060001)
+    SetOpenUpPanel.content.text = GetLanguage(43060002)
 end
 
 function SetOpenUpCtrl:Refresh()
@@ -112,6 +117,16 @@ function SetOpenUpCtrl:OnConfirm(go)
             end
         end
     end
+end
+
+function SetOpenUpCtrl:OnInfoBtn()
+    SetOpenUpPanel.tooltip.localScale = Vector3.one
+    SetOpenUpPanel.closeTooltip.transform.localScale = Vector3.one
+end
+
+function SetOpenUpCtrl:OnCloseTooltip()
+    SetOpenUpPanel.tooltip.localScale = Vector3.zero
+    SetOpenUpPanel.closeTooltip.transform.localScale = Vector3.zero
 end
 
 --关闭界面

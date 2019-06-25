@@ -32,4 +32,13 @@ function SetOpenUpPanel.InitPanel()
     this.closeText = transform:Find("set/close/closeText"):GetComponent("Text")
     this.confirm = transform:Find("set/confirm").gameObject
 
+    --竞争力
+    this.conpetitivebessText = transform:Find("set/conpetitivebess/conpetitivebessText"):GetComponent("Text")
+    this.value = transform:Find("set/conpetitivebess/valueText"):GetComponent("Text")
+    this.infoBtn = transform:Find("set/conpetitivebess/infoBtn").gameObject
+    this.tooltip = transform:Find("set/conpetitivebess/infoBtn/info/tooltip")
+    this.title = transform:Find("set/conpetitivebess/infoBtn/info/tooltip/title"):GetComponent("Text")
+    this.content = transform:Find("set/conpetitivebess/infoBtn/info/tooltip/content"):GetComponent("Text")
+    this.closeTooltip = transform:Find("set/closeTooltip").gameObject
+
 end

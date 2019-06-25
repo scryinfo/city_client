@@ -97,8 +97,7 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.AddListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.AddListener("getShelfInfoData",self.getShelfInfoData,self)
-    --推送
-    --Event.AddListener("salesNotice",self.salesNotice,self)
+    Event.AddListener("salesNotice",self.salesNotice,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
@@ -113,7 +112,7 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.RemoveListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.RemoveListener("getShelfInfoData",self.getShelfInfoData,self)
-    --Event.RemoveListener("salesNotice",self.salesNotice,self)
+    Event.RemoveListener("salesNotice",self.salesNotice,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -375,7 +374,17 @@ function BuildingShelfDetailPart:wareHouseNoGoods(data)
 end
 --货架购买成功后推送
 function BuildingShelfDetailPart:salesNotice(data)
-    local aaa = ""
+    if data ~= nil then
+        for key,value in pairs(self.shelfDatas) do
+            if value.dataInfo.k.id == data.itemId then
+                value.dataInfo.n = data.selledCount
+                value.dataInfo.price = data.selledPrice
+                value.dataInfo.autoReplenish = data.autoRepOn
+                value.numberText.text = data.selledCount
+                value.priceText.text = GetClientPriceString(data.selledPrice)
+            end
+        end
+    end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取仓库里某个商品的数量

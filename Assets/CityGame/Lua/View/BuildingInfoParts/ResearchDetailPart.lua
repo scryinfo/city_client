@@ -73,8 +73,8 @@ function ResearchDetailPart:RefreshData(data)
     self:creatInvent()
 
     self:onClick_good(self)
-    self:updateUI(data)
     self:updateLanguage()
+    self:updateUI(data)
 
     --获取推荐价格
     DataManager.ModelSendNetMes("gscode.OpCode", "laboratoryGuidePrice","gs.LaboratoryMsg",{buildingId = self.m_data.insId , playerId = DataManager.GetMyOwnerID()})
@@ -135,14 +135,22 @@ function ResearchDetailPart:updateUI(data)
     else
         self.setBtn.localScale = Vector3.zero
     end
-
+    if data.exclusive == false then
+        self.bgtitleText.text = GetLanguage(27040002)
+    else
+        self.bgtitleText.text = GetLanguage(27040001)
+    end
     --self.goods.localScale = Vector3.one
     --self.evaIma.localScale = Vector3.zero
 
     self:onClick_good(self)
-
-    self.timeCountText.text = data.sellTimes
-    self.priceCountText.text = GetClientPriceString(data.pricePreTime)
+    if data.exclusive == false then
+        self.timeCountText.text = data.sellTimes
+        self.priceCountText.text = GetClientPriceString(data.pricePreTime)
+    else
+        self.priceCountText.text = ""
+        self.timeCountText.text = ""
+    end
 
     if data.inProcess then
         self.queneCountText.text = #( data.inProcess )
@@ -219,7 +227,7 @@ function ResearchDetailPart:onClick_good(ins)
     ins.evaRoot.localScale = Vector3.zero
     ins.goods.localScale = Vector3.one
     ins.evaIma.localScale = Vector3.zero
-    ins.oodsCountText.text = tostring(ins.m_data.probGood.."%".."("..ins.m_data.probGoodAdd.."%"..")")
+    ins.oodsCountText.text = tostring(ins.m_data.probGood .."%".."("..ins.m_data.probGoodAdd * 100 .."%"..")")
 end
 --研究eva
 function ResearchDetailPart:onClick_eva(ins)
@@ -227,7 +235,7 @@ function ResearchDetailPart:onClick_eva(ins)
     ins.type="eva"
     ins.goods.localScale = Vector3.zero
     ins.evaIma.localScale = Vector3.one
-    ins.oodsCountText.text = tostring(ins.m_data.probEva.."%".."("..ins.m_data.probEvaAdd.."%"..")")
+    ins.oodsCountText.text = tostring(ins.m_data.probEva .."%".."("..ins.m_data.probEvaAdd * 100 .."%"..")")
 end
 --设置
 function ResearchDetailPart:onClick_set(ins)

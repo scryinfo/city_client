@@ -28,6 +28,7 @@ function RetailStoresModel:OnCreate()
     Event.AddListener("m_ReqRetailStoresAddShoppingCart",self.m_ReqAddShoppingCart,self)
     Event.AddListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
     Event.AddListener("m_GetShelfData",self.m_GetShelfData,self)
+    Event.AddListener("m_GetRetailGiodePrice",self.m_GetRetailGiodePrice,self)
 
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailRetailShop","gs.RetailShop",self.n_OnOpenRetailStores)
@@ -45,6 +46,7 @@ function RetailStoresModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","retailGuidePrice","gs.GoodSummary",self.n_OnRetailGuidePrice)
 
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -68,6 +70,7 @@ function RetailStoresModel:Close()
     Event.RemoveListener("m_ReqRetailStoresAddShoppingCart",self.m_ReqAddShoppingCart,self)
     Event.RemoveListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
     Event.RemoveListener("m_GetShelfData",self.m_GetShelfData,self)
+    Event.RemoveListener("m_GetRetailGiodePrice",self.m_GetRetailGiodePrice,self)
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailRetailShop","gs.RetailShop",self.n_OnOpenRetailStores)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
@@ -84,6 +87,7 @@ function RetailStoresModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","retailGuidePrice","gs.GoodSummary",self.n_OnRetailGuidePrice)
 
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -138,6 +142,10 @@ end
 --获取货架数据
 function RetailStoresModel:m_GetShelfData(buildingId)
     self.funModel:m_GetShelfData(buildingId)
+end
+--获取加工厂参考价格
+function RetailStoresModel:m_GetRetailGiodePrice(buildingId,playerId)
+    self.funModel:m_GetRetailGiodePrice(buildingId,playerId)
 end
 ----自动补货
 --function RetailStoresModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
@@ -216,7 +224,11 @@ end
 function RetailStoresModel:n_OnGetShelfData(data)
     Event.Brocast("getShelfInfoData",data)
 end
---自动补货
+--获取零售店参考价格
+function RetailStoresModel:n_OnRetailGuidePrice(data)
+    Event.Brocast("getRetailGuidePrice",data)
+end
+----自动补货
 function RetailStoresModel:n_OnSetAutoReplenish(data)
     local aaa = data
 end

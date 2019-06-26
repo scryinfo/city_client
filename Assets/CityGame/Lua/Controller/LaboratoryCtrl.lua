@@ -29,7 +29,7 @@ function LaboratoryCtrl:Awake(go)
     --self.luaBehaviour:AddClick(panel.changeNameBtn.gameObject, self._changeName, self)
 
     self.luaBehaviour:AddClick(panel.centerBtn.gameObject, self._centerBtnFunc, self)
---    self.luaBehaviour:AddClick(panel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
+    --    self.luaBehaviour:AddClick(panel.stopIconBtn.gameObject, self._openBuildingBtnFunc, self)
 
     Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
@@ -104,7 +104,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     --开业停业信息
     Event.Brocast("c_GetBuildingInfo", info)
     if info.state == "OPERATE" then
-       -- panel.stopRootTran.localScale = Vector3.zero
+        -- panel.stopRootTran.localScale = Vector3.zero
         --判断是自己还是别人打开了界面
         if info.ownerId ~= DataManager.GetMyOwnerID() then
             self:other(buildingInfo)

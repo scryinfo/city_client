@@ -148,6 +148,9 @@ function WalletCtrl:_getComponent(go)
     self.QRCodeContent = go.transform:Find("QRCodeContent")
     self.QRCodeCloseBtn = go.transform:Find("QRCodeContent/top/closeBtn")
     self.QRCodeTopName = go.transform:Find("QRCodeContent/top/topName"):GetComponent("Text")
+    self.QRCodeAmount = go.transform:Find("QRCodeContent/content/amount"):GetComponent("Text")
+    self.QRCodeMoney = go.transform:Find("QRCodeContent/content/money"):GetComponent("Text")
+    self.QRCodeText = go.transform:Find("QRCodeContent/content/Text"):GetComponent("Text")
     self.QRCodeImg = go.transform:Find("QRCodeContent/content/QRCode"):GetComponent("Image")
     self.QRCodeAddressText = go.transform:Find("QRCodeContent/content/addressBg/addressText"):GetComponent("Text")
     self.copyBtn = go.transform:Find("QRCodeContent/content/addressBg/copyBtn")
@@ -246,6 +249,8 @@ function WalletCtrl:_language()
     self.agreeText.text = GetLanguage(33010007)
     self.detailsTopName.text = GetLanguage(33040001)
     self.emptyText.text = GetLanguage(33040007)
+    self.QRCodeAmount.text = GetLanguage(33020024)
+    self.QRCodeText.text = GetLanguage(33020013)
 end
 --初始化打开钱包时
 function WalletCtrl:defaultPanel()
@@ -386,11 +391,11 @@ end
 --前往CashBoxs
 function WalletCtrl:_clickQRCodeConfirmBtn(ins)
     PlayMusEff(1002)
-    local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
-                content = GetLanguage(33020018),func = function()
-            UIPanel.ClosePage()
-        end  }
-    ct.OpenCtrl('NewReminderCtrl',data)
+    --local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
+    --            content = GetLanguage(33020018),func = function()
+    --        UIPanel.ClosePage()
+    --    end  }
+    --ct.OpenCtrl('NewReminderCtrl',data)
 end
 -----------------------------------------------------------------------监听函数-----------------------------------------------------------------------
 --检测两次输入密码是否相同
@@ -513,6 +518,7 @@ function WalletCtrl:openQRCode(data)
     self:closeRechargeAmountContent()
     self.QRCodeContent.transform.localScale = Vector3.one
     --self.QRCodeImg
+    self.purchaseId = data.RechargeRequestRes.PurchaseId   --订单Id
     self.scanQRCode:CreateQRCode(data.RechargeRequestRes.EthAddr)
     self.timmer= 0
     self.QRCodeAddressText.text = data.RechargeRequestRes.EthAddr

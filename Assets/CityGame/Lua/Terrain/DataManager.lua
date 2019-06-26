@@ -939,16 +939,15 @@ function DataManager.RegisterErrorNetMsg()
         --该消息监听的无参回调如果有
         msgErrId_RegisterErrorNetMsg = pbl.enum('common.OpCode','error')
         if ModelNetMsgStack[protoData.opcode] ~= nil then
-            if ModelNetMsgStack[protoData.opcode]["NoParameters"] ~= nil  then
-                tb_RegisterErrorNetMsg = ModelNetMsgStack[protoData.opcode]["NoParameters"]
-                for i, funcTable in pairs(tb_RegisterErrorNetMsg) do
-                    if funcTable.self ~= nil then
-                        funcTable.func(funcTable.self,protoData,msgErrId_RegisterErrorNetMsg)
-                    else
-                        funcTable.func(protoData,msgErrId_RegisterErrorNetMsg)
+                tb_RegisterErrorNetMsg = ModelNetMsgStack[protoData.opcode]
+                for ins, functions in pairs(tb_RegisterErrorNetMsg) do
+                    if functions ~= nil then
+                        for i, func in pairs(functions) do
+                            func(BuildDataStack.DetailModelStack[ins],protoData,msgErrId_RegisterErrorNetMsg)
+                        end
                     end
                 end
-            end
+                return
         else
             info_RegisterErrorNetMsg = {}
             info_RegisterErrorNetMsg.titleInfo = "未注册处理方法的网络错误"
@@ -957,7 +956,7 @@ function DataManager.RegisterErrorNetMsg()
             info_RegisterErrorNetMsg.tipInfo = ""
             ct.OpenCtrl("ErrorBtnDialogPageCtrl", info_RegisterErrorNetMsg)
         end
-
+        --无参回调
         for i=#ModelNetMsgStackNoIns[protoData.opcode],1,-1 do
             local fun = ModelNetMsgStackNoIns[protoData.opcode][i]
             if fun.ins == nil then

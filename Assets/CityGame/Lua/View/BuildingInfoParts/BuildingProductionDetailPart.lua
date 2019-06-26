@@ -233,7 +233,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         end
         --判断当前有没有代生产队列
         if #lineData == 1 then
-            self.noLineTip.text = GetLanguage(20060005)
+            self.noLineTip.text = GetLanguage(25030012)
             self.noLineTip.transform.localScale = Vector3.one
         elseif #lineData > 1 then
             self.noLineTip.transform.localScale = Vector3.zero
@@ -413,8 +413,8 @@ function BuildingProductionDetailPart:SettopSuccess(data)
             temporaryValue = value
         end
     end
-    table.remove(self.self.m_data.line,temporaryKey)
-    table.insert(self.self.m_data.line,2,temporaryValue)
+    table.remove(self.m_data.line,temporaryKey)
+    table.insert(self.m_data.line,2,temporaryValue)
     table.remove(self.waitingQueueIns,temporaryKey)
     table.insert(self.waitingQueueIns,1,temporaryValue)
     Event.Brocast("SmallPop",GetLanguage(25030013), ReminderType.Succeed)

@@ -865,11 +865,24 @@ end
 function ct.CalculationMaterialCompetitivePower(recommendedPricing,price,materialID)
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
-		recommendedPricing = 11 * PRIDMagnification + materialID
+		recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
 	end
 	--竞争力 = 推荐定价 / 定价 * 1000 (整数)
 	return  CalculationNBitAfterDecimalPoint((recommendedPricing/ price * CPMagnification ))
 end
+
+---计算原料厂推荐定价
+--推荐定价:recommendedPricing
+--原料ID：materialID（7位ID）
+function ct.CalculationMaterialSuggestPrice(recommendedPricing,materialID)
+	if recommendedPricing <= 0 then
+		--推荐定价 = 推荐定价表
+		recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
+		return recommendedPricing
+	end
+	return recommendedPricing
+end
+
 
 ---计算推广公司竞争力
 --推荐定价:recommendedPricing
@@ -919,12 +932,21 @@ end
 function ct.CalculationFactoryCompetitivePower(recommendedPricing,price,commodityID,commodityScore,averageSalesScore)
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
-		recommendedPricing = 12 * PRIDMagnification + commodityID
+		recommendedPricing = Competitive[12 * PRIDMagnification + commodityID]
 		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
 		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification))
 	end
 	--竞争力 = (全城成交均价 * 玩家商品评分)/ (定价 * 销售均评分) * 1000 (整数)
 	return  CalculationNBitAfterDecimalPoint(((recommendedPricing * commodityScore)/ ( price * averageSalesScore) * CPMagnification))
+end
+
+---计算加工厂推荐定价
+function ct.CalculationProcessingSuggestPrice(recommendedPricing,goodsID)
+	if recommendedPricing <= 0 then
+		recommendedPricing = Competitive[12 * PRIDMagnification + goodsID]
+		return recommendedPricing
+	end
+	return recommendedPricing
 end
 
 ---计算零售店竞争力
@@ -944,6 +966,15 @@ function ct.CalculationSupermarketCompetitivePower(recommendedPricing,price,comm
 	end
 	--竞争力 = (推荐定价 * (玩家商品评分+玩家店铺评分))/ (定价 * (全城销售均商品评分+全城销售均店铺评分)) * 1000
 	return CalculationNBitAfterDecimalPoint(((recommendedPricing * (commodityScore + shopScore))/ ( price * (averageSalesScore + averageShopScore)) * CPMagnification))
+end
+
+---计算零售店推荐定价
+function ct.CalculationRetailSuggestPrice(recommendedPricing,goodsID)
+	if recommendedPricing <= 0 then
+		recommendedPricing = Competitive[12 * PRIDMagnification + goodsID]
+		return recommendedPricing
+	end
+	return recommendedPricing
 end
 
 ---计算住宅竞争力

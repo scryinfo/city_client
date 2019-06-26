@@ -305,17 +305,28 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
         --刷新当前仓库最新数据，用来更新详情界面
-        for key,value in pairs(self.storeInfoData.inHand) do
-            if value.key.id == data.iKey.id then
-                value.n = value.n + 1
-            end
-        end
+        --if self.storeInfoData.inHand ~= nil then
+        --    for key,value in pairs(self.storeInfoData.inHand) do
+        --        if value.key.id == data.iKey.id then
+        --            value.n = value.n + 1
+        --        end
+        --    end
+        --end
+        --if self.storeInfoData.locked ~= nil then
+        --    for key,value in pairs(self.storeInfoData.locked) do
+        --        if value.key.id == data.iKey.id then
+        --            value.n = value.n + 1
+        --        end
+        --    end
+        --end
         --刷新仓库界面
-        for key,value in pairs(self.warehouseDatas) do
-            if value.itemId == data.iKey.id then
-                value.dataInfo.n = value.dataInfo.n + 1
-                value.numberText.text = "×"..value.dataInfo.n
-                return
+        if self.warehouseDatas ~= nil then
+            for key,value in pairs(self.warehouseDatas) do
+                if value.itemId == data.iKey.id then
+                    value.dataInfo.n = value.dataInfo.n + 1
+                    value.numberText.text = "×"..value.dataInfo.n
+                    return
+                end
             end
         end
         --local dataInfo = {}

@@ -428,37 +428,43 @@ end
 --删除正在生产中的线
 function BuildingProductionDetailPart:updateNowLine(data)
     if data ~= nil then
-        if data.lineId == self.m_data.line[1].id then
-            table.remove(self.m_data.line,1)
-            self.time = nil
-            UpdateBeat:Remove(self.Update,self)
-            --清空生产队列Item数据
-            if next(self.waitingQueueIns) ~= nil then
-                self:CloseDestroy(self.waitingQueueIns)
-            end
-            --重新初始化界面及数据
-            self:initializeUiInfoData(self.m_data.line)
-            Event.Brocast("SmallPop",GetLanguage(25030011), ReminderType.Succeed)
-        else
-            --清空生产队列Item数据
-            if next(self.waitingQueueIns) ~= nil then
-                for key,value in pairs(self.waitingQueueIns) do
-                    if value.lineId == data.lineId then
-                        self:updateListLine(key)
-                        table.remove(self.m_data.line,key +1)
-                    end
-                end
-            end
-            if next(self.waitingQueueIns) ~= nil then
-                for key,value in pairs(self.waitingQueueIns) do
-                    if key == 1 then
-                        value.placedTopBtn.transform.localScale = Vector3.zero
-                    else
-                        value.placedTopBtn.transform.localScale = Vector3.one
-                    end
-                end
-            end
+        --if data.lineId == self.m_data.line[1].id then
+        --    table.remove(self.m_data.line,1)
+        --    self.time = nil
+        --    UpdateBeat:Remove(self.Update,self)
+        --    --清空生产队列Item数据
+        --    if next(self.waitingQueueIns) ~= nil then
+        --        self:CloseDestroy(self.waitingQueueIns)
+        --    end
+        --    --重新初始化界面及数据
+        --    self:initializeUiInfoData(self.m_data.line)
+        --    Event.Brocast("SmallPop",GetLanguage(25030011), ReminderType.Succeed)
+        --else
+        --    --清空生产队列Item数据
+        --    if next(self.waitingQueueIns) ~= nil then
+        --        for key,value in pairs(self.waitingQueueIns) do
+        --            if value.lineId == data.lineId then
+        --                self:updateListLine(key)
+        --                table.remove(self.m_data.line,key +1)
+        --            end
+        --        end
+        --    end
+        --    if next(self.waitingQueueIns) ~= nil then
+        --        for key,value in pairs(self.waitingQueueIns) do
+        --            if key == 1 then
+        --                value.placedTopBtn.transform.localScale = Vector3.zero
+        --            else
+        --                value.placedTopBtn.transform.localScale = Vector3.one
+        --            end
+        --        end
+        --    end
+        --end
+        --清空生产队列Item数据
+        if next(self.waitingQueueIns) ~= nil then
+            self:CloseDestroy(self.waitingQueueIns)
         end
+        --获取最新的生产线数据
+        Event.Brocast("m_GetLineData",data.buildingId)
     end
 end
 --缓存获取到当前建筑Eva加点后的生产速度(原料信息，商品信息)

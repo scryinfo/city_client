@@ -275,6 +275,7 @@ function WalletCtrl:defaultPanel()
         self.PasswordContent.transform.localScale = Vector3.zero
         --self.DeclarationContent.transform.localScale = Vector3.zero
         self.DeclarationContent.gameObject:SetActive(false)
+        self.moneyText.text = DataManager.GetMoneyByString()
     end
 end
 -------------------------------------------------------------点击函数---------------------------------------------------------------------------------
@@ -337,7 +338,8 @@ function WalletCtrl:_clickRechargeConfirmBtn(ins)
     end
     local data = {}
     data.userId = ins.userId
-    data.amount = tostring(ins.rechargeMoneyInput.text)
+    data.amount = tostring(tonumber(ins.rechargeMoneyInput.text)/1000000)
+    data.type = "topUp"
     ct.OpenCtrl("WalletBoxCtrl",data)
 end
 --关闭密码弹窗（新加）
@@ -372,7 +374,11 @@ function WalletCtrl:_clickDetailsConfirmBtn(ins)
         Event.Brocast("SmallPop",GetLanguage(33030012), ReminderType.Warning)
         return
     end
-    Event.Brocast("ReqDisChargeOrder",ins.userId)
+
+    local data = {}
+    data.userId = ins.userId
+    data.type = "withdraw"
+    ct.OpenCtrl("WalletBoxCtrl",data)
 end
 --请求提币并获取验证码
 function WalletCtrl:_clickGetBtn(ins)
@@ -397,7 +403,7 @@ function WalletCtrl:_clickQRCodeConfirmBtn(ins)
     --    end  }
     --ct.OpenCtrl('NewReminderCtrl',data)
 
-    CityLuaUtil.openCashbox("0.5",ins.ethAddr,ins.moneyPurchaseId)
+    CityLuaUtil.openCashbox(ins.TopUpMoney,ins.moneyEthAddr,ins.moneyPurchaseId)
 end
 -----------------------------------------------------------------------监听函数-----------------------------------------------------------------------
 --检测两次输入密码是否相同
@@ -421,7 +427,7 @@ function WalletCtrl:saveAmount()
     if self.moneyInput.text == "" then
         self.moneyInput.text = 0
     end
-    self.Amount = self.moneyInput.text
+    self.Amount = tonumber(self.moneyInput.text) / 1000000
     self.poundageText.text = GetLanguage(33030002 ,"E" .. GetClientPriceString(tonumber(self.moneyInput.text) * 0.003 * 10000),0.3)
     self.proportionMontyText.text = getMoneyString(tonumber(self.moneyInput.text) * (1/1000000))
 end
@@ -439,7 +445,8 @@ function WalletCtrl:inputMoney()
     if self.rechargeMoneyInput.text == "" then
         self.rechargeMoneyInput.text = 0
     end
-   self.DDDText.text = getMoneyString(tonumber(self.rechargeMoneyInput.text) * (1/1000000)) .. "(DDD)"
+    self.TopUpMoney = self.rechargeMoneyInput.text
+    self.DDDText.text = getMoneyString(tonumber(self.rechargeMoneyInput.text) * (1/1000000)) .. "(DDD)"
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开用户协议
@@ -519,8 +526,10 @@ end
 function WalletCtrl:openQRCode(data)
     self:closeRechargeAmountContent()
     self.QRCodeContent.transform.localScale = Vector3.one
+    self.QRCodeMoney.text = getMoneyString(GetClientPriceString(self.TopUpMoney * 10000)) .. "(DDD)"
     --self.QRCodeImg
     self.moneyPurchaseId = data.RechargeRequestRes.PurchaseId   --订单Id
+    self.moneyEthAddr = data.RechargeRequestRes.EthAddr   --地址
     self.scanQRCode:CreateQRCode(data.RechargeRequestRes.EthAddr)
     self.timmer= 0
     self.QRCodeAddressText.text = data.RechargeRequestRes.EthAddr
@@ -541,6 +550,7 @@ end
 --关闭二维码
 function WalletCtrl:closeQRCode()
     self.QRCodeContent.transform.localScale = Vector3.zero
+    self.QRCodeMoney.text = 0.0000 .. "(DDD)"
     os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png")
     os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png.meta")
 end
@@ -593,18 +603,18 @@ end
 function WalletCtrl:reqTopUpSucceed(data)
     if data then
         self:openQRCode(data)
-        Event.Brocast("SmallPop", "操作成功", ReminderType.Succeed)
+        Event.Brocast("SmallPop", GetLanguage(33020021,self.TopUpMoney), ReminderType.Succeed)
     end
 end
 --提币订单请求成功
-function WalletCtrl:reqDisChargeOrderSucceed(data)
+function WalletCtrl:reqDisChargeOrderSucceed(data,passWard)
     if data ~= nil then
         ---封装一个方法，打开手机验证---
         self:openPhoneCode()
         -------------------------------------------------------------
         self.PurchaseId = data.PurchaseId
         local serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
-        local privateKeyStr = self:parsing()
+        local privateKeyStr = ct.GetPrivateKeyLocal(passWard)
         self.sm = City.signer_ct.New()
         local pubkey = self.sm.GetPublicKeyFromPrivateKey(privateKeyStr)
         self.pubkeyStr = self.sm.ToHexString(pubkey)

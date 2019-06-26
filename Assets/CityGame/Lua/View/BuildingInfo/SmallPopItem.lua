@@ -16,20 +16,18 @@ SmallPopItem.endPOS=Vector2.New(0,462)
 
 SmallPopItem.POS=Vector2.New(0,797)
 
-local prefabTrans;
-
 
 ---初始化方法   数据（读配置表）
 function SmallPopItem:initialize(string,type,prefab,mgr)
-    prefabTrans=prefab.transform:GetComponent("RectTransform");
+    self.prefabTrans=prefab.transform:GetComponent("RectTransform");
     self.tipText=prefab.transform:Find("textbg/tipText"):GetComponent("Text");
 
     self.textBgTrans=prefab.transform:Find("textbg"):GetComponent("RectTransform")
-    prefabTrans.anchoredPosition=Vector2.New(0,797)
+    self.prefabTrans.anchoredPosition=Vector2.New(0,797)
     self.tipText.text=string
     self.tipTextTrans=prefab.transform:Find("textbg/tipText"):GetComponent("RectTransform")
 
-    prefabTrans:DOAnchorPos(SmallPopItem.endPOS, 0.5);
+    self.prefabTrans:DOAnchorPos(SmallPopItem.endPOS, 0.5);
 
     self.timenow= 3
 
@@ -55,7 +53,7 @@ function SmallPopItem:_update()
     self.timenow = self.timenow - UnityEngine.Time.unscaledDeltaTime
     if  self.timenow <= 0  then
         self.timenow = 3
-        prefabTrans.anchoredPosition=Vector2.New(0,797);
+        self.prefabTrans.anchoredPosition=Vector2.New(0,797);
         UpdateBeat:Remove(self._update, self);
     end
 end

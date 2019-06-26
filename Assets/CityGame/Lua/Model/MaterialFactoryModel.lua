@@ -118,7 +118,6 @@ end
 ---客户端请求---
 --打开原料厂
 function MaterialFactoryModel:m_ReqOpenMaterial(buildingId)
-    --FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
 end
 --改变建筑名字
@@ -147,6 +146,7 @@ function MaterialFactoryModel:m_ReqShelfDel(buildingId,itemId,num,producerId,qty
 end
 --添加生产线
 function MaterialFactoryModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
 end
 --删除生产线
@@ -159,6 +159,7 @@ function MaterialFactoryModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,
 end
 --销毁仓库原料或商品
 function MaterialFactoryModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
 end
 --生产线置顶
@@ -196,7 +197,6 @@ end
 -------------------------------------------------------------服务器回调------------------------------------------------------------------
 --开业成功，再次请求建筑详情
 function MaterialFactoryModel:n_OnReceiveOpenBusiness(data)
-    --FlightMainModel.CloseFlightLoading()
     if data ~= nil and data.id == self.insId then
         self:m_ReqOpenMaterial(self.insId)
         Event.Brocast("SmallPop", GetLanguage(24020018), ReminderType.Succeed)  --开业成功提示
@@ -293,6 +293,7 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
 end
 --销毁仓库原料或商品
 function MaterialFactoryModel:n_OnDelItemInfo(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("deleteSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end
@@ -319,6 +320,7 @@ function MaterialFactoryModel:n_OnGetShelfData(data)
 end
 --获取生产线
 function MaterialFactoryModel:n_OnBuildingLineInfo(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("lineAddSucceed",data)
 end
 --货架购买数量推送

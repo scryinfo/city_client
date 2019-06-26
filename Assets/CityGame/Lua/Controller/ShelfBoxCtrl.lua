@@ -34,6 +34,7 @@ function ShelfBoxCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.addShelfBtn.gameObject,self._clickAddShelfBtn,self)
     self.luaBehaviour:AddClick(self.downShelfBtn.gameObject,self._clickDownShelfBtn,self)
     self.luaBehaviour:AddClick(self.confirmBtn.gameObject,self._clickConfirmBtn,self)
+    self.luaBehaviour:AddClick(self.tipPriceBtn.gameObject,self._clickTipPriceBtn,self)
 
     self.automaticSwitch.onValueChanged:AddListener(function()
         self:ToggleUndateText()
@@ -293,6 +294,10 @@ function ShelfBoxCtrl:_clickConfirmBtn(ins)
         data.number = ins.numberSlider.maxValue
     end
     Event.Brocast("modifyShelfInfo",data)
+end
+--点击打开竞争力提示
+function ShelfBoxCtrl:_clickTipPriceBtn(ins)
+
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置提示开关

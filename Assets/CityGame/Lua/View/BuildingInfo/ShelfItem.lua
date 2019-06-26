@@ -30,6 +30,9 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,st
     self.nameBg = prefab.transform:Find("nameBg")
     self.nameText = prefab.transform:Find("nameBg/nameText"):GetComponent("Text")
 
+    ----竞争力
+    self.Text = prefab.transform:Find("goods/detailsBg/scoreBg/Image/Text"):GetComponent("Text")
+
     --需要隐藏的商品信息
     self.goods = prefab.transform:Find("goods")
     self.levelImg = prefab.transform:Find("goods/levelImg"):GetComponent("Image")
@@ -64,11 +67,32 @@ function ShelfItem:InitializeData()
     self.priceText.text = GetClientPriceString(self.dataInfo.price)
     local materialKey,goodsKey = 21,22
     if ToNumber(StringSun(self.itemId,1,2)) == materialKey then
-        self.goods.transform.localScale = Vector3.zero
+        self.goods.transform.localScale = Vector3.one
+        self.brandNameText.text = GetLanguage(self.itemId)
+        self.levelImg.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3(-140,-100,0)
         LoadSprite(Material[self.itemId].img,self.iconImg,false)
+
+        local function callback(a)
+            self.Text.text = ct.CalculationMaterialCompetitivePower(a,self.dataInfo.price,self.itemId)
+        end
+        Event.Brocast("getShelfItemGuidePrice",self.itemId,callback)
+
     elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
+        if self.buildingType == BuildingType.ProcessingFactory then
+            local function callback(a,b,c)
+                self.Text.text = ct.CalculationFactoryCompetitivePower(a,self.dataInfo.price,self.itemId,b,c)
+            end
+            Event.Brocast("getShelfItemProcessing",self.itemId,callback)
+        elseif self.buildingType == BuildingType.RetailShop then
+            local function callbacks(a,b,c,d,e)
+                self.Text.text = ct.CalculationSupermarketCompetitivePower(a,self.dataInfo.price,self.itemId,d,e,b,c)
+            end
+            Event.Brocast("getRetailItemGuidePrice",self.m_data.itemId,callbacks)
+        end
+
         self.goods.transform.localScale = Vector3.one
+        self.levelImg.transform.localScale = Vector3.one
         LoadSprite(Good[self.itemId].img,self.iconImg,false)
         --如果是商品，判断原料等级
         if Good[self.itemId].luxury == 1 then

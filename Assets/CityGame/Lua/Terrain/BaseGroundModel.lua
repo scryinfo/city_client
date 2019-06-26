@@ -20,9 +20,12 @@ function BaseGroundModel:Refresh(data)
     if nil ~= DataManager.GetMyOwnerID() and self.Data.ownerId == DataManager.GetMyOwnerID() and data.ownerId ~= DataManager.GetMyOwnerID() then
         DataManager.RemoveMyGroundInfo(data)
     end
-    --for key, value in pairs(data) do
-    --    self.Data[key] = value
-    --end
+    --判断自己租到的地不属于自己了
+    --自己ID不等于nil，本来租赁人属于自己,现在不是自己
+    if nil ~= DataManager.GetMyOwnerID() and self.Data.rent ~= nil and self.Data.rent.renterId == DataManager.GetMyOwnerID() then
+        DataManager.RemoveMyRentGroundInfo(data)
+    end
+
     self:CheckGroundTransSuccess(data)
     self.Data = data
     UIBubbleManager.startBubble()

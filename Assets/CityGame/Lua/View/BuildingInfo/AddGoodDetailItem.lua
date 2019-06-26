@@ -25,12 +25,10 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     local tempData
     if data.itemType == 0 then
         tempData = Material[data.itemId]
-        LoadSprite(Material[data.itemId].img,self.iconImg,false)
     else
         tempData = Good[data.itemId]
-        LoadSprite(Good[data.itemId].img,self.iconImg,false)
     end
-    self.nameText.text = GetLanguage(data.itemId)
+    AddProductionLineMgr.SetBuildingIconSpite(tempData.img, self.iconImg)
     --self.numberText.text = HomeProductionLineItem.GetInventoryNum(data.itemId)
     self.toggle.onValueChanged:RemoveAllListeners()
     self.toggle.onValueChanged:AddListener(function(isOn)
@@ -39,6 +37,7 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
             self.data.backFunc(self.data.itemId, self.viewRect.transform.position,stateData.enableShow)  --显示中间的线路
         end
     end)
+    self:_language()
 end
 --根据itemId去查状态
 function AddGoodDetailItem:_showState(itemId)
@@ -68,7 +67,11 @@ end
 function AddGoodDetailItem:getItemId()
     return self.data.itemId
 end
-
+--
 function AddGoodDetailItem:getItemPos()
     return self.viewRect.transform.position
+end
+--
+function AddGoodDetailItem:_language()
+    self.nameText.text = GetLanguage(self.data.itemId)
 end

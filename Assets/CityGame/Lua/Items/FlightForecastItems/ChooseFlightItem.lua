@@ -32,7 +32,7 @@ function ChooseFlightItem:initData(data)
     self.trueStartTimeText.text = self:_getSecondStr(data.FlightDeptimeDate)  --实际起飞时间
     self.planArriveTimeText.text = self:_getSecondStr(data.FlightArrtimePlanDate)  --计划到达时间
     self.trueArriveTimeText.text = self:_getSecondStr(data.FlightArrtimeDate)  --实际到达时间
-    self.stateText.text = data.FlightState  --状态
+    self.stateText.text = GetLanguage(FlightStateConfig[data.FlightState])  --状态
 end
 --获得xx分xx秒格式的时间
 function ChooseFlightItem:_getSecondStr(str)

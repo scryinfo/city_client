@@ -34,12 +34,16 @@ function ShelfBoxCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.addShelfBtn.gameObject,self._clickAddShelfBtn,self)
     self.luaBehaviour:AddClick(self.downShelfBtn.gameObject,self._clickDownShelfBtn,self)
     self.luaBehaviour:AddClick(self.confirmBtn.gameObject,self._clickConfirmBtn,self)
+    self.luaBehaviour:AddClick(self.tipPriceBtn.gameObject,self._clickTipPriceBtn,self)
 
     self.automaticSwitch.onValueChanged:AddListener(function()
         self:ToggleUndateText()
     end)
     self.numberSlider.onValueChanged:AddListener(function()
         self:SlidingUpdateText()
+    end)
+    self.priceInput.onValueChanged:AddListener(function()
+        self:InputUpdateText()
     end)
 end
 
@@ -89,17 +93,44 @@ function ShelfBoxCtrl:_getComponent(go)
     self.btnImage = go.transform:Find("contentRoot/content/detailsInfo/automaticSwitch/btnImage")
     self.priceTip = go.transform:Find("contentRoot/content/detailsInfo/price"):GetComponent("Text")
     self.priceInput = go.transform:Find("contentRoot/content/detailsInfo/priceInput"):GetComponent("InputField")
-    self.advicePrice = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tip"):GetComponent("Text")
+    self.advicePrice = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tip")
     self.advicePriceText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/priceText"):GetComponent("Text")
+    self.CompetitivenessText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/priceText/Text"):GetComponent("Text")
+    self.tipPriceBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBtn")
+
     self.tipPriceDetailsBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipPriceDetailsBtn")
     --bottom
     self.downShelfBtn = go.transform:Find("contentRoot/bottom/downShelfBtn")
     self.addShelfBtn = go.transform:Find("contentRoot/bottom/addShelfBtn")
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn")
+
+
 end
 --------------------------------------------------------------------------初始化--------------------------------------------------------------------------
 --初始化UI数据
 function ShelfBoxCtrl:initializeUiInfoData()
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
+        local function callbacks(b)
+            self.guidePrice = b
+        end
+        Event.Brocast("getShelfItemGuidePrice",self.m_data.itemId,callbacks)
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+        local function callbacks(a,b,c)
+            self.averagePrice = a --平均价
+            self.averageScore = b --平均分
+            self.score = c        --评分
+        end
+        Event.Brocast("getShelfItemProcessing",self.m_data.itemId,callbacks)
+    elseif self.m_data.buildingType == BuildingType.RetailShop then
+        local function callbacks(a,b,c,d,e)
+            self.averagePrice = a --平均价
+            self.averageScore = b --平均分
+            self.averageBuildingScore = c        --评分
+            self.playerGoodsScore = d            --玩家商品评分
+            self.playerBuildingScore = e         --玩家店铺评分
+        end
+        Event.Brocast("getRetailItemGuidePrice",self.m_data.itemId,callbacks)
+    end
     local materialKey,goodsKey = 21,22
     if Math_Floor(self.m_data.itemId / 100000) == materialKey then
         self.popularity.transform.localScale = Vector3.zero
@@ -133,7 +164,6 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.popularityValue.text = self.m_data.dataInfo.k.brandScore
             self.qualityValue.text = self.m_data.dataInfo.k.qualityScore
         end
-
     end
     local function callback(a)
         --缓存一个值，修改数量时使用
@@ -180,11 +210,16 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.minValue = 1
         self.numberSlider.value = 1
         self.numberText.text = "×"..self.numberSlider.value
-        self.priceInput.text = "0"
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            self.priceInput.text = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            self.priceInput.text = ct.CalculationProcessingSuggestPrice(self.averagePrice / 10000,self.m_data.itemId)
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            self.priceInput.text = ct.CalculationRetailSuggestPrice(self.averagePrice / 10000,self.m_data.itemId)
+        end
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.tipBg.transform.localScale = Vector3.zero
-    self.advicePriceText.text = "0.0000"
 end
 --设置多语言
 function ShelfBoxCtrl:_language()
@@ -260,6 +295,10 @@ function ShelfBoxCtrl:_clickConfirmBtn(ins)
     end
     Event.Brocast("modifyShelfInfo",data)
 end
+--点击打开竞争力提示
+function ShelfBoxCtrl:_clickTipPriceBtn(ins)
+
+end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置提示开关
 function ShelfBoxCtrl:openTipText(isBool)
@@ -294,6 +333,20 @@ end
 --滑动条更新文本
 function ShelfBoxCtrl:SlidingUpdateText()
     self.numberText.text = "×"..self.numberSlider.value
+end
+--输入框
+function ShelfBoxCtrl:InputUpdateText()
+    if self.priceInput.text == nil or self.priceInput.text == "" then
+        return
+    else
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            self.advicePriceText.text = ct.CalculationMaterialCompetitivePower(self.guidePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            self.advicePriceText.text = ct.CalculationFactoryCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,self.averageScore,self.score)
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            self.advicePriceText.text = ct.CalculationSupermarketCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,self.playerGoodsScore,self.playerBuildingScore,self.averageScore,self.averageBuildingScore)
+        end
+    end
 end
 --上架时检查操作是否成功
 function ShelfBoxCtrl:WhetherValidShelfOp(ins)

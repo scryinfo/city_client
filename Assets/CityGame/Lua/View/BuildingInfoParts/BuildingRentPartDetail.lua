@@ -87,13 +87,13 @@ function BuildingRentPartDetail:_getComponent(transform)
     self.competValueText = transform:Find("Root/competRoot/valueText"):GetComponent("Text")
     self.competBtn = transform:Find("Root/competRoot/infoBtn"):GetComponent("Button")
     self.competitivenessRoot = transform:Find("Root/competitivenessRoot")
-    self.competitivenessBtn = transform:Find("Root/competitivenessRoot/btn"):GetComponent("Button")
+    self.competitivenessBtn = transform:Find("Root/competitivenessRoot/tooltip"):GetComponent("Button")
 
     self.occupancyText01 = transform:Find("Root/Text01"):GetComponent("Text")
     self.rentText02 = transform:Find("Root/Text02"):GetComponent("Text")
-    self.competValueText03 = transform:Find("Root/competRoot/valueText"):GetComponent("Text")
-    self.competitivenessText04 = transform:Find("Root/competitivenessRoot/Text01"):GetComponent("Text")
-    self.competitivenessText05 = transform:Find("Root/competitivenessRoot/Text02"):GetComponent("Text")
+    self.competValueText03 = transform:Find("Root/competRoot/Text"):GetComponent("Text")
+    self.competitivenessText04 = transform:Find("Root/competitivenessRoot/tooltip/title"):GetComponent("Text")
+    self.competitivenessText05 = transform:Find("Root/competitivenessRoot/tooltip/content"):GetComponent("Text")
 end
 --
 function BuildingRentPartDetail:clickCloseBtn()

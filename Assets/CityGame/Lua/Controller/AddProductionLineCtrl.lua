@@ -19,26 +19,26 @@ function AddProductionLineCtrl:Awake(go)
     self.luabehaviour = self.gameObject:GetComponent('LuaBehaviour')
 
     self.luabehaviour:AddClick(AddProductionLinePanel.returnBtn.gameObject,function()
-        --查询当前生产线
-        --Event.Brocast("m_GetLineData",self.m_data.buildingId)
         UIPanel.ClosePage()
     end,self)
     self:_addListener()
 end
+--
 function AddProductionLineCtrl:Active()
     UIPanel.Active(self)
     AddProductionLinePanel.nameText.text = GetLanguage(25030002)
 end
-
+--
 function AddProductionLineCtrl:Refresh()
     self:_initData()
 end
+--
 function AddProductionLineCtrl:_addListener()
     Event.AddListener("leftSetCenter", self.leftSetCenter, self)
     Event.AddListener("rightSetCenter", self.rightSetCenter, self)
-    Event.AddListener("c_new_changeAddlineData", self._changeAddLineData, self)
+    --Event.AddListener("c_new_changeAddlineData", self._changeAddLineData, self)
 end
-
+--
 function AddProductionLineCtrl:_initData()
     AddProductionLineCtrl.goodLv = DataManager.GetMyGoodLv()
     local data = {}

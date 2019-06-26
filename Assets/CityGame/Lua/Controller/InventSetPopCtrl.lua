@@ -11,9 +11,13 @@ end
 function InventSetPopCtrl:bundleName()
     return "Assets/CityGame/Resources/View/InventSetPopPanel.prefab";
 end
+function InventSetPopCtrl:Active()
+    UIPanel.Active(self)
+end
 
 function InventSetPopCtrl:Refresh()
     local data = self.m_data.ins.m_data
+
     self:updateText(data)
     self:UpDateUI(data)
 end
@@ -22,13 +26,22 @@ function InventSetPopCtrl:Awake(go)
     panel = InventSetPopPanel
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
 
-    LuaBehaviour:AddClick(panel.xBtn,self.OnxBtn,self);
-    LuaBehaviour:AddClick(panel.confirm,self.OnConfirm,self);
+    LuaBehaviour:AddClick(panel.xBtn,self.OnxBtn,self)
+    LuaBehaviour:AddClick(panel.confirm,self.OnConfirm,self)
+    LuaBehaviour:AddClick(panel.infoBtn,self.OnInfo,self)
+
     panel.open.onValueChanged:AddListener(function(isOn)
         self:OnOpen(isOn)
     end)
-
+    InventSetPopPanel.price.onValueChanged:AddListener(function()
+        self:OnPrice(self)
+    end)
 end
+
+function InventSetPopCtrl:Hide()
+    UIPanel.Hide(self)
+end
+
 ---====================================================================================点击函数==============================================================================================
 
 --设置
@@ -43,12 +56,13 @@ function InventSetPopCtrl:OnConfirm(ins)
 
         local price = GetServerPriceNumber(panel.price.text)
         local count = tonumber(panel.time.text)
-        Event.Brocast("c_UpdateInventSet",count,price)
+        --Event.Brocast("c_UpdateInventSet",count,price)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSetting',price,count)
     else
-        Event.Brocast("c_UpdateInventSet",0,0)
+        --Event.Brocast("c_UpdateInventSet",0,0)
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSettings',isopen)
+        DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_labSetting', 0, 0)
     end
     UIPanel.ClosePage()
 end
@@ -57,7 +71,15 @@ function InventSetPopCtrl:OnxBtn()
     UIPanel.ClosePage()
 end
 
-
+function InventSetPopCtrl:OnInfo(go)
+    if go.isOpenTips then
+        go.isOpenTips = false
+        InventSetPopPanel.tooltip.localScale = Vector3.zero
+    else
+        go.isOpenTips = true
+        InventSetPopPanel.tooltip.localScale = Vector3.one
+    end
+end
 
 ---====================================================================================业务逻辑==============================================================================================
 
@@ -70,19 +92,29 @@ function InventSetPopCtrl:updateText(data)
     panel.name.text = GetLanguage(27040010)
     panel.external.text = GetLanguage(27040002)
     panel.closeText.text = GetLanguage(27040001)
-
+    panel.conpetitivebessText.text = GetLanguage(43010001)
+    panel.title.text = GetLanguage(43050001)
+    panel.content.text = GetLanguage(43050002)
 end
 
 function InventSetPopCtrl:UpDateUI(data)
-    panel.price.text = ""
     panel.time.text = ""
+    self.isOpenTips = true
+    self:OnInfo(self)
+
     self.openUp =  not data.exclusive
+
+    if panel.open.isOn == self.openUp then
+        self:OnOpen(self.openUp)
+    end
+
     if self.openUp then
         panel.open.isOn = true
         panel.openBtn.anchoredPosition = Vector3.New(88, 0, 0)
         panel.close.localScale = Vector3.zero
     else
         panel.open.isOn = false
+        panel.price.text = "0"
         panel.openBtn.anchoredPosition = Vector3.New(2, 0, 0)
         panel.close.localScale = Vector3.one
     end
@@ -91,10 +123,26 @@ end
 --开启对外开放
 function InventSetPopCtrl:OnOpen(isOn)
     if isOn then
+        InventSetPopPanel.conpetitivebess.localScale = Vector3.one
         panel.openBtn.anchoredPosition = Vector3.New(88,0,0)
         panel.close.localScale = Vector3.zero
+        if self.m_data.ins.m_data.pricePreTime > 0 then
+            panel.price.text = GetClientPriceString(self.m_data.ins.m_data.pricePreTime)
+        else
+            panel.price.text = GetClientPriceString(ct.CalculationLaboratorySuggestPrice(self.m_data.ins.m_data.guidePrice, self.m_data.ins.m_data.RDAbility))
+        end
     else
+        InventSetPopPanel.conpetitivebess.localScale = Vector3.zero
         panel.openBtn.anchoredPosition = Vector3.New(2,0,0)
         panel.close.localScale = Vector3.one
     end
+end
+
+--输入价格
+function InventSetPopCtrl:OnPrice()
+    if InventSetPopPanel.price.text == "" then
+        InventSetPopPanel.price.text = 0
+    end
+    local temp = InventSetPopPanel.price.text
+    InventSetPopPanel.value.text = ct.CalculationLaboratoryCompetitivePower(self.m_data.ins.m_data.guidePrice, GetServerPriceNumber(temp), self.m_data.ins.m_data.RDAbility)
 end

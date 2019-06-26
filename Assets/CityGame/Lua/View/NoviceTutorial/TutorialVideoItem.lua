@@ -12,7 +12,7 @@ function TutorialVideoItem:initialize(prefab, data)
     self.data = data
     local transform = prefab.transform
 
-    transform:Find("VideoNameText"):GetComponent("Text").text = data.videoName
+    transform:Find("VideoNameText"):GetComponent("Text").text = GetLanguage(data.videoName)
     LoadSprite(data.imgPath, transform:Find("VideoImage"):GetComponent("Image"), true)
 
     self.btn = transform:GetComponent("Button")

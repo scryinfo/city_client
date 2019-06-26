@@ -30,7 +30,7 @@ end
 --
 function FlightRuleDialogPageCtrl:_getComponent(go)
     self.titleText = go.transform:Find("root/Text01"):GetComponent("Text")
-    self.valueText = go.transform:Find("root/bg04/valueText"):GetComponent("Text")
+    self.valueText = go.transform:Find("root/bg04/scroll/Viewport/Content/valueText"):GetComponent("Text")
     self.checkBtn = go.transform:Find("root/checkBtn")
 end
 --

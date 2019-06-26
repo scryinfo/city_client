@@ -61,7 +61,7 @@ function InputDialogPageCtrl:_initData()
 
     self.titleText.text = self.m_data.titleInfo
     self.rentInput.text = ""
-    self.errorTipRoot.localScale = Vector3.zero
+    self.errorTipRoot.localScale = Vector3.one
     if self.m_data.inputDefaultStr ~= nil then
         self.rentInputPlaceholderText.text = self.m_data.inputDefaultStr
     else

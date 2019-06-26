@@ -102,3 +102,18 @@ function BuildingBaseModel:m_GetLineData(buildingId)
     local lMsg = {id = buildingId}
     DataManager.ModelSendNetMes("gscode.OpCode","getLineData","gs.Id",lMsg)
 end
+--获取原料参考价格
+function BuildingBaseModel:m_GetMaterialGuidePrice(buildingId,playerId)
+    local lMsg = {buildingId = buildingId,playerId = playerId}
+    DataManager.ModelSendNetMes("gscode.OpCode","materialGuidePrice","gs.GoodSummary",lMsg)
+end
+--获取商品参考价格
+function BuildingBaseModel:m_GetProcessingGuidePrice(buildingId,playerId)
+    local lMsg = {buildingId = buildingId,playerId = playerId}
+    DataManager.ModelSendNetMes("gscode.OpCode","produceGuidePrice","gs.GoodSummary",lMsg)
+end
+--获取零售店参考价格
+function BuildingBaseModel:m_GetRetailGiodePrice(buildingId,playerId)
+    local lMsg = {buildingId = buildingId,playerId = playerId}
+    DataManager.ModelSendNetMes("gscode.OpCode","retailGuidePrice","gs.GoodSummary",lMsg)
+end

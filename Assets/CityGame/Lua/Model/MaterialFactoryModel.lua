@@ -29,6 +29,7 @@ function MaterialFactoryModel:OnCreate()
     Event.AddListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
     Event.AddListener("m_GetShelfData",self.m_GetShelfData,self)
     Event.AddListener("m_GetLineData",self.m_GetLineData,self)
+    Event.AddListener("m_GetMaterialGuidePrice",self.m_GetMaterialGuidePrice,self)
     Event.AddListener("m_ReqBuildingMaterialInfo",self.m_ReqBuildingMaterialInfo,self)
 
     --网络回调
@@ -47,6 +48,7 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","materialGuidePrice","gs.GoodSummary",self.n_OnMaterialGuidePrice)
 
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -79,6 +81,8 @@ function MaterialFactoryModel:Close()
     Event.RemoveListener("m_GetShelfData",self.m_GetShelfData,self)
     Event.RemoveListener("m_GetLineData",self.m_GetLineData,self)
     Event.RemoveListener("m_ReqBuildingMaterialInfo",self.m_ReqBuildingMaterialInfo,self)
+    Event.RemoveListener("m_GetMaterialGuidePrice",self.m_GetMaterialGuidePrice,self)
+
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
@@ -96,6 +100,7 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","materialGuidePrice","gs.GoodSummary",self.n_OnMaterialGuidePrice)
 
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -176,6 +181,10 @@ end
 function MaterialFactoryModel:m_GetLineData(buildingId)
     self.funModel:m_GetLineData(buildingId)
 end
+--获取原料参考价格
+function MaterialFactoryModel:m_GetMaterialGuidePrice(buildingId,playerId)
+    self.funModel:m_GetMaterialGuidePrice(buildingId,playerId)
+end
 ----自动补货
 --function MaterialFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
 --    self.funModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
@@ -206,6 +215,7 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
     end
     DataManager.ControllerRpcNoRet(self.insId,"MaterialFactoryCtrl", 'refreshMaterialDataInfo',stream)
     --self:m_ReqBuildingMaterialInfo(self.insId)
+    --self:m_GetMaterialGuidePrice(stream.insId,stream.info.ownerId)
     --UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",DataManager.GetMyPersonalHomepageInfo().id)
     UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",stream)
 end
@@ -314,6 +324,10 @@ end
 --货架购买数量推送
 function MaterialFactoryModel:n_OnSalesNotice(data)
     Event.Brocast("salesNotice",data)
+end
+--获取原料参考价格
+function MaterialFactoryModel:n_OnMaterialGuidePrice(data)
+    Event.Brocast("getShelfGuidePrice",data)
 end
 ----添加购物车
 --function MaterialFactoryModel:n_OnAddShoppingCart(data)

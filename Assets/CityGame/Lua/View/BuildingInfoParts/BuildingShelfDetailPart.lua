@@ -35,6 +35,14 @@ function BuildingShelfDetailPart:RefreshData(data)
     self.m_data = data
     self:_initFunc()
     self.shelfInfoData = {}
+    if data.buildingType == BuildingType.MaterialFactory then
+        Event.Brocast("m_GetMaterialGuidePrice",data.insId,data.info.ownerId)
+    elseif data.buildingType == BuildingType.ProcessingFactory then
+        Event.Brocast("m_GetProcessingGuidePrice",data.insId,data.info.ownerId)
+    elseif data.buildingType == BuildingType.RetailShop then
+        Event.Brocast("m_GetRetailGiodePrice",data.insId,data.info.ownerId)
+    end
+
     --获取最新的货架数据
     Event.Brocast("m_GetShelfData",data.insId)
 end
@@ -102,6 +110,12 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.AddListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.AddListener("getShelfInfoData",self.getShelfInfoData,self)
+    Event.AddListener("getShelfGuidePrice",self.getShelfGuidePrice,self)
+    Event.AddListener("getShelfProcessingGuidePrice",self.getShelfProcessingGuidePrice,self)
+    Event.AddListener("getRetailGuidePrice",self.getRetailGuidePrice,self)
+    Event.AddListener("getShelfItemGuidePrice",self.getShelfItemGuidePrice,self)
+    Event.AddListener("getShelfItemProcessing",self.getShelfItemProcessing,self)
+    Event.AddListener("getRetailItemGuidePrice",self.getRetailItemGuidePrice,self)
 end
 
 function BuildingShelfDetailPart:_RemoveEvent()
@@ -116,6 +130,12 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.RemoveListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.RemoveListener("getShelfInfoData",self.getShelfInfoData,self)
+    Event.RemoveListener("getShelfGuidePrice",self.getShelfGuidePrice,self)
+    Event.RemoveListener("getShelfProcessingGuidePrice",self.getShelfProcessingGuidePrice,self)
+    Event.RemoveListener("getRetailGuidePrice",self.getRetailGuidePrice,self)
+    Event.RemoveListener("getShelfItemGuidePrice",self.getShelfItemGuidePrice,self)
+    Event.RemoveListener("getShelfItemProcessing",self.getShelfItemProcessing,self)
+    Event.RemoveListener("getRetailItemGuidePrice",self.getRetailItemGuidePrice,self)
 end
 
 function BuildingShelfDetailPart:_initFunc()
@@ -396,6 +416,18 @@ function BuildingShelfDetailPart:salesNotice(data, msgid)
         end
     end
 end
+--原料参考价格
+function BuildingShelfDetailPart:getShelfGuidePrice(data)
+    self.guideMaterialPrice = data
+end
+--加工厂参考价格
+function BuildingShelfDetailPart:getShelfProcessingGuidePrice(data)
+    self.guideProcessingPrice = data
+end
+--零售店参考价格
+function BuildingShelfDetailPart:getRetailGuidePrice(data)
+    self.guideRetailPrice = data
+end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取仓库里某个商品的数量
 --(后边要修改)
@@ -412,5 +444,39 @@ function BuildingShelfDetailPart:getShelfItemIdCount(itemId,callback)
             end
         end
         callback(nowCount)
+    end
+end
+--获取原料某个商品的推荐价格
+function BuildingShelfDetailPart:getShelfItemGuidePrice(itemId,callback)
+    if itemId ~= nil then
+        if not self.guideMaterialPrice or next(self.guideMaterialPrice) ~= nil then
+            for key,value in pairs(self.guideMaterialPrice.goodMap) do
+                if value.itemId[1] == itemId then
+                    return callback(value.gudePrice[1])
+                end
+            end
+        end
+    end
+end
+--获取加工厂某个商品的推荐价格
+function BuildingShelfDetailPart:getShelfItemProcessing(itemId,callback)
+    if not self.guideProcessingPrice or next(self.guideProcessingPrice) ~= nil then
+        for key,value in pairs(self.guideProcessingPrice.goodMap) do
+            if value.itemId[1] == itemId then
+                return callback(value.gudePrice[1],value.gudePrice[2],value.gudePrice[3])
+            end
+        end
+    end
+end
+--获取零售店某个商品的推荐价格
+function BuildingShelfDetailPart:getRetailItemGuidePrice(itemId,callback)
+    if itemId ~= nil then
+        if not self.guideRetailPrice or next(self.guideRetailPrice) ~= nil then
+            for key,value in pairs(self.guideRetailPrice.goodMap) do
+                if value.itemId[1] == itemId then
+                    return callback(value.gudePrice[1],value.gudePrice[2],value.gudePrice[3],value.gudePrice[4],value.gudePrice[5])
+                end
+            end
+        end
     end
 end

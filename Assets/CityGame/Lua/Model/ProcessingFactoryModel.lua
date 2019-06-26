@@ -29,6 +29,7 @@ function ProcessingFactoryModel:OnCreate()
     Event.AddListener("m_GetWarehouseData",self.m_GetWarehouseData,self)
     Event.AddListener("m_GetShelfData",self.m_GetShelfData,self)
     Event.AddListener("m_GetLineData",self.m_GetLineData,self)
+    Event.AddListener("m_GetProcessingGuidePrice",self.m_GetProcessingGuidePrice,self)
     Event.AddListener("m_ReqBuildingGoodsInfo",self.m_ReqBuildingGoodsInfo,self)
 
     --网络回调
@@ -48,6 +49,7 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","produceGuidePrice","gs.GoodSummary",self.n_OnProcessingGuidePrice)
 
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -79,6 +81,8 @@ function ProcessingFactoryModel:Close()
     Event.RemoveListener("m_GetShelfData",self.m_GetShelfData,self)
     Event.RemoveListener("m_ReqBuildingGoodsInfo",self.m_ReqBuildingGoodsInfo,self)
     Event.RemoveListener("m_GetLineData",self.m_GetLineData,self)
+    Event.RemoveListener("m_GetProcessingGuidePrice",self.m_GetProcessingGuidePrice,self)
+
 
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
@@ -97,7 +101,7 @@ function ProcessingFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
-
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","produceGuidePrice","gs.GoodSummary",self.n_OnProcessingGuidePrice)
 
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -176,6 +180,10 @@ end
 --获取生产线
 function ProcessingFactoryModel:m_GetLineData(buildingId)
     self.funModel:m_GetLineData(buildingId)
+end
+--获取加工厂参考价格
+function ProcessingFactoryModel:m_GetProcessingGuidePrice(buildingId,playerId)
+    self.funModel:m_GetProcessingGuidePrice(buildingId,playerId)
 end
 ----自动补货
 --function ProcessingFactoryModel:m_ReqSetAutoReplenish(buildingId,itemId,producerId,qty,autoRepOn)
@@ -308,6 +316,10 @@ end
 --货架购买数量推送
 function ProcessingFactoryModel:n_OnSalesNotice(data)
     Event.Brocast("salesNotice",data)
+end
+--获取加工厂参考价格
+function ProcessingFactoryModel:n_OnProcessingGuidePrice(data)
+    Event.Brocast("getShelfProcessingGuidePrice",data)
 end
 ----自动补货
 --function ProcessingFactoryModel:n_OnSetAutoReplenish(data)

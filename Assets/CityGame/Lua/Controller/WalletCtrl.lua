@@ -396,6 +396,8 @@ function WalletCtrl:_clickQRCodeConfirmBtn(ins)
     --        UIPanel.ClosePage()
     --    end  }
     --ct.OpenCtrl('NewReminderCtrl',data)
+
+    CityLuaUtil.openCashbox("0.5",ins.ethAddr,ins.moneyPurchaseId)
 end
 -----------------------------------------------------------------------监听函数-----------------------------------------------------------------------
 --检测两次输入密码是否相同
@@ -518,7 +520,7 @@ function WalletCtrl:openQRCode(data)
     self:closeRechargeAmountContent()
     self.QRCodeContent.transform.localScale = Vector3.one
     --self.QRCodeImg
-    self.purchaseId = data.RechargeRequestRes.PurchaseId   --订单Id
+    self.moneyPurchaseId = data.RechargeRequestRes.PurchaseId   --订单Id
     self.scanQRCode:CreateQRCode(data.RechargeRequestRes.EthAddr)
     self.timmer= 0
     self.QRCodeAddressText.text = data.RechargeRequestRes.EthAddr

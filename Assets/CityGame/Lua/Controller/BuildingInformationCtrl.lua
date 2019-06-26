@@ -291,7 +291,7 @@ function BuildingInformationCtrl:initializeButtonInfo()
         self.switchBtn.transform.localScale = Vector3.zero
         self.modifyImg.transform.localScale = Vector3.zero
         --self.buildingName:GetComponent("Button").interactable = false
-        self.buildingName.localScale = Vector3.zero
+        self.buildingName.transform.localScale = Vector3.zero
     end
 end
 --默认打开建筑信息

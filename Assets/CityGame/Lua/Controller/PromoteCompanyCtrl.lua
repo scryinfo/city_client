@@ -113,7 +113,6 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
             end
             PromoteCompanyPanel.groupTrans.localScale = Vector3.one
             PromoteCompanyPanel.queue.transform.localScale = Vector3.one
-            PromoteCompanyPanel.open.transform.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else -- 未营业

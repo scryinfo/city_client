@@ -89,6 +89,8 @@ function PromoteBuildingExtensionCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_ClosePromoteBuildingExtension",self.c_ClosePromoteBuildingExtension,self)
     PromoteBuildingExtensionPanel.title.text = ""
+    PromoteBuildingExtensionPanel.time.text = ""
+    PromoteBuildingExtensionPanel.otherTime.text = ""
 end
 
 function PromoteBuildingExtensionCtrl:OnCreate(obj)

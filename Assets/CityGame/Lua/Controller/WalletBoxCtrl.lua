@@ -40,7 +40,10 @@ function WalletBoxCtrl:_getComponent(go)
     self.topText = go.transform:Find("contentRoot/topBg/topText"):GetComponent("Text")
     self.passwordInput = go.transform:Find("contentRoot/passwordInput"):GetComponent("InputField")
     self.undoBtn = go.transform:Find("contentRoot/undoBtn")
+    self.undoBtnText = go.transform:Find("contentRoot/undoBtn/Text"):GetComponent("Text")
     self.confirmBtn = go.transform:Find("contentRoot/confirmBtn")
+    self.confirmBtnText = go.transform:Find("contentRoot/confirmBtn/Text"):GetComponent("Text")
+    self.forget = go.transform:Find("contentRoot/forget"):GetComponent("Text")
 end
 -------------------------------------------------------------初始化---------------------------------------------------------------------------------
 --初始化UI
@@ -49,13 +52,20 @@ function WalletBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function WalletBoxCtrl:_language()
-
+   self.topText.text = GetLanguage(33020001)
+   self.forget.text = GetLanguage(33020002)
+   self.undoBtnText.text = GetLanguage(33020003)
+   self.confirmBtnText.text = GetLanguage(33020004)
 end
 -------------------------------------------------------------点击函数---------------------------------------------------------------------------------
 --取消
 function WalletBoxCtrl:_clickUndoBtn()
     PlayMusEff(1002)
-    UIPanel.ClosePage()
+    local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
+                content = GetLanguage(33020028),func = function()
+            UIPanel.ClosePage()
+        end  }
+    ct.OpenCtrl('NewReminderCtrl',data)
 end
 --确认
 function WalletBoxCtrl:_clickConfirmBtn(ins)
@@ -67,7 +77,7 @@ function WalletBoxCtrl:_clickConfirmBtn(ins)
         --Event.Brocast("openQRCode")
     else
         ins.passwordInput.text = ""
-        Event.Brocast("SmallPop","支付密码错误", ReminderType.Warning)
+        Event.Brocast("SmallPop",GetLanguage(33030015), ReminderType.Warning)
         return
     end
 end

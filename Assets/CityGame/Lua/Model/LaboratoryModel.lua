@@ -94,7 +94,7 @@ end
 function LaboratoryModel:n_OnReceiveLabExclusive(LabExclusive)
     self.data.exclusive = LabExclusive.exclusive
     Event.Brocast("SmallPop","设置成功",300)
-
+    Event.Brocast("c_OnReceiveLabExclusive")
 end
 --添加研究发明线
 function LaboratoryModel:n_OnReceiveLabLineAdd(msg)

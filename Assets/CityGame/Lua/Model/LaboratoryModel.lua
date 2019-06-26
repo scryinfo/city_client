@@ -92,9 +92,10 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
 end
 --研究所设置
 function LaboratoryModel:n_OnReceiveLabExclusive(LabExclusive)
+    self:m_ReqLaboratoryDetailInfo(self.insId)
     self.data.exclusive = LabExclusive.exclusive
     Event.Brocast("SmallPop","设置成功",300)
-
+    Event.Brocast("c_OnReceiveLabExclusive")
 end
 --添加研究发明线
 function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
@@ -138,6 +139,7 @@ end
 --更新箱子
 function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
     prints("更新箱子")
+    local datas = {}
     for i, v in ipairs(self.data.inProcess) do
         if v.id == lineData.line.id  then
             local isFinished = lineData.line.times ==  (lineData.line.availableRoll + lineData.line.usedRoll)
@@ -146,10 +148,15 @@ function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
             else
                 self.data.inProcess[i]=lineData.line
             end
-            Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodQueneItem"})
+            for i, v in ipairs(self.data.inProcess) do
+                if v.availableRoll ~= 0 then
+                    table.insert(datas,v)
+                end
+            end
             break
         end
     end
+    Event.Brocast("c_updateQuque",{data = datas,name = "View/Laboratory/InventGoodQueneItem"})
     if not isNotContine then
         Event.Brocast("c_creatRollItem",lineData.line)
     end

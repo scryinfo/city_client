@@ -1,6 +1,7 @@
 local pool={}
 local LuaBehaviour
 local odds
+local proodds
 local sums = 0
 local isUpdata
 local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
@@ -184,8 +185,8 @@ end
 function RollCtrl:language()
     panel.count1.text = GetLanguage(28040024)
     panel.count2.text = GetLanguage(28040024)
-    panel.nametexts.text = GetLanguage(28040024)
-    panel.evanametexts.text = GetLanguage(28040042)
+    panel.nametexts.text = GetLanguage(28040049)
+    panel.evanametexts.text = GetLanguage(28040024)
     panel.congratulation1.text = GetLanguage(28040020)
     panel.congratulation2.text = GetLanguage(28040020)
     --panel.achievement.text = GetLanguage(28040044)
@@ -197,12 +198,14 @@ function RollCtrl:c_creatRollItem( data )
     local moedelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
     if data.goodCategory == 0 then
         odds = moedelData.probEva
+        proodds = moedelData.probEvaAdd
     else
         odds = moedelData.probGood
+        proodds = moedelData.probGoodAdd
     end
     self.datas = {}
     for i = 1, data.availableRoll do
-        table.insert( self.datas,{ lineId = data.id ,odds = odds ,availableRoll = data.availableRoll} )
+        table.insert( self.datas,{ lineId = data.id ,odds = odds ,availableRoll = data.availableRoll, oddAdd = proodds} )
     end
 
     --panel.notenough.localScale = Vector3.one

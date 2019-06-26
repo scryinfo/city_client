@@ -422,7 +422,9 @@ end
 --刷新当前产量
 function BuildingProductionDetailPart:updateNowCount(data)
     if data ~= nil then
-        self.numberText.text = data.nowCount.."/"..self.targetCount
+        if self.targetCount ~= nil then
+            self.numberText.text = data.nowCount.."/"..self.targetCount
+        end
     end
 end
 --删除正在生产中的线

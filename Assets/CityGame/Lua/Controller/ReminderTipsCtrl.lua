@@ -47,13 +47,13 @@ end
 -------------------------------------------------------------初始化函数------------------------------------------------------------------------------
 function ReminderTipsCtrl:initializeUiInfoData()
     if self.m_data.isbool == true then
-        --停业
-        self.tipsText.transform.localScale = Vector3.zero
-        self.contentText.text = GetLanguage(30010011)
-    else
         --拆除
-        self.tipsText.transform.localScale = Vector3.one
+        self.tipsText.transform.localScale = Vector3.zero
         self.contentText.text = GetLanguage(30010017)
+    else
+        --停业
+        self.tipsText.transform.localScale = Vector3.one
+        self.contentText.text = GetLanguage(30010009)
         self.oneText.text = "1."..GetLanguage(30010012)
         self.secondText.text = "2."..GetLanguage(30010018)
         self.thirdText.text = "3."..GetLanguage(30010019)

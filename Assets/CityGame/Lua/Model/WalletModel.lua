@@ -149,23 +149,7 @@ end
 --验证手机验证码并通过
 function WalletModel:ReqValidationPhoneCodeSuccees(data)
     if data ~= nil then
-        if data.errorCode == 0 then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = GetLanguage(33030011),func = function()
-                    Event.Brocast("reqDisChargeSucceed",data)
-                end}
-            ct.OpenCtrl("NewReminderCtrl",data)
-        elseif data.errorCode == 1 then
-            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = GetLanguage(10030015),func = function()
-                end}
-            ct.OpenCtrl("NewReminderCtrl",data)
-        elseif data.errorCode == 2 then
-            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = GetLanguage(10030014),func = function()
-                end}
-            ct.OpenCtrl("NewReminderCtrl",data)
-        end
+        Event.Brocast("ValidationPhoneCode",data)
     end
 end
 ------------------------------------------------------------------------解析-----------------------------------------------------------------------------

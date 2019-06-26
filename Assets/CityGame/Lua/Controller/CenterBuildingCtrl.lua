@@ -31,8 +31,8 @@ end
 
 function CenterBuildingCtrl:Active()
     UIPanel.Active(self)
-    CenterBuildingPanel.name.text = GetLanguage(11030001)
-    CenterBuildingPanel.contentText.text = GetLanguage(11030002)
+    CenterBuildingPanel.name.text = GetLanguage(11040001)
+    CenterBuildingPanel.contentText.text = GetLanguage(11040002)
     CenterBuildingPanel.btnText.text = GetLanguage(11030003)
     CenterBuildingPanel.nameText.text = GetLanguage(11030004)
     CenterBuildingPanel.join.text = GetLanguage(11030005)

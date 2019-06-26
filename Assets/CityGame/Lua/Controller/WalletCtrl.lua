@@ -44,6 +44,9 @@ function WalletCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.getBtn.gameObject,self._clickGetBtn,self)
     self.luaBehaviour:AddClick(self.detailsConfirmBtn.gameObject,self._clickDetailsConfirmBtn,self)
     self.luaBehaviour:AddClick(self.phoneRootConfirmBtn.gameObject,self._clickPhoneRootConfirmBtn,self)
+    --self.luaBehaviour:AddClick(self.phoneRootConfirmBtn.gameObject,self._clickPhoneRootConfirmBtn,self)
+    self.luaBehaviour:AddClick(self.QRCodeConfirm.gameObject,self._clickQRCodeConfirmBtn,self)   --前往CashBoxs
+    self.luaBehaviour:AddClick(self.copyBtn.gameObject,self._clickCopyBtnBtn,self)   --复制
 
 
     --初始化循环参数
@@ -62,6 +65,10 @@ function WalletCtrl:Awake(go)
     self.validationInput.onValueChanged:AddListener(function()
         self:savePhoneCode()
     end)
+    --输入充值金额
+    self.rechargeMoneyInput.onValueChanged:AddListener(function()
+        self:inputMoney()
+    end)
 end
 
 function WalletCtrl:Active()
@@ -70,7 +77,7 @@ function WalletCtrl:Active()
     Event.AddListener("createWalletSucceed",self.createWalletSucceed,self)
     Event.AddListener("reqTopUpSucceed",self.reqTopUpSucceed,self)
     Event.AddListener("reqDisChargeOrderSucceed",self.reqDisChargeOrderSucceed,self)
-    Event.AddListener("reqDisChargeSucceed",self.reqDisChargeSucceed,self)
+    Event.AddListener("ValidationPhoneCode",self.ValidationPhoneCode,self) --验证验证码回调
 end
 
 function WalletCtrl:Refresh()
@@ -86,14 +93,15 @@ function WalletCtrl:Hide()
     Event.RemoveListener("createWalletSucceed",self.createWalletSucceed,self)
     Event.RemoveListener("reqTopUpSucceed",self.reqTopUpSucceed,self)
     Event.RemoveListener("reqDisChargeOrderSucceed",self.reqDisChargeOrderSucceed,self)
-    Event.RemoveListener("reqDisChargeSucceed",self.reqDisChargeSucceed,self)
+    Event.RemoveListener("ValidationPhoneCode",self.ValidationPhoneCode,self) --验证验证码回调
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WalletCtrl:_getComponent(go)
     --topRoot
     self.closeBtn = go.transform:Find("topRoot/closeBtn")
     self.detailsBtn = go.transform:Find("topRoot/detailsBtn")
-    self.topName = go.transform:Find("topRoot/topName")
+    self.detailsText = go.transform:Find("topRoot/detailsBtn/Image/Text"):GetComponent("Text")
+    self.topName = go.transform:Find("topRoot/topName"):GetComponent("Text")
 
     --WithoutWalletContent   创建钱包
     self.WithoutWalletContent = go.transform:Find("WithoutWalletContent")
@@ -114,12 +122,15 @@ function WalletCtrl:_getComponent(go)
     self.withdrawBtn = go.transform:Find("WalletContent/withdrawBtn")
     self.withdrawText = go.transform:Find("WalletContent/withdrawBtn/withdrawText"):GetComponent("Text")
     self.topUpBtn = go.transform:Find("WalletContent/topUpBtn")
+    self.topUpBtnText = go.transform:Find("WalletContent/topUpBtn/topUpText"):GetComponent("Text")
 
     --DetailsContent   钱包详情
     self.DetailsContent = go.transform:Find("DetailsContent")
     self.detailsCloseBtn = go.transform:Find("DetailsContent/top/closeBtn")
     self.detailsTopName = go.transform:Find("DetailsContent/top/topName"):GetComponent("Text")
     self.detailsContent = go.transform:Find("DetailsContent/content/ScrollView/Viewport/Content")
+    self.empty = go.transform:Find("DetailsContent/empty")
+    self.emptyText = go.transform:Find("DetailsContent/empty/emptyText"):GetComponent("Text")
 
     --RechargeAmountContent  输入充值金额（新加）
     self.RechargeAmountContent = go.transform:Find("RechargeAmountContent")
@@ -137,10 +148,15 @@ function WalletCtrl:_getComponent(go)
     self.QRCodeContent = go.transform:Find("QRCodeContent")
     self.QRCodeCloseBtn = go.transform:Find("QRCodeContent/top/closeBtn")
     self.QRCodeTopName = go.transform:Find("QRCodeContent/top/topName"):GetComponent("Text")
+    self.QRCodeAmount = go.transform:Find("QRCodeContent/content/amount"):GetComponent("Text")
+    self.QRCodeMoney = go.transform:Find("QRCodeContent/content/money"):GetComponent("Text")
+    self.QRCodeText = go.transform:Find("QRCodeContent/content/Text"):GetComponent("Text")
     self.QRCodeImg = go.transform:Find("QRCodeContent/content/QRCode"):GetComponent("Image")
     self.QRCodeAddressText = go.transform:Find("QRCodeContent/content/addressBg/addressText"):GetComponent("Text")
     self.copyBtn = go.transform:Find("QRCodeContent/content/addressBg/copyBtn")
     self.copyText = go.transform:Find("QRCodeContent/content/addressBg/copyBtn/Text"):GetComponent("Text")
+    self.QRCodeConfirm = go.transform:Find("QRCodeContent/content/confirm")
+    self.QRCodeConfirmText = go.transform:Find("QRCodeContent/content/confirm/Text"):GetComponent("Text")
 
     --WithdrawContent   提币
     self.WithdrawContent = go.transform:Find("WithdrawContent")
@@ -152,7 +168,6 @@ function WalletCtrl:_getComponent(go)
     self.moneyInput = go.transform:Find("WithdrawContent/content/detailsRoot/moneyInput"):GetComponent("InputField")
     self.moneyPlaceholder = go.transform:Find("WithdrawContent/content/detailsRoot/moneyInput/Placeholder"):GetComponent("Text")
     self.poundageText = go.transform:Find("WithdrawContent/content/detailsRoot/poundageText"):GetComponent("Text")
-    self.tipText = go.transform:Find("WithdrawContent/content/detailsRoot/poundageText/tipText"):GetComponent("Text")
     self.proportionMontyText = go.transform:Find("WithdrawContent/content/detailsRoot/proportionIcon/unitText/montyText"):GetComponent("Text")
     self.detailsAddressText = go.transform:Find("WithdrawContent/content/detailsRoot/addressText"):GetComponent("Text")
     self.addressInput = go.transform:Find("WithdrawContent/content/detailsRoot/addressInput"):GetComponent("InputField")
@@ -171,8 +186,7 @@ function WalletCtrl:_getComponent(go)
     self.getText = go.transform:Find("WithdrawContent/content/phoneRoot/getBtn/getText"):GetComponent("Text")
     self.countdownImage = go.transform:Find("WithdrawContent/content/phoneRoot/countdownBg")
     self.countdownText = go.transform:Find("WithdrawContent/content/phoneRoot/countdownBg/countdownText"):GetComponent("Text")
-    self.phoneRootTipIcon = go.transform:Find("WithdrawContent/content/phoneRoot/tipIcon")
-    self.phoneRootTipText = go.transform:Find("WithdrawContent/content/phoneRoot/tipIcon/tipText"):GetComponent("Text")
+    self.phoneRootTipText = go.transform:Find("WithdrawContent/content/phoneRoot/tipText"):GetComponent("Text")
     self.phoneRootConfirmBtn = go.transform:Find("WithdrawContent/content/phoneRoot/confirmBtn"):GetComponent("Image")
     self.phoneRootConfirmText = go.transform:Find("WithdrawContent/content/phoneRoot/confirmBtn/confirmText"):GetComponent("Text")
     --scanQRCodeRoot   扫描二维码
@@ -205,6 +219,38 @@ end
 function WalletCtrl:_language()
     self.moneyPlaceholder.text = "请输入提币金额"
     self.addressPlaceholder.text = "请输入钱包地址"
+    self.topName.text = GetLanguage(33010001)
+    self.withdrawText.text = GetLanguage(33010003)
+    self.topUpBtnText.text = GetLanguage(33010002)
+    self.detailsText.text = GetLanguage(33010005)
+    self.createText.text = GetLanguage(33010004)
+    self.rechargeTopName.text = GetLanguage(33010002)
+    self.rechargeText.text = GetLanguage(33020024) .. "(EEE)"
+    self.proportionText.text = "(1DDD = 1,000,000EEE)"
+    self.rechargeConfirmBtnText.text = GetLanguage(33040006)
+    self.rechargeTipText.text = GetLanguage(33020025)
+    self.QRCodeTopName.text = GetLanguage(33020015)
+    self.copyText.text = GetLanguage(33020014)
+    self.QRCodeConfirmText.text = GetLanguage(33020016)
+    self.passwordTopName.text = GetLanguage(33010009)
+    self.settingPassword.text = GetLanguage(33010010)
+    self.confirmPassword.text = GetLanguage(33010011)
+    self.passwordConfirmText.text = GetLanguage(10030003)
+    self.withdrawTopName.text = GetLanguage(33010003)
+    self.detailsMoneyText.text = GetLanguage(33030001)
+    self.poundageText.text = GetLanguage(33030002,"E0",0.3)
+    self.detailsAddressText.text = GetLanguage(33030003)
+    self.detailsConfirmText.text = GetLanguage(33020026)
+    self.phoneNumberText.text = GetLanguage(33030009)
+    self.validationNumberText.text = GetLanguage(33030010)
+    self.getText.text = GetLanguage(33020008)
+    self.phoneRootConfirmText.text = GetLanguage(10030003)
+    self.declarationTopName.text = GetLanguage(33010006)
+    self.agreeText.text = GetLanguage(33010007)
+    self.detailsTopName.text = GetLanguage(33040001)
+    self.emptyText.text = GetLanguage(33040007)
+    self.QRCodeAmount.text = GetLanguage(33020024)
+    self.QRCodeText.text = GetLanguage(33020013)
 end
 --初始化打开钱包时
 function WalletCtrl:defaultPanel()
@@ -286,7 +332,7 @@ end
 function WalletCtrl:_clickRechargeConfirmBtn(ins)
     PlayMusEff(1002)
     if ins.rechargeMoneyInput.text == "" or ins.rechargeMoneyInput.text == 0 then
-        Event.Brocast("SmallPop","请输入充值金额", ReminderType.Warning)
+        Event.Brocast("SmallPop",GetLanguage(33030014), ReminderType.Warning)
         return
     end
     local data = {}
@@ -322,15 +368,11 @@ end
 --打开弹窗
 function WalletCtrl:_clickDetailsConfirmBtn(ins)
     PlayMusEff(1002)
-    if ins.moneyInput.text == nil or ins.moneyInput.text == "" or ins.addressInput.text == nil or ins.addressInput.text == "" then
-        Event.Brocast("SmallPop","请输入正确的金额和地址", ReminderType.Warning)
+    if ins.moneyInput.text == nil or ins.moneyInput.text == "" or ins.addressInput.text == nil or ins.addressInput.text == "" or #ins.addressInput.text ~= 42 then
+        Event.Brocast("SmallPop",GetLanguage(33030012), ReminderType.Warning)
         return
     end
-    local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
-                content = "确认提币金额",func = function()
-            Event.Brocast("ReqDisChargeOrder",ins.userId)
-        end}
-    ct.OpenCtrl("NewReminderCtrl",data)
+    Event.Brocast("ReqDisChargeOrder",ins.userId)
 end
 --请求提币并获取验证码
 function WalletCtrl:_clickGetBtn(ins)
@@ -342,7 +384,18 @@ function WalletCtrl:_clickGetBtn(ins)
 end
 --点击NEXT发送验证码
 function WalletCtrl:_clickPhoneRootConfirmBtn(ins)
+    PlayMusEff(1002)
     Event.Brocast("ReqValidationPhoneCode",ins.userId,ins.phoneCode)
+end
+
+--前往CashBoxs
+function WalletCtrl:_clickQRCodeConfirmBtn(ins)
+    PlayMusEff(1002)
+    --local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
+    --            content = GetLanguage(33020018),func = function()
+    --        UIPanel.ClosePage()
+    --    end  }
+    --ct.OpenCtrl('NewReminderCtrl',data)
 end
 -----------------------------------------------------------------------监听函数-----------------------------------------------------------------------
 --检测两次输入密码是否相同
@@ -363,7 +416,12 @@ function WalletCtrl:confirmInputButton()
 end
 --检测保存输入要提币的金额
 function WalletCtrl:saveAmount()
+    if self.moneyInput.text == "" then
+        self.moneyInput.text = 0
+    end
     self.Amount = self.moneyInput.text
+    self.poundageText.text = GetLanguage(33030002 ,"E" .. GetClientPriceString(tonumber(self.moneyInput.text) * 0.003 * 10000),0.3)
+    self.proportionMontyText.text = getMoneyString(tonumber(self.moneyInput.text) * (1/1000000))
 end
 --检测保存输入的钱包地址
 function WalletCtrl:saveEthAddr()
@@ -372,6 +430,14 @@ end
 --检测保存输入的手机验证码
 function WalletCtrl:savePhoneCode()
     self.phoneCode = self.validationInput.text
+end
+
+--输入充值金额
+function WalletCtrl:inputMoney()
+    if self.rechargeMoneyInput.text == "" then
+        self.rechargeMoneyInput.text = 0
+    end
+   self.DDDText.text = getMoneyString(tonumber(self.rechargeMoneyInput.text) * (1/1000000)) .. "(DDD)"
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开用户协议
@@ -420,7 +486,7 @@ end
 --打开提币
 function WalletCtrl:openWithdrawContent()
     self.moneyInput.text = ""
-    self.poundageText.text = "E".."0.0000".."(0.3%)"
+    self.poundageText.text = GetLanguage(33030002,"E0",0.3)
     self.proportionMontyText.text = "0.0000"
     self.addressInput.text = ""
     self.WithdrawContent.transform.localScale = Vector3.one
@@ -452,6 +518,7 @@ function WalletCtrl:openQRCode(data)
     self:closeRechargeAmountContent()
     self.QRCodeContent.transform.localScale = Vector3.one
     --self.QRCodeImg
+    self.purchaseId = data.RechargeRequestRes.PurchaseId   --订单Id
     self.scanQRCode:CreateQRCode(data.RechargeRequestRes.EthAddr)
     self.timmer= 0
     self.QRCodeAddressText.text = data.RechargeRequestRes.EthAddr
@@ -482,6 +549,7 @@ function WalletCtrl:openScanningQRCode()
     self.scanQRCode.codePanel = self.scanQRCodeRoot:GetComponent("RectTransform")
     self.scanQRCode.qrStingText = self.addressInput
     self.scanQRCode:StartScanQRCode()
+    self.EthAddr = self.scanQRCode.qrStingText
 end
 --关闭扫描二维码
 function WalletCtrl:closeScanningQRCode()
@@ -498,7 +566,7 @@ function WalletCtrl:openPhoneCode()
     self.validationInput.text = ""
     LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",self.phoneRootConfirmBtn,false)
     self.countdownImage.transform.localScale = Vector3.zero
-    self.phoneRootTipIcon.transform.localScale = Vector3.zero
+    self.phoneRootTipText.transform.localScale = Vector3.zero
 end
 ---------------------------------------------------------------------回调函数---------------------------------------------------------------------------
 --创建钱包成功回调
@@ -508,7 +576,15 @@ function WalletCtrl:createWalletSucceed(data)
         self.WithoutWalletContent.transform.localScale = Vector3.zero
         self.WalletContent.transform.localScale = Vector3.one
         self.moneyText.text = DataManager.GetMoneyByString()
-        Event.Brocast("SmallPop", GetLanguage(33010013), ReminderType.Succeed)
+        PlayMusEff(1002)
+        local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                    content = GetLanguage(33010013),func = function()
+                self.PasswordContent.transform.localScale = Vector3.zero
+                self.WithoutWalletContent.transform.localScale = Vector3.zero
+                self.WalletContent.transform.localScale = Vector3.one
+                self.moneyText.text = DataManager.GetMoneyByString()
+            end  }
+        ct.OpenCtrl('NewReminderCtrl',data)
     end
 end
 --充值请求成功回调
@@ -546,6 +622,26 @@ function WalletCtrl:reqDisChargeSucceed(data)
         self:closeWithdrawContent()
     end
 end
+
+--验证验证码回调
+function WalletCtrl:ValidationPhoneCode(data)
+    if data.errorCode == 0 then
+        self.phoneRootTipText.transform.localScale = Vector3.zero
+        local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                    content = GetLanguage(33030011),func = function()
+                self:reqDisChargeSucceed(data)
+            end}
+        ct.OpenCtrl("NewReminderCtrl",data)
+    elseif data.errorCode == 1 then
+
+        self.phoneRootTipText.transform.localScale = Vector3.one
+        self.phoneRootTipText.text = GetLanguage(10030015)
+    elseif data.errorCode == 2 then
+        self.phoneRootTipText.transform.localScale = Vector3.one
+        self.phoneRootTipText.text = GetLanguage(10030014)
+    end
+end
+
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 --生成密钥
 function WalletCtrl:creatKey()
@@ -564,7 +660,7 @@ end
 function WalletCtrl:UpdateTiming()
     if self.timing >= 1 then
         self.timing = self.timing - UnityEngine.Time.unscaledDeltaTime
-        self.countdownText.text = math.floor(self.timing).."s..."
+        self.countdownText.text = math.floor(self.timing).. GetLanguage(33020010) .. "..."
     else
         self.countdownImage.transform.localScale = Vector3.zero
         UpdateBeat:Remove(self.UpdateTiming,self)

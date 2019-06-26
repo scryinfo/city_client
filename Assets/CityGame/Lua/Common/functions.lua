@@ -749,11 +749,11 @@ function GetEvaData(index, configData, lv)
 	end
 	local brandSizeNum
 	if index == 1 then -- 小
-		brandSizeNum = 100
+		brandSizeNum = 16
 	elseif index == 2 then -- 中
-		brandSizeNum = 400
+		brandSizeNum = 64
 	elseif index == 3 then -- 大
-		brandSizeNum = 900
+		brandSizeNum = 144
 	end
 	if configData.Btype == "Quality" then -- 品质
 		if configData.Atype < 2100000 then -- 建筑品质加成
@@ -843,7 +843,7 @@ function ct.getFlightSubString(value, cnLen, enLen)
 end
 
 local PRIDMagnification = 10000000   --推荐定价表ID倍率
-local CPMagnification = 10		  --竞争力倍率
+local CPMagnification = 50		  --竞争力倍率
 local AfterPointBit = 1 		--小数点后取1位
 --计算小数点后取N位
 function CalculationNBitAfterDecimalPoint(nNum)
@@ -904,23 +904,30 @@ end
 ---计算研发公司竞争力【over】
 --推荐定价:recommendedPricing
 --定价:price
---研发能力:RDcapability   --= (发明成功率 *2 + 研究成功率)/2
---研究还是发明：RBtype    -- 5是发明，6是研究
-function ct.CalculationLaboratoryCompetitivePower(recommendedPricing,price,RDcapability,RBtype)
+--玩家研发能力: RDAbility
+function ct.CalculationLaboratoryCompetitivePower(recommendedPricing,price,RDAbility)
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
-		recommendedPricing =  15 * PRIDMagnification + RBtype
-		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
+		recommendedPricing =  Competitive[15 * PRIDMagnification + 5]
+		--竞争力 = 推荐定价 / 定价  * 50(整数)
 		return CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
 	else
-		if RBtype == 5 then ---- 5是发明
-			--发明竞争力 = 推荐定价 / (定价/(发明能力*2)) * 10 (小数一位)
-			return CalculationNBitAfterDecimalPoint((recommendedPricing / ( price /( RDcapability * 3 / 2)) * CPMagnification ))
-		elseif RBtype == 6 then --- 6是研究
-			--研究竞争力 = 推荐定价 / (定价/研究能力) * 10 (小数一位)
-			return CalculationNBitAfterDecimalPoint((recommendedPricing / ( price /( RDcapability * 3 / 4)) * CPMagnification ))
-		end
+		--竞争力 = 推荐定价 / (定价/(玩家研发能力))  * 50(整数)
+		return CalculationNBitAfterDecimalPoint((recommendedPricing / ( price /( RDAbility)) * CPMagnification ))
 	end
+end
+
+---计算研发公司推荐默认值
+--推荐定价:recommendedPricing
+--研究还是发明：RBtype    -- 5是发明，6是研究
+--玩家研发能力: RDAbility
+function ct.CalculationLaboratorySuggestPrice(recommendedPricing,RDAbility)
+	if recommendedPricing <= 0 then
+		--推荐定价 = 推荐定价表
+		recommendedPricing = Competitive[15 * PRIDMagnification + 5]
+		return recommendedPricing * RDAbility
+	end
+	return recommendedPricing * RDAbility
 end
 
 ---计算加工厂竞争力

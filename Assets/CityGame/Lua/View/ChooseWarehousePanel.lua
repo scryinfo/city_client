@@ -34,6 +34,7 @@ function ChooseWarehousePanel.InitPanel()
     --Right  ScrollView
     this.scrollView = transform:Find("Right/ScrollView"):GetComponent("RectTransform");
     this.rightContent = transform:Find("Right/ScrollView/Viewport/Content"):GetComponent("RectTransform");
+    this.tipImg = transform:Find("tipImg")
 end
 function ChooseWarehousePanel.OnDestroy()
     logWarn("OnDestroy ChooseWarehousePanel--->>>");

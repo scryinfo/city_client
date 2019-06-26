@@ -410,6 +410,7 @@ function BuildingShelfDetailPart:salesNotice(data, msgid)
                     value.automaticBg.transform.localScale = Vector3.zero
                     value.numberBg.gameObject:SetActive(true)
                 end
+                value.automaticNumberText.text = "×"..data.selledCount
                 value.numberText.text = "×"..data.selledCount
                 value.priceText.text = GetClientPriceString(data.selledPrice)
             end

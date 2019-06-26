@@ -94,6 +94,11 @@ end
 function ChooseWarehouseCtrl:CreateLinePanel()   --生成自己的建筑详情
     self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
     WareHouseGoodsMgr:_creatLinePanel(self.buysBuildings,self.m_data.pos,self.m_data.buildingId)  --创建运输线
+    --if not self.WareHouseGoodsMgr.ipaItems or next(self.WareHouseGoodsMgr.ipaItems) == nil then
+    --    ChooseWarehousePanel.tipImg.transform.localScale = Vector3.one
+    --else
+    --    ChooseWarehousePanel.tipImg.transform.localScale = Vector3.zero
+    --end
 end
 
 -- 监听Model层网络回调
@@ -143,7 +148,6 @@ function ChooseWarehouseCtrl:initInsData()
     DataManager.OpenDetailModel(ChooseWarehouseModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqAllBuildingDetail')      --获取自己的建筑详情
     DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqRentBuildingDetail')     --获取自己租建筑详情
-
 end
 
 

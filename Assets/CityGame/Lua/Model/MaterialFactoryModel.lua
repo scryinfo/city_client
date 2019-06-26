@@ -118,6 +118,7 @@ end
 ---客户端请求---
 --打开原料厂
 function MaterialFactoryModel:m_ReqOpenMaterial(buildingId)
+    --FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
 end
 --改变建筑名字
@@ -208,6 +209,7 @@ function MaterialFactoryModel:n_OnReceiveHouseSalaryChange(data)
 end
 --打开原料厂
 function MaterialFactoryModel:n_OnOpenMaterial(stream)
+    --FlightMainModel.CloseFlightLoading()
     if stream ~= nil then
         if not self.funModel then
             self.funModel = BuildingBaseModel:new(self.insId)

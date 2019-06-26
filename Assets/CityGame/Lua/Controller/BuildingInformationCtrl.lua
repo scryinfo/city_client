@@ -451,13 +451,13 @@ function BuildingInformationCtrl:_clickSwitchBtn(ins)
     PlayMusEff(1002)
     if businessState == true then
         --停业
-        local data = {isbool = true,fun = function()
+        local data = {isbool = false,fun = function()
             Event.Brocast("m_ReqClosedBuilding",ins.m_data.id)
         end}
         ct.OpenCtrl('ReminderTipsCtrl',data)
     else
         --拆除
-        local data = {isbool = false,fun = function()
+        local data = {isbool = true,fun = function()
             Event.Brocast("m_ReqDemolitionBuilding",ins.m_data.id)
             DataManager.RemoveMyBuildingDetailByBuildID(ins.m_data.id)
             UIPanel.CloseAllPageExceptMain()

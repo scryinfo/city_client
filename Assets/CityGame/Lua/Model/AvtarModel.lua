@@ -28,8 +28,9 @@ end
 ---================================================================================收包===========================================================================
 
 function AvtarModel:m_registerRoleFaceId(isSuccess)
-    if isSuccess == true then
+    if isSuccess.b ~= nil and isSuccess.b == true then
         ct.log("system","改变Avatar成功")
+        DataManager.SetMyFlightScore(DataManager.GetMyFlightScore() - 10 )
     else
         ct.log("system","改变Avatar失败")
     end

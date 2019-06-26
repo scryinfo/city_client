@@ -67,12 +67,12 @@ function FlightDetailCtrl:_initData()
         self.id = flightData.FlightNo
         self.date = flightData.FlightDeptimePlanDate  --bet界面所需数据
         FlightDetailPanel.timeText.text = self:_getDayStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 --精确到天
-        FlightDetailPanel.flightText.text = flightData.FlightCompany  --需要多语言
+        FlightDetailPanel.flightText.text = ct.GetFlightCompanyName(flightData.FlightNo)
         FlightDetailPanel.numText.text = flightData.FlightNo  --CA4506
         FlightDetailPanel.endCodeText.text = flightData.FlightArrcode
-        FlightDetailPanel.endPlaceText.text = flightData.FlightArrAirport  --需要多语言
+        FlightDetailPanel.endPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightArrcode])
         FlightDetailPanel.startCodeText.text = flightData.FlightDepcode
-        FlightDetailPanel.startPlaceText.text = flightData.FlightDepAirport  --需要多语言
+        FlightDetailPanel.startPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightDepAirport])
         self:_updateText()
 
         local trueWidth01 = FlightDetailPanel.timeText.preferredWidth

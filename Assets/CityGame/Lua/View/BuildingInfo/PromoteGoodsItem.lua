@@ -12,9 +12,11 @@ function PromoteGoodsItem:initialize(prefab,dataInfo,luaBehaviour)
     self.selete = self.prefab.transform:Find("seleteBtn/selete");
     self.icon = self.prefab.transform:Find("iconImg").gameObject:GetComponent("Image");
     self.name = self.prefab.transform:Find("goods/nameBG/nameText").gameObject:GetComponent("Text");
+    self.brandScore = self.prefab.transform:Find("goods/detailsBg/popularity").gameObject:GetComponent("Text");
     self.brandScore = self.prefab.transform:Find("goods/detailsBg/scoreBg/brandIcon/brandValue").gameObject:GetComponent("Text");
     self.brand = self.prefab.transform:Find("goods/detailsBg/scoreText").gameObject:GetComponent("Text");
 
+    self.brandScore.text = GetLanguage(25020006)
     self.name.text = GetLanguage(dataInfo)
     LoadSprite(Good[dataInfo].img, self.icon)
 

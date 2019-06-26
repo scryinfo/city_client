@@ -191,6 +191,15 @@ function AvtarCtrl:begin()
         --隐藏性别选项
         panel.maleBtn.gameObject:SetActive(false)
         panel.feMaleBtn.gameObject:SetActive(false)
+        --打开幸运值展示
+        panel.luckyRoot.localScale = Vector3.one
+        panel.luckyValue.text = DataManager.GetMyFlightScore()
+        --判断是否需要有按钮 this.cofirmBtn
+        if DataManager.GetMyFlightScore() < 10 then
+            panel.cofirmBtn.localScale = Vector3.zero
+        else
+            panel.cofirmBtn.localScale = Vector3.one
+        end
     else--无ID，为初始建号
         --性别默认为男
         mySex = 1
@@ -202,6 +211,10 @@ function AvtarCtrl:begin()
         --显示性别选项
         panel.maleBtn.gameObject:SetActive(true)
         panel.feMaleBtn.gameObject:SetActive(true)
+        --隐藏幸运值展示
+        panel.luckyRoot.localScale = Vector3.zero
+
+
     end
 end
 
@@ -420,10 +433,17 @@ function AvtarCtrl:c_OnClick_confirm()
 
     if DataManager.GetFaceId() then
         if faceId ~= DataManager.GetFaceId() then
-            Event.Brocast("m_setRoleFaceId",faceId)
-            DataManager.SetFaceId(faceId)
+            --打开提示弹窗
+            local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
+                        content = GetLanguage(17030004,10),func = function()
+                    Event.Brocast("m_setRoleFaceId",faceId)
+                    DataManager.SetFaceId(faceId)
+                    UIPanel.ClosePage()
+                end  }
+            ct.OpenCtrl('NewReminderCtrl',data)
+        else
+            UIPanel.ClosePage()
         end
-        UIPanel.ClosePage()
     else
         if mySex == 1 then
             temp.gender = true

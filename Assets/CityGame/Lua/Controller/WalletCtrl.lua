@@ -411,6 +411,7 @@ end
 --打开详情
 function WalletCtrl:openDetails()
     self.DetailsContent.transform.localScale = Vector3.one
+    Event.Brocast("ReqDetails",self.userId)
 end
 --关闭详情
 function WalletCtrl:closeDetails()
@@ -478,6 +479,7 @@ end
 function WalletCtrl:openScanningQRCode()
     self.m_Timer:Start()
     self.scanQRCodeRoot.transform.localScale = Vector3.one
+    self.scanQRCode.codePanel = self.scanQRCodeRoot:GetComponent("RectTransform")
     self.scanQRCode.qrStingText = self.addressInput
     self.scanQRCode:StartScanQRCode()
 end

@@ -26,6 +26,7 @@ function PromoteCompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",self.n_OnPromoAbilityHistory) -- 推广历史曲线
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetAllMyFlowSign","gs.GetAllMyFlowSign",self.n_OnGetAllMyFlowSign) -- 获取自己的所有签约
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryBuildingLift","ss.BuildingLift",self.n_OnGetLiftCurve,self) -- 获取自己的所有签约曲线
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","promotionGuidePrice","gs.PromotionMsg",self.n_OnGuidePrice,self) -- 推荐定价
 
 end
 
@@ -111,6 +112,11 @@ function PromoteCompanyModel:m_GetAllMyFlowSign(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "adGetAllMyFlowSign","gs.GetAllMyFlowSign",{buildingId = buildingId})
 end
 
+--推荐价格
+function PromoteCompanyModel:m_promotionGuidePrice(buildingId,playerId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "promotionGuidePrice","gs.PromotionMsg",{buildingId = buildingId , playerId = playerId})
+end
+
 --服务器回调
 function PromoteCompanyModel:n_OnPublicFacility(info)
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCompanyCtrl", '_receivePromoteCompanyDetailInfo',info)
@@ -131,6 +137,7 @@ end
 
 --删除推广回调
 function PromoteCompanyModel:n_OnRemovePromo(info)
+    PromoteCompanyModel:m_detailPublicFacility(info.buildingId)
     local newData = {}
     --newData = ct.deepCopy(self.data)
     newData = self.data
@@ -219,4 +226,9 @@ function PromoteCompanyModel:n_OnReceiveOpenBusiness(data)
         self:m_detailPublicFacility(self.insId)
         Event.Brocast("SmallPop", GetLanguage(24020018), ReminderType.Succeed)  --开业成功提示
     end
+end
+
+--推荐定价
+function PromoteCompanyModel:n_OnGuidePrice(info)
+    Event.Brocast("c_GuidePrice",info)
 end

@@ -892,7 +892,7 @@ end
 function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,competitivePower,Advertisementtype)
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
-		recommendedPricing =  16 * PRIDMagnification  + Advertisementtype
+		recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
 		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
 		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
 	else
@@ -906,7 +906,7 @@ end
 --定价:price
 --研发能力:RDcapability   --= (发明成功率 *2 + 研究成功率)/2
 --研究还是发明：RBtype    -- 5是发明，6是研究
-function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,RDcapability,RBtype)
+function ct.CalculationLaboratoryCompetitivePower(recommendedPricing,price,RDcapability,RBtype)
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
 		recommendedPricing =  15 * PRIDMagnification + RBtype
@@ -1001,4 +1001,15 @@ function ct.CalculationHouseSuggestPrice(recommendedPricing)
 		return recommendedPricing
 	end
 	return recommendedPricing
+end
+
+--航班预测根据机场二字码得到对应多语言
+function ct.GetFlightCompanyName(flightNo)
+	if flightNo == nil then return end
+	local code = string.sub(flightNo, 1,2)
+	local languageId = FlightCompanyConfig[code]
+	if languageId == nil then
+		languageId = 32030035
+	end
+	return GetLanguage(languageId)
 end

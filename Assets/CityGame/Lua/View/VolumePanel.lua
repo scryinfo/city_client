@@ -33,7 +33,8 @@ function VolumePanel.InitPanel()
     --this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport/Content"):GetComponent("ActiveLoopScrollRect");
     this.firstScroll =this.playercurrRoot:Find("topRoot/firstScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
     this.secondScroll = this.playercurrRoot:Find("topRoot/secondScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
-    this.secondScrollcontent = this.playercurrRoot:Find("topRoot/secondScroll/Viewport/content");
+    this.secondScrollcontent = this.playercurrRoot:Find("topRoot/secondScroll/Viewport/Content");
+    this.threeScrollcontent = this.playercurrRoot:Find("topRoot/threeScroll/Viewport/Content");
     this.threeScroll = this.playercurrRoot:Find("topRoot/threeScroll/Viewport"):GetComponent("ActiveLoopScrollRect");
 
     --left
@@ -92,6 +93,10 @@ function VolumePanel.InitPanel()
     this.curve = transform:Find("PlayerTrading/trade/curveBg/curve"):GetComponent("RectTransform");
     this.slide = transform:Find("PlayerTrading/trade/curveBg/curve"):GetComponent("Slide");  --滑动
     this.graph = transform:Find("PlayerTrading/trade/curveBg/curve"):GetComponent("FunctionalGraph");     --绘制曲线
+    this.sum = transform:Find("PlayerTrading/trade/yScale/quantity"):GetComponent("Text");
+    this.time = transform:Find("PlayerTrading/trade/xScale/Text"):GetComponent("Text");
+    this.bussiness = transform:Find("PlayerTrading/bussiness"):GetComponent("Text");
+    this.tip = transform:Find("PlayerTrading/tip"):GetComponent("Text");
 
     --PlayerSTrading
     this.strade =  transform:Find("PlayerSTrading")
@@ -99,7 +104,9 @@ function VolumePanel.InitPanel()
     this.scurve = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("RectTransform");
     this.sslide = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("Slide");  --滑动
     this.sgraph = transform:Find("PlayerSTrading/trade/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
-
-
+    this.ssum = transform:Find("PlayerSTrading/trade/yScale/quantity"):GetComponent("Text");     --绘制曲线
+    this.stime = transform:Find("PlayerSTrading/trade/xScale/Text"):GetComponent("Text");
+    this.sbussiness = transform:Find("PlayerSTrading/bussiness"):GetComponent("Text");
+    this.stip = transform:Find("PlayerSTrading/tip"):GetComponent("Text");
     this.titleBg = transform:Find("titleBg").gameObject; --提示框Bg
 end

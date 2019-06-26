@@ -62,7 +62,8 @@ function MapRightOtherTechnologyPage:_createTech()
     if self.data.queuedTimes ~= 0 then
         str3 = os.date("%H:%M %m/%d/%Y", self.data.queuedTimes / 1000)
     else
-        str3 = os.date("%H:%M %m/%d/%Y", os.time())
+        --str3 = os.date("%H:%M %m/%d/%Y", os.time())
+        str3 = GetLanguage(27040032)
     end
     local data3 = {infoTypeStr = "Queued", value = str3}  --队列
     self.items[#self.items + 1] = self:_createShowItem(data3, self.showInfoRoot)

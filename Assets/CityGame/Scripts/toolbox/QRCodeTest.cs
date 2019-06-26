@@ -19,6 +19,8 @@ namespace UnityEngine
         //二维码写入内容
         private BarcodeWriter barcodeWriter;
         private string QRTexturePath ;
+        //扫描二维码界面
+        public RectTransform codePanel;
         private void Awake()
         {
             QRTexturePath = Application.dataPath + "/CityGame/Resources/Atlas/Wallet";
@@ -57,6 +59,10 @@ namespace UnityEngine
                 CancelInvoke("ScanQRCode");
                 cameraTexture.texture = null;
                 qrStingText.text = result.Text;
+                if (codePanel != null)
+                {
+                    codePanel.transform.localScale = Vector3.one;
+                }
             }
         }
         //创建二维码

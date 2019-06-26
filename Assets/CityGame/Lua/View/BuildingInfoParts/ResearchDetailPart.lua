@@ -67,8 +67,8 @@ function ResearchDetailPart:RefreshData(data)
     self:creatInvent()
 
     self:onClick_good(self)
-    self:updateUI(data)
     self:updateLanguage()
+    self:updateUI(data)
 
 end
 --
@@ -123,14 +123,22 @@ function ResearchDetailPart:updateUI(data)
     else
         self.setBtn.localScale = Vector3.zero
     end
-
+    if data.exclusive == false then
+        self.bgtitleText.text = GetLanguage(27040002)
+    else
+        self.bgtitleText.text = GetLanguage(27040001)
+    end
     --self.goods.localScale = Vector3.one
     --self.evaIma.localScale = Vector3.zero
 
     self:onClick_good(self)
-
-    self.timeCountText.text = data.sellTimes
-    self.priceCountText.text = GetClientPriceString(data.pricePreTime)
+    if data.exclusive == false then
+        self.timeCountText.text = data.sellTimes
+        self.priceCountText.text = GetClientPriceString(data.pricePreTime)
+    else
+        self.priceCountText.text = ""
+        self.timeCountText.text = ""
+    end
 
     if data.inProcess then
         self.queneCountText.text = #( data.inProcess )
@@ -221,7 +229,7 @@ function ResearchDetailPart:onClick_set(ins)
     end  }
 
     ct.OpenCtrl("InventSetPopCtrl",data)
-    ins.bgtitleText.text = GetLanguage(27040002)
+    --ins.bgtitleText.text = GetLanguage(27040002)
 end
 
 --研究eva

@@ -413,8 +413,8 @@ function BuildingProductionDetailPart:SettopSuccess(data)
             temporaryValue = value
         end
     end
-    table.remove(self.self.m_data.line,temporaryKey)
-    table.insert(self.self.m_data.line,2,temporaryValue)
+    table.remove(self.m_data.line,temporaryKey)
+    table.insert(self.m_data.line,2,temporaryValue)
     table.remove(self.waitingQueueIns,temporaryKey)
     table.insert(self.waitingQueueIns,1,temporaryValue)
     Event.Brocast("SmallPop",GetLanguage(25030013), ReminderType.Succeed)

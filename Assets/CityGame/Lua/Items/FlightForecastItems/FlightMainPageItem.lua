@@ -51,7 +51,7 @@ function FlightMainPageItem:initData(data)
     self.endCodeText.text = flightData.FlightArrcode
     self.endPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightArrcode])
     self.startCodeText.text = flightData.FlightDepcode
-    self.startPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightDepAirport])
+    self.startPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightDepcode])
     self:_updateText()
 
     local trueWidth01 = self.timeText.preferredWidth

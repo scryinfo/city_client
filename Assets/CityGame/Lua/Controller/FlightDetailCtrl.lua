@@ -72,7 +72,7 @@ function FlightDetailCtrl:_initData()
         FlightDetailPanel.endCodeText.text = flightData.FlightArrcode
         FlightDetailPanel.endPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightArrcode])
         FlightDetailPanel.startCodeText.text = flightData.FlightDepcode
-        FlightDetailPanel.startPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightDepAirport])
+        FlightDetailPanel.startPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightDepcode])
         self:_updateText()
 
         local trueWidth01 = FlightDetailPanel.timeText.preferredWidth

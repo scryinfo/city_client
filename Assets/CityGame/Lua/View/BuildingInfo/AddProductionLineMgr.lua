@@ -173,7 +173,7 @@ function AddProductionLineMgr:_resetDetails()
 end
 --
 function AddProductionLineMgr:_update()
-    if self.sideValue == AddLineTogglesSideValue.Left then
+    if self.sideValue == AddLineButtonPosValue.Left then
         if self.keyContentItems[self.tempDetailItemId] ~= nil then
             local pos = self.keyContentItems[self.tempDetailItemId]:getItemPos()
             AddProductionLinePanel.leftBtnParent.transform.position = pos
@@ -181,7 +181,7 @@ function AddProductionLineMgr:_update()
         return
     end
 
-    if self.sideValue == AddLineTogglesSideValue.Right then
+    if self.sideValue == AddLineButtonPosValue.Right then
         if self.keyContentItems[self.tempDetailItemId] ~= nil then
             local pos = self.keyContentItems[self.tempDetailItemId]:getItemPos()
             AddProductionLinePanel.rightBtnParent.transform.position = pos

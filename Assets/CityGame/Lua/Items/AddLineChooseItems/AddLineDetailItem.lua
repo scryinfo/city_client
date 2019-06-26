@@ -54,7 +54,7 @@ function AddLineDetailItem:initialize(viewRect, data, toggleGroup)
     self.toggle.onValueChanged:RemoveAllListeners()
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:showState(isOn)
-        if isOn then
+        if isOn == true then
             self.data.backFunc(self.data.itemId, self.viewRect.transform.position, stateData.enableShow)  --显示中间的线路
         end
     end)
@@ -71,7 +71,7 @@ function AddLineDetailItem:setToggleIsOn(isOn)
 end
 --显示
 function AddLineDetailItem:showState(select)
-    if select then
+    if select == true then
         self.chooseImgTran.localScale = Vector3.one
     else
         self.chooseImgTran.localScale = Vector3.zero
@@ -79,7 +79,7 @@ function AddLineDetailItem:showState(select)
 end
 --清除选中状态
 function AddLineDetailItem:cleanState()
-    if self.toggle.isOn then
+    if self.toggle.isOn == true then
         self:setToggleIsOn(false)
     end
 end

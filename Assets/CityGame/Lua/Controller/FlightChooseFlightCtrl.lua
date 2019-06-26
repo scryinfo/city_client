@@ -62,7 +62,7 @@ function FlightChooseFlightCtrl:_initData()
         FlightChooseFlightPanel.endCodeText.text = flightData.FlightArrcode
         FlightChooseFlightPanel.endPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightArrcode])
         FlightChooseFlightPanel.startCodeText.text = flightData.FlightDepcode
-        FlightChooseFlightPanel.startPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightDepAirport])
+        FlightChooseFlightPanel.startPlaceText.text = GetLanguage(FlightCodeNameConfig[flightData.FlightDepcode])
         self:_updateText()
 
         FlightChooseFlightCtrl.static.itemsList = {}

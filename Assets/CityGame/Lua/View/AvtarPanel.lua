@@ -31,10 +31,16 @@ function AvtarPanel.InitPanel()
 
     this.topticText = transform:Find("topRoot/name"):GetComponent("Text")
 
+    this.luckyText = transform:Find("topRoot/Lucky/luckText"):GetComponent("Text")
+
+    this.luckyValue = transform:Find("topRoot/Lucky/luckycouponValue"):GetComponent("Text")
+
+    this.luckyRoot = transform:Find("topRoot/Lucky")
 end
 --数据初始化
 function AvtarPanel.InitLanguage()
     this.topticText.text = GetLanguage(10060011)
+    this.luckyText.text = GetLanguage(17030001)
 end
 
 

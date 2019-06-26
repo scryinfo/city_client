@@ -131,8 +131,11 @@ function InventGoodQueneItem:updateUI(data)
         if LaboratoryCtrl.static.buildingOwnerId == data.proposerId then -- 并且是自己的建筑
             if data.availableRoll > 0 then -- 第一条线
                 self.delete.transform.localScale = Vector3.zero
+                self.rollBtn.localScale = Vector3.one
+                self.rollBtnText.text = "x" .. tostring(data.availableRoll)
             else
                 self.delete.transform.localScale = Vector3.one
+                self.rollBtn.localScale = Vector3.zero
             end
         else -- 不是自己的建筑
             self.delete.transform.localScale = Vector3.zero

@@ -18,7 +18,7 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     self.typeToggleGroup = viewRect:Find("typeRoot"):GetComponent("ToggleGroup")
     self.typeContent = viewRect:Find("typeRoot/typeScroll/content")
     self.detailToggleGroup = viewRect:Find("detailRoot"):GetComponent("ToggleGroup")
-    self.detailContent = viewRect:Find("detailRoot/detailScroll/content")
+    self.detailContent = viewRect:Find("detailRoot/detailScroll/content"):GetComponent("RectTransform")
 
     self.togglePrefab = UnityEngine.Resources.Load(AddProductionLineMgr.static.ButtonItemPath)
     self.detailPrefab = UnityEngine.Resources.Load(AddProductionLineMgr.static.GoodDetailItemPath)
@@ -33,7 +33,7 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
             local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
             go.transform:SetParent(self.typeContent.transform)
             go.transform.localScale = Vector3.one
-            local tempData = {name = GetLanguage(typeItem[1].name), typeId = i, backFunc = function (typeId)
+            local tempData = {languageId = typeItem[1].name, typeId = i, backFunc = function (typeId)
                 self:_showDetails(typeId)
             end}
             local item = AddLineBtnItem:new(go.transform, tempData, self.typeToggleGroup)
@@ -44,8 +44,24 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     --UpdateBeat:Add(self._update, self)
     FixedUpdateBeat:Add(self._update, self)
 end
+--
+function AddProductionLineMgr:_language()
+    if self.keyContentItems ~= nil then
+        for i, item in pairs(self.keyContentItems) do
+            item:_language()
+        end
+    end
+    if self.toggleItems ~= nil then
+        for i, item in pairs(self.toggleItems) do
+            item:_language()
+        end
+    end
+end
 --初始化
 function AddProductionLineMgr:initData(chooseTypeId)
+    self:_language()
+    self.detailContent.anchoredPosition = Vector2.zero
+
     --设置默认打开的类别
     for i, item in pairs(self.toggleItems) do
         self.toggleItems[i]:setToggleIsOn(false)
@@ -171,5 +187,63 @@ function AddProductionLineMgr:_update()
             AddProductionLinePanel.rightBtnParent.transform.position = pos
         end
         return
+    end
+end
+--------------------------------------------------------------------------------------------------------------------------------
+local m_MatGoodIconSpriteList = {}
+
+--添加BuildingIcon的sprite列表
+local function AddBuildingIcon(name,sprite)
+    if m_MatGoodIconSpriteList == nil or type(m_MatGoodIconSpriteList) ~= 'table' then
+        m_MatGoodIconSpriteList = {}
+    end
+    if name ~= nil and sprite ~= nil then
+        m_MatGoodIconSpriteList[name] = sprite
+    end
+end
+--
+local function JudgeHasBuildingIcon(name)
+    if m_MatGoodIconSpriteList == nil or m_MatGoodIconSpriteList[name] == nil  then
+        return false
+    else
+        return true
+    end
+end
+--
+local function GetBuildingIcon(name)
+    if m_MatGoodIconSpriteList == nil or m_MatGoodIconSpriteList[name] == nil  then
+        return nil
+    else
+        return m_MatGoodIconSpriteList[name]
+    end
+end
+--
+local SpriteType = nil
+local function LoadBuildingIcon(name,iIcon)
+    if SpriteType == nil then
+        SpriteType = ct.getType(UnityEngine.Sprite)
+    end
+    panelMgr:LoadPrefab_A(name, SpriteType, iIcon, function(Icon, obj )
+        if Icon == nil then
+            return
+        end
+        if obj ~= nil  then
+            local texture = ct.InstantiatePrefab(obj)
+            AddBuildingIcon(name,texture)
+            if Icon then
+                Icon.sprite = texture
+                --Icon:SetNativeSize()
+            end
+        end
+    end)
+end
+
+--设置ICon的Sprite
+function AddProductionLineMgr.SetBuildingIconSpite(name , tempImage)
+    if JudgeHasBuildingIcon() == true then
+        tempImage.sprite = GetBuildingIcon(name)
+        --tempImage:SetNativeSize()
+    else
+        LoadBuildingIcon(name , tempImage)
     end
 end

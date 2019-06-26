@@ -26,38 +26,24 @@ end
 function AddDetailItem:initData(data)
     local type = ct.getType(UnityEngine.Sprite)
     if Material[data.itemId] then
-        self.nameText.text = GetLanguage(data.itemId);
-        panelMgr:LoadPrefab_A(Material[data.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.iconImg.sprite = texture
-            end
-        end)
+        self.nameText.text = GetLanguage(data.itemId)
+        AddProductionLineMgr.SetBuildingIconSpite(Material[data.itemId].img, self.iconImg)
+        --panelMgr:LoadPrefab_A(Material[data.itemId].img,type,nil,function(goodData,obj)
+        --    if obj ~= nil then
+        --        local texture = ct.InstantiatePrefab(obj)
+        --        self.iconImg.sprite = texture
+        --    end
+        --end)
     else
-        panelMgr:LoadPrefab_A(Good[data.itemId].img,type,nil,function(goodData,obj)
-            if obj ~= nil then
-                local texture = ct.InstantiatePrefab(obj)
-                self.iconImg.sprite = texture
-            end
-        end)
-        self.nameText.text = GetLanguage(data.itemId);
+        self.nameText.text = GetLanguage(data.itemId)
+        AddProductionLineMgr.SetBuildingIconSpite(Good[data.itemId].img, self.iconImg)
+        --panelMgr:LoadPrefab_A(Good[data.itemId].img,type,nil,function(goodData,obj)
+        --    if obj ~= nil then
+        --        local texture = ct.InstantiatePrefab(obj)
+        --        self.iconImg.sprite = texture
+        --    end
+        --end)
     end
-    --if data.itemState == AddLineDetailItemState.InventIng then
-    --    self.stateRoot.localScale = Vector3.one
-    --    self.stateText.text = "Be inventing..."
-    --elseif data.itemState == AddLineDetailItemState.ToBeInvented then
-    --    self.stateRoot.localScale = Vector3.one
-    --    self.stateText.text = "To be invented..."
-    --elseif data.itemState == AddLineDetailItemState.ResearchIng then
-    --    self.stateRoot.localScale = Vector3.one
-    --    self.stateText.text = "Be researching..."
-    --elseif data.itemState == AddLineDetailItemState.HasInvented then
-    --    self.stateRoot.localScale = Vector3.one
-    --    self.stateText.text = "Has been invented..."
-    --elseif data.itemState == AddLineDetailItemState.Default then
-    --    self.stateRoot.localScale = Vector3.zero
-    --end
-    --self.numberText.text = HomeProductionLineItem.GetInventoryNum(data.itemId)
     self.countText.text = data.num
     self:setObjState(true)
     self:showSelectState(false)

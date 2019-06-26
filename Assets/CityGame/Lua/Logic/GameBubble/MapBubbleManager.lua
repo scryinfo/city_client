@@ -586,7 +586,7 @@ local function AddBuildingIcon(name,sprite)
         m_BuildingIconSpriteList[name] = sprite
     end
 end
-
+--
 local function JudgeHasBuildingIcon(name)
     if m_BuildingIconSpriteList == nil or m_BuildingIconSpriteList[name] == nil  then
         return false
@@ -594,7 +594,7 @@ local function JudgeHasBuildingIcon(name)
         return true
     end
 end
-
+--
 local function GetBuildingIcon(name)
     if m_BuildingIconSpriteList == nil or m_BuildingIconSpriteList[name] == nil  then
         return nil
@@ -602,7 +602,7 @@ local function GetBuildingIcon(name)
         return m_BuildingIconSpriteList[name]
     end
 end
-
+--
 local SpriteType = nil
 local function LoadBuildingIcon(name,iIcon)
     if SpriteType == nil then

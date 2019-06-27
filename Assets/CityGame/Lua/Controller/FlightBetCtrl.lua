@@ -74,6 +74,7 @@ function FlightBetCtrl:_language()
     FlightBetPanel.betText08.text = GetLanguage(32030017, FlightConfig.MaxBet)
     FlightBetPanel.betText09.text = GetLanguage(32030015)
     FlightBetPanel.tipText10.text = GetLanguage(32030018)
+    FlightBetPanel.moneyText11.text = GetLanguage(32020036)
 end
 --
 function FlightBetCtrl:Hide()
@@ -92,6 +93,8 @@ function FlightBetCtrl:Close()
 end
 --
 function FlightBetCtrl:_initPanelData()
+    FlightBetPanel.moneyText.text = DataManager.GetMyFlightScore()
+
     FlightBetPanel.timeSlider.minValue = FlightConfig.MinTime
     FlightBetPanel.timeSlider.maxValue = FlightConfig.MaxTime
     FlightBetPanel.timeSlider.value = 0

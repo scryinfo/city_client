@@ -87,5 +87,15 @@ Notice = {
         header = 16010024,
         content = "您好,{0}土地出现了更高的出价.",
         redirect=""
-    }
+    },
+    [18] = {
+        header = 16010027,
+        content = "您好,提币成功.",
+        redirect=""
+    },
+    [19] = {
+        header = 16010028,
+        content = "您好,充值到账成功.",
+        redirect=""
+    },
 }

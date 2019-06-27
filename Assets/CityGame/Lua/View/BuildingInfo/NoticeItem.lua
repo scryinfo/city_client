@@ -79,6 +79,8 @@ end
 function NoticeItem:OnBg(go)
     PlayMusEff(1002)
     if go.typeId == 1 then
+        nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
+        go:GetHouse(go.uuidParas[1])
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 2 then
         type = go.typeId
@@ -163,6 +165,12 @@ function NoticeItem:OnBg(go)
     elseif go.typeId == 17 then
         go.content = GetLanguage(16010025,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
         GameNoticePanel.rightContent.text = go.content
+    elseif go.typeId == 18 then
+        go.content = GetLanguage(16010025)
+        GameNoticePanel.rightContent.text = go.content
+    elseif go.typeId == 19 then
+        go.content = GetLanguage(16010025)
+        GameNoticePanel.rightContent.text = go.content
     end
         Event.Brocast("c_onBg",go)
     end
@@ -201,6 +209,11 @@ function NoticeItem:GetLaboratory(buildingId)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetLaboratory',buildingId)
 end
 
+--获取住宅建筑详情
+function NoticeItem:GetHouse(buildingId)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetHouse',buildingId)
+end
+
 --获取公会信息
 function NoticeItem:GetSocietyInfo(id)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetSocietyInfo',id)
@@ -214,6 +227,7 @@ function NoticeItem:_addListener()
     Event.AddListener("c_RetailShopInfo", self.c_RetailShopInfo, self) --零售店建筑详情回调
     Event.AddListener("c_PromoteInfo", self.c_PromoteInfo, self) --推广公司建筑详情回调
     Event.AddListener("c_Laboratory", self.c_Laboratory, self) --研究所建筑详情回调
+    Event.AddListener("c_House", self.c_House, self) --住宅建筑详情回调
     Event.AddListener("c_SocietyInfo", self.c_SocietyInfo, self) --公会详情回调
 end
 
@@ -225,6 +239,7 @@ function NoticeItem:_removeListener()
     Event.RemoveListener("c_RetailShopInfo", self.c_RetailShopInfo, self)--零售店建筑详情回调
     Event.RemoveListener("c_PromoteInfo", self.c_PromoteInfo, self)--推广公司建筑详情回调
     Event.RemoveListener("c_Laboratory", self.c_Laboratory, self)--研究所建筑详情回调
+    Event.RemoveListener("c_House", self.c_House, self)--住宅建筑详情回调
     Event.RemoveListener("c_SocietyInfo", self.c_SocietyInfo, self)--公会详情回调
 end
 
@@ -278,6 +293,11 @@ function NoticeItem:c_Laboratory(name)
     elseif type == 8 then
         self.content = GetLanguage(16020015,name,goodsName,money,num)
     end
+    GameNoticePanel.rightContent.text = self.content
+end
+
+function NoticeItem:c_House(name)
+    self.content = GetLanguage(16020001,name,nameSize)
     GameNoticePanel.rightContent.text = self.content
 end
 

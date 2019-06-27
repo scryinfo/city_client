@@ -119,6 +119,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.averagePrice = a --平均价
             self.averageScore = b --平均分
             self.score = c        --评分
+
         end
         Event.Brocast("getShelfItemProcessing",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.RetailShop then
@@ -211,11 +212,13 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.value = 1
         self.numberText.text = "×"..self.numberSlider.value
         if self.m_data.buildingType == BuildingType.MaterialFactory then
-            self.priceInput.text = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId)
+            self.priceInput.text = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId) / 10000
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            self.priceInput.text = ct.CalculationProcessingSuggestPrice(self.averagePrice / 10000,self.m_data.itemId)
+            local temp = ct.CalculationProcessingSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.score,self.averageScore)
+            self.priceInput.text = GetClientPriceString(temp)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
-            self.priceInput.text = ct.CalculationRetailSuggestPrice(self.averagePrice / 10000,self.m_data.itemId)
+            self.priceInput.text = ct.CalculationRetailSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.playerGoodsScore,
+                    self.playerBuildingScore,self.averageScore,self.averageBuildingScore) / 10000
         end
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
@@ -344,7 +347,8 @@ function ShelfBoxCtrl:InputUpdateText()
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             self.advicePriceText.text = ct.CalculationFactoryCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,self.averageScore,self.score)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
-            self.advicePriceText.text = ct.CalculationSupermarketCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,self.playerGoodsScore,self.playerBuildingScore,self.averageScore,self.averageBuildingScore)
+            self.advicePriceText.text = ct.CalculationSupermarketCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,
+                    self.playerGoodsScore,self.playerBuildingScore,self.averageScore,self.averageBuildingScore)
         end
     end
 end

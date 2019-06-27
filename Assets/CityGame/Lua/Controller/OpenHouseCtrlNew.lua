@@ -141,7 +141,7 @@ function OpenHouseCtrlNew:_getApartmentGuidePrice(data)
     if data ~= nil and data.apartmentPrice ~= nil then
         local value = data.apartmentPrice[1]
         self.guideData = value
-        local tempPrice = ct.CalculationHouseSuggestPrice(value.avgPrice)
+        local tempPrice = ct.CalculationHouseSuggestPrice(value.avgPrice, value.score, value.avgScore)
         self.rentInput.text = GetClientPriceString(tempPrice)
         local temp = ct.CalculationHouseCompetitivePower(value.avgPrice, value.avgPrice, value.score, value.avgScore)
         self.valueText.text = temp

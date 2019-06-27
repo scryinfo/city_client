@@ -248,7 +248,7 @@ function UIBubbleManager.getCollectionAucData()
         for i, value in pairs(this.aucItemsTable) do
             local data = value:getValuableData()
             --local blockId = GroundAucConfig[data.id].firstBlockId
-            local blockId = TerrainManager.GridIndexTurnBlockID(GroundAucConfig[data.id].area[2])
+            local blockId = TerrainManager.GridIndexTurnBlockID(GroundAucConfig[data.id].centerPos)
             local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
             local index = tempTable[collectionId]
             if index ~= nil then

@@ -24,6 +24,7 @@ function WalletBoxCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.undoBtn.gameObject,self._clickUndoBtn,self)
     self.luaBehaviour:AddClick(self.confirmBtn.gameObject,self._clickConfirmBtn,self)
+    --self.luaBehaviour:AddClick(self.forget.gameObject,self._clickForget,self)
 end
 
 function WalletBoxCtrl:Refresh()
@@ -71,7 +72,11 @@ end
 function WalletBoxCtrl:_clickConfirmBtn(ins)
     PlayMusEff(1002)
     if ct.VerifyPassword(ins.passwordInput.text) == true then
-        Event.Brocast("ReqCreateOrder",ins.m_data.userId,ins.m_data.amount)
+        if ins.m_data.type == "topUp" then
+            Event.Brocast("ReqCreateOrder",ins.m_data.userId,ins.m_data.amount,ins.passwordInput.text)
+        elseif ins.m_data.type == "withdraw" then
+            Event.Brocast("ReqDisChargeOrder",ins.m_data.userId,ins.passwordInput.text)
+        end
         UIPanel.ClosePage()
         --在充值成功后打开这个  赋值钱包地址
         --Event.Brocast("openQRCode")
@@ -80,4 +85,9 @@ function WalletBoxCtrl:_clickConfirmBtn(ins)
         Event.Brocast("SmallPop",GetLanguage(33030015), ReminderType.Warning)
         return
     end
+end
+
+--忘记密码
+function WalletBoxCtrl:_clickForget()
+
 end

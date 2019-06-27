@@ -127,6 +127,7 @@ function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("deleListLine",self.deleListLine,self)
     Event.AddListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
     Event.AddListener("lineAddSucceed",self.lineAddSucceed,self)
+    --Event.AddListener("WarehousCapacityWhetherfull",self.WarehousCapacityWhetherfull,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
@@ -137,6 +138,7 @@ function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("deleListLine",self.deleListLine,self)
     Event.RemoveListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
     Event.RemoveListener("lineAddSucceed",self.lineAddSucceed,self)
+    --Event.RemoveListener("WarehousCapacityWhetherfull",self.WarehousCapacityWhetherfull,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
@@ -260,7 +262,7 @@ end
 function BuildingProductionDetailPart:clickAddBtnBg()
     PlayMusEff(1002)
     if self.m_data.info.state == "OPERATE" then
-        ct.OpenCtrl("AddProductionLineCtrl",self.materialOrGoodsInfo)
+        ct.OpenCtrl("NewAddProductionLineCtrl",self.materialOrGoodsInfo)
         self:CloseDestroy(self.waitingQueueIns)
     else
         Event.Brocast("SmallPop",GetLanguage(20120001),ReminderType.Common)
@@ -430,37 +432,6 @@ end
 --删除正在生产中的线
 function BuildingProductionDetailPart:updateNowLine(data)
     if data ~= nil then
-        --if data.lineId == self.m_data.line[1].id then
-        --    table.remove(self.m_data.line,1)
-        --    self.time = nil
-        --    UpdateBeat:Remove(self.Update,self)
-        --    --清空生产队列Item数据
-        --    if next(self.waitingQueueIns) ~= nil then
-        --        self:CloseDestroy(self.waitingQueueIns)
-        --    end
-        --    --重新初始化界面及数据
-        --    self:initializeUiInfoData(self.m_data.line)
-        --    Event.Brocast("SmallPop",GetLanguage(25030011), ReminderType.Succeed)
-        --else
-        --    --清空生产队列Item数据
-        --    if next(self.waitingQueueIns) ~= nil then
-        --        for key,value in pairs(self.waitingQueueIns) do
-        --            if value.lineId == data.lineId then
-        --                self:updateListLine(key)
-        --                table.remove(self.m_data.line,key +1)
-        --            end
-        --        end
-        --    end
-        --    if next(self.waitingQueueIns) ~= nil then
-        --        for key,value in pairs(self.waitingQueueIns) do
-        --            if key == 1 then
-        --                value.placedTopBtn.transform.localScale = Vector3.zero
-        --            else
-        --                value.placedTopBtn.transform.localScale = Vector3.one
-        --            end
-        --        end
-        --    end
-        --end
         --清空生产队列Item数据
         if next(self.waitingQueueIns) ~= nil then
             self:CloseDestroy(self.waitingQueueIns)
@@ -482,6 +453,10 @@ function BuildingProductionDetailPart:saveMaterialOrGoodsInfo(data)
         end
     end
 end
+----仓库是否没有容量
+--function BuildingProductionDetailPart:WarehousCapacityWhetherfull(data,msgId)
+--    self.isBoolCapacity = ""
+--end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --删除一条待生产的线
 function BuildingProductionDetailPart:updateListLine(id)

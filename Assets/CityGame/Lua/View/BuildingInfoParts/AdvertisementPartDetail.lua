@@ -153,6 +153,9 @@ function AdvertisementPartDetail:Show(data)
     self:_initFunc()
     if data.selledPromCount == 0 then
         self.startTime.text = GetLanguage(27040032)
+    elseif data.newPromoStartTs ~= -1 then
+        local ts = getFormatUnixTime(data.newPromoStartTs/1000)
+        self.startTime.text = ts.hour .. ":" ..ts.minute .. " " .. ts.month .. "/" .. ts.day .. "/" .. ts.year
     end
     if data.takeOnNewOrder then
         self.openedOthers.text = GetLanguage(27040002)

@@ -890,6 +890,10 @@ end
 --推广能力:competitivePower  -- 所有不同类型推广能力和 / 4
 --推广类型:Advertisementtype  --2251食品推广  2252服饰推广   13零售店推广   14住宅推广
 function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,competitivePower,Advertisementtype)
+	if price <= 0 then
+		return CalculationNBitAfterDecimalPoint(100)
+	end
+
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
 		recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]

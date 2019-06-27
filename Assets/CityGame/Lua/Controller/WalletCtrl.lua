@@ -562,8 +562,8 @@ function WalletCtrl:openQRCode(data)
     self.QRCodeContent.transform.localScale = Vector3.one
     self.QRCodeMoney.text = getMoneyString(GetClientPriceString(self.TopUpMoney * 10000)) .. "(DDD)"
     --self.QRCodeImg
-    local currentTime = TimeSynchronized.GetTheCurrentTime()
-    currentTime = currentTime + 3600
+    local currentTime = TimeSynchronized.GetTheCurrentServerTime() --毫秒
+    currentTime = currentTime + 3600000
     currentTime = math.floor(currentTime)
     local path = "https://cashbox.scry.info/qr?ot=t&ct=60&ca=0xaa638fca332190b63be1605baefde1df0b3b031e&ta="..data.RechargeRequestRes.EthAddr.."&v=" .. tonumber(self.TopUpMoney)
     .."&bu=" .. data.RechargeRequestRes.PurchaseId .. "&tl=" .. currentTime

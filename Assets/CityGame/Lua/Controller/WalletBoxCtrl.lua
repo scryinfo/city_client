@@ -24,6 +24,7 @@ function WalletBoxCtrl:Awake(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.undoBtn.gameObject,self._clickUndoBtn,self)
     self.luaBehaviour:AddClick(self.confirmBtn.gameObject,self._clickConfirmBtn,self)
+    --self.luaBehaviour:AddClick(self.forget.gameObject,self._clickForget,self)
 end
 
 function WalletBoxCtrl:Refresh()
@@ -84,4 +85,9 @@ function WalletBoxCtrl:_clickConfirmBtn(ins)
         Event.Brocast("SmallPop",GetLanguage(33030015), ReminderType.Warning)
         return
     end
+end
+
+--忘记密码
+function WalletBoxCtrl:_clickForget()
+
 end

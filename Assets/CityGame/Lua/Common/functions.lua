@@ -858,6 +858,7 @@ end
 
 local PRIDMagnification = 10000000   --推荐定价表ID倍率
 local CPMagnification = 50		  --竞争力倍率
+local BargainingPower = 25		  --议价权
 local AfterPointBit = 1 		--小数点后取1位
 --计算小数点后取N位
 function CalculationNBitAfterDecimalPoint(nNum)
@@ -1004,24 +1005,29 @@ end
 --玩家店铺评分:shopScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationHouseCompetitivePower(recommendedPricing,price,shopScore,averageShopScore)
+	if price <= 0 then
+		return CalculationNBitAfterDecimalPoint(100)
+	end
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
 		recommendedPricing = Competitive[14 * PRIDMagnification]
-		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
-		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification))
+		--竞争力 = (推荐定价 / 定价) * (玩家店铺评分 / 全城销售均店铺评分) /25 * 50(整数)
+		return  CalculationNBitAfterDecimalPoint(recommendedPricing / price * (shopScore / BargainingPower) * CPMagnification)
 	end
 	--竞争力 = (推荐定价 * 玩家店铺评分)/ (定价 * 全城销售均店铺评分) * 1000 (整数)
-	return  CalculationNBitAfterDecimalPoint(((recommendedPricing * shopScore)/ ( price * averageShopScore) * CPMagnification))
+	return  CalculationNBitAfterDecimalPoint((recommendedPricing / price)*( shopScore /  averageShopScore) / BargainingPower * CPMagnification)
 end
 ---计算住宅推荐定价
---推荐定价:recommendedPricing
-function ct.CalculationHouseSuggestPrice(recommendedPricing)
+--推荐定价:recommendedPricing\
+--玩家店铺评分:shopScore(找服务器要)
+--全城销售均店铺评分:averageShopScore(找服务器要)
+function ct.CalculationHouseSuggestPrice(recommendedPricing,shopScore,averageShopScore)
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
 		recommendedPricing = Competitive[14 * PRIDMagnification]
-		return recommendedPricing
+		return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
 	end
-	return recommendedPricing
+	return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
 end
 
 --航班预测根据机场二字码得到对应多语言

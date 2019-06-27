@@ -250,7 +250,8 @@ namespace LuaFramework
             //判断是否需要更新
             if (m_ojects.Count >= 1)
             {
-                StartLoadReminderPanel();
+                //StartLoadReminderPanel();
+                StartCoroutine(StartDownLoad(m_ojects));
             }
             else
             {

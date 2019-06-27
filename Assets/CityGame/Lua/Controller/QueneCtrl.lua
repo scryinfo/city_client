@@ -33,7 +33,7 @@ function QueneCtrl:Active()
     QuenePanel.goods.text = GetLanguage(28040011)
     QuenePanel.details.text = GetLanguage(28040012)
     QuenePanel.startTime.text = GetLanguage(27040018)
-    QuenePanel.contentText.text = GetLanguage(16010026)
+    QuenePanel.contentText.text = GetLanguage(27040033)
 end
 --todo：刷新
 function QueneCtrl:Refresh()

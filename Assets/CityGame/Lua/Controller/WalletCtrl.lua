@@ -427,7 +427,7 @@ function WalletCtrl:saveAmount()
     if self.moneyInput.text == "" then
         self.moneyInput.text = 0
     end
-    self.Amount = tonumber(self.moneyInput.text) / 1000000
+    self.Amount = tostring(tonumber(self.moneyInput.text) / 1000000)
     self.poundageText.text = GetLanguage(33030002 ,"E" .. GetClientPriceString(tonumber(self.moneyInput.text) * 0.003 * 10000),0.3)
     self.proportionMontyText.text = getMoneyString(tonumber(self.moneyInput.text) * (1/1000000))
 end

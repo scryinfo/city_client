@@ -23,7 +23,21 @@ namespace UnityEngine
         public RectTransform codePanel;
         private void Awake()
         {
-            QRTexturePath = Application.dataPath + "/CityGame/Resources/Atlas/Wallet";
+            //QRTexturePath = Application.dataPath + "/CityGame/Resources/Atlas/Wallet";
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                QRTexturePath = UnityEngine.Application.persistentDataPath + "/CityGame";
+            }
+            else
+            {
+#if LUA_BUNDEL
+            return "Assets/CityGame";
+#else
+                QRTexturePath = "Assets/CityGame";
+
+#endif
+            }
+
         }
         public void StartScanQRCode()
         {

@@ -158,7 +158,7 @@ function WalletCtrl:_getComponent(go)
     self.QRCodeAmount = go.transform:Find("QRCodeContent/content/amount"):GetComponent("Text")
     self.QRCodeMoney = go.transform:Find("QRCodeContent/content/money"):GetComponent("Text")
     self.QRCodeText = go.transform:Find("QRCodeContent/content/Text"):GetComponent("Text")
-    self.QRCodeImg = go.transform:Find("QRCodeContent/content/QRCode"):GetComponent("Image")
+    self.QRCodeImg = go.transform:Find("QRCodeContent/content/QRCode"):GetComponent("RawImage")
     self.QRCodeAddressText = go.transform:Find("QRCodeContent/content/addressBg/addressText"):GetComponent("Text")
     self.copyBtn = go.transform:Find("QRCodeContent/content/addressBg/copyBtn")
     self.copyText = go.transform:Find("QRCodeContent/content/addressBg/copyBtn/Text"):GetComponent("Text")
@@ -553,9 +553,9 @@ end
 --关闭钱包充值金额（新加）
 function WalletCtrl:closeRechargeAmountContent()
     self.RechargeAmountContent.transform.localScale = Vector3.zero
-    local paths = CityLuaUtil.getAssetsPath()
-    os.remove(paths.."/Resources/QRCode.png")
-    os.remove(paths.."/Resources/QRCode.png.meta")
+    --local paths = CityLuaUtil.getAssetsPath()
+    --os.remove(paths.."/Resources/QRCode.png")
+    --os.remove(paths.."/Resources/QRCode.png.meta")
 end
 --打开二维码
 function WalletCtrl:openQRCode(data)
@@ -570,10 +570,10 @@ function WalletCtrl:openQRCode(data)
     .."&bu=" .. data.RechargeRequestRes.PurchaseId .. "&tl=" .. currentTime
     self.moneyPurchaseId = data.RechargeRequestRes.PurchaseId   --订单Id
     self.moneyEthAddr = data.RechargeRequestRes.EthAddr   --地址
-    self.scanQRCode:CreateQRCode(path)
-    self.timmer= 0
+    self.scanQRCode:CreateQRCode(path,self.QRCodeImg)
+    --self.timmer= 0
     self.QRCodeAddressText.text = data.RechargeRequestRes.EthAddr
-    UpdateBeat:Add(self.UpdateCode,self)
+    --UpdateBeat:Add(self.UpdateCode,self)
 end
 
 function WalletCtrl:UpdateCode()
@@ -592,9 +592,9 @@ end
 function WalletCtrl:closeQRCode()
     self.QRCodeContent.transform.localScale = Vector3.zero
     self.QRCodeMoney.text = 0.0000 .. "(DDD)"
-    local paths = CityLuaUtil.getAssetsPath()
-    os.remove(paths.."/Resources/QRCode.png")
-    os.remove(paths.."/Resources/QRCode.png.meta")
+    --local paths = CityLuaUtil.getAssetsPath()
+    --os.remove(paths.."/Resources/QRCode.png")
+    --os.remove(paths.."/Resources/QRCode.png.meta")
 end
 --打开扫描二维码
 function WalletCtrl:openScanningQRCode()

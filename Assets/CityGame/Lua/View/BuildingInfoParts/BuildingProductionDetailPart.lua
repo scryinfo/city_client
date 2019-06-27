@@ -260,7 +260,7 @@ end
 function BuildingProductionDetailPart:clickAddBtnBg()
     PlayMusEff(1002)
     if self.m_data.info.state == "OPERATE" then
-        ct.OpenCtrl("AddProductionLineCtrl",self.materialOrGoodsInfo)
+        ct.OpenCtrl("NewAddProductionLineCtrl",self.materialOrGoodsInfo)
         self:CloseDestroy(self.waitingQueueIns)
     else
         Event.Brocast("SmallPop",GetLanguage(20120001),ReminderType.Common)

@@ -11,7 +11,7 @@ local prefabPools = {}
 
 GAucModel.StartAucPath = "View/Building/AuctionPlanes"
 GAucModel.WillAucPath = "View/Building/AuctionWillPlanes"
-GAucModel.BidTime = 180 * 1000
+--GAucModel.BidTime = 180 * 1000
 local GroundNowPoolName = "GroundNowObj"
 local GroundSoonPoolName = "GroundSoonObj"
 

@@ -1,17 +1,18 @@
-AddProductionLineMgr = class('AddProductionLineMgr')
---AddProductionLineMgr.static.ChooseColor = Vector3.New(78, 111, 189)  --选中时显示的颜色
---AddProductionLineMgr.static.NomalColor = Vector3.New(230, 226, 205)  --未选中时显示的颜色
+---
+---
+---
+AddLineMgrNew = class('AddLineMgrNew')
 
-AddProductionLineMgr.static.ButtonItemPath = "View/GoodsItem/AddLineBtnItem"  --左侧需要加载的预制
-AddProductionLineMgr.static.GoodDetailItemPath = "View/GoodsItem/AddGoodDetailItem"  --右侧滑动需要加载的预制
+AddLineMgrNew.static.togglePrefab = "View/items/AddLineChooseItems/AddLineToggleItem"  --左侧需要加载的预制
+AddLineMgrNew.static.detailPrefab = "View/items/AddLineChooseItems/AddLineDetailItem"  --右侧滑动需要加载的预制
 
 --位于哪边，左右两边具有不同意义
-AddLineButtonPosValue =
+AddLineSideValue =
 {
     Left = 0,
     Right = 1,
 }
-function AddProductionLineMgr:initialize(viewRect, sideValue)
+function AddLineMgrNew:initialize(viewRect, sideValue)
     self.viewRect = viewRect
     self.sideValue = sideValue
 
@@ -20,8 +21,8 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     self.detailToggleGroup = viewRect:Find("detailRoot"):GetComponent("ToggleGroup")
     self.detailContent = viewRect:Find("detailRoot/detailScroll/content"):GetComponent("RectTransform")
 
-    self.togglePrefab = UnityEngine.Resources.Load(AddProductionLineMgr.static.ButtonItemPath)
-    self.detailPrefab = UnityEngine.Resources.Load(AddProductionLineMgr.static.GoodDetailItemPath)
+    self.togglePrefab = UnityEngine.Resources.Load(AddLineMgrNew.static.togglePrefab)
+    self.detailPrefab = UnityEngine.Resources.Load(AddLineMgrNew.static.detailPrefab)
 
     self.detailPrefabList = {}
     self.toggleItems = {}
@@ -29,14 +30,17 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     self.keyContentItems = {}
 
     for i, typeItem in pairs(CompoundTypeConfig) do
-        if (sideValue == AddLineButtonPosValue.Left) and i < 2200 or (sideValue == AddLineButtonPosValue.Right and i > 2200) then
+        if (sideValue == AddLineSideValue.Left) and i < 2200 or (sideValue == AddLineSideValue.Right and i > 2200) then
             local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
             go.transform:SetParent(self.typeContent.transform)
             go.transform.localScale = Vector3.one
-            local tempData = {languageId = typeItem[1].name, typeId = i, backFunc = function (typeId)
-                self:_showDetails(typeId)
+            local tempData = {languageId = typeItem[1].name, typeId = i, createDetail = function (typeId)  --创建方法
+                self:_createDetail(typeId)
+            end,
+            selectFunc = function (item)  --选中
+                self:_selectTypeItem(item)
             end}
-            local item = AddLineBtnItem:new(go.transform, tempData, self.typeToggleGroup)
+            local item = AddLineTypeItemNew:new(go.transform, tempData, self.typeToggleGroup)
             self.toggleItems[#self.toggleItems + 1] = item
             self.keyToggleItems[i] = item  --创建以typeId为key的表
         end
@@ -45,7 +49,13 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     FixedUpdateBeat:Add(self._update, self)
 end
 --
-function AddProductionLineMgr:_language()
+function AddLineMgrNew:_cleanAll()
+    self.selectTypeItem = nil
+    self.selectDetailItem = nil
+    FixedUpdateBeat:Remove(self._update, self)
+end
+--
+function AddLineMgrNew:_language()
     if self.keyContentItems ~= nil then
         for i, item in pairs(self.keyContentItems) do
             item:_language()
@@ -58,19 +68,21 @@ function AddProductionLineMgr:_language()
     end
 end
 --初始化
-function AddProductionLineMgr:initData(chooseTypeId)
-    self:_language()
+function AddLineMgrNew:initData(chooseTypeId)
     self.detailContent.anchoredPosition = Vector2.zero
+    FixedUpdateBeat:Add(self._update, self)
+    self:_language()
 
     --设置默认打开的类别
     for i, item in pairs(self.toggleItems) do
         self.toggleItems[i]:setToggleIsOn(false)
     end
 
-    --根据特定值去设置toggle
+    --根据特定值去设置toggle  --暂时没找到用的地方
     if chooseTypeId ~= nil then
         for i, item in pairs(self.toggleItems) do
             if self.toggleItems[i]:getTypeId() == chooseTypeId then
+                self.selectTypeItem = self.toggleItems[i]
                 self.toggleItems[i]:setToggleIsOn(true)
                 self.tempTypeId = self.toggleItems[i]:getTypeId()
                 return
@@ -78,40 +90,74 @@ function AddProductionLineMgr:initData(chooseTypeId)
         end
     end
 
-    self.toggleItems[1]:setToggleIsOn(true)
+    self.toggleItems[1]:_selectType()
+    self.selectTypeItem = self.toggleItems[1]
     self.tempTypeId = self.toggleItems[1]:getTypeId()
 end
 --获取当前选择的typeId
-function AddProductionLineMgr:getCurrentTypeId()
+function AddLineMgrNew:getCurrentTypeId()
     return self.tempTypeId
 end
 
 --根据typeId 和 itemId 获取对应的item，并显示选中状态
-function AddProductionLineMgr:setToggleIsOnByType(itemId)
+function AddLineMgrNew:setToggleIsOnByType(itemId)
     local typeId = tonumber(string.sub(itemId, 1, 4))
     if self.tempDetailItemId ~= nil and itemId == self.tempDetailItemId then
         return
     end
     self.tempDetailItemId = itemId
 
+    --if self.keyToggleItems[typeId] then
+    --    for i, toggleItem in pairs(self.keyToggleItems) do
+    --        toggleItem.setToggleIsOn(toggleItem, false)
+    --    end
+    --    self.keyToggleItems[typeId].setToggleIsOn(self.keyToggleItems[typeId], true)
+    --end
+    --
+    --if self.keyContentItems[itemId] then
+    --    for i, detailItem in pairs(self.keyContentItems) do
+    --        detailItem.setToggleIsOn(detailItem, false)
+    --    end
+    --    self.keyContentItems[itemId].setToggleIsOn(self.keyContentItems[itemId], true)
+    --end
     if self.keyToggleItems[typeId] then
         for i, toggleItem in pairs(self.keyToggleItems) do
             toggleItem.setToggleIsOn(toggleItem, false)
         end
-        self.keyToggleItems[typeId].setToggleIsOn(self.keyToggleItems[typeId], true)
+        self.keyToggleItems[typeId]:_selectType(self.keyToggleItems[typeId], true)
     end
 
     if self.keyContentItems[itemId] then
         for i, detailItem in pairs(self.keyContentItems) do
             detailItem.setToggleIsOn(detailItem, false)
         end
-        self.keyContentItems[itemId].setToggleIsOn(self.keyContentItems[itemId], true)
+        self.keyContentItems[itemId]._selectDetail(self.keyContentItems[itemId], true)
     end
 end
-function AddProductionLineMgr:_showDetails(typeId)
-    ct.log("system", "+++++++++++++++++++++showDetail: "..typeId)
+---------
+function AddLineMgrNew:_selectTypeItem(selectTypeItem)
+    --清空之前的item状态
+    if self.selectTypeItem ~= nil then
+        self.selectTypeItem:setToggleIsOn(false)
+    end
+    self.selectTypeItem = selectTypeItem
+    selectTypeItem:setToggleIsOn(true)  --显示现在的item
+
+    local typeId = selectTypeItem:getTypeId()
+    self:_createDetail(typeId)
+    ct.log("system","-------------------选中了type："..typeId)
+
+    for i, item in ipairs(self.contentItems) do
+        self.contentItems[i]:setToggleIsOn(false)
+    end
+    self.contentItems[1]:_selectDetail()
+    self.tempDetailItemId = self.contentItems[1]:getItemId()
+end
+--
+function AddLineMgrNew:_createDetail(typeId)
     self:_resetDetails()
     self.contentItems = {}
+    self.keyContentItems = {}
 
     --暂时是直接使用content下的子物体，多了的就移出content
     local data = CompoundTypeConfig[typeId]
@@ -133,59 +179,72 @@ function AddProductionLineMgr:_showDetails(typeId)
         go.transform:SetParent(self.detailContent.transform)
         go.transform.localScale = Vector3.one
 
-        local tempData = {itemId = itemData.itemId,itemType = itemData.itemType, backFunc = function (itemId, rectPosition, enableShow)
-            self:_setLineShow(itemId, rectPosition, enableShow)
+        local tempData = {itemId = itemData.itemId,itemType = itemData.itemType, backFunc = function (detailItem)
+            self:_setLineShow(detailItem)
         end}
-        local item = AddGoodDetailItem:new(go.transform, tempData, self.detailToggleGroup)
+        local item = AddLineDetailItemNew:new(go.transform, tempData, self.detailToggleGroup)
         self.contentItems[#self.contentItems + 1] = item
         self.keyContentItems[itemData.itemId] = item  --创建以itemId为key的详情表
     end
-
-    for i, item in ipairs(self.contentItems) do
-        self.contentItems[i]:setToggleIsOn(false)
-    end
-    self.contentItems[1]:setToggleIsOn(true)
-    self.tempDetailItemId = self.contentItems[1]:getItemId()
 end
+
 --选择了某个item，显示线路
-function AddProductionLineMgr:_setLineShow(itemId, rectPosition, enableShow)
+function AddLineMgrNew:_setLineShow(selectDetailItem)
+    if self.selectDetailItem ~= nil then
+        self.selectDetailItem:setToggleIsOn(false)
+    end
+    self.selectDetailItem = selectDetailItem
+    selectDetailItem:setToggleIsOn(true)  --显示已选中
+    local itemId = selectDetailItem:getItemId()
+    local rectPosition = selectDetailItem:getItemPos()
+    local enableShow = selectDetailItem:getEnableShow()
     self.tempDetailItemId = itemId
 
-    if self.sideValue == AddLineButtonPosValue.Left then
+    ct.log("system","-------------------选中了detail："..itemId)
+
+
+    if self.sideValue == AddLineSideValue.Left then
         Event.Brocast("leftSetCenter", itemId, rectPosition, enableShow)
-    elseif self.sideValue == AddLineButtonPosValue.Right then
+    elseif self.sideValue == AddLineSideValue.Right then
         Event.Brocast("rightSetCenter", itemId, rectPosition, enableShow)
     end
 end
 --回收预制
-function AddProductionLineMgr:_releaseObj(obj)
+function AddLineMgrNew:_releaseObj(obj)
     obj.transform:SetParent(self.detailToggleGroup.transform)
     obj.transform.localScale = Vector3.zero
     obj.transform.localPosition = Vector3.zero
 end
 --清空选中状态
-function AddProductionLineMgr:_resetDetails()
+function AddLineMgrNew:_resetDetails()
     if self.contentItems then
         for i, item in ipairs(self.contentItems) do
             item:cleanState()
+            item = nil
         end
         self.tempDetailItemId = nil
     end
+    if self.keyContentItems then
+        for i, item in pairs(self.keyContentItems) do
+            item:cleanState()
+            item = nil
+        end
+    end
 end
 --
-function AddProductionLineMgr:_update()
-    if self.sideValue == AddLineButtonPosValue.Left then
+function AddLineMgrNew:_update()
+    if self.sideValue == AddLineSideValue.Left then
         if self.keyContentItems[self.tempDetailItemId] ~= nil then
             local pos = self.keyContentItems[self.tempDetailItemId]:getItemPos()
-            AddProductionLinePanel.leftBtnParent.transform.position = pos
+            NewAddProductionLinePanel.leftBtnParent.transform.position = pos
         end
         return
     end
 
-    if self.sideValue == AddLineButtonPosValue.Right then
+    if self.sideValue == AddLineSideValue.Right then
         if self.keyContentItems[self.tempDetailItemId] ~= nil then
             local pos = self.keyContentItems[self.tempDetailItemId]:getItemPos()
-            AddProductionLinePanel.rightBtnParent.transform.position = pos
+            NewAddProductionLinePanel.rightBtnParent.transform.position = pos
         end
         return
     end
@@ -240,7 +299,7 @@ local function LoadBuildingIcon(name,iIcon)
 end
 
 --设置ICon的Sprite
-function AddProductionLineMgr.SetBuildingIconSpite(name , tempImage)
+function AddLineMgrNew.SetBuildingIconSpite(name , tempImage)
     if JudgeHasBuildingIcon() == true then
         tempImage.sprite = GetBuildingIcon(name)
         --tempImage:SetNativeSize()

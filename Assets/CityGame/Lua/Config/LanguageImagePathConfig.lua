@@ -33,3 +33,33 @@ Sprite_English={
    ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
    ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
 }
+
+Sprite_Korean = {
+    ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-sell.png",
+    ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
+    --中心建筑
+    ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon -city info.png",
+    ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/central warehouse1.png",
+    ["CBSoon"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon.png",
+    --中心仓库
+    ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/plat-centerwarehouse.png",
+    --建筑自带仓库、货架
+    ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
+    ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
+
+}
+
+Sprite_Japanese ={
+    ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-sell.png",
+    ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
+    --中心建筑
+    ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon -city info.png",
+    ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/central warehouse1.png",
+    ["CBSoon"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon.png",
+    --中心仓库
+    ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/plat-centerwarehouse.png",
+    --建筑自带仓库、货架
+    ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
+    ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
+
+}

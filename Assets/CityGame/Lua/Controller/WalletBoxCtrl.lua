@@ -71,7 +71,11 @@ end
 function WalletBoxCtrl:_clickConfirmBtn(ins)
     PlayMusEff(1002)
     if ct.VerifyPassword(ins.passwordInput.text) == true then
-        Event.Brocast("ReqCreateOrder",ins.m_data.userId,ins.m_data.amount)
+        if ins.m_data.type == "topUp" then
+            Event.Brocast("ReqCreateOrder",ins.m_data.userId,ins.m_data.amount,ins.passwordInput.text)
+        elseif ins.m_data.type == "withdraw" then
+            Event.Brocast("ReqDisChargeOrder",ins.m_data.userId,ins.passwordInput.text)
+        end
         UIPanel.ClosePage()
         --在充值成功后打开这个  赋值钱包地址
         --Event.Brocast("openQRCode")

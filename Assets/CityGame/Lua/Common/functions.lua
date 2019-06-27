@@ -431,36 +431,32 @@ currentLanguage={}
 currentSprite={}
 chinese={}
 english={}
+korean ={}
+japanese ={}
+
 sprite_chi={}
 sprite_eng={}
+sprite_kor={}
+sprite_jap={}
+
+
 function ReadConfigLanguage()
-	for ID, ch in pairs(Language_Chinese) do
-		chinese[ID]=ch
-	end
-	for ID, en in pairs(Language_English) do
-		english[ID]=en
-	end
+	chinese = Language_Chinese
+	english = Language_English
+	korean =Language_Korean
+	japanese = Language_Japanese
 
-	for key, content in pairs(Sprite_Chinese) do
-		sprite_chi[key]=content
-	end
-	for key, content in pairs(Sprite_English) do
-		sprite_eng[key]=content
-	end
+	sprite_chi = Sprite_Chinese
+	sprite_eng = Sprite_English
+	sprite_kor = Sprite_Korean
+	sprite_jap = Sprite_Japanese
 
-
-   local num=UnityEngine.PlayerPrefs.GetInt("Language")
-	if num==0 then
-		currentLanguage=chinese
-		currentSprite=sprite_chi
-	elseif num==1 then
-		currentLanguage=english
-		currentSprite=sprite_eng
-	end
+    local num = UnityEngine.PlayerPrefs.GetInt("Language")
+	SaveLanguageSettings(num)
 end
 
 function SaveLanguageSettings(languageType)
-	if languageType==LanguageType.Chinese then
+	if languageType == LanguageType.Chinese then
 		UnityEngine.PlayerPrefs.SetInt("Language",0)
 		currentLanguage=chinese
 		currentSprite=sprite_chi
@@ -468,6 +464,14 @@ function SaveLanguageSettings(languageType)
 		UnityEngine.PlayerPrefs.SetInt("Language",1)
 		currentLanguage=english
 		currentSprite=sprite_eng
+	elseif languageType == LanguageType.Korean then
+		UnityEngine.PlayerPrefs.SetInt("Language",2)
+		currentLanguage = korean
+		currentSprite = sprite_kor
+	elseif languageType==LanguageType.Japanese then
+		UnityEngine.PlayerPrefs.SetInt("Language",3)
+		currentLanguage = japanese
+		currentSprite = sprite_jap
 	end
 end
 
@@ -825,18 +829,28 @@ end
 --获取带...的string，航班预测
 local cnDefaultLength = 27  --默认显示的中文字符长度，一个中字占3length
 local enDefaultLength = 16
-function ct.getFlightSubString(value, cnLen, enLen)
+function ct.getFlightSubString(value, cnLen, enLen , koLen ,jpLen)
 	local result = value
 	local language = currentLanguage
-	if language == chinese then
+	if language == Language_Chinese then
 		if cnLen == nil then cnLen = cnDefaultLength end
 		if #value > cnLen then
 			result = string.sub(value, 1, cnLen).."..."
 		end
-	elseif language == english then
+	elseif language == Language_English then
 		if enLen == nil then enLen = enDefaultLength end
 		if #value > enLen then
 			result = string.sub(value, 1, enLen).."..."
+		end
+	elseif language == Language_Korean then
+		if koLen == nil then koLen = cnDefaultLength end
+		if #value > koLen then
+			result = string.sub(value, 1, koLen).."..."
+		end
+	elseif language == Language_Japanese then
+		if jpLen == nil then jpLen = cnDefaultLength end
+		if #value > jpLen then
+			result = string.sub(value, 1, jpLen).."..."
 		end
 	end
 	return result
@@ -844,6 +858,7 @@ end
 
 local PRIDMagnification = 10000000   --推荐定价表ID倍率
 local CPMagnification = 50		  --竞争力倍率
+local BargainingPower = 25		  --议价权
 local AfterPointBit = 1 		--小数点后取1位
 --计算小数点后取N位
 function CalculationNBitAfterDecimalPoint(nNum)
@@ -1007,24 +1022,29 @@ end
 --玩家店铺评分:shopScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationHouseCompetitivePower(recommendedPricing,price,shopScore,averageShopScore)
+	if price <= 0 then
+		return CalculationNBitAfterDecimalPoint(100)
+	end
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
 		recommendedPricing = Competitive[14 * PRIDMagnification]
-		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
-		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification))
+		--竞争力 = (推荐定价 / 定价) * (玩家店铺评分 / 全城销售均店铺评分) /25 * 50(整数)
+		return  CalculationNBitAfterDecimalPoint(recommendedPricing / price * (shopScore / BargainingPower) * CPMagnification)
 	end
 	--竞争力 = (推荐定价 * 玩家店铺评分)/ (定价 * 全城销售均店铺评分) * 1000 (整数)
-	return  CalculationNBitAfterDecimalPoint(((recommendedPricing * shopScore)/ ( price * averageShopScore) * CPMagnification))
+	return  CalculationNBitAfterDecimalPoint((recommendedPricing / price)*( shopScore /  averageShopScore) / BargainingPower * CPMagnification)
 end
 ---计算住宅推荐定价
---推荐定价:recommendedPricing
-function ct.CalculationHouseSuggestPrice(recommendedPricing)
+--推荐定价:recommendedPricing\
+--玩家店铺评分:shopScore(找服务器要)
+--全城销售均店铺评分:averageShopScore(找服务器要)
+function ct.CalculationHouseSuggestPrice(recommendedPricing,shopScore,averageShopScore)
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
 		recommendedPricing = Competitive[14 * PRIDMagnification]
-		return recommendedPricing
+		return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
 	end
-	return recommendedPricing
+	return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
 end
 
 --航班预测根据机场二字码得到对应多语言

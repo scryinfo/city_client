@@ -51,6 +51,8 @@ end
 --
 function AddLineMgrNew:_cleanAll()
     self.selectTypeItem = nil
+    self.selectDetailItem = nil
+    FixedUpdateBeat:Remove(self._update, self)
 end
 --
 function AddLineMgrNew:_language()
@@ -67,8 +69,9 @@ function AddLineMgrNew:_language()
 end
 --初始化
 function AddLineMgrNew:initData(chooseTypeId)
-    self:_language()
     self.detailContent.anchoredPosition = Vector2.zero
+    FixedUpdateBeat:Add(self._update, self)
+    self:_language()
 
     --设置默认打开的类别
     for i, item in pairs(self.toggleItems) do
@@ -87,7 +90,7 @@ function AddLineMgrNew:initData(chooseTypeId)
         end
     end
 
-    self.toggleItems[1]:setToggleIsOn(true)
+    self.toggleItems[1]:_selectType()
     self.selectTypeItem = self.toggleItems[1]
     self.tempTypeId = self.toggleItems[1]:getTypeId()
 end
@@ -104,18 +107,31 @@ function AddLineMgrNew:setToggleIsOnByType(itemId)
     end
     self.tempDetailItemId = itemId
 
+    --if self.keyToggleItems[typeId] then
+    --    for i, toggleItem in pairs(self.keyToggleItems) do
+    --        toggleItem.setToggleIsOn(toggleItem, false)
+    --    end
+    --    self.keyToggleItems[typeId].setToggleIsOn(self.keyToggleItems[typeId], true)
+    --end
+    --
+    --if self.keyContentItems[itemId] then
+    --    for i, detailItem in pairs(self.keyContentItems) do
+    --        detailItem.setToggleIsOn(detailItem, false)
+    --    end
+    --    self.keyContentItems[itemId].setToggleIsOn(self.keyContentItems[itemId], true)
+    --end
     if self.keyToggleItems[typeId] then
         for i, toggleItem in pairs(self.keyToggleItems) do
-            toggleItem.setToggleIsOn(toggleItem, false)
+            toggleItem:setToggleIsOn(toggleItem, false)
         end
-        self.keyToggleItems[typeId].setToggleIsOn(self.keyToggleItems[typeId], true)
+        self.keyToggleItems[typeId]:_selectType(self.keyToggleItems[typeId])
     end
 
     if self.keyContentItems[itemId] then
         for i, detailItem in pairs(self.keyContentItems) do
-            detailItem.setToggleIsOn(detailItem, false)
+            detailItem:setToggleIsOn(detailItem, false)
         end
-        self.keyContentItems[itemId].setToggleIsOn(self.keyContentItems[itemId], true)
+        self.keyContentItems[itemId]._selectDetail(self.keyContentItems[itemId])
     end
 end
 ---------
@@ -129,11 +145,12 @@ function AddLineMgrNew:_selectTypeItem(selectTypeItem)
 
     local typeId = selectTypeItem:getTypeId()
     self:_createDetail(typeId)
+    ct.log("system","-------------------选中了type："..typeId)
 
     for i, item in ipairs(self.contentItems) do
         self.contentItems[i]:setToggleIsOn(false)
     end
-    self.contentItems[1]:setToggleIsOn(true)
+    self.contentItems[1]:_selectDetail()
     self.tempDetailItemId = self.contentItems[1]:getItemId()
 end
 --
@@ -161,8 +178,8 @@ function AddLineMgrNew:_createDetail(typeId)
         go.transform:SetParent(self.detailContent.transform)
         go.transform.localScale = Vector3.one
 
-        local tempData = {itemId = itemData.itemId,itemType = itemData.itemType, backFunc = function (itemId, rectPosition, enableShow)
-            self:_setLineShow(itemId, rectPosition, enableShow)
+        local tempData = {itemId = itemData.itemId,itemType = itemData.itemType, backFunc = function (detailItem)
+            self:_setLineShow(detailItem)
         end}
         local item = AddLineDetailItemNew:new(go.transform, tempData, self.detailToggleGroup)
         self.contentItems[#self.contentItems + 1] = item
@@ -171,8 +188,19 @@ function AddLineMgrNew:_createDetail(typeId)
 end
 
 --选择了某个item，显示线路
-function AddLineMgrNew:_setLineShow(itemId, rectPosition, enableShow)
+function AddLineMgrNew:_setLineShow(selectDetailItem)
+    if self.selectDetailItem ~= nil then
+        self.selectDetailItem:setToggleIsOn(false)
+    end
+    self.selectDetailItem = selectDetailItem
+    selectDetailItem:setToggleIsOn(true)  --显示已选中
+    local itemId = selectDetailItem:getItemId()
+    local rectPosition = selectDetailItem:getItemPos()
+    local enableShow = selectDetailItem:getEnableShow()
     self.tempDetailItemId = itemId
+
+    ct.log("system","-------------------选中了detail："..itemId)
+
 
     if self.sideValue == AddLineSideValue.Left then
         Event.Brocast("leftSetCenter", itemId, rectPosition, enableShow)
@@ -193,6 +221,11 @@ function AddLineMgrNew:_resetDetails()
             item:cleanState()
         end
         self.tempDetailItemId = nil
+    end
+    if self.keyContentItems then
+        for i, item in pairs(self.keyContentItems) do
+            item:close()
+        end
     end
 end
 --

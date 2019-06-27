@@ -114,7 +114,7 @@ function NewAddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow
     --NewAddProductionLinePanel.leftBtnParent.transform.position = rectPosition
     --NewAddProductionLinePanel.leftBtnParent.anchoredPosition = NewAddProductionLinePanel.leftBtnParent.anchoredPosition + Vector2.New(174, 0)
 
-    ct.log("system", "-----------选中 left: "..itemId)
+    --ct.log("system", "-----------选中 left: "..itemId)
 
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
     local lineDatas = {}  --获取线的数据
@@ -137,7 +137,7 @@ function NewAddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableSho
     --NewAddProductionLinePanel.rightBtnParent.transform.position = rectPosition
     --NewAddProductionLinePanel.rightBtnParent.anchoredPosition = NewAddProductionLinePanel.rightBtnParent.anchoredPosition - Vector2.New(174, 0)
 
-    ct.log("system", "-----------选中 right: "..itemId)
+    --ct.log("system", "-----------选中 right: "..itemId)
 
     local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
     self:_setLineDetailInfo(selectItemMatToGoodIds)
@@ -199,7 +199,13 @@ function NewAddProductionLineCtrl:getPresentSpeed(itemId)
         end
     end
 end
+--
 function NewAddProductionLineCtrl:Hide()
     UIPanel.Hide(self)
-    --return {insId = self.m_data.info.id}
+    self:_cleanData()
+end
+--
+function NewAddProductionLineCtrl:_cleanData()
+    NewAddProductionLinePanel.leftToggleMgr:_cleanAll()
+    NewAddProductionLinePanel.rightToggleMgr:_cleanAll()
 end

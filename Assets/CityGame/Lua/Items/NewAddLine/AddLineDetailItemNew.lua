@@ -20,6 +20,7 @@ function AddLineDetailItemNew:initialize(viewRect, data, toggleGroup)
     else
         self.disableImg.transform.localScale = Vector3.one
     end
+    self.stateData = stateData
 
     local tempData
     if data.itemType == 0 then
@@ -28,26 +29,23 @@ function AddLineDetailItemNew:initialize(viewRect, data, toggleGroup)
         tempData = Good[data.itemId]
     end
     AddProductionLineMgr.SetBuildingIconSpite(tempData.img, self.iconImg)
-    --self.numberText.text = HomeProductionLineItem.GetInventoryNum(data.itemId)
     self.bgBtn.onClick:RemoveAllListeners()
     self.bgBtn.onClick:AddListener(function()
-        if self.select == nil or self.select == false then
-            self.select = true
-            self:showState(true)
-            self.data.backFunc(self.data.itemId, self.viewRect.transform.position,stateData.enableShow)  --显示中间的线路
-        end
+        self:_clickFunc()
     end)
     self:_language()
-end
---根据itemId去查状态
-function AddLineDetailItemNew:_showState(itemId)
-
 end
 
 --外部设置toggle状态
 function AddLineDetailItemNew:setToggleIsOn(isOn)
     self.select = isOn
     self:showState(isOn)
+end
+--
+function AddLineDetailItemNew:_selectDetail()
+    self.select = true
+    self:showState(true)
+    self.data.backFunc(self)  --显示中间的线路
 end
 --显示
 function AddLineDetailItemNew:showState(select)
@@ -70,6 +68,21 @@ function AddLineDetailItemNew:getItemPos()
     return self.viewRect.transform.position
 end
 --
+function AddLineDetailItemNew:getEnableShow()
+    return self.stateData.enableShow
+end
+--
 function AddLineDetailItemNew:_language()
     self.nameText.text = GetLanguage(self.data.itemId)
+end
+--
+function AddLineDetailItemNew:_clickFunc()
+    if self.select == nil or self.select == false then
+        self:_selectDetail()
+    end
+end
+--
+function AddLineDetailItemNew:close()
+    --self.data = nil
+    --self = nil
 end

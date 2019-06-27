@@ -40,6 +40,13 @@ end
 function AddLineTypeItemNew:_btnClickFunc()
     if self.select == nil or self.select == false then
         self.data.selectFunc(self)
-        ct.log("system","-------------------选中了type："..self.data.typeId)
+        --ct.log("system","-------------------选中了type："..self.data.typeId)
     end
+end
+--
+function AddLineTypeItemNew:_selectType()
+    self.select = true
+    self:showState(true)
+    self.data.selectFunc(self)
+    --ct.log("system","-------------------选中了type："..self.data.typeId)
 end

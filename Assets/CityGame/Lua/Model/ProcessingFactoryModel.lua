@@ -139,6 +139,7 @@ function ProcessingFactoryModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId
 end
 --修改货架属性
 function ProcessingFactoryModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
 --下架
@@ -147,6 +148,7 @@ function ProcessingFactoryModel:m_ReqShelfDel(buildingId,itemId,num,producerId,q
 end
 --添加生产线
 function ProcessingFactoryModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
 end
 --删除生产线
@@ -227,6 +229,7 @@ function ProcessingFactoryModel:n_OnShelfAddInfo(data)
 end
 --修改货架属性
 function ProcessingFactoryModel:n_OnModifyShelfInfo(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenprocessing(self.insId)
@@ -234,7 +237,17 @@ function ProcessingFactoryModel:n_OnModifyShelfInfo(data)
     end
 end
 --下架
-function ProcessingFactoryModel:n_OnShelfDelInfo(data)
+function ProcessingFactoryModel:n_OnShelfDelInfo(data,msgId)
+    if msgId == 0 then
+        if data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = "货架数量发生变化请刷新后操作",func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        end
+    end
     Event.Brocast("downShelfSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenprocessing(self.insId)
@@ -260,27 +273,37 @@ end
 --货架购买
 function ProcessingFactoryModel:n_OnBuyShelfGoodsInfo(data,msgId)
     if msgId == 0 then
-        if data.reason == 16 then
+        if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量不足",func = function()
+                        content = GetLanguage(25060013),func = function()
+                    Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
             return
-        elseif data.reason == 15 then
+        elseif data.reason == "shelfSetFail" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架购买失败",func = function()
+                        content = GetLanguage(25060013),func = function()
+                    Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
             return
-        elseif data.reason == 17 then
+        elseif data.reason == "spaceNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "仓库不足",func = function()
+                        content = GetLanguage(25060014),func = function()
+                    Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
             return
+        elseif data.reason == "moneyNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(25060015),func = function()
+                    Event.Brocast("closeBuyList")
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
         end
     else
         Event.Brocast("buySucceed",data)
@@ -311,6 +334,7 @@ function ProcessingFactoryModel:n_OnGetShelfData(data)
 end
 --获取生产线
 function ProcessingFactoryModel:n_OnBuildingLineInfo(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("lineAddSucceed",data)
 end
 --货架购买数量推送

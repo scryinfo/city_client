@@ -111,6 +111,7 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.AddListener("getShelfInfoData",self.getShelfInfoData,self)
     Event.AddListener("getShelfGuidePrice",self.getShelfGuidePrice,self)
+    Event.AddListener("closeBuyList",self.closeBuyList,self)
     Event.AddListener("getShelfProcessingGuidePrice",self.getShelfProcessingGuidePrice,self)
     Event.AddListener("getRetailGuidePrice",self.getRetailGuidePrice,self)
     Event.AddListener("getShelfItemGuidePrice",self.getShelfItemGuidePrice,self)
@@ -131,6 +132,7 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.RemoveListener("getShelfInfoData",self.getShelfInfoData,self)
     Event.RemoveListener("getShelfGuidePrice",self.getShelfGuidePrice,self)
+    Event.RemoveListener("closeBuyList",self.closeBuyList,self)
     Event.RemoveListener("getShelfProcessingGuidePrice",self.getShelfProcessingGuidePrice,self)
     Event.RemoveListener("getRetailGuidePrice",self.getRetailGuidePrice,self)
     Event.RemoveListener("getShelfItemGuidePrice",self.getShelfItemGuidePrice,self)
@@ -345,9 +347,9 @@ function BuildingShelfDetailPart:buySucceed(data)
             if value.itemId == data.item.key.id then
                 if value.dataInfo.n == data.item.n then
                     self:deleteGoodsItem(self.shelfDatas,key)
-                else
-                    value.dataInfo.n = value.dataInfo.n - data.item.n
-                    value.numberText.text = "×"..value.dataInfo.n
+                --else
+                --    value.dataInfo.n = value.dataInfo.n - data.item.n
+                --    value.numberText.text = "×"..value.dataInfo.n
                 end
             end
         end
@@ -396,7 +398,7 @@ function BuildingShelfDetailPart:wareHouseNoGoods(data)
     self.m_data.store.inHand[#self.m_data.store.inHand + 1] = goods
 end
 --货架变化推送
-function BuildingShelfDetailPart:salesNotice(data, msgid)
+function BuildingShelfDetailPart:salesNotice(data)
     if data ~= nil then
         for key,value in pairs(self.shelfDatas) do
             if value.dataInfo.k.id == data.itemId then
@@ -416,6 +418,10 @@ function BuildingShelfDetailPart:salesNotice(data, msgid)
             end
         end
     end
+end
+--货架购买失败后清空购买列表
+function BuildingShelfDetailPart:closeBuyList()
+    self.buyDatas = {}
 end
 --原料参考价格
 function BuildingShelfDetailPart:getShelfGuidePrice(data)

@@ -60,7 +60,7 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
-
+    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","storeIsFullNotice","gs.storeIsFullNotice",self.n_OnBuildingWarehouse)
 end
 
 function MaterialFactoryModel:Close()
@@ -112,8 +112,7 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
-
-
+    --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","storeIsFullNotice","gs.ByteBool",self.n_OnBuildingWarehouse)
 end
 ---客户端请求---
 --打开原料厂
@@ -131,6 +130,7 @@ function MaterialFactoryModel:m_ReqCloseMaterial(buildingId)
 end
 --运输
 function MaterialFactoryModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
 --上架
@@ -139,6 +139,7 @@ function MaterialFactoryModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,q
 end
 --修改货架属性
 function MaterialFactoryModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
 --下架
@@ -152,6 +153,7 @@ function MaterialFactoryModel:m_ReqAddLine(buildingId,number,steffNumber,itemId)
 end
 --删除生产线
 function MaterialFactoryModel:m_ReqDeleteLine(buildingId,lineId)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqDeleteLine(buildingId,lineId)
 end
 --货架购买
@@ -160,11 +162,11 @@ function MaterialFactoryModel:m_ReqBuyShelfGoods(buildingId,itemId,number,price,
 end
 --销毁仓库原料或商品
 function MaterialFactoryModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
-    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
 end
 --生产线置顶
 function MaterialFactoryModel:m_ReqSetLineOrder(buildingId,lineId,pos)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqSetLineOrder(buildingId,lineId,pos)
 end
 --查询原料信息
@@ -223,6 +225,7 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
 end
 --运输
 function MaterialFactoryModel:n_OnBuildingTransportInfo(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end
@@ -233,6 +236,7 @@ function MaterialFactoryModel:n_OnShelfAddInfo(data)
 end
 --修改货架属性
 function MaterialFactoryModel:n_OnModifyShelfInfo(data)
+    FlightMainModel.OpenFlightLoading()
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)
@@ -240,7 +244,17 @@ function MaterialFactoryModel:n_OnModifyShelfInfo(data)
     end
 end
 --下架
-function MaterialFactoryModel:n_OnShelfDelInfo(data)
+function MaterialFactoryModel:n_OnShelfDelInfo(data,msgId)
+    if msgId == 0 then
+        if data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = "货架数量发生变化请刷新后操作",func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        end
+    end
     Event.Brocast("downShelfSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)
@@ -253,6 +267,7 @@ function MaterialFactoryModel:n_OnAddLineInfo(data)
 end
 --删除生产线
 function MaterialFactoryModel:n_OnDeleteLineInfo(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("detailPartUpdateNowLine",data)
     Event.Brocast("partUpdateNowLine",data)
 end
@@ -266,27 +281,37 @@ end
 --货架购买
 function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
     if msgId == 0 then
-        if data.reason == 16 then
+        if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量不足",func = function()
+                        content = GetLanguage(25060013),func = function()
+                    Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
             return
-        elseif data.reason == 15 then
+        elseif data.reason == "shelfSetFail" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架购买失败",func = function()
+                        content = GetLanguage(25060013),func = function()
+                    Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
             return
-        elseif data.reason == 17 then
+        elseif data.reason == "spaceNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "仓库不足",func = function()
+                        content = GetLanguage(25060014),func = function()
+                    Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
             return
+        elseif data.reason == "moneyNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(25060015),func = function()
+                    Event.Brocast("closeBuyList")
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
         end
     else
         Event.Brocast("buySucceed",data)
@@ -295,12 +320,12 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
 end
 --销毁仓库原料或商品
 function MaterialFactoryModel:n_OnDelItemInfo(data)
-    FlightMainModel.CloseFlightLoading()
     Event.Brocast("deleteSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end
 --生产线置顶
 function MaterialFactoryModel:n_OnSetLineOrderInform(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("SettopSuccess",data)
 end
 --自动补货
@@ -329,6 +354,10 @@ end
 function MaterialFactoryModel:n_OnSalesNotice(data)
     Event.Brocast("salesNotice",data)
 end
+----仓库容量满通知
+--function MaterialFactoryModel:n_OnBuildingWarehouse(data,msgId)
+--    Event.Brocast("WarehousCapacityWhetherfull",data,msgId)
+--end
 --获取原料参考价格
 function MaterialFactoryModel:n_OnMaterialGuidePrice(data)
     Event.Brocast("getShelfGuidePrice",data)

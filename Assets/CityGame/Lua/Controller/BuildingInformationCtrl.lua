@@ -286,12 +286,13 @@ function BuildingInformationCtrl:initializeButtonInfo()
             self.switchBtn.text = GetLanguage(30010005)
             businessState = false
         end
-        self.buildingName.transform.localScale = Vector3.one
+        self.switchBtn.transform.localScale = Vector3.one
+        self.modifyImg.transform.localScale = Vector3.one
+        self.buildingName:GetComponent("Button").interactable = true
     else
         self.switchBtn.transform.localScale = Vector3.zero
         self.modifyImg.transform.localScale = Vector3.zero
-        --self.buildingName:GetComponent("Button").interactable = false
-        self.buildingName.transform.localScale = Vector3.zero
+        self.buildingName:GetComponent("Button").interactable = false
     end
 end
 --默认打开建筑信息

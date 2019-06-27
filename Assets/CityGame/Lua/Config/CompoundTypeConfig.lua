@@ -52,6 +52,38 @@ CompoundTypeConfig={
 		itemType = 0,
 		},
 	},
+	[2252] = {
+		[1] = {
+			itemId = 2252101,
+			name = 20030001,
+			itemType = 1,
+		},
+		[2] = {
+			itemId = 2252102,
+			name = 20030001,
+			itemType = 1,
+		},
+		[3] = {
+			itemId = 2252103,
+			name = 20030001,
+			itemType = 1,
+		},
+		[4] = {
+			itemId = 2252201,
+			name = 20030001,
+			itemType = 1,
+		},
+		[5] = {
+			itemId = 2252202,
+			name = 20030001,
+			itemType = 1,
+		},
+		[6] = {
+			itemId = 2252203,
+			name = 20030001,
+			itemType = 1,
+		}
+	},
 	[2251] = {
 		[1] = {
 		itemId = 2251101,
@@ -84,36 +116,4 @@ CompoundTypeConfig={
 		itemType = 1,
 		}
 	},
-	[2252] = {
-		[1] = {
-		itemId = 2252101,
-		name = 20030001,
-		itemType = 1,
-		},
-		[2] = {
-		itemId = 2252102,
-		name = 20030001,
-		itemType = 1,
-		},
-		[3] = {
-		itemId = 2252103,
-		name = 20030001,
-		itemType = 1,
-		},
-		[4] = {
-		itemId = 2252201,
-		name = 20030001,
-		itemType = 1,
-		},
-		[5] = {
-		itemId = 2252202,
-		name = 20030001,
-		itemType = 1,
-		},
-		[6] = {
-		itemId = 2252203,
-		name = 20030001,
-		itemType = 1,
-		}
-	}
 }

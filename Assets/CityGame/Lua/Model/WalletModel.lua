@@ -51,7 +51,8 @@ function WalletModel:ReqCreateWallet(userId,userName,pubKey)
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --生成充值订单
-function WalletModel:ReqCreateOrder(userId,Amount)
+function WalletModel:ReqCreateOrder(userId,Amount,passWard)
+    self.passWard = passWard
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
     self.Amount = tostring(Amount)
     local msgId = pbl.enum("gscode.OpCode","ct_GenerateOrderReq")
@@ -61,7 +62,8 @@ function WalletModel:ReqCreateOrder(userId,Amount)
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 --生成提币订单
-function WalletModel:ReqDisChargeOrder(userId)
+function WalletModel:ReqDisChargeOrder(userId,passWard)
+    self.passWard = passWard
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveDisChargeOrder,self)
     local msgId = pbl.enum("gscode.OpCode","ct_GenerateOrderReq")
     local lMsg ={PlayerId = userId,ReqHeader = {Version = 1,ReqId = tostring(msgId),}}
@@ -119,7 +121,7 @@ function WalletModel:ReceiveCreateOrder(data)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
     if data ~= nil then
         local serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
-        local privateKeyStr = self:parsing()
+        local privateKeyStr = ct.GetPrivateKeyLocal(self.passWard)
         local sm = City.signer_ct.New()
         local pubkey = sm.GetPublicKeyFromPrivateKey(privateKeyStr)
         local pubkeyStr = sm.ToHexString(pubkey)
@@ -137,7 +139,7 @@ end
 function WalletModel:ReceiveDisChargeOrder(data)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveDisChargeOrder,self)
     if data ~= nil then
-        Event.Brocast("reqDisChargeOrderSucceed",data)
+        Event.Brocast("reqDisChargeOrderSucceed",data,self.passWard)
     end
 end
 --充值成功

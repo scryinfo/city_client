@@ -22,7 +22,6 @@ function SystemSettingPanel.InitPanel()
     this.titleText=transform:Find("Panel/topRoot/bg/Text"):GetComponent("Text")
     this.backBtn = transform:Find("Panel/topRoot/bg/closeBtn");
     this.backBtn1 = transform:Find("BG/Image");
-    this.backBtn2 = transform:Find("BG/Image (1)");
     this.closeLan=transform:Find("Panel/bodyRoot/bg/body/closePage")
 
     this.outBtn = transform:Find("Panel/bodyRoot/bg/bottom/outBtn");
@@ -48,6 +47,13 @@ function SystemSettingPanel.InitPanel()
 
     this.englishBtnText = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/English/Text"):GetComponent("Text")
     this.englishBtn = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/English")
+
+    this.JapaneseBtnText = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/Japanese/Text"):GetComponent("Text")
+    this.JapaneseBtn = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/Japanese")
+
+    this.KoreanBtnText = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/Korean/Text"):GetComponent("Text")
+    this.KoreanBtn = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/Korean")
+
     ---气泡
     this.bubbleShowBtn = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/showBubble")
     this.bubbleCloseBtn = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/closeBubble")
@@ -67,6 +73,8 @@ function SystemSettingPanel:InitDate(string)
     this.LanguageBtnText.text = GetLanguage(14010013,string)
     this.chineseBtnText.text = GetLanguage(14010004)
     this.englishBtnText.text = GetLanguage(14010005)
+    this.KoreanBtnText.text = GetLanguage(14010006)
+    this.JapaneseBtnText.text = GetLanguage(14010007)
     this.bubbleText.text = GetLanguage(14010008)
     this.bubbleShowText.text = GetLanguage(14010009)
     this.bubbleCloseText.text = GetLanguage(14010010)

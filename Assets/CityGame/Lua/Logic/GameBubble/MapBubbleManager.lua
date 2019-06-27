@@ -391,7 +391,7 @@ function MapBubbleManager.createGAucDetailItems()
             if value ~= nil then
                 local data = value:getValuableData()
                 --local blockId = GroundAucConfig[data.id].firstBlockId
-                local info = GroundAucConfig[data.id].area[2]
+                local info = GroundAucConfig[data.id].centerPos
                 local blockId = TerrainManager.GridIndexTurnBlockID(info)
                 local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
                 if this.groundAucData[collectionId] == nil then
@@ -557,7 +557,7 @@ function MapBubbleManager.groundAucChange(groundId)
         if this.groundAucData == nil then
             return
         end
-        local info = GroundAucConfig[groundId].area[2]
+        local info = GroundAucConfig[groundId].centerPos
         local blockId = TerrainManager.GridIndexTurnBlockID(info)
         local collectionId = TerrainManager.BlockIDTurnCollectionID(blockId)
         if this.groundAucData[collectionId] == nil then

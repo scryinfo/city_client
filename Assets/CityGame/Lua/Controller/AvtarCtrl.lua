@@ -213,8 +213,6 @@ function AvtarCtrl:begin()
         panel.feMaleBtn.gameObject:SetActive(true)
         --隐藏幸运值展示
         panel.luckyRoot.localScale = Vector3.zero
-
-
     end
 end
 
@@ -356,11 +354,18 @@ function GetAvtar(faceId)
         LoadSprite(arr[1],AvatarOrganImageList[mySex][myCurrentHeadNum]["head"])
 
         for i = 1, #temp ,2 do
-            if temp[i] ~= "" then
+            if temp[i] ~= "" and temp[i] == "1" then
                 local kind = AvtarConfig.man[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
                 this:changAparance(kind, temp[i+1])
             end
         end
+        for i = 1, #temp ,2 do
+            if temp[i] ~= "" and temp[i] ~= "1" then
+                local kind = AvtarConfig.man[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
+                this:changAparance(kind, temp[i+1])
+            end
+        end
+
     else--女人
         mySex = 2
         myCurrentHeadNum = 1
@@ -377,7 +382,13 @@ function GetAvtar(faceId)
         LoadSprite(arr[1],AvatarOrganImageList[mySex][myCurrentHeadNum]["head"])
 
         for i = 1, #temp ,2 do
-            if temp[i] ~= "" then
+            if temp[i] ~= "" and temp[i] == "1" then
+                local kind = AvtarConfig.woMan[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
+                this:changAparance(kind,temp[i+1])
+            end
+        end
+        for i = 1, #temp ,2 do
+            if temp[i] ~= "" and temp[i] ~= "1" then
                 local kind = AvtarConfig.woMan[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
                 this:changAparance(kind,temp[i+1])
             end

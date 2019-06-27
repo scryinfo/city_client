@@ -42,7 +42,6 @@ function NewReminderCtrl:Refresh()
                 NewReminderPanel.name.text = GetLanguage(10040004)
             end
             NewReminderPanel.poptitle.color = getColorByInt(84,107,203,255)
-            NewReminderPanel.name.text = "REMINDER"
         elseif self.m_data.ReminderType == ReminderType.Warning then
             if self.m_data.name then
                 NewReminderPanel.name.text = GetLanguage(self.m_data.name)
@@ -50,7 +49,6 @@ function NewReminderCtrl:Refresh()
                 NewReminderPanel.name.text = GetLanguage(10040004)
             end
             NewReminderPanel.poptitle.color = getColorByInt(197,67,67,255)
-            NewReminderPanel.name.text = "REMINDER"
         elseif self.m_data.ReminderType == ReminderType.Succeed then
             if self.m_data.name then
                 NewReminderPanel.name.text = GetLanguage(self.m_data.name)
@@ -58,7 +56,6 @@ function NewReminderCtrl:Refresh()
                 NewReminderPanel.name.text = GetLanguage(28040022)
             end
             NewReminderPanel.poptitle.color = getColorByInt(225,158,29,255)
-            NewReminderPanel.name.text = "SUCCESS"
         end
         if self.m_data.ReminderSelectType == ReminderSelectType.Select then
             NewReminderPanel.select.localScale = Vector3.one

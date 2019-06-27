@@ -122,16 +122,16 @@ function AddLineMgrNew:setToggleIsOnByType(itemId)
     --end
     if self.keyToggleItems[typeId] then
         for i, toggleItem in pairs(self.keyToggleItems) do
-            toggleItem:setToggleIsOn(toggleItem, false)
+            toggleItem.setToggleIsOn(toggleItem, false)
         end
-        self.keyToggleItems[typeId]:_selectType(self.keyToggleItems[typeId])
+        self.keyToggleItems[typeId]:_selectType(self.keyToggleItems[typeId], true)
     end
 
     if self.keyContentItems[itemId] then
         for i, detailItem in pairs(self.keyContentItems) do
-            detailItem:setToggleIsOn(detailItem, false)
+            detailItem.setToggleIsOn(detailItem, false)
         end
-        self.keyContentItems[itemId]._selectDetail(self.keyContentItems[itemId])
+        self.keyContentItems[itemId]._selectDetail(self.keyContentItems[itemId], true)
     end
 end
 ---------
@@ -157,6 +157,7 @@ end
 function AddLineMgrNew:_createDetail(typeId)
     self:_resetDetails()
     self.contentItems = {}
+    self.keyContentItems = {}
 
     --暂时是直接使用content下的子物体，多了的就移出content
     local data = CompoundTypeConfig[typeId]
@@ -219,12 +220,14 @@ function AddLineMgrNew:_resetDetails()
     if self.contentItems then
         for i, item in ipairs(self.contentItems) do
             item:cleanState()
+            item = nil
         end
         self.tempDetailItemId = nil
     end
     if self.keyContentItems then
         for i, item in pairs(self.keyContentItems) do
-            item:close()
+            item:cleanState()
+            item = nil
         end
     end
 end

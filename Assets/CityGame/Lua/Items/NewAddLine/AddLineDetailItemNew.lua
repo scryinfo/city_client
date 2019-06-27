@@ -34,10 +34,14 @@ function AddLineDetailItemNew:initialize(viewRect, data, toggleGroup)
         self:_clickFunc()
     end)
     self:_language()
+    self:setToggleIsOn(false)
 end
 
 --外部设置toggle状态
 function AddLineDetailItemNew:setToggleIsOn(isOn)
+    if isOn ~= true or isOn ~= false then
+        ct.log("")
+    end
     self.select = isOn
     self:showState(isOn)
 end

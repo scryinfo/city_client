@@ -62,20 +62,21 @@ function UIBubbleGroundAucItem:initialize(data)
         end
     end
 
-    local groundConfigData = GroundAucConfig[self.data.id].area
-    local pos = Vector3.New(groundConfigData[1].x, 0, groundConfigData[1].y)
+    local groundConfigData = GroundAucConfig[self.data.id]
+    --local groundConfigData = GroundAucConfig[1]
+    local pos = Vector3.New(groundConfigData.centerPos.x, 0, groundConfigData.centerPos.y)
     if self.data.isStartAuc == true then
         --self.now.transform.localScale = Vector3.one
         --self.soon.transform.localScale = Vector3.zero
         self.now.gameObject:SetActive(true)
         self.soon.gameObject:SetActive(false)
-        self.groundGo = GAucModel._getValuableStartAucObj(groundDataManagerConfigData)  --设置场景中的拍卖gameobject
+        self.groundGo = GAucModel._getValuableStartAucObj(groundConfigData.area)  --设置场景中的拍卖gameobject
     else
         --self.now.transform.localScale = Vector3.zero
         --self.soon.transform.localScale = Vector3.one
         self.now.gameObject:SetActive(false)
         self.soon.gameObject:SetActive(true)
-        self.groundGo = GAucModel._getValuableWillAucObj(groundConfigData)
+        self.groundGo = GAucModel._getValuableWillAucObj(groundConfigData.area)
     end
     self.data.targetPos = pos
     self.m_Timer = Timer.New(slot(self._itemTimer, self), 1, -1, true)

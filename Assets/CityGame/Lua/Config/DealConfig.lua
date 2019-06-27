@@ -238,12 +238,12 @@ DealConfig={
             name = "研究",--名字
             childs = {
                 [1] = {
-                    name = "发明",
+                    name = "商品发明",
                     typeId = 3,
                     EX=5
                 },
                 [2] = {
-                    name = "EVA提升",
+                    name = "EVA研究",
                     typeId= 4,
                     EX=5
                 },

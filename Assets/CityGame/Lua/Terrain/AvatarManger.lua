@@ -181,8 +181,21 @@ local function GetAvatar(faceId,isSmall)
     end
     --换装
     local temp = split(arr[2],",")
+    --优先加载脸
     for i = 1, #temp ,2 do
-        if temp[i]~="" then
+        if temp[i]~="" and temp[i] == "1" then
+            local type = tonumber(temp[i])
+            local typeId = tonumber(temp[i+1])
+            if config[type] then
+                local kind = config[type].kinds[typeId]
+                num = type
+                changAparance(kind)
+            end
+        end
+    end
+    --之后加载除脸之外的其他部件
+    for i = 1, #temp ,2 do
+        if temp[i]~="" and temp[i] ~= "1" then
             local type = tonumber(temp[i])
             local typeId = tonumber(temp[i+1])
             if config[type] then

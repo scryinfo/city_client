@@ -328,8 +328,6 @@ function AvtarCtrl:changAparance(data,rank)
         else
             tempList[type].gameObject:SetActive(true)
             LoadSprite(path,tempList[type])
-            ct.log("system","Avatar部件名字： "..tempList[type].gameObject.name)
-            ct.log("system","加载了" .. type .." 部位的Avatar图片 "..path)
             pastApperanceID[type].path = path
             pastApperanceID[type].rank = rank
             pastApperanceID[type].type = type

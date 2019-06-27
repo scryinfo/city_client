@@ -213,8 +213,6 @@ function AvtarCtrl:begin()
         panel.feMaleBtn.gameObject:SetActive(true)
         --隐藏幸运值展示
         panel.luckyRoot.localScale = Vector3.zero
-
-
     end
 end
 
@@ -330,6 +328,8 @@ function AvtarCtrl:changAparance(data,rank)
         else
             tempList[type].gameObject:SetActive(true)
             LoadSprite(path,tempList[type])
+            ct.log("system","Avatar部件名字： "..tempList[type].gameObject.name)
+            ct.log("system","加载了" .. type .." 部位的Avatar图片 "..path)
             pastApperanceID[type].path = path
             pastApperanceID[type].rank = rank
             pastApperanceID[type].type = type
@@ -356,11 +356,18 @@ function GetAvtar(faceId)
         LoadSprite(arr[1],AvatarOrganImageList[mySex][myCurrentHeadNum]["head"])
 
         for i = 1, #temp ,2 do
-            if temp[i] ~= "" then
+            if temp[i] ~= "" and temp[i] == "1" then
                 local kind = AvtarConfig.man[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
                 this:changAparance(kind, temp[i+1])
             end
         end
+        for i = 1, #temp ,2 do
+            if temp[i] ~= "" and temp[i] ~= "1" then
+                local kind = AvtarConfig.man[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
+                this:changAparance(kind, temp[i+1])
+            end
+        end
+
     else--女人
         mySex = 2
         myCurrentHeadNum = 1
@@ -377,7 +384,13 @@ function GetAvtar(faceId)
         LoadSprite(arr[1],AvatarOrganImageList[mySex][myCurrentHeadNum]["head"])
 
         for i = 1, #temp ,2 do
-            if temp[i] ~= "" then
+            if temp[i] ~= "" and temp[i] == "1" then
+                local kind = AvtarConfig.woMan[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
+                this:changAparance(kind,temp[i+1])
+            end
+        end
+        for i = 1, #temp ,2 do
+            if temp[i] ~= "" and temp[i] ~= "1" then
                 local kind = AvtarConfig.woMan[tonumber(temp[i])].kinds[tonumber(temp[i+1])]
                 this:changAparance(kind,temp[i+1])
             end

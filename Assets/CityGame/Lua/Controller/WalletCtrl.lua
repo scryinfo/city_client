@@ -554,8 +554,8 @@ end
 function WalletCtrl:closeRechargeAmountContent()
     self.RechargeAmountContent.transform.localScale = Vector3.zero
     local paths = CityLuaUtil.getAssetsPath()
-    os.remove(paths.."/QRCode.png")
-    os.remove(paths.."/QRCode.png.meta")
+    os.remove(paths.."/Resources/QRCode.png")
+    os.remove(paths.."/Resources/QRCode.png.meta")
 end
 --打开二维码
 function WalletCtrl:openQRCode(data)
@@ -581,9 +581,9 @@ function WalletCtrl:UpdateCode()
     if self.timmer >= 0.5 then
         self.timmer = 0
         local paths = CityLuaUtil.getAssetsPath()
-        local path = os.execute(paths.."/QRCode.png.meta")
+        local path = os.execute(paths.."/Resources/QRCode.png.meta")
         if path == 1 then
-            LoadSprite(paths.."/QRCode.png", self.QRCodeImg)
+            LoadSprite(paths.."/Resources/QRCode.png", self.QRCodeImg)
             UpdateBeat:Remove(self.UpdateCode,self)
         end
     end
@@ -593,8 +593,8 @@ function WalletCtrl:closeQRCode()
     self.QRCodeContent.transform.localScale = Vector3.zero
     self.QRCodeMoney.text = 0.0000 .. "(DDD)"
     local paths = CityLuaUtil.getAssetsPath()
-    os.remove(paths.."/QRCode.png")
-    os.remove(paths.."/QRCode.png.meta")
+    os.remove(paths.."/Resources/QRCode.png")
+    os.remove(paths.."/Resources/QRCode.png.meta")
 end
 --打开扫描二维码
 function WalletCtrl:openScanningQRCode()

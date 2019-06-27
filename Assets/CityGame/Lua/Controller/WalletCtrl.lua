@@ -553,9 +553,6 @@ end
 --关闭钱包充值金额（新加）
 function WalletCtrl:closeRechargeAmountContent()
     self.RechargeAmountContent.transform.localScale = Vector3.zero
-    --local paths = CityLuaUtil.getAssetsPath()
-    --os.remove(paths.."/Resources/QRCode.png")
-    --os.remove(paths.."/Resources/QRCode.png.meta")
 end
 --打开二维码
 function WalletCtrl:openQRCode(data)
@@ -571,30 +568,13 @@ function WalletCtrl:openQRCode(data)
     self.moneyPurchaseId = data.RechargeRequestRes.PurchaseId   --订单Id
     self.moneyEthAddr = data.RechargeRequestRes.EthAddr   --地址
     self.scanQRCode:CreateQRCode(path,self.QRCodeImg)
-    --self.timmer= 0
     self.QRCodeAddressText.text = data.RechargeRequestRes.EthAddr
-    --UpdateBeat:Add(self.UpdateCode,self)
 end
 
-function WalletCtrl:UpdateCode()
-   self.timmer = self.timmer + UnityEngine.Time.unscaledDeltaTime
-    if self.timmer >= 0.5 then
-        self.timmer = 0
-        local paths = CityLuaUtil.getAssetsPath()
-        local path = os.execute(paths.."/Resources/QRCode.png.meta")
-        if path == 1 then
-            LoadSprite(paths.."/Resources/QRCode.png", self.QRCodeImg)
-            UpdateBeat:Remove(self.UpdateCode,self)
-        end
-    end
-end
 --关闭二维码
 function WalletCtrl:closeQRCode()
     self.QRCodeContent.transform.localScale = Vector3.zero
     self.QRCodeMoney.text = 0.0000 .. "(DDD)"
-    --local paths = CityLuaUtil.getAssetsPath()
-    --os.remove(paths.."/Resources/QRCode.png")
-    --os.remove(paths.."/Resources/QRCode.png.meta")
 end
 --打开扫描二维码
 function WalletCtrl:openScanningQRCode()

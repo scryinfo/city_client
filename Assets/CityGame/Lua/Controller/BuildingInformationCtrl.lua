@@ -514,7 +514,7 @@ function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
         else
             LoadSprite("Assets/CityGame/Resources/Atlas/BuildingInformation/famale.png",self.genderImg,false)
         end
-        self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs).." - "..self:getStringTime(self.groundData[index].Data.rent.rentDueTime)
+        self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs).." - "..self:getStringTime(self.groundData[index].Data.rent.rentBeginTs)
     end
 end
 --关闭界面

@@ -47,7 +47,7 @@ end
 
 function ToggleBtnItem:updateData( data )
     self.data = data
-    this.foodtext.text = self.data.name
+    this.foodtext.text = GetLanguage(self.data.name)
 end
 
 function ToggleBtnItem:updateUI( data )

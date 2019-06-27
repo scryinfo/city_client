@@ -16,6 +16,7 @@ end
 function FlightBetPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.confirmBtn = transform:Find("centerRoot/confirmBtn")
+    this.moneyText = transform:Find("topRoot/moneyBg/Text/moneyText"):GetComponent("Text")
 
     this.timeReduceBtn = transform:Find("centerRoot/time/btnRoot/timeReduceBtn")
     this.timeAddBtn = transform:Find("centerRoot/time/btnRoot/timeAddBtn")
@@ -37,4 +38,5 @@ function FlightBetPanel.InitPanel()
     this.betText08 = transform:Find("centerRoot/bet/right/Text"):GetComponent("Text")
     this.betText09 = transform:Find("centerRoot/bet/btnRoot/Text"):GetComponent("Text")
     this.tipText10 = transform:Find("centerRoot/tip/Text"):GetComponent("Text")
+    this.moneyText11 = transform:Find("topRoot/moneyBg/Text"):GetComponent("Text")
 end

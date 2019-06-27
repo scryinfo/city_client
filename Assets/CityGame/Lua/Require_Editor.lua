@@ -62,6 +62,7 @@ AutoRequire.getInstance():require("Items/LaboratoryItems")
 AutoRequire.getInstance():require("Items/AddLineChooseItems")
 AutoRequire.getInstance():require("Items/MapItems")
 AutoRequire.getInstance():require("Items/FlightForecastItems")
+AutoRequire.getInstance():require("Items/NewAddLine")
 AutoRequire.getInstance():require("Terrain")
 AutoRequire.getInstance():requireLast("__require_last__")
 --在磁盘上上述目录中如果新添了文件夹，需要把新文件夹添加到上述 “自动包含目录”中

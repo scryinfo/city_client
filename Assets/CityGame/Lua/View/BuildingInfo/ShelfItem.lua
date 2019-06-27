@@ -88,7 +88,7 @@ function ShelfItem:InitializeData()
             local function callbacks(a,b,c,d,e)
                 self.Text.text = ct.CalculationSupermarketCompetitivePower(a,self.dataInfo.price,self.itemId,d,e,b,c)
             end
-            Event.Brocast("getRetailItemGuidePrice",self.m_data.itemId,callbacks)
+            Event.Brocast("getRetailItemGuidePrice",self.itemId,callbacks)
         end
 
         self.goods.transform.localScale = Vector3.one

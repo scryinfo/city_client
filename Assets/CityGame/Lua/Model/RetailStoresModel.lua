@@ -47,6 +47,7 @@ function RetailStoresModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","retailGuidePrice","gs.GoodSummary",self.n_OnRetailGuidePrice)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
 
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -88,6 +89,8 @@ function RetailStoresModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","retailGuidePrice","gs.GoodSummary",self.n_OnRetailGuidePrice)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
+
 
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -120,6 +123,7 @@ function RetailStoresModel:m_ReqShelfAdd(buildingId,Id,num,price,producerId,qty,
 end
 --修改货架属性
 function RetailStoresModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqModifyShelf(buildingId,Id,num,price,producerId,qty,autoRepOn)
 end
 --下架
@@ -188,6 +192,7 @@ function RetailStoresModel:n_OnShelfAddInfo(data)
 end
 --修改货架属性
 function RetailStoresModel:n_OnModifyShelfInfo(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenRetailShop(self.insId)
@@ -195,7 +200,17 @@ function RetailStoresModel:n_OnModifyShelfInfo(data)
     end
 end
 --下架
-function RetailStoresModel:n_OnShelfDelInfo(data)
+function RetailStoresModel:n_OnShelfDelInfo(data,msgId)
+    if msgId == 0 then
+        if data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = "货架数量发生变化请刷新后操作",func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        end
+    end
     Event.Brocast("downShelfSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenRetailShop(self.insId)
@@ -215,6 +230,10 @@ end
 function RetailStoresModel:n_OnDelItemInfo(data)
     Event.Brocast("deleteSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
+end
+--货架购买数量推送
+function RetailStoresModel:n_OnSalesNotice(data)
+    Event.Brocast("salesNotice",data)
 end
 --获取仓库数据
 function RetailStoresModel:n_OnGetWarehouseData(data)

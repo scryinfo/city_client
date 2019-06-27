@@ -49,7 +49,7 @@ end
 function retailStoreItem:language()
     self.symbol.transform.localScale = Vector3.zero
     self.retailStoreText.text = GetLanguage(30040001)
-    self.basicQualityTextBtn.text = GetLanguage(30040002).." "..self.buildingQuality.."(".."+"..self.dataInfo.score[5].val.."%"..")"
+    self.basicQualityTextBtn.text = GetLanguage(30040002).." "..self.buildingQuality.."(".."+"..self.dataInfo.score[5].val * 100 .."%"..")"
     self.qualityAdditionTextBtn.transform.localScale = Vector3.zero
     self.popolarityTextBtn.text = GetLanguage(30040003).." "..self.dataInfo.score[1].val
 end

@@ -19,14 +19,19 @@ function BuildingProductionPart:_InitTransform()
 end
 
 function BuildingProductionPart:RefreshData(data)
-    if data.buildingType == BuildingType.MaterialFactory then
-        Event.Brocast("m_ReqBuildingMaterialInfo",data.insId)
-    elseif data.buildingType == BuildingType.ProcessingFactory then
-        Event.Brocast("m_ReqBuildingGoodsInfo",data.insId)
+    if not self.materialOrGoodsInfo or next(self.materialOrGoodsInfo) == nil then
+        if data.buildingType == BuildingType.MaterialFactory then
+            Event.Brocast("m_ReqBuildingMaterialInfo",data.insId)
+        elseif data.buildingType == BuildingType.ProcessingFactory then
+            Event.Brocast("m_ReqBuildingGoodsInfo",data.insId)
+        end
+    else
+        self:_initFunc()
     end
     if data == nil then
         return
     end
+
     self.m_data = data
     self:_language()
 end
@@ -127,6 +132,7 @@ function BuildingProductionPart:Update()
         self.TopLineInfo.transform.localScale = Vector3.zero
         self.tipText.transform.localScale = Vector3.one
         UpdateBeat:Remove(self.Update,self)
+        return
     end
     if self.Capacity == PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity then
         UpdateBeat:Remove(self.Update,self)

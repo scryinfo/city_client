@@ -83,6 +83,7 @@ function WarehouseBoxCtrl:initializeUiInfoData()
         self.quality.transform.localScale = Vector3.zero
         self.levelBg.transform.localScale = Vector3.zero
         self.number.transform.localPosition = Vector3.New(183,-45,0)
+        self.brandNameText.text = DataManager.GetCompanyName()
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == goodsKey then
         self.popularity.transform.localScale = Vector3.one

@@ -46,7 +46,7 @@ function NoviceTutorialCtrl:Active()
     UIPanel.Active(self)
 
     -- 多语言适配
-    NoviceTutorialPanel.titleText.text = "ROOKIE TUTORIAL" --GetLanguage(31010001)
+    NoviceTutorialPanel.titleText.text = GetLanguage(44010001)
 end
 
 function NoviceTutorialCtrl:Refresh()

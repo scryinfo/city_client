@@ -147,11 +147,13 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
     --    end
     --end
     if buysBuildings ==nil then
+        ChooseWarehousePanel.tipImg.transform.localScale = Vector3.one
         return
     end
     for i, v in pairs(buysBuildings) do
         for k, z in pairs(v) do
             if z.store ~= nil then
+                ChooseWarehousePanel.tipImg.transform.localScale = Vector3.zero
                 if z.info.id ~= buildingId then
                     local function callback(prefab)
                         self.LinePaneltLuaItems = ChooseLineItem:new(prefab,self,z,data)
@@ -162,7 +164,11 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
                     if not self.ipaItems then
                         self.ipaItems = {}
                     end
+                else
+                    ChooseWarehousePanel.tipImg.transform.localScale = Vector3.one
                 end
+            else
+                ChooseWarehousePanel.tipImg.transform.localScale = Vector3.one
             end
         end
     end

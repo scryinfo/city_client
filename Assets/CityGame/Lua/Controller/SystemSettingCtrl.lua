@@ -24,6 +24,10 @@ function SystemSettingCtrl:Refresh()
         panel:InitDate(GetLanguage(14010005))
     elseif Languagenum == 0 then
         panel:InitDate(GetLanguage(14010004))
+    elseif Languagenum == 2 then
+        panel:InitDate(GetLanguage(14010006))
+    elseif Languagenum == 3 then
+        panel:InitDate(GetLanguage(14010007))
     end
 end
 
@@ -42,13 +46,14 @@ function  SystemSettingCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.LanguageBtn.gameObject,self.c_OnClick_changeLanguage,self);
     LuaBehaviour:AddClick(panel.chineseBtn.gameObject,self.c_OnClick_chinese,self);
     LuaBehaviour:AddClick(panel.englishBtn.gameObject,self.c_OnClick_english,self);
+    LuaBehaviour:AddClick(panel.JapaneseBtn.gameObject,self.c_OnClick_Japanese,self);
+    LuaBehaviour:AddClick(panel.KoreanBtn.gameObject,self.c_OnClick_Korean,self);
     LuaBehaviour:AddClick(panel.MusicBtnyellosw.gameObject,self.c_OnClick_Music,self);
     LuaBehaviour:AddClick(panel.MusicEffectBtnyellow.gameObject,self.c_OnClick_MusicEffect,self);
     LuaBehaviour:AddClick(panel.MusicBtngrey.gameObject,self.c_OnClickMusic,self);
     LuaBehaviour:AddClick(panel.MusicEffectBtngrey.gameObject,self.c_OnClickMusicEffect,self);
     LuaBehaviour:AddClick(panel.outBtn.gameObject,self.c_OnClickout,self);
     LuaBehaviour:AddClick(panel.backBtn1.gameObject,self.c_OnClick_backBtn1,self);
-    LuaBehaviour:AddClick(panel.backBtn2.gameObject,self.c_OnClick_backBtn1,self);
     LuaBehaviour:AddClick(panel.closeLan.gameObject,self.c_OnClick_backBtn2,self);
     --气泡
     LuaBehaviour:AddClick(panel.bubbleShowBtn.gameObject,self.c_OnClick_BubbleClose,self);
@@ -149,6 +154,24 @@ function SystemSettingCtrl:c_OnClick_english()
     SaveLanguageSettings(LanguageType.English)
     panel:InitDate(GetLanguage(14010005))
     panel.closeLan.localScale=Vector3.zero
+    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
+end
+--韩语
+function SystemSettingCtrl:c_OnClick_Korean()
+    PlayMusEff(1002)
+    panel.LanguagePanel.localScale=Vector3.zero
+    SaveLanguageSettings(LanguageType.Korean)
+    panel:InitDate(GetLanguage(14010006))
+    panel.closeLan.localScale = Vector3.zero
+    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
+end
+--日语
+function SystemSettingCtrl:c_OnClick_Japanese()
+    PlayMusEff(1002)
+    panel.LanguagePanel.localScale=Vector3.zero
+    SaveLanguageSettings(LanguageType.Japanese)
+    panel:InitDate(GetLanguage(14010007))
+    panel.closeLan.localScale = Vector3.zero
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end
 

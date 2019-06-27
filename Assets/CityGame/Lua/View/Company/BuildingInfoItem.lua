@@ -29,7 +29,7 @@ function BuildingInfoItem:initialize(prefab, data)
     end)
 
     -- 名字
-    self.nameText.text = string.format("%s's  %s", data.name, GetLanguage(PlayerBuildingBaseData[data.mId].typeName))
+    self.nameText.text = string.format("%s  %s", data.name, GetLanguage(PlayerBuildingBaseData[data.mId].typeName))
 
     -- 住宅、零售店才有品质、品牌评分
     local type = string.sub(tostring(data.mId), 1, 2)
@@ -54,9 +54,9 @@ function BuildingInfoItem:_goPos()
     local id = TerrainManager.GridIndexTurnBlockID(self.data.pos)
     local targetPos = TerrainManager.BlockIDTurnPosition(id)
     CameraMove.MoveCameraToPos(targetPos)
-    local tempValue = DataManager.GetBaseBuildDataByID(id)
-    if tempValue ~= nil then
-        tempValue:OpenPanel()
-        CameraMove.MoveIntoUILayer(id)
-    end
+    --local tempValue = DataManager.GetBaseBuildDataByID(id)
+    --if tempValue ~= nil then
+    --    tempValue:OpenPanel()
+    --    CameraMove.MoveIntoUILayer(id)
+    --end
 end

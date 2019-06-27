@@ -112,6 +112,8 @@ function AddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow)
     --AddProductionLinePanel.leftBtnParent.transform.position = rectPosition
     --AddProductionLinePanel.leftBtnParent.anchoredPosition = AddProductionLinePanel.leftBtnParent.anchoredPosition + Vector2.New(174, 0)
 
+    ct.log("system", "-----------选中 left: "..itemId)
+
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
     local lineDatas = {}  --获取线的数据
     for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
@@ -132,6 +134,8 @@ end
 function AddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableShow)
     --AddProductionLinePanel.rightBtnParent.transform.position = rectPosition
     --AddProductionLinePanel.rightBtnParent.anchoredPosition = AddProductionLinePanel.rightBtnParent.anchoredPosition - Vector2.New(174, 0)
+
+    ct.log("system", "-----------选中 right: "..itemId)
 
     local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
     self:_setLineDetailInfo(selectItemMatToGoodIds)

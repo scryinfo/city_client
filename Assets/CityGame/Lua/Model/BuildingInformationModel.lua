@@ -59,6 +59,7 @@ end
 ---客户端请求----
 --建筑停业
 function BuildingInformationModel:m_ReqClosedBuilding(buildingId)
+    FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "shutdownBusiness","gs.Id",{id = buildingId})
 end
 --建筑拆除
@@ -100,6 +101,7 @@ end
 ---服务器回调---
 --建筑停业
 function BuildingInformationModel:n_ClosedBuilding(data)
+    FlightMainModel.CloseFlightLoading()
     DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'closedBuildingSucceed',data)
 end
 --建筑改名

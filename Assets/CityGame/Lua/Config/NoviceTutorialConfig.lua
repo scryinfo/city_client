@@ -14,7 +14,7 @@ NoviceTutorialConfig = {
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
-                videoName = "44020002",
+                videoName = 44020002,
                 imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Retrieve password.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             }

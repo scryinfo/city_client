@@ -1025,6 +1025,9 @@ function ct.CalculationHouseCompetitivePower(recommendedPricing,price,shopScore,
 	if price <= 0 then
 		return CalculationNBitAfterDecimalPoint(100)
 	end
+	if averageShopScore <= 0 then
+		averageShopScore = 1
+	end
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
 		recommendedPricing = Competitive[14 * PRIDMagnification]
@@ -1039,6 +1042,9 @@ end
 --玩家店铺评分:shopScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationHouseSuggestPrice(recommendedPricing,shopScore,averageShopScore)
+	if averageShopScore <= 0 then
+		averageShopScore = 1
+	end
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
 		recommendedPricing = Competitive[14 * PRIDMagnification]

@@ -851,6 +851,8 @@ function ChatCtrl:c_OnReceiveRoleCommunication(chatData)
                 local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
                 if strangersPlayerItem[chatData.id] then
                     strangersPlayerItem[chatData.id]:SetNoticeText(chatStrangersInfo[chatData.id].unreadNum)
+                else
+                    PlayerInfoManger.GetInfos({chatData.id}, self.c_OnQueryNewStrangersInfo, self)
                 end
             end
         else
@@ -965,4 +967,18 @@ function ChatCtrl:c_OnReceiveDeleteFriend(friendsId)
             ChatPanel.friendsNoContentRoot:SetActive(true)
         end
     end
+end
+
+-- 查询在陌生人界面收到的陌生人的个人信息，并显示
+function ChatCtrl:c_OnQueryNewStrangersInfo(playerData)
+    if #ChatCtrl.static.chatMgr:GetFriendsPlayer().id == 0 then
+        ChatPanel.strangersNoContentRoot:SetActive(false)
+    end
+    if playerData then
+        ChatCtrl.static.chatMgr:CreatePlayerItem(2, playerData[1])
+        local chatStrangersInfo = DataManager.GetMyChatInfo(3)
+        local strangersPlayerItem = ChatCtrl.static.chatMgr:GetStrangersPlayer().item
+        strangersPlayerItem[playerData[1].id]:SetNoticeText(chatStrangersInfo[playerData[1].id].unreadNum)
+    end
+    ChatPanel.strangersPlayerNum.text = tostring(#ChatCtrl.static.chatMgr:GetStrangersPlayer().id)
 end

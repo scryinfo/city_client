@@ -200,8 +200,10 @@ BuildingType =
 }
 
 LanguageType={
-	Chinese=0,
-	English=1,
+	Chinese = 0,
+	English = 1,
+	Korean = 2,
+	Japanese = 3,
 }
 
 BuildingBubbleType={

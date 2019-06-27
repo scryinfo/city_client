@@ -22,6 +22,7 @@ function GameNoticeModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailRetailShop","gs.RetailShop",self.n_OnDetailRetailShop,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailPublicFacility","gs.PublicFacility",self.n_OnPromote,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnLaboratory,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailApartment","gs.Apartment",self.n_OnApartment,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getOneSocietyInfo","gs.SocietyInfo",self.n_OnSocietyInfo,self)
 end
 
@@ -72,6 +73,11 @@ function GameNoticeModel:m_GetLaboratory(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode","detailLaboratory" ,"gs.Id",{id = buildingId})
 end
 
+--获取住宅详情
+function GameNoticeModel:m_GetHouse(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode","detailApartment" ,"gs.Id",{id = buildingId})
+end
+
 --获取公会名字
 function GameNoticeModel:m_GetSocietyInfo(id)
     DataManager.ModelSendNetMes("gscode.OpCode","getOneSocietyInfo" ,"gs.Id",{id = id})
@@ -112,6 +118,11 @@ end
 --研究所建筑详情回调
 function GameNoticeModel:n_OnLaboratory(info)
     Event.Brocast("c_Laboratory",info.info.name)
+end
+
+--住宅建筑详情回调
+function GameNoticeModel:n_OnApartment(info)
+    Event.Brocast("c_House",info.info.name)
 end
 
 --公会详情回调

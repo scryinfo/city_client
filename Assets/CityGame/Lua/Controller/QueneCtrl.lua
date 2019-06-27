@@ -32,33 +32,18 @@ function QueneCtrl:Active()
 end
 
 function QueneCtrl:_laboratoryLanguage()
-    QuenePanel.name.text = GetLanguage(28040044)
+    QuenePanel.name.text = GetLanguage(27010008)
     QuenePanel.player.text = GetLanguage(28040010)
-    QuenePanel.goods.text = GetLanguage(28040011)
+    QuenePanel.goods.text = GetLanguage(28040034)
     QuenePanel.details.text = GetLanguage(28040035)
     QuenePanel.startTime.text = GetLanguage(27040018)
     QuenePanel.contentText.text = GetLanguage(16010026)
 end
 
-function QueneCtrl:_promoLanguage()
-    QuenePanel.name.text = GetLanguage(27010008)
-    QuenePanel.player.text = GetLanguage(28040010)
-    QuenePanel.goods.text = GetLanguage(27040016)
-    QuenePanel.details.text = GetLanguage(28040035)
-    QuenePanel.startTime.text = GetLanguage(27040018)
-    QuenePanel.contentText.text = GetLanguage(16010026)
-end
 --todo：刷新
 function QueneCtrl:Refresh()
-    self:ChangeLanguage()
-    --区别研究所与推广公司的quene界面
-    for i, v in pairs(self.m_data.data) do
-        if v.availableRoll == nil then
-            self:_promoLanguage()
-        else
-            self:_laboratoryLanguage()
-        end
-    end
+    --self:ChangeLanguage()
+    self:_laboratoryLanguage()
     self:c_updateQuque(self.m_data)
 end
 

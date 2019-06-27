@@ -32,7 +32,7 @@ function ToggleBtnTwoItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.ToggleBtnTwoItem.mProvideData = ToggleBtnTwoItem.static.OptionThreeData
     self.ToggleBtnTwoItem.mClearData = ToggleBtnTwoItem.static.OptionThreeClearData
 
-    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    VolumePanel.curve.anchoredPosition = Vector3.New(-18208, 56,0)
     VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
     insId = OpenModelInsID.VolumeCtrl
     self:Refresh(data)
@@ -46,7 +46,7 @@ function ToggleBtnTwoItem:_firstclose(ins)
 end
 --打开交易折线图
 function ToggleBtnTwoItem:_tradingOpenFunc(ins)
-    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    VolumePanel.curve.anchoredPosition = Vector3.New(-18208, 56,0)
     VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
 
     if state ~= nil then
@@ -81,7 +81,8 @@ end
 
 function ToggleBtnTwoItem:updateData( data )
     self.data = data
-    self.foodtext.text = self.data.name
+    --self.foodtext.text = self.data.name
+    self.foodtext.text = GetLanguage(self.data.name)
 end
 
 function ToggleBtnTwoItem:updateUI( data )
@@ -93,6 +94,7 @@ function ToggleBtnTwoItem:updateUI( data )
 end
 
 function ToggleBtnTwoItem:Refresh(data)
+
     self:updateData(data)
     DataManager.DetailModelRpcNoRet(data.insId , 'm_GoodsplayerTypeNum')
     --self:updateUI(data)
@@ -175,7 +177,7 @@ function ToggleBtnTwoItem:c_GoodsplayerTypeNum(info)
         end
     end
     local demandNumVet = {}
-    local scale = SetYScale(max,6,VolumePanel.yScale)
+    local scale = SetYScale(max,4,VolumePanel.yScale)
     for i, v in ipairs(demandNumValue) do
         if scale == 0 then
             demandNumVet[i] = v

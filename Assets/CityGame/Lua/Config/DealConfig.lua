@@ -1,16 +1,16 @@
 DealConfig={
 
     [1] = {
-        name = "土地",--名字
+        name = 19030004,--名字
         childs = {
             [1] = {
-                name = "土地租凭",
+                name = 19030006,
                 typeId = 888,
                 EX=3
             },
 
             [2] = {
-                name = "土地买卖",
+                name = 19030005,
                 typeId= 999,
                 EX=3
             },
@@ -18,45 +18,45 @@ DealConfig={
     },
 
     [2] = {
-        name = "原料",--名字
+        name = 19030007,--名字
         childs = {
             [1] ={
-                name = "小麦",
+                name = 2101001,
                 typeId= "2101001",
                 EX=1
             },
             [2] ={
-                name = "猪肉",
+                name = 2101002,
                 typeId= "2101002",
                 EX=1
             },
             [3] ={
-                name = "鸡蛋",
+                name = 2101003,
                 typeId= "2101003",
                 EX=1
             },
             [4] ={
-                name = "奶酪",
+                name = 2101004,
                 typeId= "2101004",
                 EX=1
             },
             [5] ={
-                name = "棉",
+                name = 2102001,
                 typeId= "2102001",
                 EX=1
             },
             [6] ={
-                name = "珊瑚绒",
+                name = 2102002,
                 typeId= "2102002",
                 EX=1
             },
             [7] ={
-                name = "树胶",
+                name = 2102003,
                 typeId= "2102003",
                 EX=1
             },
             [8] ={
-                name = "呢绒",
+                name = 2102004,
                 typeId= "2102004",
                 EX=1
             }
@@ -65,38 +65,38 @@ DealConfig={
         }
     },
     [3] = {
-        name = "商品", --名字
+        name = 19030008, --名字
         childs = {
             [1] = {
-                name = "主食",
+                name = 20030002,
                 childs = {
                     [1] = {
-                        name = "面包",
+                        name = 2251101,
                         typeId = "2251101",
                          EX=2
                     },
                     [2] = {
-                        name = "热狗",
+                        name = 2251102,
                         typeId = "2251102",
                          EX=2
                     },
                     [3] = {
-                        name = "蛋挞",
+                        name = 2251103,
                         typeId = "2251103",
                          EX=2
                     },
                     [4] = {
-                        name = "汉堡",
+                        name = 2251201,
                         typeId = "2251201",
                          EX=2
                     },
                     [5] = {
-                        name = "香肠",
+                        name = 2251202,
                         typeId = "2251202",
                          EX=2
                     },
                     [6] = {
-                        name = "三明治",
+                        name = 2251203,
                         typeId = "2251203",
                          EX=2
                     },
@@ -113,35 +113,35 @@ DealConfig={
             --    }
             --},
             [2] = {
-                name = "服饰",
+                name = 20030001,
                 childs = {
                     [1] = {
-                        name = "手套",
+                        name = 2252101,
                         typeId = "2252101",
                          EX=2
                     },
                     [2] = {
-                        name = "围巾",
+                        name = 2252102,
                         typeId = "2252102",
                          EX=2
                     },
                     [3] = {
-                        name = "冬帽",
+                        name = 2252103,
                         typeId = "2252103",
                          EX=2
                     },
                     [4] = {
-                        name = "西装",
+                        name = 2252201,
                         typeId = "2252201",
                          EX=2
                     },
                     [5] = {
-                        name = "毛衣",
+                        name = 2252202,
                         typeId = "2252202",
                          EX=2
                     },
                     [6] = {
-                        name = "大衣",
+                        name = 2252203,
                         typeId = "2252203",
                          EX=2
                     },
@@ -180,28 +180,28 @@ DealConfig={
         }
     },
         [4] = {
-            name = "推广",--名字
+            name = 19030009,--名字
             childs = {
                 [1] = {
-                    name = "建筑推广",
+                    name = 19030026,
                     childs ={
                         [1] = {
-                            name = "零售店",
+                            name = 19030012,
                             typeId = 13,
                             EX=4
                         },
                         [2] = {
-                            name = "住宅",
+                            name = 19030013,
                             typeId= 14,
                             EX=4
                         },
                     }
                 },
                 [2] = {
-                    name = "商品推广",
+                    name = 19030027,
                     childs ={
                         [1] = {
-                            name = "主食",
+                            name = 19030010,
                             typeId = 51,
                             EX=4
                         },
@@ -211,7 +211,7 @@ DealConfig={
                         --    EX=4
                         --},
                         [2] = {
-                            name = "服装",
+                            name = 19030011,
                             typeId= 53,
                             EX=4
                         },
@@ -235,15 +235,15 @@ DealConfig={
             }
         },
         [5] = {
-            name = "研究",--名字
+            name = 19030014,--名字
             childs = {
                 [1] = {
-                    name = "商品发明",
+                    name = 19030015,
                     typeId = 3,
                     EX=5
                 },
                 [2] = {
-                    name = "EVA研究",
+                    name = 19030016,
                     typeId= 4,
                     EX=5
                 },

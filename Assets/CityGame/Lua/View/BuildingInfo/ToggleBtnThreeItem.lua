@@ -29,8 +29,8 @@ function ToggleBtnThreeItem:initialize(prefab,luaBehaviour,data,ctrl)
     self.ToggleBtnThreeItem.mProvideData = ToggleBtnThreeItem.static.OptionTwoData
     self.ToggleBtnThreeItem.mClearData = ToggleBtnThreeItem.static.OptionTwoClearData
 
-    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
-    VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
+    VolumePanel.scurve.anchoredPosition = Vector3.New(-18208, 65,0)
+    VolumePanel.scurve.sizeDelta = Vector2.New(19530, 450)
     insId = OpenModelInsID.VolumeCtrl
     self:Refresh(data)
     Event.AddListener("c_ToggleBtnThreeItem",self.c_GoodsplayerTypeThreeNum,self)
@@ -41,8 +41,8 @@ end
 --打开交易折线图
 function ToggleBtnThreeItem:_tradingOpenFunc(ins)
     VolumePanel.strade.localScale = Vector3.one
-    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
-    VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
+    VolumePanel.scurve.anchoredPosition = Vector3.New(-18208, 80,0)
+    VolumePanel.scurve.sizeDelta = Vector2.New(19530, 450)
     if state ~= nil then
         state.localScale = Vector3.zero
     end
@@ -72,7 +72,7 @@ end
 -- 第二层信息展示
 function ToggleBtnThreeItem:updateData( data )
     self.data = data
-    self.foodtext.text = self.data.name
+    self.foodtext.text = GetLanguage(self.data.name)
 end
 
 function ToggleBtnThreeItem:updateUI( data )
@@ -161,7 +161,7 @@ function ToggleBtnThreeItem:c_GoodsplayerTypeThreeNum(info)
         end
     end
     local demandNumVet = {}
-    local scale = SetYScale(max,6,VolumePanel.syScale)
+    local scale = SetYScale(max,4,VolumePanel.syScale)
     for i, v in ipairs(demandNumValue) do
         if scale == 0 then
             demandNumVet[i] = v

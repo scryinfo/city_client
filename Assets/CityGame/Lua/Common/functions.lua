@@ -1059,7 +1059,7 @@ function ct.CalculationSupermarketCompetitivePower(recommendedPricing,price,comm
 	end
 	if recommendedPricing <= 0 then
 		--推荐定价 = 推荐定价表
-		recommendedPricing = 13 * PRIDMagnification + commodityID
+		recommendedPricing = Competitive[13 * PRIDMagnification + commodityID]
 		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
 		return CalculationNBitAfterDecimalPoint(recommendedPricing / price * ((commodityScore+ shopScore)/25 ) * CPMagnification)
 	end
@@ -1074,7 +1074,7 @@ end
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationRetailSuggestPrice(recommendedPricing,goodsID,commodityScore,shopScore,averageSalesScore,averageShopScore)
 	if recommendedPricing <= 0 then
-		recommendedPricing = Competitive[12 * PRIDMagnification + goodsID]
+		recommendedPricing = Competitive[13 * PRIDMagnification + goodsID]
 		return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )
 	end
 	return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )

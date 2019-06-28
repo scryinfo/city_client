@@ -639,6 +639,11 @@ function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
         end
         CompanyPanel.landScroll:ActiveLoopScroll(self.landSource, #CompanyCtrl.landInfos, "View/Company/LandInfoItem")
         CompanyPanel.landScroll:RefillCells()
+
+        if #CompanyCtrl.landInfos == 0 then
+            CompanyPanel.noContentRoot.localScale = Vector3.one
+            CompanyPanel.tipsText.text = GetLanguage(18020011)
+        end
     else
         -- 当没有土地需要显示时，各项数据皆为零
         CompanyPanel.noContentRoot.localScale = Vector3.one
@@ -706,6 +711,10 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
         end
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, #CompanyCtrl.buildingInfos, "View/Company/BuildingInfoItem")
         CompanyPanel.buildingScroll:RefillCells()
+        if #CompanyCtrl.buildingInfos == 0 then
+            CompanyPanel.noContentRoot.localScale = Vector3.one
+            CompanyPanel.tipsText.text = GetLanguage(18030002)
+        end
     else
         CompanyPanel.noContentRoot.localScale = Vector3.one
         CompanyPanel.tipsText.text = GetLanguage(18030002)

@@ -21,10 +21,6 @@ namespace UnityEngine
         private string QRTexturePath ;
         //扫描二维码界面
         public RectTransform codePanel;
-        private void Awake()
-        {
-            QRTexturePath = Application.dataPath + "/CityGame/Resources/Atlas/Wallet";
-        }
         public void StartScanQRCode()
         {
             if (Application.HasUserAuthorization(UserAuthorization.WebCam))
@@ -61,24 +57,18 @@ namespace UnityEngine
                 qrStingText.text = result.Text;
                 if (codePanel != null)
                 {
-                    codePanel.transform.localScale = Vector3.one;
+                    codePanel.transform.localScale = Vector3.zero;
                 }
             }
         }
         //创建二维码
-        public void CreateQRCode(string str /*,Image RQCodeImg*/)
+        public void CreateQRCode(string str, RawImage RQCodeImg)
         {
             //定义texture2d并填充
             Texture2D tTexture = new Texture2D(256, 256);
             tTexture.SetPixels32(GetnQRCode(str, 256, 256));
             tTexture.Apply();
-            string fullpath = QRTexturePath + "/QRCode.png";
-            var bytes = tTexture.EncodeToPNG();
-            if (!Directory.Exists(QRTexturePath))
-            {
-                Directory.CreateDirectory(QRTexturePath);
-            }
-            File.WriteAllBytes(fullpath, bytes);
+            RQCodeImg.texture = tTexture;
         }
         //返回Color32图片颜色的方法
         Color32[] GetnQRCode(string formatStr, int width, int height)

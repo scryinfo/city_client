@@ -299,7 +299,7 @@ function VolumeCtrl:initData()
     end
     house[1] = {}
     house[1].itemId = 20050004
-    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    VolumePanel.curve.anchoredPosition = Vector3.New(-18208, 56,0)
     VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end
 
@@ -459,7 +459,7 @@ function VolumeCtrl:OncitzenRect(ins)
     VolumePanel.playercurrRoot.gameObject:SetActive(false)
     VolumePanel.trade.localScale = Vector3.zero
     VolumePanel.strade.localScale = Vector3.zero
-    VolumePanel.curve.anchoredPosition = Vector3.New(-18524, 56,0)
+    VolumePanel.curve.anchoredPosition = Vector3.New(-18208, 56,0)
     VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 0),
@@ -631,7 +631,7 @@ function VolumeCtrl:c_GoodsplayerTypeNum(info)
         end
     end
     local demandNumVet = {}
-    local scale = SetYScale(max,6,VolumePanel.yScale)
+    local scale = SetYScale(max,4,VolumePanel.yScale)
     for i, v in ipairs(demandNumValue) do
         if scale == 0 then
             demandNumVet[i] = v

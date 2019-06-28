@@ -37,7 +37,7 @@ UnitTest.Exec("abel_TimefunPrecision", "test_timefunPrecision",  function ()
 end)
 
 --心跳检测服务器返回时间差
-local HeartBeatTimeDifference = 0.5
+local HeartBeatTimeDifference = 1
 UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
     ct.testUpdate = false
     --UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")

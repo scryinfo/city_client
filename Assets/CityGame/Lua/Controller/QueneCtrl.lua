@@ -28,16 +28,22 @@ function QueneCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_updateQuque",self.c_updateQuque,self)
 
+
+end
+
+function QueneCtrl:_laboratoryLanguage()
     QuenePanel.name.text = GetLanguage(27010008)
     QuenePanel.player.text = GetLanguage(28040010)
-    QuenePanel.goods.text = GetLanguage(28040011)
-    QuenePanel.details.text = GetLanguage(28040012)
+    QuenePanel.goods.text = GetLanguage(28040034)
+    QuenePanel.details.text = GetLanguage(28040035)
     QuenePanel.startTime.text = GetLanguage(27040018)
-    QuenePanel.contentText.text = GetLanguage(16010026)
+    QuenePanel.contentText.text = GetLanguage(27040033)
 end
+
 --todo：刷新
 function QueneCtrl:Refresh()
-    self:ChangeLanguage()
+    --self:ChangeLanguage()
+    self:_laboratoryLanguage()
     self:c_updateQuque(self.m_data)
 end
 

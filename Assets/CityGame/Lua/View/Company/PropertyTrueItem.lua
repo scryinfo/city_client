@@ -78,11 +78,10 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.addExNumInputField.onEndEdit:RemoveAllListeners()
     self.addExNumInputField.onEndEdit:AddListener(function (inputValue)
         if inputValue == nil or inputValue == "" then
-            self:_setBtnInteractable(false, false)
-            return
+            self:_setAddExNumInputField("0")
         end
         -- 使按钮可点
-        self:_setBtnInteractable(true, true)
+        --self:_setBtnInteractable(true, true)
 
         -- 规范输入的点数
         local addNumber = tonumber(inputValue)
@@ -183,9 +182,9 @@ end
 -- 设置输入框的值
 function PropertyTrueItem:_setAddExNumInputField(str)
     self.addExNumInputField.text = str
-    if tonumber(str) and tonumber(str) >= 0 then
-        self:_setBtnInteractable(true, true)
-    end
+    --if tonumber(str) and tonumber(str) >= 0 then
+    --    self:_setBtnInteractable(true, true)
+    --end
 end
 
 -- 加/减一点

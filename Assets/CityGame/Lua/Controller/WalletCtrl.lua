@@ -6,6 +6,7 @@
 WalletCtrl = class('WalletCtrl',UIPanel)
 UIPanel:ResgisterOpen(WalletCtrl)
 
+local records
 function WalletCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.DoNothing,UICollider.Normal)
 end
@@ -48,6 +49,10 @@ function WalletCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.QRCodeConfirm.gameObject,self._clickQRCodeConfirmBtn,self)   --前往CashBoxs
     self.luaBehaviour:AddClick(self.copyBtn.gameObject,self._clickCopyBtnBtn,self)   --复制
 
+    --滑动互用
+    self.trading = UnityEngine.UI.LoopScrollDataSource.New()  --行情
+    self.trading.mProvideData = WalletCtrl.static.TradingProvideData
+    self.trading.mClearData = WalletCtrl.static.TradingClearData
 
     --初始化循环参数
     self.intTime = 0
@@ -78,6 +83,7 @@ function WalletCtrl:Active()
     Event.AddListener("reqTopUpSucceed",self.reqTopUpSucceed,self)
     Event.AddListener("reqDisChargeOrderSucceed",self.reqDisChargeOrderSucceed,self)
     Event.AddListener("ValidationPhoneCode",self.ValidationPhoneCode,self) --验证验证码回调
+    Event.AddListener("TradingRecords",self.TradingRecords,self) --交易详情
 end
 
 function WalletCtrl:Refresh()
@@ -94,6 +100,7 @@ function WalletCtrl:Hide()
     Event.RemoveListener("reqTopUpSucceed",self.reqTopUpSucceed,self)
     Event.RemoveListener("reqDisChargeOrderSucceed",self.reqDisChargeOrderSucceed,self)
     Event.RemoveListener("ValidationPhoneCode",self.ValidationPhoneCode,self) --验证验证码回调
+    Event.RemoveListener("TradingRecords",self.TradingRecords,self) --交易详情
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WalletCtrl:_getComponent(go)
@@ -128,7 +135,7 @@ function WalletCtrl:_getComponent(go)
     self.DetailsContent = go.transform:Find("DetailsContent")
     self.detailsCloseBtn = go.transform:Find("DetailsContent/top/closeBtn")
     self.detailsTopName = go.transform:Find("DetailsContent/top/topName"):GetComponent("Text")
-    self.detailsContent = go.transform:Find("DetailsContent/content/ScrollView/Viewport/Content")
+    self.detailsViewport = go.transform:Find("DetailsContent/content/ScrollView/Viewport"):GetComponent("ActiveLoopScrollRect")
     self.empty = go.transform:Find("DetailsContent/empty")
     self.emptyText = go.transform:Find("DetailsContent/empty/emptyText"):GetComponent("Text")
 
@@ -151,7 +158,7 @@ function WalletCtrl:_getComponent(go)
     self.QRCodeAmount = go.transform:Find("QRCodeContent/content/amount"):GetComponent("Text")
     self.QRCodeMoney = go.transform:Find("QRCodeContent/content/money"):GetComponent("Text")
     self.QRCodeText = go.transform:Find("QRCodeContent/content/Text"):GetComponent("Text")
-    self.QRCodeImg = go.transform:Find("QRCodeContent/content/QRCode"):GetComponent("Image")
+    self.QRCodeImg = go.transform:Find("QRCodeContent/content/QRCode"):GetComponent("RawImage")
     self.QRCodeAddressText = go.transform:Find("QRCodeContent/content/addressBg/addressText"):GetComponent("Text")
     self.copyBtn = go.transform:Find("QRCodeContent/content/addressBg/copyBtn")
     self.copyText = go.transform:Find("QRCodeContent/content/addressBg/copyBtn/Text"):GetComponent("Text")
@@ -278,10 +285,23 @@ function WalletCtrl:defaultPanel()
         self.moneyText.text = DataManager.GetMoneyByString()
     end
 end
+
+--滑动互用
+WalletCtrl.static.TradingProvideData = function(transform, idx)
+
+    idx = idx + 1
+    local item = TradeInfoItem:new(records[#records-idx+1],transform)
+end
+
+WalletCtrl.static.TradingClearData = function(transform)
+
+end
+
 -------------------------------------------------------------点击函数---------------------------------------------------------------------------------
 --退出钱包
 function WalletCtrl:_clickCloseBtn()
     PlayMusEff(1002)
+    records = nil
     UIPanel.ClosePage()
 end
 --打开用户协议
@@ -394,6 +414,20 @@ function WalletCtrl:_clickPhoneRootConfirmBtn(ins)
     Event.Brocast("ReqValidationPhoneCode",ins.userId,ins.phoneCode)
 end
 
+--交易详情
+function WalletCtrl:TradingRecords(info)
+    if info.records then
+        self.empty.localScale = Vector3.zero
+        records = nil
+        records = info.records
+
+        self.detailsViewport:ActiveLoopScroll(self.trading, #info.records)
+    else
+        records = nil
+        self.empty.localScale = Vector3.one
+    end
+end
+
 --前往CashBoxs
 function WalletCtrl:_clickQRCodeConfirmBtn(ins)
     PlayMusEff(1002)
@@ -445,7 +479,7 @@ function WalletCtrl:inputMoney()
     if self.rechargeMoneyInput.text == "" then
         self.rechargeMoneyInput.text = 0
     end
-    self.TopUpMoney = self.rechargeMoneyInput.text
+    self.TopUpMoney = tostring(tonumber(self.rechargeMoneyInput.text)/1000000)
     self.DDDText.text = getMoneyString(tonumber(self.rechargeMoneyInput.text) * (1/1000000)) .. "(DDD)"
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -519,8 +553,6 @@ end
 --关闭钱包充值金额（新加）
 function WalletCtrl:closeRechargeAmountContent()
     self.RechargeAmountContent.transform.localScale = Vector3.zero
-    os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png")
-    os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png.meta")
 end
 --打开二维码
 function WalletCtrl:openQRCode(data)
@@ -528,31 +560,21 @@ function WalletCtrl:openQRCode(data)
     self.QRCodeContent.transform.localScale = Vector3.one
     self.QRCodeMoney.text = getMoneyString(GetClientPriceString(self.TopUpMoney * 10000)) .. "(DDD)"
     --self.QRCodeImg
+    local currentTime = TimeSynchronized.GetTheCurrentServerTime() --毫秒
+    currentTime = currentTime + 3600000
+    currentTime = math.floor(currentTime)
+    local path = "https://cashbox.scry.info/qr?ot=t&ct=60&ca=0xaa638fca332190b63be1605baefde1df0b3b031e&ta="..data.RechargeRequestRes.EthAddr.."&v=" .. tonumber(self.TopUpMoney)
+    .."&bu=" .. data.RechargeRequestRes.PurchaseId .. "&tl=" .. currentTime
     self.moneyPurchaseId = data.RechargeRequestRes.PurchaseId   --订单Id
     self.moneyEthAddr = data.RechargeRequestRes.EthAddr   --地址
-    self.scanQRCode:CreateQRCode(data.RechargeRequestRes.EthAddr)
-    self.timmer= 0
+    self.scanQRCode:CreateQRCode(path,self.QRCodeImg)
     self.QRCodeAddressText.text = data.RechargeRequestRes.EthAddr
-    UpdateBeat:Add(self.UpdateCode,self)
 end
 
-function WalletCtrl:UpdateCode()
-   self.timmer = self.timmer + UnityEngine.Time.unscaledDeltaTime
-    if self.timmer >= 0.5 then
-        self.timmer = 0
-        local path = os.execute("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png.meta")
-        if path == 1 then
-            LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png", self.QRCodeImg)
-            UpdateBeat:Remove(self.UpdateCode,self)
-        end
-    end
-end
 --关闭二维码
 function WalletCtrl:closeQRCode()
     self.QRCodeContent.transform.localScale = Vector3.zero
     self.QRCodeMoney.text = 0.0000 .. "(DDD)"
-    os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png")
-    os.remove("Assets/CityGame/Resources/Atlas/Wallet/QRCode.png.meta")
 end
 --打开扫描二维码
 function WalletCtrl:openScanningQRCode()

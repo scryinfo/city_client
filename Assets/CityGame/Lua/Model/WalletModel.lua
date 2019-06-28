@@ -24,6 +24,7 @@ function WalletModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.ct_RechargeRequestRes",self.ReqTopUpSucceed,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_DisPaySmVefifyReq","ccapi.ct_DisPaySmVefifyReq",self.ReqValidationPhoneCodeSuccees,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GetTradingRecords","ccapi.ct_GetTradingRecords",self.GetTradingRecords,self)
 end
 
 function WalletModel:Close()
@@ -39,6 +40,7 @@ function WalletModel:Close()
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.ct_RechargeRequestRes",self.ReqTopUpSucceed,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_DisPaySmVefifyReq","ccapi.ct_DisPaySmVefifyReq",self.ReqValidationPhoneCodeSuccees,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GetTradingRecords","ccapi.ct_GetTradingRecords",self.GetTradingRecords,self)
 end
 
 ---客户端请求----
@@ -98,15 +100,27 @@ end
 
 --订单详情
 function WalletModel:ReqDetails(userId)
-    --local currentTime = TimeSynchronized.GetTheCurrentTime()
-    --local ts = getFormatUnixTime(currentTime)
-    --if tonumber(ts.second) ~= 0 then
-    --    currentTime = currentTime - tonumber(ts.second)
-    --end
-    --if tonumber(ts.minute) ~= 0 then
-    --    currentTime = currentTime - tonumber(ts.second)
-    --end
-
+    local currentTime = TimeSynchronized.GetTheCurrentServerTime()  --毫秒
+    local endTime = TimeSynchronized.GetTheCurrentServerTime()  --毫秒
+    local ts = getFormatUnixTime(currentTime/1000)
+    if tonumber(ts.second) ~= 0 then
+        currentTime = currentTime - tonumber(ts.second)*1000
+    end
+    if tonumber(ts.minute) ~= 0 then
+        currentTime = currentTime - tonumber(ts.minute)*60000
+    end
+    if tonumber(ts.hour) ~= 0 then
+        currentTime = currentTime - tonumber(ts.hour)*3600000
+    end
+    if tonumber(ts.day) ~= 0 then
+        currentTime = currentTime - tonumber(ts.hour)*86400000
+    end
+    local startTime = currentTime
+    local msgId = pbl.enum("gscode.OpCode","ct_GetTradingRecords")
+    local lMsg ={playerId = userId,range_StartTime = startTime,range_EndTime = endTime}
+    local pMsg = assert(pbl.encode("ccapi.ct_GetTradingRecords", lMsg))
+    local msgRet = assert(pbl.decode("ccapi.ct_GetTradingRecords",pMsg), "pbl.decode decode failed")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 
 ---服务器回调---
@@ -153,6 +167,11 @@ function WalletModel:ReqValidationPhoneCodeSuccees(data)
     if data ~= nil then
         Event.Brocast("ValidationPhoneCode",data)
     end
+end
+
+--交易详情
+function WalletModel:GetTradingRecords(info)
+    Event.Brocast("TradingRecords",info)
 end
 ------------------------------------------------------------------------解析-----------------------------------------------------------------------------
 --解析支付密码和私钥

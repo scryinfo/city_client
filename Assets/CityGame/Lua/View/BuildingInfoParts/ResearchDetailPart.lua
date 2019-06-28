@@ -277,7 +277,7 @@ function ResearchDetailPart:c_UpdateInventSet()
     else
         self.bgtitleText.text = ""
         self.openOther.localScale = Vector3.one
-        self.openOtherText.text = ct.CalculationLaboratoryCompetitivePower(self.m_data.guidePrice, self.m_data.pricePreTime, self.m_data.RDAbility)
+        self.openOtherText.text = ct.CalculationLaboratoryCompetitivePower(self.m_data.guidePrice, self.m_data.pricePreTime, self.m_data.RDAbility , self.m_data.averageRDAbility)
     end
     self.timeCountText.text = self.m_data.sellTimes
     self.priceCountText.text = GetClientPriceString(self.m_data.pricePreTime)
@@ -292,7 +292,8 @@ function ResearchDetailPart:n_OnLaboratoryGuidePrice(info)
     --self.m_data.laboratoryGuidePrice = info
     self.m_data.RDAbility = (info.labPrice[1].goodProb * 2 + info.labPrice[1].evaProb) / 2
     self.m_data.guidePrice = info.labPrice[1].guidePrice
-
+    --TODO://计算公式错误
+    self.m_data.averageRDAbility = (info.labPrice[1].goodProb * 2 + info.labPrice[1].evaProb) / 2
     self:c_UpdateInventSet()
 end
 

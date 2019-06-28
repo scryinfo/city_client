@@ -1036,13 +1036,19 @@ end
 --玩家商品评分:commodityScore
 --销售均评分:averageSalesScore(找服务器要)
 function ct.CalculationProcessingSuggestPrice(recommendedPricing,goodsID,commodityScore,averageSalesScore)
-	if averageSalesScore <= 0 then averageSalesScore = 1 end
+    --0628修改
+    if recommendedPricing <= 0 then
+        return Competitive[12 * PRIDMagnification + goodsID]
+    end
+    return recommendedPricing
 
-	if recommendedPricing <= 0 then
-		recommendedPricing = Competitive[12 * PRIDMagnification + goodsID]
-		return recommendedPricing *((commodityScore / averageSalesScore) / 25 )
-	end
-	return recommendedPricing * ((commodityScore / averageSalesScore) / 25 )
+	--if averageSalesScore <= 0 then averageSalesScore = 1 end
+    --
+	--if recommendedPricing <= 0 then
+	--	recommendedPricing = Competitive[12 * PRIDMagnification + goodsID]
+	--	return recommendedPricing *((commodityScore / averageSalesScore) / 25 )
+	--end
+	--return recommendedPricing * ((commodityScore / averageSalesScore) / 25 )
 end
 
 ---计算零售店竞争力
@@ -1073,11 +1079,17 @@ end
 --全城销售均商品评分:averageSalesScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationRetailSuggestPrice(recommendedPricing,goodsID,commodityScore,shopScore,averageSalesScore,averageShopScore)
-	if recommendedPricing <= 0 then
-		recommendedPricing = Competitive[13 * PRIDMagnification + goodsID]
-		return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )
-	end
-	return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )
+    --0628修改
+    if recommendedPricing <= 0 then
+        return Competitive[13 * PRIDMagnification + goodsID]
+    end
+    return recommendedPricing
+
+	--if recommendedPricing <= 0 then
+	--	recommendedPricing = Competitive[13 * PRIDMagnification + goodsID]
+	--	return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )
+	--end
+	--return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )
 end
 
 ---计算住宅竞争力
@@ -1106,15 +1118,21 @@ end
 --玩家店铺评分:shopScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationHouseSuggestPrice(recommendedPricing,shopScore,averageShopScore)
-	if averageShopScore <= 0 then
-		averageShopScore = 1
-	end
-	if recommendedPricing <= 0 then
-		--推荐定价 = 推荐定价表
-		recommendedPricing = Competitive[14 * PRIDMagnification]
-		return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
-	end
-	return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
+    --0628修改
+    if recommendedPricing <= 0 then
+        return Competitive[14 * PRIDMagnification]
+    end
+    return recommendedPricing
+
+	--if averageShopScore <= 0 then
+	--	averageShopScore = 1
+	--end
+	--if recommendedPricing <= 0 then
+	--	--推荐定价 = 推荐定价表
+	--	recommendedPricing = Competitive[14 * PRIDMagnification]
+	--	return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
+	--end
+	--return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
 end
 
 --航班预测根据机场二字码得到对应多语言

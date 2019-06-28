@@ -218,7 +218,7 @@ function ProcessingFactoryModel:n_OnOpenprocessing(stream)
     DataManager.ControllerRpcNoRet(self.insId,"ProcessingFactoryCtrl", 'refreshprocessingDataInfo',stream)
 end
 --运输
-function ProcessingFactoryModel:n_OnBuildingTransportInfo(data)
+function ProcessingFactoryModel:n_OnBuildingTransportInfo(data,msgId)
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end

@@ -72,7 +72,7 @@ function NewTransportBoxCtrl:initializeUiInfoData()
             self.itemTable = {}
         end
         local unitPrice = ChooseWarehouseCtrl:GetPrice()
-        self.targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
+        --self.targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
         self:CreateGoodsItems(self.m_data.itemPrefabTab,self.TransportItem,self.Content,TransportItem,self.luaBehaviour,self.m_data.buildingType,unitPrice)
     end
     self.priceText.text = self:calculateTotalPrice()
@@ -107,6 +107,7 @@ function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
 end
 --点击运输
 function NewTransportBoxCtrl:_clickStartBtn(ins)
+    ins.targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
     if not ins.itemTable or next(ins.itemTable) == nil then
         Event.Brocast("SmallPop",GetLanguage(25020023), 300)
         return

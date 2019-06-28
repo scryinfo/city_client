@@ -168,7 +168,7 @@ end
 --打开运输弹窗
 function BuildingWarehouseDetailPart:clickTransportBtn()
     local data = {}
-    data.buildingId = self.m_data.insId
+    data.buildingId = self.m_data.info.id
     data.buildingInfo = self.m_data.info
     data.buildingType = self.m_data.buildingType
     data.itemPrefabTab = self.transportTab
@@ -245,20 +245,21 @@ function BuildingWarehouseDetailPart:deleTransportList(id)
 end
 --开始运输
 function BuildingWarehouseDetailPart:startTransport(dataInfo,targetBuildingId)
+    self.numberTest = #dataInfo
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
         for key,value in pairs(dataInfo) do
-            Event.Brocast("m_MaterialTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
+            Event.Brocast("m_MaterialTransport",self.m_data.info.id,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --加工厂
         for key,value in pairs(dataInfo) do
-            Event.Brocast("m_processingTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
+            Event.Brocast("m_processingTransport",self.m_data.info.id,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
     elseif self.m_data.buildingType == BuildingType.RetailShop then
         --零售店
         for key,value in pairs(dataInfo) do
-            Event.Brocast("m_RetailStoresTransport",self.m_data.insId,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
+            Event.Brocast("m_RetailStoresTransport",self.m_data.info.id,targetBuildingId,value.itemId,value.dataInfo.number,value.dataInfo.producerId,value.dataInfo.qty)
         end
     end
 end
@@ -267,13 +268,13 @@ function BuildingWarehouseDetailPart:deleteWarehouseItem(dataInfo)
     if dataInfo ~= nil then
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             --原料厂
-            Event.Brocast("m_ReqMaterialDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
+            Event.Brocast("m_ReqMaterialDelItem",self.m_data.info.id,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
             --加工厂
-            Event.Brocast("m_ReqprocessingDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
+            Event.Brocast("m_ReqprocessingDelItem",self.m_data.info.id,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
-            Event.Brocast("m_ReqRetailStoresDelItem",self.m_data.insId,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
+            Event.Brocast("m_ReqRetailStoresDelItem",self.m_data.info.id,dataInfo.itemId,dataInfo.num,dataInfo.producerId,dataInfo.qty)
         end
     end
 end
@@ -342,6 +343,7 @@ end
 --运输成功回调
 function BuildingWarehouseDetailPart:transportSucceed(data)
     if data ~= nil then
+        self.numberTest = self.numberTest - 1
         --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.item.key.id then
@@ -373,7 +375,9 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     self.number.transform.localScale = Vector3.zero
     self.transportTab = {}
-    UIPanel.ClosePage()
+    if self.numberTest == 0 then
+        UIPanel.ClosePage()
+    end
     Event.Brocast("SmallPop", GetLanguage(25020020), ReminderType.Succeed)
 end
 --销毁成功后回调

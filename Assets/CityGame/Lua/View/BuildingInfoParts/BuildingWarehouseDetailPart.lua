@@ -344,6 +344,9 @@ end
 function BuildingWarehouseDetailPart:transportSucceed(data)
     if data ~= nil then
         self.numberTest = self.numberTest - 1
+        if not data.item or next(data.item) == nil then
+            data.item = {}
+        end
         --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.item.key.id then

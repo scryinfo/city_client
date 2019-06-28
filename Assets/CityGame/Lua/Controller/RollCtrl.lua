@@ -189,6 +189,9 @@ function RollCtrl:language()
     panel.evanametexts.text = GetLanguage(28040024)
     panel.congratulation1.text = GetLanguage(28040020)
     panel.congratulation2.text = GetLanguage(28040020)
+    panel.failtitleText.text = GetLanguage(28040023)
+    panel.failtitle.text = GetLanguage(28040021)
+    panel.titleTexts.text = GetLanguage(28040018)
     --panel.achievement.text = GetLanguage(28040044)
     --panel.Remainingtime.text = GetLanguage(28040044)
 
@@ -217,7 +220,6 @@ end
 
 function RollCtrl:updateText(data)
     panel.BigEVAtext.text = DataManager.GetEvaPoint()
-    panel.titleText.text = GetLanguage(40010009)
     --panel.evacounts.text = DataManager.GetEvaPoint()
 end
 

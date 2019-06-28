@@ -6,7 +6,7 @@ function PopCommpent:initialize(panelPrefab,LuaBehaviour,basectrl)
 
     self.closeBtn=transform:Find("PopCommpent/closeBtn")
     self.confirmBtn=transform:Find("PopCommpent/confimBtn")
-    self.titleText=transform:Find("PopCommpent/titleText"):GetComponent('Text')
+    --self.titleText=transform:Find("PopCommpent/titleText"):GetComponent('Text')
 
     LuaBehaviour:AddClick(self.confirmBtn.gameObject,self.OnClick_confirm,self)
     LuaBehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_close,self)
@@ -41,7 +41,7 @@ end
 --刷新
 function PopCommpent:Refesh(m_data)
    --多语言
-    self.titleText.text=GetLanguage(10040004)
+   -- self.titleText.text=GetLanguage(10040004)
    --刷新回调
    self.m_data=m_data
 end

@@ -202,7 +202,7 @@ function ResearchDetailPart:updateLanguage()
 
     -- 竞争力
     self.bgtitleText.text = ""
-    --self.competitiveness.text = GetLanguage(43060003)
+    self.competitiveness.text = GetLanguage(43060003)
 end
 
 ---===================================================================================释放==============================================================================================
@@ -227,7 +227,7 @@ function ResearchDetailPart:onClick_good(ins)
     ins.evaRoot.localScale = Vector3.zero
     ins.goods.localScale = Vector3.one
     ins.evaIma.localScale = Vector3.zero
-    ins.oodsCountText.text = tostring(ins.m_data.probGood .."%".."("..ins.m_data.probGoodAdd * 100 .."%"..")")
+    ins.oodsCountText.text = tostring(ins.m_data.probGood .."%")
 end
 --研究eva
 function ResearchDetailPart:onClick_eva(ins)
@@ -235,7 +235,7 @@ function ResearchDetailPart:onClick_eva(ins)
     ins.type="eva"
     ins.goods.localScale = Vector3.zero
     ins.evaIma.localScale = Vector3.one
-    ins.oodsCountText.text = tostring(ins.m_data.probEva .."%".."("..ins.m_data.probEvaAdd * 100 .."%"..")")
+    ins.oodsCountText.text = tostring(ins.m_data.probEva .."%")
 end
 --设置
 function ResearchDetailPart:onClick_set(ins)

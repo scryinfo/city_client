@@ -61,6 +61,8 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingGoodInfo","gs.BuildingGoodInfo",self.n_OnBuildingGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","materialNotEnough","gs.ByteBool",self.n_OnBuildingWarehouse)
+
 end
 
 function ProcessingFactoryModel:Close()
@@ -113,8 +115,7 @@ function ProcessingFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryBuildingGoodInfo","gs.BuildingGoodInfo",self.n_OnBuildingGoodsInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
-
-
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","materialNotEnough","gs.ByteBool",self.n_OnBuildingWarehouse)
 end
 ---客户端请求---
 --打开原料厂
@@ -344,6 +345,10 @@ end
 --获取加工厂参考价格
 function ProcessingFactoryModel:n_OnProcessingGuidePrice(data)
     Event.Brocast("getShelfProcessingGuidePrice",data)
+end
+--仓库材料不够通知
+function ProcessingFactoryModel:n_OnBuildingWarehouse(data)
+    Event.Brocast("WarehousMaterialWhetherEnough",data)
 end
 ----自动补货
 --function ProcessingFactoryModel:n_OnSetAutoReplenish(data)

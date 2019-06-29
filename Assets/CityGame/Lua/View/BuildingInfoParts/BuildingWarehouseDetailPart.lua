@@ -320,12 +320,19 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         --        end
         --    end
         --end
+        if self.storeInfoData or next(self.storeInfoData) ~= nil then
+            for key,value in pairs(self.storeInfoData.inHand) do
+                if value.key.id == data.iKey.id then
+                    value.n = value.n + 1
+                end
+            end
+        end
         --刷新仓库界面
         if self.warehouseDatas ~= nil then
             for key,value in pairs(self.warehouseDatas) do
                 if value.itemId == data.iKey.id then
-                    value.dataInfo.n = value.dataInfo.n + 1
-                    value.numberText.text = "×"..value.dataInfo.n
+                    value.dataInfo.n = data.nowCountStore
+                    value.numberText.text = "×"..data.nowCountInStore
                     return
                 end
             end
@@ -345,6 +352,9 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
     if data ~= nil then
         self.numberTest = self.numberTest - 1
         --刷新仓库界面
+        if not data.item or next(data.item) == nil then
+            data.item = {}
+        end
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.item.key.id then
                 if value.dataInfo.n == data.item.n then

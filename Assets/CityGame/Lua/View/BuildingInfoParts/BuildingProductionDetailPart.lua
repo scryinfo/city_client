@@ -127,7 +127,8 @@ function BuildingProductionDetailPart:_InitEvent()
     Event.AddListener("deleListLine",self.deleListLine,self)
     Event.AddListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
     Event.AddListener("lineAddSucceed",self.lineAddSucceed,self)
-    --Event.AddListener("WarehousCapacityWhetherfull",self.WarehousCapacityWhetherfull,self)
+    Event.AddListener("WarehousCapacityWhetherFull",self.WarehousCapacityWhetherFull,self)
+    Event.AddListener("WarehousMaterialWhetherEnough",self.WarehousMaterialWhetherEnough,self)
 end
 
 function BuildingProductionDetailPart:_RemoveEvent()
@@ -138,7 +139,8 @@ function BuildingProductionDetailPart:_RemoveEvent()
     Event.RemoveListener("deleListLine",self.deleListLine,self)
     Event.RemoveListener("saveMaterialOrGoodsInfo",self.saveMaterialOrGoodsInfo,self)
     Event.RemoveListener("lineAddSucceed",self.lineAddSucceed,self)
-    --Event.RemoveListener("WarehousCapacityWhetherfull",self.WarehousCapacityWhetherfull,self)
+    Event.RemoveListener("WarehousCapacityWhetherFull",self.WarehousCapacityWhetherFull,self)
+    Event.RemoveListener("WarehousMaterialWhetherEnough",self.WarehousMaterialWhetherEnough,self)
 end
 
 function BuildingProductionDetailPart:_initFunc()
@@ -152,7 +154,10 @@ function BuildingProductionDetailPart:_language()
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
+    self.time = nil
     self.tipText.text = ""
+    self.isBoolCapacity = false
+    self.isBoolMaterial = false
     self.Capacity = self:getWarehouseCapacity()
     if not lineData or next(lineData) == nil then
         self.addBtn.transform.localScale = Vector3.one
@@ -212,7 +217,6 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
             self.timeSlider.value = 0
             self.oneTimeText.text = "00:00"
             self.tipText.text = GetLanguage(25030014)
-            return
         else
             --是商品时
             local goodsKey = 22
@@ -311,34 +315,28 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --刷新时间
 function BuildingProductionDetailPart:Update()
-    if self.Capacity == PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity then
+    if self.isBoolCapacity == true then
         UpdateBeat:Remove(self.Update,self)
         self.timeSlider.value = 0
+        self.oneTimeText.text = "00:00"
         self.tipText.text = GetLanguage(25030014)
         return
     else
         local goodsKey = 22
         if Math_Floor(self.itemId / 100000) == goodsKey then
             --原料不足时
-            if self:checkMaterial(self.itemId) == false then
+            ----这个要测试材料不足的情况
+            if self.isBoolMaterial == true then
                 UpdateBeat:Remove(self.Update,self)
-                self.oneTimeText.text = "00:00"
                 self.timeSlider.value = 0
+                self.oneTimeText.text = "00:00"
                 self.tipText.text = GetLanguage(25030020)
                 return
             end
         end
     end
-    ----刷新总时间
-    ----检查正在生产中的总时间
-    --if self.time == nil or self.time <= 0 then
-    --    self.timeText.text = "00:00:00"
-    --    self.oneTimeText.text = "00:00"
-    --    self.timeSlider.value = 0
-    --    UpdateBeat:Remove(self.Update,self)
-    --    return
-    --end
 
+    ---刷新总时间
     self.time = self.time - UnityEngine.Time.unscaledDeltaTime
     local timeTable = getTimeBySec(self.time)
     local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
@@ -453,10 +451,14 @@ function BuildingProductionDetailPart:saveMaterialOrGoodsInfo(data)
         end
     end
 end
-----仓库是否没有容量
---function BuildingProductionDetailPart:WarehousCapacityWhetherfull(data,msgId)
---    self.isBoolCapacity = ""
---end
+--仓库是否没有容量
+function BuildingProductionDetailPart:WarehousCapacityWhetherFull(data)
+    self.isBoolCapacity = data.b
+end
+--生产商品时材料够不够
+function BuildingProductionDetailPart:WarehousMaterialWhetherEnough(data)
+    self.isBoolMaterial = data.b
+end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --删除一条待生产的线
 function BuildingProductionDetailPart:updateListLine(id)

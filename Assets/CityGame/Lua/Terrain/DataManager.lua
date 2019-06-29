@@ -939,15 +939,19 @@ function DataManager.RegisterErrorNetMsg()
         --该消息监听的无参回调如果有
         msgErrId_RegisterErrorNetMsg = pbl.enum('common.OpCode','error')
         if ModelNetMsgStack[protoData.opcode] ~= nil then
-                tb_RegisterErrorNetMsg = ModelNetMsgStack[protoData.opcode]
-                for ins, functions in pairs(tb_RegisterErrorNetMsg) do
-                    if functions ~= nil then
-                        for i, func in pairs(functions) do
-                            func(BuildDataStack.DetailModelStack[ins],protoData,msgErrId_RegisterErrorNetMsg)
-                        end
+            tb_RegisterErrorNetMsg = ModelNetMsgStack[protoData.opcode]
+            local isBool = false
+            for ins, functions in pairs(tb_RegisterErrorNetMsg) do
+                if functions ~= nil then
+                    for i, func in pairs(functions) do
+                        func(BuildDataStack.DetailModelStack[ins],protoData,msgErrId_RegisterErrorNetMsg)
                     end
+                    isBool = true
                 end
+            end
+            if isBool == true then
                 return
+            end
         else
             info_RegisterErrorNetMsg = {}
             info_RegisterErrorNetMsg.titleInfo = "未注册处理方法的网络错误"

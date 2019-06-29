@@ -84,6 +84,7 @@ function RollCtrl:Refresh()
     self:updateText(data)
     self.popCompent:Refesh(data)
     self:c_creatRollItem(data)
+    self:updateText(data)
 end
 
 --function RollCtrl:UpData()
@@ -186,9 +187,12 @@ function RollCtrl:language()
     panel.count1.text = GetLanguage(28040024)
     panel.count2.text = GetLanguage(28040024)
     panel.nametexts.text = GetLanguage(28040049)
-    panel.evanametexts.text = GetLanguage(28040024)
+    --panel.evanametexts.text = GetLanguage(28040024)
     panel.congratulation1.text = GetLanguage(28040020)
     panel.congratulation2.text = GetLanguage(28040020)
+    panel.failtitleText.text = GetLanguage(28040023)
+    panel.failtitle.text = GetLanguage(28040021)
+    panel.titleTexts.text = GetLanguage(28040018)
     --panel.achievement.text = GetLanguage(28040044)
     --panel.Remainingtime.text = GetLanguage(28040044)
 
@@ -216,8 +220,29 @@ function RollCtrl:c_creatRollItem( data )
 end
 
 function RollCtrl:updateText(data)
-    panel.BigEVAtext.text = DataManager.GetEvaPoint()
-    panel.titleText.text = GetLanguage(40010009)
+    --区分商品 服饰 以及 eva
+    if data.goodCategory == 52 then
+        panel.evanametexts.text = GetLanguage(28040053)
+        panel.BigEVAtext.transform.localScale = Vector3.zero
+        panel.food.localScale = Vector3.zero
+        panel.icon.localScale = Vector3.zero
+        panel.cloth.localScale = Vector3.one
+    elseif data.goodCategory == 51 then
+        panel.evanametexts.text = GetLanguage(28040052)
+        panel.BigEVAtext.transform.localScale = Vector3.zero
+        panel.cloth.localScale = Vector3.zero
+        panel.icon.localScale = Vector3.zero
+        panel.food.localScale = Vector3.one
+    elseif  data.goodCategory == 0 then
+        panel.evanametexts.text = GetLanguage(28040024)
+        panel.BigEVAtext.transform.localScale = Vector3.one
+        panel.icon.localScale = Vector3.one
+        panel.cloth.localScale = Vector3.zero
+        panel.food.localScale = Vector3.zero
+        panel.BigEVAtext.text = DataManager.GetEvaPoint()
+    else
+        return
+    end
     --panel.evacounts.text = DataManager.GetEvaPoint()
 end
 

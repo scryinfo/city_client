@@ -14,6 +14,7 @@ function ServerItem:initialize(inluabehaviour, prefab, mgr, goodsDataInfo ,id)
     self._luabehaviour = inluabehaviour
     self.manager = mgr
     self.id = id
+    self.createTime = goodsDataInfo.createTime
 
     self.serverBtn = self.prefab.transform.gameObject;
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Image");
@@ -47,4 +48,5 @@ end
 function ServerItem:OnServerBtn(go)
     PlayMusEff(1002)
     Event.Brocast("c_OnServer",go)
+    DataManager.SetServerCreateTs(go.createTime)
 end

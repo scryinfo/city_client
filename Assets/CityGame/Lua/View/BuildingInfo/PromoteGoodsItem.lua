@@ -16,7 +16,7 @@ function PromoteGoodsItem:initialize(prefab,dataInfo,luaBehaviour)
     self.brandScore = self.prefab.transform:Find("goods/detailsBg/scoreBg/brandIcon/brandValue").gameObject:GetComponent("Text");
     self.brand = self.prefab.transform:Find("goods/detailsBg/scoreText").gameObject:GetComponent("Text");
 
-    self.popularity.text = GetLanguage(25020006)
+    self.popularity.text = GetLanguage(27040009)
     self.name.text = GetLanguage(dataInfo)
     LoadSprite(Good[dataInfo].img, self.icon)
 

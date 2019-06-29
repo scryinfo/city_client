@@ -344,6 +344,9 @@ end
 function BuildingShelfDetailPart:buySucceed(data)
     if data ~= nil then
         self.numberTest = self.numberTest - 1
+        if not data.item or next(data.item) == nil then
+            data.item = {}
+        end
         --刷新货架
         for key,value in pairs(self.shelfDatas) do
             if value.itemId == data.item.key.id  then

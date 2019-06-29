@@ -351,6 +351,9 @@ end
 function BuildingWarehouseDetailPart:transportSucceed(data)
     if data ~= nil then
         self.numberTest = self.numberTest - 1
+        if not data.item or next(data.item) == nil then
+            data.item = {}
+        end
         --刷新仓库界面
         if not data.item or next(data.item) == nil then
             data.item = {}

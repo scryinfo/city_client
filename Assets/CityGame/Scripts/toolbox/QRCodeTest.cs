@@ -23,10 +23,17 @@ namespace UnityEngine
         public RectTransform codePanel;
         public void StartScanQRCode()
         {
-            if (Application.HasUserAuthorization(UserAuthorization.WebCam))
+            StartCoroutine(OpenPermissions());
+        }
+        IEnumerator OpenPermissions()
+        {
+            yield return Application.RequestUserAuthorization(UserAuthorization.WebCam );
+            if (!Application.HasUserAuthorization(UserAuthorization.WebCam ))
             {
-                DeviceInit();
+                yield break;            
             }
+            DeviceInit();
+
         }
         void DeviceInit()
         {

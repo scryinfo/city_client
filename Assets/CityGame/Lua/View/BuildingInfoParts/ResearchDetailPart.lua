@@ -227,7 +227,7 @@ function ResearchDetailPart:onClick_good(ins)
     ins.evaRoot.localScale = Vector3.zero
     ins.goods.localScale = Vector3.one
     ins.evaIma.localScale = Vector3.zero
-    ins.oodsCountText.text = tostring(ins.m_data.probGood .."%")
+    ins.oodsCountText.text = tostring(ins.m_data.probGood + ins.m_data.probEvaAdd .."%")
 end
 --研究eva
 function ResearchDetailPart:onClick_eva(ins)
@@ -235,7 +235,7 @@ function ResearchDetailPart:onClick_eva(ins)
     ins.type="eva"
     ins.goods.localScale = Vector3.zero
     ins.evaIma.localScale = Vector3.one
-    ins.oodsCountText.text = tostring(ins.m_data.probEva .."%")
+    ins.oodsCountText.text = tostring(ins.m_data.probEva + ins.m_data.probGoodAdd .."%")
 end
 --设置
 function ResearchDetailPart:onClick_set(ins)

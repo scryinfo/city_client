@@ -493,6 +493,8 @@ function VolumeCtrl:OnplayerRect(ins)
     --VolumePanel.infoBgrRect:DOSizeDelta(
     --        Vector2.New(0, 336),
     --        0.5):SetEase(DG.Tweening.Ease.OutCubic);
+
+    --第一次进入初始化显示土地租赁
     if isone then
         local info = {}
         info.id = 888

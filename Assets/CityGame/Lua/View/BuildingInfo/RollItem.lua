@@ -26,7 +26,7 @@ end
 
 function RollItem:updateUI(data)
     --LoadSprite()
-    self.oddsText.text = tostring(data.odds) .. "%".."("..data.oddAdd * 100 .."%"..")"
+    self.oddsText.text = tostring(data.odds) .. "%"
 end
 
 function RollItem:Refresh(data)

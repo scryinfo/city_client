@@ -1201,6 +1201,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.guildManager = GuildManager:new()
     DataManager.InitGuildInfo()
 
+
+
     --初始化相机位置
     if tempData.position ~= nil then
         local LastCollectionID = TerrainManager.AOIGridIndexTurnCollectionID(tempData.position)
@@ -1315,6 +1317,17 @@ end
 --获取中心仓库Id
 function DataManager.GetBagId()
     return PersonDataStack.m_bagId
+end
+
+-- 所选服务器创建时间
+PersonDataStack.createTime = nil
+
+function DataManager.SetServerCreateTs(ts)
+    PersonDataStack.createTime = ts
+end
+
+function DataManager.GetServerCreateTs()
+    return PersonDataStack.createTime
 end
 
 --获取中心仓库信息

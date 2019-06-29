@@ -85,7 +85,8 @@ end
 
 --获取推广能力列表
 function PromoteCompanyModel:m_queryPromotionItemInfo(buildingId,typeIds)
-    DataManager.ModelSendNetMes("gscode.OpCode", "queryPromotionItemInfo","gs.QueryPromotionItemInfo",{buildingId = buildingId,typeIds= typeIds})
+    local playerId = DataManager.GetMyOwnerID()
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPromotionItemInfo","gs.QueryPromotionItemInfo",{playerId = playerId,buildingId = buildingId,typeIds= typeIds})
 end
 
 --推广历史曲线图

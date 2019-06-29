@@ -24,15 +24,19 @@ function PromoteAbilityItem:OnBG(go)
 end
 
 function PromoteAbilityItem:InitData(Data,DataInfo)
+    self.m_data = {}
     if Data.typeId == 2251 then
+        self.m_data.capacity = {}
+        self.m_data.capacity[Data.typeId] = Data.capacity
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-food.png", self.icon)
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/bg-food.png", self.down)
     elseif Data.typeId == 2252 then
+        self.m_data.capacity = {}
+        self.m_data.capacity[Data.typeId] = Data.capacity
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-clothes.png", self.icon)
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/bg-clothes.png", self.down)
     end
     self.name.text = GetLanguage(Data.name)
-    self.m_data = {}
     self.m_data.DataInfo = DataInfo
     self.m_data.Data = Data
     self.speed.text ="+".. Data.capacity .. "/h"

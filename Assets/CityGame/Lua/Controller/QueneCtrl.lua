@@ -37,7 +37,7 @@ function QueneCtrl:_laboratoryLanguage()
     QuenePanel.goods.text = GetLanguage(28040034)
     QuenePanel.details.text = GetLanguage(28040035)
     QuenePanel.startTime.text = GetLanguage(27040018)
-    QuenePanel.contentText.text = GetLanguage(27040033)
+    QuenePanel.contentText.text = GetLanguage(28040046)
 end
 
 --todo：刷新

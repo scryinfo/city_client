@@ -165,10 +165,10 @@ function NoticeItem:OnBg(go)
         go.content = GetLanguage(16010025,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
         GameNoticePanel.rightContent.text = go.content
     elseif go.typeId == 18 then
-        go.content = GetLanguage(16010025)
+        go.content = GetLanguage(16020025)
         GameNoticePanel.rightContent.text = go.content
     elseif go.typeId == 19 then
-        go.content = GetLanguage(16010025)
+        go.content = GetLanguage(16020026)
         GameNoticePanel.rightContent.text = go.content
     end
         Event.Brocast("c_onBg",go)

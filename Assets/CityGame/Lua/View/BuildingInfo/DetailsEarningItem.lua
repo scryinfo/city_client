@@ -19,7 +19,9 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
     self.picture = viewTrans:Find("bg/picture"):GetComponent("Image")         --图片
     self.pictureText = viewTrans:Find("bg/picture/pictureText"):GetComponent("Text")   --图片内容
     self.rent = viewTrans:Find("bg/rent")
+    self.rentText = viewTrans:Find("bg/rent/Text"):GetComponent("Text")
     self.sell = viewTrans:Find("bg/sell")
+    self.sellText = viewTrans:Find("bg/sell/Text"):GetComponent("Text")
 
     self.faceId = 0
 
@@ -39,10 +41,12 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/landx1.png", self.picture, true)
             self.pictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
             if dataInfo.type == "BUY_GROUND" then
+                self.sellText.text = GetLanguage(11020001)
                 self.sell.localScale = Vector3.one
                 self.income.text =  GetLanguage(11010013)
             end
             if dataInfo.type == "RENT_GROUND" then
+                self.rentText.text = GetLanguage(11020002)
                 self.rent.localScale = Vector3.one
                 self.income.text = GetLanguage(11010014)
             end

@@ -10,6 +10,7 @@ local curveBehaviour
 local maxValue = 0
 local value
 local scaleValue
+local createTs
 
 function  HistoryCurveCtrl:bundleName()
     return "Assets/CityGame/Resources/View/HistoryCurvePanel.prefab"
@@ -23,6 +24,18 @@ function HistoryCurveCtrl:Awake()
     curveBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     curveBehaviour:AddClick(HistoryCurvePanel.xBtn,self.OnBack,self)
     self.insId = OpenModelInsID.HistoryCurveCtrl
+    self.buildingTs = DataManager.GetServerCreateTs()
+    createTs = self.buildingTs
+    createTs = math.floor(createTs)
+    if tonumber(getFormatUnixTime(createTs).second) ~= 0 then
+        createTs = createTs - tonumber(getFormatUnixTime(createTs).second)
+    end
+    if tonumber(getFormatUnixTime(createTs).minute) ~= 0 then
+        createTs = createTs - tonumber(getFormatUnixTime(createTs).minute) * 60
+    end
+    if tonumber(getFormatUnixTime(createTs).hour) ~= 0 then
+        createTs = createTs - tonumber(getFormatUnixTime(createTs).hour) * 3600
+    end
     self:initData()
 end
 
@@ -69,13 +82,13 @@ function HistoryCurveCtrl:OnCreate(obj)
 end
 
 function HistoryCurveCtrl:initData()
-    HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 52,0)
-    HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
+    --HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 52,0)
+    --HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end
 
 function HistoryCurveCtrl:OnBack()
-    HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 52,0)
-    HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
+    --HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 52,0)
+    --HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
     UIPanel.ClosePage()
 end
 
@@ -93,42 +106,75 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
         currentTime = currentTime - minute * 60
     end
     if hour ~= 0 then
-        currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
+        currentTime = currentTime - hour * 3600        --当天0点
     end
     currentTime = math.floor(currentTime)
     local demandNumTab = {}
     local sevenDaysAgo = currentTime - 604800
-    local sevenDaysAgoTime = sevenDaysAgo
-    local sevenDaysAgoTime = sevenDaysAgo
+    local updataTime = sevenDaysAgo
     local time = {}
     local boundaryLine = {}
-    for i = 1, 168 do
-        sevenDaysAgo = sevenDaysAgo + 3600
-        time[i] = sevenDaysAgo
-        demandNumTab[i] = {}
-        demandNumTab[i] .ts = (sevenDaysAgo - sevenDaysAgoTime)/3600 * 116
-        if tonumber(getFormatUnixTime(sevenDaysAgo).hour) == 0 then
-            time[i] = getFormatUnixTime(sevenDaysAgo).month .. "/" .. getFormatUnixTime(sevenDaysAgo).day
-            table.insert(boundaryLine,(sevenDaysAgo - sevenDaysAgoTime )/3600 * 116)
-        else
-            time[i] = tostring(getFormatUnixTime(sevenDaysAgo).hour) .. "h"
-        end
-        if info == nil then
-            demandNumTab[i].num = 0
-        else
-            for k, v in ipairs(info) do
-                if math.floor(v.t/1000) == sevenDaysAgo then
-                    if self.m_data == 20050004 then    --住宅
-                        demandNumTab[i].num = v.npcTypeNumMap[1].n + v.npcTypeNumMap[2].n
-                    else   --商品
-                        local temp1 = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
-                                .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap[1].tp][self.m_data] / 10000 * v.npcTypeNumMap[1].n)
-                        local temp2 = math.floor(npcConsumption[tonumber(getFormatUnixTime(sevenDaysAgo).year..getFormatUnixTime(sevenDaysAgo)
-                                .month..getFormatUnixTime(sevenDaysAgo).day)][v.npcTypeNumMap[2].tp][self.m_data] / 10000 * v.npcTypeNumMap[2].n)
-                        demandNumTab[i].num = temp1 + temp2
+    if createTs >= sevenDaysAgo then
+        updataTime = createTs
+        for i = 1, 168 do
+            if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
+                time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
+                table.insert(boundaryLine,(updataTime - createTs +3600)/3600 * 116)
+            else
+                time[i] = tostring(getFormatUnixTime(updataTime).hour) .. "h"
+            end
+            if updataTime <= currentTime -3600 then
+                demandNumTab[i] = {}
+                demandNumTab[i] .ts = (updataTime - createTs +3600)/3600 * 116
+                if info == nil then
+                    demandNumTab[i].num = 0
+                else
+                    for k, v in ipairs(info) do
+                        if math.floor(v.t/1000) == updataTime then
+                            if self.m_data == 20050004 then    --住宅
+                                demandNumTab[i].num = v.npcTypeNumMap[1].n + v.npcTypeNumMap[2].n
+                            else   --商品
+                                local temp1 = math.floor(npcConsumption[tonumber(getFormatUnixTime(updataTime).year..getFormatUnixTime(updataTime)
+                                        .month..getFormatUnixTime(updataTime).day)][v.npcTypeNumMap[1].tp][self.m_data] / 10000 * v.npcTypeNumMap[1].n)
+                                local temp2 = math.floor(npcConsumption[tonumber(getFormatUnixTime(updataTime).year..getFormatUnixTime(updataTime)
+                                        .month..getFormatUnixTime(updataTime).day)][v.npcTypeNumMap[2].tp][self.m_data] / 10000 * v.npcTypeNumMap[2].n)
+                                demandNumTab[i].num = temp1 + temp2
+                            end
+                        end
                     end
                 end
             end
+            updataTime = updataTime + 3600
+        end
+    else
+        for i = 1, 168 do
+            time[i] = updataTime
+            demandNumTab[i] = {}
+            demandNumTab[i] .ts = (updataTime - sevenDaysAgo +3600)/3600 * 116
+            if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
+                time[i] = getFormatUnixTime(updataTime).month .. "/" .. getFormatUnixTime(updataTime).day
+                table.insert(boundaryLine,(updataTime - sevenDaysAgo + 3600)/3600 * 116)
+            else
+                time[i] = tostring(getFormatUnixTime(updataTime).hour) .. "h"
+            end
+            if info == nil then
+                demandNumTab[i].num = 0
+            else
+                for k, v in ipairs(info) do
+                    if math.floor(v.t/1000) == sevenDaysAgo then
+                        if self.m_data == 20050004 then    --住宅
+                            demandNumTab[i].num = v.npcTypeNumMap[1].n + v.npcTypeNumMap[2].n
+                        else   --商品
+                            local temp1 = math.floor(npcConsumption[tonumber(getFormatUnixTime(updataTime).year..getFormatUnixTime(updataTime)
+                                    .month..getFormatUnixTime(updataTime).day)][v.npcTypeNumMap[1].tp][self.m_data] / 10000 * v.npcTypeNumMap[1].n)
+                            local temp2 = math.floor(npcConsumption[tonumber(getFormatUnixTime(updataTime).year..getFormatUnixTime(updataTime)
+                                    .month..getFormatUnixTime(updataTime).day)][v.npcTypeNumMap[2].tp][self.m_data] / 10000 * v.npcTypeNumMap[2].n)
+                            demandNumTab[i].num = temp1 + temp2
+                        end
+                    end
+                end
+            end
+            updataTime = updataTime + 3600
         end
     end
 
@@ -154,6 +200,20 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
     end
     scaleValue = scale
     value = demandNumValue
+
+    local difference = (currentTime - createTs) / 3600  --距离开业的小时数
+    if difference < 8 then
+        HistoryCurvePanel.curve.anchoredPosition = Vector3.New(6, 52,0)
+        HistoryCurvePanel.curve.sizeDelta = Vector2.New(1000, 450)
+    elseif difference < 168 then
+        HistoryCurvePanel.curve.anchoredPosition = Vector3.New(6, 52,0)
+        HistoryCurvePanel.curve.sizeDelta = Vector2.New(1000, 450)
+        HistoryCurvePanel.curve.anchoredPosition = Vector3.New(HistoryCurvePanel.curve.anchoredPosition.x - (difference - 8) * 116, 52,0)
+        HistoryCurvePanel.curve.sizeDelta = Vector2.New(HistoryCurvePanel.curve.sizeDelta.x + (difference - 8) * 116, 450)
+    else
+        HistoryCurvePanel.curve.anchoredPosition = Vector3.New(-18524, 52,0)
+        HistoryCurvePanel.curve.sizeDelta = Vector2.New(19530, 450)
+    end
 
     HistoryCurvePanel.slide:SetXScaleValue(time,116)
     HistoryCurvePanel.graph:BoundaryLine(boundaryLine)
@@ -185,40 +245,48 @@ function HistoryCurveCtrl:SupplyCurve(info)
         currentTime = currentTime - minute * 60
     end
     if hour ~= 0 then
-        currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
+        currentTime = currentTime - hour * 3600       --当天0点
     end
     currentTime = math.floor(currentTime)
-    local sevenDaysAgoTime = currentTime - 604800
-    local sevenDaysAgo = sevenDaysAgoTime
+    local sevenDaysAgo = currentTime - 604800
+    local updataTime = sevenDaysAgo
     local supplyNum = {}
     local supplyNumValue = {}
-    for i = 1, 168 do
-        sevenDaysAgo = sevenDaysAgo + 3600
-        supplyNum[i] = {}
-        supplyNum[i].ts = sevenDaysAgo
-        supplyNum[i].num = 0
-    end
-    if next(info) ~= nil then
-        local temp = {}
-        for i, v in ipairs(supplyNum) do
-            temp[i] = {}
-            temp[i].num = 0
-            for k, z in ipairs(info) do
-                if v.ts == z.key/1000 then
-                    temp[i].num = z.value
+    if createTs >= sevenDaysAgo then
+        updataTime = createTs
+        for i = 1, 168 do
+            if updataTime <= currentTime -3600 then
+                supplyNum[i] = {}
+                supplyNum[i].ts = (updataTime - createTs +3600)/3600 * 116
+                supplyNum[i].num = 0
+                if next(info) ~= nil then
+                    for k, v in ipairs(info) do
+                        if math.floor(v.key/1000) == updataTime then
+                            supplyNum[i].num =  v.value
+                        end
+                    end
                 end
             end
-        end
-        for i, v in ipairs(temp) do
-            supplyNum[i].num = v.num
-        end
-        for i, v in ipairs(supplyNum) do
-            supplyNumValue[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
+            updataTime = updataTime + 3600
         end
     else
-        for i, v in ipairs(supplyNum) do
-            supplyNumValue[i] = Vector2.New((v.ts-sevenDaysAgoTime) /3600 *116,v.num)
+        for i = 1, 168 do
+            supplyNum[i] = {}
+            supplyNum[i].ts = (updataTime - sevenDaysAgo +3600)/3600 * 116
+            supplyNum[i].num = 0
+            if next(info) ~= nil then
+                for k, v in ipairs(info) do
+                    if math.floor(v.key/1000) == updataTime then
+                        supplyNum[i].num =  v.value
+                    end
+                end
+            end
+            updataTime = updataTime + 3600
         end
+    end
+
+    for i, v in ipairs(supplyNum) do
+        supplyNumValue[i] = Vector2.New(v.ts,v.num)
     end
     table.insert(supplyNumValue,1,Vector2.New(0,0))
     local max = 0
@@ -249,7 +317,6 @@ function HistoryCurveCtrl:SupplyCurve(info)
             demandNumVet[i] = Vector2.New(v.x,v.y / scale * 60)
         end
     end
-
 
     --需求线
     HistoryCurvePanel.graph:DrawLine(demandNumVet,Color.New(213 / 255, 35 / 255, 77 / 255, 255 / 255),1)

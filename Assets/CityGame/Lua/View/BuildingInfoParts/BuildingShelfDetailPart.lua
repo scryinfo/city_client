@@ -228,7 +228,7 @@ function BuildingShelfDetailPart:addBuyList(data)
         Event.Brocast("SmallPop",GetLanguage(25070010), 300)
     else
         for key,value in pairs(self.buyDatas) do
-            if value.itemId == data.itemId then
+            if value.itemId == data.itemId and value.producerId == data.producerId then
                 Event.Brocast("SmallPop",GetLanguage(25070011), 300)
                 return
             end
@@ -346,7 +346,7 @@ function BuildingShelfDetailPart:buySucceed(data)
         self.numberTest = self.numberTest - 1
         --刷新货架
         for key,value in pairs(self.shelfDatas) do
-            if value.itemId == data.item.key.id then
+            if value.itemId == data.item.key.id  then
                 if value.dataInfo.n == data.item.n then
                     self:deleteGoodsItem(self.shelfDatas,key)
                 --else

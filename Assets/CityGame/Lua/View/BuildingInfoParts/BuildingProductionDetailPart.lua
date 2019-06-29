@@ -158,7 +158,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
     self.tipText.text = ""
     self.isBoolCapacity = false
     self.isBoolMaterial = false
-    self.Capacity = self:getWarehouseCapacity()
+
     if not lineData or next(lineData) == nil then
         self.addBtn.transform.localScale = Vector3.one
         self.content.transform.localScale = Vector3.zero
@@ -276,13 +276,17 @@ end
 --删除当前正在生产中的线
 function BuildingProductionDetailPart:clickDeleBtn()
     PlayMusEff(1002)
-    if self.m_data.buildingType == BuildingType.MaterialFactory then
-        --原料厂
-        Event.Brocast("m_ReqMaterialDeleteLine",self.m_data.insId,self.m_data.line[1].id)
-    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        --加工厂
-        Event.Brocast("m_ReqprocessingDeleteLine",self.m_data.insId,self.m_data.line[1].id)
-    end
+    local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
+                content = "是否确认删除正在生产中的线",func = function()
+            if self.m_data.buildingType == BuildingType.MaterialFactory then
+                --原料厂
+                Event.Brocast("m_ReqMaterialDeleteLine",self.m_data.insId,self.m_data.line[1].id)
+            elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+                --加工厂
+                Event.Brocast("m_ReqprocessingDeleteLine",self.m_data.insId,self.m_data.line[1].id)
+            end
+        end  }
+    ct.OpenCtrl('NewReminderCtrl',data)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --计算总时间
@@ -390,6 +394,7 @@ end
 --查询生产线成功
 function BuildingProductionDetailPart:lineAddSucceed(data)
     self.m_data.line = data.line
+    self.Capacity = data.warehouseCapacity
     self:initializeUiInfoData(data.line)
 end
 ------------------------------------------------------------------------------------回调函数------------------------------------------------------------------------------------
@@ -512,26 +517,26 @@ function BuildingProductionDetailPart:checkMaterial(itemId)
         return true
     end
 end
---获取仓库容量，如果仓库容量已满，停止时间刷新
-function BuildingProductionDetailPart:getWarehouseCapacity()
-    local warehouseNowCount = 0
-    local lockedNowCount = 0
-    if not self.m_data.store.inHand then
-        warehouseNowCount = 0
-    else
-        for key,value in pairs(self.m_data.store.inHand) do
-            warehouseNowCount = warehouseNowCount + value.n
-        end
-    end
-    if not self.m_data.store.locked then
-        lockedNowCount = 0
-    else
-        for key,value in pairs(self.m_data.store.locked) do
-            lockedNowCount = lockedNowCount + value.n
-        end
-    end
-    return warehouseNowCount + lockedNowCount
-end
+----获取仓库容量，如果仓库容量已满，停止时间刷新
+--function BuildingProductionDetailPart:getWarehouseCapacity()
+--    --local warehouseNowCount = 0
+--    --local lockedNowCount = 0
+--    --if not self.m_data.store.inHand then
+--    --    warehouseNowCount = 0
+--    --else
+--    --    for key,value in pairs(self.m_data.store.inHand) do
+--    --        warehouseNowCount = warehouseNowCount + value.n
+--    --    end
+--    --end
+--    --if not self.m_data.store.locked then
+--    --    lockedNowCount = 0
+--    --else
+--    --    for key,value in pairs(self.m_data.store.locked) do
+--    --        lockedNowCount = lockedNowCount + value.n
+--    --    end
+--    --end
+--    --return warehouseNowCount + lockedNowCount
+--end
 --获取当前生产中的秒产量(含Eva)
 function BuildingProductionDetailPart:getNumOneSec(itemId)
     if not self.materialOrGoodsInfo or next(self.materialOrGoodsInfo) == nil then

@@ -28,7 +28,7 @@ function AddLineDetailItemNew:initialize(viewRect, data, toggleGroup)
     else
         tempData = Good[data.itemId]
     end
-    AddProductionLineMgr.SetBuildingIconSpite(tempData.img, self.iconImg)
+    NewAddProductionLineCtrl.SetBuildingIconSpite(tempData.img, self.iconImg)
     self.bgBtn.onClick:RemoveAllListeners()
     self.bgBtn.onClick:AddListener(function()
         self:_clickFunc()

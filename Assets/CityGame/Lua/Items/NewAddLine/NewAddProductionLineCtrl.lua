@@ -24,6 +24,7 @@ function NewAddProductionLineCtrl:Awake(go)
         UIPanel.ClosePage()
     end,self)
     self:_addListener()
+    NewAddProductionLineCtrl.GetAllImg()
 end
 --
 function NewAddProductionLineCtrl:Active()
@@ -32,13 +33,14 @@ function NewAddProductionLineCtrl:Active()
 end
 --
 function NewAddProductionLineCtrl:Refresh()
-    self:_initData()
+    --self:_initData()
+    NewAddProductionLineCtrl.CheckLoad()
 end
 --
 function NewAddProductionLineCtrl:_addListener()
     Event.AddListener("leftSetCenter", self.leftSetCenter, self)
     Event.AddListener("rightSetCenter", self.rightSetCenter, self)
-    --Event.AddListener("c_new_changeAddlineData", self._changeAddLineData, self)
+    Event.AddListener("c_NewAddLineLoadFinish", self._initData, self)
 end
 --
 function NewAddProductionLineCtrl:_initData()
@@ -208,4 +210,78 @@ end
 function NewAddProductionLineCtrl:_cleanData()
     NewAddProductionLinePanel.leftToggleMgr:_cleanAll()
     NewAddProductionLinePanel.rightToggleMgr:_cleanAll()
+end
+
+--------------------------------------------------------------------------------------------------------------------------------
+local m_MatGoodIconSpriteList = {}
+
+--添加BuildingIcon的sprite列表
+local function AddBuildingIcon(name,sprite)
+    if m_MatGoodIconSpriteList == nil or type(m_MatGoodIconSpriteList) ~= 'table' then
+        m_MatGoodIconSpriteList = {}
+    end
+    if name ~= nil and sprite ~= nil then
+        m_MatGoodIconSpriteList[name] = sprite
+    end
+end
+--
+local function JudgeHasBuildingIcon(name)
+    if m_MatGoodIconSpriteList == nil or m_MatGoodIconSpriteList[name] == nil  then
+        return false
+    else
+        return true
+    end
+end
+--
+local function GetBuildingIcon(name)
+    if m_MatGoodIconSpriteList == nil or m_MatGoodIconSpriteList[name] == nil  then
+        return nil
+    else
+        return m_MatGoodIconSpriteList[name]
+    end
+end
+--
+local SpriteType = nil
+local function LoadBuildingIcon(name,iIcon)
+    if SpriteType == nil then
+        SpriteType = ct.getType(UnityEngine.Sprite)
+    end
+    panelMgr:LoadPrefab_A(name, SpriteType, iIcon, function(Icon, obj )
+        if obj ~= nil  then
+            local texture = ct.InstantiatePrefab(obj)
+            AddBuildingIcon(name,texture)
+            NewAddProductionLineCtrl.CheckLoad()
+        end
+    end)
+end
+--
+function NewAddProductionLineCtrl.CheckLoad()
+    for i, img in ipairs(NewAddProductionLineCtrl.tempList) do
+        if JudgeHasBuildingIcon(img) == false then
+            LoadBuildingIcon(img)
+            return
+        end
+    end
+    --开始初始化
+    Event.Brocast("c_NewAddLineLoadFinish")
+end
+
+--先加载完所有图片再初始化
+function NewAddProductionLineCtrl.GetAllImg()
+    NewAddProductionLineCtrl.tempList = {}
+    for i, mat in pairs(Material) do
+        NewAddProductionLineCtrl.tempList[#NewAddProductionLineCtrl.tempList + 1] = mat.img
+    end
+    for i, good in pairs(Good) do
+        NewAddProductionLineCtrl.tempList[#NewAddProductionLineCtrl.tempList + 1] = good.img
+    end
+    NewAddProductionLineCtrl.CheckLoad()
+end
+
+--设置ICon的Sprite
+function NewAddProductionLineCtrl.SetBuildingIconSpite(name , tempImage)
+    if JudgeHasBuildingIcon(name) == true then
+        tempImage.sprite = GetBuildingIcon(name)
+        --tempImage:SetNativeSize()
+    end
 end

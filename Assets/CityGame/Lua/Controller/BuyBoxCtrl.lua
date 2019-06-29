@@ -53,6 +53,7 @@ function BuyBoxCtrl:_getComponent(go)
     self.iconImg = go.transform:Find("contentRoot/content/goodsInfo/iconbg/iconImg"):GetComponent("Image")
     self.nameText = go.transform:Find("contentRoot/content/goodsInfo/iconbg/name/nameText"):GetComponent("Text")
     --如果是原料关闭商品属性展示,否则打开
+    self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandNameText"):GetComponent("Text")
     self.popularity = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity")
     self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
     self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity/popularityValue"):GetComponent("Text")
@@ -99,8 +100,9 @@ function BuyBoxCtrl:initializeUiInfoData()
             self.levelImg.color = getColorByVector3(threeLevel)
             self.levelValue.text = GetLanguage(25020030)
         end
-        --self.popularityValue.text =
-        --self.qualityValue.text =
+        self.brandNameText.text = self.m_data.dataInfo.k.brandName
+        self.popularityValue.text = self.m_data.dataInfo.k.brandScore
+        self.qualityValue.text = self.m_data.dataInfo.k.qualityScore
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.numberSlider.maxValue = self.m_data.dataInfo.n
@@ -135,6 +137,9 @@ function BuyBoxCtrl:_clickBuyBtn(ins)
     goods.qty = ins.m_data.dataInfo.k.qty
     goods.level = ins.m_data.dataInfo.k.level
     goods.price = ins.m_data.dataInfo.price
+    goods.qualityScore = ins.m_data.dataInfo.k.qualityScore
+    goods.brandScore = ins.m_data.dataInfo.k.brandScore
+    goods.brandName = ins.m_data.dataInfo.k.brandName
     if ins.numberSlider.value == 0 then
         return
     else

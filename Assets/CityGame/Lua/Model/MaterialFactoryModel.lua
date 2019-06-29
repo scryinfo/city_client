@@ -60,7 +60,8 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","storeIsFullNotice","gs.storeIsFullNotice",self.n_OnBuildingWarehouse)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","storeIsFullNotice","gs.ByteBool",self.n_OnBuildingWarehouse)
+
 end
 
 function MaterialFactoryModel:Close()
@@ -112,7 +113,7 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftySetLineOrder","gs.SetLineOrder",self.n_OnSetLineOrderInform)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
-    --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","storeIsFullNotice","gs.ByteBool",self.n_OnBuildingWarehouse)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","storeIsFullNotice","gs.ByteBool",self.n_OnBuildingWarehouse)
 end
 ---客户端请求---
 --打开原料厂
@@ -352,10 +353,10 @@ end
 function MaterialFactoryModel:n_OnSalesNotice(data)
     Event.Brocast("salesNotice",data)
 end
-----仓库容量满通知
---function MaterialFactoryModel:n_OnBuildingWarehouse(data,msgId)
---    Event.Brocast("WarehousCapacityWhetherfull",data,msgId)
---end
+--仓库容量满通知
+function MaterialFactoryModel:n_OnBuildingWarehouse(data)
+    Event.Brocast("WarehousCapacityWhetherFull",data)
+end
 --获取原料参考价格
 function MaterialFactoryModel:n_OnMaterialGuidePrice(data)
     Event.Brocast("getShelfGuidePrice",data)

@@ -54,7 +54,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
             end
         elseif #recordData == 3 then
             if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]then
-                self:_setAddExNumInputField(tostring(EvaCtrl.static.evaCtrl.addData[recordData[1]].value))
+                self:_setAddExNumInputField(tostring(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]))
             end
         end
     else

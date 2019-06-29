@@ -43,6 +43,7 @@ function CompanyInputCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("Root/CloseBtn").gameObject
     self.confimBtn = go.transform:Find("Root/ConfirmBtn").gameObject
     self.input = go.transform:Find("Root/InputField").gameObject:GetComponent("InputField")
+    self.inputPlaceholder = go.transform:Find("Root/InputField/Placeholder").gameObject:GetComponent("Text")
     self.tipsText = go.transform:Find("Root/TipsText"):GetComponent("Text")
 end
 
@@ -50,13 +51,24 @@ end
 function CompanyInputCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.tipsText.text = self.m_data.tipInfo
+
+    -- 输入框的默认值
     if self.m_data.inputInfo then
         self.input.text = self.m_data.inputInfo
     end
+
+    -- 输入框的个数限制
     if self.m_data.characterLimit then
         self.input.characterLimit = self.m_data.characterLimit
     else
         self.input.characterLimit = 0
+    end
+
+    -- 输入框的提示值
+    if self.m_data.inputDefaultStr ~= nil then
+        self.inputPlaceholder.text = self.m_data.inputDefaultStr
+    else
+        self.inputPlaceholder.text = ""
     end
 end
 

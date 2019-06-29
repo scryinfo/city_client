@@ -54,6 +54,8 @@ function GameMainInterfaceCtrl:Active()
     --Event.AddListener("c_MajorTransaction", self.c_OnMajorTransaction, self) --重大交易
     Event.AddListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
     --Event.AddListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
+    Event.AddListener("c_GuildMessageNewJoinReq", self.c_GuildMessageNewJoinReq, self) -- 收到新的公会申请
+    Event.AddListener("c_GameMainExitSociety", self.c_GameMainExitSociety, self) -- 退出联盟
 
     GameMainInterfacePanel.city.text = GetLanguage(10050002)
     GameMainInterfacePanel.smallMapText.text = GetLanguage(11010005)
@@ -80,6 +82,9 @@ function GameMainInterfaceCtrl:Hide()
     --Event.RemoveListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
     Event.RemoveListener("TemperatureChange",self.c_TemperatureChange,self)
     Event.RemoveListener("WeatherIconChange",self.c_WeatherIconChange,self)
+    Event.RemoveListener("c_GuildMessageNewJoinReq",self.c_GuildMessageNewJoinReq,self)
+    Event.RemoveListener("c_GameMainExitSociety",self.c_GameMainExitSociety,self)
+
     GameMainInterfaceCtrl:OnClick_EarningBtn(false,self)
     self:RemoveUpdata()
 end
@@ -420,6 +425,16 @@ function GameMainInterfaceCtrl:c_WeatherIconChange()
     end
 end
 
+-- 新增入会请求
+function GameMainInterfaceCtrl:c_GuildMessageNewJoinReq()
+    GameMainInterfacePanel.leagueNotice.localScale = Vector3.one
+end
+
+-- 退出联盟
+function GameMainInterfaceCtrl:c_GameMainExitSociety()
+    self:_showWorldChatNoticeItem()
+end
+
 function GameMainInterfaceCtrl:Awake()
     --PlayerTempModel.tempTestCreateAll()
     self.root=self.gameObject.transform.root:Find("FixedRoot");
@@ -519,6 +534,7 @@ function GameMainInterfaceCtrl:Refresh()
     self:initInsData()
     self:_showFriendsNotice()
     self:_showWorldChatNoticeItem()
+    self:_showLeagueNoticeItem()
 end
 
 function GameMainInterfaceCtrl:initInsData()
@@ -766,8 +782,22 @@ function GameMainInterfaceCtrl:_showWorldChatNoticeItem()
             end
         end
     end
+
+    if DataManager.GetIsReadGuildChatInfo() then
+        GameMainInterfacePanel.chatItem.localScale = Vector3.one
+    end
 end
 
+function GameMainInterfaceCtrl:_showLeagueNoticeItem()
+    local societyInfo = DataManager.GetGuildInfo()
+    if societyInfo then
+        if societyInfo.reqs and societyInfo.reqs[1] then
+            GameMainInterfacePanel.leagueNotice.localScale = Vector3.one
+        else
+            GameMainInterfacePanel.leagueNotice.localScale = Vector3.zero
+        end
+    end
+end
 
 --设置--
 function GameMainInterfaceCtrl.Onset()

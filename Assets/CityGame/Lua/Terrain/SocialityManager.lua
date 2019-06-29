@@ -14,6 +14,7 @@ function SocialityManager:initialize()
     self.m_friendsApply = {}
     self.m_blacklist = {}
     self.mySaveRoleCom = { id = DataManager.GetMyOwnerID(), readCommunication = {}, unreadCommunication = {}}
+    self.isReadGuildChatInfo = false
     self:ReadFriendsChat()
 end
 
@@ -87,6 +88,7 @@ function SocialityManager:SetMyChatInfo(chatData)
         table.insert(self.m_chatByType[3][dataId].chatInfo, chatData)
     elseif chatData.channel == "GROUP" then
         table.insert(self.m_chatByType[4], chatData)
+        self.isReadGuildChatInfo = true
     end
 end
 
@@ -245,4 +247,14 @@ end
 -- 清空公会的聊天消息
 function SocialityManager:SetGuildChatInfo()
     self.m_chatByType[4] = {}
+end
+
+-- 获得联盟聊天是否查看信息
+function SocialityManager:GetIsReadGuildChatInfo()
+    return  self.isReadGuildChatInfo
+end
+
+-- 设置联盟聊天是否查看信息
+function SocialityManager:SetIsReadGuildChatInfo(read)
+    self.isReadGuildChatInfo = read
 end

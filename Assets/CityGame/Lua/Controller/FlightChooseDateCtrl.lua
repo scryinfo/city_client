@@ -138,6 +138,7 @@ function FlightChooseDateCtrl:_monthItemsInit(trans)
                 self.monthValue:setState(false)
             end
             self.monthValue = value
+            self.dayMonthText.text = value:getValue()
             self:updateDay()
         end})
         self.monthList[i] = item
@@ -163,9 +164,9 @@ end
 function FlightChooseDateCtrl:updateDay()
     local year = self.yearValue:getValue()
     local month = self.monthValue:getValue()
-    local day = self.dayValue:getValue()
-    self:updateDateShow(year, month, day)
-    self:_showDay(year, month)
+    --local day = self.dayValue:getValue()
+    self:updateDateShow(year, month, 1)
+    self:_showDay(year, month, 1)
 end
 --更新顶部显示
 function FlightChooseDateCtrl:updateDateShow(year, month, day)
@@ -237,20 +238,24 @@ function FlightChooseDateCtrl:_initData()
     if self.m_data ~= nil then
         local year = tonumber(os.date("%Y", self.m_data.selectDate))
         local month = tonumber(os.date("%m", self.m_data.selectDate))
+        local temp = os.date("%d", self.m_data.selectDate)
+        local day = tonumber(temp)
         self.dayMonthText.text = month
         self:_initYear(year)
         self:_initMonth(month)
-        self:_showDay(year, month)
+        self:_showDay(year, month, day)
         self:_toggleShowDate("day")
-        self:updateDay()
+
+        self:updateDateShow(year, month, day)
     end
 end
 --
-function FlightChooseDateCtrl:_showDay(year, month)
+function FlightChooseDateCtrl:_showDay(year, month, day)
     local dayAmount = tonumber(os.date("%d", os.time({year = year, month = month + 1, day = 0})))
     local startWeek = tonumber(os.date("%w", os.time({year = year, month = month, day = 1})))
 
     for i, dayItem in ipairs(self.dayList) do
+        dayItem:_clean()
         if i < startWeek or i > startWeek + dayAmount then
             dayItem:hide()
         end
@@ -258,13 +263,19 @@ function FlightChooseDateCtrl:_showDay(year, month)
             dayItem:show()
             local dayId = i - startWeek + 1
             dayItem:setValue(dayId)
-            local temp = os.time({year = year, month = month, day = dayId})
-            if temp == self.m_data.selectDate then
+            if dayId == day then
                 dayItem:setState(true)
                 self.dayValue = dayItem
             else
                 dayItem:setState(false)
             end
+            --local temp = os.time({year = year, month = month, day = dayId})
+            --if temp == self.m_data.selectDate then
+            --    dayItem:setState(true)
+            --    self.dayValue = dayItem
+            --else
+            --    dayItem:setState(false)
+            --end
         end
     end
 end

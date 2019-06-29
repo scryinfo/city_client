@@ -33,11 +33,20 @@ function PersonalHomeDialogPageCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.avatarBtn.gameObject, self._avatarBtnFunc, self)
     self.luaBehaviour:AddClick(self.nameBtn.gameObject, self._nameBtnFunc, self)
     self.luaBehaviour:AddClick(self.moneyBtn.gameObject, self._moneyBtnFunc, self)
+    self.luaBehaviour:AddClick(self.infoBtn.gameObject, function ()
+        self.competitivenessRoot.localScale = Vector3.one
+    end , self)
+    self.luaBehaviour:AddClick(self.tooltipBtn.gameObject, function ()
+        self.competitivenessRoot.localScale = Vector3.zero
+    end , self)
 end
 
 function PersonalHomeDialogPageCtrl:Active()
     UIPanel.Active(self)
     self.titleText.text = GetLanguage(17010001)
+    self.scoreText02.text = GetLanguage(32020036)
+    self.scoreText03.text = GetLanguage(17030003)
+    self.scoreText04.text = GetLanguage(17030006)
 
     Event.AddListener("updatePlayerName",self.updateNameFunc,self)
 end
@@ -85,14 +94,24 @@ function PersonalHomeDialogPageCtrl:_getComponent(go)
     self.friendOtherTran = trans:Find("root/otherOpen/friends")
     self.friendSendMessageBtn = trans:Find("root/otherOpen/friends/sendMessageBtn")  --如果是好友则只能聊天，不能再加好友
 
+    --幸运券
+    self.scoreRoot = trans:Find("root/scoreRoot")
+    self.scoreText = trans:Find("root/scoreRoot/Text/moneyText"):GetComponent("Text")
+    self.infoBtn = trans:Find("root/scoreRoot/infoBtn"):GetComponent("Button")
+    self.tooltipBtn = trans:Find("root/scoreRoot/competitivenessRoot/tooltip"):GetComponent("Button")
+    self.competitivenessRoot = trans:Find("root/scoreRoot/competitivenessRoot")
     --多语言
     self.titleText = trans:Find("root/topBg/Text"):GetComponent("Text")
+    self.scoreText02 = trans:Find("root/scoreRoot/Text"):GetComponent("Text")
+    self.scoreText03 = trans:Find("root/scoreRoot/competitivenessRoot/tooltip/title"):GetComponent("Text")
+    self.scoreText04 = trans:Find("root/scoreRoot/competitivenessRoot/tooltip/content"):GetComponent("Text")
 end
 ---初始化
 function PersonalHomeDialogPageCtrl:_initData()
     if self.m_data.id ~= DataManager.GetMyOwnerID() then
         self.otherOpen.localScale = Vector3.one
         self.changeSayBtn.localScale = Vector3.zero
+        self.scoreRoot.localScale = Vector3.zero
         local friendsBasicData = DataManager.GetMyFriends()
         if friendsBasicData[self.m_data.id] == nil then
             self.friendOtherTran.localScale = Vector3.zero
@@ -115,11 +134,13 @@ function PersonalHomeDialogPageCtrl:_initData()
     else
         self.otherOpen.localScale = Vector3.zero
         self.changeSayBtn.localScale = Vector3.one
+        self.scoreRoot.localScale = Vector3.one
+        self.competitivenessRoot.localScale = Vector3.zero
 
         if self.m_data.des == nil or self.m_data.des == "" then
             self.m_data.des = GetLanguage(17010004)  --默认值
         end
-
+        self.scoreText.text = DataManager.GetMyFlightScore()
         self.moneyRoot.localScale = Vector3.one
         self.nameBtn.interactable = true
         self.avatarBtn.interactable = true

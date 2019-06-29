@@ -21,11 +21,11 @@ function TradeInfoItem:initialize(dataInfo, viewRect)
     self.moneys = tonumber(CityLuaUtil.scientificNotation2Normal(dataInfo.ddd))
 
     if self.moneys >= 0 then
-        self.name.text = GetLanguage(33010002)
-        self.address.transform.localScale = Vector3.zero
-        self.money.text = "+ " .. self.moneys
-    else
         self.name.text = GetLanguage(33010003)
+        self.address.transform.localScale = Vector3.zero
+        self.money.text = "+ " .. CityLuaUtil.scientificNotation2Normal(self.moneys)
+    else
+        self.name.text = CityLuaUtil.scientificNotation2Normal(self.moneys)
         self.money.text = self.moneys
         self.address.transform.localScale = Vector3.one
         --self.address.text =

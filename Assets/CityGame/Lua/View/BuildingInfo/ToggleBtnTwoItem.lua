@@ -109,20 +109,3 @@ end
 function ToggleBtnTwoItem:_close()
     VolumePanel.threeScroll:ActiveLoopScroll(self.ToggleBtnTwoItem, 0,"View/Laboratory/ToggleBtnThreeItem")
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -72,6 +72,8 @@ function SetOpenUpCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_CloseSetOpenUp",self.c_CloseSetOpenUp,self)
     Event.RemoveListener("c_GuidePrice",self.GuidePrice,self)
+    SetOpenUpPanel.price.text = ""
+    SetOpenUpPanel.time.text = ""
 end
 
 function SetOpenUpCtrl:OnCreate(obj)
@@ -95,6 +97,9 @@ function SetOpenUpCtrl:OnOpen(isOn)
         --SetOpenUpPanel.openBtn:DOMove(Vector3.New(88,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(88,0,0)
         SetOpenUpPanel.close.localScale = Vector3.zero
+        if not self.m_data.takeOnNewOrder then
+            SetOpenUpPanel.price.text = GetClientPriceString(ct.CalculationPromoteSuggestPrice(self.m_data.guidePrice))
+        end
     else
         SetOpenUpPanel.conpetitivebess.localScale = Vector3.zero
         --SetOpenUpPanel.openBtn:DOMove(Vector3.New(2,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
@@ -108,8 +113,10 @@ function SetOpenUpCtrl:OnPrice()
     if SetOpenUpPanel.price.text == "" then
         SetOpenUpPanel.price.text = 0
     end
-    self.price = tonumber(SetOpenUpPanel.price.text)
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_promotionGuidePrice',self.m_data.insId,self.myOwnerID) --获取推荐价格
+    local price = SetOpenUpPanel.price.text
+    SetOpenUpPanel.value.text = ct.CalculationAdvertisementCompetitivePower(self.m_data.guidePrice,GetServerPriceNumber(price), self.m_data.RDAbility ,2251, self.m_data.averageRDAbility)
+    --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_promotionGuidePrice',self.m_data.insId,self.myOwnerID) --获取推荐价格
+    self.m_data.openOtherText.text = SetOpenUpPanel.value.text
 end
 
 --点击确定
@@ -134,7 +141,7 @@ function SetOpenUpCtrl:OnConfirm(go)
             if  SetOpenUpPanel.time.text == "" then
                 SetOpenUpPanel.time.text = 0
             else
-                DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_PromotionSetting',go.m_data.insId,false,tonumber(SetOpenUpPanel.price.text), tonumber(SetOpenUpPanel.time.text))
+                DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_PromotionSetting',go.m_data.insId,false,0, 0)
             end
         end
     end
@@ -167,6 +174,4 @@ function SetOpenUpCtrl:GuidePrice(info)
     end
     local competitive = ct.CalculationAdvertisementCompetitivePower(value,self.price,curAbilitys,2251)
     SetOpenUpPanel.value.text = competitive
-    Event.Brocast("c_competitiveness",competitive)
-    UnityEngine.PlayerPrefs.SetInt("competitiveness",competitive)
 end

@@ -257,7 +257,7 @@ end
 --收到拍卖中的土地信息
 function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream, msgId)
 
-    if stream == nil or stream == "" or #stream == 0 then
+    if stream == nil or stream == "" or stream.auction == nil then
         local time = TimeSynchronized.GetTheCurrentTime()
         for i, value in ipairs(GroundAucConfig) do
             if value.beginTime > time then

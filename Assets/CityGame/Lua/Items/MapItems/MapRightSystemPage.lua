@@ -39,8 +39,8 @@ end
 --多语言
 function MapRightSystemPage:_language()
     self.goHereText01.text = GetLanguage(20010008)
-    self.titleText02.text = GetLanguage(11030001)
-    self.valueText03.text = GetLanguage(11030002)
+    self.titleText02.text = GetLanguage(11040001)
+    self.valueText03.text = GetLanguage(11040002)
 end
 --关闭
 function MapRightSystemPage:close()

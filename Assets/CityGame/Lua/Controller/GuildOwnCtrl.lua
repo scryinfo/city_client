@@ -135,7 +135,9 @@ function GuildOwnCtrl:OnModifyName(go)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(12050002)
+    data.tipInfo = GetLanguage(18010012)
     data.inputDefaultStr = GetLanguage(12060019)
+    data.characterLimit = 7
     data.btnCallBack = function(str)
         if str == "" or str == nil then
             str = GetLanguage(12060022)
@@ -147,7 +149,7 @@ function GuildOwnCtrl:OnModifyName(go)
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifySocietyName", {societyId = DataManager.GetGuildID(), str = str})
         end
     end
-    ct.OpenCtrl("InputDialogPageCtrl",data)
+    ct.OpenCtrl("CompanyInputCtrl",data)
     --ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(12060019), btnCallBack = function (str)
     --    if str == "" or str == nil then
     --        str = GetLanguage(12060022)
@@ -167,7 +169,9 @@ function GuildOwnCtrl:OnModifyIntroduction(go)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(12010008)
+    --data.tipInfo = GetLanguage(18010012)
     data.inputDefaultStr = GetLanguage(12060020)
+    data.characterLimit = 10
     data.btnCallBack = function(str)
         if str == "" or str == nil then
             str = GetLanguage(12060024)
@@ -179,7 +183,7 @@ function GuildOwnCtrl:OnModifyIntroduction(go)
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifyIntroduction", {societyId = DataManager.GetGuildID(), str = str})
         end
     end
-    ct.OpenCtrl("InputDialogPageCtrl",data)
+    ct.OpenCtrl("CompanyInputCtrl",data)
     --ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(12060020), btnCallBack = function (str)
     --    if str == "" or str == nil then
     --        str = GetLanguage(12060024)
@@ -199,6 +203,7 @@ function GuildOwnCtrl:OnModifyDeclaration(go)
     local data = {}
     data.titleInfo = GetLanguage(12060041)
     data.inputDefaultStr = GetLanguage(12060021)
+    data.characterLimit = 60
     data.btnCallBack = function(str)
         if str == "" or str == nil then
             str = GetLanguage(12060026)
@@ -210,8 +215,8 @@ function GuildOwnCtrl:OnModifyDeclaration(go)
             DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildOwnCtrl, "m_ModifyDeclaration", {societyId = DataManager.GetGuildID(), str = str})
         end
     end
-    ct.OpenCtrl("InputDialogPageCtrl",data)
-    --ct.OpenCtrl("LongInputDialogPageCtrl", {btnCallBack = function (str)
+    ct.OpenCtrl("BigInputCtrl",data)
+    --ct.OpenCtrl("BigInputCtrl", {btnCallBack = function (str)
     --    if str == "" or str == nil then
     --        str = GetLanguage(12060026)
     --        Event.Brocast("SmallPop",str,80)

@@ -104,7 +104,7 @@ function PromoteGoodsExtensionCtrl:initData()
     if self.m_data.Data.subclass == nil then
         return
     end
-    PromoteGoodsExtensionPanel.popularity.text = "+".. self.m_data.Data.capacity .. "/h"
+    PromoteGoodsExtensionPanel.popularity.text = "+".. self.m_data.capacity[self.m_data.Data.typeId] .. "/h"
     self.PromoteGoods = {}
     for i, v in ipairs(self.m_data.Data.subclass) do
         local function callback(prefab)

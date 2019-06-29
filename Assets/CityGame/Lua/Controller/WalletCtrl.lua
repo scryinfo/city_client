@@ -258,6 +258,8 @@ function WalletCtrl:_language()
     self.emptyText.text = GetLanguage(33040007)
     self.QRCodeAmount.text = GetLanguage(33020024)
     self.QRCodeText.text = GetLanguage(33020013)
+    self.scanTipText.text = GetLanguage(33030004)
+    self.scanTopName.text = GetLanguage(33030005)
 end
 --初始化打开钱包时
 function WalletCtrl:defaultPanel()
@@ -463,7 +465,7 @@ function WalletCtrl:saveAmount()
     end
     self.Amount = tostring(tonumber(self.moneyInput.text) / 1000000)
     self.poundageText.text = GetLanguage(33030002 ,"E" .. GetClientPriceString(tonumber(self.moneyInput.text) * 0.003 * 10000),0.3)
-    self.proportionMontyText.text = getMoneyString(tonumber(self.moneyInput.text) * (1/1000000))
+    self.proportionMontyText.text = getMoneyString(CityLuaUtil.scientificNotation2Normal(tonumber(self.moneyInput.text) * (1/1000000)))
 end
 --检测保存输入的钱包地址
 function WalletCtrl:saveEthAddr()
@@ -480,7 +482,7 @@ function WalletCtrl:inputMoney()
         self.rechargeMoneyInput.text = 0
     end
     self.TopUpMoney = tostring(tonumber(self.rechargeMoneyInput.text)/1000000)
-    self.DDDText.text = getMoneyString(tonumber(self.rechargeMoneyInput.text) * (1/1000000)) .. "(DDD)"
+    self.DDDText.text = getMoneyString(CityLuaUtil.scientificNotation2Normal(tonumber(self.rechargeMoneyInput.text) * (1/1000000))) .. "(DDD)"
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开用户协议

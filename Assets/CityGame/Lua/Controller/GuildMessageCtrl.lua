@@ -157,8 +157,8 @@ end
 
 -- 滑动复用
 GuildMessageCtrl.static.GuildNoticeProvideData = function(transform, idx)
-    idx = idx + 1
-    GuildMessageItem:new(transform, GuildMessageCtrl.societyNotice[idx])
+    --idx = idx + 1
+    GuildMessageItem:new(transform, GuildMessageCtrl.societyNotice[#GuildMessageCtrl.societyNotice - idx])
 end
 
 GuildMessageCtrl.static.GuildNoticeClearData = function(transform)

@@ -273,31 +273,31 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
         end
     end
 
-    if buildingTs >= monthAgo then
-        if buildingTime == currentTime then
-            incomeVet[2].x = incomeVet[2].x + (taday * (140 / 86400))
-            payVet[2].x = payVet[2].x + (taday * (140 / 86400))
-            table.insert(incomeVet,2,Vector2.New(140,0))
-            table.insert(payVet,2,Vector2.New(140,0))
-            table.insert(income,2,Vector2.New(140,0))
-            table.insert(pay,2,Vector2.New(140,0))
-        else
-          local dis = (currentTime - buildingTime)/86400 *40
-            local id
-            for i, v in ipairs(incomeVet) do
-                if v.x == dis then
-                    id = i
-                end
-            end
-            if id then
-                incomeVet[id].x = incomeVet[id].x + (taday * (140 / 86400))
-                payVet[id].x = payVet[id].x + (taday * (140 / 86400))
-            end
-        end
-    else
-        incomeVet[#incomeVet].x = incomeVet[#incomeVet].x + (taday * (140 / 86400))
-        payVet[#payVet].x = payVet[#payVet].x + (taday * (140 / 86400))
-    end
+    --if buildingTs >= monthAgo then
+    --    if buildingTime == currentTime then
+    --        incomeVet[2].x = incomeVet[2].x + (taday * (140 / 86400))
+    --        payVet[2].x = payVet[2].x + (taday * (140 / 86400))
+    --        table.insert(incomeVet,2,Vector2.New(140,0))
+    --        table.insert(payVet,2,Vector2.New(140,0))
+    --        table.insert(income,2,Vector2.New(140,0))
+    --        table.insert(pay,2,Vector2.New(140,0))
+    --    else
+    --      local dis = (currentTime - buildingTime)/86400 *40
+    --        local id
+    --        for i, v in ipairs(incomeVet) do
+    --            if v.x == dis then
+    --                id = i
+    --            end
+    --        end
+    --        --if id then
+    --        --    incomeVet[id].x = incomeVet[id].x + (taday * (140 / 86400))
+    --        --    payVet[id].x = payVet[id].x + (taday * (140 / 86400))
+    --        --end
+    --    end
+    --else
+    --    --incomeVet[#incomeVet].x = incomeVet[#incomeVet].x + (taday * (140 / 86400))
+    --    --payVet[#payVet].x = payVet[#payVet].x + (taday * (140 / 86400))
+    --end
     --if buildingTime == currentTime then
     --    local incomeVetTemp = {}
     --    local payVetTemp = {}

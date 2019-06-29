@@ -22,6 +22,7 @@ function  AdvertisementPartDetail:_InitEvent()
     Event.AddListener("c_PromoteCapacity",self.PromoteCapacity,self)
     Event.AddListener("c_PromoteBuildingCapacity",self.PromoteBuildingCapacity,self)
     Event.AddListener("c_competitiveness",self.Competitiveness,self)
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "promotionGuidePrice", "gs.PromotionMsg", self.n_OnPromoteGuidePrice, self)
 end
 --
 function AdvertisementPartDetail:_InitClick(mainPanelLuaBehaviour)
@@ -44,6 +45,7 @@ function AdvertisementPartDetail:_RemoveEvent()
     Event.RemoveListener("c_PromoteCapacity",self.PromoteCapacity,self)
     Event.RemoveListener("c_PromoteBuildingCapacity",self.PromoteBuildingCapacity,self)
     Event.RemoveListener("c_competitiveness",self.Competitiveness,self)
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "promotionGuidePrice", self)
 end
 --
 function AdvertisementPartDetail:_RemoveClick()
@@ -58,7 +60,6 @@ function AdvertisementPartDetail:RefreshData(data)
         end
         if data.takeOnNewOrder then
             self.openedOthers.transform.localScale = Vector3.zero
-            self.openedOthers.text = GetLanguage(27040002)
             self.openOther.localScale = Vector3.one
         else
             self.openedOthers.transform.localScale = Vector3.one
@@ -142,25 +143,20 @@ end
 
 function AdvertisementPartDetail:Show(data)
     BasePartDetail.Show(self)
-    local competitiveness = UnityEngine.PlayerPrefs.GetInt("competitiveness")
-    self.openOtherText.text = competitiveness
+    self.m_data = data
+    --获取推荐价格
+    DataManager.ModelSendNetMes("gscode.OpCode", "promotionGuidePrice","gs.PromotionMsg",{buildingId = data.insId , playerId = data.info.ownerId})
     if data.info.ownerId ~= myOwnerID then
         self.open.transform.localScale = Vector3.zero
     else
         self.open.transform.localScale = Vector3.one
     end
-    self.m_data = data
     self:_initFunc()
     if data.selledPromCount == 0 then
         self.startTime.text = GetLanguage(27040032)
     elseif data.newPromoStartTs ~= -1 then
         local ts = getFormatUnixTime(data.newPromoStartTs/1000)
         self.startTime.text = ts.hour .. ":" ..ts.minute .. " " .. ts.month .. "/" .. ts.day .. "/" .. ts.year
-    end
-    if data.takeOnNewOrder then
-        self.openedOthers.text = GetLanguage(27040002)
-    else
-        self.openedOthers.text = GetLanguage(27040001)
     end
     self.goodsText.text = GetLanguage(27040008)
     self.goodsClickText.text = GetLanguage(27040008)
@@ -211,10 +207,31 @@ function AdvertisementPartDetail:PromoteBuildingCapacity(CurAbilitys)
     self.houseSpeed.text = "+" .. CurAbilitys[2] .."/h"
 end
 
---竞争力赋值
-function AdvertisementPartDetail:Competitiveness(info)
-    self.openOtherText.text = info
+--推荐定价
+function AdvertisementPartDetail:n_OnPromoteGuidePrice(info)
+    self.m_data.guidePrice = 0
+    self.m_data.guidePrice = info.proPrice[1].guidePrice
+    self.m_data.RDAbility = 0
+    if info.proPrice[1].curAbilitys then
+        for i, v in pairs(info.proPrice[1].curAbilitys) do
+            self.m_data.RDAbility = self.m_data.RDAbility + v
+        end
+        self.m_data.RDAbility = self.m_data.RDAbility / #info.proPrice[1].curAbilitys
+    end
+    --TODO://计算公式错误
+    self.m_data.averageRDAbility = self.m_data.RDAbility
+
+    if self.m_data.takeOnNewOrder then
+        self.openedOthers.transform.localScale = Vector3.zero
+        self.openOther.localScale = Vector3.one
+        self.openOtherText.text = ct.CalculationAdvertisementCompetitivePower(self.m_data.guidePrice, self.m_data.curPromPricePerHour, self.m_data.RDAbility ,2251, self.m_data.averageRDAbility)
+    else
+        self.openedOthers.transform.localScale = Vector3.one
+        self.openOther.localScale = Vector3.zero
+        self.openedOthers.text = GetLanguage(27040001)
+    end
 end
+
 
 --点击建筑
 function AdvertisementPartDetail:OnBuilding(go)
@@ -233,6 +250,7 @@ end
 --对外开放
 function AdvertisementPartDetail:OnOpen(go)
     PlayMusEff(1002)
+    go.m_data.openOtherText = go.openOtherText
    ct.OpenCtrl("SetOpenUpCtrl",go.m_data)
 end
 

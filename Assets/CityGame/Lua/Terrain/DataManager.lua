@@ -939,15 +939,19 @@ function DataManager.RegisterErrorNetMsg()
         --该消息监听的无参回调如果有
         msgErrId_RegisterErrorNetMsg = pbl.enum('common.OpCode','error')
         if ModelNetMsgStack[protoData.opcode] ~= nil then
-                tb_RegisterErrorNetMsg = ModelNetMsgStack[protoData.opcode]
-                for ins, functions in pairs(tb_RegisterErrorNetMsg) do
-                    if functions ~= nil then
-                        for i, func in pairs(functions) do
-                            func(BuildDataStack.DetailModelStack[ins],protoData,msgErrId_RegisterErrorNetMsg)
-                        end
+            tb_RegisterErrorNetMsg = ModelNetMsgStack[protoData.opcode]
+            local isBool = false
+            for ins, functions in pairs(tb_RegisterErrorNetMsg) do
+                if functions ~= nil then
+                    for i, func in pairs(functions) do
+                        func(BuildDataStack.DetailModelStack[ins],protoData,msgErrId_RegisterErrorNetMsg)
                     end
+                    isBool = true
                 end
+            end
+            if isBool == true then
                 return
+            end
         else
             info_RegisterErrorNetMsg = {}
             info_RegisterErrorNetMsg.titleInfo = "未注册处理方法的网络错误"
@@ -1197,6 +1201,8 @@ function  DataManager.InitPersonDatas(tempData)
     PersonDataStack.guildManager = GuildManager:new()
     DataManager.InitGuildInfo()
 
+
+
     --初始化相机位置
     if tempData.position ~= nil then
         local LastCollectionID = TerrainManager.AOIGridIndexTurnCollectionID(tempData.position)
@@ -1311,6 +1317,17 @@ end
 --获取中心仓库Id
 function DataManager.GetBagId()
     return PersonDataStack.m_bagId
+end
+
+-- 所选服务器创建时间
+PersonDataStack.createTime = nil
+
+function DataManager.SetServerCreateTs(ts)
+    PersonDataStack.createTime = ts
+end
+
+function DataManager.GetServerCreateTs()
+    return PersonDataStack.createTime
 end
 
 --获取中心仓库信息
@@ -1652,6 +1669,17 @@ function DataManager.GetMinersCostRatioMoney(number)
     end
     return PersonDataStack.m_minersCostRatio * tonumber(number)
 end
+
+-- 设置联盟聊天是否查看信息
+function DataManager.SetIsReadGuildChatInfo(read)
+    PersonDataStack.socialityManager:SetIsReadGuildChatInfo(read)
+end
+
+-- 获得联盟聊天是否查看信息
+function DataManager.GetIsReadGuildChatInfo()
+    return PersonDataStack.socialityManager:GetIsReadGuildChatInfo()
+end
+
 ---------------------------------
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
@@ -2158,6 +2186,7 @@ end
 function DataManager.n_ExitSociety(ByteBool)
     DataManager.SetGuildID()
     DataManager.SetGuildInfo()
+    DataManager.SetIsReadGuildChatInfo(false)
 end
 
 -- 改名字返回

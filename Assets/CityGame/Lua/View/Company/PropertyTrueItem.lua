@@ -54,7 +54,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
             end
         elseif #recordData == 3 then
             if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]then
-                self:_setAddExNumInputField(tostring(EvaCtrl.static.evaCtrl.addData[recordData[1]].value))
+                self:_setAddExNumInputField(tostring(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]))
             end
         end
     else
@@ -77,18 +77,21 @@ function PropertyTrueItem:initialize(prefab, data, configData)
 
     self.addExNumInputField.onEndEdit:RemoveAllListeners()
     self.addExNumInputField.onEndEdit:AddListener(function (inputValue)
+        local addNumber
         if inputValue == nil or inputValue == "" then
+            addNumber = 0
             self:_setAddExNumInputField("0")
+        else
+            -- 规范输入的点数
+            addNumber = tonumber(inputValue)
+            if addNumber < 0 then
+                addNumber = 0
+                self:_setAddExNumInputField("0")
+            end
         end
         -- 使按钮可点
         --self:_setBtnInteractable(true, true)
 
-        -- 规范输入的点数
-        local addNumber = tonumber(inputValue)
-        if addNumber < 0 then
-            addNumber = 0
-            self:_setAddExNumInputField("0")
-        end
 
         -- 本身的点数
         local selfAddPoint = 0

@@ -40,7 +40,7 @@ function EvaCtrl:Awake()
     --luaBehaviour:AddClick(EvaPanel.startAddBtn.gameObject, self.OnStartAdd, self)
     luaBehaviour:AddClick(EvaPanel.addBtn, self.OnAdd, self)
     luaBehaviour:AddClick(EvaPanel.introductionBtn, self.OnIntroduction, self)
-    --luaBehaviour:AddClick(EvaPanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
+    luaBehaviour:AddClick(EvaPanel.closeIntroductionBtn.gameObject, self.OnCloseTips, self)
 
     -- Eva节点2
     self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
@@ -97,8 +97,7 @@ function EvaCtrl:updateData()
     -- 打开开始加点，关闭加点
     --EvaPanel.addBtn.localScale = Vector3.one
     --EvaPanel.startAddBtn.localScale = Vector3.zero
-    -- 关闭eva小提示
-    self:_showIntroduction( false )
+
     -- eva界面上总的加点的点数值
     self.allEvaAddPoint = 0
     -- 刷新加点按钮显示
@@ -124,9 +123,9 @@ end
 
 -- eva小提示是否显示
 function EvaCtrl:_showIntroduction(isShow)
-    self.isShowTips = isShow
     EvaPanel.introductionImage.localScale = isShow and Vector3.one or Vector3.zero
     EvaPanel.introductionText.localScale = isShow and Vector3.one or Vector3.zero
+    EvaPanel.closeIntroductionBtn.localScale = isShow and Vector3.one or Vector3.zero
 end
 
 -- 清理Eva数据以及界面显示
@@ -192,6 +191,7 @@ function EvaCtrl:OnAdd(go)
         table.insert(evas, v)
     end
     if not  next(evas) then
+        Event.Brocast("SmallPop",GetLanguage(31010050),70)
         return
     end
     DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_UpdateMyEvas', {eva = evas})
@@ -202,15 +202,15 @@ end
 function EvaCtrl:OnIntroduction(go)
     PlayMusEff(1002)
     --ct.OpenCtrl("CompanyIntroductionCtrl")
-    go:_showIntroduction( not go.isShowTips )
+    go:_showIntroduction( true )
 end
 
 --关闭eva小提示
---function EvaCtrl:OnCloseTips(go)
---    PlayMusEff(1002)
---    EvaPanel.closeTipsBtn.localScale = Vector3.zero
---    --CompanyCtrl.static.companyMgr:ClsoeTips()
---end
+function EvaCtrl:OnCloseTips(go)
+    PlayMusEff(1002)
+    -- 关闭eva小提示
+    go:_showIntroduction( false )
+end
 
 -------------------------------------------------------------- 网络消息相关 --------------------------------------------------------
 -- 打开model

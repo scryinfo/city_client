@@ -62,7 +62,7 @@ function GuildListCtrl:Active()
     GuildListPanel.createTitleText.text = GetLanguage(12050001)
     GuildListPanel.nameInputFieldText.text = GetLanguage(12050002)
     GuildListPanel.describeInputFieldText.text = GetLanguage(12010008)
-    GuildListPanel.nullImageText.text = GetLanguage(16010026)
+    GuildListPanel.nullImageText.text = GetLanguage(12010015)
 end
 
 -- 监听Model层网络回调

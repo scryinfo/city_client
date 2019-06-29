@@ -965,7 +965,7 @@ end
 --定价:price
 --推广能力:competitivePower  -- 所有不同类型推广能力和 / 4
 --推广类型:Advertisementtype  --2251食品推广  2252服饰推广   13零售店推广   14住宅推广
-function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,competitivePower,Advertisementtype)
+function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,competitivePower,Advertisementtype,averageRDAbility)
 	if price <= 0 then
 		return CalculationNBitAfterDecimalPoint(100)
 	end
@@ -977,8 +977,19 @@ function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,co
 		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
 	else
 		--竞争力 = 推荐定价 / (定价/推广能力) * 1000 (整数)
-		return  CalculationNBitAfterDecimalPoint((recommendedPricing / ( price / competitivePower) * CPMagnification ))
+		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price ) * (competitivePower / averageRDAbility) * CPMagnification )
 	end
+end
+
+---计算推广公司推荐默认值
+--推荐定价:recommendedPricing
+function ct.CalculationPromoteSuggestPrice(recommendedPricing)
+    if recommendedPricing <= 0 then
+        --推荐定价 = 推荐定价表
+        recommendedPricing = Competitive[16 * PRIDMagnification + 2251]
+        return recommendedPricing
+    end
+    return recommendedPricing
 end
 
 ---计算研发公司竞争力【over】

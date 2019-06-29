@@ -210,6 +210,7 @@ end
 function ChatCtrl._showChatNoticeItem()
     ChatPanel.friendsNoticeImage:SetActive(false)
     ChatPanel.strangersNoticeImage:SetActive(false)
+    ChatPanel.guildNoticeImage:SetActive(DataManager.GetIsReadGuildChatInfo())
     local chatFriendsInfo = DataManager.GetMyChatInfo(2)
     local chatStrangersInfo = DataManager.GetMyChatInfo(3)
     local saveUnread = DataManager.GetUnread()
@@ -483,6 +484,8 @@ function ChatCtrl:_guildToggleValueChange(isOn)
         ChatCtrl.static.chatMgr:SetToggle()
         ChatCtrl.static.chatMgr:SetActivePlayerData({})
         ChatPanel.playerInfoRoot:SetActive(false)
+        DataManager.SetIsReadGuildChatInfo(false)
+        ChatPanel.guildNoticeImage:SetActive(false)
 
         self:_showGuildPlayer()
         self:_showGuildInfo()
@@ -866,6 +869,8 @@ function ChatCtrl:c_OnReceiveRoleCommunication(chatData)
             end
             ChatCtrl.static.chatMgr:CreateChatItem(chatData)
             ChatCtrl.static.chatMgr:StartScrollBottom()
+        else
+            ChatPanel.guildNoticeImage:SetActive(true)
         end
     end
 end

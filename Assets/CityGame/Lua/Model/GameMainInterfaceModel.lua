@@ -33,6 +33,7 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.ModelRegisterNetMsg( nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnCityPlayerGoodsCurve,self)
 
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newJoinReq","gs.JoinReq", self.n_NewJoinReq, self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","exitSociety","gs.ByteBool", self.n_ExitSociety, self)
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
     UnitTest.Exec_now("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",DataManager.GetMyOwnerID())
@@ -186,4 +187,9 @@ end
 -- 新增入会请求
 function GameMainInterfaceModel:n_NewJoinReq(joinReq)
     Event.Brocast("c_GuildMessageNewJoinReq", joinReq)
+end
+
+-- 退出公会返回
+function GameMainInterfaceModel:n_ExitSociety(byteBool)
+    Event.Brocast("c_GameMainExitSociety", byteBool)
 end

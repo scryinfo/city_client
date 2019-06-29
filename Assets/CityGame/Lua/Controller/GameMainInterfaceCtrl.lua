@@ -55,6 +55,7 @@ function GameMainInterfaceCtrl:Active()
     Event.AddListener("c_AllExchangeAmount", self.c_AllExchangeAmount, self) --所有交易量
     --Event.AddListener("c_CityBroadcasts", self.c_CityBroadcasts, self) --获取城市广播
     Event.AddListener("c_GuildMessageNewJoinReq", self.c_GuildMessageNewJoinReq, self) -- 收到新的公会申请
+    Event.AddListener("c_GameMainExitSociety", self.c_GameMainExitSociety, self) -- 退出联盟
 
     GameMainInterfacePanel.city.text = GetLanguage(10050002)
     GameMainInterfacePanel.smallMapText.text = GetLanguage(11010005)
@@ -82,6 +83,7 @@ function GameMainInterfaceCtrl:Hide()
     Event.RemoveListener("TemperatureChange",self.c_TemperatureChange,self)
     Event.RemoveListener("WeatherIconChange",self.c_WeatherIconChange,self)
     Event.RemoveListener("c_GuildMessageNewJoinReq",self.c_GuildMessageNewJoinReq,self)
+    Event.RemoveListener("c_GameMainExitSociety",self.c_GameMainExitSociety,self)
 
     GameMainInterfaceCtrl:OnClick_EarningBtn(false,self)
     self:RemoveUpdata()
@@ -426,6 +428,11 @@ end
 -- 新增入会请求
 function GameMainInterfaceCtrl:c_GuildMessageNewJoinReq()
     GameMainInterfacePanel.leagueNotice.localScale = Vector3.one
+end
+
+-- 退出联盟
+function GameMainInterfaceCtrl:c_GameMainExitSociety()
+    self:_showWorldChatNoticeItem()
 end
 
 function GameMainInterfaceCtrl:Awake()
@@ -774,6 +781,10 @@ function GameMainInterfaceCtrl:_showWorldChatNoticeItem()
                 self.worldChatItem[i]:_ShowChatContent(data[worldInfoAllNum - chatItemNum + i])
             end
         end
+    end
+
+    if DataManager.GetIsReadGuildChatInfo() then
+        GameMainInterfacePanel.chatItem.localScale = Vector3.one
     end
 end
 

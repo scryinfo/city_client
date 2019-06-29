@@ -53,6 +53,7 @@ function ChatPanel.InitPanel()
     -- 好友、陌生人红点
     this.friendsNoticeImage = transform:Find("LeftRoot/TopRoot/FriendsToggle/NoticeImage").gameObject
     this.strangersNoticeImage = transform:Find("LeftRoot/TopRoot/StrangersToggle/NoticeImage").gameObject
+    this.guildNoticeImage = transform:Find("LeftRoot/TopRoot/GuildToggle/NoticeImage").gameObject
 
     -- 显示节点
     this.worldRoot = transform:Find("LeftRoot/MiddleRoot/WorldRoot").gameObject

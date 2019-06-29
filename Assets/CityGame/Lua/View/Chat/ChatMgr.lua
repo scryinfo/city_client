@@ -248,7 +248,7 @@ function ChatMgr:CreateChatItem(chatData, isOthers)
             local chatRightItem = ChatRightItem:new(#self.strangersItem + 1, prefab, chatData)
             table.insert(self.strangersItem, chatRightItem)
             DataManager.SetMyReadChatInfo(3, chatData.channelId)
-        elseif chatData.channel == "GROUP" then -- 代表世界频道
+        elseif chatData.channel == "GROUP" then -- 代表联盟频道
             local prefab = self:_createNoticePab(ChatMgr.static.ChatRightItemPath, ChatPanel.guildContent)
             local chatRightItem = ChatRightItem:new(#self.guildItem + 1, prefab, chatData)
             table.insert(self.guildItem, chatRightItem)
@@ -256,6 +256,7 @@ function ChatMgr:CreateChatItem(chatData, isOthers)
                 UnityEngine.GameObject.Destroy(self.guildItem[1].prefab)
                 table.remove(self.guildItem, 1)
             end
+            DataManager.SetIsReadGuildChatInfo(false)
         end
     else
         if chatData.channel == "WORLD" then -- 代表世界频道
@@ -298,7 +299,7 @@ function ChatMgr:CreateChatItem(chatData, isOthers)
             local chatLeftItem = ChatLeftItem:new(#self.strangersItem + 1, prefab, chatData)
             table.insert(self.strangersItem, chatLeftItem)
             DataManager.SetMyReadChatInfo(3, chatData.id)
-        elseif chatData.channel == "GROUP" then -- 代表世界频道
+        elseif chatData.channel == "GROUP" then -- 代表联盟频道
             local prefab = self:_createNoticePab(ChatMgr.static.ChatLeftItemPath, ChatPanel.guildContent)
             local chatLeftItem = ChatLeftItem:new(#self.guildItem + 1, prefab, chatData)
             table.insert(self.guildItem, chatLeftItem)
@@ -306,6 +307,7 @@ function ChatMgr:CreateChatItem(chatData, isOthers)
                 UnityEngine.GameObject.Destroy(self.guildItem[1].prefab)
                 table.remove(self.guildItem, 1)
             end
+            DataManager.SetIsReadGuildChatInfo(false)
         end
     end
 end

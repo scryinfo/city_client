@@ -1656,6 +1656,17 @@ function DataManager.GetMinersCostRatioMoney(number)
     end
     return PersonDataStack.m_minersCostRatio * tonumber(number)
 end
+
+-- 设置联盟聊天是否查看信息
+function DataManager.SetIsReadGuildChatInfo(read)
+    PersonDataStack.socialityManager:SetIsReadGuildChatInfo(read)
+end
+
+-- 获得联盟聊天是否查看信息
+function DataManager.GetIsReadGuildChatInfo()
+    return PersonDataStack.socialityManager:GetIsReadGuildChatInfo()
+end
+
 ---------------------------------
 --获取自己所有的建筑详情
 function DataManager.GetMyAllBuildingDetail()
@@ -2162,6 +2173,7 @@ end
 function DataManager.n_ExitSociety(ByteBool)
     DataManager.SetGuildID()
     DataManager.SetGuildInfo()
+    DataManager.SetIsReadGuildChatInfo(false)
 end
 
 -- 改名字返回

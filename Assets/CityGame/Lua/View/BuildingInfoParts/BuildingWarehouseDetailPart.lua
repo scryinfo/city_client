@@ -216,7 +216,7 @@ function BuildingWarehouseDetailPart:addTransportList(data)
         Event.Brocast("SmallPop",GetLanguage(25020009), ReminderType.Succeed)
     else
         for key,value in pairs(self.transportTab) do
-            if value.itemId == data.itemId then
+            if value.itemId == data.itemId and value.producerId == data.producerId then
                 Event.Brocast("SmallPop",GetLanguage(25070011), ReminderType.Common)
                 return
             end
@@ -320,12 +320,19 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         --        end
         --    end
         --end
+        if self.storeInfoData or next(self.storeInfoData) ~= nil then
+            for key,value in pairs(self.storeInfoData.inHand) do
+                if value.key.id == data.iKey.id then
+                    value.n = value.n + 1
+                end
+            end
+        end
         --刷新仓库界面
         if self.warehouseDatas ~= nil then
             for key,value in pairs(self.warehouseDatas) do
                 if value.itemId == data.iKey.id then
-                    value.dataInfo.n = value.dataInfo.n + 1
-                    value.numberText.text = "×"..value.dataInfo.n
+                    value.dataInfo.n = data.nowCountStore
+                    value.numberText.text = "×"..data.nowCountInStore
                     return
                 end
             end
@@ -348,6 +355,9 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
             data.item = {}
         end
         --刷新仓库界面
+        if not data.item or next(data.item) == nil then
+            data.item = {}
+        end
         for key,value in pairs(self.warehouseDatas) do
             if value.itemId == data.item.key.id then
                 if value.dataInfo.n == data.item.n then
@@ -444,15 +454,20 @@ function BuildingWarehouseDetailPart:mergeTables(inHandTab,lockedTab)
     end
     if inHandTab ~= nil then
         for key,value in pairs(inHandTab) do
-            targetTab[value.key.id] = ct.deepCopy(value)
+            targetTab[#targetTab + 1] = ct.deepCopy(value)
         end
     end
     if lockedTab ~= nil then
         for key,value in pairs(lockedTab) do
-            if targetTab[value.key.id] then
-                targetTab[value.key.id].n = targetTab[value.key.id].n + value.n
-            else
-                targetTab[value.key.id] = ct.deepCopy(value)
+            local isBool = true
+            for key1,value1 in pairs(targetTab) do
+                if value.key.id == value1.key.id and value.key.producerId == value1.key.producerId then
+                    value1.n = value1.n + value.n
+                    isBool = false
+                end
+            end
+            if isBool == true then
+                targetTab[#targetTab + 1] = ct.deepCopy(value)
             end
         end
     end

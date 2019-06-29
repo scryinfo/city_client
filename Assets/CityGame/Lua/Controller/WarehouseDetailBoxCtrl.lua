@@ -103,7 +103,7 @@ function WarehouseDetailBoxCtrl:addShelf(dataInfo)
             Event.Brocast("m_ReqprocessingShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
         else
             --如果货架不是空的，检查货架上是否有这个商品
-            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId) == true then
+            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId,dataInfo.producerId) == true then
                 --发送修改价格
                 Event.Brocast("m_ReqprocessingModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
                 --发送上架
@@ -162,10 +162,16 @@ function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --上架前检查货架上是否有这个商品  返回true有   返回false没有
-function WarehouseDetailBoxCtrl:ShelfWhetherHave(table,itemId)
+function WarehouseDetailBoxCtrl:ShelfWhetherHave(table,itemId,producerId)
     for key,value in pairs(table) do
-        if value.k.id == itemId then
-            return true
+        if producerId == nil then
+            if value.k.id == itemId then
+                return true
+            end
+        else
+            if value.k.id == itemId and value.k.producerId == producerId then
+                return true
+            end
         end
     end
     return false
@@ -193,7 +199,7 @@ function WarehouseDetailBoxCtrl:addShelfGood(dataInfo)
         --架子上有没有这个商品
         for key,value in pairs(self.m_data.shelf.shelf.good) do
             --如果架子上有,直接修改数量和价格
-            if value.k.id == dataInfo.item.key.id then
+            if value.k.id == dataInfo.item.key.id and value.k.producerId == dataInfo.item.key.producerId then
                 value.n = value.n + dataInfo.item.n
                 value.price = dataInfo.price
                 Event.Brocast("refreshShelfDetailPart",self.m_data)
@@ -232,11 +238,11 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
     if self.m_data.info.buildingType == BuildingType.MaterialFactory then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
-                if not self.m_data.info.shelf.good or next(self.m_data.info.shelf.good) == nil then
+                if not self.m_data.shelf.shelf.good or next(self.m_data.shelf.shelf.good) == nil then
                     table.insert(temporaryDataInfo,value)
                 else
                     local bools = true
-                    for k,v in pairs(self.m_data.info.shelf.good) do
+                    for k,v in pairs(self.m_data.shelf.shelf.good) do
                         if value.key.id == v.k.id then
                             bools = false
                         end
@@ -254,16 +260,17 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
     elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
-                if not self.m_data.info.shelf.good or next(self.m_data.info.shelf.good) == nil then
+                if not self.m_data.shelf.shelf.good or next(self.m_data.shelf.shelf.good) == nil then
                     table.insert(temporaryDataInfo,value)
                 else
                     local bools = true
-                    for k,v in pairs(self.m_data.info.shelf.good) do
-                        if value.key.id == v.k.id then
+                    for k,v in pairs(self.m_data.shelf.shelf.good) do
+                        if value.key.id == v.k.id and value.key.producerId == v.k.producerId then
                             bools = false
+                            break
                         end
                     end
-                    if bools then
+                    if bools == true then
                         table.insert(temporaryDataInfo,value)
                     end
                 end
@@ -276,16 +283,17 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
     elseif self.m_data.info.buildingType == BuildingType.RetailShop then
         for key,value in pairs(dataInfo.inHand) do
             if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
-                if not self.m_data.info.shelf.good or next(self.m_data.info.shelf.good) == nil then
+                if not self.m_data.shelf.shelf.good or next(self.m_data.shelf.shelf.good) == nil then
                     table.insert(temporaryDataInfo,value)
                 else
                     local bools = true
-                    for k,v in pairs(self.m_data.info.shelf.good) do
-                        if value.key.id == v.k.id then
+                    for k,v in pairs(self.m_data.shelf.shelf.good) do
+                        if value.key.id == v.k.id and value.key.producerId == v.k.producerId then
                             bools = false
+                            break
                         end
                     end
-                    if bools then
+                    if bools == true then
                         table.insert(temporaryDataInfo,value)
                     end
                 end

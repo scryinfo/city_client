@@ -191,7 +191,7 @@ function EvaCtrl:OnAdd(go)
         table.insert(evas, v)
     end
     if not  next(evas) then
-        Event.Brocast("SmallPop",GetLanguage(31010048),70)
+        Event.Brocast("SmallPop",GetLanguage(31010050),70)
         return
     end
     DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_UpdateMyEvas', {eva = evas})

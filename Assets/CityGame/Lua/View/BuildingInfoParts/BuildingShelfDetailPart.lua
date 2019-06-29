@@ -290,6 +290,7 @@ function BuildingShelfDetailPart:downShelf(data)
 end
 --购买
 function BuildingShelfDetailPart:startBuy(dataInfo,targetBuildingId)
+    self.numberTest = #dataInfo
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
         for key,value in pairs(dataInfo) do
@@ -342,6 +343,10 @@ end
 --购买成功
 function BuildingShelfDetailPart:buySucceed(data)
     if data ~= nil then
+        self.numberTest = self.numberTest - 1
+        if not data.item or next(data.item) == nil then
+            data.item = {}
+        end
         --刷新货架
         for key,value in pairs(self.shelfDatas) do
             if value.itemId == data.item.key.id then
@@ -372,7 +377,9 @@ function BuildingShelfDetailPart:buySucceed(data)
     end
     self.number.transform.localScale = Vector3.zero
     self.buyDatas = {}
-    UIPanel.ClosePage()
+    if self.numberTest == 0 then
+        UIPanel.ClosePage()
+    end
     Event.Brocast("SmallPop",GetLanguage(25070005), ReminderType.Succeed)
 end
 --自动补货

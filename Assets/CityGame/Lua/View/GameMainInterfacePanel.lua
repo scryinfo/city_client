@@ -33,6 +33,7 @@ function GameMainInterfacePanel.InitPanel()
     this.friendsNotice = transform:Find("setBg/friends/friendsItem") --好友红点提示
     this.setButton = transform:Find("setBg/setting").gameObject;
     this.league = transform:Find("setBg/League").gameObject; --联盟
+    this.leagueNotice = transform:Find("setBg/League/noticeItem") --联盟红点提示
     this.chat = transform:Find("setBg/chat").gameObject   --聊天
     this.chatItem = transform:Find("setBg/chat/chatItem")   --聊天红点
 

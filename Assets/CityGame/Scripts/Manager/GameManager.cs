@@ -251,6 +251,7 @@ namespace LuaFramework
             if (m_ojects.Count >= 1)
             {
                 //StartLoadReminderPanel();
+                contentBg.localScale = Vector3.one;
                 StartCoroutine(StartDownLoad(m_ojects));
             }
             else

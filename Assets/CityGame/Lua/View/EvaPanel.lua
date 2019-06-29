@@ -19,6 +19,7 @@ end
 
 function EvaPanel.InitPanel()
     this.backBtn = transform:Find("TopRoot/BackBtn").gameObject
+    this.closeIntroductionBtn = transform:Find("CloseIntroductionBtn")
     this.startAddBtn = transform:Find("TopRoot/StartAddBtn")
     this.addBtn = transform:Find("TopRoot/AddBtn").gameObject
     this.addButton = transform:Find("TopRoot/AddBtn"):GetComponent("Button")

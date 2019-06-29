@@ -37,6 +37,10 @@ function FlightDateDayItem:setValue(value)
     self.selectValue.text = value
     self.unSelectValue.text = value
 end
+--
+function FlightDateDayItem:_clean()
+    self:setState(false)
+end
 ----
 --function FlightDateDayItem:setState(value, isSelect)
 --    self.selectValue.text = value

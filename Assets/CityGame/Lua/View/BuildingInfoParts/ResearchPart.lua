@@ -92,16 +92,27 @@ function ResearchPart:updateUI(data)
     else
         self.queneCount.text = 0
     end
-    --已完成
-    if data.info.ownerId == DataManager.GetMyOwnerID() then
+    local isShow = true
+    local ownerId = DataManager.GetMyOwnerID()
+    --已完成(判断是不是自己的线设置是否显示提示icon)
+    if data.info.ownerId == ownerId  then
         if data.completed then
-            self.hasImage.localScale = Vector3.one
+            for i, v in ipairs(data.completed) do
+                if v.proposerId == ownerId then
+                    self.hasImage.localScale = Vector3.one
+                    isShow = false
+                    break
+                else
+                    self.hasImage.localScale = Vector3.zero
+                end
+            end
         else
-            self.hasImage.localScale = Vector3.zero
+                self.hasImage.localScale = Vector3.zero
         end
     else
         self.hasImage.localScale = Vector3.zero
     end
+
 
     if data.exclusive == false then
         self.priceText.transform.localScale = Vector3.one

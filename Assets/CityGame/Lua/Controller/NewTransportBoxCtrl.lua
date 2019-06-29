@@ -41,6 +41,7 @@ end
 function NewTransportBoxCtrl:Hide()
     UIPanel.Hide(self)
     self:CloseDestroy()
+    self.targetWarehouse.text = ""
     Event.RemoveListener("deleteItemPrefab",self.deleteItemPrefab,self)
 end
 
@@ -113,6 +114,10 @@ function NewTransportBoxCtrl:_clickStartBtn(ins)
         return
     end
     if ins.targetBuildingId == nil then
+        Event.Brocast("SmallPop",GetLanguage(25070012), 300)
+        return
+    end
+    if ins.targetWarehouse.text == nil or ins.targetWarehouse.text == "" then
         Event.Brocast("SmallPop",GetLanguage(25070012), 300)
         return
     end

@@ -69,6 +69,7 @@ function WarehouseBoxCtrl:_getComponent(go)
     self.warehouseNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/warehouseNumberText"):GetComponent("Text")
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
     self.tipText = go.transform:Find("contentRoot/content/tipText"):GetComponent("Text")
+    self.tipNumText = go.transform:Find("contentRoot/content/tipNumText"):GetComponent("Text")
     self.numberSlider = go.transform:Find("contentRoot/content/numberSlider"):GetComponent("Slider")
     self.numberText = go.transform:Find("contentRoot/content/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
     self.deleBtn = go.transform:Find("contentRoot/bottom/deleBtn")
@@ -117,9 +118,18 @@ function WarehouseBoxCtrl:initializeUiInfoData()
     Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
     Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
     self.nameText.text = GetLanguage(self.m_data.itemId)
-    self.numberSlider.maxValue = self.warehouseCount
-    self.numberSlider.minValue = 1
-    self.numberSlider.value = 1
+    self.numberSlider.maxValue = self.m_data.dataInfo.n
+    if self.warehouseCount == 0 then
+        self.numberSlider.value = 0
+        self.numberSlider.minValue = 0
+        self.numberSlider.maxValue = 0
+        self.tipNumText.transform.localScale = Vector3.one
+    else
+        self.numberSlider.value = 1
+        self.numberSlider.minValue = 1
+        self.numberSlider.maxValue = self.warehouseCount
+        self.tipNumText.transform.localScale = Vector3.zero
+    end
     self.numberText.text = "×"..self.numberSlider.value
 end
 --设置多语言
@@ -129,6 +139,7 @@ function WarehouseBoxCtrl:_language()
     self.qualityText.text = GetLanguage(25020005)
     self.levelText.text = GetLanguage(25020007)
     self.tipText.text = GetLanguage(25020008)
+    self.tipNumText.text = "仓库可用数量为0,请先下架后操作"
 end
 --滑动更新文本
 function WarehouseBoxCtrl:SlidingUpdateText()

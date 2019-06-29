@@ -410,7 +410,7 @@ end
 --温度变化
 function GameMainInterfaceCtrl:c_TemperatureChange()
     if ClimateManager.Temperature ~= nil then
-        GameMainInterfacePanel.temperature.text = CalculationNBitAfterDecimalPoint(ClimateManager.Temperature) .."℃"
+        GameMainInterfacePanel.temperature.text = math.floor(ClimateManager.Temperature) .."℃"
     else
         GameMainInterfacePanel.temperature.text = "0 ℃"
     end

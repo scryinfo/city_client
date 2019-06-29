@@ -243,9 +243,9 @@ function PersonalHomeDialogPageCtrl:_nameBtnFunc(ins)
 end
 --充值
 function PersonalHomeDialogPageCtrl:_moneyBtnFunc(ins)
-    --PlayMusEff(1002)
-    --UIPanel.ClosePage()
-    --ct.OpenCtrl("CompanyCtrl", ins.m_data)
+    PlayMusEff(1002)
+    UIPanel.ClosePage()
+    ct.OpenCtrl("WalletCtrl")
 end
 --
 function PersonalHomeDialogPageCtrl:_reqChangeDesToServer(str)

@@ -277,7 +277,7 @@ end
 function BuildingProductionDetailPart:clickDeleBtn()
     PlayMusEff(1002)
     local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
-                content = "是否确认删除正在生产中的线",func = function()
+                content = GetLanguage(25030029),func = function()
             if self.m_data.buildingType == BuildingType.MaterialFactory then
                 --原料厂
                 Event.Brocast("m_ReqMaterialDeleteLine",self.m_data.insId,self.m_data.line[1].id)

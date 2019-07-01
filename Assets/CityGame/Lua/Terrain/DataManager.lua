@@ -894,17 +894,19 @@ function DataManager.ModelRegisterNetMsg(insId,protoNameStr,protoNumStr,protoAna
                     end
                 end
             end
-            --该消息监听的无参回调如果有
-            for k, fun in pairs(ModelNetMsgStackNoIns[newMsgId]) do
-                if fun ~= nil and fun.fun ~= nil then
-                    if fun.ins == nil then
-                        fun.fun(protoData,newMsgId)
-                    else
-                        fun.fun(fun.ins, protoData,newMsgId)
+            if ModelNetMsgStackNoIns[newMsgId] ~= nil then
+                --该消息监听的无参回调如果有
+                for k, fun in pairs(ModelNetMsgStackNoIns[newMsgId]) do
+                    if fun ~= nil and fun.fun ~= nil then
+                        if fun.ins == nil then
+                            fun.fun(protoData,newMsgId)
+                        else
+                            fun.fun(fun.ins, protoData,newMsgId)
+                        end
                     end
                 end
+                ct.log("System","没有找到对应的建筑详情Model类的回调函数")
             end
-            ct.log("System","没有找到对应的建筑详情Model类的回调函数")
         end)
     end
     --依据有无唯一ID，存储回调方法

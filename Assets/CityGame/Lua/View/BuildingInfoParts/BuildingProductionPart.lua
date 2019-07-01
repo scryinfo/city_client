@@ -201,7 +201,7 @@ function BuildingProductionPart:CheckMaterial(itemId)
         isMeet = false
         for key1,value1 in pairs(self.m_data.store.inHand) do
             if value1.key.id == value.itemId then
-                materialNum[#materialNum + 1] = Math_Floor(value1.n / value.num)
+                materialNum[#materialNum + 1] = math.floor(value1.n / value.num)
                 isMeet = true
             end
             if isMeet == false then

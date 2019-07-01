@@ -45,7 +45,7 @@ function AdvertisementPartDetail:_RemoveEvent()
     Event.RemoveListener("c_PromoteCapacity",self.PromoteCapacity,self)
     Event.RemoveListener("c_PromoteBuildingCapacity",self.PromoteBuildingCapacity,self)
     Event.RemoveListener("c_competitiveness",self.Competitiveness,self)
-    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "promotionGuidePrice", self)
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "promotionGuidePrice", self.n_OnPromoteGuidePrice,self)
 end
 --
 function AdvertisementPartDetail:_RemoveClick()
@@ -209,6 +209,9 @@ end
 
 --推荐定价
 function AdvertisementPartDetail:n_OnPromoteGuidePrice(info)
+    if self.m_data == nil then
+        return
+    end
     self.m_data.guidePrice = 0
     self.m_data.guidePrice = info.proPrice[1].guidePrice
     self.m_data.RDAbility = 0

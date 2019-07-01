@@ -73,10 +73,11 @@ end
 function FlightMainModel.n_OnGetAllFlight(data, msgId)
     FlightMainModel.mSearchFlight = {}  --清掉之前的搜索数据
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnGetAllFlight："..data.reason
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        --local info = {}
+        --info.titleInfo = "Error"
+        --info.contentInfo = "GAucModel.n_OnGetAllFlight："..data.reason
+        --ct.OpenCtrl("BtnDialogPageCtrl", info)
+        Event.Brocast("SmallPop", GetLanguage(41010013), ReminderType.Warning)
         return
     end
     FlightMainModel.allFlightDic = {}
@@ -122,10 +123,7 @@ end
 function FlightMainModel.n_OnBetFlight(data, msgId)
     FlightMainModel.CloseFlightLoading()  --结束loading
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnBetFlight："
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        Event.Brocast("SmallPop", GetLanguage(41010013), ReminderType.Warning)
         return
     end
     --从搜索押注
@@ -137,10 +135,7 @@ end
 --
 function FlightMainModel.n_OnGetBetHistory(data, msgId)
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnGetBetHistory："..data.reason
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        Event.Brocast("SmallPop", GetLanguage(41010013), ReminderType.Warning)
         return
     end
     Event.Brocast("c_getFlightBetHistory", data)
@@ -149,10 +144,11 @@ end
 function FlightMainModel.n_OnGetBetResult(data, msgId)
     FlightMainModel.CloseFlightLoading()  --结束loading
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnGetBetResult："..data.reason
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        --local info = {}
+        --info.titleInfo = "Error"
+        --info.contentInfo = "GAucModel.n_OnGetBetResult："..data.reason
+        --ct.OpenCtrl("BtnDialogPageCtrl", info)
+        Event.Brocast("SmallPop", GetLanguage(41010013), ReminderType.Warning)
         return
     end
     Event.Brocast("c_getBetResult", data)
@@ -160,10 +156,11 @@ end
 --
 function FlightMainModel.n_OnFlightScoreChange(data, msgId)
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnFlightScoreChange："..data.reason
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        --local info = {}
+        --info.titleInfo = "Error"
+        --info.contentInfo = "GAucModel.n_OnFlightScoreChange："..data.reason
+        --ct.OpenCtrl("BtnDialogPageCtrl", info)
+        Event.Brocast("SmallPop", GetLanguage(41010013), ReminderType.Warning)
         return
     end
     DataManager.SetMyFlightScore(data.num)
@@ -173,10 +170,11 @@ end
 function FlightMainModel.n_OnGetSearchFlight(data, msgId)
     FlightMainModel.CloseFlightLoading()  --结束loading
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnGetSearchFlight："..data.reason
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        --local info = {}
+        --info.titleInfo = "Error"
+        --info.contentInfo = "GAucModel.n_OnGetSearchFlight："..data.reason
+        --ct.OpenCtrl("BtnDialogPageCtrl", info)
+        Event.Brocast("SmallPop", GetLanguage(41010013), ReminderType.Warning)
         return
     end
     FlightMainModel.mSearchFlight = {}

@@ -61,6 +61,10 @@ function InputDialogPageCtrl:_initData()
 
     self.titleText.text = self.m_data.titleInfo
     self.rentInput.text = ""
+    if self.m_data.limit == nil then
+        self.m_data.limit = 8  --给个默认值
+    end
+    self.rentInput.characterLimit = self.m_data.limit
     self.errorTipRoot.localScale = Vector3.one
     self.errorTipText.text = GetLanguage(17020005)
     if self.m_data.inputDefaultStr ~= nil then
@@ -103,12 +107,14 @@ function InputDialogPageCtrl:setPlayerNameCallback(data)
     if data.reason ~= nil then
         self.errorTipRoot.localScale = Vector3.one
         if data.reason == "roleNameDuplicated" then
-            self.errorTipText.text = GetLanguage(17020003)
+            --self.errorTipText.text = GetLanguage(17020003)
+            Event.Brocast("SmallPop", GetLanguage(17020003), ReminderType.Warning)
         elseif data.reason == "roleNameSetInCd" then
-            self.errorTipText.text = GetLanguage(17020005)
+            --self.errorTipText.text = GetLanguage(17020005)
+            Event.Brocast("SmallPop", GetLanguage(17020008), ReminderType.Warning)
         end
     else
-        Event.Brocast("SmallPop", GetLanguage(17020006), 300)
+        Event.Brocast("SmallPop", GetLanguage(17020006), ReminderType.Succeed)
         UIPanel.ClosePage()
     end
 end

@@ -1,3 +1,6 @@
+
+
+--研究所掷点界面ctrl
 local pool={}
 local LuaBehaviour
 local odds
@@ -74,6 +77,7 @@ end
 function RollCtrl:Refresh()
     Event.AddListener("c_creatRollItem",self.c_creatRollItem,self)
     local data = self.m_data
+    data.titleName = GetLanguage(28040018)
     if data.goodCategory ~=0 then
         Event.AddListener("c_InventResult",self.handleGoodsResult,self)
         panel.EvaRoot.localScale = Vector3.one
@@ -83,7 +87,7 @@ function RollCtrl:Refresh()
     end
     self:updateText(data)
     self.popCompent:Refesh(data)
-    self:c_creatRollItem(data)
+    self:c_creatRollItem(data,data.titleName)
     self:updateText(data)
 end
 
@@ -139,6 +143,7 @@ function RollCtrl:_closeEva(ins)
     panel.EvaRoots.localScale = Vector3.one
 end
 
+
 function RollCtrl:_closeAll(ins)
     --及时销毁产生的item
     for i = 0, 4 do
@@ -146,7 +151,7 @@ function RollCtrl:_closeAll(ins)
         panel.resultRoot.localScale =  Vector3.one
         panel.result.localScale =  Vector3.one
     end
-    --congratulation界面文本更新（0为失败+1 1为成功+10）
+    --eva开箱结果界面文本更新（0为失败+1 1为成功+10）
     for i = 1, #ins.data do
         if ins.data[i] == 0 then
             sums = sums + 1
@@ -192,12 +197,13 @@ function RollCtrl:language()
     panel.congratulation2.text = GetLanguage(28040020)
     panel.failtitleText.text = GetLanguage(28040023)
     panel.failtitle.text = GetLanguage(28040021)
-    panel.titleTexts.text = GetLanguage(28040018)
+    --panel.titleTexts.text = GetLanguage(28040018)
     --panel.achievement.text = GetLanguage(28040044)
     --panel.Remainingtime.text = GetLanguage(28040044)
 
 end
 
+--通过服务器回调数据生成item
 function RollCtrl:c_creatRollItem( data )
     local moedelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
     if data.goodCategory == 0 then
@@ -219,8 +225,8 @@ function RollCtrl:c_creatRollItem( data )
     panel.totalText.text = data.availableRoll
 end
 
+--设置item名称（区分商品 服饰 以及 eva）
 function RollCtrl:updateText(data)
-    --区分商品 服饰 以及 eva
     if data.goodCategory == 52 then
         panel.evanametexts.text = GetLanguage(28040053)
         panel.BigEVAtext.transform.localScale = Vector3.zero
@@ -246,7 +252,7 @@ function RollCtrl:updateText(data)
     --panel.evacounts.text = DataManager.GetEvaPoint()
 end
 
---点击一次开启五个
+--点击一次item开启五个宝箱
 function RollCtrl:handleEvaResult(data)
     self.Rollpoint = {}
     self.data = data
@@ -275,6 +281,7 @@ function RollCtrl:handleEvaResult(data)
     panel.evacount.text = DataManager.GetEvaPoint()
 end
 
+--设置食物以及服饰研究成功时界面
 function  RollCtrl:handleGoodsResult(data)
     if data then
         panel.resultRoot.localScale = Vector3.one
@@ -317,11 +324,13 @@ function  RollCtrl:handleGoodsResult(data)
     end
 end
 
+--研究失败
 function RollCtrl:fail()
     panel.resultRoot.localScale = Vector3.one
     panel.FailRoot.localScale = Vector3.one
 end
 
+--关闭所有节点
 function RollCtrl:closeAllRoot()
     panel.EvaRoots.localScale = Vector3.zero
     panel.FailRoot.localScale = Vector3.zero

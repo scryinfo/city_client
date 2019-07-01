@@ -1,3 +1,4 @@
+--研究所队列界面item
 
 InventGoodQueneItem = class('InventGoodQueneItem')
 
@@ -31,6 +32,7 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
     luaBehaviour:AddClick(self.delete,self.c_OnClick_Delete,self)
     luaBehaviour:AddClick(self.rollBtn.gameObject,self.c_OnClick_Roll,self)
 
+    --设置倒计时时间
     self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
     if self.currentTime >= self.data.beginProcessTs and self.currentTime <= self.data.beginProcessTs + self.data.times*3600000  then
         local  function UpData()
@@ -58,7 +60,7 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
     self:Refresh(data)
 end
 ---==========================================================================================点击函数=============================================================================
---删除
+--删除研究队列
 function InventGoodQueneItem:c_OnClick_Delete(go)
     local data={ins = go,content = GetLanguage(28040043),func = function()
         DataManager.DetailModelRpcNoRet(LaboratoryCtrl.static.insId, 'm_ReqLabDeleteLine',go.data.id)
@@ -66,7 +68,7 @@ function InventGoodQueneItem:c_OnClick_Delete(go)
     ct.OpenCtrl('ReminderCtrl',data)
 end
 
---删除
+--开启掷点界面
 function InventGoodQueneItem:c_OnClick_Roll(ins)
     ct.OpenCtrl("RollCtrl" , ins.data)
 end
@@ -78,6 +80,7 @@ function InventGoodQueneItem:updateData( data )
     self.data=data
     self:updateUI(data)
 end
+
 
 function InventGoodQueneItem:updateUI(data)
     if data.goodCategory ~= 0 then
@@ -126,10 +129,10 @@ function InventGoodQueneItem:updateUI(data)
 
     --自已与他人区分
     local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
-    if playerId == data.proposerId then -- 自己的线
+    if playerId == data.proposerId then              --自己的线
         self.myBg.localScale = Vector3.one
         if LaboratoryCtrl.static.buildingOwnerId == data.proposerId then -- 并且是自己的建筑
-            if data.availableRoll > 0 then -- 第一条线
+            if data.availableRoll > 0 then                               -- 第一条线
                 self.delete.transform.localScale = Vector3.zero
                 self.rollBtn.localScale = Vector3.one
                 self.rollBtnText.text = "x" .. tostring(data.availableRoll)
@@ -163,6 +166,7 @@ function InventGoodQueneItem:c_OnHead(info)
     AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.15)
     self.name.text = info[1].name
 end
+
 
 function InventGoodQueneItem:updateSlider(data)
     currTime = TimeSynchronized.GetTheCurrentServerTime()

@@ -199,7 +199,10 @@ function FlightDetailCtrl:_search(value)
         value.amount = tempBet.amount
         value.win = tempBet.win
     else
-        if flightData.FlightState == "计划" then
+        local plan = getTimeUnixByFormat(flightData.FlightDeptimePlanDate)
+        if self:_checkZoneTime(plan, flightData.orgTimeZoneHours) == false then
+            --flightData.FlightState == "计划"
+            --self:_checkZoneTime(plan, flightData.orgTimeZoneHours) == false
             FlightDetailPanel.betBtn.localScale = Vector3.one  --可以下注
         else
             FlightDetailPanel.infoRoot.localScale = Vector3.one
@@ -228,6 +231,15 @@ function FlightDetailCtrl:_search(value)
         FlightDetailPanel.value01Text.text = value.delay..GetLanguage(20160005)  --预测延误时间
         FlightDetailPanel.value02Text.text = delay..GetLanguage(20160005)  --实际延误时间
     end
+end
+--判断是否已过某时区时间
+function FlightDetailCtrl:_checkZoneTime(startTime, zone)
+    local serverTime = TimeSynchronized.GetTheCurrentTime()  --服务器当前时间
+    local turnTime = startTime + (FlightConfig.ChenDuZone - zone) * 3600  --对应时区在服务器的时间  --默认服务器是UTF+8
+    if serverTime >= turnTime then
+        return true
+    end
+    return false
 end
 --
 function FlightDetailCtrl:_language()

@@ -108,6 +108,7 @@ function PersonalHomeDialogPageCtrl:_getComponent(go)
 end
 ---初始化
 function PersonalHomeDialogPageCtrl:_initData()
+    local tempStr = self.m_data.des
     if self.m_data.id ~= DataManager.GetMyOwnerID() then
         self.otherOpen.localScale = Vector3.one
         self.changeSayBtn.localScale = Vector3.zero
@@ -122,7 +123,7 @@ function PersonalHomeDialogPageCtrl:_initData()
         end
 
         if self.m_data.des == nil or self.m_data.des == "" then
-            self.m_data.des = GetLanguage(17020007)  --默认值
+            tempStr = GetLanguage(17020007)  --默认值
         end
 
         --
@@ -138,7 +139,7 @@ function PersonalHomeDialogPageCtrl:_initData()
         self.competitivenessRoot.localScale = Vector3.zero
 
         if self.m_data.des == nil or self.m_data.des == "" then
-            self.m_data.des = GetLanguage(17010004)  --默认值
+            tempStr = GetLanguage(17010004)  --默认值
         end
         self.scoreText.text = DataManager.GetMyFlightScore()
         self.moneyRoot.localScale = Vector3.one
@@ -157,7 +158,7 @@ function PersonalHomeDialogPageCtrl:_initData()
         self.maleTran.localScale = Vector3.one
     end
 
-    self.sayText.text = self.m_data.des
+    self.sayText.text = tempStr
     self.nameText.text = self.m_data.name
     self.nameText.rectTransform.sizeDelta = Vector2.New(self.nameText.preferredWidth + 50, self.nameText.rectTransform.sizeDelta.y)  --加一个性别图片的宽度
     self.companyText.text = self.m_data.companyName
@@ -175,19 +176,17 @@ end
 --修改des
 function PersonalHomeDialogPageCtrl:_changeDesFunc(ins)
     PlayMusEff(1002)
-    ct.OpenCtrl("LongInputDialogPageCtrl", {placeholderContent = GetLanguage(17010003), btnCallBack = function (str)
+    local temp = {inputDefaultStr = GetLanguage(17010003), characterLimit = 30, titleInfo = GetLanguage(17010002), contentStr = ins.m_data.des
+    , btnCallBack = function (str)
         if str == "" or str == nil then
             str = GetLanguage(17020007)
         end
         ins:_reqChangeDesToServer(str)
         DataManager.SetMyPersonalHomepageDesInfo(str)
-
         ins.sayText.text = ins.m_data.des
-        --if ins.m_data.id == DataManager.GetMyOwnerID() then
-        --    ins.m_data.des = GetLanguage(4301013)  --默认值
-        --end
         ins.sayText.text = str
-    end})
+    end}
+    ct.OpenCtrl("BigInputCtrl", temp)
 end
 --请求加好友
 function PersonalHomeDialogPageCtrl:_reqAddFriend(ins)
@@ -235,6 +234,7 @@ function PersonalHomeDialogPageCtrl:_nameBtnFunc(ins)
     PlayMusEff(1002)
     local data = {}
     data.titleInfo = GetLanguage(17020001)
+    data.limit = 6
     data.inputDefaultStr = GetLanguage(17020002)
     data.btnCallBack = function(name)
         ins:_reqChangePlayerName(name)

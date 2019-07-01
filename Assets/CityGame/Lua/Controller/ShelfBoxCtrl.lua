@@ -350,7 +350,7 @@ function ShelfBoxCtrl:InputUpdateText()
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             self.advicePriceText.text = ct.CalculationMaterialCompetitivePower(self.guidePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            self.advicePriceText.text = ct.CalculationFactoryCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,self.averageScore,self.score)
+            self.advicePriceText.text = ct.CalculationFactoryCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,self.score,self.averageScore)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             self.advicePriceText.text = ct.CalculationSupermarketCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,
                     self.playerGoodsScore,self.playerBuildingScore,self.averageScore,self.averageBuildingScore)

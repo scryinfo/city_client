@@ -293,10 +293,11 @@ end
 --推荐定价
 function ResearchDetailPart:n_OnLaboratoryGuidePrice(info)
     --self.m_data.laboratoryGuidePrice = info
-    self.m_data.RDAbility = (info.labPrice[1].goodProb * 2 + info.labPrice[1].evaProb) / 2
+
+    self.m_data.RDAbility = info.labPrice[1].curProb
     self.m_data.guidePrice = info.labPrice[1].guidePrice
     --TODO://计算公式错误
-    self.m_data.averageRDAbility = (info.labPrice[1].goodProb * 2 + info.labPrice[1].evaProb) / 2
+    self.m_data.averageRDAbility = info.labPrice[1].avgProb
     self:c_UpdateInventSet()
 end
 

@@ -167,6 +167,7 @@ function InventGoodQueneItem:c_OnHead(info)
     self.name.text = info[1].name
 end
 
+
 function InventGoodQueneItem:updateSlider(data)
     currTime = TimeSynchronized.GetTheCurrentServerTime()
     local remmindTime = currTime - data.beginProcessTs

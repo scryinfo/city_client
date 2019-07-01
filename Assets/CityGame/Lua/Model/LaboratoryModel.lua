@@ -22,12 +22,12 @@ end
 --启动事件--
 function LaboratoryModel:_addListener()
     --网络回调注册
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo,self)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labExclusive","gs.LabExclusive",self.n_OnReceiveLabExclusive,self)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labAddLine","gs.LabAddLineACK",self.n_OnReceiveLabLineAdd,self)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labCancelLine","gs.LabCancelLine",self.n_OnReceiveDelLine,self);
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.LabRollACK",self.n_OnReceiveLineChange,self)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChangeInform","gs.LabLineInform",self.n_OnReceivelabLineChangeInform,self)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labExclusive","gs.LabExclusive",self.n_OnReceiveLabExclusive)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labAddLine","gs.LabAddLineACK",self.n_OnReceiveLabLineAdd)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labCancelLine","gs.LabCancelLine",self.n_OnReceiveDelLine);
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.LabRollACK",self.n_OnReceiveLineChange)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChangeInform","gs.LabLineInform",self.n_OnReceivelabLineChangeInform)
 
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)

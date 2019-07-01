@@ -111,7 +111,7 @@ function InputDialogPageCtrl:setPlayerNameCallback(data)
             Event.Brocast("SmallPop", GetLanguage(17020003), ReminderType.Warning)
         elseif data.reason == "roleNameSetInCd" then
             --self.errorTipText.text = GetLanguage(17020005)
-            Event.Brocast("SmallPop", GetLanguage(17020005), ReminderType.Warning)
+            Event.Brocast("SmallPop", GetLanguage(17020008), ReminderType.Warning)
         end
     else
         Event.Brocast("SmallPop", GetLanguage(17020006), ReminderType.Succeed)

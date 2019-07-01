@@ -112,7 +112,8 @@ end
 
 -- 跳转到场景上土地的位置
 function LandInfoItem:_goPos()
-    UIPanel.ClosePage()
+    --UIPanel.ClosePage()
+    UIPanel.CloseAllPageExceptMain()
     local id = TerrainManager.GridIndexTurnBlockID(self.data)
     local targetPos = TerrainManager.BlockIDTurnPosition(id)
     CameraMove.MoveCameraToPos(targetPos)

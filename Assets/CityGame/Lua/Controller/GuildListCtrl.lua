@@ -212,12 +212,12 @@ function GuildListCtrl:OnSure(go)
     elseif string.len(describeInputText) == 0 or describeInputText == "" then
         Event.Brocast("SmallPop", GetLanguage(12060024),80)
         return
-    elseif string.len(guildNameInputText) > 21 then
-        Event.Brocast("SmallPop",GetLanguage(12060023),80)
-        return
-    elseif string.len(describeInputText) > 30 then
-        Event.Brocast("SmallPop",GetLanguage(12060025),80)
-        return
+    --elseif string.len(guildNameInputText) > 21 then
+    --    Event.Brocast("SmallPop",GetLanguage(12060023),80)
+    --    return
+    --elseif string.len(describeInputText) > 30 then
+    --    Event.Brocast("SmallPop",GetLanguage(12060025),80)
+    --    return
     end
 
     GuildListPanel.createRoot.localScale =Vector3.zero

@@ -448,27 +448,27 @@ function getPriceString(str, intSize, floatSize)
     return finalStr
 end
 function getMoneyString(str)
-	local b
-	local index = string.find(str, '%.')
-	if not index then
-		index = #tostring(str)
-	else
-		index = index - 1
-	end
-	local intString = string.sub(str, 1, index)
-	local floatString = string.sub(str, index + 1)
-	local n = math.floor(index / 3)
-	local a = index % 3
-	local temp
-	b = string.sub(intString,1,a)
-	for i = 1, n do
-		temp = string.sub(intString,(a + 1) + 3*(i-1),(a + 3) + 3*(i-1))
-		b = b .. "," .. temp
-	end
-	if a == 0 then
-		b = string.sub(b,2)
-	end
-	return b..floatString
+    local b
+    local index = string.find(str, '%.')
+    if not index then
+        index = #tostring(str)
+    else
+        index = index - 1
+    end
+    local intString = string.sub(str, 1, index)
+    local floatString = string.sub(str, index + 1)
+    local n = math.floor(index / 3)
+    local a = index % 3
+    local temp
+    b = string.sub(intString,1,a)
+    for i = 1, n do
+        temp = string.sub(intString,(a + 1) + 3*(i-1),(a + 3) + 3*(i-1))
+        b = b .. "," .. temp
+    end
+    if a == 0 then
+        b = string.sub(b,2)
+    end
+    return b..floatString
 end
 
 currentLanguage={}
@@ -485,38 +485,38 @@ sprite_jap={}
 
 
 function ReadConfigLanguage()
-	chinese = Language_Chinese
-	english = Language_English
-	korean =Language_Korean
-	japanese = Language_Japanese
+    chinese = Language_Chinese
+    english = Language_English
+    korean =Language_Korean
+    japanese = Language_Japanese
 
-	sprite_chi = Sprite_Chinese
-	sprite_eng = Sprite_English
-	sprite_kor = Sprite_Korean
-	sprite_jap = Sprite_Japanese
+    sprite_chi = Sprite_Chinese
+    sprite_eng = Sprite_English
+    sprite_kor = Sprite_Korean
+    sprite_jap = Sprite_Japanese
 
     local num = UnityEngine.PlayerPrefs.GetInt("Language")
-	SaveLanguageSettings(num)
+    SaveLanguageSettings(num)
 end
 
 function SaveLanguageSettings(languageType)
-	if languageType == LanguageType.Chinese then
-		UnityEngine.PlayerPrefs.SetInt("Language",0)
-		currentLanguage=chinese
-		currentSprite=sprite_chi
-	elseif languageType==LanguageType.English then
-		UnityEngine.PlayerPrefs.SetInt("Language",1)
-		currentLanguage=english
-		currentSprite=sprite_eng
-	elseif languageType == LanguageType.Korean then
-		UnityEngine.PlayerPrefs.SetInt("Language",2)
-		currentLanguage = korean
-		currentSprite = sprite_kor
-	elseif languageType==LanguageType.Japanese then
-		UnityEngine.PlayerPrefs.SetInt("Language",3)
-		currentLanguage = japanese
-		currentSprite = sprite_jap
-	end
+    if languageType == LanguageType.Chinese then
+        UnityEngine.PlayerPrefs.SetInt("Language",0)
+        currentLanguage=chinese
+        currentSprite=sprite_chi
+    elseif languageType==LanguageType.English then
+        UnityEngine.PlayerPrefs.SetInt("Language",1)
+        currentLanguage=english
+        currentSprite=sprite_eng
+    elseif languageType == LanguageType.Korean then
+        UnityEngine.PlayerPrefs.SetInt("Language",2)
+        currentLanguage = korean
+        currentSprite = sprite_kor
+    elseif languageType==LanguageType.Japanese then
+        UnityEngine.PlayerPrefs.SetInt("Language",3)
+        currentLanguage = japanese
+        currentSprite = sprite_jap
+    end
 end
 
 function SaveBuildingBubbleSettings(bubbleType)
@@ -535,7 +535,10 @@ function GetLanguage(key, ...)
             return tempString
         end
     end
-    return key .. "没有设置"
+    --if key ~= nil then
+    --    return key .. "没有设置"
+    --end
+    return GetLanguage(41010014)
 end
 
 function GetSprite(key)
@@ -544,7 +547,8 @@ function GetSprite(key)
     if path then
         return path
     else
-        return key .. "没有设置"
+        --return key .. "没有设置"
+        return GetLanguage(41010014)
     end
 end
 ---生成预制
@@ -887,30 +891,30 @@ local cnDefaultLength = 27  --默认显示的中文字符长度，一个中字�
 local enDefaultLength = 16
 
 function ct.getFlightSubString(value, cnLen, enLen , koLen ,jpLen)
-	local result = value
-	local language = currentLanguage
-	if language == Language_Chinese then
-		if cnLen == nil then cnLen = cnDefaultLength end
-		if #value > cnLen then
-			result = string.sub(value, 1, cnLen).."..."
-		end
-	elseif language == Language_English then
-		if enLen == nil then enLen = enDefaultLength end
-		if #value > enLen then
-			result = string.sub(value, 1, enLen).."..."
-		end
-	elseif language == Language_Korean then
-		if koLen == nil then koLen = cnDefaultLength end
-		if #value > koLen then
-			result = string.sub(value, 1, koLen).."..."
-		end
-	elseif language == Language_Japanese then
-		if jpLen == nil then jpLen = cnDefaultLength end
-		if #value > jpLen then
-			result = string.sub(value, 1, jpLen).."..."
-		end
-	end
-	return result
+    local result = value
+    local language = currentLanguage
+    if language == Language_Chinese then
+        if cnLen == nil then cnLen = cnDefaultLength end
+        if #value > cnLen then
+            result = string.sub(value, 1, cnLen).."..."
+        end
+    elseif language == Language_English then
+        if enLen == nil then enLen = enDefaultLength end
+        if #value > enLen then
+            result = string.sub(value, 1, enLen).."..."
+        end
+    elseif language == Language_Korean then
+        if koLen == nil then koLen = cnDefaultLength end
+        if #value > koLen then
+            result = string.sub(value, 1, koLen).."..."
+        end
+    elseif language == Language_Japanese then
+        if jpLen == nil then jpLen = cnDefaultLength end
+        if #value > jpLen then
+            result = string.sub(value, 1, jpLen).."..."
+        end
+    end
+    return result
 end
 
 local PRIDMagnification = 10000000   --推荐定价表ID倍率
@@ -936,15 +940,15 @@ end
 --原料ID：materialID（7位ID）
 
 function ct.CalculationMaterialCompetitivePower(recommendedPricing,price,materialID)
-	if price <= 0 then
-		return CalculationNBitAfterDecimalPoint(100)
-	end
-	if recommendedPricing <= 0 then
-		--推荐定价 = 推荐定价表
-		recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
-	end
-	--竞争力 = 推荐定价 / 定价 * 1000 (整数)
-	return (CalculationNBitAfterDecimalPoint((recommendedPricing/ price * CPMagnification )))
+    if price <= 0 then
+        return CalculationNBitAfterDecimalPoint(100)
+    end
+    if recommendedPricing <= 0 then
+        --推荐定价 = 推荐定价表
+        recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
+    end
+    --竞争力 = 推荐定价 / 定价 * 1000 (整数)
+    return (CalculationNBitAfterDecimalPoint((recommendedPricing/ price * CPMagnification )))
 end
 
 ---计算原料厂推荐定价
@@ -966,19 +970,19 @@ end
 --推广能力:competitivePower  -- 所有不同类型推广能力和 / 4
 --推广类型:Advertisementtype  --2251食品推广  2252服饰推广   13零售店推广   14住宅推广
 function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,competitivePower,Advertisementtype,averageRDAbility)
-	if price <= 0 then
-		return CalculationNBitAfterDecimalPoint(100)
-	end
+    if price <= 0 then
+        return CalculationNBitAfterDecimalPoint(100)
+    end
 
-	if recommendedPricing <= 0 then
-		--推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
-		recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
-		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
-		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
-	else
-		--竞争力 = 推荐定价 / (定价/推广能力) * 1000 (整数)
-		return  CalculationNBitAfterDecimalPoint((recommendedPricing / price ) * (competitivePower / averageRDAbility) * CPMagnification )
-	end
+    if recommendedPricing <= 0 then
+        --推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
+        recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
+        --竞争力 = 推荐定价 / 定价  * 1000 (整数)
+        return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
+    else
+        --竞争力 = 推荐定价 / (定价/推广能力) * 1000 (整数)
+        return  CalculationNBitAfterDecimalPoint((recommendedPricing / price ) * (competitivePower / averageRDAbility) * CPMagnification )
+    end
 end
 
 ---计算推广公司推荐默认值
@@ -1030,17 +1034,17 @@ end
 --玩家商品评分:commodityScore
 --销售均评分:averageSalesScore(找服务器要)
 function ct.CalculationFactoryCompetitivePower(recommendedPricing,price,commodityID,commodityScore,averageSalesScore)
-	if price <= 0 then
-		return CalculationNBitAfterDecimalPoint(100)
-	end
-	if recommendedPricing <= 0 then
-		--推荐定价 = 推荐定价表
-		recommendedPricing = Competitive[12 * PRIDMagnification + commodityID]
-		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
-		return CalculationNBitAfterDecimalPoint((recommendedPricing / price * ( commodityScore / 25) * CPMagnification))
-	end
-	--竞争力 = (全城成交均价 * 玩家商品评分)/ (定价 * 销售均评分) * 1000 (整数)
-	return (CalculationNBitAfterDecimalPoint(((recommendedPricing /price )/ ((commodityScore * averageSalesScore) / 25 ) * CPMagnification)))
+    if price <= 0 then
+        return CalculationNBitAfterDecimalPoint(100)
+    end
+    if recommendedPricing <= 0 then
+        --推荐定价 = 推荐定价表
+        recommendedPricing = Competitive[12 * PRIDMagnification + commodityID]
+        --竞争力 = 推荐定价 / 定价  * 1000 (整数)
+        return CalculationNBitAfterDecimalPoint((recommendedPricing / price * ( commodityScore / 25) * CPMagnification))
+    end
+    --竞争力 = (全城成交均价 * 玩家商品评分)/ (定价 * 销售均评分) * 1000 (整数)
+    return (CalculationNBitAfterDecimalPoint(((recommendedPricing /price )/ ((commodityScore * averageSalesScore) / 25 ) * CPMagnification)))
 end
 
 ---计算加工厂推荐定价
@@ -1053,13 +1057,13 @@ function ct.CalculationProcessingSuggestPrice(recommendedPricing,goodsID,commodi
     end
     return recommendedPricing
 
-	--if averageSalesScore <= 0 then averageSalesScore = 1 end
+    --if averageSalesScore <= 0 then averageSalesScore = 1 end
     --
-	--if recommendedPricing <= 0 then
-	--	recommendedPricing = Competitive[12 * PRIDMagnification + goodsID]
-	--	return recommendedPricing *((commodityScore / averageSalesScore) / 25 )
-	--end
-	--return recommendedPricing * ((commodityScore / averageSalesScore) / 25 )
+    --if recommendedPricing <= 0 then
+    --	recommendedPricing = Competitive[12 * PRIDMagnification + goodsID]
+    --	return recommendedPricing *((commodityScore / averageSalesScore) / 25 )
+    --end
+    --return recommendedPricing * ((commodityScore / averageSalesScore) / 25 )
 end
 
 ---计算零售店竞争力
@@ -1071,17 +1075,17 @@ end
 --全城销售均商品评分:averageSalesScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationSupermarketCompetitivePower(recommendedPricing,price,commodityID,commodityScore,shopScore,averageSalesScore,averageShopScore)
-	if price <= 0 then
-		return CalculationNBitAfterDecimalPoint(100)
-	end
-	if recommendedPricing <= 0 then
-		--推荐定价 = 推荐定价表
-		recommendedPricing = Competitive[13 * PRIDMagnification + commodityID]
-		--竞争力 = 推荐定价 / 定价  * 1000 (整数)
-		return CalculationNBitAfterDecimalPoint(recommendedPricing / price * ((commodityScore+ shopScore)/25 ) * CPMagnification)
-	end
-	--竞争力 = (推荐定价 * (玩家商品评分+玩家店铺评分))/ (定价 * (全城销售均商品评分+全城销售均店铺评分)) * 1000
-	return CalculationNBitAfterDecimalPoint((recommendedPricing  / price)* (commodityScore + shopScore)/ ((averageSalesScore + averageShopScore) / 25) * CPMagnification)
+    if price <= 0 then
+        return CalculationNBitAfterDecimalPoint(100)
+    end
+    if recommendedPricing <= 0 then
+        --推荐定价 = 推荐定价表
+        recommendedPricing = Competitive[13 * PRIDMagnification + commodityID]
+        --竞争力 = 推荐定价 / 定价  * 1000 (整数)
+        return CalculationNBitAfterDecimalPoint(recommendedPricing / price * ((commodityScore+ shopScore)/25 ) * CPMagnification)
+    end
+    --竞争力 = (推荐定价 * (玩家商品评分+玩家店铺评分))/ (定价 * (全城销售均商品评分+全城销售均店铺评分)) * 1000
+    return CalculationNBitAfterDecimalPoint((recommendedPricing  / price)* (commodityScore + shopScore)/ ((averageSalesScore + averageShopScore) / 25) * CPMagnification)
 end
 
 ---计算零售店默认输入值
@@ -1096,11 +1100,11 @@ function ct.CalculationRetailSuggestPrice(recommendedPricing,goodsID,commoditySc
     end
     return recommendedPricing
 
-	--if recommendedPricing <= 0 then
-	--	recommendedPricing = Competitive[13 * PRIDMagnification + goodsID]
-	--	return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )
-	--end
-	--return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )
+    --if recommendedPricing <= 0 then
+    --	recommendedPricing = Competitive[13 * PRIDMagnification + goodsID]
+    --	return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )
+    --end
+    --return recommendedPricing * (commodityScore + shopScore) / ((averageSalesScore + averageShopScore)/25 )
 end
 
 ---计算住宅竞争力
@@ -1109,20 +1113,20 @@ end
 --玩家店铺评分:shopScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationHouseCompetitivePower(recommendedPricing,price,shopScore,averageShopScore)
-	if price <= 0 then
-		return CalculationNBitAfterDecimalPoint(100)
-	end
-	if averageShopScore <= 0 then
-		averageShopScore = 1
-	end
-	if recommendedPricing <= 0 then
-		--推荐定价 = 推荐定价表
-		recommendedPricing = Competitive[14 * PRIDMagnification]
-		--竞争力 = (推荐定价 / 定价) * (玩家店铺评分 / 全城销售均店铺评分) /25 * 50(整数)
-		return  CalculationNBitAfterDecimalPoint(recommendedPricing / price * (shopScore / BargainingPower) * CPMagnification)
-	end
-	--竞争力 = (推荐定价 * 玩家店铺评分)/ (定价 * 全城销售均店铺评分) * 1000 (整数)
-	return  CalculationNBitAfterDecimalPoint((recommendedPricing / price)*( shopScore /  averageShopScore) / BargainingPower * CPMagnification)
+    if price <= 0 then
+        return CalculationNBitAfterDecimalPoint(100)
+    end
+    if averageShopScore <= 0 then
+        averageShopScore = 1
+    end
+    if recommendedPricing <= 0 then
+        --推荐定价 = 推荐定价表
+        recommendedPricing = Competitive[14 * PRIDMagnification]
+        --竞争力 = (推荐定价 / 定价) * (玩家店铺评分 / 全城销售均店铺评分) /25 * 50(整数)
+        return  CalculationNBitAfterDecimalPoint(recommendedPricing / price * (shopScore / BargainingPower) * CPMagnification)
+    end
+    --竞争力 = (推荐定价 * 玩家店铺评分)/ (定价 * 全城销售均店铺评分) * 1000 (整数)
+    return  CalculationNBitAfterDecimalPoint((recommendedPricing / price)*( shopScore /  averageShopScore) / BargainingPower * CPMagnification)
 end
 ---计算住宅推荐定价
 --推荐定价:recommendedPricing\
@@ -1135,15 +1139,15 @@ function ct.CalculationHouseSuggestPrice(recommendedPricing,shopScore,averageSho
     end
     return recommendedPricing
 
-	--if averageShopScore <= 0 then
-	--	averageShopScore = 1
-	--end
-	--if recommendedPricing <= 0 then
-	--	--推荐定价 = 推荐定价表
-	--	recommendedPricing = Competitive[14 * PRIDMagnification]
-	--	return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
-	--end
-	--return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
+    --if averageShopScore <= 0 then
+    --	averageShopScore = 1
+    --end
+    --if recommendedPricing <= 0 then
+    --	--推荐定价 = 推荐定价表
+    --	recommendedPricing = Competitive[14 * PRIDMagnification]
+    --	return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
+    --end
+    --return recommendedPricing * ((shopScore/averageShopScore)/BargainingPower)
 end
 
 --航班预测根据机场二字码得到对应多语言

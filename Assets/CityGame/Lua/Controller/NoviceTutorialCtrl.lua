@@ -29,17 +29,6 @@ function NoviceTutorialCtrl:Awake()
     self.tutorialVideoSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.tutorialVideoSource.mProvideData = NoviceTutorialCtrl.static.tutorialVideoData
     self.tutorialVideoSource.mClearData = NoviceTutorialCtrl.static.tutorialVideoClearData
-
-    self.tutorialChoiceItems = {}
-    for i = 1, #NoviceTutorialConfig do
-        local function callback(obj)
-            self.tutorialChoiceItems[i] = TutorialChoiceItem:new(obj, i, self)
-            if i == 1 then
-                self.tutorialChoiceItems[1]:_onClickBtn()
-            end
-        end
-        DynamicLoadPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScroll, nil, callback)
-    end
 end
 
 function NoviceTutorialCtrl:Active()
@@ -50,8 +39,19 @@ function NoviceTutorialCtrl:Active()
 end
 
 function NoviceTutorialCtrl:Refresh()
-    if self.tutorialChoiceItems[1] then
+    if self.tutorialChoiceItems then
         self.tutorialChoiceItems[1]:_onClickBtn()
+    else
+        self.tutorialChoiceItems = {}
+        for i = 1, #NoviceTutorialConfig do
+            local function callback(obj)
+                self.tutorialChoiceItems[i] = TutorialChoiceItem:new(obj, i, self)
+                if i == 1 then
+                    self.tutorialChoiceItems[1]:_onClickBtn()
+                end
+            end
+            DynamicLoadPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScroll, nil, callback)
+        end
     end
 end
 

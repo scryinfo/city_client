@@ -28,6 +28,7 @@ function FriendslistPanel.InitPanel()
 
     --好友搜索及按钮
     this.searchInputField = transform:Find("MiddleRoot/Bg/SearchInputField").gameObject
+    this.searchInputFieldPlaceholder = transform:Find("MiddleRoot/Bg/SearchInputField/Placeholder"):GetComponent("Text")
     this.searchBtn = transform:Find("MiddleRoot/Bg/SearchInputField/SearchBtn").gameObject
 
     --好友群组滑动框显示

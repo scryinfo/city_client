@@ -122,6 +122,7 @@ function FriendslistCtrl:_initState()
         if FriendslistCtrl.static.isAddfriends then
             FriendslistCtrl.static.isAddfriends = false
         else
+            FriendslistPanel.searchInputFieldPlaceholder.text = GetLanguage(13040008)
             FriendslistPanel.panelNameText.text = GetLanguage(13040001) --"ADD NEW FRIENDS"
             FriendslistPanel.blacklistNumberImage:SetActive(false)
             FriendslistPanel.blacklistNumberText.text = ""

@@ -129,8 +129,8 @@ end
 --多语言
 function ResearchPart:updateLanguage()
     self.queneText.text = GetLanguage(28040044)
-    --self.priceText
-    --self.TimeText
+    self.priceText.text = GetLanguage(28010006)
+    self.TimeText.text = GetLanguage(28010007)
     self.title.text = GetLanguage(28050002)
     self.title1.text = GetLanguage(28040036)
     self.UnselectBtntext.text = GetLanguage(28040036)

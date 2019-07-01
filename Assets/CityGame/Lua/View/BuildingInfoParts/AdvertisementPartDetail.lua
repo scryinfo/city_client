@@ -209,6 +209,9 @@ end
 
 --推荐定价
 function AdvertisementPartDetail:n_OnPromoteGuidePrice(info)
+    if self.m_data == nil then
+        return
+    end
     self.m_data.guidePrice = 0
     self.m_data.guidePrice = info.proPrice[1].guidePrice
     self.m_data.RDAbility = 0

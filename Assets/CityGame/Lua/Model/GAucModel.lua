@@ -257,7 +257,7 @@ end
 --收到拍卖中的土地信息
 function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream, msgId)
 
-    if stream == nil or stream == "" or #stream == 0 then
+    if stream == nil or stream == "" or stream.auction == nil then
         local time = TimeSynchronized.GetTheCurrentTime()
         for i, value in ipairs(GroundAucConfig) do
             if value.beginTime > time then
@@ -273,6 +273,7 @@ function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream, msgId)
     end
 
     this.getNowAucDataFunc(msgGroundAuc)
+
 end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？

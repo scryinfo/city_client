@@ -9,6 +9,7 @@ function TradeInfoItem:initialize(dataInfo, viewRect)
     self.dataInfo = dataInfo
     self.viewRect = viewRect
     local viewTrans = self.viewRect
+    viewTrans.localScale = Vector3.one
 
     self.name = viewTrans:Find("name"):GetComponent("Text")
     self.state = viewTrans:Find("name/state"):GetComponent("Image")

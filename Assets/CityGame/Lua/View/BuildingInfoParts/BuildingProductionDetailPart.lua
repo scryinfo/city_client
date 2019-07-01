@@ -319,6 +319,7 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --刷新时间
 function BuildingProductionDetailPart:Update()
+    --刷新时间有问题，但不影响流程
     if self.isBoolCapacity == true then
         UpdateBeat:Remove(self.Update,self)
         self.timeSlider.value = 0
@@ -329,7 +330,7 @@ function BuildingProductionDetailPart:Update()
         local goodsKey = 22
         if Math_Floor(self.itemId / 100000) == goodsKey then
             --原料不足时
-            ----这个要测试材料不足的情况
+            --这个要测试材料不足的情况
             if self.isBoolMaterial == true then
                 UpdateBeat:Remove(self.Update,self)
                 self.timeSlider.value = 0

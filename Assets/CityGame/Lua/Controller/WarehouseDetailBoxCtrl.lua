@@ -136,11 +136,21 @@ end
 --上架成功后刷新
 function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
     for key,value in pairs(self.m_data.info.store.inHand) do
-        if value.key.id == dataInfo.item.key.id then
-            if value.n == dataInfo.item.n then
-                table.remove(self.m_data.info.store.inHand,key)
-            else
-                value.n = value.n - dataInfo.item.n
+        if ToNumber(StringSun(dataInfo.item.key.id,1,2)) == 21 then
+            if value.key.id == dataInfo.item.key.id then
+                if value.n == dataInfo.item.n then
+                    table.remove(self.m_data.info.store.inHand,key)
+                else
+                    value.n = value.n - dataInfo.item.n
+                end
+            end
+        elseif ToNumber(StringSun(dataInfo.item.key.id,1,2)) == 22 then
+            if value.key.id == dataInfo.item.key.id and value.key.producerId == dataInfo.item.key.producerId then
+                if value.n == dataInfo.item.n then
+                    table.remove(self.m_data.info.store.inHand,key)
+                else
+                    value.n = value.n - dataInfo.item.n
+                end
             end
         end
     end

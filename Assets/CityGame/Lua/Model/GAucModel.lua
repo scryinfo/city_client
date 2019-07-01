@@ -273,6 +273,7 @@ function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream, msgId)
     end
 
     this.getNowAucDataFunc(msgGroundAuc)
+
 end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？

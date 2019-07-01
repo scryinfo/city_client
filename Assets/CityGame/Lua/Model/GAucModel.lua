@@ -256,7 +256,6 @@ end
 --- 回调 ---
 --收到拍卖中的土地信息
 function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream, msgId)
-
     if stream == nil or stream == "" or stream.auction == nil then
         local time = TimeSynchronized.GetTheCurrentTime()
         for i, value in ipairs(GroundAucConfig) do
@@ -273,7 +272,6 @@ function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream, msgId)
     end
 
     this.getNowAucDataFunc(msgGroundAuc)
-
 end
 
 --拍卖出价回调 --出价成功之后会不会有提示信息？
@@ -318,10 +316,11 @@ end
 --拍卖结束
 function GAucModel.n_OnReceiveAuctionEnd(stream, msgId)
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnReceiveAuctionEnd："..stream.reason
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        --local info = {}
+        --info.titleInfo = "Error"
+        --info.contentInfo = "GAucModel.n_OnReceiveAuctionEnd："..stream.reason
+        --ct.OpenCtrl("BtnDialogPageCtrl", info)
+        Event.Brocast("SmallPop", GetLanguage(41010013), ReminderType.Warning)
         return
     end
     if stream == nil or stream == "" then
@@ -335,10 +334,11 @@ end
 --拍卖成功
 function GAucModel.n_OnReceiveWinBid(stream, msgId)
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnReceiveWinBid："..stream.reason
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        --local info = {}
+        --info.titleInfo = "Error"
+        --info.contentInfo = "GAucModel.n_OnReceiveWinBid："..stream.reason
+        --ct.OpenCtrl("BtnDialogPageCtrl", info)
+        Event.Brocast("SmallPop", GetLanguage(41010013), ReminderType.Warning)
         return
     end
     if stream == nil or stream == "" then
@@ -352,10 +352,11 @@ end
 --拍卖失败
 function GAucModel.n_OnReceiveFailBid(stream, msgId)
     if msgId == 0 then
-        local info = {}
-        info.titleInfo = "Error"
-        info.contentInfo = "GAucModel.n_OnReceiveFailBid："..stream.reason
-        ct.OpenCtrl("BtnDialogPageCtrl", info)
+        --local info = {}
+        --info.titleInfo = "Error"
+        --info.contentInfo = "GAucModel.n_OnReceiveFailBid："..stream.reason
+        --ct.OpenCtrl("BtnDialogPageCtrl", info)
+        Event.Brocast("SmallPop", GetLanguage(41010013), ReminderType.Warning)
         return
     end
     if stream == nil or stream == "" then

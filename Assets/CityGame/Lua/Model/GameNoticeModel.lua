@@ -13,10 +13,8 @@ end
 
 function GameNoticeModel:OnCreate()
     --网络回调
-     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","mailRead","gs.Id",self.n_OnMailRead,self)
-     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delMail","gs.Id",self.n_OnDeleMails,self)
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","mailRead"),GameNoticeModel.n_OnMailRead);
-    --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","delMail"),GameNoticeModel.n_OnDeleMails);
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","mailRead","gs.Id",self.n_OnMailRead,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delMail","gs.Id",self.n_OnDeleMails,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnMaterialFactory,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnProduceDepartment,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","detailRetailShop","gs.RetailShop",self.n_OnDetailRetailShop,self)

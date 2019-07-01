@@ -337,7 +337,11 @@ end
 -- 显示基本信息
 function GuildOwnCtrl:c_GetSocietyInfo(societyInfo)
     GuildOwnPanel.guildNameText.text = societyInfo.name
-    GuildOwnPanel.declarationText.text = societyInfo.declaration
+    if societyInfo.declaration == "" then
+        GuildOwnPanel.declarationText.text = GetLanguage(12060044)
+    else
+        GuildOwnPanel.declarationText.text = societyInfo.declaration
+    end
     GuildOwnPanel.introduceText.text = societyInfo.introduction
 
     GuildOwnCtrl.societyMembers = societyInfo.members

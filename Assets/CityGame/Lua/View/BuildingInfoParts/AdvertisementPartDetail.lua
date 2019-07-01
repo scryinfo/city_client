@@ -45,7 +45,7 @@ function AdvertisementPartDetail:_RemoveEvent()
     Event.RemoveListener("c_PromoteCapacity",self.PromoteCapacity,self)
     Event.RemoveListener("c_PromoteBuildingCapacity",self.PromoteBuildingCapacity,self)
     Event.RemoveListener("c_competitiveness",self.Competitiveness,self)
-    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "promotionGuidePrice", self)
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "promotionGuidePrice", self.n_OnPromoteGuidePrice,self)
 end
 --
 function AdvertisementPartDetail:_RemoveClick()

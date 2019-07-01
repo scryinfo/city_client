@@ -36,9 +36,7 @@ end
 function CreateRoleModel:n_CreateNewRole(pMsg, msgId)
     --异常处理
     if msgId == 0 then
-        if pMsg.reason == 'notAllow' then
-            Event.Brocast("c_SameName")
-        end
+        Event.Brocast("c_SameName",pMsg.reason)
         return
     end
 

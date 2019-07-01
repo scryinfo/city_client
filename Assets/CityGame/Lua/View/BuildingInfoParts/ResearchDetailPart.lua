@@ -215,7 +215,7 @@ end
 
 function ResearchDetailPart:_RemoveEvent()
     Event.RemoveListener("c_OnReceiveLabExclusive", self.c_OnReceiveLabExclusive, self)
-    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "laboratoryGuidePrice", self)
+    --DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "laboratoryGuidePrice", self.n_OnLaboratoryGuidePrice, self)
     DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "labSetting", self)
 end
 

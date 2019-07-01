@@ -200,7 +200,7 @@ end
 
 --删除通知回调
 function GameNoticeCtrl:c_OnDeleMails(go)
-
+     Event.Brocast("SmallPop",GetLanguage(16010029),ReminderType.Succeed)
      GameNoticeCtrl:_deleteNotice(go)
 end
 

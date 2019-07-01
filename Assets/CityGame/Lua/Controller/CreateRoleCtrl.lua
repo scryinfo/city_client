@@ -66,8 +66,8 @@ function CreateRoleCtrl:OnCreateRole(go)
     local nickname = CreateRolePanel.nickname:GetComponent('InputField').text;
     local companyname = CreateRolePanel.companyname:GetComponent('InputField').text;
     if nickname == "" or companyname == "" then
-        CreateRolePanel.duplicateText.transform.localScale = Vector3.one
-        CreateRolePanel.duplicateText.text = GetLanguage(10070009)
+        CreateRolePanel.nicknameDuplicateText.transform.localScale = Vector3.one
+        CreateRolePanel.nicknameDuplicateText.text = GetLanguage(10070009)
     else
         local data = {}
         data.nickname = nickname
@@ -79,7 +79,14 @@ function CreateRoleCtrl:OnCreateRole(go)
 end
 
 --重名
-function CreateRoleCtrl:c_SameName()
-    CreateRolePanel.duplicateText.transform.localScale = Vector3.one
-    CreateRolePanel.duplicateText.text = GetLanguage(10070005)
+function CreateRoleCtrl:c_SameName(reason)
+    if reason == "roleNameDuplicated" then
+        CreateRolePanel.companynameDuplicateText.transform.localScale = Vector3.zero
+        CreateRolePanel.nicknameDuplicateText.transform.localScale = Vector3.one
+        CreateRolePanel.nicknameDuplicateText.text = GetLanguage(10070005)
+    elseif reason == "notAllow" then
+        CreateRolePanel.companynameDuplicateText.transform.localScale = Vector3.one
+        CreateRolePanel.nicknameDuplicateText.transform.localScale = Vector3.zero
+        CreateRolePanel.companynameDuplicateText.text = GetLanguage(10070006)
+    end
 end

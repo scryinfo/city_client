@@ -960,8 +960,8 @@ function GameMainInterfaceCtrl:OnClick_EarningBtn(isShow,go)
             if incomeNotify then
                 GameMainInterfacePanel.earningScroll:ActiveLoopScroll(go.earnings, #incomeNotify)
             end
+            lastIncomeNotify = ct.deepCopy(incomeNotify)
         end
-        lastIncomeNotify = ct.deepCopy(incomeNotify)
         GameMainInterfacePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         GameMainInterfacePanel.open.transform.localScale = Vector3.zero
         GameMainInterfacePanel.opens.transform.localScale = Vector3.zero

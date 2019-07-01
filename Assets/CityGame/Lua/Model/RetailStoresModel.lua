@@ -181,7 +181,11 @@ function RetailStoresModel:n_OnOpenRetailStores(stream)
     DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", 'refreshmRetailShopDataInfo',stream)
 end
 --运输
-function RetailStoresModel:n_OnBuildingTransportInfo(data)
+function RetailStoresModel:n_OnBuildingTransportInfo(data,msgId)
+    if msgId == 0 then
+        Event.Brocast("transportSucceed",data,msgId)
+        return
+    end
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end

@@ -341,10 +341,12 @@ function BuildingProductionDetailPart:Update()
     end
 
     ---刷新总时间
-    self.time = self.time - UnityEngine.Time.unscaledDeltaTime
-    local timeTable = getTimeBySec(self.time)
-    local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
-    self.timeText.text = timeStr
+    if self.time ~= nil then
+        self.time = self.time - UnityEngine.Time.unscaledDeltaTime
+        local timeTable = getTimeBySec(self.time)
+        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        self.timeText.text = timeStr
+    end
 
     ---刷新单个时间
     --当前生产中线开始的时间
@@ -430,7 +432,10 @@ function BuildingProductionDetailPart:updateNowCount(data)
         if self.targetCount ~= nil then
             self.numberText.text = data.nowCount.."/"..self.targetCount
         end
-        self:getWarehouseCapacity()
+        if tonumber(string.sub(data.iKey.id,1,2)) == 22 then
+            --如果是商品要扣除原料
+            self:getWarehouseCapacity()
+        end
     end
 end
 --删除正在生产中的线
@@ -438,7 +443,6 @@ function BuildingProductionDetailPart:updateNowLine(data)
     if data ~= nil then
         --清空生产队列Item数据
         UpdateBeat:Remove(self.Update,self)
-        self.time = nil
         if next(self.waitingQueueIns) ~= nil then
             self:CloseDestroy(self.waitingQueueIns)
         end

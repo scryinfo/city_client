@@ -305,7 +305,7 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
         self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
-        if self.storeInfoData or next(self.storeInfoData) ~= nil then
+        if next(self.storeInfoData) ~= nil then
             for key,value in pairs(self.storeInfoData.inHand) do
                 if ToNumber(StringSun(data.iKey.id,1,2)) == 21 then
                     if value.key.id == data.iKey.id then
@@ -339,7 +339,43 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
     end
 end
 --运输成功回调
-function BuildingWarehouseDetailPart:transportSucceed(data)
+function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
+    if msgId == 0 then
+        if data.reason == "spaceNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(25060014),func = function()
+                    if next(self.transportTab) ~= nil then
+                        self.transportTab = {}
+                    end
+                    self.number.transform.localScale = Vector3.zero
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        elseif data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(25060014),func = function()
+                    if next(self.transportTab) ~= nil then
+                        self.transportTab = {}
+                    end
+                    self.number.transform.localScale = Vector3.zero
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        elseif data.reason == "moneyNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(21010003),func = function()
+                    if next(self.transportTab) ~= nil then
+                        self.transportTab = {}
+                    end
+                    self.number.transform.localScale = Vector3.zero
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        end
+    end
     if data ~= nil then
         self.numberTest = self.numberTest - 1
         if not data.item or next(data.item) == nil then
@@ -411,7 +447,16 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
     Event.Brocast("SmallPop", GetLanguage(25020020), ReminderType.Succeed)
 end
 --销毁成功后回调
-function BuildingWarehouseDetailPart:deleteSucceed(data)
+function BuildingWarehouseDetailPart:deleteSucceed(data,msgId)
+    if msgId == 0 then
+        if data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(25060014),func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+        end
+    end
     if data ~= nil then
         --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do

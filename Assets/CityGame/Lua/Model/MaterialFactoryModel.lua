@@ -224,7 +224,11 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
     UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",stream)
 end
 --运输
-function MaterialFactoryModel:n_OnBuildingTransportInfo(data)
+function MaterialFactoryModel:n_OnBuildingTransportInfo(data,msgId)
+    if msgId == 0 then
+        Event.Brocast("transportSucceed",data,msgId)
+        return
+    end
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end
@@ -318,7 +322,10 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
     end
 end
 --销毁仓库原料或商品
-function MaterialFactoryModel:n_OnDelItemInfo(data)
+function MaterialFactoryModel:n_OnDelItemInfo(data,msgId)
+    if msgId == 0 then
+        Event.Brocast("deleteSucceed",data,msgId)
+    end
     Event.Brocast("deleteSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end

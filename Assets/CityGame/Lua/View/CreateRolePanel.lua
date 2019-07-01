@@ -24,6 +24,7 @@ function CreateRolePanel.InitPanel()
     this.companyname = transform:Find("InputField_Companyname").gameObject;
     this.CompanyName = transform:Find("InputField_Companyname/conmpanyNameBg/conmpanyName").gameObject:GetComponent("Text");
     this.companynameText = transform:Find("InputField_Companyname/Placeholder").gameObject:GetComponent("Text");
-    this.duplicateText = transform:Find("InputField_Nickname/hint"):GetComponent("Text");
+    this.nicknameDuplicateText = transform:Find("InputField_Nickname/hint"):GetComponent("Text");
+    this.companynameDuplicateText = transform:Find("InputField_Companyname/hint"):GetComponent("Text");
     this.create = transform:Find("CreateRoleButton/Text"):GetComponent("Text");
 end

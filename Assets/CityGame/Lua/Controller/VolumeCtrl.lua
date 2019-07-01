@@ -172,6 +172,12 @@ function VolumeCtrl:Hide()
 
 end
 
+function VolumeCtrl:Close()
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
+end
+
 function VolumeCtrl:initInsData()
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')

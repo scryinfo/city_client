@@ -625,9 +625,9 @@ function WalletCtrl:createWalletSucceed(data)
 end
 --充值请求成功回调
 function WalletCtrl:reqTopUpSucceed(data)
-    if data then
+    if data.RechargeRequestRes then
         self:openQRCode(data)
-        Event.Brocast("SmallPop", GetLanguage(33020021,self.TopUpMoney), ReminderType.Succeed)
+        --Event.Brocast("SmallPop", GetLanguage(33020021,self.rechargeMoneyInput.text), ReminderType.Succeed)
     end
 end
 --提币订单请求成功
@@ -654,7 +654,8 @@ function WalletCtrl:reqDisChargeOrderSucceed(data,passWard)
 end
 --提币成功
 function WalletCtrl:reqDisChargeSucceed(data)
-    if data ~= nil then
+    if data then
+        --Event.Brocast("SmallPop", GetLanguage(33020022,self.moneyInput.text), ReminderType.Succeed)
         self:closeWithdrawContent()
     end
 end

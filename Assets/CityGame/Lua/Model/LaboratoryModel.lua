@@ -90,13 +90,15 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     end
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', data)
 end
---研究所设置
+
+--研究所设置出租
 function LaboratoryModel:n_OnReceiveLabExclusive(LabExclusive)
     self:m_ReqLaboratoryDetailInfo(self.insId)
     self.data.exclusive = LabExclusive.exclusive
     Event.Brocast("SmallPop","设置成功",300)
     Event.Brocast("c_OnReceiveLabExclusive")
 end
+
 --添加研究发明线
 function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
     if not self.data.inProcess then
@@ -105,6 +107,7 @@ function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
     table.insert(self.data.inProcess,msg.line)
     ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodQueneItem",data = self.data.inProcess ,insClass=InventGoodQueneItem}  )
 end
+
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(lineData)
     for i,line in ipairs(self.data.inProcess) do
@@ -113,7 +116,6 @@ function LaboratoryModel:n_OnReceiveDelLine(lineData)
         end
     end
     Event.Brocast("SmallPop","删除成功",300)
-
     Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodQueneItem"})
 end
 --开箱
@@ -127,7 +129,7 @@ function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
     local line
     for i, v in ipairs(self.data.inProcess) do
         if LabRollACK.lineId == v.id  then
-            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 1
+            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 1             --点击之后开启一个箱子
             self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll + 1
             line = self.data.inProcess[i]
             break

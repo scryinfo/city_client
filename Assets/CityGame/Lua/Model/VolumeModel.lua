@@ -101,10 +101,11 @@ function VolumeModel:m_PlayerNumCurve(info)
     CityEngineLua.Bundle:newAndSendMsgExt(msgId,pMsg,CityEngineLua._tradeNetworkInterface1)
 end
 -------------------服务器回调---------------------
+---npc数量
 function VolumeModel:n_OnGetNpcNum(lMsg)
     Event.Brocast("c_NpcNum",lMsg.countNpcMap,lMsg.workNpcNum,lMsg.unEmployeeNpcNum)
 end
-
+--npc商品数量
 function VolumeModel:n_OnGoodsNpcNum(lMsg)
     Event.Brocast("c_OnGoodsNpcNum",lMsg.numInfo,lMsg.type)
 end
@@ -128,7 +129,7 @@ end
 function VolumeModel:n_OnPlayerCountCurve(lMsg)
     Event.Brocast("c_currebPlayerNum",lMsg.playerAmount)
 end
-----玩家购买数量折线图
+----玩家购买数量折线图（c_ToggleBtnThreeItem为第三层数据 c_ToggleBtnTwoItem为第二层数据）
 function VolumeModel:n_OngetPlayerAmount(lMsg)
     if  lMsg.exchangeType == 2 or lMsg.exchangeType == 4 then
         Event.Brocast("c_ToggleBtnThreeItem",lMsg.playerGoodsCurveMap)

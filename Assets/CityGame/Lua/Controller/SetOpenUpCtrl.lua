@@ -96,7 +96,7 @@ function SetOpenUpCtrl:OnOpen(isOn)
         SetOpenUpPanel.openBtn.anchoredPosition = Vector3.New(88,0,0)
         SetOpenUpPanel.close.localScale = Vector3.zero
         if not self.m_data.takeOnNewOrder then
-            SetOpenUpPanel.price.text = GetClientPriceString(ct.CalculationPromoteSuggestPrice(self.m_data.guidePrice))
+            SetOpenUpPanel.price.text = GetClientPriceString(ct.CalculationPromoteSuggestPrice(self.m_data.guidePrice, self.m_data.RDAbility, self.m_data.averageRDAbility))
         end
     else
         SetOpenUpPanel.conpetitivebess.localScale = Vector3.zero

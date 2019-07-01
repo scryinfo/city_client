@@ -23,7 +23,7 @@ TerrainConfig = {
         ["ScaleStart"] = 1,
         ["ScaleDuringTime"] = 0.1,
         ["MapLeftPageDuringTime"] = 0.1,
-        ["MapSize"] = 101,
+        ["MapSize"] = 100,
     },
     ["LoadingConfig"] = {
         ["MinDurationTime"] = 5,

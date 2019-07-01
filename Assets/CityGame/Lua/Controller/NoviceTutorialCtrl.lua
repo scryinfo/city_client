@@ -50,7 +50,8 @@ function NoviceTutorialCtrl:Refresh()
                     self.tutorialChoiceItems[1]:_onClickBtn()
                 end
             end
-            DynamicLoadPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScroll, nil, callback)
+            --DynamicLoadPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScroll, nil, callback)
+            createPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScroll.gameObject, callback)
         end
     end
 end

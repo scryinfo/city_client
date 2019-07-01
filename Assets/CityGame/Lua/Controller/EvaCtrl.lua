@@ -116,7 +116,8 @@ function EvaCtrl:updateData()
                     DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_QueryMyEva')
                 end
             end
-            DynamicLoadPrefab("Assets/CityGame/Resources/View/Eva/EvaTitleItem.prefab", EvaPanel.optionOneScroll, nil, callback)
+            --DynamicLoadPrefab("Assets/CityGame/Resources/View/Eva/EvaTitleItem.prefab", EvaPanel.optionOneScroll, nil, callback)
+            createPrefab("Assets/CityGame/Resources/View/Eva/EvaTitleItem.prefab", EvaPanel.optionOneScroll.gameObject, callback)
         end
     end
 end

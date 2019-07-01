@@ -430,12 +430,15 @@ function BuildingProductionDetailPart:updateNowCount(data)
         if self.targetCount ~= nil then
             self.numberText.text = data.nowCount.."/"..self.targetCount
         end
+        self:getWarehouseCapacity()
     end
 end
 --删除正在生产中的线
 function BuildingProductionDetailPart:updateNowLine(data)
     if data ~= nil then
         --清空生产队列Item数据
+        UpdateBeat:Remove(self.Update,self)
+        self.time = nil
         if next(self.waitingQueueIns) ~= nil then
             self:CloseDestroy(self.waitingQueueIns)
         end
@@ -491,11 +494,11 @@ function BuildingProductionDetailPart:checkMaterial(itemId)
         return false
     end
     --如果仓库不是空的
-    local material = CompoundDetailConfig[itemId].goodsNeedMatData
+    self.material = CompoundDetailConfig[itemId].goodsNeedMatData
     local materialNum = {}
     local isMeet = false
     --生产中商品需要的原料
-    for key,value in pairs(material) do
+    for key,value in pairs(self.material) do
         --仓库中有的原料
         for key1,value1 in pairs(self.m_data.store.inHand) do
             if value1.key.id == value.itemId then
@@ -517,26 +520,20 @@ function BuildingProductionDetailPart:checkMaterial(itemId)
         return true
     end
 end
-----获取仓库容量，如果仓库容量已满，停止时间刷新
---function BuildingProductionDetailPart:getWarehouseCapacity()
---    --local warehouseNowCount = 0
---    --local lockedNowCount = 0
---    --if not self.m_data.store.inHand then
---    --    warehouseNowCount = 0
---    --else
---    --    for key,value in pairs(self.m_data.store.inHand) do
---    --        warehouseNowCount = warehouseNowCount + value.n
---    --    end
---    --end
---    --if not self.m_data.store.locked then
---    --    lockedNowCount = 0
---    --else
---    --    for key,value in pairs(self.m_data.store.locked) do
---    --        lockedNowCount = lockedNowCount + value.n
---    --    end
---    --end
---    --return warehouseNowCount + lockedNowCount
---end
+--如果是生产商品的话，生产出来扣除现有的原料
+function BuildingProductionDetailPart:getWarehouseCapacity()
+    for key,value in pairs(self.material) do
+        for key1,value1 in pairs(self.m_data.store.inHand) do
+            if value.itemId == value1.key.id then
+                value1.n = value1.n - value.num
+                if value1.n == 0 then
+                    table.remove(self.m_data.store.inHand,key1)
+                end
+                break
+            end
+        end
+    end
+end
 --获取当前生产中的秒产量(含Eva)
 function BuildingProductionDetailPart:getNumOneSec(itemId)
     if not self.materialOrGoodsInfo or next(self.materialOrGoodsInfo) == nil then

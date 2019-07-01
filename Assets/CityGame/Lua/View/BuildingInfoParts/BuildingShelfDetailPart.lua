@@ -443,17 +443,23 @@ function BuildingShelfDetailPart:getRetailGuidePrice(data)
     self.guideRetailPrice = data
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
---获取仓库里某个商品的数量
+--获取货架上某个商品的数量
 --(后边要修改)
-function BuildingShelfDetailPart:getShelfItemIdCount(itemId,callback)
+function BuildingShelfDetailPart:getShelfItemIdCount(itemId,producerId,callback)
     if itemId ~= nil then
         local nowCount = 0
         if not self.shelfInfoData.shelf.good or next(self.shelfInfoData.shelf.good) == nil then
             nowCount = 0
         else
             for key,value in pairs(self.shelfInfoData.shelf.good) do
-                if value.k.id == itemId then
-                    nowCount = value.n
+                if producerId == nil then
+                    if value.k.id == itemId then
+                        nowCount = value.n
+                    end
+                else
+                    if value.k.id == itemId and value.k.producerId == producerId then
+                        nowCount = value.n
+                    end
                 end
             end
         end

@@ -174,8 +174,8 @@ function ShelfBoxCtrl:initializeUiInfoData()
     local function callback1(b)
         self.shelfNumberText.text = "×"..b
     end
-    Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
-    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
+    Event.Brocast("getItemIdCount",self.m_data.itemId,self.m_data.dataInfo.key.producerId,callback)
+    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,self.m_data.dataInfo.key.producerId,callback1)
     if not self.m_data.stateType then
         --货架打开时
         self.downShelfBtn.transform.localScale = Vector3.one

@@ -65,7 +65,7 @@ end
 --建筑个性签名
 function PromoteCompanyCtrl:OnOpen(go)
     PlayMusEff(1002)
-    ct.OpenCtrl("BubbleMessageCtrl",go.m_data)
+    ct.OpenCtrl("BubbleMessageCtrl",go.m_data.info)
 end
 
 --点击队列

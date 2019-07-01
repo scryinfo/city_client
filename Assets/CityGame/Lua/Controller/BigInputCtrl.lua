@@ -55,6 +55,12 @@ end
 function BigInputCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.tipsText.text = self.m_data.tipInfo
+    self.rentInput.text = ""
+
+    --设置默认显示str
+    if self.m_data.contentStr ~= nil and self.m_data.contentStr ~= "" then
+        self.rentInput.text = self.m_data.contentStr
+    end
 
     -- 输入框的个数限制
     if self.m_data.characterLimit then

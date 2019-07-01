@@ -209,7 +209,6 @@ function BuildingProductionPart:CheckMaterial(itemId)
             end
         end
     end
-    end
     table.sort(materialNum)
     --最少能生产的数量
     self.lineMinValue = materialNum[1]

@@ -83,13 +83,13 @@ function WarehouseDetailBoxCtrl:addShelf(dataInfo)
     if self.m_data.info.buildingType == BuildingType.MaterialFactory then
         --原料厂
         --检查货架是否是空的
-        if not self.m_data.info.shelf.good then
+        if not self.m_data.shelf.shelf.good then
             Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
         else
             --如果货架不是空的，检查货架上是否有这个商品
-            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId) == true then
+            if self:ShelfWhetherHave(self.m_data.shelf.shelf.good,dataInfo.itemId) == true then
                 --发送修改价格
-                Event.Brocast("m_ReqMaterialModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
+                --Event.Brocast("m_ReqMaterialModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
                 --发送上架
                 Event.Brocast("m_ReqMaterialShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
             else
@@ -99,13 +99,13 @@ function WarehouseDetailBoxCtrl:addShelf(dataInfo)
     elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
         --加工厂
         --检查货架是否是空的
-        if not self.m_data.info.shelf.good then
+        if not self.m_data.shelf.shelf.good then
             Event.Brocast("m_ReqprocessingShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
         else
             --如果货架不是空的，检查货架上是否有这个商品
-            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId,dataInfo.producerId) == true then
+            if self:ShelfWhetherHave(self.m_data.shelf.shelf.good,dataInfo.itemId,dataInfo.producerId) == true then
                 --发送修改价格
-                Event.Brocast("m_ReqprocessingModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
+                --Event.Brocast("m_ReqprocessingModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
                 --发送上架
                 Event.Brocast("m_ReqprocessingShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
             else
@@ -115,13 +115,13 @@ function WarehouseDetailBoxCtrl:addShelf(dataInfo)
     elseif self.m_data.info.buildingType == BuildingType.RetailShop then
         --零售店
         --检查货架是否是空的
-        if not self.m_data.info.shelf.good then
+        if not self.m_data.shelf.shelf.good then
             Event.Brocast("m_ReqRetailStoresShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
         else
             --如果货架不是空的，检查货架上是否有这个商品
-            if self:ShelfWhetherHave(self.m_data.info.shelf.good,dataInfo.itemId) == true then
+            if self:ShelfWhetherHave(self.m_data.shelf.shelf.good,dataInfo.itemId) == true then
                 --发送修改价格
-                Event.Brocast("m_ReqRetailStoresModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
+                --Event.Brocast("m_ReqRetailStoresModifyShelf",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty)
                 --发送上架
                 Event.Brocast("m_ReqRetailStoresShelfAdd",self.m_data.insId,dataInfo.itemId,dataInfo.number,dataInfo.price,dataInfo.producerId,dataInfo.qty,dataInfo.switch)
             else
@@ -136,11 +136,21 @@ end
 --上架成功后刷新
 function WarehouseDetailBoxCtrl:RefreshWarehouseData(dataInfo)
     for key,value in pairs(self.m_data.info.store.inHand) do
-        if value.key.id == dataInfo.item.key.id then
-            if value.n == dataInfo.item.n then
-                table.remove(self.m_data.info.store.inHand,key)
-            else
-                value.n = value.n - dataInfo.item.n
+        if ToNumber(StringSun(dataInfo.item.key.id,1,2)) == 21 then
+            if value.key.id == dataInfo.item.key.id then
+                if value.n == dataInfo.item.n then
+                    table.remove(self.m_data.info.store.inHand,key)
+                else
+                    value.n = value.n - dataInfo.item.n
+                end
+            end
+        elseif ToNumber(StringSun(dataInfo.item.key.id,1,2)) == 22 then
+            if value.key.id == dataInfo.item.key.id and value.key.producerId == dataInfo.item.key.producerId then
+                if value.n == dataInfo.item.n then
+                    table.remove(self.m_data.info.store.inHand,key)
+                else
+                    value.n = value.n - dataInfo.item.n
+                end
             end
         end
     end
@@ -163,6 +173,9 @@ end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --上架前检查货架上是否有这个商品  返回true有   返回false没有
 function WarehouseDetailBoxCtrl:ShelfWhetherHave(table,itemId,producerId)
+    if table == nil then
+        return true
+    end
     for key,value in pairs(table) do
         if producerId == nil then
             if value.k.id == itemId then

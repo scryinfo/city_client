@@ -123,7 +123,7 @@ function WareHouseGoodsMgr:_creatAddressList(data)
 end
 
 --创建路线面板
-function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
+function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId,number)
     --local bagId = DataManager.GetBagId()
     --if bagId ~= buildingId then
     --    local dataInfo = {}
@@ -157,7 +157,7 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
                 if z.info.id ~= buildingId then
                     local function callback(prefab)
                         ChooseWarehousePanel.tipImg.transform.localScale = Vector3.zero
-                        self.LinePaneltLuaItems = ChooseLineItem:new(prefab,self,z,data)
+                        self.LinePaneltLuaItems = ChooseLineItem:new(prefab,self,z,data,number)
                         self.ipaItems[index] = self.LinePaneltLuaItems
                         index = index + 1
                         self.isStore = true
@@ -178,7 +178,7 @@ function WareHouseGoodsMgr:_creatLinePanel(buysBuildings,data,buildingId)
 end
 
 --创建好友路线面板
-function WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings,data)
+function WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings,data,number)
     if buysBuildings == nil then
         return
     end
@@ -186,7 +186,7 @@ function WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings,data)
         if v.store ~= nil then
 
             local function callback(prefab)
-                self.LineFriendsLuaItem = ChooseLineItem:new(prefab,self,v,data)
+                self.LineFriendsLuaItem = ChooseLineItem:new(prefab,self,v,data,number)
             end
             createPrefab(WareHouseGoodsMgr.static.Line_PATH,ChooseWarehousePanel.rightContent,callback)
 

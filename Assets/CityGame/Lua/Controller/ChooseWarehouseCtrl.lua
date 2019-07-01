@@ -93,7 +93,7 @@ end
 
 function ChooseWarehouseCtrl:CreateLinePanel()   --生成自己的建筑详情
     self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
-    WareHouseGoodsMgr:_creatLinePanel(self.buysBuildings,self.m_data.pos,self.m_data.buildingId)  --创建运输线
+    WareHouseGoodsMgr:_creatLinePanel(self.buysBuildings,self.m_data.pos,self.m_data.buildingId,self.m_data.number)  --创建运输线
     --if not self.WareHouseGoodsMgr.ipaItems or next(self.WareHouseGoodsMgr.ipaItems) == nil then
     --    ChooseWarehousePanel.tipImg.transform.localScale = Vector3.one
     --else
@@ -171,7 +171,7 @@ function ChooseWarehouseCtrl:OnClick_bgBtn(go)
             item.box:SetActive(false)
             item.onClick = true
         end
-        WareHouseGoodsMgr:_creatLinePanel(go.buysBuildings,go.m_data.pos,go.m_data.buildingId)  --创建运输线
+        WareHouseGoodsMgr:_creatLinePanel(go.buysBuildings,go.m_data.pos,go.m_data.buildingId,go.m_data.number)  --创建运输线
     end
     go.onClick = false
 end

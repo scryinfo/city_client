@@ -98,11 +98,16 @@ function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
         Event.Brocast("SmallPop",GetLanguage(25020023), 300)
         return
     end
+    local totalNum = 0
+    for key,value in pairs(ins.itemTable) do
+        totalNum = totalNum + value.dataInfo.number
+    end
     local data = {}
     data.pos = {}
     data.pos.x = ins.m_data.buildingInfo.pos.x
     data.pos.y = ins.m_data.buildingInfo.pos.y
     data.buildingId = ins.m_data.buildingId
+    data.number = totalNum
     data.nameText = ins.targetWarehouse
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end

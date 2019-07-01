@@ -220,6 +220,10 @@ function ProcessingFactoryModel:n_OnOpenprocessing(stream)
 end
 --运输
 function ProcessingFactoryModel:n_OnBuildingTransportInfo(data,msgId)
+    if msgId == 0 then
+        Event.Brocast("transportSucceed",data,msgId)
+        return
+    end
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end
@@ -229,8 +233,18 @@ function ProcessingFactoryModel:n_OnShelfAddInfo(data)
     Event.Brocast("refreshShelfPartCount")
 end
 --修改货架属性
-function ProcessingFactoryModel:n_OnModifyShelfInfo(data)
+function ProcessingFactoryModel:n_OnModifyShelfInfo(data,msgId)
     FlightMainModel.CloseFlightLoading()
+    if msgId == 0 then
+        if data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = "货架数量发生变化请刷新后操作",func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        end
+    end
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenprocessing(self.insId)

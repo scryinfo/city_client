@@ -943,24 +943,31 @@ function ct.CalculationMaterialCompetitivePower(recommendedPricing,price,materia
     if price <= 0 then
         return CalculationNBitAfterDecimalPoint(100)
     end
-    if recommendedPricing <= 0 then
-        --推荐定价 = 推荐定价表
-        recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
-    end
-    --竞争力 = 推荐定价 / 定价 * 1000 (整数)
+
+    recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
+    --竞争力 =  推荐定价 / 定价 * 50(整数)
     return (CalculationNBitAfterDecimalPoint((recommendedPricing/ price * CPMagnification )))
+
+    --if recommendedPricing <= 0 then
+    --    --推荐定价 = 推荐定价表
+    --    recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
+    --end
+    ----竞争力 = 推荐定价 / 定价 * 1000 (整数)
+    --return (CalculationNBitAfterDecimalPoint((recommendedPricing/ price * CPMagnification )))
 end
 
 ---计算原料厂推荐定价
 --推荐定价:recommendedPricing
 --原料ID：materialID（7位ID）
 function ct.CalculationMaterialSuggestPrice(recommendedPricing, materialID)
-    if recommendedPricing <= 0 then
-        --推荐定价 = 推荐定价表
-        recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
-        return recommendedPricing
-    end
-    return recommendedPricing
+    return Competitive[11 * PRIDMagnification + materialID]  --0701修改
+
+    --if recommendedPricing <= 0 then
+    --    --推荐定价 = 推荐定价表
+    --    recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
+    --    return recommendedPricing
+    --end
+    --return recommendedPricing
 end
 
 
@@ -974,26 +981,39 @@ function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,co
         return CalculationNBitAfterDecimalPoint(100)
     end
 
-    if recommendedPricing <= 0 then
-        --推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
-        recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
-        --竞争力 = 推荐定价 / 定价  * 1000 (整数)
-        return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
-    else
-        --竞争力 = 推荐定价 / (定价/推广能力) * 1000 (整数)
-        return  CalculationNBitAfterDecimalPoint((recommendedPricing / price ) * (competitivePower / averageRDAbility) * CPMagnification )
+    recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
+    if averageRDAbility <= 0 then
+        averageRDAbility = competitivePower
     end
+    --竞争力 = 推荐定价 * 玩家推广能力 / 全城推广能力 / 定价 * 50
+    return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification * competitivePower / averageRDAbility))
+
+    --if recommendedPricing <= 0 then
+    --    --推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
+    --    recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
+    --    --竞争力 = 推荐定价 / 定价  * 1000 (整数)
+    --    return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
+    --else
+    --    --竞争力 = 推荐定价 / (定价/推广能力) * 1000 (整数)
+    --    return  CalculationNBitAfterDecimalPoint((recommendedPricing / price ) * (competitivePower / averageRDAbility) * CPMagnification )
+    --end
 end
 
 ---计算推广公司推荐默认值
 --推荐定价:recommendedPricing
-function ct.CalculationPromoteSuggestPrice(recommendedPricing)
-    if recommendedPricing <= 0 then
-        --推荐定价 = 推荐定价表
-        recommendedPricing = Competitive[16 * PRIDMagnification + 2251]
-        return recommendedPricing
+--推广类型:Advertisementtype  --2251食品推广  2252服饰推广   13零售店推广   14住宅推广
+--全城
+function ct.CalculationPromoteSuggestPrice(recommendedPricing,competitivePower,averageRDAbility)
+    if averageRDAbility <= 0 then
+        averageRDAbility = competitivePower
     end
-    return recommendedPricing
+    return Competitive[16 * PRIDMagnification + 2251] * competitivePower / averageRDAbility --0701修改
+    --if recommendedPricing <= 0 then
+    --    --推荐定价 = 推荐定价表
+    --    recommendedPricing = Competitive[16 * PRIDMagnification + 2251]
+    --    return recommendedPricing
+    --end
+    --return recommendedPricing
 end
 
 ---计算研发公司竞争力【over】
@@ -1005,26 +1025,37 @@ function ct.CalculationLaboratoryCompetitivePower(recommendedPricing, price, RDA
     if price <= 0 then
         return CalculationNBitAfterDecimalPoint(100)
     end
-    if recommendedPricing <= 0 then
-        --推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
-        recommendedPricing = Competitive[15 * PRIDMagnification + 5]
-        --竞争力 = 推荐定价 / 定价  * 50(整数)
-        return CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification))
-    else
-        --竞争力 = 推荐定价 / (定价/(玩家研发能力))  * 50(整数)
-        return CalculationNBitAfterDecimalPoint((recommendedPricing / price) * (RDAbility / averageRDAbility) * CPMagnification)
+    recommendedPricing = Competitive[15 * PRIDMagnification + 5]
+
+    if averageRDAbility <= 0 then
+        averageRDAbility = RDAbility
     end
+    return CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification * RDAbility / averageRDAbility))
+
+    --if recommendedPricing <= 0 then
+    --    --推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
+    --    recommendedPricing = Competitive[15 * PRIDMagnification + 5]
+    --    --竞争力 = 推荐定价 / 定价  * 50(整数)
+    --    return CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification))
+    --else
+    --    --竞争力 = 推荐定价 / (定价/(玩家研发能力))  * 50(整数)
+    --    return CalculationNBitAfterDecimalPoint((recommendedPricing / price) * (RDAbility / averageRDAbility) * CPMagnification)
+    --end
 end
 
 ---计算研发公司推荐默认值
 --推荐定价:recommendedPricing
-function ct.CalculationLaboratorySuggestPrice(recommendedPricing)
-    if recommendedPricing <= 0 then
-        --推荐定价 = 推荐定价表
-        recommendedPricing = Competitive[15 * PRIDMagnification + 5]
-        return recommendedPricing
+function ct.CalculationLaboratorySuggestPrice(recommendedPricing,RDAbility, averageRDAbility)
+    if averageRDAbility <= 0 then
+        averageRDAbility = RDAbility
     end
-    return recommendedPricing
+    return Competitive[15 * PRIDMagnification + 5] * RDAbility / averageRDAbility --0701修改
+    --if recommendedPricing <= 0 then
+    --    --推荐定价 = 推荐定价表
+    --    recommendedPricing = Competitive[15 * PRIDMagnification + 5]
+    --    return recommendedPricing
+    --end
+    --return recommendedPricing
 end
 
 ---计算加工厂竞争力
@@ -1037,25 +1068,37 @@ function ct.CalculationFactoryCompetitivePower(recommendedPricing,price,commodit
     if price <= 0 then
         return CalculationNBitAfterDecimalPoint(100)
     end
-    if recommendedPricing <= 0 then
-        --推荐定价 = 推荐定价表
-        recommendedPricing = Competitive[12 * PRIDMagnification + commodityID]
-        --竞争力 = 推荐定价 / 定价  * 1000 (整数)
-        return CalculationNBitAfterDecimalPoint((recommendedPricing / price * ( commodityScore / 25) * CPMagnification))
+    recommendedPricing = Competitive[12 * PRIDMagnification + commodityID]
+
+    if averageSalesScore <= 0 then
+        averageSalesScore = commodityScore
     end
-    --竞争力 = (全城成交均价 * 玩家商品评分)/ (定价 * 销售均评分) * 1000 (整数)
-    return (CalculationNBitAfterDecimalPoint(((recommendedPricing /price )/ ((commodityScore * averageSalesScore) / 25 ) * CPMagnification)))
+
+    return CalculationNBitAfterDecimalPoint((recommendedPricing / price * ( commodityScore * 2 / (averageSalesScore + commodityScore) ) * CPMagnification))
+
+    --if recommendedPricing <= 0 then
+    --    --推荐定价 = 推荐定价表
+    --    recommendedPricing = Competitive[12 * PRIDMagnification + commodityID]
+    --    --竞争力 = 推荐定价 / 定价  * 1000 (整数)
+    --    return CalculationNBitAfterDecimalPoint((recommendedPricing / price * ( commodityScore / 25) * CPMagnification))
+    --end
+    ----竞争力 = (全城成交均价 * 玩家商品评分)/ (定价 * 销售均评分) * 1000 (整数)
+    --return (CalculationNBitAfterDecimalPoint(((recommendedPricing /price )/ ((commodityScore * averageSalesScore) / 25 ) * CPMagnification)))
 end
 
 ---计算加工厂推荐定价
 --玩家商品评分:commodityScore
 --销售均评分:averageSalesScore(找服务器要)
 function ct.CalculationProcessingSuggestPrice(recommendedPricing,goodsID,commodityScore,averageSalesScore)
-    --0628修改
-    if recommendedPricing <= 0 then
-        return Competitive[12 * PRIDMagnification + goodsID]
+    if averageSalesScore <= 0 then
+        averageSalesScore = commodityScore
     end
-    return recommendedPricing
+    return Competitive[12 * PRIDMagnification + goodsID] * commodityScore * 2 / (averageSalesScore + commodityScore) --0701修改
+    ----0628修改
+    --if recommendedPricing <= 0 then
+    --    return Competitive[12 * PRIDMagnification + goodsID]
+    --end
+    --return recommendedPricing
 
     --if averageSalesScore <= 0 then averageSalesScore = 1 end
     --
@@ -1078,14 +1121,24 @@ function ct.CalculationSupermarketCompetitivePower(recommendedPricing,price,comm
     if price <= 0 then
         return CalculationNBitAfterDecimalPoint(100)
     end
-    if recommendedPricing <= 0 then
-        --推荐定价 = 推荐定价表
-        recommendedPricing = Competitive[13 * PRIDMagnification + commodityID]
-        --竞争力 = 推荐定价 / 定价  * 1000 (整数)
-        return CalculationNBitAfterDecimalPoint(recommendedPricing / price * ((commodityScore+ shopScore)/25 ) * CPMagnification)
+    recommendedPricing = Competitive[13 * PRIDMagnification + commodityID]
+    if averageSalesScore <= 0 then
+        averageSalesScore = commodityScore
     end
-    --竞争力 = (推荐定价 * (玩家商品评分+玩家店铺评分))/ (定价 * (全城销售均商品评分+全城销售均店铺评分)) * 1000
-    return CalculationNBitAfterDecimalPoint((recommendedPricing  / price)* (commodityScore + shopScore)/ ((averageSalesScore + averageShopScore) / 25) * CPMagnification)
+    if averageShopScore <= 0 then
+        averageShopScore = shopScore
+    end
+    return CalculationNBitAfterDecimalPoint(recommendedPricing / price * CPMagnification * (commodityScore * 2 /(averageSalesScore + commodityScore)) * (shopScore * 2 /(averageShopScore + shopScore)))
+
+
+    --if recommendedPricing <= 0 then
+    --    --推荐定价 = 推荐定价表
+    --    recommendedPricing = Competitive[13 * PRIDMagnification + commodityID]
+    --    --竞争力 = 推荐定价 / 定价  * 1000 (整数)
+    --    return CalculationNBitAfterDecimalPoint(recommendedPricing / price * ((commodityScore+ shopScore)/25 ) * CPMagnification)
+    --end
+    ----竞争力 = (推荐定价 * (玩家商品评分+玩家店铺评分))/ (定价 * (全城销售均商品评分+全城销售均店铺评分)) * 1000
+    --return CalculationNBitAfterDecimalPoint((recommendedPricing  / price)* (commodityScore + shopScore)/ ((averageSalesScore + averageShopScore) / 25) * CPMagnification)
 end
 
 ---计算零售店默认输入值
@@ -1094,11 +1147,18 @@ end
 --全城销售均商品评分:averageSalesScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationRetailSuggestPrice(recommendedPricing,goodsID,commodityScore,shopScore,averageSalesScore,averageShopScore)
-    --0628修改
-    if recommendedPricing <= 0 then
-        return Competitive[13 * PRIDMagnification + goodsID]
+    if averageSalesScore <= 0 then
+        averageSalesScore = commodityScore
     end
-    return recommendedPricing
+    if averageShopScore <= 0 then
+        averageShopScore = shopScore
+    end
+    return Competitive[13 * PRIDMagnification + goodsID] * (commodityScore * 2 /(averageSalesScore + commodityScore)) * (shopScore * 2 /(averageShopScore + shopScore)) --0701修改
+    ----0628修改
+    --if recommendedPricing <= 0 then
+    --    return Competitive[13 * PRIDMagnification + goodsID]
+    --end
+    --return recommendedPricing
 
     --if recommendedPricing <= 0 then
     --	recommendedPricing = Competitive[13 * PRIDMagnification + goodsID]
@@ -1116,28 +1176,38 @@ function ct.CalculationHouseCompetitivePower(recommendedPricing,price,shopScore,
     if price <= 0 then
         return CalculationNBitAfterDecimalPoint(100)
     end
+    recommendedPricing = Competitive[14 * PRIDMagnification]
     if averageShopScore <= 0 then
-        averageShopScore = 1
+        averageShopScore = shopScore
     end
-    if recommendedPricing <= 0 then
-        --推荐定价 = 推荐定价表
-        recommendedPricing = Competitive[14 * PRIDMagnification]
-        --竞争力 = (推荐定价 / 定价) * (玩家店铺评分 / 全城销售均店铺评分) /25 * 50(整数)
-        return  CalculationNBitAfterDecimalPoint(recommendedPricing / price * (shopScore / BargainingPower) * CPMagnification)
-    end
-    --竞争力 = (推荐定价 * 玩家店铺评分)/ (定价 * 全城销售均店铺评分) * 1000 (整数)
-    return  CalculationNBitAfterDecimalPoint((recommendedPricing / price)*( shopScore /  averageShopScore) / BargainingPower * CPMagnification)
+    return CalculationNBitAfterDecimalPoint(recommendedPricing / price * CPMagnification * (shopScore * 2 /(averageShopScore + shopScore)))
+
+    --if averageShopScore <= 0 then
+    --    averageShopScore = 1
+    --end
+    --if recommendedPricing <= 0 then
+    --    --推荐定价 = 推荐定价表
+    --    recommendedPricing = Competitive[14 * PRIDMagnification]
+    --    --竞争力 = (推荐定价 / 定价) * (玩家店铺评分 / 全城销售均店铺评分) /25 * 50(整数)
+    --    return  CalculationNBitAfterDecimalPoint(recommendedPricing / price * (shopScore / BargainingPower) * CPMagnification)
+    --end
+    ----竞争力 = (推荐定价 * 玩家店铺评分)/ (定价 * 全城销售均店铺评分) * 1000 (整数)
+    --return  CalculationNBitAfterDecimalPoint((recommendedPricing / price)*( shopScore /  averageShopScore) / BargainingPower * CPMagnification)
 end
 ---计算住宅推荐定价
 --推荐定价:recommendedPricing\
 --玩家店铺评分:shopScore(找服务器要)
 --全城销售均店铺评分:averageShopScore(找服务器要)
 function ct.CalculationHouseSuggestPrice(recommendedPricing,shopScore,averageShopScore)
-    --0628修改
-    if recommendedPricing <= 0 then
-        return Competitive[14 * PRIDMagnification]
+    if averageShopScore <= 0 then
+        averageShopScore = shopScore
     end
-    return recommendedPricing
+    return Competitive[14 * PRIDMagnification] * (shopScore * 2 /(averageShopScore + shopScore)) --0701修改
+    ----0628修改
+    --if recommendedPricing <= 0 then
+    --    return Competitive[14 * PRIDMagnification]
+    --end
+    --return recommendedPricing
 
     --if averageShopScore <= 0 then
     --	averageShopScore = 1

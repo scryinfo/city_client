@@ -129,7 +129,7 @@ function InventSetPopCtrl:OnOpen(isOn)
         if self.m_data.ins.m_data.pricePreTime > 0 then
             panel.price.text = GetClientPriceString(self.m_data.ins.m_data.pricePreTime)
         else
-            panel.price.text = GetClientPriceString(ct.CalculationLaboratorySuggestPrice(self.m_data.ins.m_data.guidePrice))
+            panel.price.text = GetClientPriceString(ct.CalculationLaboratorySuggestPrice(self.m_data.ins.m_data.guidePrice, self.m_data.ins.m_data.RDAbility,self.m_data.ins.m_data.averageRDAbility))
         end
     else
         InventSetPopPanel.conpetitivebess.localScale = Vector3.zero

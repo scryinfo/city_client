@@ -10,7 +10,7 @@ PromoteAbilityItem = class('PromoteAbilityItem')
         self.icon = self.prefab.transform:Find("icon").gameObject:GetComponent("Image");
         self.name = self.prefab.transform:Find("icon/name").gameObject:GetComponent("Text");
         self.speed = self.prefab.transform:Find("center/speed").gameObject:GetComponent("Text");
-        self.down = self.prefab.transform:Find("down").gameObject:GetComponent("Image");
+        --self.down = self.prefab.transform:Find("down").gameObject:GetComponent("Image");
         self.popularity = self.prefab.transform:Find("center/Image/popularity").gameObject:GetComponent("Text");
 
         self.bg.onClick:AddListener(function()
@@ -29,12 +29,12 @@ function PromoteAbilityItem:InitData(Data,DataInfo)
         self.m_data.capacity = {}
         self.m_data.capacity[Data.typeId] = Data.capacity
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-food.png", self.icon)
-        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/bg-food.png", self.down)
+        --LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/bg-food.png", self.down)
     elseif Data.typeId == 2252 then
         self.m_data.capacity = {}
         self.m_data.capacity[Data.typeId] = Data.capacity
         LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/icon-clothes.png", self.icon)
-        LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/bg-clothes.png", self.down)
+        --LoadSprite("Assets/CityGame/Resources/Atlas/PromoteCompany/bg-clothes.png", self.down)
     end
     self.name.text = GetLanguage(Data.name)
     self.m_data.DataInfo = DataInfo

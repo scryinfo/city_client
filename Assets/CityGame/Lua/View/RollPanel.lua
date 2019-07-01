@@ -1,3 +1,6 @@
+
+--研究所掷点界面panel
+
 local transform;
 --local gameObject;
 

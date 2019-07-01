@@ -580,8 +580,8 @@ function WalletCtrl:closeQRCode()
 end
 --打开扫描二维码
 function WalletCtrl:openScanningQRCode()
-    self.m_Timer:Start()
     self.scanQRCodeRoot.transform.localScale = Vector3.one
+    self.m_Timer:Start()
     self.scanQRCode.codePanel = self.scanQRCodeRoot:GetComponent("RectTransform")
     self.scanQRCode.qrStingText = self.addressInput
     self.scanQRCode:StartScanQRCode()

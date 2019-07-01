@@ -430,7 +430,7 @@ end
 function BuildingShelfDetailPart:salesNotice(data)
     if data ~= nil then
         for key,value in pairs(self.shelfDatas) do
-            if data.producerId == nil then
+            if tonumber(string.sub(data.itemId,1,2)) == 21 then
                 if value.dataInfo.k.id == data.itemId then
                     value.dataInfo.n = data.selledCount
                     value.dataInfo.price = data.selledPrice
@@ -446,7 +446,7 @@ function BuildingShelfDetailPart:salesNotice(data)
                     value.numberText.text = "×"..data.selledCount
                     value.priceText.text = GetClientPriceString(data.selledPrice)
                 end
-            else
+            elseif tonumber(string.sub(data.itemId,1,2)) == 22 then
                 if value.dataInfo.k.id == data.itemId and value.dataInfo.k.producerId == data.producerId then
                     value.dataInfo.n = data.selledCount
                     value.dataInfo.price = data.selledPrice

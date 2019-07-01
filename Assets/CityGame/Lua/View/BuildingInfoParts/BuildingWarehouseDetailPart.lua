@@ -140,7 +140,7 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     else
         self.noTip.transform.localScale = Vector3.zero
-        self.Capacity = self:_getWarehouseCapacity(self.m_data.store)
+        self.Capacity = self:_getWarehouseCapacity(storeData)
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
         self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
@@ -305,50 +305,77 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
         self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
-        --刷新当前仓库最新数据，用来更新详情界面
-        --if self.storeInfoData.inHand ~= nil then
-        --    for key,value in pairs(self.storeInfoData.inHand) do
-        --        if value.key.id == data.iKey.id then
-        --            value.n = value.n + 1
-        --        end
-        --    end
-        --end
-        --if self.storeInfoData.locked ~= nil then
-        --    for key,value in pairs(self.storeInfoData.locked) do
-        --        if value.key.id == data.iKey.id then
-        --            value.n = value.n + 1
-        --        end
-        --    end
-        --end
-        if self.storeInfoData or next(self.storeInfoData) ~= nil then
+        if next(self.storeInfoData) ~= nil then
             for key,value in pairs(self.storeInfoData.inHand) do
-                if value.key.id == data.iKey.id then
-                    value.n = value.n + 1
+                if ToNumber(StringSun(data.iKey.id,1,2)) == 21 then
+                    if value.key.id == data.iKey.id then
+                        value.n = value.n + 1
+                    end
+                elseif ToNumber(StringSun(data.iKey.id,1,2)) == 22 then
+                    if value.key.id == data.iKey.id and value.key.producerId == data.iKey.producerId then
+                        value.n = value.n + 1
+                    end
                 end
             end
         end
         --刷新仓库界面
         if self.warehouseDatas ~= nil then
             for key,value in pairs(self.warehouseDatas) do
-                if value.itemId == data.iKey.id then
-                    value.dataInfo.n = data.nowCountStore
-                    value.numberText.text = "×"..data.nowCountInStore
-                    return
+                if ToNumber(StringSun(data.iKey.id,1,2)) == 21 then
+                    if value.itemId == data.iKey.id then
+                        value.dataInfo.n = data.nowCountInStore
+                        value.numberText.text = "×"..data.nowCountInStore
+                        return
+                    end
+                elseif ToNumber(StringSun(data.iKey.id,1,2)) == 22 then
+                    if value.itemId == data.iKey.id and value.dataInfo.key.producerId == data.iKey.producerId then
+                        value.dataInfo.n = data.nowCountInStore
+                        value.numberText.text = "×"..data.nowCountInStore
+                        return
+                    end
                 end
             end
         end
-        --local dataInfo = {}
-        --local key = {}
-        --dataInfo.key = key
-        --dataInfo.key.id = data.iKey.id
-        --dataInfo.key.producerId = data.iKey.producerId
-        --dataInfo.key.qty = data.iKey.qty
-        --dataInfo.n = data.nowCount
-        --self:CreateGoodsItem(dataInfo,self.WarehouseItem,self.Content,WarehouseItem,self.mainPanelLuaBehaviour,self.warehouseDatas,self.m_data.buildingType,self.transportBool)
     end
 end
 --运输成功回调
-function BuildingWarehouseDetailPart:transportSucceed(data)
+function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
+    if msgId == 0 then
+        if data.reason == "spaceNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(25060014),func = function()
+                    if next(self.transportTab) ~= nil then
+                        self.transportTab = {}
+                    end
+                    self.number.transform.localScale = Vector3.zero
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        elseif data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(25060014),func = function()
+                    if next(self.transportTab) ~= nil then
+                        self.transportTab = {}
+                    end
+                    self.number.transform.localScale = Vector3.zero
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        elseif data.reason == "moneyNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(21010003),func = function()
+                    if next(self.transportTab) ~= nil then
+                        self.transportTab = {}
+                    end
+                    self.number.transform.localScale = Vector3.zero
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        end
+    end
     if data ~= nil then
         self.numberTest = self.numberTest - 1
         if not data.item or next(data.item) == nil then
@@ -359,25 +386,51 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
             data.item = {}
         end
         for key,value in pairs(self.warehouseDatas) do
-            if value.itemId == data.item.key.id then
-                if value.dataInfo.n == data.item.n then
-                    self:deleteGoodsItem(self.warehouseDatas,key)
-                else
-                    value.dataInfo.n = value.dataInfo.n - data.item.n
-                    value.numberText.text = "×"..value.dataInfo.n
+            if ToNumber(StringSun(data.item.key.id,1,2)) == 21 then
+                if value.itemId == data.item.key.id then
+                    if value.dataInfo.n == data.item.n then
+                        self:deleteGoodsItem(self.warehouseDatas,key)
+                    else
+                        value.dataInfo.n = value.dataInfo.n - data.item.n
+                        value.numberText.text = "×"..value.dataInfo.n
+                    end
+                end
+            elseif ToNumber(StringSun(data.item.key.id,1,2)) == 22 then
+                if value.itemId == data.item.key.id and value.dataInfo.key.producerId == data.item.key.producerId then
+                    if value.dataInfo.n == data.item.n then
+                        self:deleteGoodsItem(self.warehouseDatas,key)
+                    else
+                        value.dataInfo.n = value.dataInfo.n - data.item.n
+                        value.numberText.text = "×"..value.dataInfo.n
+                    end
                 end
             end
         end
         --刷新建筑数据
         for key,value in pairs(self.storeInfoData.inHand) do
-            if value.key.id == data.item.key.id then
-                if value.n == data.item.n then
-                    table.remove(self.storeInfoData.inHand,key)
-                else
-                    value.n = value.n - data.item.n
+            if ToNumber(StringSun(data.item.key.id,1,2)) == 21 then
+                if value.key.id == data.item.key.id then
+                    if value.n == data.item.n then
+                        table.remove(self.storeInfoData.inHand,key)
+                    else
+                        value.n = value.n - data.item.n
+                    end
+                end
+            elseif ToNumber(StringSun(data.item.key.id,1,2)) == 22 then
+                if value.key.id == data.item.key.id and value.key.producerId == data.item.key.producerId then
+                    if value.n == data.item.n then
+                        table.remove(self.storeInfoData.inHand,key)
+                    else
+                        value.n = value.n - data.item.n
+                    end
                 end
             end
         end
+        --for key,value in pairs(self.m_data.store.inHand) do
+        --    if ToNumber(StringSun(data.item.key.id,1,2)) == 21 then
+        --
+        --    end
+        --end
     end
     --运输成功后，如果仓库是空的
     if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil then
@@ -394,26 +447,56 @@ function BuildingWarehouseDetailPart:transportSucceed(data)
     Event.Brocast("SmallPop", GetLanguage(25020020), ReminderType.Succeed)
 end
 --销毁成功后回调
-function BuildingWarehouseDetailPart:deleteSucceed(data)
+function BuildingWarehouseDetailPart:deleteSucceed(data,msgId)
+    if msgId == 0 then
+        if data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = GetLanguage(25060014),func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+        end
+    end
     if data ~= nil then
         --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do
-            if value.itemId == data.item.key.id then
-                if value.dataInfo.n == data.item.n then
-                    self:deleteGoodsItem(self.warehouseDatas,key)
-                else
-                    value.dataInfo.n = value.dataInfo.n - data.item.n
-                    value.numberText.text = "×"..value.dataInfo.n
+            if ToNumber(StringSun(data.item.key.id,1,2)) == 21 then
+                if value.itemId == data.item.key.id then
+                    if value.dataInfo.n == data.item.n then
+                        self:deleteGoodsItem(self.warehouseDatas,key)
+                    else
+                        value.dataInfo.n = value.dataInfo.n - data.item.n
+                        value.numberText.text = "×"..value.dataInfo.n
+                    end
+                end
+            elseif ToNumber(StringSun(data.item.key.id,1,2)) == 22 then
+                if value.itemId == data.item.key.id and value.dataInfo.key.producerId == data.item.key.producerId then
+                    if value.dataInfo.n == data.item.n then
+                        self:deleteGoodsItem(self.warehouseDatas,key)
+                    else
+                        value.dataInfo.n = value.dataInfo.n - data.item.n
+                        value.numberText.text = "×"..value.dataInfo.n
+                    end
                 end
             end
         end
         --刷新建筑数据
         for key,value in pairs(self.storeInfoData.inHand) do
-            if value.key.id == data.item.key.id then
-                if value.n == data.item.n then
-                    table.remove(self.storeInfoData.inHand,key)
-                else
-                    value.n = value.n - data.item.n
+            if ToNumber(StringSun(data.item.key.id,1,2)) == 21 then
+                if value.key.id == data.item.key.id then
+                    if value.n == data.item.n then
+                        table.remove(self.storeInfoData.inHand,key)
+                    else
+                        value.n = value.n - data.item.n
+                    end
+                end
+            elseif ToNumber(StringSun(data.item.key.id,1,2)) == 22 then
+                if value.key.id == data.item.key.id and value.key.producerId == data.item.key.producerId then
+                    if value.n == data.item.n then
+                        table.remove(self.storeInfoData.inHand,key)
+                    else
+                        value.n = value.n - data.item.n
+                    end
                 end
             end
         end
@@ -429,17 +512,31 @@ function BuildingWarehouseDetailPart:deleteSucceed(data)
     Event.Brocast("SmallPop", GetLanguage(25020012), ReminderType.Succeed)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+--获取仓库容量
+function BuildingWarehouseDetailPart:_getWarehouseCapacity(data)
+    local nowCapacity = 0
+    for key,value in pairs(data) do
+        nowCapacity = nowCapacity + value.n
+    end
+    return nowCapacity
+end
 --获取仓库里某个商品的数量
 --(后边要修改)
-function BuildingWarehouseDetailPart:getItemIdCount(itemId,callback)
+function BuildingWarehouseDetailPart:getItemIdCount(itemId,producerId,callback)
     if itemId ~= nil then
         local nowCount = 0
         if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil then
             nowCount = 0
         else
             for key,value in pairs(self.storeInfoData.inHand) do
-                if value.key.id == itemId then
-                    nowCount = value.n
+                if producerId == nil then
+                    if value.key.id == itemId then
+                        nowCount = value.n
+                    end
+                else
+                    if value.key.id == itemId and value.key.producerId == producerId then
+                        nowCount = value.n
+                    end
                 end
             end
         end

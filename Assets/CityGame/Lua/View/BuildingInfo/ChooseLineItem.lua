@@ -8,7 +8,7 @@ require('Framework/UI/UIPage')
 ChooseLineItem = class('ChooseLineItem')
 
 --初始化方法   数据（读配置表）
-function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
+function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos,allNumber)
     self.prefab = prefab;
     self.buildingId = DataInfo.info.id;
     self.manager = mgr;
@@ -17,6 +17,7 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos)
     self.manager = mgr;
     self.state = DataInfo.info.state
     self.mId = DataInfo.info.mId
+    self.allNumber = allNumber
 
     self.bg = self.prefab.transform:Find("bg").gameObject:GetComponent("Button");
     self.name = self.prefab.transform:Find("factory/name").gameObject:GetComponent("Text");
@@ -87,6 +88,12 @@ function ChooseLineItem:OnLinePanelBG(go)
     if go.posX ~= 51 then
         if go.state ~= "OPERATE"  then
             Event.Brocast("SmallPop",GetLanguage(25030026),ReminderType.Warning)
+            return
+        end
+    end
+    if go.allNumber then
+        if tonumber(go.allNumber) > go.spareCapacity then
+            Event.Brocast("SmallPop",GetLanguage(25060014),ReminderType.Warning)
             return
         end
     end

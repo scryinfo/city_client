@@ -174,8 +174,13 @@ function ShelfBoxCtrl:initializeUiInfoData()
     local function callback1(b)
         self.shelfNumberText.text = "×"..b
     end
-    Event.Brocast("getItemIdCount",self.m_data.itemId,callback)
-    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
+    if not self.m_data.dataInfo.key then
+        Event.Brocast("getItemIdCount",self.m_data.itemId,self.m_data.dataInfo.k.producerId,callback)
+        Event.Brocast("getShelfItemIdCount",self.m_data.itemId,self.m_data.dataInfo.k.producerId,callback1)
+    else
+        Event.Brocast("getItemIdCount",self.m_data.itemId,self.m_data.dataInfo.key.producerId,callback)
+        Event.Brocast("getShelfItemIdCount",self.m_data.itemId,self.m_data.dataInfo.key.producerId,callback1)
+    end
     if not self.m_data.stateType then
         --货架打开时
         self.downShelfBtn.transform.localScale = Vector3.one
@@ -345,7 +350,7 @@ function ShelfBoxCtrl:InputUpdateText()
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             self.advicePriceText.text = ct.CalculationMaterialCompetitivePower(self.guidePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            self.advicePriceText.text = ct.CalculationFactoryCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,self.averageScore,self.score)
+            self.advicePriceText.text = ct.CalculationFactoryCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,self.score,self.averageScore)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             self.advicePriceText.text = ct.CalculationSupermarketCompetitivePower(self.averagePrice,tonumber(self.priceInput.text) * 10000,self.m_data.itemId,
                     self.playerGoodsScore,self.playerBuildingScore,self.averageScore,self.averageBuildingScore)

@@ -26,6 +26,7 @@ function BuildingShelfDetailPart:Show(data)
 end
 function BuildingShelfDetailPart:Hide()
     BasePartDetail.Hide(self)
+    self.buyDatas = {}
     Event.RemoveListener("salesNotice",self.salesNotice,self)
 end
 function BuildingShelfDetailPart:RefreshData(data)
@@ -347,24 +348,45 @@ function BuildingShelfDetailPart:buySucceed(data)
         if not data.item or next(data.item) == nil then
             data.item = {}
         end
-        --刷新货架
-        for key,value in pairs(self.shelfDatas) do
-            if value.itemId == data.item.key.id  then
-                if value.dataInfo.n == data.item.n then
-                    self:deleteGoodsItem(self.shelfDatas,key)
-                --else
-                --    value.dataInfo.n = value.dataInfo.n - data.item.n
-                --    value.numberText.text = "×"..value.dataInfo.n
-                end
-            end
-        end
+        ----刷新货架
+        --for key,value in pairs(self.shelfDatas) do
+        --    if tonumber(string.sub(data.item.key.id,1,2)) == 21 then
+        --        if value.itemId == data.item.key.id then
+        --            if value.dataInfo.n == data.item.n then
+        --                self:deleteGoodsItem(self.shelfDatas,key)
+        --                --else
+        --                --    value.dataInfo.n = value.dataInfo.n - data.item.n
+        --                --    value.numberText.text = "×"..value.dataInfo.n
+        --            end
+        --        end
+        --    elseif tonumber(string.sub(data.item.key.id,1,2)) == 22 then
+        --        if value.itemId == data.item.key.id and value.dataInfo.k.producerId == data.item.key.producerId then
+        --            if value.dataInfo.n == data.item.n then
+        --                self:deleteGoodsItem(self.shelfDatas,key)
+        --                --else
+        --                --    value.dataInfo.n = value.dataInfo.n - data.item.n
+        --                --    value.numberText.text = "×"..value.dataInfo.n
+        --            end
+        --        end
+        --    end
+        --end
         --刷新建筑货架信息
         for key,value in pairs(self.m_data.shelf.good) do
-            if value.k.id == data.item.key.id then
-                if value.n == data.item.n then
-                    table.remove(self.m_data.shelf.good,key)
-                else
-                    value.n = value.n - data.item.n
+            if tonumber(string.sub(data.item.key.id,1,2)) == 21 then
+                if value.k.id == data.item.key.id then
+                    if value.n == data.item.n then
+                        table.remove(self.m_data.shelf.good,key)
+                    else
+                        value.n = value.n - data.item.n
+                    end
+                end
+            elseif tonumber(string.sub(data.item.key.id,1,2)) == 22 then
+                if value.k.id == data.item.key.id and value.k.producerId == data.item.key.producerId then
+                    if value.n == data.item.n then
+                        table.remove(self.m_data.shelf.good,key)
+                    else
+                        value.n = value.n - data.item.n
+                    end
                 end
             end
         end
@@ -408,20 +430,38 @@ end
 function BuildingShelfDetailPart:salesNotice(data)
     if data ~= nil then
         for key,value in pairs(self.shelfDatas) do
-            if value.dataInfo.k.id == data.itemId then
-                value.dataInfo.n = data.selledCount
-                value.dataInfo.price = data.selledPrice
-                value.dataInfo.autoReplenish = data.autoRepOn
-                if data.autoRepOn == true then
-                    value.automaticBg.transform.localScale = Vector3.one
-                    value.numberBg.gameObject:SetActive(false)
-                else
-                    value.automaticBg.transform.localScale = Vector3.zero
-                    value.numberBg.gameObject:SetActive(true)
+            if tonumber(string.sub(data.itemId,1,2)) == 21 then
+                if value.dataInfo.k.id == data.itemId then
+                    value.dataInfo.n = data.selledCount
+                    value.dataInfo.price = data.selledPrice
+                    value.dataInfo.autoReplenish = data.autoRepOn
+                    if data.autoRepOn == true then
+                        value.automaticBg.transform.localScale = Vector3.one
+                        value.numberBg.gameObject:SetActive(false)
+                    else
+                        value.automaticBg.transform.localScale = Vector3.zero
+                        value.numberBg.gameObject:SetActive(true)
+                    end
+                    value.automaticNumberText.text = "×"..data.selledCount
+                    value.numberText.text = "×"..data.selledCount
+                    value.priceText.text = GetClientPriceString(data.selledPrice)
                 end
-                value.automaticNumberText.text = "×"..data.selledCount
-                value.numberText.text = "×"..data.selledCount
-                value.priceText.text = GetClientPriceString(data.selledPrice)
+            elseif tonumber(string.sub(data.itemId,1,2)) == 22 then
+                if value.dataInfo.k.id == data.itemId and value.dataInfo.k.producerId == data.producerId then
+                    value.dataInfo.n = data.selledCount
+                    value.dataInfo.price = data.selledPrice
+                    value.dataInfo.autoReplenish = data.autoRepOn
+                    if data.autoRepOn == true then
+                        value.automaticBg.transform.localScale = Vector3.one
+                        value.numberBg.gameObject:SetActive(false)
+                    else
+                        value.automaticBg.transform.localScale = Vector3.zero
+                        value.numberBg.gameObject:SetActive(true)
+                    end
+                    value.automaticNumberText.text = "×"..data.selledCount
+                    value.numberText.text = "×"..data.selledCount
+                    value.priceText.text = GetClientPriceString(data.selledPrice)
+                end
             end
         end
     end
@@ -443,17 +483,23 @@ function BuildingShelfDetailPart:getRetailGuidePrice(data)
     self.guideRetailPrice = data
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
---获取仓库里某个商品的数量
+--获取货架上某个商品的数量
 --(后边要修改)
-function BuildingShelfDetailPart:getShelfItemIdCount(itemId,callback)
+function BuildingShelfDetailPart:getShelfItemIdCount(itemId,producerId,callback)
     if itemId ~= nil then
         local nowCount = 0
-        if not self.shelfInfoData.shelf.good or next(self.shelfInfoData.shelf.good) == nil then
+        if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
             nowCount = 0
         else
-            for key,value in pairs(self.shelfInfoData.shelf.good) do
-                if value.k.id == itemId then
-                    nowCount = value.n
+            for key,value in pairs(self.m_data.shelf.good) do
+                if producerId == nil then
+                    if value.k.id == itemId then
+                        nowCount = value.n
+                    end
+                else
+                    if value.k.id == itemId and value.k.producerId == producerId then
+                        nowCount = value.n
+                    end
                 end
             end
         end

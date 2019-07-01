@@ -473,7 +473,7 @@ function VolumeCtrl:OncitzenRect(ins)
 
     pos_Y= pos_Y- (102 + 460)
 
-    VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, pos_Y),
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(159, pos_Y),
             0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     VolumePanel.infoBgrRect.localScale= Vector3.zero
@@ -497,7 +497,7 @@ function VolumeCtrl:OnplayerRect(ins)
 
     pos_Y= pos_Y - 102
 
-    VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, -115),
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(159, -150),
             0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerTypeNum')              --获取玩家交易量

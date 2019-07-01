@@ -181,7 +181,11 @@ function RetailStoresModel:n_OnOpenRetailStores(stream)
     DataManager.ControllerRpcNoRet(self.insId,"RetailStoresCtrl", 'refreshmRetailShopDataInfo',stream)
 end
 --运输
-function RetailStoresModel:n_OnBuildingTransportInfo(data)
+function RetailStoresModel:n_OnBuildingTransportInfo(data,msgId)
+    if msgId == 0 then
+        Event.Brocast("transportSucceed",data,msgId)
+        return
+    end
     Event.Brocast("transportSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end
@@ -191,8 +195,18 @@ function RetailStoresModel:n_OnShelfAddInfo(data)
     Event.Brocast("refreshShelfPartCount")
 end
 --修改货架属性
-function RetailStoresModel:n_OnModifyShelfInfo(data)
+function RetailStoresModel:n_OnModifyShelfInfo(data,msgId)
     FlightMainModel.CloseFlightLoading()
+    if msgId == 0 then
+        if data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = "货架数量发生变化请刷新后操作",func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        end
+    end
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenRetailShop(self.insId)
@@ -227,7 +241,10 @@ function RetailStoresModel:n_OnBuyShelfGoodsInfo(data)
     Event.Brocast("refreshShelfPartCount")
 end
 --销毁仓库原料或商品
-function RetailStoresModel:n_OnDelItemInfo(data)
+function RetailStoresModel:n_OnDelItemInfo(data,msgId)
+    if msgId == 0 then
+        Event.Brocast("deleteSucceed",data,msgId)
+    end
     Event.Brocast("deleteSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
 end

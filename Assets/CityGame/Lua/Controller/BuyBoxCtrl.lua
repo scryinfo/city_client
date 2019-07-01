@@ -111,7 +111,7 @@ function BuyBoxCtrl:initializeUiInfoData()
     local function callback1(b)
         self.shelfNumberText.text = "×"..b
     end
-    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,callback1)
+    Event.Brocast("getShelfItemIdCount",self.m_data.itemId,self.m_data.dataInfo.k.producerId,callback1)
 end
 --设置多语言
 function BuyBoxCtrl:_language()

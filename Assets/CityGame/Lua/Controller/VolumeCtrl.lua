@@ -182,6 +182,8 @@ function VolumeCtrl:initInsData()
     DataManager.OpenDetailModel(VolumeModel,self.insId )
     DataManager.DetailModelRpcNoRet(self.insId , 'm_GetNpcNum')
 end
+
+--多语言
 function VolumeCtrl:language()
 
     VolumePanel.name.text = GetLanguage(11010006)
@@ -498,10 +500,10 @@ function VolumeCtrl:OnplayerRect(ins)
     VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, -115),
             0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
-    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerTypeNum')
-    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNum')
+    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerTypeNum')              --获取玩家交易量
+    DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerNum')                  --获取玩家数量
     VolumePanel.infoBgrRect.localScale= Vector3.one
-    VolumePanel.playercurrRoot.gameObject:SetActive(true)
+    VolumePanel.playercurrRoot.gameObject:SetActive(true)                                       --将玩家交易量节点设置为可见
     if  VolumePanel.threeScrollcontent.transform.childCount == 0 then
         VolumePanel.trade.localScale = Vector3.one
     else
@@ -563,7 +565,7 @@ end
 
 --VolumeCtrl.static.OptionTwosClearData = function(transform)
 --end
-
+--初始化显示
 function VolumeCtrl:c_OnClick_Delete(ins)
     local item = {}
     local type = ins.data.childs
@@ -591,7 +593,7 @@ function VolumeCtrl:c_OnClick_Delete(ins)
 end
 
 
---玩家交易信息（金额）
+--玩家交易信息（金额）曲线
 function VolumeCtrl:c_GoodsplayerTypeNum(info)
     VolumePanel.slide:Close()
     VolumePanel.graph:Close()
@@ -710,6 +712,7 @@ function VolumeCtrl:c_GoodsplayerTypeNum(info)
     VolumePanel.curve.sizeDelta = VolumePanel.curve.sizeDelta + Vector2.New(0.01, 0)
 end
 
+--玩家交易信息（金额）曲线
 function VolumeCtrl:c_GoodsplayerTypeThreeNum(info)
     VolumePanel.sslide:Close()
     VolumePanel.sgraph:Close()

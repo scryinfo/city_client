@@ -460,12 +460,23 @@ function BuildingWarehouseDetailPart:deleteSucceed(data,msgId)
     if data ~= nil then
         --刷新仓库界面
         for key,value in pairs(self.warehouseDatas) do
-            if value.itemId == data.item.key.id then
-                if value.dataInfo.n == data.item.n then
-                    self:deleteGoodsItem(self.warehouseDatas,key)
-                else
-                    value.dataInfo.n = value.dataInfo.n - data.item.n
-                    value.numberText.text = "×"..value.dataInfo.n
+            if ToNumber(StringSun(data.item.key.id,1,2)) == 21 then
+                if value.itemId == data.item.key.id then
+                    if value.dataInfo.n == data.item.n then
+                        self:deleteGoodsItem(self.warehouseDatas,key)
+                    else
+                        value.dataInfo.n = value.dataInfo.n - data.item.n
+                        value.numberText.text = "×"..value.dataInfo.n
+                    end
+                end
+            elseif ToNumber(StringSun(data.item.key.id,1,2)) == 22 then
+                if value.itemId == data.item.key.id and value.dataInfo.key.producerId == data.item.key.producerId then
+                    if value.dataInfo.n == data.item.n then
+                        self:deleteGoodsItem(self.warehouseDatas,key)
+                    else
+                        value.dataInfo.n = value.dataInfo.n - data.item.n
+                        value.numberText.text = "×"..value.dataInfo.n
+                    end
                 end
             end
         end

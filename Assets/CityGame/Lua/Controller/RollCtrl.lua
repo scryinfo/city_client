@@ -77,6 +77,7 @@ end
 function RollCtrl:Refresh()
     Event.AddListener("c_creatRollItem",self.c_creatRollItem,self)
     local data = self.m_data
+    data.titleName = GetLanguage(28040018)
     if data.goodCategory ~=0 then
         Event.AddListener("c_InventResult",self.handleGoodsResult,self)
         panel.EvaRoot.localScale = Vector3.one
@@ -86,7 +87,7 @@ function RollCtrl:Refresh()
     end
     self:updateText(data)
     self.popCompent:Refesh(data)
-    self:c_creatRollItem(data)
+    self:c_creatRollItem(data,data.titleName)
     self:updateText(data)
 end
 
@@ -196,7 +197,7 @@ function RollCtrl:language()
     panel.congratulation2.text = GetLanguage(28040020)
     panel.failtitleText.text = GetLanguage(28040023)
     panel.failtitle.text = GetLanguage(28040021)
-    panel.titleTexts.text = GetLanguage(28040018)
+    --panel.titleTexts.text = GetLanguage(28040018)
     --panel.achievement.text = GetLanguage(28040044)
     --panel.Remainingtime.text = GetLanguage(28040044)
 

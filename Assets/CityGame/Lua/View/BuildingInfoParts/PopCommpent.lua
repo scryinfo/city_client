@@ -6,7 +6,7 @@ function PopCommpent:initialize(panelPrefab,LuaBehaviour,basectrl)
 
     self.closeBtn=transform:Find("PopCommpent/closeBtn")
     self.confirmBtn=transform:Find("PopCommpent/confimBtn")
-    --self.titleText=transform:Find("PopCommpent/titleText"):GetComponent('Text')
+    self.titleText=transform:Find("PopCommpent/titleText"):GetComponent('Text')
 
     LuaBehaviour:AddClick(self.confirmBtn.gameObject,self.OnClick_confirm,self)
     LuaBehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_close,self)
@@ -41,15 +41,19 @@ end
 --刷新
 function PopCommpent:Refesh(m_data)
    --多语言
-   -- self.titleText.text=GetLanguage(10040004)
+    if m_data.titleName then
+        self.titleText.text = m_data.titleName
+    else
+        self.titleText.text = GetLanguage(10040004)
+    end
    --刷新回调
-   self.m_data=m_data
+   self.m_data = m_data
 end
 
 --刷新数据
 function PopCommpent:RefeshData(m_data)
     --刷新回调
-    self.m_data=m_data
+    self.m_data = m_data
 end
 
 -- 设置确认按钮的位置

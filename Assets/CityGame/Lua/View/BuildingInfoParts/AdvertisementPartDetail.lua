@@ -215,14 +215,16 @@ function AdvertisementPartDetail:n_OnPromoteGuidePrice(info)
     self.m_data.guidePrice = 0
     self.m_data.guidePrice = info.proPrice[1].guidePrice
     self.m_data.RDAbility = 0
-    if info.proPrice[1].curAbilitys then
-        for i, v in pairs(info.proPrice[1].curAbilitys) do
-            self.m_data.RDAbility = self.m_data.RDAbility + v
-        end
-        self.m_data.RDAbility = self.m_data.RDAbility / #info.proPrice[1].curAbilitys
-    end
+    --if info.proPrice[1].curAbilitys then
+    --    for i, v in pairs(info.proPrice[1].curAbilitys) do
+    --        self.m_data.RDAbility = self.m_data.RDAbility + v
+    --    end
+    --    self.m_data.RDAbility = self.m_data.RDAbility / #info.proPrice[1].curAbilitys
+    --end
+    self.m_data.RDAbility = info.proPrice[1].curAbilitys
+    self.m_data.averageRDAbility = info.proPrice[1].avgAbility
     --TODO://计算公式错误
-    self.m_data.averageRDAbility = self.m_data.RDAbility
+    --self.m_data.averageRDAbility = self.m_data.RDAbility
 
     if self.m_data.takeOnNewOrder then
         self.openedOthers.transform.localScale = Vector3.zero

@@ -81,7 +81,7 @@ function ShelfItem:InitializeData()
     elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         if self.buildingType == BuildingType.ProcessingFactory then
             local function callback(a,b,c)
-                self.Text.text = ct.CalculationFactoryCompetitivePower(a,self.dataInfo.price,self.itemId,b,c)
+                self.Text.text = ct.CalculationFactoryCompetitivePower(a,self.dataInfo.price,self.itemId,c,b)
             end
             Event.Brocast("getShelfItemProcessing",self.itemId,callback)
         elseif self.buildingType == BuildingType.RetailShop then

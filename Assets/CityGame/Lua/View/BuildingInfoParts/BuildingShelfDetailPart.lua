@@ -26,6 +26,7 @@ function BuildingShelfDetailPart:Show(data)
 end
 function BuildingShelfDetailPart:Hide()
     BasePartDetail.Hide(self)
+    self.buyDatas = {}
     Event.RemoveListener("salesNotice",self.salesNotice,self)
 end
 function BuildingShelfDetailPart:RefreshData(data)

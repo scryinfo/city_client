@@ -238,8 +238,18 @@ function MaterialFactoryModel:n_OnShelfAddInfo(data)
     Event.Brocast("refreshShelfPartCount")
 end
 --修改货架属性
-function MaterialFactoryModel:n_OnModifyShelfInfo(data)
+function MaterialFactoryModel:n_OnModifyShelfInfo(data,msgId)
     FlightMainModel.OpenFlightLoading()
+    if msgId == 0 then
+        if data.reason == "numberNotEnough" then
+            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+                        content = "货架数量发生变化请刷新后操作",func = function()
+                    UIPanel.ClosePage()
+                end}
+            ct.OpenCtrl("NewReminderCtrl",data)
+            return
+        end
+    end
     Event.Brocast("replenishmentSucceed",data)
     if data ~= nil and data.buildingId == self.insId then
         self:m_ReqOpenMaterial(self.insId)

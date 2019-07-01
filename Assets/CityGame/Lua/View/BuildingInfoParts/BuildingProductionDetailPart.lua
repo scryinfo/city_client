@@ -443,6 +443,7 @@ function BuildingProductionDetailPart:updateNowLine(data)
     if data ~= nil then
         --清空生产队列Item数据
         UpdateBeat:Remove(self.Update,self)
+        self.time = nil
         if next(self.waitingQueueIns) ~= nil then
             self:CloseDestroy(self.waitingQueueIns)
         end

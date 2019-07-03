@@ -200,7 +200,6 @@ end
 
 --推广历史曲线回调
 function PromoteCompanyModel:n_OnPromoAbilityHistory(info)
-    local a = info
     DataManager.ControllerRpcNoRet(self.insId,"PromoteCurveCtrl", 'm_PromoteHistoryCurve', info.recordsList[1].list)
 end
 

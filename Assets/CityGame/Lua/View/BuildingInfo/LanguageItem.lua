@@ -37,6 +37,12 @@ function LanguageItem:OnUnselected(go)
     elseif go.data.id == 1 then
         SaveLanguageSettings(LanguageType.English)
         LoginPanel.languageText.text = GetLanguage(10020011)
+    elseif go.data.id == 2 then
+        SaveLanguageSettings(LanguageType.Korean)
+        LoginPanel.languageText.text = GetLanguage(10020012)
+    elseif go.data.id == 3 then
+        SaveLanguageSettings(LanguageType.Japanese)
+        LoginPanel.languageText.text = GetLanguage(10020013)
     end
     Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
 end

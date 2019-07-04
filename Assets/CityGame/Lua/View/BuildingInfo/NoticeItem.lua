@@ -16,7 +16,7 @@ local money
 local startTime
 local bonus
 --初始化方法   数据（读配置表）
-function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,typeId)
+function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,typeId,ins)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
@@ -26,8 +26,7 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,typeId)
     self.content = goodsDataInfo.contents
     self.uuidParas = goodsDataInfo.uuidParas
     self.hide = true
-
-    self:_addListener()
+    self.ins = ins
 
     self.itemHedaer = self.prefab.transform:Find("bg/hedaer").gameObject:GetComponent("Text");
     self.from = self.prefab.transform:Find("bg/from").gameObject:GetComponent("Text");
@@ -45,7 +44,6 @@ function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,typeId)
     local time =ts.year.."-"..ts.month.."-"..ts.day.." "..ts.hour..":"..ts.minute..":"..ts.second
     self.itemTime.text = time
     --到期时间(毫秒)
-   -- local expore = goodsDataInfo.time + 604800000
     local expore = goodsDataInfo.time + 518400000
     --获取当前时间(毫秒)
     local current = TimeSynchronized.GetTheCurrentServerTime()
@@ -79,63 +77,54 @@ end
 function NoticeItem:OnBg(go)
     PlayMusEff(1002)
     if go.typeId == 1 then
-        nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
-        go:GetHouse(go.uuidParas[1])
-        GameNoticePanel.rightContent.text = Notice[go.typeId].content
+        go.ins.nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
+        go:queryBuildingName(go.uuidParas[1])
     elseif go.typeId == 2 then
-        type = go.typeId
-        nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
-        if go.goodsDataInfo.paras[1] == 1100001 or go.goodsDataInfo.paras[1] == 1100002 or go.goodsDataInfo.paras[1] == 1100003 then
-            go:GetMateralDetailInfo(go.uuidParas[1])
-        elseif go.goodsDataInfo.paras[1] == 1200001 or go.goodsDataInfo.paras[1] == 1200002 or go.goodsDataInfo.paras[1] == 1200003 then
-            go:GetProduceDepartment(go.uuidParas[1])
-        end
+        go.ins.type = go.typeId
+        go.ins.nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
+        go:queryBuildingName(go.uuidParas[1])
     elseif go.typeId == 3 then
-        type = go.typeId
-        nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
-        goodsName = GetLanguage(go.goodsDataInfo.intParasArr[1])
-        num = go.goodsDataInfo.intParasArr[2]
-        if go.goodsDataInfo.paras[1] == 1100001 or go.goodsDataInfo.paras[1] == 1100002 or go.goodsDataInfo.paras[1] == 1100003 then
-            go:GetMateralDetailInfo(go.uuidParas[1])
-        else
-            go:GetProduceDepartment(go.uuidParas[1])
-        end
+        go.ins.type = go.typeId
+        go.ins.nameSize =  GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].sizeName)..GetLanguage(PlayerBuildingBaseData[go.goodsDataInfo.paras[1]].typeName)
+        go.ins.goodsName = GetLanguage(go.goodsDataInfo.intParasArr[1])
+        go.ins.num = go.goodsDataInfo.intParasArr[2]
+        go:queryBuildingName(go.uuidParas[1])
     elseif go.typeId == 4 then
         GameNoticePanel.rightContent.text = Notice[go.typeId].content
     elseif go.typeId == 5 then
-        type = go.typeId
-        money = GetClientPriceString(go.goodsDataInfo.tparas[1])
-        time = go.goodsDataInfo.tparas[2]/3600000
+        go.ins.type = go.typeId
+        go.ins.money = GetClientPriceString(go.goodsDataInfo.tparas[1])
+        go.ins.time = go.goodsDataInfo.tparas[2]/3600000
         local timmer = tonumber(go.goodsDataInfo.tparas[3])
         local ts = getFormatUnixTime(timmer/1000)
-        startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
-        go:GetPromote(go.uuidParas[1])
+        go.ins.startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
+        go:queryBuildingName(go.uuidParas[1])
     elseif go.typeId == 6 then
-        type = go.typeId
-        money = GetClientPriceString(go.goodsDataInfo.tparas[1])
-        time =go.goodsDataInfo.tparas[2]
+        go.ins.type = go.typeId
+        go.ins.money = GetClientPriceString(go.goodsDataInfo.tparas[1])
+        go.ins.time =go.goodsDataInfo.tparas[2]
         local timmer = tonumber(go.goodsDataInfo.tparas[3])
         local ts = getFormatUnixTime(timmer/1000)
-        startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
-        go:GetLaboratory(go.uuidParas[1])
+        go.ins.startTime = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
+        go:queryBuildingName(go.uuidParas[1])
     elseif go.typeId == 7 then
-        type = go.typeId
-        nameSize = GetLanguage(go.goodsDataInfo.intParasArr[1])
-        bonus = go.goodsDataInfo.intParasArr[2]
-        time = go.goodsDataInfo.intParasArr[3]
-        go:GetPromote(go.uuidParas[1])
+        go.ins.type = go.typeId
+        go.ins.nameSize = GetLanguage(go.goodsDataInfo.intParasArr[1])
+        go.ins.bonus = go.goodsDataInfo.intParasArr[2]
+        go.ins.time = go.goodsDataInfo.intParasArr[3]
+        go:queryBuildingName(go.uuidParas[1])
     elseif go.typeId == 8 or go.typeId == 9 then
-        type = go.typeId
+        go.ins.type = go.typeId
         if go.goodsDataInfo.paras[3] == 51 then
-            goodsName = GetLanguage(20030002)
+            go.ins.goodsName = GetLanguage(20030002)
         elseif go.goodsDataInfo.paras[3] == 52 then
-            goodsName = GetLanguage(20030001)
+            go.ins.goodsName = GetLanguage(20030001)
         elseif go.goodsDataInfo.paras[3] == 0 then
-            goodsName = GetLanguage(11010001)
+            go.ins.goodsName = GetLanguage(11010001)
         end
-        money = go.goodsDataInfo.paras[1]
-        num = go.goodsDataInfo.paras[2]
-        go:GetLaboratory(go.uuidParas[1])
+        go.ins.money = go.goodsDataInfo.paras[1]
+        go.ins.num = go.goodsDataInfo.paras[2]
+        go:queryBuildingName(go.uuidParas[1])
     elseif go.typeId == 10 then
         go.content = GetLanguage(16020017,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
         GameNoticePanel.rightContent.text = go.content
@@ -153,13 +142,13 @@ function NoticeItem:OnBg(go)
         pos.y = go.goodsDataInfo.intParasArr[2]
         PlayerInfoManger.GetInfos({go.uuidParas[1]}, NoticeItem.c_OnReceivePlayerInfo, NoticeItem)
     elseif go.typeId == 14 then
-        type = go.typeId
+        go.ins.type = go.typeId
         go:GetSocietyInfo(go.uuidParas[1])
     elseif go.typeId == 15 then
-        type = go.typeId
+        go.ins.type = go.typeId
         go:GetSocietyInfo(go.uuidParas[1])
     elseif go.typeId == 16 then
-        type = go.typeId
+        go.ins.type = go.typeId
         go:GetSocietyInfo(go.uuidParas[1])
     elseif go.typeId == 17 then
         go.content = GetLanguage(16010025,"(".. go.goodsDataInfo.intParasArr[1]..","..go.goodsDataInfo.intParasArr[2] .. ")")
@@ -178,68 +167,14 @@ function NoticeItem:RefreshID(id)
     self.id = id
 end
 
---获取玩家信息
-function NoticeItem:GetPlayerId(playerid)
-    --DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetMyFriendsInfo',{playerid})--获取好友信息
-end
-
---获取原料厂建筑详情
-function NoticeItem:GetMateralDetailInfo(buildingId)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetMateralDetailInfo',buildingId)
-end
-
---获取加工厂建筑详情
-function NoticeItem:GetProduceDepartment(buildingId)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetProduceDepartment',buildingId)
-end
-
---获取零售店建筑详情
-function NoticeItem:GetRetailShop(buildingId)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetRetailShop',buildingId)
-end
-
---获取推广公司建筑详情
-function NoticeItem:GetPromote(buildingId)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetPromote',buildingId)
-end
-
---获取研究所建筑详情
-function NoticeItem:GetLaboratory(buildingId)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetLaboratory',buildingId)
-end
-
---获取住宅建筑详情
-function NoticeItem:GetHouse(buildingId)
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetHouse',buildingId)
-end
-
 --获取公会信息
 function NoticeItem:GetSocietyInfo(id)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_GetSocietyInfo',id)
 end
 
--- 监听Model层网络回调
-function NoticeItem:_addListener()
-    Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
-    Event.AddListener("c_MaterialInfo", self.c_MaterialInfo, self) --原料厂建筑详情回调
-    Event.AddListener("c_ProduceInfo", self.c_ProduceInfo, self) --加工厂建筑详情回调
-    Event.AddListener("c_RetailShopInfo", self.c_RetailShopInfo, self) --零售店建筑详情回调
-    Event.AddListener("c_PromoteInfo", self.c_PromoteInfo, self) --推广公司建筑详情回调
-    Event.AddListener("c_Laboratory", self.c_Laboratory, self) --研究所建筑详情回调
-    Event.AddListener("c_House", self.c_House, self) --住宅建筑详情回调
-    Event.AddListener("c_SocietyInfo", self.c_SocietyInfo, self) --公会详情回调
-end
-
---注销model层网络回调
-function NoticeItem:_removeListener()
-    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--玩家信息网络回调
-    Event.RemoveListener("c_MaterialInfo", self.c_MaterialInfo, self)--原料厂建筑详情回调
-    Event.RemoveListener("c_ProduceInfo", self.c_ProduceInfo, self)--加工厂建筑详情回调
-    Event.RemoveListener("c_RetailShopInfo", self.c_RetailShopInfo, self)--零售店建筑详情回调
-    Event.RemoveListener("c_PromoteInfo", self.c_PromoteInfo, self)--推广公司建筑详情回调
-    Event.RemoveListener("c_Laboratory", self.c_Laboratory, self)--研究所建筑详情回调
-    Event.RemoveListener("c_House", self.c_House, self)--住宅建筑详情回调
-    Event.RemoveListener("c_SocietyInfo", self.c_SocietyInfo, self)--公会详情回调
+--获取建筑名字
+function NoticeItem:queryBuildingName(buildingId)
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameNoticeCtrl , 'm_queryBuildingName',buildingId)
 end
 
 function NoticeItem:c_OnReceivePlayerInfo(playerData)
@@ -254,62 +189,4 @@ function NoticeItem:c_OnReceivePlayerInfo(playerData)
     GameNoticePanel.rightContent.text = self.content
 end
 
-function NoticeItem:c_MaterialInfo(name)
-    if type == 3 then
-        self.content = GetLanguage(16020004,name,nameSize,goodsName,num)
-    elseif  type == 2 then
-        self.content = GetLanguage(16020002,name,nameSize)
-    end
-    GameNoticePanel.rightContent.text = self.content
-end
-
-function NoticeItem:c_ProduceInfo(name)
-    if type == 3 then
-        self.content = GetLanguage(16020004,name,nameSize,goodsName,num)
-    elseif  type == 2 then
-        self.content = GetLanguage(16020002,name,nameSize)
-    end
-    GameNoticePanel.rightContent.text = self.content
-end
-
-function NoticeItem:c_RetailShopInfo(name)
-    self.content = GetLanguage(16020002,name,nameSize)
-    GameNoticePanel.rightContent.text = self.content
-end
-
-function NoticeItem:c_PromoteInfo(name)
-    if type == 5 then
-        self.content = GetLanguage(16020012,name,time,money,startTime)
-    elseif type == 7 then
-        self.content = GetLanguage(16020014,name,time,nameSize,bonus)
-    end
-    GameNoticePanel.rightContent.text = self.content
-end
-
-function NoticeItem:c_Laboratory(name)
-    if type == 6 then
-        self.content = GetLanguage(16020013,name,time,money,startTime)
-    elseif type == 8 then
-        self.content = GetLanguage(16020015,name,goodsName,money,num)
-    elseif type == 9 then
-        self.content = GetLanguage(16020015,name,goodsName,money,num)
-    end
-    GameNoticePanel.rightContent.text = self.content
-end
-
-function NoticeItem:c_House(name)
-    self.content = GetLanguage(16020001,name,nameSize)
-    GameNoticePanel.rightContent.text = self.content
-end
-
-function NoticeItem:c_SocietyInfo(name)
-    if type == 14 then
-        self.content = GetLanguage(16020022,name)
-    elseif type == 15 then
-        self.content = GetLanguage(16020023,name)
-    elseif type == 16 then
-        self.content = GetLanguage(16020024,name)
-    end
-    GameNoticePanel.rightContent.text = self.content
-end
 

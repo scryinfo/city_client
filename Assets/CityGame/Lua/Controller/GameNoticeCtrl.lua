@@ -31,11 +31,21 @@ end
 
 function GameNoticeCtrl:Awake()
     self.insId = OpenModelInsID.GameNoticeCtrl
+    self.m_data.insId = OpenModelInsID.GameNoticeCtrl
     GameNoticeBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     GameNoticeBehaviour:AddClick(GameNoticePanel.bgBtn,self.OnBgBtn,self)
     GameNoticeBehaviour:AddClick(GameNoticePanel.xBtn,self.OnXBtn,self);
     GameNoticeBehaviour:AddClick(GameNoticePanel.jumpBtn,self.OnJumpBtn,self);
     GameNoticeBehaviour:AddClick(GameNoticePanel.hint,self.OnHint,self);
+
+    self.type = 0
+    self.nameSize = ""
+    self.goodsName = ""
+    self.num = 0
+    self.time = 0
+    self.money = 0
+    self.startTime = 0
+    self.bonus = 0
 
     --滑动互用
     self.notices = UnityEngine.UI.LoopScrollDataSource.New()  --行情
@@ -51,6 +61,8 @@ function GameNoticeCtrl:Active()
     Event.AddListener("c_onBg",self.c_onBg,self)
     Event.AddListener("c_OnMailRead",self.c_OnMailRead,self)
     Event.AddListener("c_OnDeleMails",self.c_OnDeleMails,self)
+    Event.AddListener("GetBuildingName",self.GetBuildingName,self)  --建筑名字
+    Event.AddListener("c_SocietyInfo",self.c_SocietyInfo,self)  --公会名字
 
     GameNoticePanel.hintText.text = GetLanguage(16010018)
 
@@ -71,6 +83,8 @@ function GameNoticeCtrl:Hide()
     Event.RemoveListener("c_onBg",self.c_onBg,self)
     Event.RemoveListener("c_OnMailRead",self.c_OnMailRead,self)
     Event.RemoveListener("c_OnDeleMails",self.c_OnDeleMails,self)
+    Event.RemoveListener("GetBuildingName",self.GetBuildingName,self)  --建筑名字
+    Event.RemoveListener("c_SocietyInfo",self.c_SocietyInfo,self)  --公会名字
 
     bg = nil
     noticeData = {}
@@ -83,7 +97,7 @@ end
 function GameNoticeCtrl:initializeData()
     if self.m_data then
         DataManager.OpenDetailModel(GameNoticeModel,self.insId )
-        for i, v in pairs(self.m_data) do
+        for i, v in pairs(self.m_data.mails) do
             noticeData[i] = {}
             noticeData[i].header = GetLanguage(Notice[v.type].header)
             noticeData[i].content = Notice[v.type].content
@@ -115,8 +129,7 @@ end
 GameNoticeCtrl.static.NoticeProvideData = function(transform, idx)
 
     idx = idx + 1
-    local item = NoticeItem:new(noticeData[#noticeData-idx+1],transform,GameNoticeBehaviour,noticeData[#noticeData-idx+1].id,noticeData[#noticeData-idx+1].type)
-    --local item = NoticeItem:new(noticeData[idx],transform,GameNoticeBehaviour,noticeData[idx].id,noticeData[idx].type)
+    local item = NoticeItem:new(noticeData[#noticeData-idx+1],transform,GameNoticeBehaviour,noticeData[#noticeData-idx+1].id,noticeData[#noticeData-idx+1].type,GameNoticeCtrl)
     noticeItems[item.id] = item
 end
 
@@ -125,29 +138,21 @@ GameNoticeCtrl.static.NoticeClearData = function(transform)
 end
 
 --点击空白背景返回
-function GameNoticeCtrl:OnBgBtn()
+function GameNoticeCtrl:OnBgBtn(go)
     PlayMusEff(1002)
     GameNoticePanel.hintItem.localScale = Vector3.zero
     GameNoticePanel.right.localScale = Vector3.zero
+    go:Hide()
     UIPanel.ClosePage();
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameMainInterfaceCtrl , 'm_GetAllMails')
 end
 
 --点击xbutton
 function GameNoticeCtrl:OnXBtn(go)
     PlayMusEff(1002)
-    --local data = {}
-    --data.titleInfo = GetLanguage(16010019)
-    --data.contentInfo = GetLanguage(16010020)
-    --data.tipInfo = ""
-    --data.btnCallBack = function ()
-    --    DataManager.DetailModelRpcNoRet(go.insId , 'm_delMail',goId)
-    --    --GameNoticeCtrl:c_OnDeleMails(go)
-    --end
-    --ct.OpenCtrl('BtnDialogPageCtrl',data)
     local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
                 content = GetLanguage(16010020),func = function()
             DataManager.DetailModelRpcNoRet(go.insId , 'm_delMail',goId)
-            --GameNoticeCtrl:c_OnDeleMails(go)
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)
 end
@@ -233,7 +238,7 @@ function GameNoticeCtrl:_deleteNotice(id)
     if id == nil then
         return
     end
-    noticeItems[id].prefab.gameObject:SetActive(false)
+    destroy(noticeItems[id].prefab.gameObject)
     noticeItems[id] = nil
     id = nil
     bg = nil
@@ -242,4 +247,36 @@ function GameNoticeCtrl:_deleteNotice(id)
         UIPanel.ClosePage();
         ct.OpenCtrl("NoMessageCtrl")
     end
+end
+
+function GameNoticeCtrl:GetBuildingName(name)
+    if GameNoticeCtrl.type == 1 then
+        GameNoticeCtrl.content = GetLanguage(16020001,name,GameNoticeCtrl.nameSize)
+    elseif GameNoticeCtrl.type == 2 then
+        GameNoticeCtrl.content = GetLanguage(16020002,name,GameNoticeCtrl.nameSize)
+    elseif GameNoticeCtrl.type == 3 then
+        GameNoticeCtrl.content = GetLanguage(16020004,name,GameNoticeCtrl.nameSize,GameNoticeCtrl.goodsName,GameNoticeCtrl.num)
+    elseif GameNoticeCtrl.type == 5 then
+        GameNoticeCtrl.content = GetLanguage(16020012,name,GameNoticeCtrl.time,GameNoticeCtrl.money,GameNoticeCtrl.startTime)
+    elseif GameNoticeCtrl.type == 6 then
+        GameNoticeCtrl.content = GetLanguage(16020013,name,GameNoticeCtrl.time,GameNoticeCtrl.money,GameNoticeCtrl.startTime)
+    elseif GameNoticeCtrl.type == 7 then
+        GameNoticeCtrl.content = GetLanguage(16020014,name,GameNoticeCtrl.time,GameNoticeCtrl.nameSize,GameNoticeCtrl.bonus)
+    elseif GameNoticeCtrl.type == 8 then
+        GameNoticeCtrl.content = GetLanguage(16020015,name,GameNoticeCtrl.goodsName,GameNoticeCtrl.money,GameNoticeCtrl.num)
+    elseif GameNoticeCtrl.type == 9 then
+        GameNoticeCtrl.content = GetLanguage(16020015,name,GameNoticeCtrl.goodsName,GameNoticeCtrl.money,GameNoticeCtrl.num)
+    end
+    GameNoticePanel.rightContent.text = GameNoticeCtrl.content
+end
+
+function GameNoticeCtrl:c_SocietyInfo(name)
+    if GameNoticeCtrl.type == 14 then
+        GameNoticeCtrl.content = GetLanguage(16020022,name)
+    elseif GameNoticeCtrl.type == 15 then
+        GameNoticeCtrl.content = GetLanguage(16020023,name)
+    elseif GameNoticeCtrl.type == 16 then
+        GameNoticeCtrl.content = GetLanguage(16020024,name)
+    end
+    GameNoticePanel.rightContent.text = GameNoticeCtrl.content
 end

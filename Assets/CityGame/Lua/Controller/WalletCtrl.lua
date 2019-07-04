@@ -7,6 +7,7 @@ WalletCtrl = class('WalletCtrl',UIPanel)
 UIPanel:ResgisterOpen(WalletCtrl)
 
 local records
+local cashBox = {}
 function WalletCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.DoNothing,UICollider.Normal)
 end
@@ -433,13 +434,33 @@ end
 --前往CashBoxs
 function WalletCtrl:_clickQRCodeConfirmBtn(ins)
     PlayMusEff(1002)
-    --local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
-    --            content = GetLanguage(33020018),func = function()
-    --        UIPanel.ClosePage()
-    --    end  }
-    --ct.OpenCtrl('NewReminderCtrl',data)
+    cashBox.TopUpMoney = ins.TopUpMoney
+    cashBox.moneyEthAddr = ins.moneyEthAddr
+    cashBox.moneyPurchaseId = ins.moneyPurchaseId
+    CityLuaUtil.CallDetectWall()
+end
 
-    CityLuaUtil.openCashbox(ins.TopUpMoney,ins.moneyEthAddr,ins.moneyPurchaseId)
+--沒有CashBoxs
+function WalletCtrl.static.NoCashBox()
+    local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
+                content = GetLanguage(33020018),func = function()
+            UnityEngine.Application.OpenURL("https://cashbox.scry.info/downloadview")
+
+        end  }
+    ct.OpenCtrl('NewReminderCtrl',data)
+end
+
+--无转账功能
+function WalletCtrl.static.Fail()
+    local data= { ReminderType = ReminderType.Warning, ReminderSelectType = ReminderSelectType.Select,
+                  content = GetLanguage(33020018) }
+    ct.OpenCtrl('NewReminderCtrl',data)
+end
+
+--跳转CashBox
+function WalletCtrl.static.GotoCashBox()
+    CityLuaUtil.openCashbox(cashBox.TopUpMoney,cashBox.moneyEthAddr,cashBox.moneyPurchaseId)
+    cashBox = {}
 end
 -----------------------------------------------------------------------监听函数-----------------------------------------------------------------------
 --检测两次输入密码是否相同
@@ -580,8 +601,8 @@ function WalletCtrl:closeQRCode()
 end
 --打开扫描二维码
 function WalletCtrl:openScanningQRCode()
-    self.m_Timer:Start()
     self.scanQRCodeRoot.transform.localScale = Vector3.one
+    self.m_Timer:Start()
     self.scanQRCode.codePanel = self.scanQRCodeRoot:GetComponent("RectTransform")
     self.scanQRCode.qrStingText = self.addressInput
     self.scanQRCode:StartScanQRCode()

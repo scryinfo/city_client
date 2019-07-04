@@ -499,8 +499,6 @@ function GameMainInterfaceCtrl:Awake()
 
     --radioTime = 0
     radioIndex = 1
-   -- radio = {{type = 1,ts = 1,sellName = "12",buyName = "34",cost = 100000},{type = 2,ts = 11,num = 100},{type = 3 ,ts = 22,num = 200},{type = 4 ,ts = 33,cost = 200000},{type = 5 ,ts = 44,num = 300}}
-
     --初始化循环参数
     self.intTime = 1
     self.m_Timer = Timer.New(slot(self.RefreshWeather, self), 1, -1, true)
@@ -699,7 +697,7 @@ function GameMainInterfaceCtrl.OnNotice(go)
     if Mails == nil then
         ct.OpenCtrl("NoMessageCtrl")
     else
-        ct.OpenCtrl('GameNoticeCtrl',Mails)
+        ct.OpenCtrl('GameNoticeCtrl',{mails = Mails})
     end
 end
 
@@ -960,8 +958,8 @@ function GameMainInterfaceCtrl:OnClick_EarningBtn(isShow,go)
             if incomeNotify then
                 GameMainInterfacePanel.earningScroll:ActiveLoopScroll(go.earnings, #incomeNotify)
             end
+            lastIncomeNotify = ct.deepCopy(incomeNotify)
         end
-        lastIncomeNotify = ct.deepCopy(incomeNotify)
         GameMainInterfacePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         GameMainInterfacePanel.open.transform.localScale = Vector3.zero
         GameMainInterfacePanel.opens.transform.localScale = Vector3.zero

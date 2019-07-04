@@ -49,6 +49,7 @@ end
 function NoMessageCtrl:OnBgBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage();
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.GameMainInterfaceCtrl , 'm_GetAllMails')
 end
 
 --点击删除

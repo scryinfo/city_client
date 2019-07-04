@@ -426,11 +426,6 @@ function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
                 end
             end
         end
-        --for key,value in pairs(self.m_data.store.inHand) do
-        --    if ToNumber(StringSun(data.item.key.id,1,2)) == 21 then
-        --
-        --    end
-        --end
     end
     --运输成功后，如果仓库是空的
     if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil then
@@ -576,11 +571,11 @@ function BuildingWarehouseDetailPart:screeningTabInfo(data,type)
     local targetTable = {}
     for key,value in pairs(data) do
         if type == ItemScreening.material then
-            if ToNumber(StringSun(key,1,2)) == materialKey then
+            if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
                 targetTable[#targetTable + 1] = ct.deepCopy(value)
             end
         elseif type == ItemScreening.goods then
-            if ToNumber(StringSun(key,1,2)) == goodsKey then
+            if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
                 targetTable[#targetTable + 1] = ct.deepCopy(value)
             end
         end

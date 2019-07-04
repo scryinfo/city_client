@@ -63,6 +63,7 @@ function ChooseWarehouseCtrl:Active()
     Event.AddListener("CreateLinePanel",self.CreateLinePanel,self)
     self:_addListener()
 
+    ChooseWarehousePanel.tipText.text = "暂无仓库"
     ChooseWarehousePanel.name.text = GetLanguage(25020015)
     ChooseWarehousePanel.mineName.text = GetLanguage(21030005)
     ChooseWarehousePanel.addresslist.text = GetLanguage(21030006)

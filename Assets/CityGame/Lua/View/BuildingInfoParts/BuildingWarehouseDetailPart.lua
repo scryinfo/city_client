@@ -456,6 +456,7 @@ function BuildingWarehouseDetailPart:deleteSucceed(data,msgId)
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
         end
+        return
     end
     if data ~= nil then
         --刷新仓库界面
@@ -508,7 +509,6 @@ function BuildingWarehouseDetailPart:deleteSucceed(data,msgId)
     self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
     self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
-    UIPanel.ClosePage()
     Event.Brocast("SmallPop", GetLanguage(25020012), ReminderType.Succeed)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------

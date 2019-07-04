@@ -46,6 +46,8 @@ function BuildingShelfDetailPart:RefreshData(data)
 
     --获取最新的货架数据
     Event.Brocast("m_GetShelfData",data.insId)
+    --获取最新的仓库数据
+    Event.Brocast("m_GetWarehouseData",data.insId)
 end
 
 function BuildingShelfDetailPart:_getComponent(transform)
@@ -111,6 +113,7 @@ function BuildingShelfDetailPart:_InitEvent()
     Event.AddListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.AddListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.AddListener("getShelfInfoData",self.getShelfInfoData,self)
+    Event.AddListener("getWarehouseBoxData",self.getWarehouseData,self)
     Event.AddListener("getShelfGuidePrice",self.getShelfGuidePrice,self)
     Event.AddListener("closeBuyList",self.closeBuyList,self)
     Event.AddListener("getShelfProcessingGuidePrice",self.getShelfProcessingGuidePrice,self)
@@ -132,6 +135,7 @@ function BuildingShelfDetailPart:_RemoveEvent()
     Event.RemoveListener("getShelfItemIdCount",self.getShelfItemIdCount,self)
     Event.RemoveListener("modifyShelfInfo",self.modifyShelfInfo,self)
     Event.RemoveListener("getShelfInfoData",self.getShelfInfoData,self)
+    Event.RemoveListener("getWarehouseBoxData",self.getWarehouseData,self)
     Event.RemoveListener("getShelfGuidePrice",self.getShelfGuidePrice,self)
     Event.RemoveListener("closeBuyList",self.closeBuyList,self)
     Event.RemoveListener("getShelfProcessingGuidePrice",self.getShelfProcessingGuidePrice,self)
@@ -206,6 +210,7 @@ function BuildingShelfDetailPart:clickaddShelfBtn()
     local data = {}
     data.info = self.m_data
     data.shelf = self.shelfInfoData
+    data.warehouse = self.warehouseInfoData
     ct.OpenCtrl("WarehouseDetailBoxCtrl",data)
 end
 --打开购买弹窗
@@ -325,6 +330,10 @@ function BuildingShelfDetailPart:getShelfInfoData(data)
     self.shelfInfoData = ct.deepCopy(data)
     self:initializeUiInfoData(self.shelfInfoData.shelf.good)
 end
+--获取仓库数据
+function BuildingShelfDetailPart:getWarehouseData(data)
+    self.warehouseInfoData = ct.deepCopy(data)
+end
 --下架成功后
 function BuildingShelfDetailPart:downShelfSucceed(data)
     if data ~= nil then
@@ -348,28 +357,28 @@ function BuildingShelfDetailPart:buySucceed(data)
         if not data.item or next(data.item) == nil then
             data.item = {}
         end
-        ----刷新货架
-        --for key,value in pairs(self.shelfDatas) do
-        --    if tonumber(string.sub(data.item.key.id,1,2)) == 21 then
-        --        if value.itemId == data.item.key.id then
-        --            if value.dataInfo.n == data.item.n then
-        --                self:deleteGoodsItem(self.shelfDatas,key)
-        --                --else
-        --                --    value.dataInfo.n = value.dataInfo.n - data.item.n
-        --                --    value.numberText.text = "×"..value.dataInfo.n
-        --            end
-        --        end
-        --    elseif tonumber(string.sub(data.item.key.id,1,2)) == 22 then
-        --        if value.itemId == data.item.key.id and value.dataInfo.k.producerId == data.item.key.producerId then
-        --            if value.dataInfo.n == data.item.n then
-        --                self:deleteGoodsItem(self.shelfDatas,key)
-        --                --else
-        --                --    value.dataInfo.n = value.dataInfo.n - data.item.n
-        --                --    value.numberText.text = "×"..value.dataInfo.n
-        --            end
-        --        end
-        --    end
-        --end
+        --刷新货架
+        for key,value in pairs(self.shelfDatas) do
+            if tonumber(string.sub(data.item.key.id,1,2)) == 21 then
+                if value.itemId == data.item.key.id then
+                    if value.dataInfo.n == data.item.n then
+                        self:deleteGoodsItem(self.shelfDatas,key)
+                        --else
+                        --    value.dataInfo.n = value.dataInfo.n - data.item.n
+                        --    value.numberText.text = "×"..value.dataInfo.n
+                    end
+                end
+            elseif tonumber(string.sub(data.item.key.id,1,2)) == 22 then
+                if value.itemId == data.item.key.id and value.dataInfo.k.producerId == data.item.key.producerId then
+                    if value.dataInfo.n == data.item.n then
+                        self:deleteGoodsItem(self.shelfDatas,key)
+                        --else
+                        --    value.dataInfo.n = value.dataInfo.n - data.item.n
+                        --    value.numberText.text = "×"..value.dataInfo.n
+                    end
+                end
+            end
+        end
         --刷新建筑货架信息
         for key,value in pairs(self.m_data.shelf.good) do
             if tonumber(string.sub(data.item.key.id,1,2)) == 21 then

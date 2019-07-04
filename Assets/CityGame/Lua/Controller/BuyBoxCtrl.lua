@@ -108,8 +108,8 @@ function BuyBoxCtrl:initializeUiInfoData()
     self.numberSlider.maxValue = self.m_data.dataInfo.n
     self.numberSlider.value = 1
     self.numberText.text = "×"..self.numberSlider.value
-    local function callback1(b)
-        self.shelfNumberText.text = "×"..b
+    local function callback1(number)
+        self.shelfNumberText.text = "×"..number
     end
     Event.Brocast("getShelfItemIdCount",self.m_data.itemId,self.m_data.dataInfo.k.producerId,callback1)
 end

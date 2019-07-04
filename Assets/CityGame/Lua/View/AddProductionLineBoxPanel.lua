@@ -24,6 +24,8 @@ function AddProductionLineBoxPanel:InitPanel()
     this.nameText = transform:Find("contentRoot/content/goodsInfo/iconBg/nameBg/nameText"):GetComponent("Text")
     this.brandNameText = transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandNameText"):GetComponent("Text")
     --商品属性，原料没有
+    this.iconBg = transform:Find("contentRoot/content/goodsInfo/iconBg")
+    this.scoreBg = transform:Find("contentRoot/content/goodsInfo/scoreBg")
     this.popularity = transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity")
     this.quality = transform:Find("contentRoot/content/goodsInfo/scoreBg/quality")
     this.levelBg = transform:Find("contentRoot/content/goodsInfo/levelBg")

@@ -240,6 +240,7 @@ function ShelfBoxCtrl:_language()
     self.tipText.text = GetLanguage(25060004)
     self.tipContentText.text = GetLanguage(25020027)
     self.priceTip.text = GetLanguage(25060003)
+    self.CompetitivenessText.text = GetLanguage(43010001)
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------

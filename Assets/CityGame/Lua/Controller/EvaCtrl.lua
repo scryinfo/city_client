@@ -117,7 +117,7 @@ function EvaCtrl:updateData()
                 end
             end
             --DynamicLoadPrefab("Assets/CityGame/Resources/View/Eva/EvaTitleItem.prefab", EvaPanel.optionOneScroll, nil, callback)
-            createPrefab("Assets/CityGame/Resources/View/Eva/EvaTitleItem.prefab", EvaPanel.optionOneScroll.gameObject, callback)
+            createPrefab("Assets/CityGame/Resources/View/Eva/EvaTitleItem.prefab", EvaPanel.optionOneScroll, callback)
         end
     end
 end

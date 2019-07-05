@@ -6,6 +6,7 @@
 AddProductionLineBoxCtrl = class('AddProductionLineBoxCtrl',UIPanel)
 UIPanel:ResgisterOpen(AddProductionLineBoxCtrl)
 
+local ToNumber = tonumber
 local addLineBox
 --奢侈等级
 local oneLevel = Vector3.New(105,174,238)
@@ -47,6 +48,9 @@ function AddProductionLineBoxCtrl:Active()
     AddProductionLineBoxPanel.numberSlider.onValueChanged:AddListener(function()
         self:SlidingUpdateText()
     end)
+    AddProductionLineBoxPanel.numberInput.onValueChanged:AddListener(function()
+        self:inputUpdateText()
+    end)
 end
 function AddProductionLineBoxCtrl:Refresh()
     self:InitializeData()
@@ -66,7 +70,7 @@ function AddProductionLineBoxCtrl:InitializeData()
     AddProductionLineBoxPanel.numberSlider.value = 1
     AddProductionLineBoxPanel.numberSlider.minValue = 1
     AddProductionLineBoxPanel.numberSlider.maxValue = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
-    AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
+    --AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.nameText.text = GetLanguage(self.m_data.itemId)
     self.workerNum = PlayerBuildingBaseData[self.m_data.mId].maxWorkerNum
 
@@ -164,10 +168,20 @@ end
 
 --滑动条刷新输入框值
 function AddProductionLineBoxCtrl:SlidingUpdateText()
-    AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
+    --AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
+    AddProductionLineBoxPanel.numberInput.text = AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.timeText.text = self:GetTime(AddProductionLineBoxPanel.numberSlider.value,self.workerNum)
 end
-
+--输入框事件
+function AddProductionLineBoxCtrl:inputUpdateText()
+    if AddProductionLineBoxPanel.numberInput.text == "" or ToNumber(AddProductionLineBoxPanel.numberInput.text) <= 0 then
+        AddProductionLineBoxPanel.numberInput.text = 1
+    end
+    if ToNumber(AddProductionLineBoxPanel.numberInput.text) > PlayerBuildingBaseData[self.m_data.mId].storeCapacity then
+        AddProductionLineBoxPanel.numberInput.text = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
+    end
+    AddProductionLineBoxPanel.numberSlider.value = ToNumber(AddProductionLineBoxPanel.numberInput.text)
+end
 --检查要生产的数量是否为零
 function AddProductionLineBoxCtrl:NumberWhetherZero(number)
     if number == 0 then

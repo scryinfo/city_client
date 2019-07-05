@@ -49,15 +49,9 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
         --更新队列数据
         local function UpData()
             if not isUpdata then
-                if self.m_Timer ~= nil then
-                    self.m_Timer:Stop()
-                end
                 return
             end
             if self.bg:Equals(nil) then
-                if self.m_Timer ~= nil then
-                    self.m_Timer:Stop()
-                end
                 return
             end
             self.waiting = self.waiting -1

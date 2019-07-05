@@ -26,8 +26,14 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
     self.rollBtn = self.transform:Find("startTime/rollBtn")
     self.rollBtnText = self.transform:Find("startTime/rollBtn/rollBtnText"):GetComponent("Text")
     self.counttimetext = self.transform:Find("details/Slider/counttime"):GetComponent("Text")
+    self.move = self.transform:Find("details/Slider/Fill Area/Fill/move"):GetComponent("RectTransform")
+    self.moves = self.transform:Find("details/Slider/Fill Area/Fill/moves"):GetComponent("RectTransform")
     self.searching = self.transform:Find("details/Slider/searching")
     self.waiting = 0
+    self.speed = 0.4
+
+    self.position = Vector3.New(-164,0,0)
+    self.positions = Vector3.New(210,0,0)
     isUpdata = true
     luaBehaviour:AddClick(self.delete,self.c_OnClick_Delete,self)
     luaBehaviour:AddClick(self.rollBtn.gameObject,self.c_OnClick_Roll,self)
@@ -48,8 +54,17 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
                 self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
                 local ts =getTimeBySec( (self.currentTime - self.data.beginProcessTs)/1000)
                 --local downtime = getTimeBySec((self.data.times * 3600000 - ts)/1000)
+                self.slider.value = (self.currentTime - self.data.beginProcessTs) /  self.data.times*3600000
                 self.counttimetext.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.data.times).. "h"
                 self.waiting = 1
+            end
+            self.move:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
+            self.moves:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
+            if self.move.localPosition.x >= self.position.x + 100 then
+                self.move.localPosition = self.position
+            end
+            if self.moves.localPosition.x >= self.positions.x + 100 then
+                self.moves.localPosition = self.positions
             end
         end
         ctrl:SetFunc(UpData)
@@ -163,7 +178,7 @@ function InventGoodQueneItem:Refresh(data)
 end
 --加载头像和名字
 function InventGoodQueneItem:c_OnHead(info)
-    AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.15)
+    AvatarManger.GetSmallAvatar(info[1].faceId,self.head.transform,0.13)
     self.name.text = info[1].name
 end
 

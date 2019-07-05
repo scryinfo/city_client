@@ -489,6 +489,7 @@ function ChatCtrl:_guildToggleValueChange(isOn)
 
         self:_showGuildPlayer()
         self:_showGuildInfo()
+        ChatCtrl.static.chatMgr:StartScrollBottom()
     end
 end
 

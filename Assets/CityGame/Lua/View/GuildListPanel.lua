@@ -32,6 +32,7 @@ function GuildListPanel.InitPanel()
     this.sureBtn = transform:Find("CreateRoot/MiddleRoot/SureBtn").gameObject
 
     -- 排序
+    this.listTitleRoot = transform:Find("MiddleRoot/ListTitleRoot")
     this.memberNumberBtn = transform:Find("MiddleRoot/ListTitleRoot/MemberNumberBtn").gameObject
     this.memberNumberBtnOpen = transform:Find("MiddleRoot/ListTitleRoot/MemberNumberBtn/Open")
     this.memberNumberBtnClose = transform:Find("MiddleRoot/ListTitleRoot/MemberNumberBtn/Close")

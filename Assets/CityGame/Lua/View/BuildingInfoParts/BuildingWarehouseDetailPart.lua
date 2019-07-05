@@ -346,7 +346,7 @@ end
 function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
     if msgId == 0 then
         if data.reason == "spaceNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060014),func = function()
                     if next(self.transportTab) ~= nil then
                         self.transportTab = {}
@@ -357,7 +357,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
             ct.OpenCtrl("NewReminderCtrl",data)
             return
         elseif data.reason == "numberNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060014),func = function()
                     if next(self.transportTab) ~= nil then
                         self.transportTab = {}
@@ -368,7 +368,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
             ct.OpenCtrl("NewReminderCtrl",data)
             return
         elseif data.reason == "moneyNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(21010003),func = function()
                     if next(self.transportTab) ~= nil then
                         self.transportTab = {}

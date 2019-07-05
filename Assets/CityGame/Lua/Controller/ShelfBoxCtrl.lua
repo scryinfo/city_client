@@ -114,13 +114,11 @@ end
 --初始化UI数据
 function ShelfBoxCtrl:initializeUiInfoData()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        self.tipPriceText.text = GetLanguage(43020001)..GetLanguage(43020002)
         local function callbacks(b)
             self.guidePrice = b
         end
         Event.Brocast("getShelfItemGuidePrice",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        self.tipPriceText.text = GetLanguage(43030001)..GetLanguage(43030002)
         local function callbacks(a,b,c)
             self.averagePrice = a --平均价
             self.averageScore = b --平均分
@@ -128,7 +126,6 @@ function ShelfBoxCtrl:initializeUiInfoData()
         end
         Event.Brocast("getShelfItemProcessing",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.RetailShop then
-        self.tipPriceText.text = GetLanguage(43040001)..GetLanguage(43040002)
         local function callbacks(a,b,c,d,e)
             self.averagePrice = a --平均价
             self.averageScore = b --平均分
@@ -333,8 +330,16 @@ end
 function ShelfBoxCtrl:openTipPriceText(isBool)
     if isBool then
         self.tipPriceBg.transform.localScale = Vector3.one
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            self.tipPriceText.text = GetLanguage(43020001)..GetLanguage(43020002)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            self.tipPriceText.text = GetLanguage(43030001)..GetLanguage(43030002)
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            self.tipPriceText.text = GetLanguage(43040001)..GetLanguage(43040002)
+        end
     else
         self.tipPriceBg.transform.localScale = Vector3.zero
+        self.tipPriceText.text = ""
     end
     isShowPrice = isBool
 end

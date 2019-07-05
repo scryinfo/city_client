@@ -27,7 +27,7 @@ function FlightMainPanel.InitPanel()
     this.scrollPage = transform:Find("pageRoot/scroll"):GetComponent("ScrollPageOptimize")
 
     this.titleText01 = transform:Find("topRoot/Text"):GetComponent("Text")
-    this.recordText02 = transform:Find("recordBtn/Text"):GetComponent("Text")
+    this.recordText02 = transform:Find("topRoot/recordBtn/Text"):GetComponent("Text")
     this.noneTipText03 = transform:Find("noneTip/Text"):GetComponent("Text")
     this.moneyText04 = transform:Find("topRoot/moneyBg/Text"):GetComponent("Text")
     this.searchBtnText05 = transform:Find("searchBtn/Text"):GetComponent("Text")

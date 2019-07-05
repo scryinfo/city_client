@@ -118,6 +118,11 @@ end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
+    if self.m_data.buildingType == BuildingType.RetailShop then
+        self.tipText.text = GetLanguage(25020024)
+    else
+        self.tipText.text = GetLanguage(25020033)
+    end
     --隐藏仓库分类按钮
     self.sortingBtn.localScale = Vector3.zero
 end
@@ -125,7 +130,6 @@ end
 --设置多语言
 function BuildingWarehouseDetailPart:_language()
     self.capacityText.text = GetLanguage(25020031)
-    self.tipText.text = GetLanguage(25020024)
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)

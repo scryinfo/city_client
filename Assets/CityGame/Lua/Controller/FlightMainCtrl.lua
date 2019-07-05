@@ -145,6 +145,7 @@ function FlightMainCtrl:_language()
     FlightMainPanel.recordText02.text = GetLanguage(32010002)
     FlightMainPanel.noneTipText03.text = GetLanguage(32030033)
     FlightMainPanel.moneyText04.text = GetLanguage(32020036)
+    FlightMainPanel.searchBtnText05.text = GetLanguage(32010003)
 end
 --
 function FlightMainCtrl:backFunc()

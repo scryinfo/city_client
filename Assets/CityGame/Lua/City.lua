@@ -2353,3 +2353,15 @@ CityEngineLua.process = function()
 	-- 向服务端发送心跳以及同步角色信息到服务端
     this.sendTick();
 end
+
+CityEngineLua.NoCashBox = function()
+	 WalletCtrl.static.NoCashBox()
+end
+
+CityEngineLua.Fail = function()
+	WalletCtrl.static.Fail()
+end
+
+CityEngineLua.GotoCashBox = function()
+	WalletCtrl.static.GotoCashBox()
+end

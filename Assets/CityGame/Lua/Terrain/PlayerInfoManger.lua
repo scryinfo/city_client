@@ -44,11 +44,12 @@ function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
     end
     curr = curr + 1
     _funcs[curr](_classes[curr],stream.info)
-    recardNums=recardNums-1
-    if recardNums == 0 then
+    --recardNums=recardNums-1
+    if curr == recardNums then
         playerIDs={}
         _classes={}
         _funcs={}
         curr=0
+        recardNums = 0
     end
 end

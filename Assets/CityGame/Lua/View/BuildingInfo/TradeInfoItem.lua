@@ -25,7 +25,7 @@ function TradeInfoItem:initialize(dataInfo, viewRect)
         self.name.text = GetLanguage(33010003)
         self.address.transform.localScale = Vector3.one
         self.address.text = GetLanguage(33040003)
-        self.addressText.text = dataInfo.ddd_from
+        self.addressText.text = dataInfo.ddd_to
         self.money.text = "-" .. self.moneys * 1000000
     else
         self.name.text = GetLanguage(33010002)

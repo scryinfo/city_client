@@ -12,7 +12,7 @@ namespace UnityEngine
         public InputField qrStingText;
         public RawImage cameraTexture;
         //private Thread qrThread;
-        private float time = 2f;
+        private float time = 2.5f;
         private WebCamTexture webCamTexture;
         //二维码读取内容
         private BarcodeReader barcodeReader;
@@ -38,6 +38,7 @@ namespace UnityEngine
         void DeviceInit()
         {
             WebCamDevice[] devices = WebCamTexture.devices;
+            Debug.Log("devices     " + devices.Length);
             if (devices.Length == 0)
             {
                 return;
@@ -46,7 +47,7 @@ namespace UnityEngine
             webCamTexture = new WebCamTexture(deviceName, Screen.currentResolution.height, Screen.currentResolution.width);
             cameraTexture.texture = webCamTexture;
             webCamTexture.Play();
-
+           
             barcodeReader = new BarcodeReader();
             InvokeRepeating("ScanQRCode", 2.5f, time);
         }
@@ -62,6 +63,7 @@ namespace UnityEngine
                 CancelInvoke("ScanQRCode");
                 cameraTexture.texture = null;
                 qrStingText.text = result.Text;
+
                 if (codePanel != null)
                 {
                     codePanel.transform.localScale = Vector3.zero;

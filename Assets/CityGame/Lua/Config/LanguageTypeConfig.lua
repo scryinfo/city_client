@@ -12,4 +12,12 @@ LanguageTypeConfig = {
         name = 10020011,
         id = 1,
     },
+    [3] = {
+        name = 10020012,
+        id = 2,
+    },
+    [4] = {
+        name = 10020013,
+        id = 3,
+    },
 }

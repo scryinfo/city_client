@@ -31,15 +31,18 @@ function ServerItem:initialize(inluabehaviour, prefab, mgr, goodsDataInfo ,id)
         self.serverBtn:GetComponent("Button").enabled = true
     end
     self.tag.localScale = Vector3.zero
-    self.serverName.text = goodsDataInfo.name
     if goodsDataInfo.name == "ChengDu" then
+        self.serverName.text = GetLanguage(10050002)
         LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/pic-chengdu.png",self.bg)
     elseif goodsDataInfo.name == "NewYork" then
         LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/NewYork.png",self.bg)
     elseif goodsDataInfo.name == "Paris" then
         LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/Paris.png",self.bg)
     elseif goodsDataInfo.name == "Tokyo" then
+        self.serverName.text = GetLanguage(10050003)
         LoadSprite("Assets/CityGame/Resources/Atlas/ServerList/Tokyo.png",self.bg)
+    else
+        self.serverName.text = goodsDataInfo.name
     end
     self._luabehaviour:AddClick(self.serverBtn, self.OnServerBtn, self);
 

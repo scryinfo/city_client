@@ -73,7 +73,9 @@ function NewTransportBoxCtrl:initializeUiInfoData()
             self.itemTable = {}
         end
         local unitPrice = ChooseWarehouseCtrl:GetPrice()
-        --self.targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
+        if self.targetWarehouse.text == nil or self.targetWarehouse.text == "" then
+             unitPrice = 0
+        end
         self:CreateGoodsItems(self.m_data.itemPrefabTab,self.TransportItem,self.Content,TransportItem,self.luaBehaviour,self.m_data.buildingType,unitPrice)
     end
     self.priceText.text = self:calculateTotalPrice()
@@ -157,6 +159,7 @@ function NewTransportBoxCtrl:deleteItemPrefab(id)
                 id = id + 1
             end
         end
+        self.priceText.text = self:calculateTotalPrice()
     end
 end
 --计算总费用

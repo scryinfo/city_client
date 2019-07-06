@@ -81,10 +81,8 @@ function RollCtrl:Refresh()
     if data.goodCategory ~= 0 then  --食物
         Event.AddListener("c_InventResult",self.handleGoodsResult,self)
         panel.EvaRoot.localScale = Vector3.zero
-        panel.GoodRoot.localScale = Vector3.one
     else
         panel.EvaRoot.localScale = Vector3.one
-        panel.GoodRoot.localScale = Vector3.zero
         Event.AddListener("c_InventResult",self.handleEvaResult,self)
     end
     self:updateText(data)
@@ -248,8 +246,6 @@ function RollCtrl:updateText(data)
         panel.cloth.localScale = Vector3.zero
         panel.food.localScale = Vector3.zero
         panel.BigEVAtext.text = DataManager.GetEvaPoint()
-    else
-        return
     end
     --panel.evacounts.text = DataManager.GetEvaPoint()
 end

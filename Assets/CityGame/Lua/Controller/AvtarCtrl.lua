@@ -165,8 +165,6 @@ end
 --初始化
 function AvtarCtrl:begin()
     local faceId = DataManager.GetFaceId()
-    --加载左侧五官选择按钮
-    InsAndObjectPool(AvtarConfig.man,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
     --初始化
     AvatarOrganImageList = {}
     AvatarOrganImageList[1] = {}
@@ -179,8 +177,12 @@ function AvtarCtrl:begin()
         local arr = split(faceId,"-")
         if arr[1] == "1" then
             self:switchKinds(AvtarConfig.man[1].kinds)
+            --加载左侧五官选择按钮
+            InsAndObjectPool(AvtarConfig.man,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
         else
             self:switchKinds(AvtarConfig.woMan[1].kinds)
+            --加载左侧五官选择按钮
+            InsAndObjectPool(AvtarConfig.woMan,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
         end
         --左侧选到第一个
         this.select.localScale = Vector3.zero
@@ -204,6 +206,8 @@ function AvtarCtrl:begin()
         --性别默认为男
         mySex = 1
         myCurrentHeadNum = 1
+        --加载左侧五官选择按钮
+        InsAndObjectPool(AvtarConfig.man,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
         --随机一个装扮
         self:randomChange()
         --默认选择男性的第一个部件
@@ -376,9 +380,9 @@ function GetAvtar(faceId)
             end
         end
         --todo：加载小人头像
-        headPrefab[mySex][myCurrentHeadNum] = creatGoods(HeadConfig.man[myCurrentHeadNum].path,panel.showContent)
+        headPrefab[mySex][myCurrentHeadNum] = creatGoods(HeadConfig.woMan[myCurrentHeadNum].path,panel.showContent)
         AvatarOrganImageList[mySex][myCurrentHeadNum] =  FindOrgan(headPrefab[mySex][myCurrentHeadNum].transform)
-        local arr = split(AvtarConfig.man[1].kinds[myCurrentHeadNum].path,",")
+        local arr = split(AvtarConfig.woMan[1].kinds[myCurrentHeadNum].path,",")
         LoadSprite(arr[1],AvatarOrganImageList[mySex][myCurrentHeadNum]["head"])
 
         for i = 1, #temp ,2 do
@@ -474,6 +478,7 @@ end
 --切换为男性
 function AvtarCtrl:c_OnClick_male(ins)
     PlayMusEff(1002)
+    pastApperanceID = {}
     if mySex == 2 then
         mySex = 1
         panel.feMaleSelect.localScale=Vector3.zero
@@ -490,6 +495,7 @@ end
 --切换为女性
 function AvtarCtrl:c_OnClick_faMale(ins)
     PlayMusEff(1002)
+    pastApperanceID = {}
     if mySex == 1 then
         mySex = 2
         panel.feMaleSelect.localScale=Vector3.one

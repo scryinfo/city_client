@@ -253,6 +253,7 @@ end
 function GuildListCtrl:c_OnSocietyList(societyList)
     if societyList.listInfo then
         GuildListPanel.nullImage.localScale = Vector3.zero
+        GuildListPanel.listTitleRoot.localScale = Vector3.one
         GuildListCtrl.societyList = societyList.listInfo
 
         if GuildListCtrl.rankId then
@@ -271,6 +272,7 @@ function GuildListCtrl:c_OnSocietyList(societyList)
         end
     else
         GuildListPanel.nullImage.localScale = Vector3.one
+        GuildListPanel.listTitleRoot.localScale = Vector3.zero
     end
 end
 

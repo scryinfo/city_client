@@ -181,6 +181,13 @@ namespace City
     }
     public static class CityLuaUtil
     {
+        //调用检测钱包是否可用
+        public static void CallDetectWall()
+        {
+            AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            AndroidJavaObject jo = jc.GetStatic<AndroidJavaObject>("currentActivity");
+            jo.Call("CheckCashboxCanBeUse");
+        }
         public static bool checkLocalCashboxExist() {            
             Dbg.WARNING_MSG(string.Format("c# 调用 checkLocalCashboxExist"));
             if (Application.platform == RuntimePlatform.Android) {

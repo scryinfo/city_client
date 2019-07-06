@@ -218,6 +218,8 @@ function VolumeCtrl:language()
     VolumePanel.total.text = GetLanguage(19020012)
     VolumePanel.totalContent.text = GetLanguage(19020013)
 
+    VolumePanel.grossVolume.text = GetLanguage(11010006)
+
 
 
 end
@@ -465,15 +467,15 @@ end
 
 --打开npc交易
 function VolumeCtrl:OncitzenRect(ins)
-    local pos_Y=defaultPos_Y
+    local pos_Y= defaultPos_Y
     --VolumePanel.turnoverRect:DOSizeDelta(
     --    Vector2.New(0, 460),
     --       0.5):SetEase(DG.Tweening.Ease.OutCubic);
     VolumePanel.turnoverRect.localScale= Vector3.one
 
-    pos_Y= pos_Y- (102 + 460)
+    pos_Y= pos_Y - 500
 
-    VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, pos_Y),
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(159, pos_Y),
             0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     VolumePanel.infoBgrRect.localScale= Vector3.zero
@@ -497,7 +499,7 @@ function VolumeCtrl:OnplayerRect(ins)
 
     pos_Y= pos_Y - 102
 
-    VolumePanel.playerRect:DOAnchorPos(Vector2.New(-2.5, -115),
+    VolumePanel.playerRect:DOAnchorPos(Vector2.New(159, -150),
             0.5):SetEase(DG.Tweening.Ease.OutCubic);
 
     DataManager.DetailModelRpcNoRet(ins.insId , 'm_PlayerTypeNum')              --获取玩家交易量
@@ -601,16 +603,12 @@ function VolumeCtrl:c_GoodsplayerTypeNum(info)
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
     local minute = tonumber(ts.minute)
-    local hour = tonumber(ts.hour)
     if second ~= 0 then
         currentTime = currentTime - second
     end
     if minute ~= 0 then
         currentTime = currentTime - minute * 60
     end
-    --if hour ~= 0 then
-    --    currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
-    --end
     currentTime = math.floor(currentTime)
     local demandNumTab = {}
     local sevenDaysAgo = currentTime - 604800
@@ -720,16 +718,12 @@ function VolumeCtrl:c_GoodsplayerTypeThreeNum(info)
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
     local minute = tonumber(ts.minute)
-    local hour = tonumber(ts.hour)
     if second ~= 0 then
         currentTime = currentTime - second
     end
     if minute ~= 0 then
         currentTime = currentTime - minute * 60
     end
-    --if hour ~= 0 then
-    --    currentTime = currentTime - hour * 3600 - 3600       --当天0点在提前一小时
-    --end
     currentTime = math.floor(currentTime)
     local demandNumTab = {}
     local sevenDaysAgo = currentTime - 604800

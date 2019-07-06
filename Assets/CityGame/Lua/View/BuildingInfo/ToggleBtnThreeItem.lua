@@ -39,6 +39,7 @@ end
 --打开交易折线图（设置高光显示）
 function ToggleBtnThreeItem:_tradingOpenFunc(ins)
     VolumePanel.strade.localScale = Vector3.one
+    VolumePanel.trade.localScale = Vector3.zero
     if state ~= nil then
         state.localScale = Vector3.zero
     end

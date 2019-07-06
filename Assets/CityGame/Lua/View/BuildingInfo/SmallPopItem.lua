@@ -18,7 +18,8 @@ SmallPopItem.POS=Vector2.New(0,797)
 
 
 ---初始化方法   数据（读配置表）
-function SmallPopItem:initialize(string,type,prefab,mgr)
+function SmallPopItem:initialize(string,type,prefab,mgr,behaviour)
+
     self.prefabTrans=prefab.transform:GetComponent("RectTransform");
     self.tipText=prefab.transform:Find("textbg/tipText"):GetComponent("Text");
 
@@ -30,6 +31,8 @@ function SmallPopItem:initialize(string,type,prefab,mgr)
     self.prefabTrans:DOAnchorPos(SmallPopItem.endPOS, 0.5);
 
     self.timenow= 3
+
+    behaviour:AddClick(self.textBgTrans.gameObject,self.OnBtn,self);
 
     if type == ReminderType.Common then
         self.textBgTrans.transform:GetComponent("Image").color = getColorByInt(243,243,243,230)
@@ -56,6 +59,12 @@ function SmallPopItem:_update()
         self.prefabTrans.anchoredPosition=Vector2.New(0,797);
         UpdateBeat:Remove(self._update, self);
     end
+end
+
+function SmallPopItem:OnBtn(go)
+    go.timenow = 3
+    go.prefabTrans.anchoredPosition=Vector2.New(0,797);
+    UpdateBeat:Remove(go._update, go);
 end
 
 

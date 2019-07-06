@@ -127,6 +127,7 @@ end
 function HouseCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     if self.groupMgr ~= nil then
+        self.groupMgr:TurnOffAllOptions()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end

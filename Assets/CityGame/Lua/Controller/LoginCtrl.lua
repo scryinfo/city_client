@@ -47,9 +47,13 @@ function LoginCtrl:Awake(go)
 		LoginPanel.languageText.text = GetLanguage(10020010)
 	elseif languageId == 1 then
 		LoginPanel.languageText.text = GetLanguage(10020011)
+	elseif languageId == 2 then
+		LoginPanel.languageText.text = GetLanguage(10020012)
+	elseif languageId == 3 then
+		LoginPanel.languageText.text = GetLanguage(10020013)
 	end
 	self.languageItem = {}
-	for i, v in pairs(LanguageTypeConfig) do
+	for i, v in ipairs(LanguageTypeConfig) do
 		local function callback(prefab)
 			self.languageItem[i] = LanguageItem:new(prefab,v,i,LuaBehaviour)
 			if self.languageItem[i].data.id == languageId  then

@@ -153,7 +153,7 @@ end
 
 --刷新队列
 function QueneCtrl:c_updateQuque(data)
-    if data.data  then
+    if data.data and next(data.data) then
         panel.empty.localScale = Vector3.zero
         if data.func then
             self.m_data.data = data.func(data.ins,data.data)

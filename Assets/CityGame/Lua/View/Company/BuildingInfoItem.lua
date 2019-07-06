@@ -50,7 +50,8 @@ end
 
 -- 跳转到场景上建筑的位置
 function BuildingInfoItem:_goPos()
-    UIPanel.ClosePage()
+    --UIPanel.ClosePage()
+    UIPanel.CloseAllPageExceptMain()
     local id = TerrainManager.GridIndexTurnBlockID(self.data.pos)
     local targetPos = TerrainManager.BlockIDTurnPosition(id)
     CameraMove.MoveCameraToPos(targetPos)

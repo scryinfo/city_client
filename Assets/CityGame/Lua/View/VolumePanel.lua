@@ -23,8 +23,9 @@ function VolumePanel.InitPanel()
     --top
     this.back = transform:Find("return").gameObject --返回
     this.name = transform:Find("name"):GetComponent("Text");
-    this.volume = transform:Find("Volume/volumeImage").gameObject;  --交易量Bg
+    this.volume = transform:Find("Volume/volumeImage/volumeBG").gameObject;  --交易量Bg
     this.volumeText = transform:Find("Volume/volumeImage/volumeText"):GetComponent("Text")  --交易量
+    this.grossVolume = transform:Find("Volume/volumeImage/volum"):GetComponent("Text")  --交易量
 
     this.volumetitle = transform:Find("Volume/title")  --交易量提示
     this.total = transform:Find("Volume/title/total"):GetComponent("Text")

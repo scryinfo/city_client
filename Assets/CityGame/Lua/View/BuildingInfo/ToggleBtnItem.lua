@@ -75,9 +75,10 @@ ToggleBtnItem.static.OptionTwoData = function(transform, idx)
         end
     else
         optionTwoScript[idx] = ToggleBtnTwoItem:new(transform, volumeBehaviour, playerdata.childs[idx], idx)
-        optionTwoScript[1].highlight.localScale = Vector3.zero
+        optionTwoScript[1]:_tradingOpenFunc(optionTwoScript[1])
+        --optionTwoScript[1].highlight.localScale = Vector3.one
         ToggleBtnItem.city = optionTwoScript[idx]
-        optionTwoScript[idx].highlight.localScale = Vector3.zero
+        --optionTwoScript[idx].highlight.localScale = Vector3.zero
     end
 
 end

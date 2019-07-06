@@ -11,7 +11,7 @@ UIPanel:ResgisterOpen(QueneCtrl) --注册打开的方法
 local insTable = {}
 --构建函数
 function QueneCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 end
 
 function QueneCtrl:bundleName()
@@ -19,7 +19,7 @@ function QueneCtrl:bundleName()
 end
 
 function QueneCtrl:OnCreate(obj)
-    UIPanel.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj)
 end
 
 local panel,luabehaviour,this
@@ -70,8 +70,8 @@ end
 function QueneCtrl:Awake(go)
     panel = QuenePanel
     this=self
-    luabehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    luabehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self);
+    luabehaviour = self.gameObject:GetComponent('LuaBehaviour')
+    luabehaviour:AddClick(panel.backBtn.gameObject,self.OnClick_backBtn,self)
 
     self.loopScrollDataSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.loopScrollDataSource.mProvideData =self.ReleaseData

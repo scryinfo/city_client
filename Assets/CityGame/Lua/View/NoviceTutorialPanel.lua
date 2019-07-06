@@ -20,6 +20,7 @@ function NoviceTutorialPanel.InitPanel()
     this.backBtn = transform:Find("BackBtn").gameObject
     this.titleText = transform:Find("TitleText"):GetComponent("Text")
 
-    this.choiceScroll = transform:Find("LeftRoot/ScrollView/Viewport/Content")
+    this.choiceScroll = transform:Find("LeftRoot/ScrollView/Viewport/Content"):GetComponent("RectTransform")
+    this.choiceScrollObj = transform:Find("LeftRoot/ScrollView/Viewport/Content").gameObject
     this.urlScroll = transform:Find("UrlScroll"):GetComponent("ActiveLoopScrollRect")
 end

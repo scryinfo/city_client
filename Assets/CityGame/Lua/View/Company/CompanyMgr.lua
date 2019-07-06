@@ -42,7 +42,8 @@ function CompanyMgr:CreateLandTitleItem()
                 DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_GetGroundInfo')
             end
         end
-        DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.landTitleContent, nil, callback)
+        --DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.landTitleContent, nil, callback)
+        createPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.landTitleContent, callback)
     end
 end
 
@@ -61,7 +62,8 @@ function CompanyMgr:CreateBuildingTitleItem()
                 DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyBuildings')
             end
         end
-        DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.buildingTitleContent, nil, callback)
+        --DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.buildingTitleContent, nil, callback)
+        createPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.buildingTitleContent, callback)
     end
 end
 

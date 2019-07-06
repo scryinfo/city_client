@@ -107,13 +107,13 @@ function WarehouseBoxCtrl:initializeUiInfoData()
         self.popularityValue.text = self.m_data.dataInfo.key.brandScore
         self.qualityValue.text = self.m_data.dataInfo.key.qualityScore
     end
-    local function callback(a)
+    local function callback(warehouseNum)
         --暂时缓存仓库有的个数（后边要下架然后运输）
-        self.warehouseCount = a
-        self.warehouseNumberText.text = "×"..a
+        self.warehouseCount = warehouseNum
+        self.warehouseNumberText.text = "×"..warehouseNum
     end
-    local function callback1(b)
-        self.shelfNumberText.text = "×"..b
+    local function callback1(shelfNum)
+        self.shelfNumberText.text = "×"..shelfNum
     end
     Event.Brocast("getItemIdCount",self.m_data.itemId,self.m_data.dataInfo.key.producerId,callback)
     Event.Brocast("getShelfItemIdCount",self.m_data.itemId,self.m_data.dataInfo.key.producerId,callback1)
@@ -178,5 +178,6 @@ function WarehouseBoxCtrl:_clickDeleBtn(ins)
     data.producerId = ins.m_data.dataInfo.key.producerId
     data.qty = ins.m_data.dataInfo.key.qty
     data.n = ins.warehouseCount
+    UIPanel.ClosePage()
     ct.OpenCtrl("DeleteItemBoxCtrl",data)
 end

@@ -335,6 +335,7 @@ end
 function MaterialFactoryModel:n_OnDelItemInfo(data,msgId)
     if msgId == 0 then
         Event.Brocast("deleteSucceed",data,msgId)
+        return
     end
     Event.Brocast("deleteSucceed",data)
     Event.Brocast("refreshWarehousePartCount")
@@ -356,6 +357,7 @@ end
 --获取仓库数据
 function MaterialFactoryModel:n_OnGetWarehouseData(data)
     Event.Brocast("getWarehouseInfoData",data)
+    Event.Brocast("getWarehouseBoxData",data)
 end
 --获取货架数据
 function MaterialFactoryModel:n_OnGetShelfData(data)

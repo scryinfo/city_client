@@ -40,6 +40,7 @@ end
 
 function NoviceTutorialCtrl:Refresh()
     if self.tutorialChoiceItems then
+        NoviceTutorialPanel.choiceScroll.anchoredPosition = Vector2.New(0,0)
         self.tutorialChoiceItems[1]:_onClickBtn()
     else
         self.tutorialChoiceItems = {}
@@ -50,7 +51,8 @@ function NoviceTutorialCtrl:Refresh()
                     self.tutorialChoiceItems[1]:_onClickBtn()
                 end
             end
-            DynamicLoadPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScroll, nil, callback)
+            --DynamicLoadPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScroll, nil, callback)
+            createPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScrollObj, callback)
         end
     end
 end

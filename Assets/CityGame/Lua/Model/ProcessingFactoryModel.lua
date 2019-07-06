@@ -118,7 +118,7 @@ function ProcessingFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","materialNotEnough","gs.ByteBool",self.n_OnBuildingWarehouse)
 end
 ---客户端请求---
---打开原料厂
+--打开加工厂
 function ProcessingFactoryModel:m_ReqOpenprocessing(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailProduceDepartment","gs.Id",{id = buildingId})
 end
@@ -342,6 +342,7 @@ end
 --获取仓库数据
 function ProcessingFactoryModel:n_OnGetWarehouseData(data)
     Event.Brocast("getWarehouseInfoData",data)
+    Event.Brocast("getWarehouseBoxData",data)
 end
 --获取货架数据
 function ProcessingFactoryModel:n_OnGetShelfData(data)

@@ -97,6 +97,7 @@ end
 ToggleBtnTwoItem.static.OptionThreeData = function(transform, idx)
     idx = idx + 1
     optionTwoScript[idx] = ToggleBtnThreeItem:new(transform, volumeBehaviour, playerdata.childs[idx], idx)
+    optionTwoScript[1]:_tradingOpenFunc(optionTwoScript[1])
 end
 
 ToggleBtnTwoItem.static.OptionThreeClearData = function(transform)

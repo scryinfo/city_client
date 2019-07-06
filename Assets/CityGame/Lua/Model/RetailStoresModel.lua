@@ -255,6 +255,7 @@ end
 --获取仓库数据
 function RetailStoresModel:n_OnGetWarehouseData(data)
     Event.Brocast("getWarehouseInfoData",data)
+    Event.Brocast("getWarehouseBoxData",data)
 end
 --获取货架数据
 function RetailStoresModel:n_OnGetShelfData(data)

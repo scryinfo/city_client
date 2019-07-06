@@ -25,6 +25,7 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,st
     self.numberText = prefab.transform:Find("numberBg/numberText"):GetComponent("Text")
     self.noHaveBg = prefab.transform:Find("noHaveBg")
     self.automaticBg = prefab.transform:Find("automaticBg")
+    self.automaticIcon = prefab.transform:Find("automaticBg/icon")
     self.automaticNumberText = prefab.transform:Find("automaticBg/automaticNumberText"):GetComponent("Text")
 
     self.nameBg = prefab.transform:Find("nameBg")
@@ -49,6 +50,9 @@ end
 function ShelfItem:InitializeData()
     if self.dataInfo.autoReplenish == true then
         self.numberBg.gameObject:SetActive(false)
+        if self.isOther == true then
+            self.automaticIcon.gameObject:SetActive(false)
+        end
         if self.dataInfo.n == 0 then
             self.automaticBg.transform.localScale = Vector3.zero
             self.noHaveBg.transform.localScale = Vector3.one

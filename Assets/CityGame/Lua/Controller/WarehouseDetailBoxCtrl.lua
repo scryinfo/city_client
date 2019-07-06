@@ -55,7 +55,7 @@ end
 --初始化UI数据
 function WarehouseDetailBoxCtrl:initializeUiInfoData()
     self.m_data.insId = self.m_data.info.insId
-    if next(self.m_data.info.store) == nil then
+    if next(self.m_data.warehouse.store) == nil then
         self.noTip.transform.localScale = Vector3.one
         return
     else
@@ -64,12 +64,12 @@ function WarehouseDetailBoxCtrl:initializeUiInfoData()
         end
         self.noTip.transform.localScale = Vector3.zero
         self.addShelfBool = GoodsItemStateType.addShelf
-        self:CreateGoodsItems(self.m_data.info.store,self.WarehouseItem,self.Content,WarehouseItem,self.luaBehaviour,self.m_data.info.buildingType,self.addShelfBool,self.m_data.info.info.id)
+        self:CreateGoodsItems(self.m_data.warehouse.store,self.WarehouseItem,self.Content,WarehouseItem,self.luaBehaviour,self.m_data.info.buildingType,self.addShelfBool,self.m_data.info.info.id)
     end
 end
 --设置多语言
 function WarehouseDetailBoxCtrl:_language()
-    self.tipText.text = GetLanguage(25020024)
+    self.tipText.text = GetLanguage(25020032)
 end
 -------------------------------------------------------------点击函数-------------------------------------------------------------------------------
 --关闭

@@ -6,6 +6,7 @@
 AddProductionLineBoxCtrl = class('AddProductionLineBoxCtrl',UIPanel)
 UIPanel:ResgisterOpen(AddProductionLineBoxCtrl)
 
+local ToNumber = tonumber
 local addLineBox
 --奢侈等级
 local oneLevel = Vector3.New(105,174,238)
@@ -37,7 +38,7 @@ function AddProductionLineBoxCtrl:Active()
     AddProductionLineBoxPanel.qualityText.text = GetLanguage(25020005)
     AddProductionLineBoxPanel.levelText.text = GetLanguage(25020007)
     AddProductionLineBoxPanel.productionText.text = GetLanguage(25030004)
-    AddProductionLineBoxPanel.eachText.text = GetLanguage(25030015)
+    AddProductionLineBoxPanel.eachText.text = GetLanguage(31010042)
     AddProductionLineBoxPanel.time.text = GetLanguage(25030005)
     AddProductionLineBoxPanel.numberTip.text = GetLanguage(25030006)
     --addLineBox:AddClick(AddLineBoxPanel.leftBtn.gameObject,self.OnClick_leftBtn,self)
@@ -46,6 +47,9 @@ function AddProductionLineBoxCtrl:Active()
 
     AddProductionLineBoxPanel.numberSlider.onValueChanged:AddListener(function()
         self:SlidingUpdateText()
+    end)
+    AddProductionLineBoxPanel.numberInput.onValueChanged:AddListener(function()
+        self:inputUpdateText()
     end)
 end
 function AddProductionLineBoxCtrl:Refresh()
@@ -66,7 +70,7 @@ function AddProductionLineBoxCtrl:InitializeData()
     AddProductionLineBoxPanel.numberSlider.value = 1
     AddProductionLineBoxPanel.numberSlider.minValue = 1
     AddProductionLineBoxPanel.numberSlider.maxValue = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
-    AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
+    --AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.nameText.text = GetLanguage(self.m_data.itemId)
     self.workerNum = PlayerBuildingBaseData[self.m_data.mId].maxWorkerNum
 
@@ -75,19 +79,24 @@ function AddProductionLineBoxCtrl:InitializeData()
         AddProductionLineBoxPanel.popularity.transform.localScale = Vector3.zero
         AddProductionLineBoxPanel.quality.transform.localScale = Vector3.zero
         AddProductionLineBoxPanel.levelBg.transform.localScale = Vector3.zero
+        AddProductionLineBoxPanel.scoreBg.transform.localScale = Vector3.zero
+        AddProductionLineBoxPanel.iconBg.transform.localPosition = Vector3(0,30,0)
         LoadSprite(Material[self.m_data.itemId].img,AddProductionLineBoxPanel.iconImg,false)
         --local speed = 1 / (Material[self.m_data.itemId].numOneSec * self.workerNum)
         local speed = 1 / self.m_data.numOneSec
-        AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed).."s"
+        AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --如果是商品打开商品属性展示
+        AddProductionLineBoxPanel.tipText.text = "当原料不足时,生产线会停止"
         AddProductionLineBoxPanel.popularity.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.quality.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.levelBg.transform.localScale = Vector3.one
+        AddProductionLineBoxPanel.scoreBg.transform.localScale = Vector3.one
+        AddProductionLineBoxPanel.iconBg.transform.localPosition = Vector3(-292,30,0)
         LoadSprite(Good[self.m_data.itemId].img,AddProductionLineBoxPanel.iconImg,false)
         --local speed = 1 / (Good[self.m_data.itemId].numOneSec * self.workerNum)
         local speed = 1 / self.m_data.info.numOneSec
-        AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed).."s"
+        AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed)
         --如果是商品，判断原料等级
         if Good[self.m_data.itemId].luxury == 1 then
             AddProductionLineBoxPanel.levelImg.color = getColorByVector3(oneLevel)
@@ -159,10 +168,20 @@ end
 
 --滑动条刷新输入框值
 function AddProductionLineBoxCtrl:SlidingUpdateText()
-    AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
+    --AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
+    AddProductionLineBoxPanel.numberInput.text = AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.timeText.text = self:GetTime(AddProductionLineBoxPanel.numberSlider.value,self.workerNum)
 end
-
+--输入框事件
+function AddProductionLineBoxCtrl:inputUpdateText()
+    if AddProductionLineBoxPanel.numberInput.text == "" or ToNumber(AddProductionLineBoxPanel.numberInput.text) <= 0 then
+        AddProductionLineBoxPanel.numberInput.text = 1
+    end
+    if ToNumber(AddProductionLineBoxPanel.numberInput.text) > PlayerBuildingBaseData[self.m_data.mId].storeCapacity then
+        AddProductionLineBoxPanel.numberInput.text = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
+    end
+    AddProductionLineBoxPanel.numberSlider.value = ToNumber(AddProductionLineBoxPanel.numberInput.text)
+end
 --检查要生产的数量是否为零
 function AddProductionLineBoxCtrl:NumberWhetherZero(number)
     if number == 0 then

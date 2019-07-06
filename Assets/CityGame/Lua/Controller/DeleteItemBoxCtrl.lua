@@ -73,10 +73,18 @@ end
 function DeleteItemBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22
     self.nameText.text = GetLanguage(self.m_data.itemId)
-    self.numberSlider.maxValue = self.m_data.n
-    self.numberSlider.minValue = 1
-    self.numberSlider.value = 1
-    self.numberText.text = "×"..self.numberSlider.value
+    if self.m_data.n == 0 then
+        self.numberSlider.maxValue = self.m_data.n
+        self.numberSlider.minValue = 0
+        self.numberSlider.value = 0
+        self.numberText.text = "×"..self.numberSlider.value
+        self.tipText.text = "仓库中暂无可销毁数量"
+    else
+        self.numberSlider.maxValue = self.m_data.n
+        self.numberSlider.minValue = 1
+        self.numberSlider.value = 1
+        self.numberText.text = "×"..self.numberSlider.value
+    end
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
         self.goods.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3.New(-140,-100,0)

@@ -97,9 +97,11 @@ end
 -----------------------------------------------------------------------回调函数---------------------------------------------------------------------------
 --改名字失败
 function InputDialogPageCtrl:setBuildingNameFailure(data)
-    if data then
-        self.errorTipRoot.localScale = Vector3.one
-        self.errorTipText.text = GetLanguage(17020005)
+    if data ~= nil then
+        if data.reason == "timeNotSatisfy" then
+            UIPanel.ClosePage()
+            Event.Brocast("SmallPop", GetLanguage(17020008), ReminderType.Warning)
+        end
     end
 end
 --修改玩家姓名

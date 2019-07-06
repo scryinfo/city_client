@@ -18,7 +18,6 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
     self.slider = self.transform:Find("details/Slider"):GetComponent("Slider")
     self.progress = self.transform:Find("details/Slider/progress"):GetComponent("Text")
     self.move = self.transform:Find("details/Slider/Fill Area/Fill/move"):GetComponent("RectTransform")
-    self.moves = self.transform:Find("details/Slider/Fill Area/Fill/moves"):GetComponent("RectTransform")
     self.nowTime = self.transform:Find("details/Slider/time"):GetComponent("Text")
     self.timePrice = self.transform:Find("details/timePrice")
     self.time = self.transform:Find("details/timePrice/time/Text"):GetComponent("Text")
@@ -31,9 +30,7 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
 
     self.waiting = 0
     self.speed = 0.4
-    self.position = Vector3.New(-141,0,0)
-    self.positions = Vector3.New(224,0,0)
-
+    self.position = Vector3.New(-50,0,0)
     self.progress.text = GetLanguage(27040024)
 
     local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
@@ -63,12 +60,8 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
                 self.waiting = 1
             end
             self.move:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
-            self.moves:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
             if self.move.localPosition.x >= self.position.x + 100 then
                 self.move.localPosition = self.position
-            end
-            if self.moves.localPosition.x >= self.positions.x + 100 then
-                self.moves.localPosition = self.positions
             end
         end
         ctrl:SetFunc(UpData)

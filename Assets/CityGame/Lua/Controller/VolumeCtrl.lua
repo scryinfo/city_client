@@ -683,22 +683,22 @@ function VolumeCtrl:c_GoodsplayerTypeNum(info)
         if scale == 0 then
             demandNumVet[i] = v
         else
-            demandNumVet[i] = Vector2.New(v.x,v.y / scale * 60)
+            demandNumVet[i] = Vector2.New(v.x,v.y / scale * 110)
         end
     end
 
     local difference = (currentTime - createTs) / 3600  --距离开业的天数
     if difference < 11 then
-        VolumePanel.curve.anchoredPosition = Vector3.New(0, 52,0)
-        VolumePanel.curve.sizeDelta = Vector2.New(1305, 450)
+        VolumePanel.curve.anchoredPosition = Vector3.New(0, 54,0)
+        VolumePanel.curve.sizeDelta = Vector2.New(1305, 443)
     elseif difference < 168 then
-        VolumePanel.curve.anchoredPosition = Vector3.New(0, 52,0)
-        VolumePanel.curve.sizeDelta = Vector2.New(1305, 450)
-        VolumePanel.curve.anchoredPosition = Vector3.New(VolumePanel.curve.anchoredPosition.x - (difference - 11) * 116, 52,0)
-        VolumePanel.curve.sizeDelta = Vector2.New(VolumePanel.curve.sizeDelta.x + (difference - 11) * 116, 450)
+        VolumePanel.curve.anchoredPosition = Vector3.New(0, 54,0)
+        VolumePanel.curve.sizeDelta = Vector2.New(1305, 443)
+        VolumePanel.curve.anchoredPosition = Vector3.New(VolumePanel.curve.anchoredPosition.x - (difference - 11) * 116, 54,0)
+        VolumePanel.curve.sizeDelta = Vector2.New(VolumePanel.curve.sizeDelta.x + (difference - 11) * 116, 443)
     else
-        VolumePanel.curve.anchoredPosition = Vector3.New(-18223, 56,0)
-        VolumePanel.curve.sizeDelta = Vector2.New(19229, 450)
+        VolumePanel.curve.anchoredPosition = Vector3.New(-18223, 54,0)
+        VolumePanel.curve.sizeDelta = Vector2.New(19229, 443)
     end
 
     VolumePanel.slide:SetXScaleValue(time,116)
@@ -799,22 +799,22 @@ function VolumeCtrl:c_GoodsplayerTypeThreeNum(info)
         if scale == 0 then
             demandNumVet[i] = v
         else
-            demandNumVet[i] = Vector2.New(v.x,v.y / scale * 60)
+            demandNumVet[i] = Vector2.New(v.x,v.y / scale * 110)
         end
     end
 
     local difference = (currentTime - createTs) / 3600  --距离开业的天数
     if difference < 11 then
         VolumePanel.scurve.anchoredPosition = Vector3.New(0, 70,0)
-        VolumePanel.scurve.sizeDelta = Vector2.New(1306, 460)
+        VolumePanel.scurve.sizeDelta = Vector2.New(1306, 420)
     elseif difference < 168 then
         VolumePanel.scurve.anchoredPosition = Vector3.New(0, 70,0)
-        VolumePanel.scurve.sizeDelta = Vector2.New(1306, 460)
+        VolumePanel.scurve.sizeDelta = Vector2.New(1306, 420)
         VolumePanel.scurve.anchoredPosition = Vector3.New(VolumePanel.scurve.anchoredPosition.x - (difference - 11) * 116, 70,0)
-        VolumePanel.scurve.sizeDelta = Vector2.New(VolumePanel.scurve.sizeDelta.x + (difference - 11) * 116, 460)
+        VolumePanel.scurve.sizeDelta = Vector2.New(VolumePanel.scurve.sizeDelta.x + (difference - 11) * 116, 420)
     else
         VolumePanel.scurve.anchoredPosition = Vector3.New(-18223, 70,0)
-        VolumePanel.scurve.sizeDelta = Vector2.New(19229, 460)
+        VolumePanel.scurve.sizeDelta = Vector2.New(19229, 420)
     end
 
     VolumePanel.sslide:SetXScaleValue(time,116)

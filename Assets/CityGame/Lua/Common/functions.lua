@@ -535,10 +535,10 @@ function GetLanguage(key, ...)
             return tempString
         end
     end
-    --if key ~= nil then
-    --    return key .. "没有设置"
-    --end
-    return GetLanguage(41010014)
+    if key ~= nil then
+        return key .. "没有设置"  --开发模式
+    end
+    --return GetLanguage(41010014)  --正式显示
 end
 
 function GetSprite(key)
@@ -547,8 +547,8 @@ function GetSprite(key)
     if path then
         return path
     else
-        --return key .. "没有设置"
-        return GetLanguage(41010014)
+        return key .. "没有设置"  --开发模式
+        --return GetLanguage(41010014)  --正式显示
     end
 end
 ---生成预制

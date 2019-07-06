@@ -16,7 +16,6 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
     self.goodsImage = self.transform:Find("goods/goodsImage"):GetComponent("Image")
     self.goodsText = self.transform:Find("goods/goodsText"):GetComponent("Text")
     self.slider = self.transform:Find("details/Slider"):GetComponent("Slider")
-    self.nowTime = self.transform:Find("details/Slider/time"):GetComponent("Text")
     self.timePrice = self.transform:Find("details/timePrice")
     self.time = self.transform:Find("details/timePrice/time/Text"):GetComponent("Text")
     self.price = self.transform:Find("details/timePrice/price/Text"):GetComponent("Text")
@@ -25,7 +24,7 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
     self.delete = self.transform:Find("startTime/time/deleteBg").gameObject
     self.rollBtn = self.transform:Find("startTime/rollBtn")
     self.rollBtnText = self.transform:Find("startTime/rollBtn/rollBtnText"):GetComponent("Text")
-    self.counttimetext = self.transform:Find("details/Slider/counttime"):GetComponent("Text")
+    self.counttimetext = self.transform:Find("details/Slider/time"):GetComponent("Text")
     self.move = self.transform:Find("details/Slider/Fill Area/Fill/move"):GetComponent("RectTransform")
     self.searching = self.transform:Find("details/Slider/searching")
     self.waiting = 0
@@ -52,7 +51,7 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
                 self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
                 local ts =getTimeBySec( (self.currentTime - self.data.beginProcessTs)/1000)
                 --local downtime = getTimeBySec((self.data.times * 3600000 - ts)/1000)
-                self.slider.value = (self.currentTime - self.data.beginProcessTs) /  self.data.times*3600000
+                self.slider.value = (self.currentTime - self.data.beginProcessTs) / (self.data.times*3600000)
                 self.counttimetext.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.data.times).. "h"
                 self.waiting = 1
             end

@@ -44,14 +44,16 @@ function retailStoreItem:getBuildingScore()
     --建筑总评分
     self.scoreText.text = math.ceil((famousScore + qualityScore) / 2)
     --建筑当前品质
-    self.buildingQuality = self.dataInfo.score[4].val * (1 + self.dataInfo.score[5].val)
+    --self.buildingQuality = self.dataInfo.score[4].val * (1 + self.dataInfo.score[5].val)
+    self.buildingQuality = self.dataInfo.score[6].val
 end
 function retailStoreItem:language()
     self.symbol.transform.localScale = Vector3.zero
     self.retailStoreText.text = GetLanguage(30040001)
-    self.basicQualityTextBtn.text = GetLanguage(30040002).." "..self.buildingQuality.."(".."+"..self.dataInfo.score[5].val * 100 .."%"..")"
+    --self.basicQualityTextBtn.text = GetLanguage(30040002).." "..self.buildingQuality.."(".."+"..self.dataInfo.score[5].val * 100 .."%"..")"
+    self.basicQualityTextBtn.text = GetLanguage(30040002).." "..self.buildingQuality
     self.qualityAdditionTextBtn.transform.localScale = Vector3.zero
-    self.popolarityTextBtn.text = GetLanguage(30040003).." "..self.dataInfo.score[1].val
+    self.popolarityTextBtn.text = GetLanguage(30040003).." "..self.dataInfo.score[3].val
 end
 function retailStoreItem:_clickBasicQualityTextBtn(ins)
     local stringKey = 30040004

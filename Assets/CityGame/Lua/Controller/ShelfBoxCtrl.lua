@@ -114,24 +114,24 @@ end
 --初始化UI数据
 function ShelfBoxCtrl:initializeUiInfoData()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        local function callbacks(b)
-            self.guidePrice = b
+        local function callbacks(guidePrice)
+            self.guidePrice = guidePrice
         end
         Event.Brocast("getShelfItemGuidePrice",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        local function callbacks(a,b,c)
-            self.averagePrice = a --平均价
-            self.averageScore = b --平均分
-            self.score = c        --评分
+        local function callbacks(averagePrice,averageScore,score)
+            self.averagePrice = averagePrice --平均价
+            self.averageScore = averageScore --平均分
+            self.score = score        --评分
         end
         Event.Brocast("getShelfItemProcessing",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.RetailShop then
-        local function callbacks(a,b,c,d,e)
-            self.averagePrice = a --平均价
-            self.averageScore = b --平均分
-            self.averageBuildingScore = c        --评分
-            self.playerGoodsScore = d            --玩家商品评分
-            self.playerBuildingScore = e         --玩家店铺评分
+        local function callbacks(averagePrice,averageScore,averageBuildingScore,playerGoodsScore,playerBuildingScore)
+            self.averagePrice = averagePrice --平均价
+            self.averageScore = averageScore --平均分
+            self.averageBuildingScore = averageBuildingScore        --评分
+            self.playerGoodsScore = playerGoodsScore            --玩家商品评分
+            self.playerBuildingScore = playerBuildingScore         --玩家店铺评分
         end
         Event.Brocast("getRetailItemGuidePrice",self.m_data.itemId,callbacks)
     end

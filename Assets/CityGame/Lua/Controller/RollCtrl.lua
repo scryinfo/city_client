@@ -75,6 +75,8 @@ function RollCtrl:Close()
 end
 
 function RollCtrl:Refresh()
+    self.lineId = self.m_data.id
+
     Event.AddListener("c_creatRollItem",self.c_creatRollItem,self)
     local data = self.m_data
     data.titleName = GetLanguage(28040018)
@@ -205,6 +207,10 @@ end
 
 --通过服务器回调数据生成item
 function RollCtrl:c_creatRollItem( data )
+    if self.lineId ~= data.id then
+        return
+    end
+
     local moedelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
     if data.goodCategory == 0 then
         odds = moedelData.probEva

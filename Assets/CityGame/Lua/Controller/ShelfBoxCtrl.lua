@@ -169,13 +169,13 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.qualityValue.text = self.m_data.dataInfo.k.qualityScore
         end
     end
-    local function callback(a)
+    local function callback(warehouseNumber)
         --缓存一个值，修改数量时使用
-        self.warehouseNumber = a
-        self.warehouseNumberText.text = "×"..a
+        self.warehouseNumber = warehouseNumber
+        self.warehouseNumberText.text = "×"..warehouseNumber
     end
-    local function callback1(b)
-        self.shelfNumberText.text = "×"..b
+    local function callback1(shelfNumber)
+        self.shelfNumberText.text = "×"..shelfNumber
     end
     if not self.m_data.dataInfo.key then
         Event.Brocast("getItemIdCount",self.m_data.itemId,self.m_data.dataInfo.k.producerId,callback)

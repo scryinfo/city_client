@@ -50,7 +50,7 @@ UIPanel:ResgisterOpen(RollCtrl) --注册打开的方法
 local panel
 
 function RollCtrl:initialize()
-    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal);
+    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal)
 end
 
 function RollCtrl:bundleName()
@@ -58,7 +58,7 @@ function RollCtrl:bundleName()
 end
 
 function RollCtrl:OnCreate(obj)
-    UIPanel.OnCreate(self,obj);
+    UIPanel.OnCreate(self,obj)
 end
 function RollCtrl:Hide()
     UIPanel.Hide(self)
@@ -76,18 +76,19 @@ end
 
 function RollCtrl:Refresh()
     self.lineId = self.m_data.id
+    panel.emptyTrans.localScale = Vector3.zero
 
     Event.AddListener("c_creatRollItem",self.c_creatRollItem,self)
     local data = self.m_data
     data.titleName = GetLanguage(28040018)
     if data.goodCategory ~= 0 then  --食物
         Event.AddListener("c_InventResult",self.handleGoodsResult,self)
-        panel.EvaRoot.localScale = Vector3.zero
+        panel.EvaRoot.localScale = Vector3.one
     else
         panel.EvaRoot.localScale = Vector3.one
         Event.AddListener("c_InventResult",self.handleEvaResult,self)
     end
-    self:updateText(data)
+    --self:updateText(data)
     self.popCompent:Refesh(data)
     self:c_creatRollItem(data,data.titleName)
     self:updateText(data)
@@ -148,11 +149,12 @@ end
 
 function RollCtrl:_closeAll(ins)
     --及时销毁产生的item
-    for i = 0, 4 do
+    local count = panel.Evaresult.transform.childCount
+    for i = 0, count - 1 do
         destroy(panel.Evaresult:GetChild(i).gameObject)
-        panel.resultRoot.localScale =  Vector3.one
-        panel.result.localScale =  Vector3.one
     end
+    panel.resultRoot.localScale =  Vector3.one
+    panel.result.localScale =  Vector3.one
     --eva开箱结果界面文本更新（0为失败+1 1为成功+10）
     for i = 1, #ins.data do
         if ins.data[i] == 0 then
@@ -199,6 +201,7 @@ function RollCtrl:language()
     panel.congratulation2.text = GetLanguage(28040020)
     panel.failtitleText.text = GetLanguage(28040023)
     panel.failtitle.text = GetLanguage(28040021)
+    panel.emptyTransText01.text = GetLanguage(28040054)
     --panel.titleTexts.text = GetLanguage(28040018)
     --panel.achievement.text = GetLanguage(28040044)
     --panel.Remainingtime.text = GetLanguage(28040044)
@@ -209,6 +212,12 @@ end
 function RollCtrl:c_creatRollItem( data )
     if self.lineId ~= data.id then
         return
+    end
+
+    if data.availableRoll == 0 then
+        panel.emptyTrans.localScale = Vector3.one
+    else
+        panel.emptyTrans.localScale = Vector3.zero
     end
 
     local moedelData = DataManager.GetDetailModelByID(LaboratoryCtrl.static.insId).data
@@ -286,7 +295,7 @@ function RollCtrl:handleEvaResult(data)
 end
 
 --设置食物以及服饰研究成功时界面
-function  RollCtrl:handleGoodsResult(data)
+function RollCtrl:handleGoodsResult(data)
     if data then
         panel.resultRoot.localScale = Vector3.one
         panel.GoodRoot.localScale =  Vector3.one
@@ -332,6 +341,8 @@ end
 function RollCtrl:fail()
     panel.resultRoot.localScale = Vector3.one
     panel.FailRoot.localScale = Vector3.one
+    panel.GoodRoot.localScale =  Vector3.zero
+    panel.Evaresultbg.localScale = Vector3.zero
 end
 
 --关闭所有节点

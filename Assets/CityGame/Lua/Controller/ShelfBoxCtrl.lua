@@ -370,7 +370,7 @@ function ShelfBoxCtrl:SlidingUpdateText()
 end
 --输入框
 function ShelfBoxCtrl:InputUpdateText()
-    if self.priceInput.text == nil or self.priceInput.text == "" then
+    if self.priceInput.text == nil or self.priceInput.text == "" or tonumber(self.priceInput.text) == nil then
         return
     else
         if self.m_data.buildingType == BuildingType.MaterialFactory then

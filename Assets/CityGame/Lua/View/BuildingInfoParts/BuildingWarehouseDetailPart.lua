@@ -118,6 +118,11 @@ end
 
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
+    if self.m_data.buildingType == BuildingType.RetailShop then
+        self.tipText.text = GetLanguage(25020024)
+    else
+        self.tipText.text = GetLanguage(25020033)
+    end
     --隐藏仓库分类按钮
     self.sortingBtn.localScale = Vector3.zero
 end
@@ -125,7 +130,6 @@ end
 --设置多语言
 function BuildingWarehouseDetailPart:_language()
     self.capacityText.text = GetLanguage(25020031)
-    self.tipText.text = GetLanguage(25020024)
 end
 --初始化UI数据
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
@@ -342,7 +346,7 @@ end
 function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
     if msgId == 0 then
         if data.reason == "spaceNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060014),func = function()
                     if next(self.transportTab) ~= nil then
                         self.transportTab = {}
@@ -353,7 +357,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
             ct.OpenCtrl("NewReminderCtrl",data)
             return
         elseif data.reason == "numberNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060014),func = function()
                     if next(self.transportTab) ~= nil then
                         self.transportTab = {}
@@ -364,7 +368,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
             ct.OpenCtrl("NewReminderCtrl",data)
             return
         elseif data.reason == "moneyNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(21010003),func = function()
                     if next(self.transportTab) ~= nil then
                         self.transportTab = {}
@@ -426,14 +430,9 @@ function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
                 end
             end
         end
-        --for key,value in pairs(self.m_data.store.inHand) do
-        --    if ToNumber(StringSun(data.item.key.id,1,2)) == 21 then
-        --
-        --    end
-        --end
     end
     --运输成功后，如果仓库是空的
-    if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil then
+    if (not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil) and (not self.storeInfoData.locked or next(self.storeInfoData.locked) == nil) then
         self.noTip.transform.localScale = Vector3.one
     end
     self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
@@ -456,6 +455,7 @@ function BuildingWarehouseDetailPart:deleteSucceed(data,msgId)
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
         end
+        return
     end
     if data ~= nil then
         --刷新仓库界面
@@ -508,7 +508,6 @@ function BuildingWarehouseDetailPart:deleteSucceed(data,msgId)
     self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
     self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
-    UIPanel.ClosePage()
     Event.Brocast("SmallPop", GetLanguage(25020012), ReminderType.Succeed)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -576,11 +575,11 @@ function BuildingWarehouseDetailPart:screeningTabInfo(data,type)
     local targetTable = {}
     for key,value in pairs(data) do
         if type == ItemScreening.material then
-            if ToNumber(StringSun(key,1,2)) == materialKey then
+            if ToNumber(StringSun(value.key.id,1,2)) == materialKey then
                 targetTable[#targetTable + 1] = ct.deepCopy(value)
             end
         elseif type == ItemScreening.goods then
-            if ToNumber(StringSun(key,1,2)) == goodsKey then
+            if ToNumber(StringSun(value.key.id,1,2)) == goodsKey then
                 targetTable[#targetTable + 1] = ct.deepCopy(value)
             end
         end

@@ -30,6 +30,8 @@ end
 --end
 function BuildingProductionDetailPart:Hide()
     BasePartDetail.Hide(self)
+    UpdateBeat:Remove(self.Update,self)
+    self.time = nil
     self.ScrollView.gameObject:SetActive(false)
     if next(self.waitingQueueIns) ~= nil then
         self:CloseDestroy(self.waitingQueueIns)
@@ -51,6 +53,7 @@ end
 function BuildingProductionDetailPart:_ResetTransform()
     --关闭Update
     UpdateBeat:Remove(self.Update,self)
+    self.time = nil
     --清空生产队列Item数据
     if next(self.waitingQueueIns) ~= nil then
         self:CloseDestroy(self.waitingQueueIns)
@@ -154,7 +157,7 @@ function BuildingProductionDetailPart:_language()
 end
 --初始化UI数据
 function BuildingProductionDetailPart:initializeUiInfoData(lineData)
-    self.time = nil
+    --self.time = nil
     self.tipText.text = ""
     self.isBoolCapacity = false
     self.isBoolMaterial = false
@@ -214,6 +217,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
 
         if self.Capacity == PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity then
             UpdateBeat:Remove(self.Update,self)
+            self.time = nil
             self.timeSlider.value = 0
             self.oneTimeText.text = "00:00"
             self.tipText.text = GetLanguage(25030014)
@@ -224,6 +228,7 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
                 --原料不足时
                 if self:checkMaterial(self.itemId) == false then
                     UpdateBeat:Remove(self.Update,self)
+                    self.time = nil
                     self.oneTimeText.text = "00:00"
                     self.timeSlider.value = 0
                     self.tipText.text = GetLanguage(25030020)
@@ -322,6 +327,7 @@ function BuildingProductionDetailPart:Update()
     --刷新时间有问题，但不影响流程
     if self.isBoolCapacity == true then
         UpdateBeat:Remove(self.Update,self)
+        self.time = nil
         self.timeSlider.value = 0
         self.oneTimeText.text = "00:00"
         self.tipText.text = GetLanguage(25030014)
@@ -333,6 +339,7 @@ function BuildingProductionDetailPart:Update()
             --这个要测试材料不足的情况
             if self.isBoolMaterial == true then
                 UpdateBeat:Remove(self.Update,self)
+                self.time = nil
                 self.timeSlider.value = 0
                 self.oneTimeText.text = "00:00"
                 self.tipText.text = GetLanguage(25030020)
@@ -512,9 +519,9 @@ function BuildingProductionDetailPart:checkMaterial(itemId)
                 materialNum[#materialNum + 1] = Math_Floor(value1.n / value.num)
                 isMeet = true
             end
-            if isMeet == false then
-                materialNum[#materialNum + 1] = 0
-            end
+        end
+        if isMeet == false then
+            materialNum[#materialNum + 1] = 0
         end
     end
     table.sort(materialNum)

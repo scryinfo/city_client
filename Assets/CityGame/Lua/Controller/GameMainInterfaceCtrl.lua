@@ -110,11 +110,11 @@ function GameMainInterfaceCtrl:c_SmallPop(string,type)
     if  not self.prefab then
         local function callback(prefab)
             self.prefab = prefab
-            SmallPopItem:new(string,type,prefab ,self);
+            SmallPopItem:new(string,type,prefab ,self,gameMainInterfaceBehaviour);
         end
         createPrefab(GameMainInterfaceCtrl.SmallPop_Path,self.root, callback)
     else
-        SmallPopItem:new(string,type,self.prefab ,self);
+        SmallPopItem:new(string,type,self.prefab ,self,gameMainInterfaceBehaviour);
     end
 end
 
@@ -612,10 +612,6 @@ function GameMainInterfaceCtrl:RefreshWeather()
             GameMainInterfacePanel.simpleEarning:GetComponent("Image"):DOFade(0,0.3):SetEase(DG.Tweening.Ease.OutCubic):OnComplete(function ()
                 GameMainInterfacePanel.simpleEarning.transform.localScale = Vector3.zero
             end);
-
-            if GameMainInterfacePanel.bg.transform.localScale ~= Vector3.one then
-                GameMainInterfacePanel.open.transform.localScale = Vector3.one
-            end
             self.isTimmer = false
         end
     end

@@ -78,11 +78,13 @@ function RollCtrl:Refresh()
     Event.AddListener("c_creatRollItem",self.c_creatRollItem,self)
     local data = self.m_data
     data.titleName = GetLanguage(28040018)
-    if data.goodCategory ~=0 then
+    if data.goodCategory ~= 0 then  --食物
         Event.AddListener("c_InventResult",self.handleGoodsResult,self)
-        panel.EvaRoot.localScale = Vector3.one
+        panel.EvaRoot.localScale = Vector3.zero
+        panel.GoodRoot.localScale = Vector3.one
     else
         panel.EvaRoot.localScale = Vector3.one
+        panel.GoodRoot.localScale = Vector3.zero
         Event.AddListener("c_InventResult",self.handleEvaResult,self)
     end
     self:updateText(data)

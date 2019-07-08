@@ -64,11 +64,11 @@ function CompanyPanel.InitPanel()
     this.brandRoot = transform:Find("BottomRoot/BrandRoot")
 
     -- 土地显示
-    this.landTitleContent = transform:Find("BottomRoot/LandRoot/TitleScroll/Viewport/Content")
+    this.landTitleContent = transform:Find("BottomRoot/LandRoot/TitleScroll/Viewport/Content").gameObject
     this.landScroll = transform:Find("BottomRoot/LandRoot/ContentScroll/Viewport"):GetComponent("ActiveLoopScrollRect")
 
     -- 建筑显示
-    this.buildingTitleContent = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content")
+    this.buildingTitleContent = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content").gameObject
     this.buildingTitleRt = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content"):GetComponent("RectTransform")
     this.buildingScroll = transform:Find("BottomRoot/BuildingRoot/ContentScroll/Viewport"):GetComponent("ActiveLoopScrollRect")
 

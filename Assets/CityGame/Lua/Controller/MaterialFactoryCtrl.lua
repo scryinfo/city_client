@@ -83,14 +83,12 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
                 self.groupMgr:AddParts(BuildingWarehousePart,0)
                 MaterialFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.zero
             else
-
                 self.groupMgr:AddParts(BuildingShelfPart,0.2)
                 self.groupMgr:AddParts(TurnoverPart,0.2)
                 self.groupMgr:AddParts(BuildingSalaryPart,0.2)
                 self.groupMgr:AddParts(BuildingProductionPart,0.2)
                 self.groupMgr:AddParts(BuildingWarehousePart,0.2)
                 MaterialFactoryPanel.bubbleMessageBtn.transform.localScale = Vector3.one
-
             end
             MaterialFactoryPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)

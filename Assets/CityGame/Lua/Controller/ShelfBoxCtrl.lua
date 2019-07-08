@@ -7,6 +7,7 @@ ShelfBoxCtrl = class('ShelfBoxCtrl',UIPanel)
 UIPanel:ResgisterOpen(ShelfBoxCtrl)
 
 local isShow = false
+local isShowPrice = false
 local Math_Floor = math.floor
 local ToNumber = tonumber
 --奢侈等级
@@ -35,6 +36,7 @@ function ShelfBoxCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.downShelfBtn.gameObject,self._clickDownShelfBtn,self)
     self.luaBehaviour:AddClick(self.confirmBtn.gameObject,self._clickConfirmBtn,self)
     self.luaBehaviour:AddClick(self.tipPriceBtn.gameObject,self._clickTipPriceBtn,self)
+    self.luaBehaviour:AddClick(self.tipPriceBg.gameObject,self._clickTipPriceBgBtn,self)
 
     self.automaticSwitch.onValueChanged:AddListener(function()
         self:ToggleUndateText()
@@ -54,6 +56,8 @@ end
 
 function ShelfBoxCtrl:Hide()
     UIPanel.Hide(self)
+    isShow = false
+    isShowPrice = false
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function ShelfBoxCtrl:_getComponent(go)
@@ -97,14 +101,14 @@ function ShelfBoxCtrl:_getComponent(go)
     self.advicePriceText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/priceText"):GetComponent("Text")
     self.CompetitivenessText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/priceText/Text"):GetComponent("Text")
     self.tipPriceBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBtn")
+    self.tipPriceBg = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn")
+    self.tipPriceText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn/tipText"):GetComponent("Text")
 
     self.tipPriceDetailsBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipPriceDetailsBtn")
     --bottom
     self.downShelfBtn = go.transform:Find("contentRoot/bottom/downShelfBtn")
     self.addShelfBtn = go.transform:Find("contentRoot/bottom/addShelfBtn")
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn")
-
-
 end
 --------------------------------------------------------------------------初始化--------------------------------------------------------------------------
 --初始化UI数据
@@ -119,7 +123,6 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.averagePrice = a --平均价
             self.averageScore = b --平均分
             self.score = c        --评分
-
         end
         Event.Brocast("getShelfItemProcessing",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.RetailShop then
@@ -228,6 +231,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.tipBg.transform.localScale = Vector3.zero
+    self.tipPriceBg.transform.localScale = Vector3.zero
 end
 --设置多语言
 function ShelfBoxCtrl:_language()
@@ -240,6 +244,7 @@ function ShelfBoxCtrl:_language()
     self.tipText.text = GetLanguage(25060004)
     self.tipContentText.text = GetLanguage(25020027)
     self.priceTip.text = GetLanguage(25060003)
+    self.CompetitivenessText.text = GetLanguage(43010001)
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------
@@ -305,7 +310,11 @@ function ShelfBoxCtrl:_clickConfirmBtn(ins)
 end
 --点击打开竞争力提示
 function ShelfBoxCtrl:_clickTipPriceBtn(ins)
-
+    ins:openTipPriceText(not isShowPrice)
+end
+--点击竞争力提示bg
+function ShelfBoxCtrl:_clickTipPriceBgBtn(ins)
+    ins:openTipPriceText(not isShowPrice)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 --设置提示开关
@@ -316,6 +325,23 @@ function ShelfBoxCtrl:openTipText(isBool)
         self.tipBg.transform.localScale = Vector3.zero
     end
     isShow = isBool
+end
+--设置竞争力提示开关
+function ShelfBoxCtrl:openTipPriceText(isBool)
+    if isBool then
+        self.tipPriceBg.transform.localScale = Vector3.one
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            self.tipPriceText.text = GetLanguage(43020001)..GetLanguage(43020002)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            self.tipPriceText.text = GetLanguage(43030001)..GetLanguage(43030002)
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            self.tipPriceText.text = GetLanguage(43040001)..GetLanguage(43040002)
+        end
+    else
+        self.tipPriceBg.transform.localScale = Vector3.zero
+        self.tipPriceText.text = ""
+    end
+    isShowPrice = isBool
 end
 --自动补货按钮
 function ShelfBoxCtrl:ToggleUndateText()

@@ -115,7 +115,7 @@ function LaboratoryModel:n_OnReceiveDelLine(lineData)
             table.remove(self.data.inProcess,i)
         end
     end
-    Event.Brocast("SmallPop","删除成功",300)
+    Event.Brocast("SmallPop",GetLanguage(28040016),ReminderType.Succeed)
     Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodQueneItem"})
 end
 --开箱

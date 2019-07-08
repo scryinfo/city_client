@@ -119,9 +119,9 @@ end
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
     if self.m_data.buildingType == BuildingType.RetailShop then
-        self.tipText.text = GetLanguage(25020024)
-    else
         self.tipText.text = GetLanguage(25020033)
+    else
+        self.tipText.text = GetLanguage(25020024)
     end
     --隐藏仓库分类按钮
     self.sortingBtn.localScale = Vector3.zero

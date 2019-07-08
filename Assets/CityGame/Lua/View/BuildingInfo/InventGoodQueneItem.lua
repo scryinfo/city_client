@@ -46,7 +46,7 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
                 return
             end
             --倒计时
-            self.waiting = self.waiting -1
+            self.waiting = self.waiting - UnityEngine.Time.unscaledDeltaTime
             if self.waiting <= 0 then
                 self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
                 local ts =getTimeBySec( (self.currentTime - self.data.beginProcessTs)/1000)

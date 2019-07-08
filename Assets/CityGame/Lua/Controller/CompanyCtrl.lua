@@ -318,13 +318,13 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
 
     local difference = (currentTime - buildingTs) / 86400  --距离开业的天数
     if difference < 10 then
-        CompanyPanel.curve.anchoredPosition = Vector3.New(-95, 47,0)
+        CompanyPanel.curve.anchoredPosition = Vector3.New(-40, 47,0)
         CompanyPanel.curve.sizeDelta = Vector2.New(1528, 535)
     elseif difference < 30 then
-        CompanyPanel.curve.anchoredPosition = Vector3.New(-95, 47,0)
+        CompanyPanel.curve.anchoredPosition = Vector3.New(-40, 47,0)
         CompanyPanel.curve.sizeDelta = Vector2.New(1528, 535)
-        CompanyPanel.curve.anchoredPosition = Vector3.New(CompanyPanel.curve.anchoredPosition.x - (difference - 10) * 140, 42,0)
-        CompanyPanel.curve.sizeDelta = Vector2.New(CompanyPanel.curve.sizeDelta.x + (difference - 10) * 140, 402)
+        CompanyPanel.curve.anchoredPosition = Vector3.New(CompanyPanel.curve.anchoredPosition.x - (difference - 10) * 140, 47,0)
+        CompanyPanel.curve.sizeDelta = Vector2.New(CompanyPanel.curve.sizeDelta.x + (difference - 10) * 140, 533)
     else
         CompanyPanel.curve.anchoredPosition = Vector3.New(-2902, 47,0)
         CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)

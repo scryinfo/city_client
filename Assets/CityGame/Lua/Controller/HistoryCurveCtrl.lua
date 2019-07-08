@@ -158,7 +158,7 @@ function HistoryCurveCtrl:c_GoodsNpcTypeNum(info)
                 demandNumTab[i].num = 0
             else
                 for k, v in ipairs(info) do
-                    if math.floor(v.t/1000) == sevenDaysAgo then
+                    if math.floor(v.t/1000) == updataTime then
                         if self.m_data == 20050004 then    --住宅
                             demandNumTab[i].num = v.npcTypeNumMap[1].n + v.npcTypeNumMap[2].n
                         else   --商品

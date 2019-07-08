@@ -432,7 +432,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
         end
     end
     --运输成功后，如果仓库是空的
-    if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil and not self.storeInfoData.locked or next(self.storeInfoData.locked) == nil then
+    if (not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil) and (not self.storeInfoData.locked or next(self.storeInfoData.locked) == nil) then
         self.noTip.transform.localScale = Vector3.one
     end
     self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity

@@ -471,6 +471,27 @@ function getMoneyString(str)
     return b..floatString
 end
 
+--保留小数点后的位数
+function radixPointNum(str,long)
+    if (string.find(str, '%.') == nil) then
+        return
+    end
+    local num = 0
+    local index = string.find(str, '%.')
+    local intString = string.sub(str, 1, index)
+    local floatString = string.sub(str, index + 1)
+    if floatString ~= "" then
+        num = #floatString
+    end
+    local newfloatSrt
+    if num <= long then
+        newfloatSrt = string.sub(str, index + 1)
+    else
+        newfloatSrt = string.sub(str, index + 1,index + long)
+    end
+    return intString .. newfloatSrt
+end
+
 currentLanguage={}
 currentSprite={}
 chinese={}

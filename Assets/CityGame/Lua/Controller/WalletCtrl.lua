@@ -397,7 +397,10 @@ function WalletCtrl:_clickDetailsConfirmBtn(ins)
         Event.Brocast("SmallPop",GetLanguage(33030012), ReminderType.Warning)
         return
     end
-
+    if tonumber(ins.moneyInput.text) < 1000000 then
+        Event.Brocast("SmallPop",GetLanguage(33030016), ReminderType.Warning)
+        return
+    end
     local data = {}
     data.userId = ins.userId
     data.type = "withdraw"
@@ -482,7 +485,12 @@ end
 --检测保存输入要提币的金额
 function WalletCtrl:saveAmount()
     if self.moneyInput.text == "" then
-        self.moneyInput.text = 0
+        return
+    end
+    if string.find(self.moneyInput.text, '%.') == nil then
+        self.moneyInput.text = tonumber(self.moneyInput.text)
+    else
+        self.moneyInput.text = radixPointNum(self.moneyInput.text,4)
     end
     self.Amount = tostring(tonumber(self.moneyInput.text) / 1000000)
     self.poundageText.text = GetLanguage(33030002 ,"E" .. GetClientPriceString(tonumber(self.moneyInput.text) * 0.003 * 10000),0.3)
@@ -500,7 +508,12 @@ end
 --输入充值金额
 function WalletCtrl:inputMoney()
     if self.rechargeMoneyInput.text == "" then
-        self.rechargeMoneyInput.text = 0
+       return
+    end
+    if string.find(self.rechargeMoneyInput.text, '%.') == nil then
+        self.rechargeMoneyInput.text = tonumber(self.rechargeMoneyInput.text)
+    else
+        self.rechargeMoneyInput.text = radixPointNum(self.rechargeMoneyInput.text,4)
     end
     self.TopUpMoney = tostring(tonumber(self.rechargeMoneyInput.text)/1000000)
     self.DDDText.text = getMoneyString(CityLuaUtil.scientificNotation2Normal(tonumber(self.rechargeMoneyInput.text) * (1/1000000))) .. "(DDD)"

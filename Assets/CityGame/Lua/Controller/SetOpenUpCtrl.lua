@@ -109,7 +109,12 @@ end
 --输入价格
 function SetOpenUpCtrl:OnPrice()
     if SetOpenUpPanel.price.text == "" then
-        SetOpenUpPanel.price.text = 0
+       return
+    end
+    if string.find(SetOpenUpPanel.price.text, '%.') == nil then
+        SetOpenUpPanel.price.text = tonumber(SetOpenUpPanel.price.text)
+    else
+        SetOpenUpPanel.price.text = radixPointNum(SetOpenUpPanel.price.text,4)
     end
     local price = SetOpenUpPanel.price.text
     SetOpenUpPanel.value.text = ct.CalculationAdvertisementCompetitivePower(self.m_data.guidePrice,GetServerPriceNumber(price), self.m_data.RDAbility ,2251, self.m_data.averageRDAbility)

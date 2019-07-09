@@ -249,9 +249,9 @@ function ShelfBoxCtrl:_language()
     self.tipContentText.text = GetLanguage(25020027)
     self.priceTip.text = GetLanguage(25060003)
     self.CompetitivenessText.text = GetLanguage(43010001)
-    self.warehouseNumberTipText.text = "仓库库存"
-    self.shelfNumberTipText.text = "货架库存"
-    self.addShelfText.text = "上架"
+    self.warehouseNumberTipText.text = GetLanguage(25020038)
+    self.shelfNumberTipText.text = GetLanguage(25020037)
+    self.addShelfText.text = GetLanguage(25020035)
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------

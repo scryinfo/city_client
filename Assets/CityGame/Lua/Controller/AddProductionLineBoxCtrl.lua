@@ -116,7 +116,7 @@ function AddProductionLineBoxCtrl:InitializeData()
 end
 --多语言
 function AddProductionLineBoxCtrl:_language()
-    AddProductionLineBoxPanel.tipText.text = "当原料不足时,生产线会停止"
+    AddProductionLineBoxPanel.tipText.text = GetLanguage(25030030)
 end
 ------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------
 --左Button

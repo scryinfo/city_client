@@ -78,8 +78,8 @@ function TransportItem:InitializeData()
 end
 
 function TransportItem:_language()
-    self.goodsCost.text = "商品费用:"
-    self.freight.text = "运输费用:"
+    self.goodsCost.text = GetLanguage(25020039)
+    self.freight.text = GetLanguage(25020034)
 end
 function TransportItem:_closeDeleBtn(ins)
     Event.Brocast("deleteItemPrefab",ins.keyId)

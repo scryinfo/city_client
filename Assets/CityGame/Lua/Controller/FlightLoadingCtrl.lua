@@ -23,8 +23,6 @@ end
 function FlightLoadingCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
-    Event.AddListener("m_CloseFlightLoading", self.CloseFlightLoading, self)
-    UpdateBeat:Add(self._Update, self)
 end
 --
 function FlightLoadingCtrl:Refresh()
@@ -43,12 +41,7 @@ end
 --
 function FlightLoadingCtrl:_initData()
     self.rotateIconTrans.localEulerAngles = Vector3.zero
-end
---
-function FlightLoadingCtrl:CloseFlightLoading()
-    if self ~= nil then
-        UIPanel.Hide(self)
-    end
+    UpdateBeat:Add(self._Update, self)
 end
 --
 function FlightLoadingCtrl:_Update()

@@ -275,6 +275,7 @@ function ProcessingFactoryModel:n_OnShelfDelInfo(data,msgId)
 end
 --添加生产线
 function ProcessingFactoryModel:n_OnAddLineInfo(data)
+    Event.Brocast("partUpdateAddLine",data)
     DataManager.ControllerRpcNoRet(self.insId,"AddProductionLineBoxCtrl",'SucceedUpdatePanel',data)
 end
 --删除生产线

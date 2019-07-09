@@ -84,7 +84,6 @@ function MaterialFactoryModel:Close()
     Event.RemoveListener("m_ReqBuildingMaterialInfo",self.m_ReqBuildingMaterialInfo,self)
     Event.RemoveListener("m_GetMaterialGuidePrice",self.m_GetMaterialGuidePrice,self)
 
-
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
@@ -118,7 +117,7 @@ end
 ---客户端请求---
 --打开原料厂
 function MaterialFactoryModel:m_ReqOpenMaterial(buildingId)
-    --FlightMainModel.OpenFlightLoading()
+    FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
 end
 --改变建筑名字
@@ -211,7 +210,7 @@ function MaterialFactoryModel:n_OnReceiveHouseSalaryChange(data)
 end
 --打开原料厂
 function MaterialFactoryModel:n_OnOpenMaterial(stream)
-    --FlightMainModel.CloseFlightLoading()
+    FlightMainModel.CloseFlightLoading()
     if stream ~= nil then
         if not self.funModel then
             self.funModel = BuildingBaseModel:new(self.insId)

@@ -31,7 +31,6 @@ function BuildingProductionPart:RefreshData(data)
     if data == nil then
         return
     end
-
     self.m_data = data
     self:_language()
 end

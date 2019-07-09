@@ -103,6 +103,7 @@ end
 ---客户端请求---
 --打开零售店
 function RetailStoresModel:m_ReqOpenRetailShop(buildingId)
+    FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailRetailShop","gs.Id",{id = buildingId})
 end
 --改变建筑名字
@@ -173,6 +174,7 @@ function RetailStoresModel:n_OnReceiveHouseSalaryChange(data)
 end
 --打开零售店
 function RetailStoresModel:n_OnOpenRetailStores(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream ~= nil then
         if not self.funModel then
             self.funModel = BuildingBaseModel:new(self.insId)

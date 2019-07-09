@@ -409,8 +409,7 @@ function AvtarCtrl:c_OnClick_backBtn(ins)
         UIPanel.ClosePage()
     else
         --ins:Hide()
-        CityEngineLua:reset()
-        UIPanel.BackToPage(LoginCtrl)
+        CityEngineLua.LoginOut()
     end
 end
 

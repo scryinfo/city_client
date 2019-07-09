@@ -9,14 +9,6 @@ local pbl = pbl
 function LaboratoryModel:initialize(insId)
     self.insId = insId
     self:_addListener()
-    --UpdateBeat:Add(self.Update, self)
-
-end
-
-function LaboratoryModel:Update()
-    if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.L) then
-        self:m_ReqLabDeleteLine(self.data.inProcess[1].id)
-    end
 end
 
 --启动事件--
@@ -25,7 +17,7 @@ function LaboratoryModel:_addListener()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labExclusive","gs.LabExclusive",self.n_OnReceiveLabExclusive)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labAddLine","gs.LabAddLineACK",self.n_OnReceiveLabLineAdd)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labCancelLine","gs.LabCancelLine",self.n_OnReceiveDelLine);
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labCancelLine","gs.LabCancelLine",self.n_OnReceiveDelLine)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labRoll","gs.LabRollACK",self.n_OnReceiveLineChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labLineChangeInform","gs.LabLineInform",self.n_OnReceivelabLineChangeInform)
 
@@ -76,16 +68,16 @@ end
 ---===================================================================================回调===============================================================================
 --研究所详情
 function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
-    self.data=data
+    self.data = data
     self.data.probGood = self.data.probGood/1000
     self.data.probEva = self.data.probEva/1000
 
-    if data.completed  then
-        if not data.inProcess then
+    if data.completed then
+        if data.inProcess == nil then
             data.inProcess={}
         end
         for i, v in ipairs(data.completed) do
-            table.insert( data.inProcess ,v )
+            table.insert(data.inProcess ,v)
         end
     end
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', data)
@@ -110,18 +102,23 @@ end
 
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(lineData)
-    for i,line in ipairs(self.data.inProcess) do
-        if line.id == lineData.lineId and DataManager.GetMyOwnerID() == line.proposerId then
-            table.remove(self.data.inProcess,i)
-        end
+    --for i,line in ipairs(self.data.inProcess) do
+    --    if line.id == lineData.lineId and DataManager.GetMyOwnerID() == line.proposerId then
+    --        table.remove(self.data.inProcess,i)
+    --    end
+    --end
+
+    --Laboratory.Line inProcessLine  重新计算队列
+    self.data.inProcess = lineData.inProcessLine
+    if self.data.inProcess == nil then
+        self.data.inProcess = {}
     end
+
     Event.Brocast("SmallPop",GetLanguage(28040016),ReminderType.Succeed)
     Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodQueneItem"})
 end
 --开箱
 function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
-
-    prints("开箱回调")
     local info = LabRollACK .itemId or  LabRollACK .evaPoint
     --DataManager.ControllerRpcNoRet(self.insId,"RollCtrl", '_evaResult', LabRollACK.labRollACK)
     Event.Brocast("c_InventResult",LabRollACK.labResult)
@@ -136,26 +133,25 @@ function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
         end
     end
     self:n_OnReceivelabLineChangeInform({line=line},false)
-
 end
 --更新箱子
 function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
-    prints("更新箱子")
     local datas = {}
-    for i, v in ipairs(self.data.inProcess) do
-        if v.id == lineData.line.id  then
-            local isFinished = lineData.line.times ==  (lineData.line.availableRoll + lineData.line.usedRoll)
-            if lineData.line.proposerId ~= DataManager.GetMyOwnerID() and   isFinished then
-                table.remove(self.data.inProcess,i)
+    for i, line in ipairs(self.data.inProcess) do
+        if line.id == lineData.line.id  then
+            local isFinished = lineData.line.times == (lineData.line.availableRoll + lineData.line.usedRoll)
+            if lineData.line.proposerId ~= DataManager.GetMyOwnerID() and isFinished == true then
+                table.remove(self.data.inProcess,i)  --别人的成果  --其实服务器不会发_(:з」∠)_但既然写了我就不改了
             else
                 self.data.inProcess[i]=lineData.line
             end
-            for i, v in ipairs(self.data.inProcess) do
-                if v.availableRoll ~= 0 then
-                    table.insert(datas,v)
-                end
-            end
             break
+        end
+    end
+    for i, line in ipairs(self.data.inProcess) do
+        local isFinished = line.times == (line.availableRoll + line.usedRoll)
+        if line.availableRoll > 0 or isFinished == false then
+            table.insert(datas, line)
         end
     end
     Event.Brocast("c_updateQuque",{data = datas,name = "View/Laboratory/InventGoodQueneItem"})

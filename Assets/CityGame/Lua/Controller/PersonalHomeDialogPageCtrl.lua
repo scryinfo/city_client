@@ -205,7 +205,9 @@ end
 --好友私聊
 function PersonalHomeDialogPageCtrl:_friendChatBtnFunc(ins)
     PlayMusEff(1002)
-    if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
+    if ins.m_data.isOpenChat == true then
+        UIPanel.ClosePage()
+    else
         UIPanel.ClosePage()
         ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
     end

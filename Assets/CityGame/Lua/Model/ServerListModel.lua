@@ -131,7 +131,6 @@ function ServerListModel:n_OnRoleLogin(pMsg)
         ServerListModel.bagId = pMsg.bagId
 
         ct.log("[LoginModel.n_OnRoleLogin] succeed!")
-        Event.Brocast("c_GsLoginSuccess",pMsg.id);
         Event.Brocast("c_RoleLoginDataInit",pMsg);
         Event.Brocast("m_bagCapacity",pMsg.bagCapacity);
         Event.Brocast("m_RoleLoginInExchangeModel", stream)  ---测试，获取登录之后的信息 cycle week 11
@@ -153,6 +152,8 @@ function ServerListModel:n_OnRoleLogin(pMsg)
         --logDebug(pMsg.role.lockedMoney)
         --logDebug(pMsg.role.offlineTs)
         --logDebug(pMsg.role.position)
+
+        Event.Brocast("c_GsLoginSuccess",pMsg.id);
         --启动天气
         ClimateManager.Star()
     end

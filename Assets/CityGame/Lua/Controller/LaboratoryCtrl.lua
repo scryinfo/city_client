@@ -37,15 +37,7 @@ end
 function LaboratoryCtrl:Hide()
     UIPanel.Hide(self)
     if self.groupMgr ~= nil then
-        self.groupMgr:Destroy()
-        self.groupMgr = nil
-    end
-    RevenueDetailsMsg.close()
-end
-
-function LaboratoryCtrl:Close()
-    UIPanel.Close(self)
-    if self.groupMgr ~= nil then
+        self.groupMgr:TurnOffAllOptions()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
@@ -170,6 +162,7 @@ end
 function LaboratoryCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     if self.groupMgr ~= nil then
+        self.groupMgr:TurnOffAllOptions()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end

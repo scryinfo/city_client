@@ -519,9 +519,9 @@ function BuildingProductionDetailPart:checkMaterial(itemId)
                 materialNum[#materialNum + 1] = Math_Floor(value1.n / value.num)
                 isMeet = true
             end
-            if isMeet == false then
-                materialNum[#materialNum + 1] = 0
-            end
+        end
+        if isMeet == false then
+            materialNum[#materialNum + 1] = 0
         end
     end
     table.sort(materialNum)

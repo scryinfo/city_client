@@ -40,7 +40,8 @@ function FlightMainModel.OpenFlightLoading()
 end
 --
 function FlightMainModel.CloseFlightLoading()
-    Event.Brocast("m_CloseFlightLoading")
+    --Event.Brocast("m_CloseFlightLoading")
+    UIPanel.CloseAllFixedPanel()
 end
 
 --客户端请求---------------------------------------------------------------------------------

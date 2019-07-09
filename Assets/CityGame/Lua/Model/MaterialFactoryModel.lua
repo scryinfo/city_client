@@ -84,7 +84,6 @@ function MaterialFactoryModel:Close()
     Event.RemoveListener("m_ReqBuildingMaterialInfo",self.m_ReqBuildingMaterialInfo,self)
     Event.RemoveListener("m_GetMaterialGuidePrice",self.m_GetMaterialGuidePrice,self)
 
-
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailMaterialFactory","gs.MaterialFactory",self.n_OnOpenMaterial)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
@@ -118,7 +117,7 @@ end
 ---客户端请求---
 --打开原料厂
 function MaterialFactoryModel:m_ReqOpenMaterial(buildingId)
-    --FlightMainModel.OpenFlightLoading()
+    FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailMaterialFactory","gs.Id",{id = buildingId})
 end
 --改变建筑名字
@@ -131,6 +130,7 @@ function MaterialFactoryModel:m_ReqCloseMaterial(buildingId)
 end
 --运输
 function MaterialFactoryModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
 --上架
@@ -211,20 +211,18 @@ function MaterialFactoryModel:n_OnReceiveHouseSalaryChange(data)
 end
 --打开原料厂
 function MaterialFactoryModel:n_OnOpenMaterial(stream)
-    --FlightMainModel.CloseFlightLoading()
+    FlightMainModel.CloseFlightLoading()
     if stream ~= nil then
         if not self.funModel then
             self.funModel = BuildingBaseModel:new(self.insId)
         end
     end
     DataManager.ControllerRpcNoRet(self.insId,"MaterialFactoryCtrl", 'refreshMaterialDataInfo',stream)
-    --self:m_ReqBuildingMaterialInfo(self.insId)
-    --self:m_GetMaterialGuidePrice(stream.insId,stream.info.ownerId)
-    --UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",DataManager.GetMyPersonalHomepageInfo().id)
     UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",stream)
 end
 --运输
 function MaterialFactoryModel:n_OnBuildingTransportInfo(data,msgId)
+    FlightMainModel.CloseFlightLoading()
     if msgId == 0 then
         Event.Brocast("transportSucceed",data,msgId)
         return
@@ -276,6 +274,7 @@ function MaterialFactoryModel:n_OnShelfDelInfo(data,msgId)
 end
 --添加生产线
 function MaterialFactoryModel:n_OnAddLineInfo(data)
+    Event.Brocast("partUpdateAddLine",data)
     DataManager.ControllerRpcNoRet(self.insId,"AddProductionLineBoxCtrl",'SucceedUpdatePanel',data)
 end
 --删除生产线

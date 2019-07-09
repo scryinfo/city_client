@@ -120,6 +120,7 @@ end
 ---客户端请求---
 --打开加工厂
 function ProcessingFactoryModel:m_ReqOpenprocessing(buildingId)
+    FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailProduceDepartment","gs.Id",{id = buildingId})
 end
 --改变建筑名字
@@ -132,6 +133,7 @@ function ProcessingFactoryModel:m_ReqCloseprocessing(buildingId)
 end
 --运输
 function ProcessingFactoryModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
 --上架
@@ -210,6 +212,7 @@ function ProcessingFactoryModel:n_OnReceiveHouseSalaryChange(data)
 end
 --打开加工厂
 function ProcessingFactoryModel:n_OnOpenprocessing(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream ~= nil then
         if not self.funModel then
             self.funModel = BuildingBaseModel:new(self.insId)
@@ -220,6 +223,7 @@ function ProcessingFactoryModel:n_OnOpenprocessing(stream)
 end
 --运输
 function ProcessingFactoryModel:n_OnBuildingTransportInfo(data,msgId)
+    FlightMainModel.CloseFlightLoading()
     if msgId == 0 then
         Event.Brocast("transportSucceed",data,msgId)
         return
@@ -271,6 +275,7 @@ function ProcessingFactoryModel:n_OnShelfDelInfo(data,msgId)
 end
 --添加生产线
 function ProcessingFactoryModel:n_OnAddLineInfo(data)
+    Event.Brocast("partUpdateAddLine",data)
     DataManager.ControllerRpcNoRet(self.insId,"AddProductionLineBoxCtrl",'SucceedUpdatePanel',data)
 end
 --删除生产线

@@ -82,7 +82,9 @@ function ShelfBoxCtrl:_getComponent(go)
 
     self.number = go.transform:Find("contentRoot/content/goodsInfo/number")
     self.warehouseNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/warehouseNumberText"):GetComponent("Text")
+    self.warehouseNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/numberTipText"):GetComponent("Text")
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
+    self.shelfNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/numberTipText"):GetComponent("Text")
     --detailsInfo
     self.totalNumber = go.transform:Find("contentRoot/content/detailsInfo/totalNumber"):GetComponent("Text")
     self.totalNumberText = go.transform:Find("contentRoot/content/detailsInfo/totalNumber/totalNumberText"):GetComponent("Text")
@@ -108,30 +110,31 @@ function ShelfBoxCtrl:_getComponent(go)
     --bottom
     self.downShelfBtn = go.transform:Find("contentRoot/bottom/downShelfBtn")
     self.addShelfBtn = go.transform:Find("contentRoot/bottom/addShelfBtn")
+    self.addShelfText = go.transform:Find("contentRoot/bottom/addShelfBtn/text"):GetComponent("Text")
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn")
 end
 --------------------------------------------------------------------------初始化--------------------------------------------------------------------------
 --初始化UI数据
 function ShelfBoxCtrl:initializeUiInfoData()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        local function callbacks(b)
-            self.guidePrice = b
+        local function callbacks(guidePrice)
+            self.guidePrice = guidePrice
         end
         Event.Brocast("getShelfItemGuidePrice",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        local function callbacks(a,b,c)
-            self.averagePrice = a --平均价
-            self.averageScore = b --平均分
-            self.score = c        --评分
+        local function callbacks(averagePrice,averageScore,score)
+            self.averagePrice = averagePrice --平均价
+            self.averageScore = averageScore --平均分
+            self.score = score        --评分
         end
         Event.Brocast("getShelfItemProcessing",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.RetailShop then
-        local function callbacks(a,b,c,d,e)
-            self.averagePrice = a --平均价
-            self.averageScore = b --平均分
-            self.averageBuildingScore = c        --评分
-            self.playerGoodsScore = d            --玩家商品评分
-            self.playerBuildingScore = e         --玩家店铺评分
+        local function callbacks(averagePrice,averageScore,averageBuildingScore,playerGoodsScore,playerBuildingScore)
+            self.averagePrice = averagePrice --平均价
+            self.averageScore = averageScore --平均分
+            self.averageBuildingScore = averageBuildingScore        --评分
+            self.playerGoodsScore = playerGoodsScore            --玩家商品评分
+            self.playerBuildingScore = playerBuildingScore         --玩家店铺评分
         end
         Event.Brocast("getRetailItemGuidePrice",self.m_data.itemId,callbacks)
     end
@@ -141,6 +144,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.quality.transform.localScale = Vector3.zero
         self.levelBg.transform.localScale = Vector3.zero
         self.number.transform.localPosition = Vector3.New(183,-45,0)
+        self.brandNameText.text = DataManager.GetCompanyName()
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif Math_Floor(self.m_data.itemId / 100000) == goodsKey then
         self.popularity.transform.localScale = Vector3.one
@@ -169,13 +173,13 @@ function ShelfBoxCtrl:initializeUiInfoData()
             self.qualityValue.text = self.m_data.dataInfo.k.qualityScore
         end
     end
-    local function callback(a)
+    local function callback(warehouseNumber)
         --缓存一个值，修改数量时使用
-        self.warehouseNumber = a
-        self.warehouseNumberText.text = "×"..a
+        self.warehouseNumber = warehouseNumber
+        self.warehouseNumberText.text = "×"..warehouseNumber
     end
-    local function callback1(b)
-        self.shelfNumberText.text = "×"..b
+    local function callback1(shelfNumber)
+        self.shelfNumberText.text = "×"..shelfNumber
     end
     if not self.m_data.dataInfo.key then
         Event.Brocast("getItemIdCount",self.m_data.itemId,self.m_data.dataInfo.k.producerId,callback)
@@ -245,6 +249,9 @@ function ShelfBoxCtrl:_language()
     self.tipContentText.text = GetLanguage(25020027)
     self.priceTip.text = GetLanguage(25060003)
     self.CompetitivenessText.text = GetLanguage(43010001)
+    self.warehouseNumberTipText.text = GetLanguage(25020038)
+    self.shelfNumberTipText.text = GetLanguage(25020037)
+    self.addShelfText.text = GetLanguage(25020035)
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------
@@ -370,7 +377,7 @@ function ShelfBoxCtrl:SlidingUpdateText()
 end
 --输入框
 function ShelfBoxCtrl:InputUpdateText()
-    if self.priceInput.text == nil or self.priceInput.text == "" then
+    if self.priceInput.text == nil or self.priceInput.text == "" or tonumber(self.priceInput.text) == nil then
         return
     else
         if self.m_data.buildingType == BuildingType.MaterialFactory then

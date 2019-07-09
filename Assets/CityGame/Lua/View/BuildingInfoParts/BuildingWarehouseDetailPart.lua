@@ -119,9 +119,9 @@ end
 function BuildingWarehouseDetailPart:_initFunc()
     self:_language()
     if self.m_data.buildingType == BuildingType.RetailShop then
-        self.tipText.text = GetLanguage(25020024)
-    else
         self.tipText.text = GetLanguage(25020033)
+    else
+        self.tipText.text = GetLanguage(25020024)
     end
     --隐藏仓库分类按钮
     self.sortingBtn.localScale = Vector3.zero
@@ -310,14 +310,28 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
         self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
         if next(self.storeInfoData) ~= nil then
-            for key,value in pairs(self.storeInfoData.inHand) do
-                if ToNumber(StringSun(data.iKey.id,1,2)) == 21 then
-                    if value.key.id == data.iKey.id then
-                        value.n = value.n + 1
+            if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil then
+                for key,value in pairs(self.storeInfoData.locked) do
+                    if ToNumber(StringSun(data.iKey.id,1,2)) == 21 then
+                        if value.key.id == data.iKey.id then
+                            value.n = value.n + 1
+                        end
+                    elseif ToNumber(StringSun(data.iKey.id,1,2)) == 22 then
+                        if value.key.id == data.iKey.id and value.key.producerId == data.iKey.producerId then
+                            value.n = value.n + 1
+                        end
                     end
-                elseif ToNumber(StringSun(data.iKey.id,1,2)) == 22 then
-                    if value.key.id == data.iKey.id and value.key.producerId == data.iKey.producerId then
-                        value.n = value.n + 1
+                end
+            else
+                for key,value in pairs(self.storeInfoData.inHand) do
+                    if ToNumber(StringSun(data.iKey.id,1,2)) == 21 then
+                        if value.key.id == data.iKey.id then
+                            value.n = value.n + 1
+                        end
+                    elseif ToNumber(StringSun(data.iKey.id,1,2)) == 22 then
+                        if value.key.id == data.iKey.id and value.key.producerId == data.iKey.producerId then
+                            value.n = value.n + 1
+                        end
                     end
                 end
             end

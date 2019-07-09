@@ -53,6 +53,7 @@ function AddProductionLineBoxCtrl:Active()
     end)
 end
 function AddProductionLineBoxCtrl:Refresh()
+    self:_language()
     self:InitializeData()
 end
 function AddProductionLineBoxCtrl:Hide()
@@ -87,7 +88,7 @@ function AddProductionLineBoxCtrl:InitializeData()
         AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --如果是商品打开商品属性展示
-        AddProductionLineBoxPanel.tipText.text = "当原料不足时,生产线会停止"
+        AddProductionLineBoxPanel.tipText.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.popularity.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.quality.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.levelBg.transform.localScale = Vector3.one
@@ -112,6 +113,10 @@ function AddProductionLineBoxCtrl:InitializeData()
         AddProductionLineBoxPanel.popularityValue.text = self.m_data.info.brandScore
         AddProductionLineBoxPanel.qualityValue.text = self.m_data.info.qtyScore
     end
+end
+--多语言
+function AddProductionLineBoxCtrl:_language()
+    AddProductionLineBoxPanel.tipText.text = GetLanguage(25030030)
 end
 ------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------
 --左Button

@@ -116,6 +116,7 @@ end
 --end
 --运输
 function RetailStoresModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
 --上架
@@ -184,6 +185,7 @@ function RetailStoresModel:n_OnOpenRetailStores(stream)
 end
 --运输
 function RetailStoresModel:n_OnBuildingTransportInfo(data,msgId)
+    FlightMainModel.CloseFlightLoading()
     if msgId == 0 then
         Event.Brocast("transportSucceed",data,msgId)
         return

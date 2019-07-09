@@ -130,6 +130,7 @@ function MaterialFactoryModel:m_ReqCloseMaterial(buildingId)
 end
 --运输
 function MaterialFactoryModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
 --上架
@@ -221,6 +222,7 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
 end
 --运输
 function MaterialFactoryModel:n_OnBuildingTransportInfo(data,msgId)
+    FlightMainModel.CloseFlightLoading()
     if msgId == 0 then
         Event.Brocast("transportSucceed",data,msgId)
         return

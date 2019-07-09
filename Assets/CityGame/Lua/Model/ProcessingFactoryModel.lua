@@ -133,6 +133,7 @@ function ProcessingFactoryModel:m_ReqCloseprocessing(buildingId)
 end
 --运输
 function ProcessingFactoryModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
 --上架
@@ -222,6 +223,7 @@ function ProcessingFactoryModel:n_OnOpenprocessing(stream)
 end
 --运输
 function ProcessingFactoryModel:n_OnBuildingTransportInfo(data,msgId)
+    FlightMainModel.CloseFlightLoading()
     if msgId == 0 then
         Event.Brocast("transportSucceed",data,msgId)
         return

@@ -155,7 +155,13 @@ end
 --打开页面实例，调用DoShow
 function UIPanel:Show(path, callback)
     if self.gameObject == nil then
-        panelMgr:LoadPrefab_A(path, nil, self, callback)
+        if true then
+            path = string.gsub(path,"Assets/CityGame/Resources/","")
+            path = string.gsub(path,".prefab","")
+            callback(self,UnityEngine.Resources.Load(path))
+        else
+            panelMgr:LoadPrefab_A(path, nil, self, callback)
+        end
     else
         self:DoShow()
     end

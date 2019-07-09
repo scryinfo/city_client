@@ -1,17 +1,17 @@
 
 --研究所掷点界面panel
 
-local transform;
---local gameObject;
+local transform
+--local gameObject
 
-RollPanel = {};
-local this = RollPanel;
+RollPanel = {}
+local this = RollPanel
 
 --启动事件
 function RollPanel.Awake(obj)
 
-    transform = obj.transform;
-    this.InitPanle();
+    transform = obj.transform
+    this.InitPanle()
 
 end
 --初始化界面
@@ -28,6 +28,9 @@ function RollPanel.InitPanle()
     this.icon = transform:Find("PopCommpent/EvaRoot/icon")
     this.congratulation1 = transform:Find("resultRoot/Evaresultbg/CONGRATULATIONS!"):GetComponent("Text")
     this.congratulation2 = transform:Find("resultRoot/result/CONGRATULATIONS!"):GetComponent("Text")
+
+    this.emptyTrans = transform:Find("PopCommpent/empty")  --空提示
+    this.emptyTransText01 = transform:Find("PopCommpent/empty/contentText"):GetComponent("Text")
 
     this.totalText = findByName(transform,"totalText"):GetComponent("Text")
     this.EvaRoot = findByName(transform,"EvaRoot")
@@ -53,7 +56,7 @@ function RollPanel.InitPanle()
     this.Evaresultbg = transform:Find("resultRoot/Evaresultbg")
     this.Evaresult = transform:Find("resultRoot/Evaresultbg/Evaresult")
     this.evacount = transform:Find("resultRoot/Evaresultbg/Image/count/Text"):GetComponent("Text")
-    this.EvaresultBtn = transform:Find("resultRoot/Evaresultbg/Evaresult"):GetComponent("Button")
+    this.EvaresultBtn = transform:Find("resultRoot/Evaresultbg/bgBtn"):GetComponent("Button")
 
     this.result = transform:Find("resultRoot/result")
     this.resultBtn = transform:Find("resultRoot/result/EvaRootBTn")
@@ -84,10 +87,6 @@ function RollPanel.InitPanle()
     tempTrans = this.child3
     this.child3Ima = findByName(tempTrans,"icon"):GetComponent("Image")
     this.child3ImanNameText = findByName(tempTrans,"Text")
-
-
-
-
 end
 
 function RollPanel.ChangeLan()

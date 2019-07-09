@@ -39,26 +39,7 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
     self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
     if self.currentTime >= self.data.beginProcessTs and self.currentTime <= self.data.beginProcessTs + self.data.times*3600000  then
         local  function UpData()
-            if not isUpdata then
-                return
-            end
-            if self.bg:Equals(nil) then
-                return
-            end
-            --倒计时
-            self.waiting = self.waiting -1
-            if self.waiting <= 0 then
-                self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
-                local ts =getTimeBySec( (self.currentTime - self.data.beginProcessTs)/1000)
-                --local downtime = getTimeBySec((self.data.times * 3600000 - ts)/1000)
-                self.slider.value = (self.currentTime - self.data.beginProcessTs) / (self.data.times*3600000)
-                self.counttimetext.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.data.times).. "h"
-                self.waiting = 1
-            end
-            self.move:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
-            if self.move.localPosition.x >= self.position.x + 100 then
-                self.move.localPosition = self.position
-            end
+            self:timeDownFunc()
         end
         ctrl:SetFunc(UpData)
         self.searching.localScale = Vector3.one
@@ -66,6 +47,29 @@ function InventGoodQueneItem:initialize(data,prefab,luaBehaviour,ctrl)
         self.counttimetext.transform.localScale = Vector3.zero
     end
     self:Refresh(data)
+end
+--
+function InventGoodQueneItem:timeDownFunc()
+    if not isUpdata then
+        return
+    end
+    if self.bg:Equals(nil) then
+        return
+    end
+    --倒计时
+    self.waiting = self.waiting - UnityEngine.Time.unscaledDeltaTime
+    if self.waiting <= 0 then
+        self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+        local ts =getTimeBySec( (self.currentTime - self.data.beginProcessTs)/1000)
+        --local downtime = getTimeBySec((self.data.times * 3600000 - ts)/1000)
+        self.slider.value = (self.currentTime - self.data.beginProcessTs) / (self.data.times*3600000)
+        self.counttimetext.text = ts.hour.. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.data.times).. "h"
+        self.waiting = 1
+    end
+    self.move:Translate(Vector3.right  * self.speed * UnityEngine.Time.unscaledDeltaTime);
+    if self.move.localPosition.x >= self.position.x + 100 then
+        self.move.localPosition = self.position
+    end
 end
 ---==========================================================================================点击函数=============================================================================
 --删除研究队列
@@ -112,7 +116,9 @@ function InventGoodQueneItem:updateUI(data)
         self.startTime.text = ts.year .. "/" .. ts.month .. "/" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
     end
     --赋值Detail
-    if  self.currentTime >= data.beginProcessTs and self.currentTime <= data.beginProcessTs + data.times*3600000  then
+    local currentTime = TimeSynchronized.GetTheCurrentServerTime()
+    --还没完成
+    if currentTime >= data.beginProcessTs and currentTime <= data.beginProcessTs + data.times * 3600000 then
         if data.availableRoll >0 then
             self.rollBtn.localScale = Vector3.one
             self.rollBtnText.text = "x" .. tostring(data.availableRoll)
@@ -126,10 +132,9 @@ function InventGoodQueneItem:updateUI(data)
     else
         self.rollBtn.localScale = Vector3.zero
         self.timePrice.localScale = Vector3.one
-        self.slider.transform.localScale = Vector3.zero
         self.time.text = data.times
+        self.slider.transform.localScale = Vector3.zero
         self.priceIma.localScale = Vector3.zero
-
     end
 
     --加载头像和名字
@@ -156,11 +161,6 @@ function InventGoodQueneItem:updateUI(data)
         self.delete.transform.localScale = Vector3.zero
         self.rollBtn.localScale = Vector3.zero
     end
-
-    --if data.beginProcessTs>0 and  data.ids==1 then
-    --    self.delete.transform.localScale = Vector3.zero
-    --end
-
 end
 
 

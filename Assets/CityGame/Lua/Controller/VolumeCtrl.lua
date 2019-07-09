@@ -249,13 +249,13 @@ function VolumeCtrl:Update()
 end
 
 --NPC数量
-function VolumeCtrl:c_NpcNum(countNpc,realWorkNpc,realUnEmployeeNpcNum)
+function VolumeCtrl:c_NpcNum(countNpc,workNpcNum,unEmployeeNpcNum,realWorkNpc,realUnEmployeeNpcNum)
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local time = tonumber(ts.year..ts.month..ts.day)
 
-    VolumePanel.employedText.text = getMoneyString(realWorkNpc)
-    VolumePanel.unemployedText.text = getMoneyString(realUnEmployeeNpcNum)
+    VolumePanel.employedText.text = getMoneyString(workNpcNum)
+    VolumePanel.unemployedText.text = getMoneyString(unEmployeeNpcNum)
     VolumeCtrl:AssignmentDemand(clothes , countNpc , time)
     VolumeCtrl:AssignmentDemand(food , countNpc , time)
     house[1].demand = realWorkNpc + realUnEmployeeNpcNum

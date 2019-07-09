@@ -41,6 +41,7 @@ function BuildingProductionPart:_ResetTransform()
     UpdateBeat:Remove(self.Update,self)
     Event.RemoveListener("partUpdateNowCount",self.updateNowCount,self)
     Event.RemoveListener("partUpdateNowLine",self.updateNowLine,self)
+    Event.RemoveListener("partUpdateAddLine",self.updateAddLine,self)
     Event.RemoveListener("saveMaterialOrGoodsInfoPart",self.saveMaterialOrGoodsInfo,self)
 end
 
@@ -61,6 +62,7 @@ end
 function BuildingProductionPart:_InitChildClick(mainPanelLuaBehaviour)
     Event.AddListener("partUpdateNowCount",self.updateNowCount,self)
     Event.AddListener("partUpdateNowLine",self.updateNowLine,self)
+    Event.AddListener("partUpdateAddLine",self.updateAddLine,self)
     Event.AddListener("saveMaterialOrGoodsInfoPart",self.saveMaterialOrGoodsInfo,self)
 end
 
@@ -179,7 +181,24 @@ end
 --删除正在生产中的线
 function BuildingProductionPart:updateNowLine(data)
     if data ~= nil then
+        for key,value in pairs(self.m_data.line) do
+            if data.lineId == value.id then
+                table.remove(self.m_data.line,key)
+            end
+        end
         self.time = nil
+        UpdateBeat:Remove(self.Update,self)
+        --重新初始化界面
+        self:_initFunc()
+    end
+end
+--添加生产线
+function BuildingProductionPart:updateAddLine(data)
+    if data ~= nil then
+        if not self.m_data.line then
+            self.m_data.line = {}
+        end
+        self.m_data.line[#self.m_data.line + 1] = data.line
         UpdateBeat:Remove(self.Update,self)
         --重新初始化界面
         self:_initFunc()

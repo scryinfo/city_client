@@ -218,9 +218,6 @@ function MaterialFactoryModel:n_OnOpenMaterial(stream)
         end
     end
     DataManager.ControllerRpcNoRet(self.insId,"MaterialFactoryCtrl", 'refreshMaterialDataInfo',stream)
-    --self:m_ReqBuildingMaterialInfo(self.insId)
-    --self:m_GetMaterialGuidePrice(stream.insId,stream.info.ownerId)
-    --UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",DataManager.GetMyPersonalHomepageInfo().id)
     UnitTest.Exec_now("abel_0511_ModyfyMyBrandName", "e_ModyfyMyBrandName",stream)
 end
 --运输
@@ -276,6 +273,7 @@ function MaterialFactoryModel:n_OnShelfDelInfo(data,msgId)
 end
 --添加生产线
 function MaterialFactoryModel:n_OnAddLineInfo(data)
+    Event.Brocast("partUpdateAddLine",data)
     DataManager.ControllerRpcNoRet(self.insId,"AddProductionLineBoxCtrl",'SucceedUpdatePanel',data)
 end
 --删除生产线

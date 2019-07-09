@@ -258,7 +258,7 @@ function VolumeCtrl:c_NpcNum(countNpc,workNpcNum,unEmployeeNpcNum,realWorkNpc,re
     VolumePanel.unemployedText.text = getMoneyString(unEmployeeNpcNum)
     VolumeCtrl:AssignmentDemand(clothes , countNpc , time)
     VolumeCtrl:AssignmentDemand(food , countNpc , time)
-    house[1].demand = realWorkNpc + realUnEmployeeNpcNum
+    house[1].demand = workNpcNum + unEmployeeNpcNum
 end
 
 --每种商品购买的npc数量

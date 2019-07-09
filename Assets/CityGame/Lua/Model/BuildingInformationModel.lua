@@ -68,22 +68,26 @@ function BuildingInformationModel:m_ReqDemolitionBuilding(buildingId)
 end
 --建筑改名
 function BuildingInformationModel:m_ReqSetBuildingName(buildingId,name)
+    FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "updateBuildingName","gs.UpdateBuildingName",{buildingId = buildingId,name = name})
 end
 
 --请求建筑信息
 --原料厂建筑信息
 function BuildingInformationModel:m_ReqMaterialFactoryInfo(buildingId,playerId)
+    FlightMainModel.OpenFlightLoading()
     local lMsg = {buildingId = buildingId,playerId = playerId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryMaterialInfo","gs.QueryBuildingInfo",lMsg)
 end
 --加工厂建筑信息
 function BuildingInformationModel:m_ReqProcessingFactoryInfo(buildingId,playerId)
+    FlightMainModel.OpenFlightLoading()
     local lMsg = {buildingId = buildingId,playerId = playerId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryProduceDepInfo","gs.QueryBuildingInfo",lMsg)
 end
 --零售店建筑信息
 function BuildingInformationModel:m_ReqRetailShopInfo(buildingId,playerId)
+    FlightMainModel.OpenFlightLoading()
     local lMsg = {buildingId = buildingId,playerId = playerId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryRetailShopOrApartmentInfo","gs.QueryBuildingInfo",lMsg)
 end
@@ -106,6 +110,7 @@ function BuildingInformationModel:n_ClosedBuilding(data)
 end
 --建筑改名
 function BuildingInformationModel:n_SetBuildingInfo(data,msgId)
+    FlightMainModel.CloseFlightLoading()
     if msgId == 0 then
         Event.Brocast("setBuildingNameFailure",data)
     else
@@ -116,14 +121,17 @@ end
 --请求建筑信息
 --原料厂建筑信息
 function BuildingInformationModel:n_MaterialFactoryInfo(data)
+    FlightMainModel.CloseFlightLoading()
     DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'builidngInfo',data)
 end
 --加工厂建筑信息
 function BuildingInformationModel:n_ProcessingFactoryInfo(data)
+    FlightMainModel.CloseFlightLoading()
     DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'builidngInfo',data)
 end
 --零售店建筑信息
 function BuildingInformationModel:n_RetailShopInfo(data)
+    FlightMainModel.CloseFlightLoading()
     DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'builidngInfo',data)
 end
 --研究所建筑信息

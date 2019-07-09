@@ -30,12 +30,13 @@ function TransportItem:initialize(dataInfo,prefab,luaBehaviour,keyId,goodsType,u
     self.brandValue = prefab.transform:Find("goodsInfo/goods/detailsBg/scoreBg/brandIcon/brandValue"):GetComponent("Text")
     self.qualityValue = prefab.transform:Find("goodsInfo/goods/detailsBg/scoreBg/qualityIcon/qualityValue"):GetComponent("Text")
     self.numberText = prefab.transform:Find("number/numberText"):GetComponent("Text")
-    self.goodsCost = prefab.transform:Find("total/goodsCost")
+    self.goodsCost = prefab.transform:Find("total/goodsCost"):GetComponent("Text")
     self.goodsPriceText = prefab.transform:Find("total/goodsCost/goodsPriceText"):GetComponent("Text")
-    self.freight = prefab.transform:Find("total/freight")
+    self.freight = prefab.transform:Find("total/freight"):GetComponent("Text")
     self.freightPriceText = prefab.transform:Find("total/freight/freightPriceText"):GetComponent("Text")
     self.deleBtn = prefab.transform:Find("deleBtn")
 
+    self:_language()
     luaBehaviour:AddClick(self.deleBtn.gameObject,self._closeDeleBtn,self)
 
     self:InitializeData()
@@ -76,6 +77,10 @@ function TransportItem:InitializeData()
     end
 end
 
+function TransportItem:_language()
+    self.goodsCost.text = "商品费用"
+    self.freight.text = "运输费用"
+end
 function TransportItem:_closeDeleBtn(ins)
     Event.Brocast("deleteItemPrefab",ins.keyId)
 end

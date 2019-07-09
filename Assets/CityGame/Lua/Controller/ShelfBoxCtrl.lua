@@ -108,6 +108,7 @@ function ShelfBoxCtrl:_getComponent(go)
     --bottom
     self.downShelfBtn = go.transform:Find("contentRoot/bottom/downShelfBtn")
     self.addShelfBtn = go.transform:Find("contentRoot/bottom/addShelfBtn")
+    self.addShelfText = go.transform:Find("contentRoot/bottom/addShelfBtn/text"):GetComponent("Text")
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn")
 end
 --------------------------------------------------------------------------初始化--------------------------------------------------------------------------
@@ -245,6 +246,7 @@ function ShelfBoxCtrl:_language()
     self.tipContentText.text = GetLanguage(25020027)
     self.priceTip.text = GetLanguage(25060003)
     self.CompetitivenessText.text = GetLanguage(43010001)
+    self.addShelfText.text = "上架"
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------

@@ -82,7 +82,9 @@ function ShelfBoxCtrl:_getComponent(go)
 
     self.number = go.transform:Find("contentRoot/content/goodsInfo/number")
     self.warehouseNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/warehouseNumberText"):GetComponent("Text")
+    self.warehouseNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/numberTipText"):GetComponent("Text")
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
+    self.shelfNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/numberTipText"):GetComponent("Text")
     --detailsInfo
     self.totalNumber = go.transform:Find("contentRoot/content/detailsInfo/totalNumber"):GetComponent("Text")
     self.totalNumberText = go.transform:Find("contentRoot/content/detailsInfo/totalNumber/totalNumberText"):GetComponent("Text")
@@ -142,6 +144,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.quality.transform.localScale = Vector3.zero
         self.levelBg.transform.localScale = Vector3.zero
         self.number.transform.localPosition = Vector3.New(183,-45,0)
+        self.brandNameText.text = DataManager.GetCompanyName()
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif Math_Floor(self.m_data.itemId / 100000) == goodsKey then
         self.popularity.transform.localScale = Vector3.one
@@ -246,6 +249,8 @@ function ShelfBoxCtrl:_language()
     self.tipContentText.text = GetLanguage(25020027)
     self.priceTip.text = GetLanguage(25060003)
     self.CompetitivenessText.text = GetLanguage(43010001)
+    self.warehouseNumberTipText.text = "仓库库存"
+    self.shelfNumberTipText.text = "货架库存"
     self.addShelfText.text = "上架"
     --self.advicePrice.text = "参考价格:"
 end

@@ -8,6 +8,7 @@ UIPanel:ResgisterOpen(WarehouseBoxCtrl)
 
 local ToNumber = tonumber
 local StringSun = string.sub
+local Math_Floor = math.floor
 --奢侈等级
 local oneLevel = Vector3.New(105,174,238)
 local twoLevel = Vector3.New(156,136,228)
@@ -50,14 +51,16 @@ function WarehouseBoxCtrl:_getComponent(go)
     self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
 
     --goodsInfo
+    self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconBg")
     self.iconImg = go.transform:Find("contentRoot/content/goodsInfo/iconBg/iconImg"):GetComponent("Image")
     self.nameText = go.transform:Find("contentRoot/content/goodsInfo/iconBg/nameBg/nameText"):GetComponent("Text")
-    self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandNameText"):GetComponent("Text")
+
+    self.scoreBg = go.transform:Find("contentRoot/content/goodsInfo/scoreBg")
+    self.brandName = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName"):GetComponent("Text")
+    self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName/brandNameText"):GetComponent("Text")
     --如果是原料关闭商品属性展示,否则打开
-    self.popularity = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity")
     self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
     self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity/popularityValue"):GetComponent("Text")
-    self.quality = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality")
     self.qualityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
     self.qualityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality/qualityValue"):GetComponent("Text")
     self.levelBg = go.transform:Find("contentRoot/content/goodsInfo/levelBg")
@@ -66,7 +69,11 @@ function WarehouseBoxCtrl:_getComponent(go)
     self.levelValue = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level/levelText"):GetComponent("Text")
 
     self.number = go.transform:Find("contentRoot/content/goodsInfo/number")
+    self.warehouse = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber")
+    self.shelf = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber")
+    self.warehouseNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/numberTipText"):GetComponent("Text")
     self.warehouseNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/warehouseNumberText"):GetComponent("Text")
+    self.shelfNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/numberTipText"):GetComponent("Text")
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
     self.tipText = go.transform:Find("contentRoot/content/tipText"):GetComponent("Text")
     self.tipNumText = go.transform:Find("contentRoot/content/tipNumText"):GetComponent("Text")
@@ -74,23 +81,17 @@ function WarehouseBoxCtrl:_getComponent(go)
     self.numberText = go.transform:Find("contentRoot/content/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
     self.deleBtn = go.transform:Find("contentRoot/bottom/deleBtn")
     self.addTransportBtn = go.transform:Find("contentRoot/bottom/addTransportBtn")
+    self.addTransportText = go.transform:Find("contentRoot/bottom/addTransportBtn/text"):GetComponent("Text")
 end
 ------------------------------------------------------------初始化函数--------------------------------------------------------------------------------
 --初始化UI数据
 function WarehouseBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
-        self.popularity.transform.localScale = Vector3.zero
-        self.quality.transform.localScale = Vector3.zero
-        self.levelBg.transform.localScale = Vector3.zero
-        self.number.transform.localPosition = Vector3.New(183,-45,0)
-        self.brandNameText.text = DataManager.GetCompanyName()
+        self:materialOrGoods(self.m_data.itemId)
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == goodsKey then
-        self.popularity.transform.localScale = Vector3.one
-        self.quality.transform.localScale = Vector3.one
-        self.levelBg.transform.localScale = Vector3.one
-        self.number.transform.localPosition = Vector3.New(183,-135,0)
+        self:materialOrGoods(self.m_data.itemId)
         LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
         --如果是商品，判断原料等级
         if Good[self.m_data.itemId].luxury == 1 then
@@ -139,7 +140,11 @@ function WarehouseBoxCtrl:_language()
     self.qualityText.text = GetLanguage(25020005)
     self.levelText.text = GetLanguage(25020007)
     self.tipText.text = GetLanguage(25020008)
-    self.tipNumText.text = "仓库可用数量为0,请先下架后操作"
+    self.warehouseNumberTipText.text = GetLanguage(25020038)
+    self.shelfNumberTipText.text = GetLanguage(25020037)
+    self.tipNumText.text = GetLanguage(25020041)
+    self.brandName.text = GetLanguage(25020040)
+    self.addTransportText = GetLanguage(25020036)
 end
 --滑动更新文本
 function WarehouseBoxCtrl:SlidingUpdateText()
@@ -180,4 +185,26 @@ function WarehouseBoxCtrl:_clickDeleBtn(ins)
     data.n = ins.warehouseCount
     UIPanel.ClosePage()
     ct.OpenCtrl("DeleteItemBoxCtrl",data)
+end
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+--初始化UI显示,原料还是商品
+function WarehouseBoxCtrl:materialOrGoods(itemId)
+    local materialKey,goodsKey = 21,22
+    if Math_Floor(itemId / 100000) == materialKey then
+        self.scoreBg.transform.localScale = Vector3.zero
+        self.levelBg.transform.localScale = Vector3.zero
+        self.number.sizeDelta = Vector2.New(470,356)
+        self.warehouse.transform.localPosition = Vector3.New(-150,50,0)
+        self.shelf.transform.localPosition = Vector3.New(-150,-60,0)
+        self.number.transform.localPosition = Vector3.New(180,0,0)
+        self.iconbg.transform.localPosition = Vector3.New(-243,0,0)
+    elseif Math_Floor(itemId / 100000) == goodsKey then
+        self.scoreBg.transform.localScale = Vector3.one
+        self.levelBg.transform.localScale = Vector3.one
+        self.number.sizeDelta = Vector2.New(585,86)
+        self.number.transform.localPosition = Vector3.New(180,-135,0)
+        self.warehouse.transform.localPosition = Vector3.New(-240,0,0)
+        self.shelf.transform.localPosition = Vector3.New(45,0,0)
+        self.iconbg.transform.localPosition = Vector3.New(-298,0,0)
+    end
 end

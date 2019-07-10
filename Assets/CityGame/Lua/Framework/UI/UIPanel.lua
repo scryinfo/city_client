@@ -176,10 +176,11 @@ function UIPanel:OnCreate(obj)
         go.layer = LayerMask.NameToLayer("UI")
         UnityEngine.GameObject.AddComponent(go, typeof(LuaFramework.LuaBehaviour))
         self.gameObject = go
+        --[[
         assert(go, "system","[UIPanel.Show] "," 没有找到资源： ",uiPath)
         if go == nil then
             ct.log("system","[UIPanel.Show]", "资源加载失败: "..uiPath)
-        end
+        end--]]
         self:AnchorUIGameObject(go)
         self:Awake(go)
         self.isAsyncUI = false
@@ -462,7 +463,7 @@ function  UIPanel.ClearAllPages()
     --清空当前page
     UIPanel.static.m_instancePageNodes = nil
     UIPanel.static.m_instancePageNodes = {}
-
+    UIPanel.static.m_FixedPageNodes = {}
     --销毁栈中所有Ctrl
     for k,v in pairs(UIPanel.static.m_allPages) do
         v:Close()

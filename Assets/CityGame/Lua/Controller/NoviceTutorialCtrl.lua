@@ -45,14 +45,17 @@ function NoviceTutorialCtrl:Refresh()
     else
         self.tutorialChoiceItems = {}
         for i = 1, #NoviceTutorialConfig do
-            local function callback(obj)
-                self.tutorialChoiceItems[i] = TutorialChoiceItem:new(obj, i, self)
-                if i == 1 then
-                    self.tutorialChoiceItems[1]:_onClickBtn()
-                end
+            local go = ct.InstantiatePrefab(NoviceTutorialPanel.tutorialChoiceItem)
+            local rect = go.transform:GetComponent("RectTransform")
+            go.transform:SetParent(NoviceTutorialPanel.choiceScrollTF)
+            rect.transform.localScale = Vector3.one
+            rect.transform.localPosition = Vector3.zero
+            go:SetActive(true)
+
+            self.tutorialChoiceItems[i] = TutorialChoiceItem:new(go, i, self)
+            if i == 1 then
+                self.tutorialChoiceItems[1]:_onClickBtn()
             end
-            --DynamicLoadPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScroll, nil, callback)
-            createPrefab("Assets/CityGame/Resources/View/NoviceTutorial/TutorialChoiceItem.prefab", NoviceTutorialPanel.choiceScrollObj, callback)
         end
     end
 end

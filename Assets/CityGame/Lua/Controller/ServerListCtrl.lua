@@ -31,7 +31,6 @@ function ServerListCtrl:Awake()
     Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.AddListener("c_OnServer",self.c_OnServer,self)
 
-    self:_initData();
 end
 
 function ServerListCtrl:Active()
@@ -43,17 +42,25 @@ end
 
 function ServerListCtrl:Refresh()
     self:_initInsData()
+    self:_initData();
 end
 
 function ServerListCtrl:Hide()
     UIPanel.Hide(self)
+    tempTag = nil
+    Index = nil
 end
 
-function ServerListCtrl:c_OnBack()
+function ServerListCtrl:c_OnBack(go)
     PlayMusEff(1002)
     local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
                 content = GetLanguage(10050004),func = function()
-            --CityEngineLua.login_loginapp(true);
+            --清空item
+            if go.server then
+                for i, v in pairs(go.server) do
+                    destroy(v.prefab.gameObject)
+                end
+            end
             UIPanel.ClosePage()
         end  }
     ct.OpenCtrl('NewReminderCtrl',data)

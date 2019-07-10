@@ -492,6 +492,16 @@ function radixPointNum(str,long)
     return intString .. newfloatSrt
 end
 
+--科学计数法去掉最后的小数点
+function ct.scientificNotation2Normal(number)
+    local num = CityLuaUtil.scientificNotation2Normal(number)
+    local index = string.find(num, '%.')
+    if index == #num then
+       num =  string.gsub(num,"%.","")
+    end
+    return num
+end
+
 currentLanguage={}
 currentSprite={}
 chinese={}

@@ -351,7 +351,7 @@ end
 function WalletCtrl:_clickWithdrawCloseBtn(ins)
     PlayMusEff(1002)
     ins:closeWithdrawContent()
-    self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
+    ins.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
 end
 --打开密码弹框(新加)
 function WalletCtrl:_clickRechargeConfirmBtn(ins)
@@ -370,7 +370,7 @@ end
 function WalletCtrl:_clickRechargeCloseBtn(ins)
     PlayMusEff(1002)
     ins:closeRechargeAmountContent()
-    self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
+    ins.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
 end
 --打开二维码
 function WalletCtrl:_clickTopUpBtn(ins)

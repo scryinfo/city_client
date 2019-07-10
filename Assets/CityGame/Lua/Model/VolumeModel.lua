@@ -103,7 +103,7 @@ end
 -------------------服务器回调---------------------
 ---npc数量
 function VolumeModel:n_OnGetNpcNum(lMsg)
-    Event.Brocast("c_NpcNum",lMsg.countNpcMap,lMsg.realWorkNpc,lMsg.realUnEmployeeNpcNum)
+    Event.Brocast("c_NpcNum",lMsg.countNpcMap,lMsg.workNpcNum,lMsg.unEmployeeNpcNum,lMsg.realWorkNpc,lMsg.realUnEmployeeNpcNum)
 end
 --npc商品数量
 function VolumeModel:n_OnGoodsNpcNum(lMsg)

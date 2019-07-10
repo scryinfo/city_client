@@ -59,16 +59,17 @@ function CompanyPanel.InitPanel()
     -- 显示节点
     this.infoRoot = transform:Find("BottomRoot/InfoRoot")
     this.landRoot = transform:Find("BottomRoot/LandRoot")
+    this.landTitleItem = transform:Find("BottomRoot/LandRoot/LandTitleItem").gameObject
     this.buildingRoot = transform:Find("BottomRoot/BuildingRoot")
     --this.evaRoot = transform:Find("BottomRoot/EvaRoot")
     this.brandRoot = transform:Find("BottomRoot/BrandRoot")
 
     -- 土地显示
-    this.landTitleContent = transform:Find("BottomRoot/LandRoot/TitleScroll/Viewport/Content").gameObject
+    this.landTitleContent = transform:Find("BottomRoot/LandRoot/TitleScroll/Viewport/Content")
     this.landScroll = transform:Find("BottomRoot/LandRoot/ContentScroll/Viewport"):GetComponent("ActiveLoopScrollRect")
 
     -- 建筑显示
-    this.buildingTitleContent = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content").gameObject
+    this.buildingTitleContent = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content")
     this.buildingTitleRt = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content"):GetComponent("RectTransform")
     this.buildingScroll = transform:Find("BottomRoot/BuildingRoot/ContentScroll/Viewport"):GetComponent("ActiveLoopScrollRect")
 

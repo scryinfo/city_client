@@ -36,14 +36,17 @@ end
 function CompanyMgr:CreateLandTitleItem()
     self.landTitleItem = {}
     for i = 1, self.landTitleItemNumber do
-        local function callback(obj)
-            self.landTitleItem[i] = LandTitleItem:new(obj, i)
-            if i == self.landTitleItemNumber then
-                DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_GetGroundInfo')
-            end
+        local go = ct.InstantiatePrefab(CompanyPanel.landTitleItem)
+        local rect = go.transform:GetComponent("RectTransform")
+        go.transform:SetParent(CompanyPanel.landTitleContent)
+        rect.transform.localScale = Vector3.one
+        rect.transform.localPosition = Vector3.zero
+        go:SetActive(true)
+
+        self.landTitleItem[i] = LandTitleItem:new(go, i)
+        if i == self.landTitleItemNumber then
+            DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_GetGroundInfo')
         end
-        --DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.landTitleContent, nil, callback)
-        createPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.landTitleContent, callback)
     end
 end
 
@@ -56,145 +59,16 @@ end
 function CompanyMgr:CreateBuildingTitleItem()
     self.buildingTitleItem = {}
     for i = 1, self.buildingTitleItemNumber do
-        local function callback(obj)
-            self.buildingTitleItem[i] = BuildingTitleItem:new(obj, i)
-            if i == self.buildingTitleItemNumber then
-                DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyBuildings')
-            end
-        end
-        --DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.buildingTitleContent, nil, callback)
-        createPrefab("Assets/CityGame/Resources/View/Company/LandTitleItem.prefab", CompanyPanel.buildingTitleContent, callback)
-    end
-end
+        local go = ct.InstantiatePrefab(CompanyPanel.landTitleItem)
+        local rect = go.transform:GetComponent("RectTransform")
+        go.transform:SetParent(CompanyPanel.buildingTitleContent)
+        rect.transform.localScale = Vector3.one
+        rect.transform.localPosition = Vector3.zero
+        go:SetActive(true)
 
--- 获得Eva选项item
-function CompanyMgr:GetEvaTitleItem()
-    return self.evaTitleItem
-end
-
--- 生成Eva选项item
-function CompanyMgr:CreateEvaTitleItem()
-    self.evaTitleItem = {}
-    for i, v in ipairs(EvaConfig) do
-        local function callback(obj)
-            self.evaTitleItem[i] = OptionItem:new(obj, 1, i)
-            if i == #EvaConfig then
-                DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
-            end
-        end
-        DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/EvaTitleItem.prefab", CompanyPanel.optionOneScroll, nil, callback)
-    end
-end
-
--- 获取Eva选项item
-function CompanyMgr:GetEvaRecordData()
-    return self.evaRecordData
-end
-
--- 设置Eva选择记录
-function CompanyMgr:SetEvaRecord(index, data)
-    self.evaRecordData[index] = data
-end
-
--- 保存Eva数据
-function CompanyMgr:SetEvaData(evas)
-    self.evasData = evas.eva
-end
-
--- 生成Eva属性item
-function CompanyMgr:CreatePropertyItem(propertyTab)
-    if not propertyTab then
-        return
-    end
-
-    -- 清除已经有的属性
-    if self.propertyItems then
-        for _, a in ipairs(self.propertyItems) do
-            UnityEngine.GameObject.Destroy(a.prefab)
-        end
-    end
-    self.propertyItems = {}
-
-    -- 生成新的属性显示
-    for _, b in ipairs(propertyTab) do
-        for _, v in ipairs(self.evasData) do
-            if b.Atype == v.at and b.Btype == v.bt then
-                if v.b == -1 then -- 可升级
-                    local function callback(obj)
-                        local propertyItem = PropertyTrueItem:new(obj, v, b)
-                        table.insert(self.propertyItems, propertyItem)
-                    end
-                    DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/PropertyTrueItem.prefab", CompanyPanel.propertyScroll, nil, callback)
-                else -- 不可升级，显示知名度
-                    local function callback(obj)
-                        local propertyItem = PropertyFalseItem:new(obj, v, b.name)
-                        table.insert(self.propertyItems, propertyItem)
-                    end
-                    DynamicLoadPrefab("Assets/CityGame/Resources/View/Company/PropertyFalseItem.prefab", CompanyPanel.propertyScroll, nil, callback)
-                end
-                break
-            end
-        end
-    end
-end
-
--- 重置按钮的状态
-function CompanyMgr:SetBtnState(index)
-    if index == 1 then
-        for _, v in ipairs(self.evaTitleItem) do
-            v:SetSelect(true)
-            v:SetNameTextColor(1)
-        end
-    elseif index == 2 then
-        for _, v in ipairs(CompanyCtrl.optionTwoScript) do
-            v:SetSelect(true)
-        end
-    elseif index == 3 then
-        for _, v in ipairs(CompanyCtrl.optionThereScript) do
-            v:SetSelect(true)
-        end
-    end
-end
-
--- 重置Eva按钮的字的颜色
-function CompanyMgr:SetBtnNameTextColor()
-    for _, v in ipairs(self.evaTitleItem) do
-        v:SetNameTextColor(1)
-    end
-end
-
--- Eva默认选择
-function CompanyMgr:SetEvaDefaultState()
-    --CompanyPanel.optionOneRt.anchoredPosition = Vector2.New(0,0)
-    self.evaTitleItem[1]:_setContent()
-end
-
--- 更新Eva的数据
---function CompanyMgr:UpdateMyEva(eva)
---    for i, v in ipairs(self.evasData) do
---        if eva.id == v.id then
---            self.evasData[i] = eva
---            break
---        end
---    end
---end
-
--- 更新Eva属性界面
---function CompanyMgr:UpdateMyEvaProperty(eva)
---    for _, v in ipairs(self.propertyItems) do
---        if eva.id == v.data.id then
---            v.data = eva
---            v:ShowData(v.data.lv, v.data.cexp)
---            break
---        end
---    end
---end
-
--- 重置Eva属性的小提示
-function CompanyMgr:ClsoeTips()
-    for _, v in ipairs(self.propertyItems) do
-        if v.IsShowTips then
-            v:IsShowTips(false)
+        self.buildingTitleItem[i] = BuildingTitleItem:new(go, i)
+        if i == self.buildingTitleItemNumber then
+            DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyBuildings')
         end
     end
 end

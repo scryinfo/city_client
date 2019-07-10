@@ -61,7 +61,6 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingMaterialInfo","gs.BuildingMaterialInfo",self.n_OnBuildingMaterialInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","storeIsFullNotice","gs.ByteBool",self.n_OnBuildingWarehouse)
-
 end
 
 function MaterialFactoryModel:Close()
@@ -241,7 +240,7 @@ function MaterialFactoryModel:n_OnModifyShelfInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
@@ -259,7 +258,7 @@ function MaterialFactoryModel:n_OnShelfDelInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)

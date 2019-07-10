@@ -91,7 +91,6 @@ function RetailStoresModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","retailGuidePrice","gs.GoodSummary",self.n_OnRetailGuidePrice)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
 
-
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
     --签约
@@ -204,7 +203,7 @@ function RetailStoresModel:n_OnModifyShelfInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
@@ -222,7 +221,7 @@ function RetailStoresModel:n_OnShelfDelInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)

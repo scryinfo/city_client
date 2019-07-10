@@ -62,7 +62,6 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingGoodInfo","gs.BuildingGoodInfo",self.n_OnBuildingGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","materialNotEnough","gs.ByteBool",self.n_OnBuildingWarehouse)
-
 end
 
 function ProcessingFactoryModel:Close()
@@ -84,8 +83,6 @@ function ProcessingFactoryModel:Close()
     Event.RemoveListener("m_ReqBuildingGoodsInfo",self.m_ReqBuildingGoodsInfo,self)
     Event.RemoveListener("m_GetLineData",self.m_GetLineData,self)
     Event.RemoveListener("m_GetProcessingGuidePrice",self.m_GetProcessingGuidePrice,self)
-
-
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
@@ -242,7 +239,7 @@ function ProcessingFactoryModel:n_OnModifyShelfInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
@@ -260,7 +257,7 @@ function ProcessingFactoryModel:n_OnShelfDelInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)

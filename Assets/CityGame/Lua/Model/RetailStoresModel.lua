@@ -142,6 +142,7 @@ function RetailStoresModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
 end
 --获取仓库数据
 function RetailStoresModel:m_GetWarehouseData(buildingId)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_GetWarehouseData(buildingId)
 end
 --获取货架数据
@@ -257,6 +258,7 @@ function RetailStoresModel:n_OnSalesNotice(data)
 end
 --获取仓库数据
 function RetailStoresModel:n_OnGetWarehouseData(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("getWarehouseInfoData",data)
     Event.Brocast("getWarehouseBoxData",data)
 end

@@ -174,6 +174,7 @@ function MaterialFactoryModel:m_ReqBuildingMaterialInfo(buildingId)
 end
 --获取仓库数据
 function MaterialFactoryModel:m_GetWarehouseData(buildingId)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_GetWarehouseData(buildingId)
 end
 --获取货架数据
@@ -354,6 +355,7 @@ function MaterialFactoryModel:n_OnBuildingMaterialInfo(data)
 end
 --获取仓库数据
 function MaterialFactoryModel:n_OnGetWarehouseData(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("getWarehouseInfoData",data)
     Event.Brocast("getWarehouseBoxData",data)
 end

@@ -285,7 +285,7 @@ function WalletCtrl:defaultPanel()
         self.PasswordContent.transform.localScale = Vector3.zero
         --self.DeclarationContent.transform.localScale = Vector3.zero
         self.DeclarationContent.gameObject:SetActive(false)
-        self.moneyText.text = DataManager.GetMoneyByString()
+        self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
     end
 end
 
@@ -351,6 +351,7 @@ end
 function WalletCtrl:_clickWithdrawCloseBtn(ins)
     PlayMusEff(1002)
     ins:closeWithdrawContent()
+    self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
 end
 --打开密码弹框(新加)
 function WalletCtrl:_clickRechargeConfirmBtn(ins)
@@ -369,6 +370,7 @@ end
 function WalletCtrl:_clickRechargeCloseBtn(ins)
     PlayMusEff(1002)
     ins:closeRechargeAmountContent()
+    self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
 end
 --打开二维码
 function WalletCtrl:_clickTopUpBtn(ins)
@@ -494,7 +496,7 @@ function WalletCtrl:saveAmount()
     end
     self.Amount = tostring(tonumber(self.moneyInput.text) / 1000000)
     self.poundageText.text = GetLanguage(33030002 ,"E" .. GetClientPriceString(tonumber(self.moneyInput.text) * 0.003 * 10000),0.3)
-    self.proportionMontyText.text = getMoneyString(CityLuaUtil.scientificNotation2Normal(tonumber(self.moneyInput.text) * (1/1000000)))
+    self.proportionMontyText.text = getMoneyString(ct.scientificNotation2Normal(tonumber(self.moneyInput.text) * (1/1000000)))
 end
 --检测保存输入的钱包地址
 function WalletCtrl:saveEthAddr()
@@ -516,7 +518,7 @@ function WalletCtrl:inputMoney()
         self.rechargeMoneyInput.text = radixPointNum(self.rechargeMoneyInput.text,4)
     end
     self.TopUpMoney = tostring(tonumber(self.rechargeMoneyInput.text)/1000000)
-    self.DDDText.text = getMoneyString(CityLuaUtil.scientificNotation2Normal(tonumber(self.rechargeMoneyInput.text) * (1/1000000))) .. "(DDD)"
+    self.DDDText.text = getMoneyString(ct.scientificNotation2Normal(tonumber(self.rechargeMoneyInput.text) * (1/1000000))) .. "(DDD)"
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开用户协议
@@ -645,14 +647,14 @@ function WalletCtrl:createWalletSucceed(data)
         self.PasswordContent.transform.localScale = Vector3.zero
         self.WithoutWalletContent.transform.localScale = Vector3.zero
         self.WalletContent.transform.localScale = Vector3.one
-        self.moneyText.text = DataManager.GetMoneyByString()
+        self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
         PlayMusEff(1002)
         local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
                     content = GetLanguage(33010013),func = function()
                 self.PasswordContent.transform.localScale = Vector3.zero
                 self.WithoutWalletContent.transform.localScale = Vector3.zero
                 self.WalletContent.transform.localScale = Vector3.one
-                self.moneyText.text = DataManager.GetMoneyByString()
+                self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
             end  }
         ct.OpenCtrl('NewReminderCtrl',data)
     end
@@ -693,6 +695,7 @@ function WalletCtrl:reqDisChargeSucceed(data)
     if data then
         Event.Brocast("SmallPop", GetLanguage(33010015), ReminderType.Succeed)
         self:closeWithdrawContent()
+        self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
     end
 end
 

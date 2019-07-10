@@ -101,7 +101,7 @@ end
 
 --金币改变
 function GameMainInterfaceCtrl:c_ChangeMoney(money)
-    self.money = getPriceString("E"..GetClientPriceString(money),24,20)
+    self.money = getPriceString("E"..getMoneyString(GetClientPriceString(money)),24,20)
     GameMainInterfacePanel.money.text = self.money
 end
 
@@ -149,63 +149,65 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
     else
         table.insert(incomeNotify,dataInfo)
         local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-        if currentTime - lastTime > 60 then
+        if currentTime - lastTime > 1 then
             local ts = getFormatUnixTime(currentTime)
             GameMainInterfacePanel.timeText.text = ts.hour..":"..ts.minute
-        else
-            GameMainInterfacePanel.timeText.text = GetLanguage(11010015)
+        --else
+        --    GameMainInterfacePanel.timeText.text = GetLanguage(11010015)
         end
         lastTime = currentTime
     end
-    self.isTimmer = true
-    self.timmer = 2
-    GameMainInterfacePanel.simpleEarning:GetComponent("RectTransform"):DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
-    GameMainInterfacePanel.simpleEarning:GetComponent("Image"):DOFade(1,0.1):SetEase(DG.Tweening.Ease.OutCubic);
+    if not self.isOpen then
+        self.isTimmer = true
+        self.timmer = 2
+        GameMainInterfacePanel.simpleEarning:GetComponent("RectTransform"):DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
+        GameMainInterfacePanel.simpleEarning:GetComponent("Image"):DOFade(1,0.1):SetEase(DG.Tweening.Ease.OutCubic);
 
-    GameMainInterfacePanel.simpleMoney.text = "E"..GetClientPriceString(dataInfo.cost)
+        GameMainInterfacePanel.simpleMoney.text = "E"..GetClientPriceString(dataInfo.cost)
 
-    if dataInfo.buyer == "PLAYER" then
-        if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
-            GameMainInterfacePanel.income.text = GetLanguage(11010010)
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/landx1.png", GameMainInterfacePanel.simplePicture, true)
-            GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
-        elseif dataInfo.type == "INSHELF" then
-            GameMainInterfacePanel.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
-            GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
-        elseif dataInfo.type == "PROMO" then
-            if dataInfo.itemId == 1300 then
-                GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
-            elseif dataInfo.itemId == 1400 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
-            else
+        if dataInfo.buyer == "PLAYER" then
+            if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
+                GameMainInterfacePanel.income.text = GetLanguage(11010010)
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/landx1.png", GameMainInterfacePanel.simplePicture, true)
+                GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
+            elseif dataInfo.type == "INSHELF" then
+                GameMainInterfacePanel.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
+                GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
+            elseif dataInfo.type == "PROMO" then
+                if dataInfo.itemId == 1300 then
+                    GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
+                    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
+                elseif dataInfo.itemId == 1400 then
+                    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
+                else
+                    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
+                end
+                GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
+            elseif dataInfo.type == "LAB" then
+                GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
+                if dataInfo.itemId == 51 then
+                    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-food.png", GameMainInterfacePanel.simplePicture, true)
+                elseif dataInfo.itemId == 52 then
+                    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-clothes.png",GameMainInterfacePanel.simplePicture, true)
+                else
+                    LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-EVA-s.png", GameMainInterfacePanel.simplePicture, true)
+                end
+                GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
             end
-            GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
-        elseif dataInfo.type == "LAB" then
-            GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            if dataInfo.itemId == 51 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-food.png", GameMainInterfacePanel.simplePicture, true)
-            elseif dataInfo.itemId == 52 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-clothes.png",GameMainInterfacePanel.simplePicture, true)
-            else
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-EVA-s.png", GameMainInterfacePanel.simplePicture, true)
-            end
-            GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
-        end
         elseif dataInfo.buyer == "NPC" then
-        if dataInfo.type == "RENT_ROOM" then
-            GameMainInterfacePanel.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", GameMainInterfacePanel.simplePicture, true)
-            GameMainInterfacePanel.simplePictureText.text = "X1"
-        elseif dataInfo.type == "INSHELF" then
-            GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
-            GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
+            if dataInfo.type == "RENT_ROOM" then
+                GameMainInterfacePanel.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-apartment.png", GameMainInterfacePanel.simplePicture, true)
+                GameMainInterfacePanel.simplePictureText.text = "X1"
+            elseif dataInfo.type == "INSHELF" then
+                GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
+                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", GameMainInterfacePanel.simplePicture)
+                GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
+            end
         end
-    end
-    if self.isOpen then
+    else
+        self.isTimmer = true
         if incomeNotify then
             GameMainInterfacePanel.earningScroll:ActiveLoopScroll(self.earnings, #incomeNotify)
             lastIncomeNotify = ct.deepCopy(incomeNotify)
@@ -559,6 +561,7 @@ function GameMainInterfaceCtrl:initInsData()
     --self.gender = info.male
 
     local gold = DataManager.GetMoneyByString()
+    gold = getMoneyString(gold)
     self.money = "E"..getPriceString(gold,24,20)
     GameMainInterfacePanel.money.text = self.money
 

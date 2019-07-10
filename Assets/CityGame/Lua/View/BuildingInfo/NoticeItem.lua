@@ -109,7 +109,13 @@ function NoticeItem:OnBg(go)
         go:queryBuildingName(go.uuidParas[1])
     elseif go.typeId == 7 then
         go.ins.type = go.typeId
-        go.ins.nameSize = GetLanguage(go.goodsDataInfo.intParasArr[1])
+        if go.goodsDataInfo.intParasArr[1] == 1300 then
+            go.ins.nameSize = GetLanguage(42020003)
+        elseif go.goodsDataInfo.intParasArr[1] == 1400 then
+            go.ins.nameSize = GetLanguage(42020004)
+        else
+            go.ins.nameSize = GetLanguage(go.goodsDataInfo.intParasArr[1])
+        end
         go.ins.bonus = go.goodsDataInfo.intParasArr[2]
         go.ins.time = go.goodsDataInfo.intParasArr[3]
         go:queryBuildingName(go.uuidParas[1])

@@ -380,35 +380,6 @@ function CompanyCtrl:OnBuilding(go)
     end
 end
 
--- Eva加点
---function CompanyCtrl:OnEva(go)
---    PlayMusEff(1002)
---    go:_showMainRoot(4)
---    go.isClickEva = true
---    go:ShowOptionTwo(0)
---    go:ShowOptionThere(0)
---    CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
---    if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
---        DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
---        CompanyPanel.optionOneScroll.anchoredPosition = Vector2.New(0,0)
---    else
---        CompanyCtrl.static.companyMgr:CreateEvaTitleItem()
---    end
---end
-
---显示eva介绍
---function CompanyCtrl:OnIntroduction(go)
---    PlayMusEff(1002)
---    ct.OpenCtrl("CompanyIntroductionCtrl")
---end
-
---关闭eva小提示
---function CompanyCtrl:OnCloseTips(go)
---    --PlayMusEff(1002)
---    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
---    CompanyCtrl.static.companyMgr:ClsoeTips()
---end
-
 -- 打开品牌
 function CompanyCtrl:OnBrand(go)
     PlayMusEff(1002)

@@ -58,10 +58,8 @@ function BuyBoxCtrl:_getComponent(go)
     --如果是原料关闭商品属性展示,否则打开
     self.scoreBg = go.transform:Find("contentRoot/content/goodsInfo/scoreBg")
     self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName/brandNameText"):GetComponent("Text")
-    self.popularity = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity")
     self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
     self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity/popularityValue"):GetComponent("Text")
-    self.quality = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality")
     self.qualityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
     self.qualityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality/qualityValue"):GetComponent("Text")
     self.levelBg = go.transform:Find("contentRoot/content/goodsInfo/levelBg")
@@ -84,17 +82,9 @@ end
 function BuyBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
-        --self.popularity.transform.localScale = Vector3.zero
-        --self.quality.transform.localScale = Vector3.zero
-        --self.levelBg.transform.localScale = Vector3.zero
-        --self.number.transform.localPosition = Vector3.New(183,-50,0)
         self:materialOrGoods(self.m_data.itemId)
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == goodsKey then
-        --self.popularity.transform.localScale = Vector3.one
-        --self.quality.transform.localScale = Vector3.one
-        --self.levelBg.transform.localScale = Vector3.one
-        --self.number.transform.localPosition = Vector3.New(183,-135,0)
         self:materialOrGoods(self.m_data.itemId)
         LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
         --如果是商品，判断原料等级
@@ -151,6 +141,7 @@ function BuyBoxCtrl:_clickBuyBtn(ins)
     goods.brandScore = ins.m_data.dataInfo.k.brandScore
     goods.brandName = ins.m_data.dataInfo.k.brandName
     if ins.numberSlider.value == 0 then
+        Event.Brocast("SmallPop", GetLanguage(25030025), ReminderType.Common)
         return
     else
         goods.number = ins.numberSlider.value

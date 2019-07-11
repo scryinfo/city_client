@@ -30,7 +30,7 @@ function BuildingBaseDetailPart:CreatedWaitingQueue(dataInfo,itemPrefab,itemRoot
     if not dataInfo then
         return
     end
-    local objPrefab = BuildingBaseDetailPart.loadingItemPrefab(itemPrefab,itemRoot)
+    local objPrefab = BuildingBaseDetailPart.loadingItemPrefabs(itemPrefab,itemRoot)
     local lineItemIns = className:new(dataInfo,objPrefab,behaviour,goodsType)
     table.insert(instanceTable,lineItemIns)
 end
@@ -95,15 +95,21 @@ end
 --加载实例化Prefab
 function BuildingBaseDetailPart.loadingItemPrefab(itemPrefab,itemRoot)
     local obj = UnityEngine.GameObject.Instantiate(itemPrefab)
-    local objRect = obj.transform:GetComponent("RectTransform");
+    local objRect = obj.transform:GetComponent("RectTransform")
     obj.transform:SetParent(itemRoot.transform)
-    objRect.transform.localScale = Vector3.one;
+    objRect.transform.localScale = Vector3.one
     --obj.transform:SetSiblingIndex(1)
     obj:SetActive(true)
     return obj
 end
+--加载实例化Prefab(只针对生产队列第一次无法点击的问题,没有找到具体原因)
+function BuildingBaseDetailPart.loadingItemPrefabs(itemPrefab,itemRoot)
+    local obj = UnityEngine.GameObject.Instantiate(itemPrefab)
+    local objRect = obj.transform:GetComponent("RectTransform")
+    obj.transform:SetParent(itemRoot.transform)
+    objRect.transform.localScale = Vector3.one
+    objRect.transform.localPosition = Vector3.zero
+    obj:SetActive(true)
+    return obj
+end
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-

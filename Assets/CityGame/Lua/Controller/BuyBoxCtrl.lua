@@ -8,6 +8,7 @@ UIPanel:ResgisterOpen(BuyBoxCtrl)
 
 local ToNumber = tonumber
 local StringSun = string.sub
+local Math_Floor = math.floor
 --奢侈等级
 local oneLevel = Vector3.New(105,174,238)
 local twoLevel = Vector3.New(156,136,228)
@@ -50,14 +51,15 @@ function BuyBoxCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
     self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
     --content
+    self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconbg")
     self.iconImg = go.transform:Find("contentRoot/content/goodsInfo/iconbg/iconImg"):GetComponent("Image")
     self.nameText = go.transform:Find("contentRoot/content/goodsInfo/iconbg/name/nameText"):GetComponent("Text")
+    self.priceText = go.transform:Find("contentRoot/content/goodsInfo/iconbg/price/priceText"):GetComponent("Text")
     --如果是原料关闭商品属性展示,否则打开
-    self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandNameText"):GetComponent("Text")
-    self.popularity = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity")
+    self.scoreBg = go.transform:Find("contentRoot/content/goodsInfo/scoreBg")
+    self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName/brandNameText"):GetComponent("Text")
     self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
     self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity/popularityValue"):GetComponent("Text")
-    self.quality = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality")
     self.qualityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
     self.qualityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality/qualityValue"):GetComponent("Text")
     self.levelBg = go.transform:Find("contentRoot/content/goodsInfo/levelBg")
@@ -66,28 +68,24 @@ function BuyBoxCtrl:_getComponent(go)
     self.levelValue = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level/levelText"):GetComponent("Text")
 
     self.number = go.transform:Find("contentRoot/content/goodsInfo/number")
+    self.shelf = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber")
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
     self.tipText = go.transform:Find("contentRoot/content/tipText"):GetComponent("Text")
     self.numberSlider = go.transform:Find("contentRoot/content/numberSlider"):GetComponent("Slider")
     self.numberText = go.transform:Find("contentRoot/content/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
     --bottom
     self.buyBtn = go.transform:Find("contentRoot/bottom/buyBtn")
+    self.buyText = go.transform:Find("contentRoot/bottom/buyBtn/text"):GetComponent("Text")
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 --初始化UI数据
 function BuyBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
-        self.popularity.transform.localScale = Vector3.zero
-        self.quality.transform.localScale = Vector3.zero
-        self.levelBg.transform.localScale = Vector3.zero
-        self.number.transform.localPosition = Vector3.New(183,-50,0)
+        self:materialOrGoods(self.m_data.itemId)
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == goodsKey then
-        self.popularity.transform.localScale = Vector3.one
-        self.quality.transform.localScale = Vector3.one
-        self.levelBg.transform.localScale = Vector3.one
-        self.number.transform.localPosition = Vector3.New(183,-135,0)
+        self:materialOrGoods(self.m_data.itemId)
         LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
         --如果是商品，判断原料等级
         if Good[self.m_data.itemId].luxury == 1 then
@@ -105,6 +103,7 @@ function BuyBoxCtrl:initializeUiInfoData()
         self.qualityValue.text = self.m_data.dataInfo.k.qualityScore
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
+    self.priceText.text = GetClientPriceString(self.m_data.dataInfo.price)
     self.numberSlider.maxValue = self.m_data.dataInfo.n
     self.numberSlider.value = 1
     self.numberText.text = "×"..self.numberSlider.value
@@ -117,6 +116,7 @@ end
 function BuyBoxCtrl:_language()
     self.topName.text = GetLanguage(28040035)
     self.tipText.text = GetLanguage(25070001)
+    self.buyText.text = GetLanguage(25070014)
 end
 --滑动更新文本
 function BuyBoxCtrl:SlidingUpdateText()
@@ -141,6 +141,7 @@ function BuyBoxCtrl:_clickBuyBtn(ins)
     goods.brandScore = ins.m_data.dataInfo.k.brandScore
     goods.brandName = ins.m_data.dataInfo.k.brandName
     if ins.numberSlider.value == 0 then
+        Event.Brocast("SmallPop", GetLanguage(25030025), ReminderType.Common)
         return
     else
         goods.number = ins.numberSlider.value
@@ -154,4 +155,24 @@ function BuyBoxCtrl:_clickBuyBtn(ins)
     --elseif ins.m_data.buildingType == BuildingType.ProcessingFactory then
     --    --加工厂
     --end
+end
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+--初始化UI显示,原料还是商品
+function BuyBoxCtrl:materialOrGoods(itemId)
+    local materialKey,goodsKey = 21,22
+    if Math_Floor(itemId / 100000) == materialKey then
+        self.scoreBg.transform.localScale = Vector3.zero
+        self.levelBg.transform.localScale = Vector3.zero
+        self.number.sizeDelta = Vector2.New(470,356)
+        self.shelf.transform.localPosition = Vector3.New(-150,0,0)
+        self.number.transform.localPosition = Vector3.New(180,0,0)
+        self.iconbg.transform.localPosition = Vector3.New(-243,0,0)
+    elseif Math_Floor(itemId / 100000) == goodsKey then
+        self.scoreBg.transform.localScale = Vector3.one
+        self.levelBg.transform.localScale = Vector3.one
+        self.number.sizeDelta = Vector2.New(585,86)
+        self.number.transform.localPosition = Vector3.New(180,-135,0)
+        self.shelf.transform.localPosition = Vector3.New(-240,0,0)
+        self.iconbg.transform.localPosition = Vector3.New(-298,0,0)
+    end
 end

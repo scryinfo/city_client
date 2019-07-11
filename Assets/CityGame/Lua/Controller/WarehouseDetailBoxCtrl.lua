@@ -238,9 +238,13 @@ end
 --生成itemPrefab
 function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType,...)
     if not dataInfo or next(dataInfo) == nil then
+        self.noTip.transform.localScale = Vector3.one
+        self.tipText.text = GetLanguage(25020032)
         return
     end
     if not dataInfo.inHand or next(dataInfo.inHand) == nil then
+        self.noTip.transform.localScale = Vector3.one
+        self.tipText.text = GetLanguage(25020032)
         return
     end
     local arg = {...}
@@ -268,7 +272,7 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
         end
         if next(temporaryDataInfo) == nil then
             self.noTip.transform.localScale = Vector3.one
-            self.tipText.text = GetLanguage(25020024)
+            self.tipText.text = GetLanguage(25020032)
         end
     elseif self.m_data.info.buildingType == BuildingType.ProcessingFactory then
         for key,value in pairs(dataInfo.inHand) do
@@ -291,7 +295,7 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
         end
         if next(temporaryDataInfo) == nil then
             self.noTip.transform.localScale = Vector3.one
-            self.tipText.text = GetLanguage(25020024)
+            self.tipText.text = GetLanguage(25020032)
         end
     elseif self.m_data.info.buildingType == BuildingType.RetailShop then
         for key,value in pairs(dataInfo.inHand) do
@@ -314,7 +318,7 @@ function WarehouseDetailBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,cl
         end
         if next(temporaryDataInfo) == nil then
             self.noTip.transform.localScale = Vector3.one
-            self.tipText.text = GetLanguage(25020024)
+            self.tipText.text = GetLanguage(25020032)
         end
     end
     for key,value in pairs(temporaryDataInfo) do

@@ -65,14 +65,17 @@ function ShelfBoxCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
     self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
     --content  goodsInfo
+    self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconbg")
     self.iconImg = go.transform:Find("contentRoot/content/goodsInfo/iconbg/iconImg"):GetComponent("Image")
     self.nameText = go.transform:Find("contentRoot/content/goodsInfo/iconbg/nameBg/nameText"):GetComponent("Text")
-    self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandNameText"):GetComponent("Text")
+
+    self.scoreBg = go.transform:Find("contentRoot/content/goodsInfo/scoreBg")
+    self.brand = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg")
+    self.brandName = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName"):GetComponent("Text")
+    self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName/brandNameText"):GetComponent("Text")
     --如果是原料关闭商品属性展示,否则打开
-    self.popularity = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity")
     self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
     self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity/popularityValue"):GetComponent("Text")
-    self.quality = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality")
     self.qualityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
     self.qualityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality/qualityValue"):GetComponent("Text")
     self.levelBg = go.transform:Find("contentRoot/content/goodsInfo/levelBg")
@@ -81,6 +84,8 @@ function ShelfBoxCtrl:_getComponent(go)
     self.levelValue = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level/levelText"):GetComponent("Text")
 
     self.number = go.transform:Find("contentRoot/content/goodsInfo/number")
+    self.warehouse = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber")
+    self.shelf = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber")
     self.warehouseNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/warehouseNumberText"):GetComponent("Text")
     self.warehouseNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/numberTipText"):GetComponent("Text")
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
@@ -140,17 +145,10 @@ function ShelfBoxCtrl:initializeUiInfoData()
     end
     local materialKey,goodsKey = 21,22
     if Math_Floor(self.m_data.itemId / 100000) == materialKey then
-        self.popularity.transform.localScale = Vector3.zero
-        self.quality.transform.localScale = Vector3.zero
-        self.levelBg.transform.localScale = Vector3.zero
-        self.number.transform.localPosition = Vector3.New(183,-45,0)
-        self.brandNameText.text = DataManager.GetCompanyName()
+        self:materialOrGoods(self.m_data.itemId)
         LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif Math_Floor(self.m_data.itemId / 100000) == goodsKey then
-        self.popularity.transform.localScale = Vector3.one
-        self.quality.transform.localScale = Vector3.one
-        self.levelBg.transform.localScale = Vector3.one
-        self.number.transform.localPosition = Vector3.New(183,-135,0)
+        self:materialOrGoods(self.m_data.itemId)
         LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
         --如果是商品，判断原料等级
         if Good[self.m_data.itemId].luxury == 1 then
@@ -224,13 +222,15 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.value = 1
         self.numberText.text = "×"..self.numberSlider.value
         if self.m_data.buildingType == BuildingType.MaterialFactory then
-            self.priceInput.text = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId) / 10000
+            local tempPrice = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId)
+            self.priceInput.text = GetClientPriceString(tempPrice)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            local temp = ct.CalculationProcessingSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.score,self.averageScore)
-            self.priceInput.text = GetClientPriceString(temp)
+            local tempPrice = ct.CalculationProcessingSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.score,self.averageScore)
+            self.priceInput.text = GetClientPriceString(tempPrice)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
-            self.priceInput.text = ct.CalculationRetailSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.playerGoodsScore,
-                    self.playerBuildingScore,self.averageScore,self.averageBuildingScore) / 10000
+            local tempPrice = ct.CalculationRetailSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.playerGoodsScore,
+                    self.playerBuildingScore,self.averageScore,self.averageBuildingScore)
+            self.priceInput.text = GetClientPriceString(tempPrice)
         end
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
@@ -252,6 +252,7 @@ function ShelfBoxCtrl:_language()
     self.warehouseNumberTipText.text = GetLanguage(25020038)
     self.shelfNumberTipText.text = GetLanguage(25020037)
     self.addShelfText.text = GetLanguage(25020035)
+    self.brandName.text = GetLanguage(25020040)
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------
@@ -324,6 +325,27 @@ function ShelfBoxCtrl:_clickTipPriceBgBtn(ins)
     ins:openTipPriceText(not isShowPrice)
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
+--初始化UI显示,原料还是商品
+function ShelfBoxCtrl:materialOrGoods(itemId)
+    local materialKey,goodsKey = 21,22
+    if Math_Floor(itemId / 100000) == materialKey then
+        self.scoreBg.transform.localScale = Vector3.zero
+        self.levelBg.transform.localScale = Vector3.zero
+        self.number.sizeDelta = Vector2.New(470,356)
+        self.warehouse.transform.localPosition = Vector3.New(-150,50,0)
+        self.shelf.transform.localPosition = Vector3.New(-150,-60,0)
+        self.number.transform.localPosition = Vector3.New(180,0,0)
+        self.iconbg.transform.localPosition = Vector3.New(-243,0,0)
+    elseif Math_Floor(itemId / 100000) == goodsKey then
+        self.scoreBg.transform.localScale = Vector3.one
+        self.levelBg.transform.localScale = Vector3.one
+        self.number.sizeDelta = Vector2.New(585,86)
+        self.number.transform.localPosition = Vector3.New(180,-135,0)
+        self.warehouse.transform.localPosition = Vector3.New(-240,0,0)
+        self.shelf.transform.localPosition = Vector3.New(45,0,0)
+        self.iconbg.transform.localPosition = Vector3.New(-298,0,0)
+    end
+end
 --设置提示开关
 function ShelfBoxCtrl:openTipText(isBool)
     if isBool then

@@ -59,7 +59,7 @@ function MapRightOtherTechnologyPage:_createTech()
     self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
 
     local str3
-    if self.data.queuedTimes ~= 0 then
+    if self.data.queuedTimes ~= -1 then
         str3 = os.date("%H:%M %m/%d/%Y", self.data.queuedTimes / 1000)
     else
         --str3 = os.date("%H:%M %m/%d/%Y", os.time())

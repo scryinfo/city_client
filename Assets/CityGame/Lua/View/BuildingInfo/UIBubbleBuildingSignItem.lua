@@ -163,6 +163,10 @@ end
 
 --显示
 function UIBubbleBuildingSignItem:ShowBubble()
+    --需要额外判断自身是否是隐藏
+    if not self.data.bubble then
+        return
+    end
     self.prefab.gameObject:SetActive(true)
 end
 

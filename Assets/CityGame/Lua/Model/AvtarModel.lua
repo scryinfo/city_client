@@ -31,6 +31,7 @@ function AvtarModel:m_registerRoleFaceId(isSuccess)
     if isSuccess.b ~= nil and isSuccess.b == true then
         Event.Brocast("SmallPop", GetLanguage(17030005), ReminderType.Succeed)
         DataManager.SetMyFlightScore(DataManager.GetMyFlightScore() - 10 )
+        Event.Brocast("m_AvatarChangeSuccess", DataManager.GetMyFlightScore())
     else
         Event.Brocast("SmallPop", GetLanguage(41010016), ReminderType.Warning)
     end

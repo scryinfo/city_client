@@ -57,13 +57,21 @@ end
 function AvtarCtrl:Refresh()
     panel.InitLanguage()
     DataManager.OpenDetailModel(AvtarModel,OpenModelInsID.AvtarCtrl)
+    Event.AddListener("m_AvatarChangeSuccess", self._updateAvatarScore, self)
+
     self:begin()
 end
 
 --【over】
 function  AvtarCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("m_AvatarChangeSuccess", self._updateAvatarScore, self)
+
     self:ClearCasch()
+end
+--
+function AvtarCtrl:_updateAvatarScore(value)
+    panel.luckyValue.text = value
 end
 
 --【over】
@@ -463,7 +471,7 @@ function AvtarCtrl:c_OnClick_confirm()
                         content = GetLanguage(17030004,10),func = function()
                     Event.Brocast("m_setRoleFaceId",faceId)
                     DataManager.SetFaceId(faceId)
-                    UIPanel.ClosePage()
+                    --UIPanel.ClosePage()
                 end  }
             ct.OpenCtrl('NewReminderCtrl',data)
         else

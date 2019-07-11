@@ -93,7 +93,6 @@ function InventGoodQueneItem:updateData( data )
     self:updateUI(data)
 end
 
-
 function InventGoodQueneItem:updateUI(data)
     if data.goodCategory ~= 0 then
         for i, configData in ipairs(InventConfig) do
@@ -191,7 +190,8 @@ end
 
 
 function InventGoodQueneItem:Refresh(data)
-    self:updateData(data)
+    --self:updateData(data)
+    self.data = data
     self:updateUI(data)
 end
 --加载头像和名字

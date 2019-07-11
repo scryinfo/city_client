@@ -73,12 +73,15 @@ function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     self.data.probEva = self.data.probEva / 1000
 
     data.totalLine = data.inProcess  --total 整合所有的生产线
+    if data.totalLine == nil then
+        data.totalLine = {}
+    end
+    --不需要显示其他人已经完成的线
     if data.completed ~= nil then
-        if data.totalLine == nil then
-            data.totalLine = {}
-        end
-        for i, v in ipairs(data.completed) do
-            table.insert(data.totalLine, v)
+        for i, line in ipairs(data.completed) do
+            if line.proposerId == DataManager.GetMyOwnerID() then
+                table.insert(data.totalLine, line)
+            end
         end
     end
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', data)
@@ -94,33 +97,45 @@ end
 
 --添加研究发明线
 function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
-    if self.data.inProcess == nil then
-        self.data.inProcess = {}
+    if self.data.totalLine == nil then
+        self.data.totalLine = {}
     end
-    table.insert(self.data.inProcess, msg.line)
-    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodQueneItem", data = self.data.inProcess ,insClass = InventGoodQueneItem})
+    table.insert(self.data.totalLine, msg.line)
+    self:_removeOtherFinishLine(self.data.totalLine)
+    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodQueneItem", data = self.data.totalLine ,insClass = InventGoodQueneItem})
 end
 
 --删除line
 function LaboratoryModel:n_OnReceiveDelLine(lineData)
-    --for i,line in ipairs(self.data.inProcess) do
+    --for i,line in ipairs(self.data.totalLine) do
     --    if line.id == lineData.lineId and DataManager.GetMyOwnerID() == line.proposerId then
-    --        table.remove(self.data.inProcess,i)
+    --        table.remove(self.data.totalLine,i)
     --    end
     --end
 
     --Laboratory.Line inProcessLine  重新计算队列
-    self.data.inProcess = lineData.inProcessLine
-    if self.data.inProcess == nil then
-        self.data.inProcess = {}
+    self.data.totalLine = lineData.inProcessLine  --返回的数据是所欲line，包括已完成的line
+    if self.data.totalLine == nil then
+        self.data.totalLine = {}
     end
-    for i, line in pairs(lineData.inProcessLine) do
-
-    end
-
+    self:_removeOtherFinishLine(self.data.totalLine)
     Event.Brocast("SmallPop",GetLanguage(28040016), ReminderType.Succeed)
-    Event.Brocast("c_updateQuque",{data = self.data.inProcess, name = "View/Laboratory/InventGoodQueneItem"})
+    Event.Brocast("c_updateQuque",{data = self.data.totalLine, name = "View/Laboratory/InventGoodQueneItem"})
 end
+--剔除他人已经完成的线
+function LaboratoryModel:_removeOtherFinishLine(lines)
+    if lines == nil or #lines == 0 then
+        return
+    end
+    for i, lineInfo in ipairs(lines) do
+        local currentTime = TimeSynchronized.GetTheCurrentServerTime()
+        local finishTime = lineInfo.beginProcessTs + lineInfo.times * 3600000
+        if lineInfo.proposerId ~= DataManager.GetMyOwnerID() and currentTime > finishTime then
+            table.remove(lines, i)  --
+        end
+    end
+end
+
 --开箱
 function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
     local info = LabRollACK .itemId or  LabRollACK .evaPoint
@@ -128,11 +143,11 @@ function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
     Event.Brocast("c_InventResult", LabRollACK.labResult)
 
     local line
-    for i, v in ipairs(self.data.inProcess) do
-        if LabRollACK.lineId == v.id  then
-            self.data.inProcess[i].availableRoll = self.data.inProcess[i].availableRoll - 1             --点击之后开启一个箱子
-            self.data.inProcess[i].usedRoll = self.data.inProcess[i].usedRoll + 1
-            line = self.data.inProcess[i]
+    for i, value in ipairs(self.data.totalLine) do
+        if LabRollACK.lineId == value.id  then
+            value.availableRoll = value.availableRoll - 1             --点击之后开启一个箱子
+            value.usedRoll = value.usedRoll + 1
+            line = value
             break
         end
     end
@@ -141,18 +156,18 @@ end
 --更新箱子
 function LaboratoryModel:n_OnReceivelabLineChangeInform(lineData,isNotContine)
     local datas = {}
-    for i, line in ipairs(self.data.inProcess) do
+    for i, line in ipairs(self.data.totalLine) do
         if line.id == lineData.line.id  then
             local isFinished = lineData.line.times == (lineData.line.availableRoll + lineData.line.usedRoll)
             if lineData.line.proposerId ~= DataManager.GetMyOwnerID() and isFinished == true then
-                table.remove(self.data.inProcess,i)  --别人的成果  --其实服务器不会发_(:з」∠)_但既然写了我就不改了
+                table.remove(self.data.totalLine, i)  --别人的成果  --其实服务器不会发_(:з」∠)_但既然写了我就不改了
             else
-                self.data.inProcess[i]=lineData.line
+                self.data.totalLine[i] = lineData.line
             end
             break
         end
     end
-    for i, line in ipairs(self.data.inProcess) do
+    for i, line in ipairs(self.data.totalLine) do
         local isFinished = line.times == (line.availableRoll + line.usedRoll)
         if line.availableRoll > 0 or isFinished == false then
             table.insert(datas, line)

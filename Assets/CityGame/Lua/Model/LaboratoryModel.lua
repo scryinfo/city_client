@@ -91,7 +91,7 @@ end
 function LaboratoryModel:n_OnReceiveLabExclusive(LabExclusive)
     self:m_ReqLaboratoryDetailInfo(self.insId)
     self.data.exclusive = LabExclusive.exclusive
-    Event.Brocast("SmallPop","设置成功",300)
+    --Event.Brocast("SmallPop","设置成功",300)
     Event.Brocast("c_OnReceiveLabExclusive")
 end
 

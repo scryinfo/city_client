@@ -8,13 +8,6 @@ require('Framework/UI/UIPage')
 NoticeItem = class('NoticeItem')
 local pos ={}
 local type
-local nameSize
-local goodsName
-local num
-local time
-local money
-local startTime
-local bonus
 --初始化方法   数据（读配置表）
 function NoticeItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,typeId,ins)
     self.prefab = prefab;

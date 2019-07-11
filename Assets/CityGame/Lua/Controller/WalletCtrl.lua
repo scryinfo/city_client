@@ -426,8 +426,8 @@ end
 function WalletCtrl:TradingRecords(info)
     if info.records then
         self.empty.localScale = Vector3.zero
-        records = nil
-        records = info.records
+        records = {}
+        records = ct.deepCopy(info.records)
 
         self.detailsViewport:ActiveLoopScroll(self.trading, #info.records)
     else

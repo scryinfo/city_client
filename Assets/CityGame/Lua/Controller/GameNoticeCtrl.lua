@@ -177,6 +177,11 @@ function GameNoticeCtrl:c_OnMailRead(ids)
     noticeItems[ids].newBg.localScale = Vector3.one
     if  noticeItems[ids].hint ~= nil then
         noticeItems[ids].hint.localScale = Vector3.zero
+        for i, v in pairs(noticeData) do
+            if v.id == ids then
+                v.state = true
+            end
+        end
     end
     bg = noticeItems[ids].newBg
     --

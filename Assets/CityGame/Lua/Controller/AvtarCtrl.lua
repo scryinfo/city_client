@@ -84,6 +84,12 @@ function AvtarCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.randomBtn.gameObject,self.c_OnClick_randomChange,self)
     LuaBehaviour:AddClick(panel.maleBtn.gameObject,self.c_OnClick_male,self)
     LuaBehaviour:AddClick(panel.feMaleBtn.gameObject,self.c_OnClick_faMale,self)
+    LuaBehaviour:AddClick(panel.luckTipBtn.gameObject, function ()
+        panel.luckTipRoot.localScale = Vector3.zero
+    end ,self)
+    LuaBehaviour:AddClick(panel.luckInfoBtn.gameObject, function ()
+        panel.luckTipRoot.localScale = Vector3.one
+    end ,self)
 end
 
 ---==========================================================================================业务代码===================================================================================================
@@ -164,6 +170,11 @@ end
 
 --初始化
 function AvtarCtrl:begin()
+    --
+    AvtarPanel.luckValueText.text = 10
+    AvtarPanel.luckTipRoot.localScale = Vector3.zero
+    --
+
     local faceId = DataManager.GetFaceId()
     --初始化
     AvatarOrganImageList = {}

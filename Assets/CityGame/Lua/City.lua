@@ -2037,6 +2037,7 @@ function CityEngineLua.LoginOut()
 	CityEngineLua:reset()
 	local timerCheck = FrameTimer.New(function()
 		--   CityEngineLua._networkInterface:connectTo(CityEngineLua.ip, CityEngineLua.port, ins.onConnectTo_loginapp_callback, nil);
+		UIPanel.CloseAllFixedPanel()
 		UIPanel.ClearAllPages()
 		--清除之前的所有注册的网络消息
 		DataManager.UnAllModelRegisterNetMsg()

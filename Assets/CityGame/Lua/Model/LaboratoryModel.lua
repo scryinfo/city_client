@@ -69,15 +69,16 @@ end
 --研究所详情
 function LaboratoryModel:n_OnReceiveLaboratoryDetailInfo(data)
     self.data = data
-    self.data.probGood = self.data.probGood/1000
-    self.data.probEva = self.data.probEva/1000
+    self.data.probGood = self.data.probGood / 1000
+    self.data.probEva = self.data.probEva / 1000
 
-    if data.completed then
-        if data.inProcess == nil then
-            data.inProcess={}
+    data.totalLine = data.inProcess  --total 整合所有的生产线
+    if data.completed ~= nil then
+        if data.totalLine == nil then
+            data.totalLine = {}
         end
         for i, v in ipairs(data.completed) do
-            table.insert(data.inProcess ,v)
+            table.insert(data.totalLine, v)
         end
     end
     DataManager.ControllerRpcNoRet(self.insId,"LaboratoryCtrl", '_receiveLaboratoryDetailInfo', data)
@@ -93,11 +94,11 @@ end
 
 --添加研究发明线
 function LaboratoryModel:n_OnReceiveLabLineAdd(msg)
-    if not self.data.inProcess then
+    if self.data.inProcess == nil then
         self.data.inProcess = {}
     end
-    table.insert(self.data.inProcess,msg.line)
-    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodQueneItem",data = self.data.inProcess ,insClass=InventGoodQueneItem}  )
+    table.insert(self.data.inProcess, msg.line)
+    ct.OpenCtrl("QueneCtrl",{name = "View/Laboratory/InventGoodQueneItem", data = self.data.inProcess ,insClass = InventGoodQueneItem})
 end
 
 --删除line
@@ -113,15 +114,18 @@ function LaboratoryModel:n_OnReceiveDelLine(lineData)
     if self.data.inProcess == nil then
         self.data.inProcess = {}
     end
+    for i, line in pairs(lineData.inProcessLine) do
 
-    Event.Brocast("SmallPop",GetLanguage(28040016),ReminderType.Succeed)
-    Event.Brocast("c_updateQuque",{data = self.data.inProcess,name = "View/Laboratory/InventGoodQueneItem"})
+    end
+
+    Event.Brocast("SmallPop",GetLanguage(28040016), ReminderType.Succeed)
+    Event.Brocast("c_updateQuque",{data = self.data.inProcess, name = "View/Laboratory/InventGoodQueneItem"})
 end
 --开箱
 function LaboratoryModel:n_OnReceiveLineChange(LabRollACK)
     local info = LabRollACK .itemId or  LabRollACK .evaPoint
     --DataManager.ControllerRpcNoRet(self.insId,"RollCtrl", '_evaResult', LabRollACK.labRollACK)
-    Event.Brocast("c_InventResult",LabRollACK.labResult)
+    Event.Brocast("c_InventResult", LabRollACK.labResult)
 
     local line
     for i, v in ipairs(self.data.inProcess) do

@@ -117,8 +117,8 @@ function InventGoodQueneItem:updateUI(data)
     end
     --赋值Detail
     local currentTime = TimeSynchronized.GetTheCurrentServerTime()
-    --还没完成
-    if currentTime >= data.beginProcessTs and currentTime <= data.beginProcessTs + data.times * 3600000 then
+    local finishTime = data.beginProcessTs + data.times * 3600000
+    if currentTime > data.beginProcessTs and currentTime < finishTime then
         if data.availableRoll >0 then
             self.rollBtn.localScale = Vector3.one
             self.rollBtnText.text = "x" .. tostring(data.availableRoll)
@@ -129,6 +129,11 @@ function InventGoodQueneItem:updateUI(data)
         self.timePrice.localScale = Vector3.zero
         self.slider.transform.localScale = Vector3.one
         self.slider.value = ((data.availableRoll + data.usedRoll)/data.times)
+    elseif currentTime >= finishTime then
+        --已经完成
+        self.rollBtn.localScale = Vector3.one
+        self.timePrice.localScale = Vector3.zero
+        self.slider.transform.localScale = Vector3.zero
     else
         self.rollBtn.localScale = Vector3.zero
         self.timePrice.localScale = Vector3.one
@@ -136,6 +141,26 @@ function InventGoodQueneItem:updateUI(data)
         self.slider.transform.localScale = Vector3.zero
         self.priceIma.localScale = Vector3.zero
     end
+
+    --还没完成
+    --if currentTime >= data.beginProcessTs and currentTime <= data.beginProcessTs + data.times * 3600000 then
+    --    if data.availableRoll >0 then
+    --        self.rollBtn.localScale = Vector3.one
+    --        self.rollBtnText.text = "x" .. tostring(data.availableRoll)
+    --    else
+    --        self.rollBtn.localScale = Vector3.zero
+    --    end
+    --
+    --    self.timePrice.localScale = Vector3.zero
+    --    self.slider.transform.localScale = Vector3.one
+    --    self.slider.value = ((data.availableRoll + data.usedRoll)/data.times)
+    --else
+    --    self.rollBtn.localScale = Vector3.zero
+    --    self.timePrice.localScale = Vector3.one
+    --    self.time.text = data.times
+    --    self.slider.transform.localScale = Vector3.zero
+    --    self.priceIma.localScale = Vector3.zero
+    --end
 
     --加载头像和名字
     PlayerInfoManger.GetInfos({data.proposerId}, self.c_OnHead, self)

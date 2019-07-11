@@ -372,7 +372,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
             return
         elseif data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = GetLanguage(25060014),func = function()
+                        content = GetLanguage(25020042),func = function()
                     if next(self.transportTab) ~= nil then
                         self.transportTab = {}
                     end

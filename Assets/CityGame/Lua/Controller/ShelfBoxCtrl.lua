@@ -222,13 +222,15 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.value = 1
         self.numberText.text = "×"..self.numberSlider.value
         if self.m_data.buildingType == BuildingType.MaterialFactory then
-            self.priceInput.text = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId) / 10000
+            local tempPrice = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId)
+            self.priceInput.text = GetClientPriceString(tempPrice)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            local temp = ct.CalculationProcessingSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.score,self.averageScore)
-            self.priceInput.text = GetClientPriceString(temp)
+            local tempPrice = ct.CalculationProcessingSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.score,self.averageScore)
+            self.priceInput.text = GetClientPriceString(tempPrice)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
-            self.priceInput.text = ct.CalculationRetailSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.playerGoodsScore,
-                    self.playerBuildingScore,self.averageScore,self.averageBuildingScore) / 10000
+            local tempPrice = ct.CalculationRetailSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.playerGoodsScore,
+                    self.playerBuildingScore,self.averageScore,self.averageBuildingScore)
+            self.priceInput.text = GetClientPriceString(tempPrice)
         end
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)

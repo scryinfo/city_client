@@ -46,9 +46,8 @@ function WalletCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.getBtn.gameObject,self._clickGetBtn,self)
     self.luaBehaviour:AddClick(self.detailsConfirmBtn.gameObject,self._clickDetailsConfirmBtn,self)
     self.luaBehaviour:AddClick(self.phoneRootConfirmBtn.gameObject,self._clickPhoneRootConfirmBtn,self)
-    --self.luaBehaviour:AddClick(self.phoneRootConfirmBtn.gameObject,self._clickPhoneRootConfirmBtn,self)
     self.luaBehaviour:AddClick(self.QRCodeConfirm.gameObject,self._clickQRCodeConfirmBtn,self)   --前往CashBoxs
-    self.luaBehaviour:AddClick(self.copyBtn.gameObject,self._clickCopyBtnBtn,self)   --复制
+    --self.luaBehaviour:AddClick(self.copyBtn.gameObject,self._clickCopyBtnBtn,self)   --复制
 
     --滑动互用
     self.trading = UnityEngine.UI.LoopScrollDataSource.New()  --行情
@@ -419,7 +418,14 @@ end
 --点击NEXT发送验证码
 function WalletCtrl:_clickPhoneRootConfirmBtn(ins)
     PlayMusEff(1002)
-    Event.Brocast("ReqValidationPhoneCode",ins.userId,ins.phoneCode)
+    if self.validationInput.text == "" then
+        self.phoneRootTipText.transform.localScale = Vector3.one
+        self.phoneRootTipText.text = GetLanguage(10030023)
+    else
+        self.phoneRootTipText.transform.localScale = Vector3.zero
+        Event.Brocast("ReqValidationPhoneCode",ins.userId,ins.phoneCode)
+        self.validationInput.text = ""
+    end
 end
 
 --交易详情

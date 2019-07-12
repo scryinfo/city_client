@@ -36,6 +36,7 @@ function GameMainInterfacePanel.InitPanel()
     this.leagueNotice = transform:Find("setBg/League/noticeItem") --联盟红点提示
     this.chat = transform:Find("setBg/chat").gameObject   --聊天
     this.chatItem = transform:Find("setBg/chat/chatItem")   --聊天红点
+    this.chatWorldItem = transform:Find("setBg/chat/WorldChatPanel/ChatWorldItem").gameObject   --聊天item
 
     this.time = transform:Find("LeftUpPanel/upBg/time"):GetComponent("Text");   --时间
     this.city = transform:Find("LeftUpPanel/upBg/city"):GetComponent("Text");   --城市

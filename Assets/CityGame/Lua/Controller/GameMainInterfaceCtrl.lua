@@ -508,15 +508,14 @@ function GameMainInterfaceCtrl:Awake()
     -- 初始化三个世界聊天的item
     self.worldChatItem = {}
     for a = 1, chatItemNum do
-        panelMgr:LoadPrefab_A("Assets/CityGame/Resources/View/Chat/ChatWorldItem.prefab", nil, nil, function(ins, obj )
-            if obj ~= nil then
-                local go = ct.InstantiatePrefab(obj)
-                local rect = go.transform:GetComponent("RectTransform")
-                go.transform:SetParent(GameMainInterfacePanel.worldChatContent)
-                rect.transform.localScale = Vector3.one
-                self.worldChatItem[a] = ChatWorldItem:new(go)
-            end
-        end)
+        local go = ct.InstantiatePrefab(GameMainInterfacePanel.chatWorldItem)
+        local rect = go.transform:GetComponent("RectTransform")
+        go.transform:SetParent(GameMainInterfacePanel.worldChatContent)
+        rect.transform.localScale = Vector3.one
+        rect.transform.localPosition = Vector3.zero
+        go:SetActive(true)
+
+        self.worldChatItem[a] = ChatWorldItem:new(go)
     end
 end
 

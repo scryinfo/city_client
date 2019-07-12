@@ -33,9 +33,10 @@ function InventSetPopPanel.InitPanle()
     this.conpetitivebessText = transform:Find("set/conpetitivebess/conpetitivebessText"):GetComponent("Text")
     this.value = transform:Find("set/conpetitivebess/valueText"):GetComponent("Text")
     this.infoBtn = transform:Find("set/conpetitivebess/infoBtn").gameObject
-    this.tooltip = transform:Find("set/conpetitivebess/infoBtn/info/tooltip")
-    this.title = transform:Find("set/conpetitivebess/infoBtn/info/tooltip/title"):GetComponent("Text")
-    this.content = transform:Find("set/conpetitivebess/infoBtn/info/tooltip/content"):GetComponent("Text")
+    this.tooltip = transform:Find("competitivenessRoot")
+    this.infoCloseBtn = transform:Find("competitivenessRoot/btn").gameObject
+    this.title = transform:Find("competitivenessRoot/tooltip/title"):GetComponent("Text")
+    this.content = transform:Find("competitivenessRoot/tooltip/content"):GetComponent("Text")
     this.closeTooltip = transform:Find("set/closeTooltip").gameObject
 end
 

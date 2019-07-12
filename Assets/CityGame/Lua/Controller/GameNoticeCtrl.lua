@@ -94,6 +94,12 @@ function GameNoticeCtrl:Hide()
     noticeItems = {}
 end
 
+function GameNoticeCtrl:Close()
+    UIPanel.Close(self)
+    bg = nil
+    goId = nil
+end
+
 function GameNoticeCtrl:initializeData()
     if self.m_data then
         DataManager.OpenDetailModel(GameNoticeModel,self.insId )

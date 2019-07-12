@@ -54,6 +54,8 @@ function WalletCtrl:Awake(go)
     self.trading.mProvideData = WalletCtrl.static.TradingProvideData
     self.trading.mClearData = WalletCtrl.static.TradingClearData
 
+    self.isOn = false
+
     --初始化循环参数
     self.intTime = 0
     self.m_Timer = Timer.New(slot(self.UpData, self), 1, -1, true)
@@ -101,6 +103,8 @@ function WalletCtrl:Hide()
     Event.RemoveListener("reqDisChargeOrderSucceed",self.reqDisChargeOrderSucceed,self)
     Event.RemoveListener("ValidationPhoneCode",self.ValidationPhoneCode,self) --验证验证码回调
     Event.RemoveListener("TradingRecords",self.TradingRecords,self) --交易详情
+
+    self.isOn = false
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WalletCtrl:_getComponent(go)
@@ -349,6 +353,8 @@ end
 --关闭提币
 function WalletCtrl:_clickWithdrawCloseBtn(ins)
     PlayMusEff(1002)
+    ins.isOn = false
+    ins.phoneRootConfirmBtn:GetComponent("Button").interactable = true
     ins:closeWithdrawContent()
     ins.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
 end
@@ -410,6 +416,7 @@ end
 --请求提币并获取验证码
 function WalletCtrl:_clickGetBtn(ins)
     PlayMusEff(1002)
+    ins.isOn = true
     ins.timing = 60
     ins.countdownImage.transform.localScale = Vector3.one
     UpdateBeat:Add(ins.UpdateTiming,ins)
@@ -418,13 +425,21 @@ end
 --点击NEXT发送验证码
 function WalletCtrl:_clickPhoneRootConfirmBtn(ins)
     PlayMusEff(1002)
-    if self.validationInput.text == "" then
-        self.phoneRootTipText.transform.localScale = Vector3.one
-        self.phoneRootTipText.text = GetLanguage(10030023)
+    if not ins.isOn then
+        ins.phoneRootTipText.transform.localScale = Vector3.one
+        ins.phoneRootTipText.text = GetLanguage(33030017)
+        return
+    end
+    if ins.validationInput.text == "" then
+        ins.phoneRootTipText.transform.localScale = Vector3.one
+        ins.phoneRootTipText.text = GetLanguage(10030023)
+    elseif #ins.validationInput.text > 4 then
+        ins.phoneRootTipText.transform.localScale = Vector3.one
+        ins.phoneRootTipText.text = GetLanguage(10030014)
     else
-        self.phoneRootTipText.transform.localScale = Vector3.zero
+        ins.phoneRootTipText.transform.localScale = Vector3.zero
         Event.Brocast("ReqValidationPhoneCode",ins.userId,ins.phoneCode)
-        self.validationInput.text = ""
+        ins.phoneRootConfirmBtn:GetComponent("Button").interactable = false
     end
 end
 
@@ -642,7 +657,7 @@ function WalletCtrl:openPhoneCode()
     self.phoneRoot.transform.localScale = Vector3.one
     self.phoneText.text = CityEngineLua.username
     self.validationInput.text = ""
-    LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",self.phoneRootConfirmBtn,false)
+    --LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",self.phoneRootConfirmBtn,false)
     self.countdownImage.transform.localScale = Vector3.zero
     self.phoneRootTipText.transform.localScale = Vector3.zero
 end
@@ -707,6 +722,8 @@ end
 
 --验证验证码回调
 function WalletCtrl:ValidationPhoneCode(data)
+    self.isOn = false
+    self.phoneRootConfirmBtn:GetComponent("Button").interactable = true
     if data.errorCode == 0 then
         self.phoneRootTipText.transform.localScale = Vector3.zero
         local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
@@ -715,7 +732,6 @@ function WalletCtrl:ValidationPhoneCode(data)
             end}
         ct.OpenCtrl("NewReminderCtrl",data)
     elseif data.errorCode == 1 then
-
         self.phoneRootTipText.transform.localScale = Vector3.one
         self.phoneRootTipText.text = GetLanguage(10030015)
     elseif data.errorCode == 2 then

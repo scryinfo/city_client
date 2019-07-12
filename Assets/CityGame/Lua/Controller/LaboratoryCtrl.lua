@@ -96,7 +96,7 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     --开业停业信息
     Event.Brocast("c_GetBuildingInfo", info)
     if info.state == "OPERATE" then
-        -- panel.stopRootTran.localScale = Vector3.zero
+        LaboratoryPanel.mainGroup.localScale = Vector3.one
         --判断是自己还是别人打开了界面
         if info.ownerId ~= DataManager.GetMyOwnerID() then
             self:other(buildingInfo)
@@ -106,7 +106,6 @@ function LaboratoryCtrl:_receiveLaboratoryDetailInfo(buildingInfo)
     else
         panel.groupTrans.localScale = Vector3.zero
         LaboratoryPanel.centerBtn.localScale = Vector3.zero
-        --panel.stopRootTran.localScale = Vector3.one
     end
 
 end
@@ -127,15 +126,13 @@ function LaboratoryCtrl:owner(buildingInfo)
     --刷新底部组件
     LaboratoryPanel.centerBtn.localScale = Vector3.one
     if self.groupMgr == nil then
-
         self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
-
         self.groupMgr:AddParts(ResearchPart,1/3)
         self.groupMgr:AddParts(TurnoverPart,1/3)
         self.groupMgr:AddParts(BuildingSalaryPart, 1/3)
 
-        self.groupMgr:RefreshData(buildingInfo)
         self.groupMgr:TurnOffAllOptions()
+        self.groupMgr:RefreshData(buildingInfo)
     else
         self.groupMgr:RefreshData(buildingInfo)
     end
@@ -146,7 +143,6 @@ function LaboratoryCtrl:other(buildingInfo)
     --刷新底部组件
     LaboratoryPanel.centerBtn.localScale = Vector3.zero
     if self.groupMgr == nil then
-
         self.groupMgr = BuildingInfoMainGroupMgr:new(panel.mainGroup, self.luaBehaviour)
         self.groupMgr:AddParts(ResearchPart,1)
         self.groupMgr:AddParts(TurnoverPart,0)

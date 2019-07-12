@@ -65,7 +65,7 @@ function ResearchPart:_InitClick(mainPanelLuaBehaviour)
             self.groupClass.SwitchingOptions(self.groupClass,self.partIndex)
         else
             if self.m_data.exclusive then
-                Event.Brocast("SmallPop","建筑没开启业务",300)
+                Event.Brocast("SmallPop",GetLanguage(28050001),300)
                 return
             end
             self.groupClass.SwitchingOptions(self.groupClass,self.partIndex)
@@ -81,37 +81,43 @@ function ResearchPart:_InitClick(mainPanelLuaBehaviour)
 end
 
 function ResearchPart:onClick_set(ins)
-    ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodQueneItem",data = ins.m_data.inProcess ,insClass=InventGoodQueneItem})
+    ct.OpenCtrl("QueneCtrl",{name="View/Laboratory/InventGoodQueneItem",data = ins.m_data.totalLine ,insClass=InventGoodQueneItem})
 end
 
 --
 function ResearchPart:updateUI(data)
     --进行中
-    if data.inProcess then
+    if data.inProcess ~= nil then
         self.queneCount.text = #(data.inProcess)
     else
         self.queneCount.text = 0
     end
-    local isShow = true
     local ownerId = DataManager.GetMyOwnerID()
-    --已完成(判断是不是自己的线设置是否显示提示icon)
-    if data.info.ownerId == ownerId  then
-        if data.completed then
-            for i, v in ipairs(data.completed) do
-                if v.proposerId == ownerId then
-                    self.hasImage.localScale = Vector3.one
-                    isShow = false
-                    break
-                else
-                    self.hasImage.localScale = Vector3.zero
-                end
-            end
-        else
-                self.hasImage.localScale = Vector3.zero
+    --判断line里有没有自己的成果
+    self.hasImage.localScale = Vector3.zero
+    for i, lineInfo in ipairs(data.totalLine) do
+        if lineInfo.proposerId == ownerId and lineInfo.availableRoll > 0 then
+            self.hasImage.localScale = Vector3.one
+            break
         end
-    else
-        self.hasImage.localScale = Vector3.zero
     end
+    --if data.info.ownerId == ownerId  then
+    --    if data.completed then
+    --        for i, v in ipairs(data.completed) do
+    --            if v.proposerId == ownerId then
+    --                self.hasImage.localScale = Vector3.one
+    --                isShow = false
+    --                break
+    --            else
+    --                self.hasImage.localScale = Vector3.zero
+    --            end
+    --        end
+    --    else
+    --            self.hasImage.localScale = Vector3.zero
+    --    end
+    --else
+    --    self.hasImage.localScale = Vector3.zero
+    --end
 
     if data.exclusive == false then
         self.priceText.transform.localScale = Vector3.one

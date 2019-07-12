@@ -34,8 +34,12 @@ function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
     end)
     mainPanelLuaBehaviour:AddClick(self.competBtn.gameObject, function ()
         self.competitivenessRoot.localScale = Vector3.one
+        self.competitivenessText04.text = GetLanguage(43010002)
+        self.competitivenessText05.text = GetLanguage(43010003)
     end , self)
     mainPanelLuaBehaviour:AddClick(self.competitivenessBtn.gameObject, function ()
+        self.competitivenessText04.text = ""
+        self.competitivenessText05.text = ""
         self.competitivenessRoot.localScale = Vector3.zero
     end , self)
 end
@@ -86,14 +90,14 @@ function BuildingRentPartDetail:_getComponent(transform)
     --
     self.competValueText = transform:Find("Root/competRoot/valueText"):GetComponent("Text")
     self.competBtn = transform:Find("Root/competRoot/infoBtn"):GetComponent("Button")
-    self.competitivenessRoot = transform:Find("Root/competitivenessRoot")
-    self.competitivenessBtn = transform:Find("Root/competitivenessRoot/tooltip"):GetComponent("Button")
+    self.competitivenessRoot = transform:Find("competitivenessRoot")
+    self.competitivenessBtn = transform:Find("competitivenessRoot/btn"):GetComponent("Button")
 
     self.occupancyText01 = transform:Find("Root/Text01"):GetComponent("Text")
     self.rentText02 = transform:Find("Root/Text02"):GetComponent("Text")
     self.competValueText03 = transform:Find("Root/competRoot/Text"):GetComponent("Text")
-    self.competitivenessText04 = transform:Find("Root/competitivenessRoot/tooltip/title"):GetComponent("Text")
-    self.competitivenessText05 = transform:Find("Root/competitivenessRoot/tooltip/content"):GetComponent("Text")
+    self.competitivenessText04 = transform:Find("competitivenessRoot/tooltip/title"):GetComponent("Text")
+    self.competitivenessText05 = transform:Find("competitivenessRoot/tooltip/content"):GetComponent("Text")
 end
 --
 function BuildingRentPartDetail:clickCloseBtn()
@@ -126,8 +130,8 @@ function BuildingRentPartDetail:_language()
     self.occupancyText01.text = GetLanguage(26040001)
     self.rentText02.text = GetLanguage(26040002)
     self.competValueText03.text = GetLanguage(43010001)
-    self.competitivenessText04.text = GetLanguage(43010002)
-    self.competitivenessText05.text = GetLanguage(43010003)
+    --self.competitivenessText04.text = GetLanguage(43010002)
+    --self.competitivenessText05.text = GetLanguage(43010003)
 end
 --
 function BuildingRentPartDetail:_getGuidePrice(data)

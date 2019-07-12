@@ -48,9 +48,9 @@ end
 function AvtarPanel.InitLanguage()
     this.topticText.text = GetLanguage(10060011)
     this.luckyText.text = GetLanguage(17030001)
-    this.luckText01.text = GetLanguage(17030002)
-    this.luckTipText02.text = GetLanguage(17030003)
-    this.luckTipText03.text = GetLanguage(17030006)
+    --this.luckText01.text = GetLanguage(17030002)
+    --this.luckTipText02.text = GetLanguage(17030003)
+    --this.luckTipText03.text = GetLanguage(17030006)
 end
 
 

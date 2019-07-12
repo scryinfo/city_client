@@ -27,8 +27,12 @@ function OpenHouseCtrlNew:Awake(go)
     self.luaBehaviour:AddClick(self.okBtn, self._onClickConfirm, self)
     self.luaBehaviour:AddClick(self.infoBtn, function ()
         self.competitivenessRoot.localScale = Vector3.one
+        self.competitivenessText11.text = GetLanguage(43010002)
+        self.competitivenessText12.text = GetLanguage(43010003)
     end , self)
     self.luaBehaviour:AddClick(self.competitivenessBtn, function ()
+        self.competitivenessText11.text = ""
+        self.competitivenessText12.text = ""
         self.competitivenessRoot.localScale = Vector3.zero
     end , self)
 end
@@ -59,8 +63,8 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.valueText = transform:Find("root/rent/priceBg/valueText"):GetComponent("Text")
     self.infoBtn = transform:Find("root/rent/priceBg/infoBtn").gameObject
     --
-    self.competitivenessRoot = transform:Find("root/competitivenessRoot")
-    self.competitivenessBtn = transform:Find("root/competitivenessRoot/btn").gameObject
+    self.competitivenessRoot = transform:Find("competitivenessRoot")
+    self.competitivenessBtn = transform:Find("competitivenessRoot/btn").gameObject
 
     self.titleText01 = transform:Find("root/titleText01"):GetComponent("Text")
     self.standardWageText02 = transform:Find("root/salary/wage/Text"):GetComponent("Text")
@@ -72,8 +76,8 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.rentText08 = transform:Find("root/rent/Text01"):GetComponent("Text")
     self.tipText09 = transform:Find("root/tipRoot/Text"):GetComponent("Text")
     self.competitivenessText10 = transform:Find("root/rent/priceBg/Text"):GetComponent("Text")
-    self.competitivenessText11 = transform:Find("root/competitivenessRoot/Text01"):GetComponent("Text")
-    self.competitivenessText12 = transform:Find("root/competitivenessRoot/Text02"):GetComponent("Text")
+    self.competitivenessText11 = transform:Find("competitivenessRoot/tooltip/title"):GetComponent("Text")
+    self.competitivenessText12 = transform:Find("competitivenessRoot/tooltip/content"):GetComponent("Text")
 
     self.rentInput.onValueChanged:AddListener(function (str)
         if str == "" then
@@ -95,8 +99,8 @@ function OpenHouseCtrlNew:_language()
     self.rentText08.text = GetLanguage(24020015)..":"
     self.tipText09.text = GetLanguage(24020016)
     self.competitivenessText10.text = GetLanguage(43010001)
-    self.competitivenessText11.text = GetLanguage(43010002)
-    self.competitivenessText12.text = GetLanguage(43010003)
+    --self.competitivenessText11.text = GetLanguage(43010002)
+    --self.competitivenessText12.text = GetLanguage(43010003)
 end
 --
 function OpenHouseCtrlNew:_initData()

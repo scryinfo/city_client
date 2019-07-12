@@ -167,7 +167,7 @@ function InventGoodQueneItem:updateUI(data)
     --自已与他人区分
     if DataManager.GetMyOwnerID() == data.proposerId then
         if data.availableRoll > 0 then
-            self.delete.transform.localScale = Vector3.zero
+            --self.delete.transform.localScale = Vector3.zero
             self.rollBtn.localScale = Vector3.one
             self.rollBtnText.text = "x" .. tostring(data.availableRoll)
         else

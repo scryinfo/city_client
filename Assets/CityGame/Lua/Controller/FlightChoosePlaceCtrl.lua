@@ -120,6 +120,11 @@ function FlightChoosePlaceCtrl:_getCorrectConfig()
         SearchDic = FlightSearchDicEnConfig
         SearchDetail = FlightSearchDetailEnConfig
     end
+    --万一其他多语言没有，则默认使用英文
+    if SearchDic == nil then
+        SearchDic = FlightSearchDicEnConfig
+        SearchDetail = FlightSearchDetailEnConfig
+    end
     return SearchDic, SearchDetail
 end
 --

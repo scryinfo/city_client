@@ -40,6 +40,8 @@ namespace LuaFramework {
 #if PUB_BUILD
         public const string asServerIp = "40.73.3.102";                   //国内
                                                                           //public const string asServerIp = "52.177.192.219";                  //国外 
+#elif PUB_BUILD0
+        public const string asServerIp = "42.159.89.63";
 #else
         public const string asServerIp = "192.168.0.51";
         //public const string WebUrl = "http://192.168.0.191:8080/CityHotUp/";      //测试更新地址

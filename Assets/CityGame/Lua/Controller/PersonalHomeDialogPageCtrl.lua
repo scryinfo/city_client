@@ -112,6 +112,7 @@ function PersonalHomeDialogPageCtrl:_getComponent(go)
 end
 ---初始化
 function PersonalHomeDialogPageCtrl:_initData()
+    self.competitivenessRoot.localScale = Vector3.zero
     local tempStr = self.m_data.des
     if self.m_data.id ~= DataManager.GetMyOwnerID() then
         self.otherOpen.localScale = Vector3.one

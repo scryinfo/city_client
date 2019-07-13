@@ -79,8 +79,9 @@ function BuildingShelfPart:_getShelfCount(dataTable)
     return shelfNowCount
 end
 --上架成功或购买成功后刷新数量
-function BuildingShelfPart:refreshShelfPartCount()
-    self:_initializeShelfCount()
+function BuildingShelfPart:refreshShelfPartCount(data)
+    self.count = self.count + data.item.n
+    self.salaryPercentText.text = self.count
 end
 
 

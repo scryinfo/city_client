@@ -257,6 +257,13 @@ function EvaCtrl:c_OnUpdateMyEvas(evas)
         for j, k in ipairs(self.evasData) do
             if v.evasInfo.old_eva.id == k.id then
                 self.evasData[j] = v.evasInfo.new_eva
+
+                -- 刷新加点的数据
+                for _, n in pairs(EvaCtrl.propertyScript) do
+                    if n.data.id == v.evasInfo.old_eva.id then
+                        n.data = v.evasInfo.new_eva
+                    end
+                end
                 break
             end
         end

@@ -154,15 +154,19 @@ function ResearchDetailPart:updateUI(data)
         self.timeCountText.text = ""
     end
 
-    if data.inProcess then
+    if data.inProcess ~= nil then
         self.queneCountText.text = #( data.inProcess )
-        local reminderTime=0
+        local lastStartTime = 0
+        local lastEndTime = 0
         for i, lineData in ipairs(data.inProcess) do
-
-            reminderTime = reminderTime + ((lineData.times-(lineData.availableRoll+lineData.usedRoll))*3600000)
+            --reminderTime = reminderTime + ((lineData.times-(lineData.availableRoll+lineData.usedRoll))*3600000)
+            if lineData.beginProcessTs >= lastStartTime then
+                lastStartTime = lineData.beginProcessTs
+                lastEndTime = lastStartTime + lineData.times * 3600000
+            end
         end
 
-        local ts = getFormatUnixTime((TimeSynchronized.GetTheCurrentServerTime()+ reminderTime)/1000)
+        local ts = getFormatUnixTime(lastEndTime / 1000)
         self.dateText.text = ts.hour..":"..ts.minute.." ".. ts.month.."/"..ts.day.."/"..ts.year
     else
         self.queneCountText.text = 0

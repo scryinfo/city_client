@@ -151,12 +151,12 @@ function SetOpenUpCtrl:OnConfirm(go)
 end
 
 function SetOpenUpCtrl:OnInfoBtn()
-    SetOpenUpPanel.tooltip.localScale = Vector3.one
+    SetOpenUpPanel.tooltip.gameObject:SetActive(true)
     SetOpenUpPanel.closeTooltip.transform.localScale = Vector3.one
 end
 
 function SetOpenUpCtrl:OnCloseTooltip()
-    SetOpenUpPanel.tooltip.localScale = Vector3.zero
+    SetOpenUpPanel.tooltip.gameObject:SetActive(false)
     SetOpenUpPanel.closeTooltip.transform.localScale = Vector3.zero
 end
 

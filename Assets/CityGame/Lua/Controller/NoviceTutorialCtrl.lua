@@ -54,6 +54,7 @@ function NoviceTutorialCtrl:Refresh()
 
             self.tutorialChoiceItems[i] = TutorialChoiceItem:new(go, i, self)
             if i == 1 then
+                self:ShowVideo(1)
                 self.tutorialChoiceItems[1]:_onClickBtn()
             end
         end

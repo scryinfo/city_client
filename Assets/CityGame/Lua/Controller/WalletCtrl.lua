@@ -722,9 +722,9 @@ end
 
 --验证验证码回调
 function WalletCtrl:ValidationPhoneCode(data)
-    self.isOn = false
     self.phoneRootConfirmBtn:GetComponent("Button").interactable = true
     if data.errorCode == 0 then
+        self.isOn = false
         self.phoneRootTipText.transform.localScale = Vector3.zero
         local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
                     content = GetLanguage(33030011),func = function()

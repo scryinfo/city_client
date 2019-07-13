@@ -30,7 +30,7 @@ function TradeInfoItem:initialize(dataInfo, viewRect)
         self.address.transform.localScale = Vector3.one
         self.address.text = GetLanguage(33040003)
         self.addressText.text = dataInfo.ddd_to
-        self.money.text = getMoneyString(ct.scientificNotation2Normal(self.moneys * 1000000))
+        self.money.text = "-" .. getMoneyString(ct.scientificNotation2Normal(math.abs(self.moneys * 1000000)))
     end
     if dataInfo.status == 0 then
         self.defeated.transform.localScale = Vector3.zero

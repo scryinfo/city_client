@@ -451,6 +451,7 @@ function BuildingWarehouseDetailPart:transportSucceed(data,msgId)
     end
     self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
     self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
+    self.Capacity = self.warehouseCapacitySlider.value
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     self.number.transform.localScale = Vector3.zero
     self.transportTab = {}

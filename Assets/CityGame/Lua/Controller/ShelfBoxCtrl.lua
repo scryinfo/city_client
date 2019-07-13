@@ -285,12 +285,17 @@ function ShelfBoxCtrl:_clickDownShelfBtn(ins)
         Event.Brocast("SmallPop",GetLanguage(25030018), 300)
         return
     end
-    local data = {}
-    data.itemId = ins.m_data.itemId
-    data.number = ins.m_data.dataInfo.n
-    data.producerId = ins.m_data.dataInfo.k.producerId
-    data.qty = ins.m_data.dataInfo.k.qty
-    Event.Brocast("downShelf",data)
+    PlayMusEff(1002)
+    local datas = {ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
+                content = GetLanguage(25060006).."？",func = function()
+            local data = {}
+            data.itemId = ins.m_data.itemId
+            data.number = ins.m_data.dataInfo.n
+            data.producerId = ins.m_data.dataInfo.k.producerId
+            data.qty = ins.m_data.dataInfo.k.qty
+            Event.Brocast("downShelf",data)
+        end  }
+    ct.OpenCtrl('NewReminderCtrl',datas)
 end
 --点击确认(修改数量，修改价格，修改自动补货)
 function ShelfBoxCtrl:_clickConfirmBtn(ins)

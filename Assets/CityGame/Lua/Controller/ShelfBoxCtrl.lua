@@ -287,7 +287,7 @@ function ShelfBoxCtrl:_clickDownShelfBtn(ins)
     end
     PlayMusEff(1002)
     local datas = {ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
-                content = GetLanguage(25060006).."？",func = function()
+                content = GetLanguage(25060017),func = function()
             local data = {}
             data.itemId = ins.m_data.itemId
             data.number = ins.m_data.dataInfo.n

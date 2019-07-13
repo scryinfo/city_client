@@ -412,26 +412,28 @@ end
 function BuildingProductionDetailPart:SettopSuccess(data)
     --调整gameObject位置,实例表位置
     local temporaryKey = nil
-    local temporaryValue = nil
+    local temporaryInsValue = nil
+    local temporaryLineData = nil
     self.waitingQueueIns[1].placedTopBtn.transform.localScale = Vector3.one
     for key,value in pairs(self.waitingQueueIns) do
         if value.lineId == data.lineId then
             value.prefab.transform:SetSiblingIndex(1)
             value.placedTopBtn.transform.localScale = Vector3.zero
             temporaryKey = key
-            temporaryValue = value
+            temporaryInsValue = value
+            temporaryLineData = value.lineDataInfo
         end
     end
     for key,value in pairs(self.m_data.line) do
         if value.lineId == data.lineId then
             temporaryKey = key
-            temporaryValue = value
+            temporaryInsValue = value
         end
     end
     table.remove(self.m_data.line,temporaryKey)
-    table.insert(self.m_data.line,2,temporaryValue)
+    table.insert(self.m_data.line,2,temporaryLineData)
     table.remove(self.waitingQueueIns,temporaryKey)
-    table.insert(self.waitingQueueIns,1,temporaryValue)
+    table.insert(self.waitingQueueIns,1,temporaryInsValue)
     Event.Brocast("SmallPop",GetLanguage(25030013), ReminderType.Succeed)
 end
 --刷新当前产量

@@ -28,7 +28,17 @@ function InventSetPopCtrl:Awake(go)
 
     LuaBehaviour:AddClick(panel.xBtn,self.OnxBtn,self)
     LuaBehaviour:AddClick(panel.confirm,self.OnConfirm,self)
-    LuaBehaviour:AddClick(panel.infoBtn,self.OnInfo,self)
+    --LuaBehaviour:AddClick(panel.infoBtn,self.OnInfo,self)
+    LuaBehaviour:AddClick(panel.infoBtn,function ()
+        InventSetPopPanel.tooltip.localScale = Vector3.one
+        InventSetPopPanel.title.text = GetLanguage(43050001)
+        InventSetPopPanel.content.text = GetLanguage(43050002)
+    end ,self)
+    LuaBehaviour:AddClick(panel.infoCloseBtn,function ()
+        InventSetPopPanel.title.text = ""
+        InventSetPopPanel.content.text = ""
+        InventSetPopPanel.tooltip.localScale = Vector3.zero
+    end ,self)
 
     panel.open.onValueChanged:AddListener(function(isOn)
         self:OnOpen(isOn)
@@ -93,8 +103,8 @@ function InventSetPopCtrl:updateText(data)
     panel.external.text = GetLanguage(27040002)
     panel.closeText.text = GetLanguage(27040001)
     panel.conpetitivebessText.text = GetLanguage(43010001)
-    panel.title.text = GetLanguage(43050001)
-    panel.content.text = GetLanguage(43050002)
+    --panel.title.text = GetLanguage(43050001)
+    --panel.content.text = GetLanguage(43050002)
 end
 
 function InventSetPopCtrl:UpDateUI(data)

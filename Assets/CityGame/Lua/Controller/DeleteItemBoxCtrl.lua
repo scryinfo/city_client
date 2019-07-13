@@ -79,11 +79,13 @@ function DeleteItemBoxCtrl:initializeUiInfoData()
         self.numberSlider.value = 0
         self.numberText.text = "×"..self.numberSlider.value
         self.tipText.text = "仓库中暂无可销毁数量"
+        self.confirmBtn:GetComponent("Button").interactable = false
     else
         self.numberSlider.maxValue = self.m_data.n
         self.numberSlider.minValue = 1
         self.numberSlider.value = 1
         self.numberText.text = "×"..self.numberSlider.value
+        self.confirmBtn:GetComponent("Button").interactable = true
     end
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
         self.goods.transform.localScale = Vector3.zero

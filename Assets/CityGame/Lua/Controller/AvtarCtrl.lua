@@ -55,7 +55,7 @@ function AvtarCtrl:OnCreate(obj)
 end
 
 function AvtarCtrl:Refresh()
-    panel.InitLanguage()
+    AvtarPanel.InitLanguage()
     DataManager.OpenDetailModel(AvtarModel,OpenModelInsID.AvtarCtrl)
     Event.AddListener("m_AvatarChangeSuccess", self._updateAvatarScore, self)
 
@@ -93,10 +93,16 @@ function AvtarCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.maleBtn.gameObject,self.c_OnClick_male,self)
     LuaBehaviour:AddClick(panel.feMaleBtn.gameObject,self.c_OnClick_faMale,self)
     LuaBehaviour:AddClick(panel.luckTipBtn.gameObject, function ()
+        panel.luckText01.text = ""
+        panel.luckTipText02.text = ""
+        panel.luckTipText03.text = ""
         panel.luckTipRoot.localScale = Vector3.zero
     end ,self)
     LuaBehaviour:AddClick(panel.luckInfoBtn.gameObject, function ()
         panel.luckTipRoot.localScale = Vector3.one
+        panel.luckText01.text = GetLanguage(17030002)
+        panel.luckTipText02.text = GetLanguage(17030003)
+        panel.luckTipText03.text = GetLanguage(17030006)
     end ,self)
 end
 

@@ -233,7 +233,7 @@ end
 --上架
 function MaterialFactoryModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
-    Event.Brocast("refreshShelfPartCount")
+    Event.Brocast("refreshShelfPartCount",data)
 end
 --修改货架属性
 function MaterialFactoryModel:n_OnModifyShelfInfo(data,msgId)
@@ -327,7 +327,7 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
         end
     else
         Event.Brocast("buySucceed",data)
-        Event.Brocast("refreshShelfPartCount")
+        --Event.Brocast("refreshShelfPartCount")
     end
 end
 --销毁仓库原料或商品

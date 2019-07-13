@@ -196,7 +196,7 @@ end
 --上架
 function RetailStoresModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
-    Event.Brocast("refreshShelfPartCount")
+    Event.Brocast("refreshShelfPartCount",data)
 end
 --修改货架属性
 function RetailStoresModel:n_OnModifyShelfInfo(data,msgId)
@@ -242,7 +242,7 @@ end
 --货架购买
 function RetailStoresModel:n_OnBuyShelfGoodsInfo(data)
     Event.Brocast("buySucceed",data)
-    Event.Brocast("refreshShelfPartCount")
+    --Event.Brocast("refreshShelfPartCount")
 end
 --销毁仓库原料或商品
 function RetailStoresModel:n_OnDelItemInfo(data,msgId)

@@ -165,20 +165,21 @@ function InventGoodQueneItem:updateUI(data)
     PlayerInfoManger.GetInfos({data.proposerId}, self.c_OnHead, self)
 
     --自已与他人区分
-    local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
-    if playerId == data.proposerId then              --自己的线
+    if DataManager.GetMyOwnerID() == data.proposerId then
+        if data.availableRoll > 0 then
+            --self.delete.transform.localScale = Vector3.zero
+            self.rollBtn.localScale = Vector3.one
+            self.rollBtnText.text = "x" .. tostring(data.availableRoll)
+        else
+            --self.delete.transform.localScale = Vector3.one
+            self.rollBtn.localScale = Vector3.zero
+        end
+
         self.myBg.localScale = Vector3.one
-        if LaboratoryCtrl.static.buildingOwnerId == data.proposerId then -- 并且是自己的建筑
-            if data.availableRoll > 0 then                               -- 第一条线
-                self.delete.transform.localScale = Vector3.zero
-                self.rollBtn.localScale = Vector3.one
-                self.rollBtnText.text = "x" .. tostring(data.availableRoll)
-            else
-                self.delete.transform.localScale = Vector3.one
-                self.rollBtn.localScale = Vector3.zero
-            end
-        else -- 不是自己的建筑
-            self.delete.transform.localScale = Vector3.zero
+        self.delete.transform.localScale = Vector3.zero
+        if LaboratoryCtrl.static.buildingOwnerId == data.proposerId and data.availableRoll == 0 then  --是自己的建筑
+            self.delete.transform.localScale = Vector3.one
+            self.rollBtn.localScale = Vector3.zero
         end
     else -- 不是自己的线
         self.myBg.localScale = Vector3.zero

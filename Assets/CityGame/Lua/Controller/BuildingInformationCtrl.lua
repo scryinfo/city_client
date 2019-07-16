@@ -189,14 +189,11 @@ function BuildingInformationCtrl:getBuildingInfo()
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
-        elseif self.m_data.buildingType == BuildingType.House then
-            --住宅
-            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.Laboratory then
             --研究所
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_LaboratoryInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.House then
-            --住宅和零售店一个协议，所以不需要添加其他监听
+            --住宅和零售店一个协议
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.Municipal then
             --推广

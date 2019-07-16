@@ -56,32 +56,29 @@ local tempUIPos
 --收到服务器返回的赚钱消息回调
 local function ReceiveMakeMoneyMessage(data)
     if data ~= nil and data.pos ~= nil and data.money ~= nil and data.buildingId ~= nil then
-        tempBuildData = nil
-        tempBuildData = DataManager.GetBaseBuildDataByID(data.buildingId)
-        --范围AOI内有该建筑(理论上服务器也只推AOI范围内建筑，此处单纯做校验)
-        if tempBuildData ~= nil then
+        --初始化
+        tempBuildBlockID = nil
+        --判定服务器位置坐标是否为错误值
+        tempBuildBlockID =  TerrainManager.GridIndexTurnBlockID(data.pos)
+        if tempBuildBlockID ~= nil then
             --初始化
-            tempBuildBlockID = nil
-            --判定服务器位置坐标是否为错误值
-            tempBuildBlockID =  TerrainManager.GridIndexTurnBlockID(data.pos)
-            if tempBuildBlockID ~= nil then
-                --初始化
-                tempUIPos = nil
-                --获取建筑3D坐标
-                tempBuildPosition =  TerrainManager.BlockIDTurnPosition(tempBuildBlockID)
-                --3D坐标转2D坐标
-                tempUIPos = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(tempBuildPosition))
-                --判断UI坐标是否在屏幕内-->不在屏幕内可不展示
-                if  CheckWhetherTheUIPositionIsOnTheScreen(tempUIPos) then
-                    --显示赚钱UI
-                    ct.log("system","赚钱坐标===》：  "..tempBuildPosition.x .. " , "..tempBuildPosition.z)
-                else
-                    ct.log("system","赚钱提示坐标不在屏幕范围内：  "..tempBuildPosition.x .. " , "..tempBuildPosition.z)
-                    return
-                end
+            tempUIPos = nil
+            --获取建筑3D坐标
+            tempBuildPosition =  TerrainManager.BlockIDTurnPosition(tempBuildBlockID)
+            --3D坐标转2D坐标
+            tempUIPos = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(tempBuildPosition))
+            --判断UI坐标是否在屏幕内-->不在屏幕内可不展示
+            if  CheckWhetherTheUIPositionIsOnTheScreen(tempUIPos) then
+                --显示赚钱UI
+                ct.log("system","赚钱坐标===》：  "..tempBuildPosition.x .. " , "..tempBuildPosition.z)
+                ct.log("system","交易金钱===》：  "..data.money)
+                MakeMoneyItem:new(UIPool:GetAvailableGameObject(),data)
             else
-                ct.log("system","位置ID为空")
+                ct.log("system","赚钱提示坐标不在屏幕范围内：  "..tempBuildPosition.x .. " , "..tempBuildPosition.z)
+                return
             end
+        else
+            ct.log("system","位置ID为空")
         end
     end
 end
@@ -90,7 +87,13 @@ end
 function MakeMoneyManager.Init()
     --注测赚钱效果的消息监听
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","makeMoneyInform","gs.MakeMoney",ReceiveMakeMoneyMessage)
-    UIPool = LuaGameObjectPool:new(item.Name,tempPrefab,item.InitCount,MapGameObjectsConfig.HidePosition,MapObjectsManager.GetPoolsRoot())
+    --UIPool = LuaGameObjectPool:new(item.Name,tempPrefab,item.InitCount,MapGameObjectsConfig.HidePosition,MapObjectsManager.GetPoolsRoot())
+    UIPool = LuaGameObjectPool:new("MakeMoneyItem",creatGoods("View/Items/MakeMoneyItems/MakeMoneyItem"),5,Vector3.New(0,0,0) )
 end
 
-
+--回收GameObject
+function MakeMoneyManager.RecyclingGameObject(go)
+    if go ~= nil then
+        UIPool:RecyclingGameObjectToPool(go)
+    end
+end

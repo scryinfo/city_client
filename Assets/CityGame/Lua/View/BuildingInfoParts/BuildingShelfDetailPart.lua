@@ -478,6 +478,8 @@ end
 --货架购买失败后清空购买列表
 function BuildingShelfDetailPart:closeBuyList()
     self.buyDatas = {}
+    self.number.transform.localScale = Vector3.zero
+    self.numberText.text = #self.buyDatas
 end
 --原料参考价格
 function BuildingShelfDetailPart:getShelfGuidePrice(data)

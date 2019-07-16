@@ -49,6 +49,7 @@ function InventPopCtrl:Refresh()
     buildInfo = modelData.info
     deatailBuildInfo = modelData
     local data = self.m_data
+    self.count = 1  --默认为1
     self.popCompent:RefeshData(data)
 
     if self.m_data.ins.type ~= "eva" then

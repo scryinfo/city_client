@@ -15,7 +15,7 @@ NoviceTutorialConfig = {
             },
 			 [2] = {
                 videoName = 44020002,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Retrieve password.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Retrievepassword.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             }
         }
@@ -25,22 +25,22 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44030001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/personal information.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/personalinformation.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = 44030002,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Company information.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Companyinformation.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			[3] = {
                 videoName = 44030003,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/City information.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Cityinformation.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			[4] = {
                 videoName = 44030004,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Main interface operation.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Maininterfaceoperation.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             }
         }
@@ -50,7 +50,7 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44040001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Create wallet.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Createwallet.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
@@ -60,7 +60,7 @@ NoviceTutorialConfig = {
             },
 			 [3] = {
                 videoName = 44040003,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Withdrawl token.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Withdrawltoken.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
         }
@@ -70,17 +70,17 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44050001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Land bidding.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Landbidding.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = 44050002,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Rent land.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Rentland.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			[3] = {
                 videoName = 44050003,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Sell land.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Sellland.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             }
         }
@@ -90,12 +90,12 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44060001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Open and operate.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Openandoperate.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = 44060002,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Stop and move.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Stopandmove.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             }
         }
@@ -105,12 +105,12 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44070001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Material factory.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Materialfactory.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = 44070002,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Processing factory.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Processingfactory.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [3] = {
@@ -120,17 +120,17 @@ NoviceTutorialConfig = {
             },
 			 [4] = {
                 videoName = 44070004,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Retail store.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Retailstore.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [5] = {
                 videoName = 44070005,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Ad company.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Adcompany.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [6] = {
                 videoName = 44070006,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Research facility.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Researchfacility.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             }
         }
@@ -150,7 +150,7 @@ NoviceTutorialConfig = {
             },
 			[3] = {
                 videoName = 44080003,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Business union.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Businessunion.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             }
         }
@@ -160,7 +160,7 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44090001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/City citizen behavior.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Citycitizenbehavior.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
         }
@@ -170,12 +170,12 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44100001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Small map.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Smallmap.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = 44100002,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Shelf purchase.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Shelfpurchase.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             }
         }
@@ -185,12 +185,12 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44110001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Brand rating.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Brandrating.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [2] = {
                 videoName = 44110002,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Quality rating.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Qualityrating.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
 			 [3] = {
@@ -205,7 +205,7 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44120001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Eva system.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Evasystem.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
         }
@@ -215,7 +215,7 @@ NoviceTutorialConfig = {
         videos ={
             [1] = {
                 videoName = 44130001,
-                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Flight prediction.png",
+                imgPath = "Assets/CityGame/Resources/Atlas/NoviceTutorial/Flightprediction.png",
                 url = "https://www.bilibili.com/video/av55335692/"
             },
         }

@@ -72,6 +72,7 @@ function SetOpenUpCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_CloseSetOpenUp",self.c_CloseSetOpenUp,self)
     Event.RemoveListener("c_GuidePrice",self.GuidePrice,self)
+    SetOpenUpPanel.time.text = ""
 end
 
 function SetOpenUpCtrl:OnCreate(obj)

@@ -878,7 +878,7 @@ function GetEvaPercent(lv)
     end
 
     if lv == 1 then
-        return "0"
+        return "0%"
     else
         return tostring(EvaUp[lv].add / 1000) .. "%"
     end

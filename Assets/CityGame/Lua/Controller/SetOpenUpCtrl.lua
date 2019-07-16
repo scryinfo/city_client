@@ -72,6 +72,7 @@ function SetOpenUpCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_CloseSetOpenUp",self.c_CloseSetOpenUp,self)
     Event.RemoveListener("c_GuidePrice",self.GuidePrice,self)
+    SetOpenUpPanel.time.text = ""
 end
 
 function SetOpenUpCtrl:OnCreate(obj)
@@ -109,7 +110,12 @@ end
 --输入价格
 function SetOpenUpCtrl:OnPrice()
     if SetOpenUpPanel.price.text == "" then
-        SetOpenUpPanel.price.text = 0
+       return
+    end
+    if string.find(SetOpenUpPanel.price.text, '%.') == nil then
+        SetOpenUpPanel.price.text = tonumber(SetOpenUpPanel.price.text)
+    else
+        SetOpenUpPanel.price.text = radixPointNum(SetOpenUpPanel.price.text,4)
     end
     local price = SetOpenUpPanel.price.text
     SetOpenUpPanel.value.text = ct.CalculationAdvertisementCompetitivePower(self.m_data.guidePrice,GetServerPriceNumber(price), self.m_data.RDAbility ,2251, self.m_data.averageRDAbility)
@@ -146,12 +152,12 @@ function SetOpenUpCtrl:OnConfirm(go)
 end
 
 function SetOpenUpCtrl:OnInfoBtn()
-    SetOpenUpPanel.tooltip.localScale = Vector3.one
+    SetOpenUpPanel.tooltip.gameObject:SetActive(true)
     SetOpenUpPanel.closeTooltip.transform.localScale = Vector3.one
 end
 
 function SetOpenUpCtrl:OnCloseTooltip()
-    SetOpenUpPanel.tooltip.localScale = Vector3.zero
+    SetOpenUpPanel.tooltip.gameObject:SetActive(false)
     SetOpenUpPanel.closeTooltip.transform.localScale = Vector3.zero
 end
 

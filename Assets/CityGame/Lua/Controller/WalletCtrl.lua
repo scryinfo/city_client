@@ -46,14 +46,15 @@ function WalletCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.getBtn.gameObject,self._clickGetBtn,self)
     self.luaBehaviour:AddClick(self.detailsConfirmBtn.gameObject,self._clickDetailsConfirmBtn,self)
     self.luaBehaviour:AddClick(self.phoneRootConfirmBtn.gameObject,self._clickPhoneRootConfirmBtn,self)
-    --self.luaBehaviour:AddClick(self.phoneRootConfirmBtn.gameObject,self._clickPhoneRootConfirmBtn,self)
     self.luaBehaviour:AddClick(self.QRCodeConfirm.gameObject,self._clickQRCodeConfirmBtn,self)   --前往CashBoxs
-    self.luaBehaviour:AddClick(self.copyBtn.gameObject,self._clickCopyBtnBtn,self)   --复制
+    --self.luaBehaviour:AddClick(self.copyBtn.gameObject,self._clickCopyBtnBtn,self)   --复制
 
     --滑动互用
     self.trading = UnityEngine.UI.LoopScrollDataSource.New()  --行情
     self.trading.mProvideData = WalletCtrl.static.TradingProvideData
     self.trading.mClearData = WalletCtrl.static.TradingClearData
+
+    self.isOn = false
 
     --初始化循环参数
     self.intTime = 0
@@ -102,6 +103,8 @@ function WalletCtrl:Hide()
     Event.RemoveListener("reqDisChargeOrderSucceed",self.reqDisChargeOrderSucceed,self)
     Event.RemoveListener("ValidationPhoneCode",self.ValidationPhoneCode,self) --验证验证码回调
     Event.RemoveListener("TradingRecords",self.TradingRecords,self) --交易详情
+
+    self.isOn = false
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WalletCtrl:_getComponent(go)
@@ -268,7 +271,7 @@ function WalletCtrl:defaultPanel()
     if whetherExist == false then
         self.WithoutWalletContent.transform.localScale = Vector3.one
         self.WalletContent.transform.localScale = Vector3.zero
-        self.DetailsContent.transform.localScale = Vector3.zero
+        self.DetailsContent.gameObject:SetActive(false)
         self.RechargeAmountContent.transform.localScale = Vector3.zero
         self.QRCodeContent.transform.localScale = Vector3.zero
         self.WithdrawContent.transform.localScale = Vector3.zero
@@ -278,14 +281,14 @@ function WalletCtrl:defaultPanel()
     else
         self.WithoutWalletContent.transform.localScale = Vector3.zero
         self.WalletContent.transform.localScale = Vector3.one
-        self.DetailsContent.transform.localScale = Vector3.zero
+        self.DetailsContent.gameObject:SetActive(false)
         self.RechargeAmountContent.transform.localScale = Vector3.zero
         self.QRCodeContent.transform.localScale = Vector3.zero
         self.WithdrawContent.transform.localScale = Vector3.zero
         self.PasswordContent.transform.localScale = Vector3.zero
         --self.DeclarationContent.transform.localScale = Vector3.zero
         self.DeclarationContent.gameObject:SetActive(false)
-        self.moneyText.text = DataManager.GetMoneyByString()
+        self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
     end
 end
 
@@ -350,7 +353,10 @@ end
 --关闭提币
 function WalletCtrl:_clickWithdrawCloseBtn(ins)
     PlayMusEff(1002)
+    ins.isOn = false
+    ins.phoneRootConfirmBtn:GetComponent("Button").interactable = true
     ins:closeWithdrawContent()
+    ins.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
 end
 --打开密码弹框(新加)
 function WalletCtrl:_clickRechargeConfirmBtn(ins)
@@ -369,6 +375,7 @@ end
 function WalletCtrl:_clickRechargeCloseBtn(ins)
     PlayMusEff(1002)
     ins:closeRechargeAmountContent()
+    ins.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
 end
 --打开二维码
 function WalletCtrl:_clickTopUpBtn(ins)
@@ -397,7 +404,10 @@ function WalletCtrl:_clickDetailsConfirmBtn(ins)
         Event.Brocast("SmallPop",GetLanguage(33030012), ReminderType.Warning)
         return
     end
-
+    if tonumber(ins.moneyInput.text) < 1000000 then
+        Event.Brocast("SmallPop",GetLanguage(33030016), ReminderType.Warning)
+        return
+    end
     local data = {}
     data.userId = ins.userId
     data.type = "withdraw"
@@ -406,6 +416,7 @@ end
 --请求提币并获取验证码
 function WalletCtrl:_clickGetBtn(ins)
     PlayMusEff(1002)
+    ins.isOn = true
     ins.timing = 60
     ins.countdownImage.transform.localScale = Vector3.one
     UpdateBeat:Add(ins.UpdateTiming,ins)
@@ -414,19 +425,35 @@ end
 --点击NEXT发送验证码
 function WalletCtrl:_clickPhoneRootConfirmBtn(ins)
     PlayMusEff(1002)
-    Event.Brocast("ReqValidationPhoneCode",ins.userId,ins.phoneCode)
+    if not ins.isOn then
+        ins.phoneRootTipText.transform.localScale = Vector3.one
+        ins.phoneRootTipText.text = GetLanguage(33030017)
+        return
+    end
+    if ins.validationInput.text == "" then
+        ins.phoneRootTipText.transform.localScale = Vector3.one
+        ins.phoneRootTipText.text = GetLanguage(10030023)
+    elseif #ins.validationInput.text > 4 then
+        ins.phoneRootTipText.transform.localScale = Vector3.one
+        ins.phoneRootTipText.text = GetLanguage(10030014)
+    else
+        ins.phoneRootTipText.transform.localScale = Vector3.zero
+        Event.Brocast("ReqValidationPhoneCode",ins.userId,ins.phoneCode)
+        ins.phoneRootConfirmBtn:GetComponent("Button").interactable = false
+    end
 end
 
 --交易详情
 function WalletCtrl:TradingRecords(info)
     if info.records then
         self.empty.localScale = Vector3.zero
-        records = nil
-        records = info.records
+        records = {}
+        records = ct.deepCopy(info.records)
 
         self.detailsViewport:ActiveLoopScroll(self.trading, #info.records)
     else
         records = nil
+        self.detailsViewport:ActiveLoopScroll(self.trading, 0)
         self.empty.localScale = Vector3.one
     end
 end
@@ -482,11 +509,16 @@ end
 --检测保存输入要提币的金额
 function WalletCtrl:saveAmount()
     if self.moneyInput.text == "" then
-        self.moneyInput.text = 0
+        return
+    end
+    if string.find(self.moneyInput.text, '%.') == nil then
+        self.moneyInput.text = tonumber(self.moneyInput.text)
+    else
+        self.moneyInput.text = radixPointNum(self.moneyInput.text,4)
     end
     self.Amount = tostring(tonumber(self.moneyInput.text) / 1000000)
     self.poundageText.text = GetLanguage(33030002 ,"E" .. GetClientPriceString(tonumber(self.moneyInput.text) * 0.003 * 10000),0.3)
-    self.proportionMontyText.text = getMoneyString(CityLuaUtil.scientificNotation2Normal(tonumber(self.moneyInput.text) * (1/1000000)))
+    self.proportionMontyText.text = getMoneyString(ct.scientificNotation2Normal(tonumber(self.moneyInput.text) * (1/1000000)))
 end
 --检测保存输入的钱包地址
 function WalletCtrl:saveEthAddr()
@@ -500,10 +532,15 @@ end
 --输入充值金额
 function WalletCtrl:inputMoney()
     if self.rechargeMoneyInput.text == "" then
-        self.rechargeMoneyInput.text = 0
+       return
+    end
+    if string.find(self.rechargeMoneyInput.text, '%.') == nil then
+        self.rechargeMoneyInput.text = tonumber(self.rechargeMoneyInput.text)
+    else
+        self.rechargeMoneyInput.text = radixPointNum(self.rechargeMoneyInput.text,4)
     end
     self.TopUpMoney = tostring(tonumber(self.rechargeMoneyInput.text)/1000000)
-    self.DDDText.text = getMoneyString(CityLuaUtil.scientificNotation2Normal(tonumber(self.rechargeMoneyInput.text) * (1/1000000))) .. "(DDD)"
+    self.DDDText.text = getMoneyString(ct.scientificNotation2Normal(tonumber(self.rechargeMoneyInput.text) * (1/1000000))) .. "(DDD)"
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开用户协议
@@ -542,12 +579,12 @@ function WalletCtrl:confirmPasswordBtn()
 end
 --打开详情
 function WalletCtrl:openDetails()
-    self.DetailsContent.transform.localScale = Vector3.one
+    self.DetailsContent.gameObject:SetActive(true)
     Event.Brocast("ReqDetails",self.userId)
 end
 --关闭详情
 function WalletCtrl:closeDetails()
-    self.DetailsContent.transform.localScale = Vector3.zero
+    self.DetailsContent.gameObject:SetActive(false)
 end
 --打开提币
 function WalletCtrl:openWithdrawContent()
@@ -621,7 +658,7 @@ function WalletCtrl:openPhoneCode()
     self.phoneRoot.transform.localScale = Vector3.one
     self.phoneText.text = CityEngineLua.username
     self.validationInput.text = ""
-    LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",self.phoneRootConfirmBtn,false)
+    --LoadSprite("Assets/CityGame/Resources/Atlas/Wallet/button-92x180.png",self.phoneRootConfirmBtn,false)
     self.countdownImage.transform.localScale = Vector3.zero
     self.phoneRootTipText.transform.localScale = Vector3.zero
 end
@@ -632,14 +669,14 @@ function WalletCtrl:createWalletSucceed(data)
         self.PasswordContent.transform.localScale = Vector3.zero
         self.WithoutWalletContent.transform.localScale = Vector3.zero
         self.WalletContent.transform.localScale = Vector3.one
-        self.moneyText.text = DataManager.GetMoneyByString()
+        self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
         PlayMusEff(1002)
         local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
                     content = GetLanguage(33010013),func = function()
                 self.PasswordContent.transform.localScale = Vector3.zero
                 self.WithoutWalletContent.transform.localScale = Vector3.zero
                 self.WalletContent.transform.localScale = Vector3.one
-                self.moneyText.text = DataManager.GetMoneyByString()
+                self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
             end  }
         ct.OpenCtrl('NewReminderCtrl',data)
     end
@@ -680,12 +717,15 @@ function WalletCtrl:reqDisChargeSucceed(data)
     if data then
         Event.Brocast("SmallPop", GetLanguage(33010015), ReminderType.Succeed)
         self:closeWithdrawContent()
+        self.moneyText.text = getMoneyString(DataManager.GetMoneyByString())
     end
 end
 
 --验证验证码回调
 function WalletCtrl:ValidationPhoneCode(data)
+    self.phoneRootConfirmBtn:GetComponent("Button").interactable = true
     if data.errorCode == 0 then
+        self.isOn = false
         self.phoneRootTipText.transform.localScale = Vector3.zero
         local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
                     content = GetLanguage(33030011),func = function()
@@ -693,7 +733,6 @@ function WalletCtrl:ValidationPhoneCode(data)
             end}
         ct.OpenCtrl("NewReminderCtrl",data)
     elseif data.errorCode == 1 then
-
         self.phoneRootTipText.transform.localScale = Vector3.one
         self.phoneRootTipText.text = GetLanguage(10030015)
     elseif data.errorCode == 2 then

@@ -48,7 +48,7 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos,allNumber)
         self.spareCapacity = bagCapacity - n --剩余容量
         self.number.text = n .. "/" .. bagCapacity
     else
-        self.name.text = GetLanguage(PlayerBuildingBaseData[DataInfo.info.mId].typeName)
+        self.name.text = GetLanguage(PlayerBuildingBaseData[DataInfo.info.mId].sizeName)..GetLanguage(PlayerBuildingBaseData[DataInfo.info.mId].typeName)
         self.size.text = GetLanguage(PlayerBuildingBaseData[DataInfo.info.mId].sizeName)
         self.warehouse_Slider.maxValue = PlayerBuildingBaseData[DataInfo.info.mId].storeCapacity;
         if DataInfo.store.inHand == nil then

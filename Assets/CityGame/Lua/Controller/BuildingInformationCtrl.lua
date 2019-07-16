@@ -37,6 +37,7 @@ function BuildingInformationCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.landNomal.gameObject,self._clickLandNomal,self)
     self.luaBehaviour:AddClick(self.switchBtn.gameObject,self._clickSwitchBtn,self)
     self.luaBehaviour:AddClick(self.buildingName.gameObject,self._clickBuildingName,self)
+    self.luaBehaviour:AddClick(self.bgBtn.gameObject,self._clickBgBtn,self)
     --给每块地的button绑定点击事件
     for key,value in pairs(self.mineLandBtnTable) do
         self.luaBehaviour:AddClick(value.gameObject,self._clickMineGroundBtn,self)
@@ -53,7 +54,6 @@ function BuildingInformationCtrl:Refresh()
     self:language()
     --获取,初始化UI建筑信息
     self:getBuildingInfo()
-
     --获取,初始化土地信息
     self:getLandInfo()
     --button 索引
@@ -94,6 +94,7 @@ function BuildingInformationCtrl:_getComponent(go)
     --buildingInfoRoot
     self.buildingInfoRoot = go.transform:Find("content/buildingInfoRoot")               --建筑信息
     self.content = go.transform:Find("content/buildingInfoRoot/content")
+    self.bgBtn = go.transform:Find("content/buildingInfoRoot/content/bgBtn")
     self.buildingName = go.transform:Find("content/buildingInfoRoot/content/buildingName"):GetComponent("Text")
     self.modifyImg = go.transform:Find("content/buildingInfoRoot/content/modifyImg")
     self.buildingTypeText = go.transform:Find("content/buildingInfoRoot/content/buildingTypeText"):GetComponent("Text")
@@ -446,6 +447,7 @@ function BuildingInformationCtrl:_clickLandNomal(ins)
     ins.buildingChoose.transform.localScale = Vector3.zero
     ins.buildingInfoRoot.transform.localScale = Vector3.zero
     ins:initializeUiLandInfo()
+    ins:closeTipBox()
 end
 --停业或拆除
 function BuildingInformationCtrl:_clickSwitchBtn(ins)
@@ -466,6 +468,7 @@ function BuildingInformationCtrl:_clickSwitchBtn(ins)
         end}
         ct.OpenCtrl('ReminderTipsCtrl',data)
     end
+    ins:closeTipBox()
 end
 --修改建筑名字
 function BuildingInformationCtrl:_clickBuildingName(ins)
@@ -477,6 +480,7 @@ function BuildingInformationCtrl:_clickBuildingName(ins)
         Event.Brocast("m_ReqSetBuildingName",ins.m_data.id,name)
     end
     ct.OpenCtrl("InputDialogPageCtrl",data)
+    ins:closeTipBox()
 end
 --自己的地块信息
 function BuildingInformationCtrl:_clickMineGroundBtn(ins)
@@ -514,12 +518,22 @@ function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
         else
             LoadSprite("Assets/CityGame/Resources/Atlas/BuildingInformation/famale.png",self.genderImg,false)
         end
-        self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs).." - "..self:getStringTime(self.groundData[index].Data.rent.rentBeginTs)
+        if self.groundData[index].Data.rent.rentDueTime == nil then
+            self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs)
+        else
+            self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs).." - "..self:getStringTime(self.groundData[index].Data.rent.rentDueTime)
+        end
     end
 end
---关闭界面
-function BuildingInformationCtrl:_clickCloseBtn()
+--关闭提示框
+function BuildingInformationCtrl:_clickBgBtn(ins)
     PlayMusEff(1002)
+    ins:closeTipBox()
+end
+--关闭界面
+function BuildingInformationCtrl:_clickCloseBtn(ins)
+    PlayMusEff(1002)
+    ins:closeTipBox()
     UIPanel.ClosePage()
 end
 ---------------------------------------------------------------回调函数---------------------------------------------------------------------------
@@ -566,6 +580,13 @@ function BuildingInformationCtrl:openTipBox(stringKey,position,parent)
         isShow = false
     end
 end
+--关闭提示框(不管父节点是那个，都还原关闭)
+function BuildingInformationCtrl:closeTipBox()
+    self.tipBox.transform:SetParent(self.content)
+    self.tipBoxText.text = ""
+    self.tipBox.transform.localScale = Vector3.zero
+    isShow = false
+end
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 --每次打开把所有的地块button全部隐藏，用到那块打开那块
 function BuildingInformationCtrl:closeGroundButton()
@@ -586,8 +607,8 @@ function BuildingInformationCtrl:getIndexKey(instance)
 end
 --时间格式转换
 function BuildingInformationCtrl:getStringTime(ms)
-    local timeTable = getFormatUnixTimeNumber(ms / 1000)
-    local timeStr = timeTable.year.."/"..timeTable.month.."/"..timeTable.day.." "..timeTable.hour..":"..timeTable.min
+    local timeTable = getFormatUnixTime(ms / 1000)
+    local timeStr = timeTable.year.."/"..timeTable.month.."/"..timeTable.day.." "..timeTable.hour..":"..timeTable.minute
     return timeStr
 end
 --缓存建筑主人信息

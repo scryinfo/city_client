@@ -249,7 +249,7 @@ function VolumeCtrl:Update()
 end
 
 --NPC数量
-function VolumeCtrl:c_NpcNum(countNpc,workNpcNum,unEmployeeNpcNum)
+function VolumeCtrl:c_NpcNum(countNpc,workNpcNum,unEmployeeNpcNum,realWorkNpc,realUnEmployeeNpcNum)
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local time = tonumber(ts.year..ts.month..ts.day)
@@ -618,16 +618,15 @@ function VolumeCtrl:c_GoodsplayerTypeNum(info)
     if createTs >= sevenDaysAgo then
         updataTime = createTs
         for i = 1, 168 do
-            updataTime = updataTime + 3600
             if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
                 time[i] = getFormatUnixTime(updataTime).month .. "/" ..getFormatUnixTime(updataTime).day
-                table.insert(boundaryLine,(updataTime - createTs )/3600 * 116)
+                table.insert(boundaryLine,(updataTime - createTs +3600)/3600 * 116)
             else
                 time[i] = getFormatUnixTime(updataTime).hour ..":00"
             end
             if updataTime <= currentTime then
                 demandNumTab[i] = {}
-                demandNumTab[i] .ts = (updataTime - createTs)/3600 * 116
+                demandNumTab[i] .ts = (updataTime - createTs +3600)/3600 * 116
                 if info == nil then
                     demandNumTab[i].num = 0
                 else
@@ -638,15 +637,15 @@ function VolumeCtrl:c_GoodsplayerTypeNum(info)
                     end
                 end
             end
+            updataTime = updataTime + 3600
         end
     else
         for i = 1, 168 do
-            updataTime = updataTime + 3600
             demandNumTab[i] = {}
-            demandNumTab[i] .ts = (updataTime - sevenDaysAgo)/3600 * 116
+            demandNumTab[i] .ts = (updataTime - sevenDaysAgo +3600)/3600 * 116
             if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
                 time[i] = getFormatUnixTime(updataTime).month .. "/" ..getFormatUnixTime(updataTime).day
-                table.insert(boundaryLine,(updataTime - sevenDaysAgo )/3600 * 116)
+                table.insert(boundaryLine,(updataTime - sevenDaysAgo +3600)/3600 * 116)
             else
                 time[i] = getFormatUnixTime(updataTime).hour ..":00"
             end
@@ -659,6 +658,7 @@ function VolumeCtrl:c_GoodsplayerTypeNum(info)
                     end
                 end
             end
+            updataTime = updataTime + 3600
         end
     end
 
@@ -734,16 +734,15 @@ function VolumeCtrl:c_GoodsplayerTypeThreeNum(info)
     if createTs >= sevenDaysAgo then
         updataTime = createTs
         for i = 1, 168 do
-            updataTime = updataTime + 3600
             if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
                 time[i] = getFormatUnixTime(updataTime).month .. "/" ..getFormatUnixTime(updataTime).day
-                table.insert(boundaryLine,(updataTime - createTs )/3600 * 116)
+                table.insert(boundaryLine,(updataTime - createTs + 3600)/3600 * 116)
             else
                 time[i] = getFormatUnixTime(updataTime).hour ..":00"
             end
             if updataTime <= currentTime then
                 demandNumTab[i] = {}
-                demandNumTab[i] .ts = (updataTime - createTs)/3600 * 116
+                demandNumTab[i] .ts = (updataTime - createTs +3600)/3600 * 116
                 if info == nil then
                     demandNumTab[i].num = 0
                 else
@@ -754,15 +753,15 @@ function VolumeCtrl:c_GoodsplayerTypeThreeNum(info)
                     end
                 end
             end
+            updataTime = updataTime + 3600
         end
     else
         for i = 1, 168 do
-            updataTime = updataTime + 3600
             demandNumTab[i] = {}
-            demandNumTab[i] .ts = (updataTime - sevenDaysAgo)/3600 * 116
+            demandNumTab[i] .ts = (updataTime - sevenDaysAgo +3600)/3600 * 116
             if tonumber(getFormatUnixTime(updataTime).hour) == 0 then
                 time[i] = getFormatUnixTime(updataTime).month .. "/" ..getFormatUnixTime(updataTime).day
-                table.insert(boundaryLine,(updataTime - sevenDaysAgo )/3600 * 116)
+                table.insert(boundaryLine,(updataTime - sevenDaysAgo +3600)/3600 * 116)
             else
                 time[i] = getFormatUnixTime(updataTime).hour ..":00"
             end
@@ -775,6 +774,7 @@ function VolumeCtrl:c_GoodsplayerTypeThreeNum(info)
                     end
                 end
             end
+            updataTime = updataTime + 3600
         end
     end
 

@@ -253,10 +253,13 @@ end
 function FlightChooseDateCtrl:_showDay(year, month, day)
     local dayAmount = tonumber(os.date("%d", os.time({year = year, month = month + 1, day = 0})))
     local startWeek = tonumber(os.date("%w", os.time({year = year, month = month, day = 1})))
+    if startWeek == 0 then
+        startWeek = 7
+    end
 
     for i, dayItem in ipairs(self.dayList) do
         dayItem:_clean()
-        if i < startWeek or i > startWeek + dayAmount then
+        if i < startWeek or i >= startWeek + dayAmount then
             dayItem:hide()
         end
         if i >= startWeek and i < startWeek + dayAmount then

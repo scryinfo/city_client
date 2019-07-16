@@ -105,7 +105,7 @@ function PromoteQueueItem:initialize(dataInfo,transform,luaBehaviour,ctrl)
 end
 
 function PromoteQueueItem:OnDelete(go)
-    local data={ins = go,content = GetLanguage(27040019),func = function()
+    local data={ins = go,content = GetLanguage(27040034),func = function()
         DataManager.DetailModelRpcNoRet(go.dataInfo.sellerBuildingId, 'm_RemovePromote',go.dataInfo.sellerBuildingId,go.id)
     end  }
     ct.OpenCtrl('ReminderCtrl',data)

@@ -93,7 +93,6 @@ function InventGoodQueneItem:updateData( data )
     self:updateUI(data)
 end
 
-
 function InventGoodQueneItem:updateUI(data)
     if data.goodCategory ~= 0 then
         for i, configData in ipairs(InventConfig) do
@@ -117,8 +116,8 @@ function InventGoodQueneItem:updateUI(data)
     end
     --赋值Detail
     local currentTime = TimeSynchronized.GetTheCurrentServerTime()
-    --还没完成
-    if currentTime >= data.beginProcessTs and currentTime <= data.beginProcessTs + data.times * 3600000 then
+    local finishTime = data.beginProcessTs + data.times * 3600000
+    if currentTime > data.beginProcessTs and currentTime < finishTime then
         if data.availableRoll >0 then
             self.rollBtn.localScale = Vector3.one
             self.rollBtnText.text = "x" .. tostring(data.availableRoll)
@@ -129,6 +128,11 @@ function InventGoodQueneItem:updateUI(data)
         self.timePrice.localScale = Vector3.zero
         self.slider.transform.localScale = Vector3.one
         self.slider.value = ((data.availableRoll + data.usedRoll)/data.times)
+    elseif currentTime >= finishTime then
+        --已经完成
+        self.rollBtn.localScale = Vector3.one
+        self.timePrice.localScale = Vector3.zero
+        self.slider.transform.localScale = Vector3.zero
     else
         self.rollBtn.localScale = Vector3.zero
         self.timePrice.localScale = Vector3.one
@@ -137,24 +141,45 @@ function InventGoodQueneItem:updateUI(data)
         self.priceIma.localScale = Vector3.zero
     end
 
+    --还没完成
+    --if currentTime >= data.beginProcessTs and currentTime <= data.beginProcessTs + data.times * 3600000 then
+    --    if data.availableRoll >0 then
+    --        self.rollBtn.localScale = Vector3.one
+    --        self.rollBtnText.text = "x" .. tostring(data.availableRoll)
+    --    else
+    --        self.rollBtn.localScale = Vector3.zero
+    --    end
+    --
+    --    self.timePrice.localScale = Vector3.zero
+    --    self.slider.transform.localScale = Vector3.one
+    --    self.slider.value = ((data.availableRoll + data.usedRoll)/data.times)
+    --else
+    --    self.rollBtn.localScale = Vector3.zero
+    --    self.timePrice.localScale = Vector3.one
+    --    self.time.text = data.times
+    --    self.slider.transform.localScale = Vector3.zero
+    --    self.priceIma.localScale = Vector3.zero
+    --end
+
     --加载头像和名字
     PlayerInfoManger.GetInfos({data.proposerId}, self.c_OnHead, self)
 
     --自已与他人区分
-    local playerId = DataManager.GetMyOwnerID()      --自己的唯一id
-    if playerId == data.proposerId then              --自己的线
+    if DataManager.GetMyOwnerID() == data.proposerId then
+        if data.availableRoll > 0 then
+            --self.delete.transform.localScale = Vector3.zero
+            self.rollBtn.localScale = Vector3.one
+            self.rollBtnText.text = "x" .. tostring(data.availableRoll)
+        else
+            --self.delete.transform.localScale = Vector3.one
+            self.rollBtn.localScale = Vector3.zero
+        end
+
         self.myBg.localScale = Vector3.one
-        if LaboratoryCtrl.static.buildingOwnerId == data.proposerId then -- 并且是自己的建筑
-            if data.availableRoll > 0 then                               -- 第一条线
-                self.delete.transform.localScale = Vector3.zero
-                self.rollBtn.localScale = Vector3.one
-                self.rollBtnText.text = "x" .. tostring(data.availableRoll)
-            else
-                self.delete.transform.localScale = Vector3.one
-                self.rollBtn.localScale = Vector3.zero
-            end
-        else -- 不是自己的建筑
-            self.delete.transform.localScale = Vector3.zero
+        self.delete.transform.localScale = Vector3.zero
+        if LaboratoryCtrl.static.buildingOwnerId == data.proposerId and data.availableRoll == 0 then  --是自己的建筑
+            self.delete.transform.localScale = Vector3.one
+            self.rollBtn.localScale = Vector3.zero
         end
     else -- 不是自己的线
         self.myBg.localScale = Vector3.zero
@@ -166,7 +191,8 @@ end
 
 
 function InventGoodQueneItem:Refresh(data)
-    self:updateData(data)
+    --self:updateData(data)
+    self.data = data
     self:updateUI(data)
 end
 --加载头像和名字

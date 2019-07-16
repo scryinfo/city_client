@@ -55,15 +55,23 @@ function AvtarCtrl:OnCreate(obj)
 end
 
 function AvtarCtrl:Refresh()
-    panel.InitLanguage()
+    AvtarPanel.InitLanguage()
     DataManager.OpenDetailModel(AvtarModel,OpenModelInsID.AvtarCtrl)
+    Event.AddListener("m_AvatarChangeSuccess", self._updateAvatarScore, self)
+
     self:begin()
 end
 
 --【over】
 function  AvtarCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("m_AvatarChangeSuccess", self._updateAvatarScore, self)
+
     self:ClearCasch()
+end
+--
+function AvtarCtrl:_updateAvatarScore(value)
+    panel.luckyValue.text = value
 end
 
 --【over】
@@ -84,6 +92,18 @@ function AvtarCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.randomBtn.gameObject,self.c_OnClick_randomChange,self)
     LuaBehaviour:AddClick(panel.maleBtn.gameObject,self.c_OnClick_male,self)
     LuaBehaviour:AddClick(panel.feMaleBtn.gameObject,self.c_OnClick_faMale,self)
+    LuaBehaviour:AddClick(panel.luckTipBtn.gameObject, function ()
+        panel.luckText01.text = ""
+        panel.luckTipText02.text = ""
+        panel.luckTipText03.text = ""
+        panel.luckTipRoot.localScale = Vector3.zero
+    end ,self)
+    LuaBehaviour:AddClick(panel.luckInfoBtn.gameObject, function ()
+        panel.luckTipRoot.localScale = Vector3.one
+        panel.luckText01.text = GetLanguage(17030002)
+        panel.luckTipText02.text = GetLanguage(17030003)
+        panel.luckTipText03.text = GetLanguage(17030006)
+    end ,self)
 end
 
 ---==========================================================================================业务代码===================================================================================================
@@ -164,6 +184,11 @@ end
 
 --初始化
 function AvtarCtrl:begin()
+    --
+    AvtarPanel.luckValueText.text = 10
+    AvtarPanel.luckTipRoot.localScale = Vector3.zero
+    --
+
     local faceId = DataManager.GetFaceId()
     --初始化
     AvatarOrganImageList = {}
@@ -409,8 +434,7 @@ function AvtarCtrl:c_OnClick_backBtn(ins)
         UIPanel.ClosePage()
     else
         --ins:Hide()
-        CityEngineLua:reset()
-        UIPanel.BackToPage(LoginCtrl)
+        CityEngineLua.LoginOut()
     end
 end
 
@@ -453,7 +477,7 @@ function AvtarCtrl:c_OnClick_confirm()
                         content = GetLanguage(17030004,10),func = function()
                     Event.Brocast("m_setRoleFaceId",faceId)
                     DataManager.SetFaceId(faceId)
-                    UIPanel.ClosePage()
+                    --UIPanel.ClosePage()
                 end  }
             ct.OpenCtrl('NewReminderCtrl',data)
         else

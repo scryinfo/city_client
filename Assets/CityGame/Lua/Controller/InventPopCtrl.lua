@@ -49,6 +49,7 @@ function InventPopCtrl:Refresh()
     buildInfo = modelData.info
     deatailBuildInfo = modelData
     local data = self.m_data
+    self.count = 1  --默认为1
     self.popCompent:RefeshData(data)
 
     if self.m_data.ins.type ~= "eva" then
@@ -116,45 +117,47 @@ function InventPopCtrl:ChangeLan()
 end
 
 function InventPopCtrl:other()
+    if deatailBuildInfo.sellTimes == nil or deatailBuildInfo.sellTimes == 0 or deatailBuildInfo.pricePreTime == nil then
+        return
+    end
+
+    panel.Slider.maxValue = deatailBuildInfo.sellTimes
+    panel.Slider.minValue = 1
+    panel.Slider.value = 1
+    panel.countInp.text = 1
+    panel.priceText.text = GetClientPriceString(deatailBuildInfo.pricePreTime)
+
     panel.countInp.onValueChanged:AddListener( function (string)
-        if string == "" or deatailBuildInfo.sellTimes == 0 or not deatailBuildInfo.pricePreTime  then
-            self.count=0
-            Event.Brocast("SmallPop","研究次数不够",300)
-            panel.countInp.text = 0
-            panel.priceText.text = 0
-            return
+        local count
+        if string == "" then
+            count = 1
+        else
+            count = tonumber(string)
         end
 
-        local count = tonumber(string)
-
-        if count >= deatailBuildInfo.sellTimes then
-            count =deatailBuildInfo.sellTimes
+        if count > deatailBuildInfo.sellTimes then
+            count = deatailBuildInfo.sellTimes
         end
         panel.countInp.text = count
-        if deatailBuildInfo.sellTimes then
-            panel.Slider.value = count/ (deatailBuildInfo.sellTimes)
-        end
+        panel.Slider.value = count
+
         self.count = count
-
-        panel.priceText.text = (GetClientPriceString(deatailBuildInfo.pricePreTime))*count
-
+        panel.priceText.text = GetClientPriceString(deatailBuildInfo.pricePreTime*count)
     end)
 
     panel.Slider.onValueChanged:AddListener(function (arg)
-        if arg <= 0 or deatailBuildInfo.sellTimes ==0 or not deatailBuildInfo.sellTimes then
-            panel.countInp.text = 0
-            panel.Slider.value = 0
-            return
-        end
+        --if arg <= 0 or deatailBuildInfo.sellTimes ==0 or not deatailBuildInfo.sellTimes then
+        --    panel.countInp.text = 0
+        --    panel.Slider.value = 0
+        --    return
+        --end
 
-        local count = math.floor(arg*deatailBuildInfo.sellTimes )
-        panel.countInp.text = count
+        panel.countInp.text = arg
     end)
-    panel.Slider.value = 0
 end
 
 function InventPopCtrl:RemoveLis()
-    panel.countInp.onValueChanged:RemoveAllListeners();
-    panel.Slider.onValueChanged:RemoveAllListeners();
+    panel.countInp.onValueChanged:RemoveAllListeners()
+    panel.Slider.onValueChanged:RemoveAllListeners()
     panel.countInput1.onValueChanged:RemoveAllListeners()
 end

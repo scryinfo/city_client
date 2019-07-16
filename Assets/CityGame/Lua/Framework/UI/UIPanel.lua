@@ -30,15 +30,12 @@ UICollider =
 }
 
 UIPanel = class('UIPanel')
-UIPanel.static.m_allPages={}            --界面GameObject管理
-UIPanel.static.m_instancePageNodes={}   --界面实例顺序管理（new）
-UIPanel.static.m_BubblePageNodes={}     --气泡界面实例顺序管理（new）
-UIPanel.static.m_FixedPageNodes={}      --固定界面实例顺序管理（new）
+UIPanel.static.m_allPages = {}            --界面GameObject管理
+UIPanel.static.m_instancePageNodes = {}   --界面实例顺序管理（new）
+UIPanel.static.m_BubblePageNodes = {}     --气泡界面实例顺序管理（new）
+UIPanel.static.m_FixedPageNodes = {}      --固定界面实例顺序管理（new）
 
 UIPanel.static.MainCtrl = nil
-
-
-
 
 ---------------------------------------------------------------------------------------框架内函数不可调用/继承---------------------------------------------------------------------------------------
 
@@ -112,8 +109,14 @@ function UIPanel.PopNode(pageInstance,inClass,pageData)
         UIPanel.HideOldPage()
     elseif pageInstance.type ==  UIType.PopUp then
 
+    elseif pageInstance.type ==  UIType.Fixed then
+        local tempPageNode  = {}
+        tempPageNode.page = pageInstance            --界面实例Ctrl（会重复）
+        tempPageNode.pageClass = inClass            --界面实例的Ctrl类
+        table.insert(UIPanel.static.m_FixedPageNodes,tempPageNode)
+        return
     else
-        --如果对象不为Normal和PopUp，不压栈
+        --如果对象不为Normal和PopUp，不压栈到m_instancePageNodes
         return
     end
     --将界面压入栈内
@@ -152,7 +155,13 @@ end
 --打开页面实例，调用DoShow
 function UIPanel:Show(path, callback)
     if self.gameObject == nil then
-        panelMgr:LoadPrefab_A(path, nil, self, callback)
+        if true then
+            path = string.gsub(path,"Assets/CityGame/Resources/","")
+            path = string.gsub(path,".prefab","")
+            callback(self,UnityEngine.Resources.Load(path))
+        else
+            panelMgr:LoadPrefab_A(path, nil, self, callback)
+        end
     else
         self:DoShow()
     end
@@ -167,10 +176,11 @@ function UIPanel:OnCreate(obj)
         go.layer = LayerMask.NameToLayer("UI")
         UnityEngine.GameObject.AddComponent(go, typeof(LuaFramework.LuaBehaviour))
         self.gameObject = go
+        --[[
         assert(go, "system","[UIPanel.Show] "," 没有找到资源： ",uiPath)
         if go == nil then
             ct.log("system","[UIPanel.Show]", "资源加载失败: "..uiPath)
-        end
+        end--]]
         self:AnchorUIGameObject(go)
         self:Awake(go)
         self.isAsyncUI = false
@@ -453,7 +463,7 @@ function  UIPanel.ClearAllPages()
     --清空当前page
     UIPanel.static.m_instancePageNodes = nil
     UIPanel.static.m_instancePageNodes = {}
-
+    UIPanel.static.m_FixedPageNodes = {}
     --销毁栈中所有Ctrl
     for k,v in pairs(UIPanel.static.m_allPages) do
         v:Close()
@@ -486,6 +496,17 @@ function UIPanel.LogPageStackStructure()
     ct.log("system","======================打印Panel堆栈=========================")
     for i = 1, #pageNodes  do
         ct.log("system","第".. i .."个Panle为：".. pageNodes[i].pageClass.name)
+    end
+end
+
+--关闭(隐藏)所有Fixed界面
+function UIPanel.CloseAllFixedPanel()
+    local pageNodes = UIPanel.static.m_FixedPageNodes
+    if pageNodes ~= nil then
+        for key, node in pairs(pageNodes) do
+            node.page:Hide()
+        end
+        UIPanel.static.m_FixedPageNodes = {}
     end
 end
 

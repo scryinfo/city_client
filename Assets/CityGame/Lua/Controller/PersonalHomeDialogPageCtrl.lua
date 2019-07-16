@@ -35,8 +35,12 @@ function PersonalHomeDialogPageCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.moneyBtn.gameObject, self._moneyBtnFunc, self)
     self.luaBehaviour:AddClick(self.infoBtn.gameObject, function ()
         self.competitivenessRoot.localScale = Vector3.one
+        self.scoreText03.text = GetLanguage(17030003)
+        self.scoreText04.text = GetLanguage(17030006)
     end , self)
     self.luaBehaviour:AddClick(self.tooltipBtn.gameObject, function ()
+        self.scoreText03.text = ""
+        self.scoreText04.text = ""
         self.competitivenessRoot.localScale = Vector3.zero
     end , self)
 end
@@ -45,8 +49,8 @@ function PersonalHomeDialogPageCtrl:Active()
     UIPanel.Active(self)
     self.titleText.text = GetLanguage(17010001)
     self.scoreText02.text = GetLanguage(32020036)
-    self.scoreText03.text = GetLanguage(17030003)
-    self.scoreText04.text = GetLanguage(17030006)
+    --self.scoreText03.text = GetLanguage(17030003)
+    --self.scoreText04.text = GetLanguage(17030006)
 
     Event.AddListener("updatePlayerName",self.updateNameFunc,self)
 end
@@ -98,16 +102,17 @@ function PersonalHomeDialogPageCtrl:_getComponent(go)
     self.scoreRoot = trans:Find("root/scoreRoot")
     self.scoreText = trans:Find("root/scoreRoot/Text/moneyText"):GetComponent("Text")
     self.infoBtn = trans:Find("root/scoreRoot/infoBtn"):GetComponent("Button")
-    self.tooltipBtn = trans:Find("root/scoreRoot/competitivenessRoot/tooltip"):GetComponent("Button")
-    self.competitivenessRoot = trans:Find("root/scoreRoot/competitivenessRoot")
+    self.tooltipBtn = trans:Find("competitivenessRoot/btn"):GetComponent("Button")
+    self.competitivenessRoot = trans:Find("competitivenessRoot")
     --多语言
     self.titleText = trans:Find("root/topBg/Text"):GetComponent("Text")
     self.scoreText02 = trans:Find("root/scoreRoot/Text"):GetComponent("Text")
-    self.scoreText03 = trans:Find("root/scoreRoot/competitivenessRoot/tooltip/title"):GetComponent("Text")
-    self.scoreText04 = trans:Find("root/scoreRoot/competitivenessRoot/tooltip/content"):GetComponent("Text")
+    self.scoreText03 = trans:Find("competitivenessRoot/tooltip/title"):GetComponent("Text")
+    self.scoreText04 = trans:Find("competitivenessRoot/tooltip/content"):GetComponent("Text")
 end
 ---初始化
 function PersonalHomeDialogPageCtrl:_initData()
+    self.competitivenessRoot.localScale = Vector3.zero
     local tempStr = self.m_data.des
     if self.m_data.id ~= DataManager.GetMyOwnerID() then
         self.otherOpen.localScale = Vector3.one
@@ -205,7 +210,9 @@ end
 --好友私聊
 function PersonalHomeDialogPageCtrl:_friendChatBtnFunc(ins)
     PlayMusEff(1002)
-    if ins.m_data.isOpenChat == nil or ins.m_data.isOpenChat == false then
+    if ins.m_data.isOpenChat == true then
+        UIPanel.ClosePage()
+    else
         UIPanel.ClosePage()
         ct.OpenCtrl("ChatCtrl", {toggleId = 2, id = ins.m_data.id})
     end

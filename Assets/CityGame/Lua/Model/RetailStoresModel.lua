@@ -91,7 +91,6 @@ function RetailStoresModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","retailGuidePrice","gs.GoodSummary",self.n_OnRetailGuidePrice)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
 
-
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
     --签约
@@ -103,6 +102,7 @@ end
 ---客户端请求---
 --打开零售店
 function RetailStoresModel:m_ReqOpenRetailShop(buildingId)
+    FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailRetailShop","gs.Id",{id = buildingId})
 end
 --改变建筑名字
@@ -115,6 +115,7 @@ end
 --end
 --运输
 function RetailStoresModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
 --上架
@@ -141,6 +142,7 @@ function RetailStoresModel:m_ReqDelItem(buildingId,itemId,num,producerId,qty)
 end
 --获取仓库数据
 function RetailStoresModel:m_GetWarehouseData(buildingId)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_GetWarehouseData(buildingId)
 end
 --获取货架数据
@@ -173,6 +175,7 @@ function RetailStoresModel:n_OnReceiveHouseSalaryChange(data)
 end
 --打开零售店
 function RetailStoresModel:n_OnOpenRetailStores(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream ~= nil then
         if not self.funModel then
             self.funModel = BuildingBaseModel:new(self.insId)
@@ -182,6 +185,7 @@ function RetailStoresModel:n_OnOpenRetailStores(stream)
 end
 --运输
 function RetailStoresModel:n_OnBuildingTransportInfo(data,msgId)
+    FlightMainModel.CloseFlightLoading()
     if msgId == 0 then
         Event.Brocast("transportSucceed",data,msgId)
         return
@@ -192,7 +196,7 @@ end
 --上架
 function RetailStoresModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
-    Event.Brocast("refreshShelfPartCount")
+    Event.Brocast("refreshShelfPartCount",data)
 end
 --修改货架属性
 function RetailStoresModel:n_OnModifyShelfInfo(data,msgId)
@@ -200,7 +204,7 @@ function RetailStoresModel:n_OnModifyShelfInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
@@ -218,7 +222,7 @@ function RetailStoresModel:n_OnShelfDelInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
@@ -238,7 +242,7 @@ end
 --货架购买
 function RetailStoresModel:n_OnBuyShelfGoodsInfo(data)
     Event.Brocast("buySucceed",data)
-    Event.Brocast("refreshShelfPartCount")
+    --Event.Brocast("refreshShelfPartCount")
 end
 --销毁仓库原料或商品
 function RetailStoresModel:n_OnDelItemInfo(data,msgId)
@@ -254,6 +258,7 @@ function RetailStoresModel:n_OnSalesNotice(data)
 end
 --获取仓库数据
 function RetailStoresModel:n_OnGetWarehouseData(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("getWarehouseInfoData",data)
     Event.Brocast("getWarehouseBoxData",data)
 end

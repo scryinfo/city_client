@@ -62,7 +62,6 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryBuildingGoodInfo","gs.BuildingGoodInfo",self.n_OnBuildingGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getLineData","gs.LineData",self.n_OnBuildingLineInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","materialNotEnough","gs.ByteBool",self.n_OnBuildingWarehouse)
-
 end
 
 function ProcessingFactoryModel:Close()
@@ -84,8 +83,6 @@ function ProcessingFactoryModel:Close()
     Event.RemoveListener("m_ReqBuildingGoodsInfo",self.m_ReqBuildingGoodsInfo,self)
     Event.RemoveListener("m_GetLineData",self.m_GetLineData,self)
     Event.RemoveListener("m_GetProcessingGuidePrice",self.m_GetProcessingGuidePrice,self)
-
-
 
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailProduceDepartment","gs.ProduceDepartment",self.n_OnOpenprocessing)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
@@ -120,6 +117,7 @@ end
 ---客户端请求---
 --打开加工厂
 function ProcessingFactoryModel:m_ReqOpenprocessing(buildingId)
+    FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailProduceDepartment","gs.Id",{id = buildingId})
 end
 --改变建筑名字
@@ -132,6 +130,7 @@ function ProcessingFactoryModel:m_ReqCloseprocessing(buildingId)
 end
 --运输
 function ProcessingFactoryModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_ReqBuildingTransport(src,dst, itemId, n,producerId,qty)
 end
 --上架
@@ -174,6 +173,7 @@ function ProcessingFactoryModel:m_ReqBuildingGoodsInfo(buildingId)
 end
 --获取仓库数据
 function ProcessingFactoryModel:m_GetWarehouseData(buildingId)
+    FlightMainModel.OpenFlightLoading()
     self.funModel:m_GetWarehouseData(buildingId)
 end
 --获取货架数据
@@ -210,6 +210,7 @@ function ProcessingFactoryModel:n_OnReceiveHouseSalaryChange(data)
 end
 --打开加工厂
 function ProcessingFactoryModel:n_OnOpenprocessing(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream ~= nil then
         if not self.funModel then
             self.funModel = BuildingBaseModel:new(self.insId)
@@ -220,6 +221,7 @@ function ProcessingFactoryModel:n_OnOpenprocessing(stream)
 end
 --运输
 function ProcessingFactoryModel:n_OnBuildingTransportInfo(data,msgId)
+    FlightMainModel.CloseFlightLoading()
     if msgId == 0 then
         Event.Brocast("transportSucceed",data,msgId)
         return
@@ -230,7 +232,7 @@ end
 --上架
 function ProcessingFactoryModel:n_OnShelfAddInfo(data)
     DataManager.ControllerRpcNoRet(self.insId,"WarehouseDetailBoxCtrl",'RefreshWarehouseData',data)
-    Event.Brocast("refreshShelfPartCount")
+    Event.Brocast("refreshShelfPartCount",data)
 end
 --修改货架属性
 function ProcessingFactoryModel:n_OnModifyShelfInfo(data,msgId)
@@ -238,7 +240,7 @@ function ProcessingFactoryModel:n_OnModifyShelfInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
@@ -256,7 +258,7 @@ function ProcessingFactoryModel:n_OnShelfDelInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
             local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
-                        content = "货架数量发生变化请刷新后操作",func = function()
+                        content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
             ct.OpenCtrl("NewReminderCtrl",data)
@@ -271,6 +273,7 @@ function ProcessingFactoryModel:n_OnShelfDelInfo(data,msgId)
 end
 --添加生产线
 function ProcessingFactoryModel:n_OnAddLineInfo(data)
+    Event.Brocast("partUpdateAddLine",data)
     DataManager.ControllerRpcNoRet(self.insId,"AddProductionLineBoxCtrl",'SucceedUpdatePanel',data)
 end
 --删除生产线
@@ -322,7 +325,7 @@ function ProcessingFactoryModel:n_OnBuyShelfGoodsInfo(data,msgId)
         end
     else
         Event.Brocast("buySucceed",data)
-        Event.Brocast("refreshShelfPartCount")
+        --Event.Brocast("refreshShelfPartCount")
     end
 end
 --销毁仓库原料或商品
@@ -341,6 +344,7 @@ function ProcessingFactoryModel:n_OnBuildingGoodsInfo(data)
 end
 --获取仓库数据
 function ProcessingFactoryModel:n_OnGetWarehouseData(data)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("getWarehouseInfoData",data)
     Event.Brocast("getWarehouseBoxData",data)
 end

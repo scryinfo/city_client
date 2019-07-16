@@ -2037,17 +2037,18 @@ function CityEngineLua.LoginOut()
 	CityEngineLua:reset()
 	local timerCheck = FrameTimer.New(function()
 		--   CityEngineLua._networkInterface:connectTo(CityEngineLua.ip, CityEngineLua.port, ins.onConnectTo_loginapp_callback, nil);
+		UIPanel.CloseAllFixedPanel()
+		UIPanel.ClearAllPages()
 		--清除之前的所有注册的网络消息
 		DataManager.UnAllModelRegisterNetMsg()
-		UIPanel.ClearAllPages()
 		DataManager.Close()
 		-- ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 		CityEngineLua.currserver = "";
 		CityEngineLua.currstate = "";
-		ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 		CityEngineLua.Message.clear()
 		--停止
 		UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")
+		ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
 	end, 10, 0)
 	timerCheck:Start()
 end

@@ -82,6 +82,7 @@ function BigInputCtrl:_onClickConfim(ins)
     PlayMusEff(1002)
     local inputValue = ins.rentInput.text
     if inputValue == "" then
+        Event.Brocast("SmallPop", GetLanguage(41010015))
         return
     end
 

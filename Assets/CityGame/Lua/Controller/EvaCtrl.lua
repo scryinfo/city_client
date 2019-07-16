@@ -110,14 +110,17 @@ function EvaCtrl:updateData()
         -- 生成大标题
         self.evaTitleItem = {}
         for i, v in ipairs(EvaConfig) do
-            local function callback(obj)
-                self.evaTitleItem[i] = EvaTitleItemOne:new(obj, 1, i)
-                if i == #EvaConfig then
-                    DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_QueryMyEva')
-                end
+            local go = ct.InstantiatePrefab(EvaPanel.evaTitleItem)
+            local rect = go.transform:GetComponent("RectTransform")
+            go.transform:SetParent(EvaPanel.optionOneScroll)
+            rect.transform.localScale = Vector3.one
+            rect.transform.localPosition = Vector3.zero
+            go:SetActive(true)
+
+            self.evaTitleItem[i] = EvaTitleItemOne:new(go, 1, i)
+            if i == #EvaConfig then
+                DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_QueryMyEva')
             end
-            --DynamicLoadPrefab("Assets/CityGame/Resources/View/Eva/EvaTitleItem.prefab", EvaPanel.optionOneScroll, nil, callback)
-            createPrefab("Assets/CityGame/Resources/View/Eva/EvaTitleItem.prefab", EvaPanel.optionOneScroll, callback)
         end
     end
 end
@@ -254,6 +257,13 @@ function EvaCtrl:c_OnUpdateMyEvas(evas)
         for j, k in ipairs(self.evasData) do
             if v.evasInfo.old_eva.id == k.id then
                 self.evasData[j] = v.evasInfo.new_eva
+
+                -- 刷新加点的数据
+                for _, n in pairs(EvaCtrl.propertyScript) do
+                    if n.data.id == v.evasInfo.old_eva.id then
+                        n.data = v.evasInfo.new_eva
+                    end
+                end
                 break
             end
         end

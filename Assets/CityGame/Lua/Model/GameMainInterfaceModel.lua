@@ -115,7 +115,6 @@ end
 --服务器回调--
 --获取所有邮件
 function GameMainInterfaceModel:n_OnGetAllMails(lMsg)
-    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
     Event.Brocast("c_AllMails",lMsg.mail)
 end
 
@@ -126,7 +125,7 @@ end
 
 --邮件更新回调
 function GameMainInterfaceModel:n_GsGetMails(lMsg)
-    --DataManager.ControllerRpcNoRet(self.insId,"GameMainInterfaceCtrl", '_receiveAllM2ails',stream)
+    PlayMusEff(1003)
     Event.Brocast("c_RefreshMails",lMsg)
 end
 
@@ -142,7 +141,13 @@ end
 
 --金币改变回调
 function GameMainInterfaceModel:n_GsExtendBag(lMsg)
-    DataManager.SetMoney(lMsg.money)
+    local money = 0
+    if lMsg.lockedMoney then
+        money = lMsg.money + lMsg.lockedMoney
+    else
+        money = lMsg.money
+    end
+    DataManager.SetMoney(money)
     Event.Brocast("c_ChangeMoney",lMsg.money)
 end
 

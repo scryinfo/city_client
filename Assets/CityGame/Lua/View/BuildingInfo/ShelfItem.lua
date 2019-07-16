@@ -24,6 +24,7 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,st
     self.numberBg = prefab.transform:Find("numberBg")
     self.numberText = prefab.transform:Find("numberBg/numberText"):GetComponent("Text")
     self.noHaveBg = prefab.transform:Find("noHaveBg")
+    self.noHaveText = prefab.transform:Find("noHaveBg/noHaveText"):GetComponent("Text")
     self.automaticBg = prefab.transform:Find("automaticBg")
     self.automaticIcon = prefab.transform:Find("automaticBg/icon")
     self.automaticNumberText = prefab.transform:Find("automaticBg/automaticNumberText"):GetComponent("Text")
@@ -43,6 +44,7 @@ function ShelfItem:initialize(dataInfo,prefab,luaBehaviour,keyId,buildingType,st
     self.priceText = prefab.transform:Find("priceBg/priceText"):GetComponent("Text")
     self.detailsBtn = prefab.transform:Find("detailsBtn")
 
+    self.noHaveText.text = GetLanguage(25060016)
     luaBehaviour:AddClick(self.detailsBtn.gameObject,self._clickDetailsBtn,self)
 
     self:InitializeData()
@@ -55,16 +57,19 @@ function ShelfItem:InitializeData()
         end
         if self.dataInfo.n == 0 then
             self.automaticBg.transform.localScale = Vector3.zero
-            self.noHaveBg.transform.localScale = Vector3.one
+            --self.noHaveBg.transform.localScale = Vector3.one
+            self.noHaveBg.gameObject:SetActive(true)
         else
             self.automaticBg.transform.localScale = Vector3.one
             self.automaticNumberText.text = "×"..self.dataInfo.n
             self.noHaveBg.transform.localScale = Vector3.zero
+            self.noHaveBg.gameObject:SetActive(false)
         end
     else
         self.numberBg.gameObject:SetActive(true)
         self.automaticBg.transform.localScale = Vector3.zero
-        self.noHaveBg.transform.localScale = Vector3.zero
+        --self.noHaveBg.transform.localScale = Vector3.zero
+        self.noHaveBg.gameObject:SetActive(false)
     end
     self.nameText.text = GetLanguage(self.itemId)
     self.numberText.text = "×"..self.dataInfo.n

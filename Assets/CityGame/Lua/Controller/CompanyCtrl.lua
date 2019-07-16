@@ -318,13 +318,13 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
 
     local difference = (currentTime - buildingTs) / 86400  --距离开业的天数
     if difference < 10 then
-        CompanyPanel.curve.anchoredPosition = Vector3.New(-95, 47,0)
+        CompanyPanel.curve.anchoredPosition = Vector3.New(-40, 47,0)
         CompanyPanel.curve.sizeDelta = Vector2.New(1528, 535)
     elseif difference < 30 then
-        CompanyPanel.curve.anchoredPosition = Vector3.New(-95, 47,0)
+        CompanyPanel.curve.anchoredPosition = Vector3.New(-40, 47,0)
         CompanyPanel.curve.sizeDelta = Vector2.New(1528, 535)
-        CompanyPanel.curve.anchoredPosition = Vector3.New(CompanyPanel.curve.anchoredPosition.x - (difference - 10) * 140, 42,0)
-        CompanyPanel.curve.sizeDelta = Vector2.New(CompanyPanel.curve.sizeDelta.x + (difference - 10) * 140, 402)
+        CompanyPanel.curve.anchoredPosition = Vector3.New(CompanyPanel.curve.anchoredPosition.x - (difference - 10) * 140, 47,0)
+        CompanyPanel.curve.sizeDelta = Vector2.New(CompanyPanel.curve.sizeDelta.x + (difference - 10) * 140, 533)
     else
         CompanyPanel.curve.anchoredPosition = Vector3.New(-2902, 47,0)
         CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)
@@ -379,35 +379,6 @@ function CompanyCtrl:OnBuilding(go)
         CompanyCtrl.static.companyMgr:CreateBuildingTitleItem()
     end
 end
-
--- Eva加点
---function CompanyCtrl:OnEva(go)
---    PlayMusEff(1002)
---    go:_showMainRoot(4)
---    go.isClickEva = true
---    go:ShowOptionTwo(0)
---    go:ShowOptionThere(0)
---    CompanyPanel.myEvaText.text = DataManager.GetEvaPoint()
---    if CompanyCtrl.static.companyMgr:GetEvaTitleItem() then
---        DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyEva')
---        CompanyPanel.optionOneScroll.anchoredPosition = Vector2.New(0,0)
---    else
---        CompanyCtrl.static.companyMgr:CreateEvaTitleItem()
---    end
---end
-
---显示eva介绍
---function CompanyCtrl:OnIntroduction(go)
---    PlayMusEff(1002)
---    ct.OpenCtrl("CompanyIntroductionCtrl")
---end
-
---关闭eva小提示
---function CompanyCtrl:OnCloseTips(go)
---    --PlayMusEff(1002)
---    CompanyPanel.closeTipsBtn.localScale = Vector3.zero
---    CompanyCtrl.static.companyMgr:ClsoeTips()
---end
 
 -- 打开品牌
 function CompanyCtrl:OnBrand(go)

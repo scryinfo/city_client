@@ -94,6 +94,12 @@ function GameNoticeCtrl:Hide()
     noticeItems = {}
 end
 
+function GameNoticeCtrl:Close()
+    UIPanel.Close(self)
+    bg = nil
+    goId = nil
+end
+
 function GameNoticeCtrl:initializeData()
     if self.m_data then
         DataManager.OpenDetailModel(GameNoticeModel,self.insId )
@@ -159,7 +165,6 @@ end
 
 --读取邮件
 function GameNoticeCtrl:c_onBg(go)
-    GameNoticePanel.right.localScale = Vector3.one
     if go.state == false then
         DataManager.DetailModelRpcNoRet(self.insId , 'm_mailRead',go.id)
     else
@@ -169,6 +174,8 @@ end
 
 --读取邮件回调
 function GameNoticeCtrl:c_OnMailRead(ids)
+    --打开内容面板
+    GameNoticePanel.right.localScale = Vector3.one
     -- [[显示新背景
     if bg ~= nil then
         bg.localScale = Vector3.zero
@@ -176,6 +183,11 @@ function GameNoticeCtrl:c_OnMailRead(ids)
     noticeItems[ids].newBg.localScale = Vector3.one
     if  noticeItems[ids].hint ~= nil then
         noticeItems[ids].hint.localScale = Vector3.zero
+        for i, v in pairs(noticeData) do
+            if v.id == ids then
+                v.state = true
+            end
+        end
     end
     bg = noticeItems[ids].newBg
     --

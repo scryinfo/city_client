@@ -132,6 +132,7 @@ function LoginCtrl:Hide()
 	Event.RemoveListener("c_GsConnected", self.c_GsConnected);
 	Event.RemoveListener("c_ConnectionStateChange", self.c_ConnectionStateChange);
 	Event.RemoveListener("c_Disconnect", self.c_Disconnect);
+	Event.RemoveListener("c_Aslogin", self.c_Aslogin);
 	Event.RemoveListener("c_ChangeLanguage",self.c_ChangeLanguage,self)
 
 	LoginPanel.inputUsername:GetComponent('InputField').text = ""

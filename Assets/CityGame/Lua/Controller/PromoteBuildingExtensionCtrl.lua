@@ -152,7 +152,7 @@ end
 --输入框(自己)
 function PromoteBuildingExtensionCtrl:onMyInputField(go)
     if PromoteBuildingExtensionPanel.time.text == "" then
-        PromoteBuildingExtensionPanel.time.text = 0
+       return
     end
     PromoteBuildingExtensionPanel.time.text = tonumber(PromoteBuildingExtensionPanel.time.text)
     if go.m_data.type == 1 then
@@ -165,7 +165,7 @@ end
 --输入框(别人)
 function PromoteBuildingExtensionCtrl:onInputField(go)
     if PromoteBuildingExtensionPanel.otherTime.text == "" then
-        PromoteBuildingExtensionPanel.otherTime.text = 0
+        return
     end
     PromoteBuildingExtensionPanel.otherTime.text = tonumber(PromoteBuildingExtensionPanel.otherTime.text)
     if tonumber(PromoteBuildingExtensionPanel.otherTime.text) > go.m_data.promRemainTime/3600000 then

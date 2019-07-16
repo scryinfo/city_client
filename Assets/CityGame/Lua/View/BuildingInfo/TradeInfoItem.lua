@@ -19,18 +19,18 @@ function TradeInfoItem:initialize(dataInfo, viewRect)
     self.money = viewTrans:Find("money"):GetComponent("Text")
     self.date = viewTrans:Find("date"):GetComponent("Text")
 
-    self.moneys = tonumber(CityLuaUtil.scientificNotation2Normal(dataInfo.ddd))
+    self.moneys = tonumber(dataInfo.ddd)
 
     if self.moneys >= 0 then
+        self.name.text = GetLanguage(33010002)
+        self.money.text = "+" .. getMoneyString(ct.scientificNotation2Normal(self.moneys * 1000000))
+        self.address.transform.localScale = Vector3.zero
+    else
         self.name.text = GetLanguage(33010003)
         self.address.transform.localScale = Vector3.one
         self.address.text = GetLanguage(33040003)
         self.addressText.text = dataInfo.ddd_to
-        self.money.text = "-" .. self.moneys * 1000000
-    else
-        self.name.text = GetLanguage(33010002)
-        self.money.text = "+" .. math.abs(self.moneys * 1000000)
-        self.address.transform.localScale = Vector3.zero
+        self.money.text = "-" .. getMoneyString(ct.scientificNotation2Normal(math.abs(self.moneys * 1000000)))
     end
     if dataInfo.status == 0 then
         self.defeated.transform.localScale = Vector3.zero

@@ -13,10 +13,6 @@ function LaboratoryPanel.Awake(obj)
 end
 
 function LaboratoryPanel.InitPanel()
-    this.rightRootTran = transform:Find("rightRoot")
-    this.leftRootTran = transform:Find("leftRoot")
-    this.topRootTran = transform:Find("topRoot")
-
     this.centerBtn = transform:Find("centerBtn")
     this.stopRootTran = transform:Find("stopRoot")
     this.stopIconBtn = transform:Find("stopRoot/stopIconBtn")

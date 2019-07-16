@@ -58,6 +58,7 @@ function NewTransportBoxCtrl:_getComponent(go)
     --buttonRoot
     self.chooseWarehouseBtn = go.transform:Find("contentRoot/buttonRoot/chooseWarehouseBtn")
     self.startBtn = go.transform:Find("contentRoot/buttonRoot/startBtn")
+    self.startText = go.transform:Find("contentRoot/buttonRoot/startBtn/text"):GetComponent("Text")
     self.targetWarehouse = go.transform:Find("contentRoot/buttonRoot/targetWarehouse"):GetComponent("InputField")
     self.placeholderText = go.transform:Find("contentRoot/buttonRoot/targetWarehouse/Placeholder"):GetComponent("Text")
     self.priceText = go.transform:Find("contentRoot/buttonRoot/totalPrice/priceText"):GetComponent("Text")
@@ -82,8 +83,16 @@ function NewTransportBoxCtrl:initializeUiInfoData()
 end
 --设置多语言
 function NewTransportBoxCtrl:_language()
-    self.topNameText.text = GetLanguage(25020013)
-    self.tipContentText.text = GetLanguage(25020023)
+    --购物车还是运输列表
+    if self.m_data.stateType == GoodsItemStateType.transport then
+        self.topNameText.text = GetLanguage(25020013)
+        self.startText.text = GetLanguage(25020036)
+        self.tipContentText.text = GetLanguage(25020023)
+    elseif self.m_data.stateType == GoodsItemStateType.buy then
+        self.topNameText.text = GetLanguage(25070002)
+        self.startText.text = GetLanguage(22040001)
+        self.tipContentText.text = GetLanguage(25070015)
+    end
     self.placeholderText.text = GetLanguage(25020015)
     self.priceText.text = "0.0000"
 end

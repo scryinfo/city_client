@@ -8,7 +8,7 @@ namespace LuaFramework
     {
 
         public float fpsMeasuringDelta = 2.0f;  //时间间隔
-        public string version = "v0.0.0";  //时间间隔
+        public string version = "v0.0.6";  //时间间隔
         public int disfontSize = 20;             //字体大小
         public int offset = 0;                  //向右的偏移量
 

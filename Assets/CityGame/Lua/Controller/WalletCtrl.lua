@@ -271,7 +271,7 @@ function WalletCtrl:defaultPanel()
     if whetherExist == false then
         self.WithoutWalletContent.transform.localScale = Vector3.one
         self.WalletContent.transform.localScale = Vector3.zero
-        self.DetailsContent.transform.localScale = Vector3.zero
+        self.DetailsContent.gameObject:SetActive(false)
         self.RechargeAmountContent.transform.localScale = Vector3.zero
         self.QRCodeContent.transform.localScale = Vector3.zero
         self.WithdrawContent.transform.localScale = Vector3.zero
@@ -281,7 +281,7 @@ function WalletCtrl:defaultPanel()
     else
         self.WithoutWalletContent.transform.localScale = Vector3.zero
         self.WalletContent.transform.localScale = Vector3.one
-        self.DetailsContent.transform.localScale = Vector3.zero
+        self.DetailsContent.gameObject:SetActive(false)
         self.RechargeAmountContent.transform.localScale = Vector3.zero
         self.QRCodeContent.transform.localScale = Vector3.zero
         self.WithdrawContent.transform.localScale = Vector3.zero
@@ -453,6 +453,7 @@ function WalletCtrl:TradingRecords(info)
         self.detailsViewport:ActiveLoopScroll(self.trading, #info.records)
     else
         records = nil
+        self.detailsViewport:ActiveLoopScroll(self.trading, 0)
         self.empty.localScale = Vector3.one
     end
 end
@@ -578,12 +579,12 @@ function WalletCtrl:confirmPasswordBtn()
 end
 --打开详情
 function WalletCtrl:openDetails()
-    self.DetailsContent.transform.localScale = Vector3.one
+    self.DetailsContent.gameObject:SetActive(true)
     Event.Brocast("ReqDetails",self.userId)
 end
 --关闭详情
 function WalletCtrl:closeDetails()
-    self.DetailsContent.transform.localScale = Vector3.zero
+    self.DetailsContent.gameObject:SetActive(false)
 end
 --打开提币
 function WalletCtrl:openWithdrawContent()

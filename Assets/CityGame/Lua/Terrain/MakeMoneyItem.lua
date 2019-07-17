@@ -25,13 +25,17 @@ function MakeMoneyItem:initialize(prefab,data)
         tempPosition.z = tempPosition.z + PlayerBuildingBaseData[basebuildData.Data.buildingID].y / 2
     end
     self.rect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPosition)
+    self.icon = prefab.transform:Find("Icon")
+    self.icon.transform.localScale = Vector3.zero
     --设置图片Icon
-    --[[
     if data.itemId ~= nil then
-        self.iconSprite = prefab.transform:Find("Icon"):GetComponent("Image")
-        self.iconSprite.sprite =
+        local tempSprite = SpriteManager.GetSpriteByPool(data.itemId)
+        if tempSprite ~= nil then
+            self.iconSprite = self.icon:GetComponent("Image")
+            self.iconSprite.sprite = tempSprite
+            self.icon.transform.localScale = Vector3.one
+        end
     end
-    --]]
     self:Show()
 end
 

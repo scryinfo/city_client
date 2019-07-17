@@ -20,7 +20,7 @@ function SupplyDemandItem:initialize(dataInfo, viewRect)
     self.beyond = viewTrans:Find("beyond")        --超出后的图片
     self.beyondText = viewTrans:Find("beyond/beyondText"):GetComponent("Text")   --超出后的数量
 
-    LoadSprite(SupplyDemandGood[dataInfo.itemId], self.goods, true)
+    LoadSprite(SupplyDemandGood[dataInfo.itemId], self.goods)
     self.name.text = GetLanguage(dataInfo.itemId)
     if dataInfo.demand == nil then
         dataInfo.demand = 0

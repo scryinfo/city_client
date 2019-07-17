@@ -34,7 +34,6 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
         self.faceId = dataInfo.faceId
         self.playerId = dataInfo.buyerId
         self.head.color = Color.New(0,0,0,0)
-        --LoadSprite(PlayerHead[self.faceId].earningsPath, self.head, true)
         AvatarManger.GetSmallAvatar(self.faceId,self.head.transform,0.125)
         self.name.localScale = Vector3.zero
         if dataInfo.type == "BUY_GROUND" or dataInfo.type == "RENT_GROUND" then
@@ -52,7 +51,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             end
         elseif dataInfo.type == "INSHELF" then
             self.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", self.picture)
+            LoadSprite(Good[dataInfo.itemId].img, self.picture)
             self.pictureText.text =  GetLanguage(dataInfo.itemId) .. "X"..dataInfo.count
         elseif dataInfo.type == "PROMO" then
             self.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
@@ -63,7 +62,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
                 LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-house.png", self.picture, true)
                 self.pictureText.text =  GetLanguage(42020004) .. "X"..dataInfo.duration .. "h"
             else
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png",self.picture)
+                LoadSprite(Good[dataInfo.itemId].img,self.picture)
                 self.pictureText.text =  GetLanguage(dataInfo.itemId) .. "X"..dataInfo.duration .. "h"
             end
         elseif dataInfo.type == "LAB" then
@@ -95,7 +94,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             self.pictureText.text = GetLanguage(11010016) .. "X1"
         elseif dataInfo.type == "INSHELF" then
             self.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/goods/"..dataInfo.itemId..".png", self.picture)
+            LoadSprite(Good[dataInfo.itemId].img, self.picture)
             self.pictureText.text = GetLanguage(dataInfo.itemId) .. "X".. dataInfo.count
         end
     end

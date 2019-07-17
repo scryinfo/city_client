@@ -40,6 +40,8 @@ function TurnoverDetailPart:Show(data)
 
     self.xText.text = GetLanguage(27030002)
     self.yText.text = GetLanguage(27030003)
+    self.expenditure.text = GetLanguage(19020010)
+    self.income.text = GetLanguage(19020008)
     self:_initFunc()
 end
 function TurnoverDetailPart:Hide()
@@ -61,8 +63,6 @@ function TurnoverDetailPart:_InitTransform()
     transform = self.transform
     self:_getComponent(self.transform)
 
-    --self.curve.anchoredPosition = Vector3.New(-2646, 42,0)
-    --self.curve.sizeDelta = Vector2.New(4326, 402)
 end
 --
 function TurnoverDetailPart:_getComponent(transform)
@@ -71,6 +71,8 @@ function TurnoverDetailPart:_getComponent(transform)
     self.slide = transform:Find("down/bg/curveBg/curve"):GetComponent("Slide");  --滑动
     self.graph = transform:Find("down/bg/curveBg/curve"):GetComponent("FunctionalGraph");  --绘制曲线
     self.xText = transform:Find("down/bg/xScale/Text"):GetComponent("Text");
+    self.expenditure = transform:Find("down/bg/expenditure/expenditureText"):GetComponent("Text");  --支出
+    self.income = transform:Find("down/bg/income/incomeText"):GetComponent("Text");  --收入
     self.yText = transform:Find("down/bg/yScale"):GetChild(transform:Find("down/bg/yScale").childCount-1):GetComponent("Text")
 end
 --
@@ -83,6 +85,7 @@ function TurnoverDetailPart:_initFunc()
     end
 
 function TurnoverDetailPart:n_OnBuildingIncome(info)
+    local expenditure = nil
     self.graph:Close()
     self.slide:Close()
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
@@ -105,6 +108,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     local time = {}
     local boundaryLine = {}
     local turnoverTab = {}
+    local expendTab = {}
     local buildingTs = buildingTs
     buildingTs = math.floor(buildingTs/1000)
     if tonumber(getFormatUnixTime(buildingTs).second) ~= 0 then
@@ -127,6 +131,9 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
                 turnoverTab[i] = {}
                 turnoverTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 142
                 turnoverTab[i].money = 0
+                expendTab[i] = {}
+                expendTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 142
+                expendTab[i].money = 1
                 if info.nodes ~= nil then
                     for k, v in pairs(info.nodes) do
                         if updataTime == v.time /1000 then
@@ -134,8 +141,16 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
                         end
                     end
                 end
+                if expenditure ~= nil then
+                    for k, v in pairs(expenditure) do
+                        if updataTime == v.time /1000 then
+                            expendTab[i].money = tonumber(GetClientPriceString(v.income))
+                        end
+                    end
+                end
                 if updataTime == currentTime then
                     turnoverTab[i].money = tonumber(GetClientPriceString(self.turnover))
+                    expendTab[i].money = 1
                 end
             end
             updataTime = updataTime + 86400
@@ -149,6 +164,9 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
             turnoverTab[i] = {}
             turnoverTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 142
             turnoverTab[i].money = 0
+            expendTab[i] = {}
+            expendTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 142
+            expendTab[i].money = 1
             if info.nodes ~= nil then
                 for k, v in pairs(info.nodes) do
                     if updataTime == v.time then
@@ -156,32 +174,53 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
                     end
                 end
             end
+            if expenditure ~= nil then
+                for k, v in pairs(expenditure) do
+                    if updataTime == v.time then
+                        expendTab[i].money = tonumber(GetClientPriceString(v.income))
+                    end
+                end
+            end
             updataTime = updataTime + 86400
         end
         turnoverTab[#turnoverTab].money = tonumber(GetClientPriceString(self.turnover))
+        expendTab[#expendTab].money = 1
     end
 
     --转换为Vector2类型
     local turnover = {}
-    for i, v in ipairs(turnoverTab) do
+    local expend = {}
+    for i, v in pairs(turnoverTab) do
         turnover[i] = Vector2.New(v.coordinate,v.money)
+    end
+    for i, v in pairs(expendTab) do
+        expend[i] = Vector2.New(v.coordinate,v.money)
     end
     table.insert(time,1,"0")
     table.insert(boundaryLine,1,0)
     table.insert(turnover,1,Vector2.New(0,0))
-    local max = 0
-    for i, v in ipairs(turnover) do
+    table.insert(expend,1,Vector2.New(0,0))
+    local max = 1
+    for i, v in pairs(turnover) do
         if v.y > max then
             max = v.y
         end
     end
     local scale = SetYScale(max,4,self.yScale)
     local turnoverVet = {}
-    for i, v in ipairs(turnover) do
+    for i, v in pairs(turnover) do
         if scale == 0 then
             turnoverVet[i] = v
         else
             turnoverVet[i] = Vector2.New(v.x,v.y / scale * 100)
+        end
+    end
+    local expendVet = {}
+    for i, v in pairs(expend) do
+        if scale == 0 then
+            expendVet[i] = v
+        else
+            expendVet[i] = Vector2.New(v.x,v.y / scale * 100)
         end
     end
     local difference = (currentTime - buildingTs) / 86400  --距离开业的天数
@@ -204,53 +243,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     self.graph:DrawLine(turnoverVet,Color.New(53 / 255, 72 / 255, 117 / 255, 255 / 255),1)
     self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
 
-end
+    self.graph:DrawLine(expendVet,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
+    self.slide:SetCoordinate(expendVet,expend,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
 
-function TurnoverDetailPart:func(buildingTs,monthAgo,updataTime,currentTime,info,time,boundaryLine,turnoverTab,turnover,index,interval,distance)
-    if buildingTs >= monthAgo then
-        updataTime = buildingTs
-        for i = 1, index do
-            if tonumber(getFormatUnixTime(updataTime).day) == 1 then
-                table.insert(boundaryLine,(updataTime - buildingTs + interval) / interval * distance)
-            end
-            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
-            turnoverTab[i] = {}
-            turnoverTab[i].coordinate = (updataTime - buildingTs + interval) / interval * distance
-            turnoverTab[i].money = 0
-            if info ~= nil then
-                for k, v in pairs(info) do
-                    if updataTime == v.time /1000 then
-                        turnoverTab[i].money = tonumber(GetClientPriceString(v.income))
-                    end
-                end
-            end
-            if turnover then
-                if updataTime == currentTime then
-                    turnoverTab[i].money = tonumber(GetClientPriceString(turnover))
-                end
-            end
-            updataTime = updataTime + interval
-        end
-    else
-        for i = 1, index do
-            if tonumber(getFormatUnixTime(updataTime).day) == 1 then
-                table.insert(boundaryLine,(updataTime - monthAgo + interval) / interval * distance)
-            end
-            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
-            turnoverTab[i] = {}
-            turnoverTab[i].coordinate = (updataTime - monthAgo + interval) / interval * distance
-            turnoverTab[i].money = 0
-            if info.nodes ~= nil then
-                for k, v in pairs(info.nodes) do
-                    if updataTime == v.time then
-                        turnoverTab[i].money = tonumber(GetClientPriceString(v.income))
-                    end
-                end
-            end
-            updataTime = updataTime + interval
-        end
-        if turnover then
-            turnoverTab[#turnoverTab].money = tonumber(GetClientPriceString(turnover))
-        end
-    end
 end

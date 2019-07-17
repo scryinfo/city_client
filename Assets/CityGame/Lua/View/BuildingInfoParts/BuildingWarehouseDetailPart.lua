@@ -22,11 +22,9 @@ function BuildingWarehouseDetailPart:Show(data)
     if next(self.warehouseDatas) ~= nil then
         self:CloseDestroy(self.warehouseDatas)
     end
-    Event.AddListener("detailPartUpdateCapacity",self.updateCapacity,self)
 end
 function BuildingWarehouseDetailPart:Hide()
     BasePartDetail.Hide(self)
-    Event.RemoveListener("detailPartUpdateCapacity",self.updateCapacity,self)
     --暂时放到关闭页面时建筑是清空运输表
     if next(self.transportTab) ~= nil then
         self.transportTab = {}
@@ -102,6 +100,7 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("getItemIdCount",self.getItemIdCount,self)
     Event.AddListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
     Event.AddListener("changeStoreInfoData",self.changeStoreInfoData,self)
+    Event.AddListener("detailPartUpdateCapacity",self.updateCapacity,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
@@ -114,6 +113,7 @@ function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("getItemIdCount",self.getItemIdCount,self)
     Event.RemoveListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
     Event.RemoveListener("changeStoreInfoData",self.changeStoreInfoData,self)
+    Event.RemoveListener("detailPartUpdateCapacity",self.updateCapacity,self)
 end
 
 function BuildingWarehouseDetailPart:_initFunc()
@@ -135,8 +135,8 @@ end
 function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
     self.nowState = ItemScreening.all
     self.nowStateText.text = GetLanguage(18020002)
+    self.Capacity = self:_getWarehouseCapacity(storeData)
     if not storeData or next(storeData) == nil then
-        self.Capacity = 0
         self.number.transform.localScale = Vector3.zero
         self.noTip.transform.localScale = Vector3.one
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
@@ -144,7 +144,6 @@ function BuildingWarehouseDetailPart:initializeUiInfoData(storeData)
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     else
         self.noTip.transform.localScale = Vector3.zero
-        self.Capacity = self:_getWarehouseCapacity(storeData)
         self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
         self.warehouseCapacitySlider.value = self.Capacity
         self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
@@ -529,8 +528,12 @@ end
 --获取仓库容量
 function BuildingWarehouseDetailPart:_getWarehouseCapacity(data)
     local nowCapacity = 0
-    for key,value in pairs(data) do
-        nowCapacity = nowCapacity + value.n
+    if data == nil then
+        nowCapacity = 0
+    else
+        for key,value in pairs(data) do
+            nowCapacity = nowCapacity + value.n
+        end
     end
     return nowCapacity
 end

@@ -156,6 +156,8 @@ function ServerListModel:n_OnRoleLogin(pMsg)
         Event.Brocast("c_GsLoginSuccess",pMsg.id);
         --启动天气
         ClimateManager.Star()
+        --启动跳钱
+        MakeMoneyManager.Init()
     end
 end
 

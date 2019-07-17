@@ -518,7 +518,11 @@ function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
         else
             LoadSprite("Assets/CityGame/Resources/Atlas/BuildingInformation/famale.png",self.genderImg,false)
         end
-        self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs).." - "..self:getStringTime(self.groundData[index].Data.rent.rentBeginTs)
+        if self.groundData[index].Data.rent.rentDueTime == nil then
+            self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs)
+        else
+            self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs).." - "..self:getStringTime(self.groundData[index].Data.rent.rentDueTime)
+        end
     end
 end
 --关闭提示框
@@ -603,8 +607,8 @@ function BuildingInformationCtrl:getIndexKey(instance)
 end
 --时间格式转换
 function BuildingInformationCtrl:getStringTime(ms)
-    local timeTable = getFormatUnixTimeNumber(ms / 1000)
-    local timeStr = timeTable.year.."/"..timeTable.month.."/"..timeTable.day.." "..timeTable.hour..":"..timeTable.min
+    local timeTable = getFormatUnixTime(ms / 1000)
+    local timeStr = timeTable.year.."/"..timeTable.month.."/"..timeTable.day.." "..timeTable.hour..":"..timeTable.minute
     return timeStr
 end
 --缓存建筑主人信息

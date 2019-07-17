@@ -173,7 +173,6 @@ end
 
 --滑动条刷新输入框值
 function AddProductionLineBoxCtrl:SlidingUpdateText()
-    --AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.numberInput.text = AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.timeText.text = self:GetTime(AddProductionLineBoxPanel.numberSlider.value,self.workerNum)
 end

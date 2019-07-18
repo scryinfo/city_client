@@ -44,7 +44,7 @@ function HistoryCurveCtrl:Active()
     Event.AddListener("c_GoodsNpcNumCurve",self.c_GoodsNpcNumCurve,self) --每种商品购买的npc数量曲线图（供应）
     Event.AddListener("c_HouseNpcNumCurve",self.c_HouseNpcNumCurve,self) --每种住宅购买的npc数量曲线图（供应）
     Event.AddListener("c_GoodsNpcTypeNum",self.c_GoodsNpcTypeNum,self) --每种商品购买的npc数量曲线图(需求)
-    LoadSprite(SupplyDemandGood[self.m_data], HistoryCurvePanel.goods, true)
+    LoadSprite(SupplyDemandGood[self.m_data], HistoryCurvePanel.goods)
 
     HistoryCurvePanel.goodsText.text = GetLanguage(self.m_data)
     HistoryCurvePanel.name.text = GetLanguage(19020026)

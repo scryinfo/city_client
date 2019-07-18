@@ -91,6 +91,7 @@ function BuildingWarehouseDetailPart:_RemoveClick()
 end
 
 function BuildingWarehouseDetailPart:_InitEvent()
+    Event.AddListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
     Event.AddListener("addTransportList",self.addTransportList,self)
     Event.AddListener("deleTransportList",self.deleTransportList,self)
     Event.AddListener("startTransport",self.startTransport,self)
@@ -98,12 +99,12 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.AddListener("deleteSucceed",self.deleteSucceed,self)
     Event.AddListener("getItemIdCount",self.getItemIdCount,self)
-    Event.AddListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
     Event.AddListener("changeStoreInfoData",self.changeStoreInfoData,self)
     Event.AddListener("detailPartUpdateCapacity",self.updateCapacity,self)
 end
 
 function BuildingWarehouseDetailPart:_RemoveEvent()
+    Event.RemoveListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
     Event.RemoveListener("addTransportList",self.addTransportList,self)
     Event.RemoveListener("deleTransportList",self.deleTransportList,self)
     Event.RemoveListener("startTransport",self.startTransport,self)
@@ -111,7 +112,6 @@ function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.RemoveListener("deleteSucceed",self.deleteSucceed,self)
     Event.RemoveListener("getItemIdCount",self.getItemIdCount,self)
-    Event.RemoveListener("getWarehouseInfoData",self.getWarehouseInfoData,self)
     Event.RemoveListener("changeStoreInfoData",self.changeStoreInfoData,self)
     Event.RemoveListener("detailPartUpdateCapacity",self.updateCapacity,self)
 end
@@ -304,11 +304,15 @@ end
 --刷新生产线生产出来商品，当前的仓库容量
 function BuildingWarehouseDetailPart:updateCapacity(data)
     if data ~= nil then
-        self.Capacity = self.Capacity + 1
-        self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
-        self.warehouseCapacitySlider.value = self.Capacity
-        self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
-        if next(self.storeInfoData) ~= nil then
+        if self.Capacity or self.Capacity ~= nil then
+            self.Capacity = self.Capacity + 1
+            self.warehouseCapacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
+            self.warehouseCapacitySlider.value = self.Capacity
+            self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
+        end
+        if not self.storeInfoData or next(self.storeInfoData) == nil then
+            return
+        else
             if not self.storeInfoData.inHand or next(self.storeInfoData.inHand) == nil then
                 for key,value in pairs(self.storeInfoData.locked) do
                     if ToNumber(StringSun(data.iKey.id,1,2)) == 21 then
@@ -334,21 +338,21 @@ function BuildingWarehouseDetailPart:updateCapacity(data)
                     end
                 end
             end
-        end
-        --刷新仓库界面
-        if self.warehouseDatas ~= nil then
-            for key,value in pairs(self.warehouseDatas) do
-                if ToNumber(StringSun(data.iKey.id,1,2)) == 21 then
-                    if value.itemId == data.iKey.id then
-                        value.dataInfo.n = data.nowCountInStore
-                        value.numberText.text = "×"..data.nowCountInStore
-                        return
-                    end
-                elseif ToNumber(StringSun(data.iKey.id,1,2)) == 22 then
-                    if value.itemId == data.iKey.id and value.dataInfo.key.producerId == data.iKey.producerId then
-                        value.dataInfo.n = data.nowCountInStore
-                        value.numberText.text = "×"..data.nowCountInStore
-                        return
+            --刷新仓库界面
+            if self.warehouseDatas ~= nil then
+                for key,value in pairs(self.warehouseDatas) do
+                    if ToNumber(StringSun(data.iKey.id,1,2)) == 21 then
+                        if value.itemId == data.iKey.id then
+                            value.dataInfo.n = data.nowCountInStore
+                            value.numberText.text = "×"..data.nowCountInStore
+                            return
+                        end
+                    elseif ToNumber(StringSun(data.iKey.id,1,2)) == 22 then
+                        if value.itemId == data.iKey.id and value.dataInfo.key.producerId == data.iKey.producerId then
+                            value.dataInfo.n = data.nowCountInStore
+                            value.numberText.text = "×"..data.nowCountInStore
+                            return
+                        end
                     end
                 end
             end

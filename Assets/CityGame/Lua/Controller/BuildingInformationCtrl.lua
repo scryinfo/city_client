@@ -109,7 +109,7 @@ function BuildingInformationCtrl:_getComponent(go)
     self.landInfoRoot = go.transform:Find("content/landInfoRoot")                       --土地信息
     self.gridGroup = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content"):GetComponent("GridLayoutGroup")
 ----------------------------------------------------------landInfoConten 地块----------------------------------------------------------------------------------
-    --地块1
+    --地块1(同一个位置显示区分是自己地还是租别人的地)
     self.mineLandBtn1 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg7/mineLandBtn7")
     self.otherLandBtn1 = go.transform:Find("content/landInfoRoot/content/landInfoConten/Viewport/Content/landBg7/otherLandBtn7")
     --地块2
@@ -189,14 +189,11 @@ function BuildingInformationCtrl:getBuildingInfo()
         elseif self.m_data.buildingType == BuildingType.RetailShop then
             --零售店
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
-        elseif self.m_data.buildingType == BuildingType.House then
-            --住宅
-            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.Laboratory then
             --研究所
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_LaboratoryInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.House then
-            --住宅和零售店一个协议，所以不需要添加其他监听
+            --住宅(和零售店一样)
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqRetailShopInfo',self.m_data.id,self.m_data.ownerId)
         elseif self.m_data.buildingType == BuildingType.Municipal then
             --推广

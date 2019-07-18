@@ -53,7 +53,7 @@ function TurnoverPart:_getComponent(transform)
 end
 --
 function TurnoverPart:_initFunc(info)
-   self.data = info
+   self.data = info.todayIncome
     if self.transform then
         if self.turnover == nil then
             self.turnover = self.transform:Find("Top/turnover"):GetComponent("Text")

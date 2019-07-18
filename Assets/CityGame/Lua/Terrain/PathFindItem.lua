@@ -6,11 +6,10 @@ local TerrainRangeSize = 1000
 local Math_Abs = math.abs
 local Math_Ceil = math.ceil
 
-
 --playerName：角色名称（对象池名称）
 --PlayerStartBlockID:角色初始化位置BlockID
 --PlayerEdgeDistance:角色和边界的距离（车和行人是不一样的）
-function PathFindItem:initialize(playerPoolName,PlayerStartBlockID,PlayerEdgeDistance,insID)
+function PathFindItem:initialize(playerPoolName,PlayerStartBlockID,PlayerEdgeDistance,insID,type)
     self.insID = insID
     self.go = MapObjectsManager.GetGameObjectByPool(playerPoolName)
     self.go.name = insID
@@ -18,14 +17,25 @@ function PathFindItem:initialize(playerPoolName,PlayerStartBlockID,PlayerEdgeDis
     self.poolName = playerPoolName
     self.edgeDistance = PlayerEdgeDistance
     self.m_BlockID = PlayerStartBlockID
+    self.type = type
+    self.nowPos = nil
+    self.oldPos = nil
+
     self.pathNum = DataManager.GetPathDataByBlockID(self.m_BlockID)
     --TODO:速度应为配置表中读取速度范围随机
-    self.speed = Math_Random(10,30) / 100
+    if self.type == MobileRolesType.cars then
+        self.speed = Math_Random(30,60) / 100
+    elseif self.type == MobileRolesType.pedestrians then
+        self.speed = Math_Random(10,30) / 100
+    end
+
     self.InitPlayerRandomPosition(self)
 
     --获取左右朝向的朝向
-    self.m_OrientationDown = self.transform:Find("Orientation_down")
-    self.m_OrientationUp = self.transform:Find("Orientation_up")
+    self.m_OrientationRightDown = self.transform:Find("Orientation_rightdown")
+    self.m_OrientationLeftUp = self.transform:Find("Orientation_leftup")
+    self.m_OrientationLeftDown = self.transform:Find("Orientation_leftdown")
+    self.m_OrientationRightUp = self.transform:Find("Orientation_rightup")
 
     self.running = true
     if not self.handle then
@@ -33,32 +43,31 @@ function PathFindItem:initialize(playerPoolName,PlayerStartBlockID,PlayerEdgeDis
     end
     UpdateBeat:AddListener(self.handle)
     self.ResetmTimer(self,0)
-end
+
+    end
 
 --UpOrDown : true 为UP
 --LeftOrRight ： true 为Left
 function PathFindItem:PlayerOrientation(UpOrDown,LeftOrRight)
     if UpOrDown == nil or LeftOrRight == nil then
         UpOrDown = true
-        LeftOrRight =true
+        LeftOrRight = true
     end
-    local UpScale = self.m_OrientationUp.localScale
-    local DownScale = self.m_OrientationDown.localScale
-    if type(UpOrDown) == "boolean" then
-        self.m_OrientationDown.gameObject:SetActive(UpOrDown)
-        self.m_OrientationUp.gameObject:SetActive(not UpOrDown)
-    end
-    if type(LeftOrRight) == "boolean" then
-        if LeftOrRight == true then
-            UpScale.x = Math_Abs(UpScale.x)
-            DownScale.x = Math_Abs(DownScale.x)
-        else
-            UpScale.x = -Math_Abs(UpScale.x)
-            DownScale.x = -Math_Abs(DownScale.x)
+    self.m_OrientationRightDown.gameObject:SetActive(false)
+    self.m_OrientationLeftUp.gameObject:SetActive(false)
+    self.m_OrientationLeftDown.gameObject:SetActive(false)
+    self.m_OrientationRightUp.gameObject:SetActive(false)
+    if type(UpOrDown) == "boolean" and type(LeftOrRight) == "boolean" then
+        if UpOrDown == true and LeftOrRight == true then
+            self.m_OrientationRightDown.gameObject:SetActive(true)
+        elseif UpOrDown == true and LeftOrRight == false then
+            self.m_OrientationLeftDown.gameObject:SetActive(true)
+        elseif UpOrDown == false and LeftOrRight == true then
+            self.m_OrientationLeftUp.gameObject:SetActive(true)
+        elseif UpOrDown == false and LeftOrRight == false then
+            self.m_OrientationRightUp.gameObject:SetActive(true)
         end
     end
-    self.m_OrientationUp.localScale = UpScale
-    self.m_OrientationDown.localScale = UpScale
 end
 
 function PathFindItem:ResetmTimer(durationTime)
@@ -115,6 +124,10 @@ local function JudgeIsCanMove(tempBlockID,tempPosPathNum)
 end
 
 --寻找下一个目标点
+--1  2
+--4  8
+--新增额外规则：车辆只能顺时针走【适用在非主道路上】
+--车辆：不能走走过的路
 function PathFindItem:FindNectTarget()
     --分为两步->1、在自己内部找2、在别的相邻两地块内部找
     local PosList = PathFindManager.CalculatePathValues(self.pathNum)
@@ -128,20 +141,25 @@ function PathFindItem:FindNectTarget()
                 PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 2}
             end
         end
-        if PosList[4] ~= nil then
-            if CannotMoveList ~= nil and CannotMoveList[800] == nil  then
-                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 4}
+        if self.type ~= MobileRolesType.cars then --车辆只能顺时针走
+            if PosList[4] ~= nil then
+                if CannotMoveList ~= nil and CannotMoveList[800] == nil  then
+                    PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 4}
+                end
             end
+            AdjacentBlockIDList[self.m_BlockID - 1] = 2
         end
         --外部点
-        AdjacentBlockIDList[self.m_BlockID - 1] = 2
         AdjacentBlockIDList[self.m_BlockID - TerrainRangeSize] = 4
     elseif self.nowPathNum == 2 then
         --内部点
-        if PosList[1] ~= nil then
-            if CannotMoveList ~= nil and CannotMoveList[100] == nil  then
-                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 1}
+        if self.type ~= MobileRolesType.cars then --车辆只能顺时针走
+            if PosList[1] ~= nil then
+                if CannotMoveList ~= nil and CannotMoveList[100] == nil  then
+                    PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 1}
+                end
             end
+            AdjacentBlockIDList[self.m_BlockID - TerrainRangeSize] = 8
         end
         if PosList[8] ~= nil then
             if CannotMoveList ~= nil and CannotMoveList[200] == nil  then
@@ -150,7 +168,6 @@ function PathFindItem:FindNectTarget()
         end
         --外部点
         AdjacentBlockIDList[self.m_BlockID + 1] = 1
-        AdjacentBlockIDList[self.m_BlockID - TerrainRangeSize] = 8
     elseif self.nowPathNum == 4 then
         --内部点
         if PosList[1] ~= nil then
@@ -158,20 +175,25 @@ function PathFindItem:FindNectTarget()
                 PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 1}
             end
         end
-        if PosList[8] ~= nil then
-            if CannotMoveList ~= nil and CannotMoveList[400] == nil  then
-                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 8}
+        if self.type ~= MobileRolesType.cars then --车辆只能顺时针走
+            if PosList[8] ~= nil then
+                if CannotMoveList ~= nil and CannotMoveList[400] == nil  then
+                    PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 8}
+                end
             end
+            AdjacentBlockIDList[self.m_BlockID + TerrainRangeSize] = 1
         end
         --外部点
         AdjacentBlockIDList[self.m_BlockID - 1] = 8
-        AdjacentBlockIDList[self.m_BlockID + TerrainRangeSize] = 1
     elseif self.nowPathNum == 8 then
         --内部点
-        if PosList[2] ~= nil then
-            if CannotMoveList ~= nil and CannotMoveList[200] == nil  then
-                PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 2}
+        if self.type ~= MobileRolesType.cars then --车辆在内部只能顺时针走
+            if PosList[2] ~= nil then
+                if CannotMoveList ~= nil and CannotMoveList[200] == nil  then
+                    PointsAccessible[#PointsAccessible + 1] = {id = self.m_BlockID , num = 2}
+                end
             end
+            AdjacentBlockIDList[self.m_BlockID + 1] = 4
         end
         if PosList[4] ~= nil then
             if CannotMoveList ~= nil and CannotMoveList[400] == nil  then
@@ -179,7 +201,6 @@ function PathFindItem:FindNectTarget()
             end
         end
         --外部点
-        AdjacentBlockIDList[self.m_BlockID + 1] = 4
         AdjacentBlockIDList[self.m_BlockID + TerrainRangeSize] = 2
     end
     for id, value in pairs(AdjacentBlockIDList) do
@@ -187,17 +208,26 @@ function PathFindItem:FindNectTarget()
             PointsAccessible[#PointsAccessible + 1] = {id = id , num = value}
         end
     end
+    --剔除之前走过的位置【车辆】
+    if self.oldPos ~= nil and self.type == MobileRolesType.cars and #PointsAccessible >= 2 then
+        for i, value in pairs(PointsAccessible) do
+            if value.id == self.oldPos.id and value.num == self.oldPos.num then
+                table.remove(PointsAccessible,i)
+                break
+            end
+        end
+    end
+    self.oldPos = self.nowPos
     --此时得到内外部可以去的点
-    local targetParameter
-    if #PointsAccessible >=1 then
-        targetParameter = PointsAccessible[Math_Random(1,#PointsAccessible)]
+    if #PointsAccessible >= 1 then
+        self.nowPos = PointsAccessible[Math_Random(1,#PointsAccessible)]
     else
-        ct.log("system","移动出错了！！！！！")
+        ct.log("system","移动到没路可走了！！！！！" )
         self:CloseSelf()
         return
     end
     --此时得到目标点
-    local targetPosition = self.CalculateTargetPosition(self,targetParameter.id,targetParameter.num)
+    local targetPosition = self.CalculateTargetPosition(self,self.nowPos.id,self.nowPos.num)
     if targetPosition == nil then
         self:CloseSelf()
         return
@@ -224,10 +254,10 @@ function PathFindItem:FindNectTarget()
     local MoveDistance = Math_Abs(offsetX) + Math_Abs(offsetZ)
     local MoveTime = MoveDistance / self.speed
     --赋值新的位置
-    self.m_BlockID = targetParameter.id
+    self.m_BlockID = self.nowPos.id
     self.targetPos = targetPosition
     self.pathNum = DataManager.GetPathDataByBlockID(self.m_BlockID)
-    self.nowPathNum = targetParameter.num
+    self.nowPathNum = self.nowPos.num
     --执行位置
     self.transform:DOMove(targetPosition,MoveTime):SetEase(DG.Tweening.Ease.Linear)
     self.ResetmTimer(self,MoveTime)

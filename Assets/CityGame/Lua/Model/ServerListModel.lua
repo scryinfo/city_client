@@ -156,6 +156,9 @@ function ServerListModel:n_OnRoleLogin(pMsg)
         Event.Brocast("c_GsLoginSuccess",pMsg.id);
         --启动天气
         ClimateManager.Star()
+
+        -- 登录后查询离线通知
+        Event.Brocast("m_QueryOffLineInformation")
     end
 end
 

@@ -43,6 +43,8 @@ function LoadingCtrl:Awake(...)
     PathFindManager.Init()
     --营收详情
     RevenueDetailsMsg.Awake()
+    --初始图片加载
+    SpriteManager.Init()
 end
 
 function LoadingCtrl:Active()

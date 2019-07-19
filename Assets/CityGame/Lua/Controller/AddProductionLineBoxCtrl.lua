@@ -48,8 +48,11 @@ function AddProductionLineBoxCtrl:Active()
     AddProductionLineBoxPanel.numberSlider.onValueChanged:AddListener(function()
         self:SlidingUpdateText()
     end)
-    AddProductionLineBoxPanel.numberInput.onValueChanged:AddListener(function()
-        self:inputUpdateText()
+    --AddProductionLineBoxPanel.numberInput.onValueChanged:AddListener(function()
+    --    self:inputUpdateText()
+    --end)
+    AddProductionLineBoxPanel.numberInput.onEndEdit:AddListener(function()
+        self:inputEndText()
     end)
 end
 function AddProductionLineBoxCtrl:Refresh()
@@ -71,7 +74,7 @@ function AddProductionLineBoxCtrl:InitializeData()
     AddProductionLineBoxPanel.numberSlider.value = 1
     AddProductionLineBoxPanel.numberSlider.minValue = 1
     AddProductionLineBoxPanel.numberSlider.maxValue = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
-    --AddProductionLineBoxPanel.sliderNumberText.text = "×"..AddProductionLineBoxPanel.numberSlider.value
+    AddProductionLineBoxPanel.numberInput.characterLimit = #tostring(PlayerBuildingBaseData[self.m_data.mId].storeCapacity)
     AddProductionLineBoxPanel.nameText.text = GetLanguage(self.m_data.itemId)
     self.workerNum = PlayerBuildingBaseData[self.m_data.mId].maxWorkerNum
 
@@ -176,8 +179,14 @@ function AddProductionLineBoxCtrl:SlidingUpdateText()
     AddProductionLineBoxPanel.numberInput.text = AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.timeText.text = self:GetTime(AddProductionLineBoxPanel.numberSlider.value,self.workerNum)
 end
---输入框事件
-function AddProductionLineBoxCtrl:inputUpdateText()
+----输入框事件
+--function AddProductionLineBoxCtrl:inputUpdateText()
+--    if ToNumber(AddProductionLineBoxPanel.numberInput.text) > PlayerBuildingBaseData[self.m_data.mId].storeCapacity then
+--        AddProductionLineBoxPanel.numberInput.text = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
+--    end
+--end
+--输入框结束事件
+function AddProductionLineBoxCtrl:inputEndText()
     if AddProductionLineBoxPanel.numberInput.text == "" or ToNumber(AddProductionLineBoxPanel.numberInput.text) <= 0 then
         AddProductionLineBoxPanel.numberInput.text = 1
     end

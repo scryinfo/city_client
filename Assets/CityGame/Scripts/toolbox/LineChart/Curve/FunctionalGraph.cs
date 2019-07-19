@@ -102,6 +102,11 @@ public class FunctionalGraph : MaskableGraphic
                         for (int v = 1; v < line.Key[i].Length - 1; v++)
                         {
                             vh.AddUIVertexQuad(GetQuad(line.Key[i][v], line.Key[i][v + 1], line.Value[i], GraphBase.LineWidth));
+                            if (i == 0)
+                            {
+                                vh.AddUIVertexQuad(GetQuad(new Vector2(line.Key[i][v].x, 0), line.Key[i][v],
+                               line.Key[i][v + 1], new Vector2(line.Key[i][v + 1].x, 0), new Color(56f / 255, 167f / 255, 202f / 255, 77f / 255)));
+                            }
                         }
                     }
                 }

@@ -294,7 +294,7 @@ end
 function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060013),func = function()
                     Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()
@@ -302,7 +302,7 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
             ct.OpenCtrl("NewReminderCtrl",data)
             return
         elseif data.reason == "shelfSetFail" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060013),func = function()
                     Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()
@@ -310,7 +310,7 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
             ct.OpenCtrl("NewReminderCtrl",data)
             return
         elseif data.reason == "spaceNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060014),func = function()
                     Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()
@@ -318,7 +318,7 @@ function MaterialFactoryModel:n_OnBuyShelfGoodsInfo(data, msgId)
             ct.OpenCtrl("NewReminderCtrl",data)
             return
         elseif data.reason == "moneyNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060015),func = function()
                     Event.Brocast("closeBuyList")
                     UIPanel.ClosePage()

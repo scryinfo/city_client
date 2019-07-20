@@ -478,6 +478,8 @@ end
 --货架购买失败后清空购买列表
 function BuildingShelfDetailPart:closeBuyList()
     self.buyDatas = {}
+    self.number.transform.localScale = Vector3.zero
+    self.numberText.text = #self.buyDatas
 end
 --原料参考价格
 function BuildingShelfDetailPart:getShelfGuidePrice(data)
@@ -497,16 +499,16 @@ end
 function BuildingShelfDetailPart:getShelfItemIdCount(itemId,producerId,callback)
     if itemId ~= nil then
         local nowCount = 0
-        if not self.m_data.shelf.good or next(self.m_data.shelf.good) == nil then
+        if not self.m_data.store.locked or next(self.m_data.store.locked) == nil then
             nowCount = 0
         else
-            for key,value in pairs(self.m_data.shelf.good) do
+            for key,value in pairs(self.m_data.store.locked) do
                 if producerId == nil then
-                    if value.k.id == itemId then
+                    if value.key.id == itemId then
                         nowCount = value.n
                     end
                 else
-                    if value.k.id == itemId and value.k.producerId == producerId then
+                    if value.key.id == itemId and value.key.producerId == producerId then
                         nowCount = value.n
                     end
                 end

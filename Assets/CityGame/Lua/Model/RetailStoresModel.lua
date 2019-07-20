@@ -203,7 +203,7 @@ function RetailStoresModel:n_OnModifyShelfInfo(data,msgId)
     FlightMainModel.CloseFlightLoading()
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}
@@ -221,7 +221,7 @@ end
 function RetailStoresModel:n_OnShelfDelInfo(data,msgId)
     if msgId == 0 then
         if data.reason == "numberNotEnough" then
-            local data={ReminderType = ReminderType.Succeed,ReminderSelectType = ReminderSelectType.NotChoose,
+            local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.NotChoose,
                         content = GetLanguage(25060013),func = function()
                     UIPanel.ClosePage()
                 end}

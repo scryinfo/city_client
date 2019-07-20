@@ -121,6 +121,7 @@ function ShelfBoxCtrl:_getComponent(go)
     --self.tipPriceDetailsBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipPriceDetailsBtn")
     --bottom
     self.downShelfBtn = go.transform:Find("contentRoot/bottom/downShelfBtn")
+    self.downShelfBtnText = go.transform:Find("contentRoot/bottom/downShelfBtn/text"):GetComponent("Text")
     self.addShelfBtn = go.transform:Find("contentRoot/bottom/addShelfBtn")
     self.addShelfText = go.transform:Find("contentRoot/bottom/addShelfBtn/text"):GetComponent("Text")
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn")
@@ -202,7 +203,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.maxValue = self.m_data.dataInfo.n
         self.numberSlider.minValue = 1
         self.numberSlider.value = self.m_data.dataInfo.n
-        self.numberInput.text = "1"
+        self.numberInput.text = self.m_data.dataInfo.n
         self.numberInput.characterLimit = #tostring(self.m_data.dataInfo.n) + 1
         self.priceInput.text = GetClientPriceString(self.m_data.dataInfo.price)
         if self.automaticSwitch.isOn == true then
@@ -263,6 +264,7 @@ function ShelfBoxCtrl:_language()
     --self.shelfNumberTipText.text = GetLanguage(25020037)
     self.addShelfText.text = GetLanguage(25020035)
     self.brandName.text = GetLanguage(25020040)
+    self.downShelfBtnText.text = "全部下架"
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------
@@ -403,18 +405,19 @@ function ShelfBoxCtrl:ToggleUndateText()
         self.btnImage.localPosition = Vector2.New(-45,0)
     end
 end
---滑动条更新文本
+--数量滑动更新输入框
 function ShelfBoxCtrl:UpdateInputText()
     self.numberInput.text = self.numberSlider.value
 end
---输入结束更新滑动条
+--输入框结束更新滑动条
 function ShelfBoxCtrl:UpdateSlidingValue()
     if self.numberInput.text == "" or ToNumber(self.numberInput.text) <= 0 then
         self.numberInput.text = 1
+        self.numberSlider.value = 1
         return
     end
-    if ToNumber(self.numberInput.text) > self.m_data.dataInfo.n then
-        self.numberInput.text = self.m_data.dataInfo.n
+    if ToNumber(self.numberInput.text) > self.numberSlider.maxValue then
+        self.numberInput.text = self.numberSlider.maxValue
         self.numberSlider.value = ToNumber(self.numberInput.text)
         return
     end

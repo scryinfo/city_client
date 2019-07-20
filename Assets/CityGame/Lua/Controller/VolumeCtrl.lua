@@ -343,8 +343,6 @@ function VolumeCtrl:initData()
     end
     house[1] = {}
     house[1].itemId = 20050004
-    VolumePanel.curve.anchoredPosition = Vector3.New(-18208, 56,0)
-    VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end
 
 --返回

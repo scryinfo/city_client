@@ -42,9 +42,12 @@ function ShelfBoxCtrl:Awake(go)
     self.automaticSwitch.onValueChanged:AddListener(function()
         self:ToggleUndateText()
     end)
-    --self.numberSlider.onValueChanged:AddListener(function()
-    --    self:SlidingUpdateText()
-    --end)
+    self.numberSlider.onValueChanged:AddListener(function()
+        self:UpdateInputText()
+    end)
+    self.numberInput.onEndEdit:AddListener(function()
+        self:UpdateSlidingValue()
+    end)
     self.priceInput.onValueChanged:AddListener(function()
         self:InputUpdateText()
     end)
@@ -96,8 +99,8 @@ function ShelfBoxCtrl:_getComponent(go)
     --detailsInfo
     self.totalNumber = go.transform:Find("contentRoot/content/detailsInfo/totalNumber"):GetComponent("Text")
     self.totalNumberText = go.transform:Find("contentRoot/content/detailsInfo/totalNumber/bg/totalNumberText"):GetComponent("Text")
-    self.numberTip = go.transform:Find("contentRoot/content/detailsInfo/numberInput/numberTip"):GetComponent("Text")
     self.numberInput = go.transform:Find("contentRoot/content/detailsInfo/numberInput"):GetComponent("InputField")
+    self.numberTip = go.transform:Find("contentRoot/content/detailsInfo/numberInput/numberTip"):GetComponent("Text")
     self.numberSlider = go.transform:Find("contentRoot/content/detailsInfo/numberSlider"):GetComponent("Slider")
     --self.numberText = go.transform:Find("contentRoot/content/detailsInfo/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
     self.tipBtn = go.transform:Find("contentRoot/content/detailsInfo/tipBtn")
@@ -199,7 +202,8 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.maxValue = self.m_data.dataInfo.n
         self.numberSlider.minValue = 1
         self.numberSlider.value = self.m_data.dataInfo.n
-        --self.numberText.text = "×"..self.numberSlider.value
+        self.numberInput.text = "1"
+        self.numberInput.characterLimit = #tostring(self.m_data.dataInfo.n) + 1
         self.priceInput.text = GetClientPriceString(self.m_data.dataInfo.price)
         if self.automaticSwitch.isOn == true then
             self.numberSlider.transform.localScale = Vector3.zero
@@ -224,6 +228,8 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.maxValue = self.m_data.dataInfo.n
         self.numberSlider.minValue = 1
         self.numberSlider.value = 1
+        self.numberInput.text = "1"
+        self.numberInput.characterLimit = #tostring(self.m_data.dataInfo.n) + 1
         --self.numberText.text = "×"..self.numberSlider.value
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             local tempPrice = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId)
@@ -341,19 +347,11 @@ function ShelfBoxCtrl:materialOrGoods(itemId)
     if Math_Floor(itemId / 100000) == materialKey then
         self.scoreBg.transform.localScale = Vector3.zero
         self.levelBg.transform.localScale = Vector3.zero
-        self.number.sizeDelta = Vector2.New(470,356)
-        self.warehouse.transform.localPosition = Vector3.New(-150,50,0)
-        self.shelf.transform.localPosition = Vector3.New(-150,-60,0)
-        self.number.transform.localPosition = Vector3.New(180,0,0)
-        self.iconbg.transform.localPosition = Vector3.New(-243,0,0)
+        self.number.transform.localPosition = Vector3.New(103,-20,0)
     elseif Math_Floor(itemId / 100000) == goodsKey then
         self.scoreBg.transform.localScale = Vector3.one
         self.levelBg.transform.localScale = Vector3.one
-        self.number.sizeDelta = Vector2.New(585,86)
-        self.number.transform.localPosition = Vector3.New(180,-135,0)
-        self.warehouse.transform.localPosition = Vector3.New(-240,0,0)
-        self.shelf.transform.localPosition = Vector3.New(45,0,0)
-        self.iconbg.transform.localPosition = Vector3.New(-298,0,0)
+        self.number.transform.localPosition = Vector3.New(103,-104,0)
     end
 end
 --设置提示开关
@@ -386,11 +384,13 @@ end
 function ShelfBoxCtrl:ToggleUndateText()
     if self.automaticSwitch.isOn == true then
         self.btnImage.localPosition = Vector2.New(45,0)
-        self.numberSlider.value = self.numberSlider.maxValue
+        self.numberInput.transform.localScale = Vector3.zero
         self.numberSlider.transform.localScale = Vector3.zero
         self.totalNumber.transform.localScale = Vector3.one
+        self.numberSlider.value = self.numberSlider.maxValue
         self.totalNumberText.text = self.numberSlider.maxValue
     else
+        self.numberInput.transform.localScale = Vector3.one
         self.numberSlider.transform.localScale = Vector3.one
         self.totalNumber.transform.localScale = Vector3.zero
         if self.m_data.dataInfo.n == 0 then
@@ -403,10 +403,23 @@ function ShelfBoxCtrl:ToggleUndateText()
         self.btnImage.localPosition = Vector2.New(-45,0)
     end
 end
-----滑动条更新文本
---function ShelfBoxCtrl:SlidingUpdateText()
---    self.numberText.text = "×"..self.numberSlider.value
---end
+--滑动条更新文本
+function ShelfBoxCtrl:UpdateInputText()
+    self.numberInput.text = self.numberSlider.value
+end
+--输入结束更新滑动条
+function ShelfBoxCtrl:UpdateSlidingValue()
+    if self.numberInput.text == "" or ToNumber(self.numberInput.text) <= 0 then
+        self.numberInput.text = 1
+        return
+    end
+    if ToNumber(self.numberInput.text) > self.m_data.dataInfo.n then
+        self.numberInput.text = self.m_data.dataInfo.n
+        self.numberSlider.value = ToNumber(self.numberInput.text)
+        return
+    end
+    self.numberSlider.value = ToNumber(self.numberInput.text)
+end
 --输入框
 function ShelfBoxCtrl:InputUpdateText()
     if self.priceInput.text == nil or self.priceInput.text == "" or tonumber(self.priceInput.text) == nil then

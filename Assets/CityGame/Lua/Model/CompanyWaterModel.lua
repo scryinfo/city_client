@@ -15,11 +15,11 @@ function CompanyWaterModel:OnCreate()
 end
 
 --客户端发包
-function CompanyWaterModel:m_queryPlayerIncomePay(playerId,id,income)
+function CompanyWaterModel:m_queryPlayerIncomePay(playerId,type,income)
     local msgId = pbl.enum("sscode.OpCode","queryPlayerIncomePay")
-    local lMsg = { playerId = playerId , bType = id , isIncome = income }
+    local lMsg = { playerId = playerId , bType = type , isIncome = income }
     local pMsg = assert(pbl.encode("ss.PlayerIncomePay", lMsg))
-    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+    --CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 
 --服务器回调

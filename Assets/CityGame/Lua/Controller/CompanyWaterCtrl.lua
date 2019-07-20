@@ -14,7 +14,7 @@ function  CompanyWaterCtrl:bundleName()
 end
 
 function CompanyWaterCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，隐藏其它面板
 end
 
 function CompanyWaterCtrl:Awake()
@@ -74,8 +74,9 @@ function CompanyWaterCtrl:Close()
 end
 
 --返回
-function CompanyWaterCtrl:c_OnBack()
-    UIPanel.ClosePage()
+function CompanyWaterCtrl:c_OnBack(go)
+    PlayMusEff(1002)
+    go:Hide()
 end
 
 function CompanyWaterCtrl:c_OnIncomeBg()
@@ -100,6 +101,7 @@ function CompanyWaterCtrl:c_OnExpendBg(go)
     CompanyWaterPanel.incomeBg:GetComponent("Button").enabled = true
     CompanyWaterPanel.open.localScale = Vector3.one
     CompanyWaterPanel.close.localScale = Vector3.zero
+    DataManager.DetailModelRpcNoRet(go.insId, 'm_queryPlayerIncomePay',go.playerId, go.type,go.income)
 end
 
 --滑动互用
@@ -112,6 +114,7 @@ CompanyWaterCtrl.static.CompanyWaterClearData = function()
 
 end
 
-function CompanyWaterCtrl:c_companyBuildingWater(id)
-    DataManager.DetailModelRpcNoRet(self.insId, 'm_queryPlayerIncomePay',self.playerId,id,self.income)
+function CompanyWaterCtrl:c_companyBuildingWater(type)
+    self.type = type
+    DataManager.DetailModelRpcNoRet(self.insId, 'm_queryPlayerIncomePay',self.playerId,type,self.income)
 end

@@ -450,6 +450,7 @@ function CompanyCtrl:OnChoiceT(go)
 end
 
 function CompanyCtrl:OnDetaiks()
+    PlayMusEff(1002)
     ct.OpenCtrl("CompanyWaterCtrl")
 end
 

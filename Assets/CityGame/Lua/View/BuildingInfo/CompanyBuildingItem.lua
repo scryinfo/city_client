@@ -14,6 +14,7 @@ function CompanyBuildingItem:initialize(inluabehaviour, prefab, goodsDataInfo)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
+    self.id = goodsDataInfo.id
 
     self.bg = self.prefab.transform:Find("bg").gameObject
     self.unSelectBg = self.prefab.transform:Find("unSelectBg")
@@ -36,4 +37,5 @@ function CompanyBuildingItem:OnBg(go)
     go.unSelectBg.localScale = Vector3.zero
     go.selectBg.localScale = Vector3.one
     lastBg = go
+    Event.Brocast("c_companyBuildingWater",go.id)
 end

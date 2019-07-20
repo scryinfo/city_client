@@ -27,6 +27,10 @@ function CompanyWaterCtrl:Awake()
 
     CompanyWaterPanel.income.text = GetLanguage(19020008)   --收入
     CompanyWaterPanel.expend.text = GetLanguage(19020010)   --支出
+
+    --玩家id
+    self.playerId = DataManager.GetMyOwnerID()
+
     self.buildingItem = {}
     for i, v in ipairs(CompanyWaterConfig) do
         local function callback(prefab)
@@ -38,19 +42,35 @@ function CompanyWaterCtrl:Awake()
         createPrefab(CompanyWaterCtrl.static.PATH,CompanyWaterPanel.buildingContent, callback)
     end
 
+    --滑动互用
+    self.companyWater = UnityEngine.UI.LoopScrollDataSource.New()  --行情
+    self.companyWater.mProvideData = CompanyWaterCtrl.static.CompanyWaterProvideData
+    self.companyWater.mClearData = CompanyWaterCtrl.static.CompanyWaterClearData
+
 end
 
 function CompanyWaterCtrl:Active()
     UIPanel.Active(self)
-
+    Event.AddListener("c_companyBuildingWater",self.c_companyBuildingWater,self)
 end
 
 function CompanyWaterCtrl:Refresh()
-
+    DataManager.OpenDetailModel(CompanyWaterModel, self.insId)
 end
 
 function CompanyWaterCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_companyBuildingWater",self.c_companyBuildingWater,self)
+end
+
+function CompanyWaterCtrl:Close()
+    UIPanel.Close(self)
+    if self.buildingItem then
+        for i, v in pairs(self.buildingItem) do
+            destroy(v.prefab.gameObject)
+        end
+        self.buildingItem = {}
+    end
 end
 
 --返回
@@ -59,11 +79,15 @@ function CompanyWaterCtrl:c_OnBack()
 end
 
 function CompanyWaterCtrl:c_OnIncomeBg()
+    PlayMusEff(1002)
     CompanyWaterPanel.expendBg.transform.localScale = Vector3.one
-    CompanyWaterPanel.incomeBg:GetComponent("Button").enable = false
+    CompanyWaterPanel.incomeBg:GetComponent("Button").enabled = false
+    CompanyWaterPanel.open.localScale = Vector3.zero
+    CompanyWaterPanel.close.localScale = Vector3.one
 end
 
 function CompanyWaterCtrl:c_OnExpendBg(go)
+    PlayMusEff(1002)
     go.income = not go.income
     if go.income then
         CompanyWaterPanel.income.text = GetLanguage(19020008)   --收入
@@ -73,5 +97,21 @@ function CompanyWaterCtrl:c_OnExpendBg(go)
         CompanyWaterPanel.expend.text = GetLanguage(19020008)   --收入
     end
     CompanyWaterPanel.expendBg.transform.localScale = Vector3.zero
-    CompanyWaterPanel.incomeBg:GetComponent("Button").enable = true
+    CompanyWaterPanel.incomeBg:GetComponent("Button").enabled = true
+    CompanyWaterPanel.open.localScale = Vector3.one
+    CompanyWaterPanel.close.localScale = Vector3.zero
+end
+
+--滑动互用
+CompanyWaterCtrl.static.CompanyWaterProvideData = function(transform, idx)
+    idx = idx + 1
+    local item = CompanyWaterItem:new(transform,idx)
+end
+
+CompanyWaterCtrl.static.CompanyWaterClearData = function()
+
+end
+
+function CompanyWaterCtrl:c_companyBuildingWater(id)
+    DataManager.DetailModelRpcNoRet(self.insId, 'm_queryPlayerIncomePay',self.playerId,id,self.income)
 end

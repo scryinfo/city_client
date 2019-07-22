@@ -89,7 +89,13 @@ function OpenHouseCtrlNew:_getComponent(go)
             return
         end
         local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
-        self.valueText.text = temp
+        if temp == 99 then
+            self.valueText.text = ">"..temp
+        elseif temp == 1 then
+            self.valueText.text = "<"..temp
+        else
+            self.valueText.text = temp
+        end
     end)
     self.competitiSlider.onValueChanged:AddListener(function (value)
         if self.guideData == nil then
@@ -162,7 +168,13 @@ function OpenHouseCtrlNew:_getApartmentGuidePrice(data)
         self.guideData = data
         local tempPrice = ct.CalculationHouseSuggestPrice(data.guidePrice)
         local temp = ct.CalculationHouseCompetitivePower(data.guidePrice, data.guidePrice, data.npc)
-        self.valueText.text = "<"..temp
+        if temp == 99 then
+            self.valueText.text = ">"..temp
+        elseif temp == 1 then
+            self.valueText.text = "<"..temp
+        else
+            self.valueText.text = temp
+        end
         self.competitiSlider.value = temp
         self.rentInput.text = GetClientPriceString(tempPrice)
     end

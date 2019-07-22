@@ -1232,7 +1232,7 @@ end
 --NPC预期消费:npc(找服务器要)
 function ct.CalculationHousePrice(recommendedPricing,power)
     local tempPrice
-    if price > recommendedPricing then
+    if power >= 50 then
         --玩家定价= 推荐定价 - （竞争力 - 50）*  (推荐定价 / 49)
         tempPrice = recommendedPricing - (power - CPMagnification) * (recommendedPricing / BargainingPower)
     else

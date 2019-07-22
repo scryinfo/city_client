@@ -9,6 +9,7 @@ MapSearchResultItem = class('MapSearchResultItem', MapBubbleBase)
 function MapSearchResultItem:_childInit()
     self.btn = self.viewRect.transform:Find("root/btn"):GetComponent("Button")
     self.protaitImg = self.viewRect.transform:Find("root/bg/protaitImg"):GetComponent("Image")
+    self.selfBuildingTran = self.viewRect.transform:Find("root/bg")
     self.selectTran = self.viewRect.transform:Find("root/detailShowImg")
     self.scaleRoot = self.viewRect.transform:Find("root")  --需要缩放的气泡
 
@@ -36,11 +37,13 @@ function MapSearchResultItem:_setPos()
                 local type = GetBuildingTypeById(mId)
                 local path = MapBubbleManager._getBuildingIconPath(type)
                 MapBubbleManager.SetBuildingIconSpite(path, self.protaitImg)
+                self.selfBuildingTran.localScale = Vector3.one
                 --LoadSprite(path, self.protaitImg, true)
-                self.protaitImg.enabled = true
+                --self.protaitImg.enabled = true
             else
                 PlayerInfoManger.GetInfos({[1] = data.ownerId}, self._initPersonalInfo, self)
-                self.protaitImg.enabled = false
+                --self.protaitImg.enabled = false
+                self.selfBuildingTran.localScale = Vector3.zero
             end
 
             self.viewRect.anchoredPosition = Vector2.New(data.pos.y, -data.pos.x) * self.data.itemWidth

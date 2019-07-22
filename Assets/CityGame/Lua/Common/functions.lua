@@ -1204,11 +1204,8 @@ end
 --定价:price
 --NPC预期消费:npc(找服务器要)
 function ct.CalculationHouseCompetitivePower(recommendedPricing,price,npc)
-    if price <= 0 then
-        return 99
-    end
-    if price > npc then
-        return 1
+    if recommendedPricing <= 0 then
+        recommendedPricing = Competitive[14 * PRIDMagnification]
     end
     local temp
     if price > recommendedPricing then
@@ -1224,7 +1221,7 @@ function ct.CalculationHouseCompetitivePower(recommendedPricing,price,npc)
     if temp >= 99 then
         temp = 99
     end
-    return temp
+    return math.floor(temp)
 end
 ---计算住宅定价
 --推荐定价:recommendedPricing
@@ -1232,6 +1229,9 @@ end
 --NPC预期消费:npc(找服务器要)
 function ct.CalculationHousePrice(recommendedPricing,power)
     local tempPrice
+    if recommendedPricing <= 0 then
+        recommendedPricing = Competitive[14 * PRIDMagnification]
+    end
     if power >= 50 then
         --玩家定价= 推荐定价 - （竞争力 - 50）*  (推荐定价 / 49)
         tempPrice = recommendedPricing - (power - CPMagnification) * (recommendedPricing / BargainingPower)
@@ -1239,7 +1239,7 @@ function ct.CalculationHousePrice(recommendedPricing,power)
         --玩家定价= 推荐定价 -（竞争力 - 50）*   (推荐定价 / 2 / 49)
         tempPrice = recommendedPricing - (power - CPMagnification) * (recommendedPricing / Divisor / BargainingPower)
     end
-    return tempPrice
+    return math.floor(tempPrice)
 end
 ---计算住宅推荐定价
 --推荐定价:recommendedPricing\

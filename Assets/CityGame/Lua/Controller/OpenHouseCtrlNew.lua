@@ -96,13 +96,16 @@ function OpenHouseCtrlNew:_getComponent(go)
         else
             self.valueText.text = temp
         end
+        self.competitiSlider.value = math.floor(temp)
     end)
     self.competitiSlider.onValueChanged:AddListener(function (value)
         if self.guideData == nil then
             return
         end
-        local price = ct.CalculationHousePrice(self.guideData.guidePrice,value)
+        local tempSlider = math.floor(value)
+        local price = ct.CalculationHousePrice(self.guideData.guidePrice,tempSlider)
         self.rentInput.text = GetClientPriceString(price)
+        --self.rentInput.text = price / 10000
     end)
 end
 --
@@ -175,8 +178,9 @@ function OpenHouseCtrlNew:_getApartmentGuidePrice(data)
         else
             self.valueText.text = temp
         end
-        self.competitiSlider.value = temp
+        self.competitiSlider.value = math.floor(temp)
         self.rentInput.text = GetClientPriceString(tempPrice)
+        --self.rentInput.text = tempPrice / 10000
     end
 end
 --

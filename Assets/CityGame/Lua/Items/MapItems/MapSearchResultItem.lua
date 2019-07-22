@@ -66,6 +66,6 @@ function MapSearchResultItem:_initPersonalInfo(info)
     local data = info[1]
     if data ~= nil and self ~= nil and self.data ~= nil then
         self.data.playerInfo = data
-        self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.protaitImg.transform,0.1)
+        --self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.protaitImg.transform,0.1)
     end
 end

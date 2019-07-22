@@ -615,6 +615,7 @@ function MapCtrl:_openRightOthersPage(item)
         local typeData = self:_getSearchData()
         MapPanel.closeAllRightPage()
 
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.rightOtherBuildingPageItem:refreshData(item.data, typeData)
     end
 end
@@ -855,7 +856,18 @@ function MapCtrl.getCurrentScaleValue()
     return MapPanel.scaleSlider.value
 end
 --
+function MapCtrl._toggleShowRightRoot(open)
+    if open == true then
+        MapPanel.rightOtherPageRoot.localScale = Vector3.one
+    else
+        MapPanel.rightOtherPageRoot.localScale = Vector3.zero
+    end
+end
+--
 function MapCtrl:_mapAOIMove()
+    --一旦移动，则关闭右侧搜索结果
+    MapCtrl._toggleShowRightRoot(false)
+
     if self.my_Scale < self.criticalScaleValue then
         return
     end

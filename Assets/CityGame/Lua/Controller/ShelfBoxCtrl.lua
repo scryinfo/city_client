@@ -30,7 +30,8 @@ function ShelfBoxCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
+    self.luaBehaviour:AddClick(self.bgBtn.gameObject,self._clickCloseBtn,self)
+    --self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.tipBtn.gameObject,self._clickTipBtn,self)
     self.luaBehaviour:AddClick(self.addShelfBtn.gameObject,self._clickAddShelfBtn,self)
     self.luaBehaviour:AddClick(self.downShelfBtn.gameObject,self._clickDownShelfBtn,self)
@@ -42,7 +43,10 @@ function ShelfBoxCtrl:Awake(go)
         self:ToggleUndateText()
     end)
     self.numberSlider.onValueChanged:AddListener(function()
-        self:SlidingUpdateText()
+        self:UpdateInputText()
+    end)
+    self.numberInput.onEndEdit:AddListener(function()
+        self:UpdateSlidingValue()
     end)
     self.priceInput.onValueChanged:AddListener(function()
         self:InputUpdateText()
@@ -61,8 +65,10 @@ function ShelfBoxCtrl:Hide()
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function ShelfBoxCtrl:_getComponent(go)
+    --bgBtn
+    self.bgBtn = go.transform:Find("bgBtn")
     --top
-    self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
+    --self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
     self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
     --content  goodsInfo
     self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconbg")
@@ -74,30 +80,31 @@ function ShelfBoxCtrl:_getComponent(go)
     self.brandName = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName"):GetComponent("Text")
     self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName/brandNameText"):GetComponent("Text")
     --如果是原料关闭商品属性展示,否则打开
-    self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
-    self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity/popularityValue"):GetComponent("Text")
-    self.qualityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
-    self.qualityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality/qualityValue"):GetComponent("Text")
+    --self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
+    self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularityValue"):GetComponent("Text")
+    --self.qualityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
+    self.qualityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/qualityValue"):GetComponent("Text")
     self.levelBg = go.transform:Find("contentRoot/content/goodsInfo/levelBg")
     self.levelImg = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg"):GetComponent("Image")
-    self.levelText = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level"):GetComponent("Text")
-    self.levelValue = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level/levelText"):GetComponent("Text")
+    --self.levelText = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level"):GetComponent("Text")
+    self.levelValue = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/levelText"):GetComponent("Text")
 
     self.number = go.transform:Find("contentRoot/content/goodsInfo/number")
     self.warehouse = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber")
     self.shelf = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber")
     self.warehouseNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/warehouseNumberText"):GetComponent("Text")
-    self.warehouseNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/numberTipText"):GetComponent("Text")
+    --self.warehouseNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/numberTipText"):GetComponent("Text")
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
-    self.shelfNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/numberTipText"):GetComponent("Text")
+    --self.shelfNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/numberTipText"):GetComponent("Text")
     --detailsInfo
     self.totalNumber = go.transform:Find("contentRoot/content/detailsInfo/totalNumber"):GetComponent("Text")
-    self.totalNumberText = go.transform:Find("contentRoot/content/detailsInfo/totalNumber/totalNumberText"):GetComponent("Text")
-    self.numberTip = go.transform:Find("contentRoot/content/detailsInfo/numberSlider/numberTip"):GetComponent("Text")
+    self.totalNumberText = go.transform:Find("contentRoot/content/detailsInfo/totalNumber/bg/totalNumberText"):GetComponent("Text")
+    self.numberInput = go.transform:Find("contentRoot/content/detailsInfo/numberInput"):GetComponent("InputField")
+    self.numberTip = go.transform:Find("contentRoot/content/detailsInfo/numberInput/numberTip"):GetComponent("Text")
     self.numberSlider = go.transform:Find("contentRoot/content/detailsInfo/numberSlider"):GetComponent("Slider")
-    self.numberText = go.transform:Find("contentRoot/content/detailsInfo/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
+    --self.numberText = go.transform:Find("contentRoot/content/detailsInfo/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
     self.tipBtn = go.transform:Find("contentRoot/content/detailsInfo/tipBtn")
-    self.tipText = go.transform:Find("contentRoot/content/detailsInfo/tipBtn/tipText"):GetComponent("Text")
+    self.tipText = go.transform:Find("contentRoot/content/detailsInfo/tipText"):GetComponent("Text")
     self.tipBg = go.transform:Find("contentRoot/content/detailsInfo/tipBtn/tipBg")
     self.tipContentText = go.transform:Find("contentRoot/content/detailsInfo/tipBtn/tipBg/Text"):GetComponent("Text")
     self.automaticSwitch = go.transform:Find("contentRoot/content/detailsInfo/automaticSwitch"):GetComponent("Toggle")
@@ -106,14 +113,15 @@ function ShelfBoxCtrl:_getComponent(go)
     self.priceInput = go.transform:Find("contentRoot/content/detailsInfo/priceInput"):GetComponent("InputField")
     self.advicePrice = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tip")
     self.advicePriceText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/priceText"):GetComponent("Text")
-    self.CompetitivenessText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/priceText/Text"):GetComponent("Text")
+    self.CompetitivenessText = go.transform:Find("contentRoot/content/detailsInfo/Text"):GetComponent("Text")
     self.tipPriceBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBtn")
     self.tipPriceBg = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn")
     self.tipPriceText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn/tipText"):GetComponent("Text")
 
-    self.tipPriceDetailsBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipPriceDetailsBtn")
+    --self.tipPriceDetailsBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipPriceDetailsBtn")
     --bottom
     self.downShelfBtn = go.transform:Find("contentRoot/bottom/downShelfBtn")
+    self.downShelfBtnText = go.transform:Find("contentRoot/bottom/downShelfBtn/text"):GetComponent("Text")
     self.addShelfBtn = go.transform:Find("contentRoot/bottom/addShelfBtn")
     self.addShelfText = go.transform:Find("contentRoot/bottom/addShelfBtn/text"):GetComponent("Text")
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn")
@@ -123,23 +131,23 @@ end
 function ShelfBoxCtrl:initializeUiInfoData()
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         local function callbacks(guidePrice)
-            self.guidePrice = guidePrice
+            self.guidePrice = guidePrice   --推荐价格
         end
         Event.Brocast("getShelfItemGuidePrice",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         local function callbacks(averagePrice,averageScore,score)
-            self.averagePrice = averagePrice --平均价
-            self.averageScore = averageScore --平均分
-            self.score = score        --评分
+            self.averagePrice = averagePrice   --平均价
+            self.averageScore = averageScore   --平均分
+            self.score = score                 --评分
         end
         Event.Brocast("getShelfItemProcessing",self.m_data.itemId,callbacks)
     elseif self.m_data.buildingType == BuildingType.RetailShop then
         local function callbacks(averagePrice,averageScore,averageBuildingScore,playerGoodsScore,playerBuildingScore)
-            self.averagePrice = averagePrice --平均价
-            self.averageScore = averageScore --平均分
-            self.averageBuildingScore = averageBuildingScore        --评分
+            self.averagePrice = averagePrice                    --平均价
+            self.averageScore = averageScore                    --平均分
+            self.averageBuildingScore = averageBuildingScore    --评分
             self.playerGoodsScore = playerGoodsScore            --玩家商品评分
-            self.playerBuildingScore = playerBuildingScore         --玩家店铺评分
+            self.playerBuildingScore = playerBuildingScore      --玩家店铺评分
         end
         Event.Brocast("getRetailItemGuidePrice",self.m_data.itemId,callbacks)
     end
@@ -195,12 +203,13 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.maxValue = self.m_data.dataInfo.n
         self.numberSlider.minValue = 1
         self.numberSlider.value = self.m_data.dataInfo.n
-        self.numberText.text = "×"..self.numberSlider.value
+        self.numberInput.text = self.m_data.dataInfo.n
+        self.numberInput.characterLimit = #tostring(self.m_data.dataInfo.n) + 1
         self.priceInput.text = GetClientPriceString(self.m_data.dataInfo.price)
         if self.automaticSwitch.isOn == true then
             self.numberSlider.transform.localScale = Vector3.zero
             self.totalNumber.transform.localScale = Vector3.one
-            self.totalNumberText.text = "×"..self.m_data.dataInfo.n
+            self.totalNumberText.text = self.m_data.dataInfo.n
             self.warehouseNumberText.text = "×"..0
             self.shelfNumberText.text = "×"..self.m_data.dataInfo.n
         else
@@ -220,7 +229,9 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.maxValue = self.m_data.dataInfo.n
         self.numberSlider.minValue = 1
         self.numberSlider.value = 1
-        self.numberText.text = "×"..self.numberSlider.value
+        self.numberInput.text = "1"
+        self.numberInput.characterLimit = #tostring(self.m_data.dataInfo.n) + 1
+        --self.numberText.text = "×"..self.numberSlider.value
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             local tempPrice = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId)
             self.priceInput.text = GetClientPriceString(tempPrice)
@@ -240,19 +251,20 @@ end
 --设置多语言
 function ShelfBoxCtrl:_language()
     self.topName.text = GetLanguage(28040035)
-    self.popularityText.text = GetLanguage(25020006)
-    self.qualityText.text = GetLanguage(25020005)
-    self.levelText.text = GetLanguage(25020007)
+    --self.popularityText.text = GetLanguage(25020006)
+    --self.qualityText.text = GetLanguage(25020005)
+    --self.levelText.text = GetLanguage(25020007)
     self.numberTip.text = GetLanguage(28040019)
     self.totalNumber.text = GetLanguage(28040019)
     self.tipText.text = GetLanguage(25060004)
     self.tipContentText.text = GetLanguage(25020027)
     self.priceTip.text = GetLanguage(25060003)
     self.CompetitivenessText.text = GetLanguage(43010001)
-    self.warehouseNumberTipText.text = GetLanguage(25020038)
-    self.shelfNumberTipText.text = GetLanguage(25020037)
+    --self.warehouseNumberTipText.text = GetLanguage(25020038)
+    --self.shelfNumberTipText.text = GetLanguage(25020037)
     self.addShelfText.text = GetLanguage(25020035)
     self.brandName.text = GetLanguage(25020040)
+    self.downShelfBtnText.text = "全部下架"
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------
@@ -282,11 +294,12 @@ end
 --点击下架
 function ShelfBoxCtrl:_clickDownShelfBtn(ins)
     PlayMusEff(1002)
+    --如果是自动补货
     if ins.m_data.dataInfo.autoReplenish == true then
         Event.Brocast("SmallPop",GetLanguage(25030018), 300)
         return
     end
-    local datas = {ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
+    local datas = { ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
                 content = GetLanguage(25060017),func = function()
             local data = {}
             data.itemId = ins.m_data.itemId
@@ -294,7 +307,7 @@ function ShelfBoxCtrl:_clickDownShelfBtn(ins)
             data.producerId = ins.m_data.dataInfo.k.producerId
             data.qty = ins.m_data.dataInfo.k.qty
             Event.Brocast("downShelf",data)
-        end  }
+        end }
     ct.OpenCtrl('NewReminderCtrl',datas)
 end
 --点击确认(修改数量，修改价格，修改自动补货)
@@ -336,19 +349,11 @@ function ShelfBoxCtrl:materialOrGoods(itemId)
     if Math_Floor(itemId / 100000) == materialKey then
         self.scoreBg.transform.localScale = Vector3.zero
         self.levelBg.transform.localScale = Vector3.zero
-        self.number.sizeDelta = Vector2.New(470,356)
-        self.warehouse.transform.localPosition = Vector3.New(-150,50,0)
-        self.shelf.transform.localPosition = Vector3.New(-150,-60,0)
-        self.number.transform.localPosition = Vector3.New(180,0,0)
-        self.iconbg.transform.localPosition = Vector3.New(-243,0,0)
+        self.number.transform.localPosition = Vector3.New(103,-20,0)
     elseif Math_Floor(itemId / 100000) == goodsKey then
         self.scoreBg.transform.localScale = Vector3.one
         self.levelBg.transform.localScale = Vector3.one
-        self.number.sizeDelta = Vector2.New(585,86)
-        self.number.transform.localPosition = Vector3.New(180,-135,0)
-        self.warehouse.transform.localPosition = Vector3.New(-240,0,0)
-        self.shelf.transform.localPosition = Vector3.New(45,0,0)
-        self.iconbg.transform.localPosition = Vector3.New(-298,0,0)
+        self.number.transform.localPosition = Vector3.New(103,-104,0)
     end
 end
 --设置提示开关
@@ -381,11 +386,13 @@ end
 function ShelfBoxCtrl:ToggleUndateText()
     if self.automaticSwitch.isOn == true then
         self.btnImage.localPosition = Vector2.New(45,0)
-        self.numberSlider.value = self.numberSlider.maxValue
+        self.numberInput.transform.localScale = Vector3.zero
         self.numberSlider.transform.localScale = Vector3.zero
         self.totalNumber.transform.localScale = Vector3.one
-        self.totalNumberText.text = "×"..self.numberSlider.maxValue
+        self.numberSlider.value = self.numberSlider.maxValue
+        self.totalNumberText.text = self.numberSlider.maxValue
     else
+        self.numberInput.transform.localScale = Vector3.one
         self.numberSlider.transform.localScale = Vector3.one
         self.totalNumber.transform.localScale = Vector3.zero
         if self.m_data.dataInfo.n == 0 then
@@ -398,11 +405,25 @@ function ShelfBoxCtrl:ToggleUndateText()
         self.btnImage.localPosition = Vector2.New(-45,0)
     end
 end
---滑动条更新文本
-function ShelfBoxCtrl:SlidingUpdateText()
-    self.numberText.text = "×"..self.numberSlider.value
+--数量滑动更新输入框
+function ShelfBoxCtrl:UpdateInputText()
+    self.numberInput.text = self.numberSlider.value
 end
---输入框
+--数量输入框结束更新滑动条
+function ShelfBoxCtrl:UpdateSlidingValue()
+    if self.numberInput.text == "" or ToNumber(self.numberInput.text) <= 0 then
+        self.numberInput.text = 1
+        self.numberSlider.value = 1
+        return
+    end
+    if ToNumber(self.numberInput.text) > self.numberSlider.maxValue then
+        self.numberInput.text = self.numberSlider.maxValue
+        self.numberSlider.value = ToNumber(self.numberInput.text)
+        return
+    end
+    self.numberSlider.value = ToNumber(self.numberInput.text)
+end
+--价格输入框
 function ShelfBoxCtrl:InputUpdateText()
     if self.priceInput.text == nil or self.priceInput.text == "" or tonumber(self.priceInput.text) == nil then
         return

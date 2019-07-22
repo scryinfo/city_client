@@ -363,18 +363,12 @@ function BuildingShelfDetailPart:buySucceed(data)
                 if value.itemId == data.item.key.id then
                     if value.dataInfo.n == data.item.n then
                         self:deleteGoodsItem(self.shelfDatas,key)
-                        --else
-                        --    value.dataInfo.n = value.dataInfo.n - data.item.n
-                        --    value.numberText.text = "×"..value.dataInfo.n
                     end
                 end
             elseif tonumber(string.sub(data.item.key.id,1,2)) == 22 then
                 if value.itemId == data.item.key.id and value.dataInfo.k.producerId == data.item.key.producerId then
                     if value.dataInfo.n == data.item.n then
                         self:deleteGoodsItem(self.shelfDatas,key)
-                        --else
-                        --    value.dataInfo.n = value.dataInfo.n - data.item.n
-                        --    value.numberText.text = "×"..value.dataInfo.n
                     end
                 end
             end

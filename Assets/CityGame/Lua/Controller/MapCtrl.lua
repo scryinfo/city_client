@@ -867,6 +867,10 @@ end
 function MapCtrl:_mapAOIMove()
     --一旦移动，则关闭右侧搜索结果
     MapCtrl._toggleShowRightRoot(false)
+    if MapCtrl.selectItem ~= nil then
+        MapCtrl.selectItem:toggleShowSelect(false)
+        MapCtrl.selectItem = nil
+    end
 
     if self.my_Scale < self.criticalScaleValue then
         return

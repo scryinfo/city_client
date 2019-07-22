@@ -85,6 +85,9 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.comCenterText13 = transform:Find("root/competitiSlider/center/Image/Text"):GetComponent("Text")
 
     self.rentInput.onValueChanged:AddListener(function (str)
+        if self.inputCanChange == nil or self.inputCanChange == false then
+            return
+        end  ------------------------
         if str == "" or self.guideData == nil then
             return
         end
@@ -96,14 +99,28 @@ function OpenHouseCtrlNew:_getComponent(go)
         else
             self.valueText.text = temp
         end
+        self.sliderCanChange = false
         self.competitiSlider.value = math.floor(temp)
     end)
+    -------------------------------------------------------------
+    self.rentInput.OnSelect:AddListener(function ()
+        self.inputCanChange = true
+    end)
+    self.competitiSlider.OnSelect:AddListener(function ()
+        self.sliderCanChange = true
+    end)
+    -------------------------------------------------------------
+
     self.competitiSlider.onValueChanged:AddListener(function (value)
+        if self.sliderCanChange == nil or self.sliderCanChange == false then
+            return
+        end
         if self.guideData == nil then
             return
         end
         local tempSlider = math.floor(value)
         local price = ct.CalculationHousePrice(self.guideData.guidePrice,tempSlider)
+        self.inputCanChange = false
         self.rentInput.text = GetClientPriceString(price)
         --self.rentInput.text = price / 10000
     end)
@@ -178,7 +195,9 @@ function OpenHouseCtrlNew:_getApartmentGuidePrice(data)
         else
             self.valueText.text = temp
         end
+        self.inputCanChange = true
         self.competitiSlider.value = math.floor(temp)
+        self.sliderCanChange = false
         self.rentInput.text = GetClientPriceString(tempPrice)
         --self.rentInput.text = tempPrice / 10000
     end

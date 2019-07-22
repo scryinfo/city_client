@@ -36,6 +36,7 @@ function MapSystemItem:_clickFunc()
     if self.data == nil then
         return
     end
+    MapCtrl._toggleShowRightRoot(true)
     Event.Brocast("c_MapSelectSystemPage", self)
 end
 --设置显示建筑大小

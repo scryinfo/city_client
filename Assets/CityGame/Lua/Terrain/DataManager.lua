@@ -1808,8 +1808,8 @@ function DataManager.m_ReqHouseGuidPrice(buildingId)
     if buildingId == nil then
         return
     end
-    local msgId = pbl.enum("gscode.OpCode","apartmentGuidePrice")
-    local pMsg = assert(pbl.encode("gs.AartmentMsg", {buildingId = buildingId, playerId = DataManager.GetMyOwnerID()}))
+    local msgId = pbl.enum("gscode.OpCode","queryApartmentRecommendPrice")
+    local pMsg = assert(pbl.encode("gs.QueryBuildingInfo", {buildingId = buildingId, playerId = DataManager.GetMyOwnerID()}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 

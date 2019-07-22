@@ -295,10 +295,10 @@ end
 function ShelfBoxCtrl:_clickDownShelfBtn(ins)
     PlayMusEff(1002)
     --如果是自动补货
-    --if ins.m_data.dataInfo.autoReplenish == true then
-    --    Event.Brocast("SmallPop",GetLanguage(25030018), 300)
-    --    return
-    --end
+    if ins.m_data.dataInfo.autoReplenish == true then
+        Event.Brocast("SmallPop",GetLanguage(25030018), 300)
+        return
+    end
     local datas = { ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
                 content = GetLanguage(25060017),func = function()
             local data = {}
@@ -409,7 +409,7 @@ end
 function ShelfBoxCtrl:UpdateInputText()
     self.numberInput.text = self.numberSlider.value
 end
---输入框结束更新滑动条
+--数量输入框结束更新滑动条
 function ShelfBoxCtrl:UpdateSlidingValue()
     if self.numberInput.text == "" or ToNumber(self.numberInput.text) <= 0 then
         self.numberInput.text = 1
@@ -423,7 +423,7 @@ function ShelfBoxCtrl:UpdateSlidingValue()
     end
     self.numberSlider.value = ToNumber(self.numberInput.text)
 end
---输入框
+--价格输入框
 function ShelfBoxCtrl:InputUpdateText()
     if self.priceInput.text == nil or self.priceInput.text == "" or tonumber(self.priceInput.text) == nil then
         return

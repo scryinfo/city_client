@@ -39,14 +39,17 @@ end
 function WarehouseItem:InitializeData()
     self.nameText.text = GetLanguage(self.itemId)
     self.numberText.text = "×"..self.dataInfo.n
+    self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.itemId)
     local materialKey,goodsKey = 21,22
     if ToNumber(StringSun(self.itemId,1,2)) == materialKey then
         self.goods.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3(-140,-100,0)
-        LoadSprite(Material[self.itemId].img,self.iconImg,false)
+        --LoadSprite(Material[self.itemId].img,self.iconImg,false)
+        --self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.itemId)
     elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
-        LoadSprite(Good[self.itemId].img,self.iconImg,false)
+        --LoadSprite(Good[self.itemId].img,self.iconImg,false)
+        --self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.itemId)
         --如果是商品，判断原料等级
         if Good[self.itemId].luxury == 1 then
             self.levelImg.color = getColorByVector3(oneLevel)

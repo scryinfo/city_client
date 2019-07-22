@@ -80,7 +80,8 @@ function ShelfItem:InitializeData()
         self.brandNameText.text = GetLanguage(self.itemId)
         self.levelImg.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3(-140,-100,0)
-        LoadSprite(Material[self.itemId].img,self.iconImg,false)
+        --LoadSprite(Material[self.itemId].img,self.iconImg,false)
+        self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.itemId)
 
         local function callback(a)
             self.Text.text = ct.CalculationMaterialCompetitivePower(a,self.dataInfo.price,self.itemId)
@@ -99,10 +100,11 @@ function ShelfItem:InitializeData()
             end
             Event.Brocast("getRetailItemGuidePrice",self.itemId,callbacks)
         end
-
         self.goods.transform.localScale = Vector3.one
         self.levelImg.transform.localScale = Vector3.one
-        LoadSprite(Good[self.itemId].img,self.iconImg,false)
+        --LoadSprite(Good[self.itemId].img,self.iconImg,false)
+        self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.itemId)
+
         --如果是商品，判断原料等级
         if Good[self.itemId].luxury == 1 then
             self.levelImg.color = getColorByVector3(oneLevel)

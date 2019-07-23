@@ -111,13 +111,14 @@ function ShelfBoxCtrl:_getComponent(go)
     self.btnImage = go.transform:Find("contentRoot/content/detailsInfo/automaticSwitch/btnImage")
     self.priceTip = go.transform:Find("contentRoot/content/detailsInfo/price"):GetComponent("Text")
     self.priceInput = go.transform:Find("contentRoot/content/detailsInfo/priceInput"):GetComponent("InputField")
+    self.competitivenessSlider = go.transform:Find("contentRoot/content/detailsInfo/competitivenessSlider"):GetComponent("Slider")
     self.advicePrice = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tip")
     self.advicePriceText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/priceText"):GetComponent("Text")
     self.CompetitivenessText = go.transform:Find("contentRoot/content/detailsInfo/Text"):GetComponent("Text")
     self.tipPriceBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBtn")
     self.tipPriceBg = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn")
     self.tipPriceText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn/tipText"):GetComponent("Text")
-
+    self.adviceTipText = go.transform:Find("contentRoot/content/detailsInfo/adviceTip/adviceTipText"):GetComponent("Text")
     --self.tipPriceDetailsBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipPriceDetailsBtn")
     --bottom
     self.downShelfBtn = go.transform:Find("contentRoot/bottom/downShelfBtn")
@@ -130,6 +131,7 @@ end
 --初始化UI数据
 function ShelfBoxCtrl:initializeUiInfoData()
     self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.m_data.itemId)
+    self.competitivenessSlider.value = 50
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         local function callbacks(guidePrice)
             self.guidePrice = guidePrice   --推荐价格
@@ -264,6 +266,7 @@ function ShelfBoxCtrl:_language()
     self.addShelfText.text = GetLanguage(25020035)
     self.brandName.text = GetLanguage(25020040)
     self.downShelfBtnText.text = "全部下架".." >"
+    self.adviceTipText.text = "Recommend:<color=#f4ad07>"..50 .."</color>"
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------

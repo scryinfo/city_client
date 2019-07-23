@@ -166,6 +166,11 @@ function WarehouseBoxCtrl:UpdateSlidingText()
 end
 --输入框结束更新滑动条
 function WarehouseBoxCtrl:UpdateInputText()
+    if self.warehouseCount == 0 then
+        self.numberInput.text = 0
+        self.numberSlider.value = 0
+        return
+    end
     if self.numberInput.text == "" or ToNumber(self.numberInput.text) <= 0 then
         self.numberInput.text = 1
         self.numberSlider.value = 1
@@ -207,10 +212,8 @@ end
 --销毁商品
 function WarehouseBoxCtrl:_clickDeleBtn(ins)
     local data = {}
-    data.itemId = ins.m_data.itemId
-    data.producerId = ins.m_data.dataInfo.key.producerId
-    data.qty = ins.m_data.dataInfo.key.qty
-    data.n = ins.warehouseCount
+    data.usableNum = ins.warehouseCount
+    data.Info = ct.deepCopy(ins.m_data.dataInfo)
     UIPanel.ClosePage()
     ct.OpenCtrl("DeleteItemBoxCtrl",data)
 end

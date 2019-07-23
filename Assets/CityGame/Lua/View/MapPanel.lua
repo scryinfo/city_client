@@ -62,6 +62,7 @@ function MapPanel.InitPanel()
 
     --右侧详情界面
     --this.rightMatGoodPageItem = MapRightMatGoodPage:new(transform:Find("rightPageRoot/searchMatGood"))  --old
+    this.rightOtherPageRoot = transform:Find("rightPageRoot")  --
     this.rightOtherBuildingPageItem = MapRightOtherBuildingPage:new(transform:Find("rightPageRoot/selectOtherBuilding"))
     this.rightGroundAucPageItem = MapRightGroundAucPage:new(transform:Find("rightPageRoot/searchGroundAuc"))
     this.rightGroundTransPageItem = MapRightGroundTransPage:new(transform:Find("rightPageRoot/searchGroundTrans"))

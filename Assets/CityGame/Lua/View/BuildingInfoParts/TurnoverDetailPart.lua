@@ -243,7 +243,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     self.graph:DrawLine(turnoverVet,Color.New(53 / 255, 72 / 255, 117 / 255, 255 / 255),1)
     self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
 
-    self.graph:DrawLine(expendVet,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
-    self.slide:SetCoordinate(expendVet,expend,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
+    --self.graph:DrawLine(expendVet,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
+    --self.slide:SetCoordinate(expendVet,expend,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
 
 end

@@ -37,7 +37,7 @@ end
 
 function OfflineNotificationCtrl:Refresh()
     -- 显示界面节点
-    self:_setDetailsTitleBgAndText(false, true ,false, false, true, false)
+    self:_setDetailsTitleBgAndText(false, true ,false, false, true, false, false)
 
     -- 显示数据
     self.homePageItems = {}
@@ -87,12 +87,12 @@ function OfflineNotificationCtrl:OnBack()
 end
 
 function OfflineNotificationCtrl:OnBuildingReturn(go)
-    go:_setDetailsTitleBgAndText(false, true, false, false, true, false)
+    go:_setDetailsTitleBgAndText(false, true, false, false, true, false, false)
     OfflineNotificationPanel.incomeText.text = GetClientPriceString(go.totalBuildingIncome)
 end
 
 function OfflineNotificationCtrl:OnLuckyReturn(go)
-    go:_setDetailsTitleBgAndText(false, true, false, false, true, false)
+    go:_setDetailsTitleBgAndText(false, true, false, false, true, false, false)
     OfflineNotificationPanel.incomeText.text = GetClientPriceString(go.totalBuildingIncome)
 end
 -----------------------------------------------------滑动复用-----------------------------------------------------------------------
@@ -118,7 +118,7 @@ function OfflineNotificationCtrl:ShowItems(detailsScrollIndex, data)
         for i = 1, #OfflineNotificationCtrl.detailsData do
             table.insert(detailsPrefabList, "View/Items/OfflineNotificationItems/OfflineNotificationBuildingpageItem")
         end
-        self:_setDetailsTitleBgAndText(true, true ,false, false, false, true)
+        self:_setDetailsTitleBgAndText(true, true ,false, false, false, true, true)
         OfflineNotificationPanel.detailsScroll:ActiveDiffItemLoop(self.offlineNotificationSource, detailsPrefabList)
     elseif detailsScrollIndex == 2 then
         OfflineNotificationPanel.luckyText.text = data.totalIncome
@@ -126,19 +126,20 @@ function OfflineNotificationCtrl:ShowItems(detailsScrollIndex, data)
         for i = 1, #OfflineNotificationCtrl.detailsData do
             table.insert(detailsPrefabList, "View/Items/OfflineNotificationItems/OfflineNotificationLuckypageItem")
         end
-        self:_setDetailsTitleBgAndText(false, false ,true, true, false, true)
+        self:_setDetailsTitleBgAndText(false, false ,true, true, false, true, true)
         OfflineNotificationPanel.detailsScroll:ActiveDiffItemLoop(self.offlineNotificationSource, detailsPrefabList)
     end
 end
 
 -----------------------------------------------------界面显示-----------------------------------------------------------------------
-function OfflineNotificationCtrl:_setDetailsTitleBgAndText(isShow1, isShow2, isShow3, isShow4, isShow5, isShow6)
+function OfflineNotificationCtrl:_setDetailsTitleBgAndText(isShow1, isShow2, isShow3, isShow4, isShow5, isShow6, isShow7)
     OfflineNotificationPanel.buildingInfoTitleBg.localScale = isShow1 and Vector3.one or Vector3.zero
     OfflineNotificationPanel.incomeTitleTextTF.localScale = isShow2 and Vector3.one or Vector3.zero
     OfflineNotificationPanel.luckyValueTitleBg.localScale = isShow3 and Vector3.one or Vector3.zero
     OfflineNotificationPanel.luckyTitleTextTF.localScale = isShow4 and Vector3.one or Vector3.zero
     OfflineNotificationPanel.allListTransform.localScale = isShow5 and Vector3.one or Vector3.zero
     OfflineNotificationPanel.detailsTransform.localScale = isShow6 and Vector3.one or Vector3.zero
+    OfflineNotificationPanel.scrollBg.localScale = isShow7 and Vector3.one or Vector3.zero
 
     if isShow5 then
         OfflineNotificationPanel.incomeTitleText.text = "Gross income:"

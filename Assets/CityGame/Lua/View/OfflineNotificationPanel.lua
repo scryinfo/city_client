@@ -26,6 +26,7 @@ function OfflineNotificationPanel.InitPanel()
     this.detailsScroll = transform:Find("MiddleRoot/DetailsScroll"):GetComponent("ActiveLoopScrollRect")
     this.allListTransform = transform:Find("MiddleRoot/AllListScroll")
     this.detailsTransform = transform:Find("MiddleRoot/DetailsScroll")
+    this.scrollBg = transform:Find("MiddleRoot/ScrollBg")
 
     -- 建筑详情
     this.buildingInfoTitleBg = transform:Find("MiddleRoot/BuildingInfoTitleBg")

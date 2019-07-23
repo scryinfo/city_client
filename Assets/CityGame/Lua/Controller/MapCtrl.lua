@@ -636,6 +636,7 @@ end
 function MapCtrl:_openRightGAucPage(item)
     if item ~= nil then
         MapPanel.closeAllRightPage()
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.rightGroundAucPageItem:refreshData(item.data)
     end
 end
@@ -643,6 +644,7 @@ end
 function MapCtrl:_openRightGTransPage(item)
     if item ~= nil then
         MapPanel.closeAllRightPage()
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.rightGroundTransPageItem:refreshData(item.data)
     end
 end
@@ -650,6 +652,7 @@ end
 function MapCtrl:_openRightSelfBuildingPage(item)
     if item ~= nil then
         MapPanel.closeAllRightPage()
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.selfBuildingPageItem:refreshData(item.data)
     end
 end
@@ -657,6 +660,7 @@ end
 function MapCtrl:_openRightSystemPage(item)
     if item ~= nil then
         MapPanel.closeAllRightPage()
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.systemBuildingPageItem:refreshData(item.data)
     end
 end

@@ -1213,7 +1213,7 @@ function ct.CalculationHouseCompetitivePower(recommendedPricing,price,npc)
         temp = (recommendedPricing - price) / (recommendedPricing / BargainingPower) + CPMagnification
     else
         --竞争力 = (推荐定价 - 玩家定价)  / (推荐定价 / 2 / 49) + 50
-        temp = (recommendedPricing - price) / (recommendedPricing / Divisor / BargainingPower) + CPMagnification
+        temp = (recommendedPricing - price) / ((recommendedPricing / Divisor )/ BargainingPower) + CPMagnification
     end
     if temp <= 1 then
         temp = 1
@@ -1221,7 +1221,7 @@ function ct.CalculationHouseCompetitivePower(recommendedPricing,price,npc)
     if temp >= 99 then
         temp = 99
     end
-    return math.floor(temp)
+    return temp
 end
 ---计算住宅定价
 --推荐定价:recommendedPricing
@@ -1232,14 +1232,14 @@ function ct.CalculationHousePrice(recommendedPricing,power)
     if recommendedPricing <= 0 then
         recommendedPricing = Competitive[14 * PRIDMagnification]
     end
-    if power >= 50 then
+    if power < 50 then
         --玩家定价= 推荐定价 - （竞争力 - 50）*  (推荐定价 / 49)
         tempPrice = recommendedPricing - (power - CPMagnification) * (recommendedPricing / BargainingPower)
     else
         --玩家定价= 推荐定价 -（竞争力 - 50）*   (推荐定价 / 2 / 49)
-        tempPrice = recommendedPricing - (power - CPMagnification) * (recommendedPricing / Divisor / BargainingPower)
+        tempPrice = recommendedPricing - (power - CPMagnification) * ((recommendedPricing / Divisor) / BargainingPower)
     end
-    return math.floor(tempPrice)
+    return tempPrice
 end
 ---计算住宅推荐定价
 --推荐定价:recommendedPricing\

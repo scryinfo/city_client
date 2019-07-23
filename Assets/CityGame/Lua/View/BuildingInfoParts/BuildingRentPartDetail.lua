@@ -6,6 +6,10 @@
 
 BuildingRentPartDetail = class('BuildingRentPartDetail', BasePartDetail)
 BuildingRentPartDetail.static.NumberColor = "#333333" -- 总容量的颜色
+BuildingRentPartDetail.static.otherSeeRentPos = Vector3.New(0, -64, 0)  --别人看到的rent位置
+BuildingRentPartDetail.static.otherSeeCompetitiPos = Vector3.New(-12, 188, 0)  --别人看到的提示框位置
+BuildingRentPartDetail.static.selfSeeRentPos = Vector3.New(-396, -64, 0)  --自己看到的rent位置
+BuildingRentPartDetail.static.selfSeeCompetitiPos = Vector3.New(-408, 188, 0)  --自己看到的提示框位置
 
 function BuildingRentPartDetail:PrefabName()
     return "BuildingRentPartDetail"
@@ -14,7 +18,7 @@ end
 function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
     mainPanelLuaBehaviour:AddClick(self.confirmBtn.gameObject, function ()
         PlayMusEff(1002)
-        local rent = self.rentInputField.text
+        local rent = self.rentInput.text
         if rent == nil or rent == ""then
             return
         end
@@ -25,27 +29,44 @@ function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
         self:_reqHouseChangeRent(price)
     end , self)
     --
-    self.rentInputField.onValueChanged:AddListener(function (str)
-        if str == "" or self.m_data.guideData == nil then
-            return
-        end
-        local temp = ct.CalculationHouseCompetitivePower(self.m_data.guideData.avgPrice, tonumber(str) * 10000, self.m_data.guideData.score, self.m_data.guideData.avgScore)
-        self.competValueText.text = temp
-    end)
     mainPanelLuaBehaviour:AddClick(self.competBtn.gameObject, function ()
-        self.competitivenessRoot.localScale = Vector3.one
+        self.competitivenessRoot.transform.localScale = Vector3.one
         self.competitivenessText04.text = GetLanguage(43010002)
         self.competitivenessText05.text = GetLanguage(43010003)
     end , self)
     mainPanelLuaBehaviour:AddClick(self.competitivenessBtn.gameObject, function ()
         self.competitivenessText04.text = ""
         self.competitivenessText05.text = ""
-        self.competitivenessRoot.localScale = Vector3.zero
+        self.competitivenessRoot.transform.localScale = Vector3.zero
     end , self)
+    --
+    self.rentInput.onValueChanged:AddListener(function (str)
+        if str == "" or self.guideData == nil then
+            return
+        end
+        local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
+        if temp == 99 then
+            self.competValueText.text = ">"..temp
+        elseif temp == 1 then
+            self.competValueText.text = "<"..temp
+        else
+            self.competValueText.text = string.format("%0.1f", temp)
+        end
+        self.competitiSlider.value = temp
+    end)
+
+    self.competitiSlider.onValueChanged:AddListener(function (value)
+        if self.guideData == nil then
+            return
+        end
+        local tempSlider = value
+        local price = ct.CalculationHousePrice(self.guideData.guidePrice,tempSlider)
+        self.rentInput.text = GetClientPriceString(price)
+    end)
 end
 --
 function BuildingRentPartDetail:_ResetTransform()
-    self.rentInputField.text = ""
+    self.rentInput.text = ""
     self.otherSeeRentText.text = ""
     self:_language()
 end
@@ -81,21 +102,24 @@ function BuildingRentPartDetail:_getComponent(transform)
     if transform == nil then
         return
     end
-    self.confirmBtn = transform:Find("Root/RentInputField/ConfirmBtn"):GetComponent("Button")
-    self.rentInputField = transform:Find("Root/RentInputField"):GetComponent("InputField")
-    self.rentInputFieldPlaceholder = transform:Find("Root/RentInputField/Placeholder"):GetComponent("Text")
-    self.occupancyText = transform:Find("Root/OccupancyText"):GetComponent("Text")
-    self.otherSee = transform:Find("Root/otherSee")
-    self.otherSeeRentText = transform:Find("Root/otherSee/Text"):GetComponent("Text")
+    self.confirmBtn = transform:Find("Root/confirmBtn"):GetComponent("Button")
+    self.occupancyText = transform:Find("Root/occupancy/occupancyText"):GetComponent("Text")  --入住率
+    self.competitiSlider = transform:Find("Root/competitiSlider"):GetComponent("Slider")
+    self.competitiHalfText = transform:Find("Root/competitiSlider/center/Image/Text/valueText"):GetComponent("Text")  --竞争力的一半
+    self.rentRect = transform:Find("Root/rent"):GetComponent("RectTransform")
+    self.rentInput = transform:Find("Root/rent/rentInput"):GetComponent("InputField")
+    self.rentInputPlaceholder = transform:Find("Root/rent/rentInput/Placeholder"):GetComponent("Text")
+    self.otherSee = transform:Find("Root/rent/otherSee")
+    self.otherSeeRentText = transform:Find("Root/rent/otherSee/Text"):GetComponent("Text")
     --
-    self.competValueText = transform:Find("Root/competRoot/valueText"):GetComponent("Text")
-    self.competBtn = transform:Find("Root/competRoot/infoBtn"):GetComponent("Button")
-    self.competitivenessRoot = transform:Find("competitivenessRoot")
+    self.competValueText = transform:Find("Root/rent/priceBg/valueText"):GetComponent("Text")
+    self.competBtn = transform:Find("Root/rent/priceBg/infoBtn"):GetComponent("Button")
+    self.competitivenessRoot = transform:Find("competitivenessRoot"):GetComponent("RectTransform")
     self.competitivenessBtn = transform:Find("competitivenessRoot/btn"):GetComponent("Button")
 
-    self.occupancyText01 = transform:Find("Root/Text01"):GetComponent("Text")
-    self.rentText02 = transform:Find("Root/Text02"):GetComponent("Text")
-    self.competValueText03 = transform:Find("Root/competRoot/Text"):GetComponent("Text")
+    self.competitiSliderText01 = transform:Find("Root/competitiSlider/center/Image/Text"):GetComponent("Text")
+    self.rentText02 = transform:Find("Root/rent/Text01"):GetComponent("Text")
+    self.competValueText03 = transform:Find("Root/rent/priceBg/Text"):GetComponent("Text")
     self.competitivenessText04 = transform:Find("competitivenessRoot/tooltip/title"):GetComponent("Text")
     self.competitivenessText05 = transform:Find("competitivenessRoot/tooltip/content"):GetComponent("Text")
 end
@@ -110,35 +134,50 @@ end
 -- 显示入住人数和总人数
 function BuildingRentPartDetail:_initFunc()
     DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)  --请求竞争力参数
+    self.competitiSlider.minValue = 1
+    self.competitiSlider.maxValue = 99
 
-    self.competitivenessRoot.localScale = Vector3.zero
+    local str = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
+    self.occupancyText.text = GetLanguage(12345678, str)
+    self.competitivenessRoot.transform.localScale = Vector3.zero
     if self.m_data.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.otherSee.localScale = Vector3.one
         self.confirmBtn.transform.localScale = Vector3.zero
         self.otherSeeRentText.text = GetClientPriceString(self.m_data.rent)
-        self.occupancyText.text = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
+
+        self.rentRect.anchoredPosition = BuildingRentPartDetail.static.otherSeeRentPos
+        self.competitiSlider.transform.localScale = Vector3.zero
+        self.competitivenessRoot.anchoredPosition = BuildingRentPartDetail.static.otherSeeCompetitiPos
     else
         self.otherSee.localScale = Vector3.zero
         self.confirmBtn.transform.localScale = Vector3.one
-        --self.rentInputFieldPlaceholder.text = GetClientPriceString(self.m_data.rent)
-        self.rentInputField.text = GetClientPriceString(self.m_data.rent)
-        self.occupancyText.text = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
+        self.rentInput.text = GetClientPriceString(self.m_data.rent)
+
+        self.rentRect.anchoredPosition = BuildingRentPartDetail.static.selfSeeRentPos
+        self.competitiSlider.transform.localScale = Vector3.one
+        self.competitivenessRoot.anchoredPosition = BuildingRentPartDetail.static.selfSeeCompetitiPos
     end
 end
 --
 function BuildingRentPartDetail:_language()
-    self.occupancyText01.text = GetLanguage(26040001)
+    self.competitiSliderText01.text = GetLanguage(12345678)
     self.rentText02.text = GetLanguage(26040002)
     self.competValueText03.text = GetLanguage(43010001)
-    --self.competitivenessText04.text = GetLanguage(43010002)
-    --self.competitivenessText05.text = GetLanguage(43010003)
 end
 --
 function BuildingRentPartDetail:_getGuidePrice(data)
     if data ~= nil then
-        local value = data.apartmentPrice[1]
-        self.m_data.guideData = value
-        local temp = ct.CalculationHouseCompetitivePower(value.avgPrice, self.m_data.rent, value.score, value.avgScore)
-        self.competValueText.text = temp
+        self.guideData = data
+        --local tempPrice = ct.CalculationHouseSuggestPrice(data.guidePrice)
+        local temp = ct.CalculationHouseCompetitivePower(data.guidePrice, self.m_data.rent, data.npc)
+        if temp == 99 then
+            self.competValueText.text = ">"..temp
+        elseif temp == 1 then
+            self.competValueText.text = "<"..temp
+        else
+            self.competValueText.text = string.format("%0.1f", temp)
+        end
+        self.competitiSlider.value = temp
+        --self.rentInput.text = GetClientPriceString(tempPrice)
     end
 end

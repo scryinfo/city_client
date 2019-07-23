@@ -96,7 +96,6 @@ function OpenHouseCtrlNew:_getComponent(go)
         else
             self.valueText.text = string.format("%0.1f", temp)
         end
-        self.sliderCanChange = false
         self.competitiSlider.value = temp
     end)
 
@@ -179,7 +178,7 @@ function OpenHouseCtrlNew:_getApartmentGuidePrice(data)
         else
             self.valueText.text = string.format("%0.1f", temp)
         end
-        self.competitiSlider.value = math.floor(temp)
+        self.competitiSlider.value = temp
         self.rentInput.text = GetClientPriceString(tempPrice)
     end
 end

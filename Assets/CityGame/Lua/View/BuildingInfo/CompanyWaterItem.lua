@@ -10,9 +10,10 @@ CompanyWaterItem = class('CompanyWaterItem')
 local lastBg
 
 --初始化方法   数据（读配置表）
-function CompanyWaterItem:initialize(viewRect, goodsDataInfo)
+function CompanyWaterItem:initialize(viewRect, goodsDataInfo,isIncome)
     self.viewRect = viewRect;
     self.goodsDataInfo = goodsDataInfo;
+    self.isIncome = isIncome
 
     self.goodsBg = self.viewRect:Find("goodsBg")
     self.goods = self.viewRect:Find("goodsBg/goods/Image"):GetComponent("Image")
@@ -21,8 +22,81 @@ function CompanyWaterItem:initialize(viewRect, goodsDataInfo)
     self.bg = self.viewRect:Find("bg")
     self.icon = self.viewRect:Find("bg/icon"):GetComponent("Image")
     self.name = self.viewRect:Find("bg/icon/name"):GetComponent("Text")
-    self.siziName = self.viewRect:Find("siziName"):GetComponent("Text")
+    self.sizeName = self.viewRect:Find("time/siziName"):GetComponent("Text")
     self.time = self.viewRect:Find("time"):GetComponent("Text")
     self.money = self.viewRect:Find("money"):GetComponent("Text")
     self.freight = self.viewRect:Find("freight"):GetComponent("Text")   --运费
+
+    self.freight.transform.localScale = Vector3.zero
+    if goodsDataInfo.metaId then
+        self.sizeName.text = goodsDataInfo.name .. GetLanguage(PlayerBuildingBaseData[goodsDataInfo.metaId].sizeName) .. GetLanguage(PlayerBuildingBaseData[goodsDataInfo.metaId].typeName)
+    end
+    local ts = getFormatUnixTime(goodsDataInfo.time / 1000)
+    self.time.text = ts.year .. "-" .. ts.month .. "-" .. ts.day .. " " .. ts.hour .. ":" .. ts.minute
+
+    if isIncome then
+        self.money.text = "+E" .. GetClientPriceString(goodsDataInfo.amount)
+        self.money.color = getColorByInt(239,159,4,255)
+        if goodsDataInfo.itemId == 2000 then   --市民入住
+            self.goodsBg.localScale = Vector3.zero
+            self.bg.localScale = Vector3.one
+            LoadSprite("Assets/CityGame/Resources/Atlas/Company/water/icon-residentialstay.png", self.icon,true)
+            self.name.text = GetLanguage(11010011)
+        elseif goodsDataInfo.itemId == 3000 then  --土地出售
+            self.goodsBg.localScale = Vector3.zero
+            self.bg.localScale = Vector3.one
+            LoadSprite("Assets/CityGame/Resources/Atlas/Company/water/icon-land.png", self.icon,true)
+            self.name.text = GetLanguage(19030005)
+            self.sizeName.text = GetLanguage(18030003) .. goodsDataInfo.name
+        else   --商品原料
+            self.goodsBg.localScale = Vector3.one
+            self.bg.localScale = Vector3.zero
+            self.name.text = GetLanguage(19030005)
+            if math.floor(goodsDataInfo.itemId / 100000) == 21 then  --原料
+                LoadSprite(Material[goodsDataInfo.itemId].img, self.goods)
+            elseif math.floor(goodsDataInfo.itemId / 100000) == 22 then --商品
+                LoadSprite(Good[goodsDataInfo.itemId].img, self.goods)
+            end
+            self.goodsName.text = GetLanguage(goodsDataInfo.itemId)
+            self.num.text = "x" .. goodsDataInfo.num
+        end
+    else
+        self.money.text = "-E" .. GetClientPriceString(goodsDataInfo.amount)
+        self.money.color = getColorByInt(213,35,77,255)
+        if goodsDataInfo.itemId == 1000 then --工资发放
+            self.goodsBg.localScale = Vector3.zero
+            self.bg.localScale = Vector3.one
+            LoadSprite("Assets/CityGame/Resources/Atlas/Company/water/icon-Employee'swages.png", self.icon,true)
+            self.name.text = GetLanguage(24020006)
+        elseif goodsDataInfo.itemId == 3000 then  --土地购买
+            self.goodsBg.localScale = Vector3.zero
+            self.bg.localScale = Vector3.one
+            LoadSprite("Assets/CityGame/Resources/Atlas/Company/water/icon-land.png", self.icon,true)
+            self.name.text = GetLanguage(11010013)
+            self.sizeName.text = GetLanguage(18030003) .. goodsDataInfo.name
+        elseif goodsDataInfo.itemId == 4000 then  --土地拍卖
+            self.goodsBg.localScale = Vector3.zero
+            self.bg.localScale = Vector3.one
+            LoadSprite("Assets/CityGame/Resources/Atlas/Company/water/icon-land.png", self.icon,true)
+            self.name.text = GetLanguage(20010007)
+            self.sizeName.text = GetLanguage(18030003) .. goodsDataInfo.name
+        else   --商品原料
+            self.goodsBg.localScale = Vector3.one
+            self.bg.localScale = Vector3.zero
+            self.name.text = GetLanguage(19030005)
+            if math.floor(goodsDataInfo.itemId / 100000) == 21 then  --原料
+                LoadSprite(Material[goodsDataInfo.itemId].img, self.goods)
+            elseif math.floor(goodsDataInfo.itemId / 100000) == 22 then --商品
+                LoadSprite(Good[goodsDataInfo.itemId].img, self.goods)
+            end
+            self.goodsName.text = GetLanguage(goodsDataInfo.itemId)
+            self.num.text = "x" .. goodsDataInfo.num
+            if goodsDataInfo.amount == 0 then
+                self.freight.transform.localScale = Vector3.one
+                self.money.text = "-E" .. GetClientPriceString(goodsDataInfo.freight * goodsDataInfo.num)
+                self.freight.text = "(" .. GetLanguage(18010015) .. ")"
+            end
+        end
+        end
+    
 end

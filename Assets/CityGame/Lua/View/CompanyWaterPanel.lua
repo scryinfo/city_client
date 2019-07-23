@@ -26,6 +26,9 @@ function CompanyWaterPanel.InitPanel()
     this.expendBg = transform:Find("TopRoot/expendBg").gameObject
     this.expend = transform:Find("TopRoot/expendBg/expend"):GetComponent("Text")
     this.buildingContent = transform:Find("TopRoot/Scroll View/Viewport/Content"):GetComponent("RectTransform")
+    this.off = transform:Find("TopRoot/off")
     --滑动互用
-    this.scroll = transform:Find("TopRoot/content/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect"); --收益时间
+    this.scroll = transform:Find("TopRoot/content/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
+    this.empty = transform:Find("TopRoot/content/empty")
+    this.emptyText = transform:Find("TopRoot/content/empty/Image/Text"):GetComponent("Text")
 end

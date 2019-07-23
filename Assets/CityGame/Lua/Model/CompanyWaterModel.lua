@@ -11,19 +11,16 @@ function CompanyWaterModel:initialize(insId)
 end
 
 function CompanyWaterModel:OnCreate()
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryPlayerIncomePay","ss.PlayerIncomePay",self.n_OnPlayerIncomePay,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPlayerIncomePay","gs.PlayerIncomePay",self.n_OnPlayerIncomePay,self)
 end
 
 --客户端发包
 function CompanyWaterModel:m_queryPlayerIncomePay(playerId,type,income)
-    local msgId = pbl.enum("sscode.OpCode","queryPlayerIncomePay")
-    local lMsg = { playerId = playerId , bType = type , isIncome = income }
-    local pMsg = assert(pbl.encode("ss.PlayerIncomePay", lMsg))
-    --CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerIncomePay","gs.PlayerIncomePay",{ playerId = playerId , bType = type , isIncome = income})
 end
 
 --服务器回调
 
 function CompanyWaterModel:n_OnPlayerIncomePay(info)
-    local a = info
+    Event.Brocast("c_companyWater",info)
 end

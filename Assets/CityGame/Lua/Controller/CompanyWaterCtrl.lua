@@ -8,13 +8,14 @@ UIPanel:ResgisterOpen(CompanyWaterCtrl)
 CompanyWaterCtrl.static.PATH = "Assets/CityGame/Resources/View/GoodsItem/CompanyBuildingItem.prefab";
 
 local companyWaterBehaviour;
+local incomePayInfo
 
 function  CompanyWaterCtrl:bundleName()
     return "Assets/CityGame/Resources/View/CompanyWaterPanel.prefab"
 end
 
 function CompanyWaterCtrl:initialize()
-    UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)
 end
 
 function CompanyWaterCtrl:Awake()
@@ -24,6 +25,7 @@ function CompanyWaterCtrl:Awake()
     companyWaterBehaviour:AddClick(CompanyWaterPanel.backBtn,self.c_OnBack,self);
     companyWaterBehaviour:AddClick(CompanyWaterPanel.incomeBg,self.c_OnIncomeBg,self);
     companyWaterBehaviour:AddClick(CompanyWaterPanel.expendBg,self.c_OnExpendBg,self);
+    companyWaterBehaviour:AddClick(CompanyWaterPanel.off.gameObject,self.c_OnOff,self);
 
     CompanyWaterPanel.income.text = GetLanguage(19020008)   --收入
     CompanyWaterPanel.expend.text = GetLanguage(19020010)   --支出
@@ -52,15 +54,31 @@ end
 function CompanyWaterCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_companyBuildingWater",self.c_companyBuildingWater,self)
+    Event.AddListener("c_companyWater",self.c_companyWater,self)
+
+    if self.income then
+        CompanyWaterPanel.income.text = GetLanguage(19020008)   --收入
+        CompanyWaterPanel.expend.text = GetLanguage(19020010)   --支出
+    else
+        CompanyWaterPanel.income.text = GetLanguage(19020010)   --支出
+        CompanyWaterPanel.expend.text = GetLanguage(19020008)   --收入
+    end
+    CompanyWaterPanel.emptyText.text = GetLanguage(18010014)
+
 end
 
 function CompanyWaterCtrl:Refresh()
     DataManager.OpenDetailModel(CompanyWaterModel, self.insId)
+    if self.bType then
+        DataManager.DetailModelRpcNoRet(self.insId, 'm_queryPlayerIncomePay',self.playerId,self.bType,self.income)
+    end
 end
 
 function CompanyWaterCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_companyBuildingWater",self.c_companyBuildingWater,self)
+    Event.RemoveListener("c_companyWater",self.c_companyWater,self)
+    self:OpenClose(false)
 end
 
 function CompanyWaterCtrl:Close()
@@ -71,20 +89,38 @@ function CompanyWaterCtrl:Close()
         end
         self.buildingItem = {}
     end
+    self.bType = nil
+    self:OpenClose(false)
 end
 
 --返回
 function CompanyWaterCtrl:c_OnBack(go)
     PlayMusEff(1002)
     go:Hide()
+    UIPanel.ClosePage()
 end
 
-function CompanyWaterCtrl:c_OnIncomeBg()
+function CompanyWaterCtrl:c_OnIncomeBg(go)
     PlayMusEff(1002)
-    CompanyWaterPanel.expendBg.transform.localScale = Vector3.one
-    CompanyWaterPanel.incomeBg:GetComponent("Button").enabled = false
-    CompanyWaterPanel.open.localScale = Vector3.zero
-    CompanyWaterPanel.close.localScale = Vector3.one
+    go:OpenClose(true)
+end
+
+function CompanyWaterCtrl:OpenClose(open)
+    if open then
+        CompanyWaterPanel.expendBg.transform.localScale = Vector3.one
+        CompanyWaterPanel.off.localScale = Vector3.one
+        CompanyWaterPanel.open.localScale = Vector3.zero
+        CompanyWaterPanel.close.localScale = Vector3.one
+    else
+        CompanyWaterPanel.expendBg.transform.localScale = Vector3.zero
+        CompanyWaterPanel.off.localScale = Vector3.zero
+        CompanyWaterPanel.open.localScale = Vector3.one
+        CompanyWaterPanel.close.localScale = Vector3.zero
+    end
+end
+
+function CompanyWaterCtrl:c_OnOff(go)
+    go:OpenClose(false)
 end
 
 function CompanyWaterCtrl:c_OnExpendBg(go)
@@ -97,17 +133,14 @@ function CompanyWaterCtrl:c_OnExpendBg(go)
         CompanyWaterPanel.income.text = GetLanguage(19020010)   --支出
         CompanyWaterPanel.expend.text = GetLanguage(19020008)   --收入
     end
-    CompanyWaterPanel.expendBg.transform.localScale = Vector3.zero
-    CompanyWaterPanel.incomeBg:GetComponent("Button").enabled = true
-    CompanyWaterPanel.open.localScale = Vector3.one
-    CompanyWaterPanel.close.localScale = Vector3.zero
-    DataManager.DetailModelRpcNoRet(go.insId, 'm_queryPlayerIncomePay',go.playerId, go.type,go.income)
+    go:OpenClose(false)
+    DataManager.DetailModelRpcNoRet(go.insId, 'm_queryPlayerIncomePay',go.playerId, go.bType,go.income)
 end
 
 --滑动互用
 CompanyWaterCtrl.static.CompanyWaterProvideData = function(transform, idx)
     idx = idx + 1
-    local item = CompanyWaterItem:new(transform,idx)
+    local item = CompanyWaterItem:new(transform,incomePayInfo.incomePay[idx],incomePayInfo.isIncome)
 end
 
 CompanyWaterCtrl.static.CompanyWaterClearData = function()
@@ -115,6 +148,19 @@ CompanyWaterCtrl.static.CompanyWaterClearData = function()
 end
 
 function CompanyWaterCtrl:c_companyBuildingWater(type)
-    self.type = type
+    self.bType = type
     DataManager.DetailModelRpcNoRet(self.insId, 'm_queryPlayerIncomePay',self.playerId,type,self.income)
+end
+
+function CompanyWaterCtrl:c_companyWater(info)
+    if info.incomePay then
+        CompanyWaterPanel.empty.localScale = Vector3.zero
+        incomePayInfo = info
+        table.sort(incomePayInfo.incomePay, function (m, n) return m.time > n.time end )
+        CompanyWaterPanel.scroll:ActiveLoopScroll(self.companyWater,#info.incomePay)
+    else
+        CompanyWaterPanel.empty.localScale = Vector3.one
+        incomePayInfo = nil
+        CompanyWaterPanel.scroll:ActiveLoopScroll(self.companyWater,0)
+    end
 end

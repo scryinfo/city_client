@@ -30,7 +30,7 @@ end
 
 function CompanyBuildingItem:OnBg(go)
     PlayMusEff(1002)
-    if lastBg then
+    if lastBg and not lastBg.bg:Equals(nil) then
         lastBg.unSelectBg.localScale = Vector3.one
         lastBg.selectBg.localScale = Vector3.zero
     end

@@ -65,6 +65,10 @@ function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
     end)
 end
 --
+function BuildingRentPartDetail:_checkChangeInputValue()
+    
+end
+--
 function BuildingRentPartDetail:_ResetTransform()
     self.rentInput.text = ""
     self.otherSeeRentText.text = ""

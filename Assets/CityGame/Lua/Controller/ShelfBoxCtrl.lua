@@ -293,11 +293,11 @@ end
 --点击下架
 function ShelfBoxCtrl:_clickDownShelfBtn(ins)
     PlayMusEff(1002)
-    --如果是自动补货
-    if ins.m_data.dataInfo.autoReplenish == true then
-        Event.Brocast("SmallPop",GetLanguage(25030018), 300)
-        return
-    end
+    ----如果是自动补货
+    --if ins.m_data.dataInfo.autoReplenish == true then
+    --    Event.Brocast("SmallPop",GetLanguage(25030018), 300)
+    --    return
+    --end
     local datas = { ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
                 content = GetLanguage(25060017),func = function()
             local data = {}

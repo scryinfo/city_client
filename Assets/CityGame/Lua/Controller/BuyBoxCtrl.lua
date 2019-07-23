@@ -57,7 +57,7 @@ function BuyBoxCtrl:_getComponent(go)
     --self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
     self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
     --content
-    self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconbg")
+    --self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconbg")
     self.iconImg = go.transform:Find("contentRoot/content/goodsInfo/iconbg/iconImg"):GetComponent("Image")
     self.nameText = go.transform:Find("contentRoot/content/goodsInfo/iconbg/name/nameText"):GetComponent("Text")
     self.priceText = go.transform:Find("contentRoot/content/goodsInfo/iconbg/price/priceText"):GetComponent("Text")

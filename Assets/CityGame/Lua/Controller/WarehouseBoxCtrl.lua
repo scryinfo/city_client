@@ -57,7 +57,7 @@ function WarehouseBoxCtrl:_getComponent(go)
     --self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
     self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
     --goodsInfo
-    self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconBg")
+    --self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconBg")
     self.iconImg = go.transform:Find("contentRoot/content/goodsInfo/iconBg/iconImg"):GetComponent("Image")
     self.nameText = go.transform:Find("contentRoot/content/goodsInfo/iconBg/nameBg/nameText"):GetComponent("Text")
 
@@ -96,12 +96,11 @@ end
 --初始化UI数据
 function WarehouseBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22
+    self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.m_data.itemId)
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
         self:materialOrGoods(self.m_data.itemId)
-        LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == goodsKey then
         self:materialOrGoods(self.m_data.itemId)
-        LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
         --如果是商品，判断原料等级
         if Good[self.m_data.itemId].luxury == 1 then
             self.levelImg.color = getColorByVector3(oneLevel)

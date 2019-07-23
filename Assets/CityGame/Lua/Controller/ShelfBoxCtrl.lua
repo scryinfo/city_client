@@ -71,7 +71,7 @@ function ShelfBoxCtrl:_getComponent(go)
     --self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
     self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
     --content  goodsInfo
-    self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconbg")
+    --self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconbg")
     self.iconImg = go.transform:Find("contentRoot/content/goodsInfo/iconbg/iconImg"):GetComponent("Image")
     self.nameText = go.transform:Find("contentRoot/content/goodsInfo/iconbg/nameBg/nameText"):GetComponent("Text")
 
@@ -129,6 +129,7 @@ end
 --------------------------------------------------------------------------初始化--------------------------------------------------------------------------
 --初始化UI数据
 function ShelfBoxCtrl:initializeUiInfoData()
+    self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.m_data.itemId)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         local function callbacks(guidePrice)
             self.guidePrice = guidePrice   --推荐价格
@@ -154,10 +155,8 @@ function ShelfBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22
     if Math_Floor(self.m_data.itemId / 100000) == materialKey then
         self:materialOrGoods(self.m_data.itemId)
-        LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif Math_Floor(self.m_data.itemId / 100000) == goodsKey then
         self:materialOrGoods(self.m_data.itemId)
-        LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
         --如果是商品，判断原料等级
         if Good[self.m_data.itemId].luxury == 1 then
             self.levelImg.color = getColorByVector3(oneLevel)

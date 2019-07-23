@@ -73,6 +73,7 @@ end
 function DeleteItemBoxCtrl:initializeUiInfoData()
     local materialKey,goodsKey = 21,22
     self.nameText.text = GetLanguage(self.m_data.itemId)
+    self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.m_data.itemId)
     if self.m_data.n == 0 then
         self.numberSlider.maxValue = self.m_data.n
         self.numberSlider.minValue = 0
@@ -90,11 +91,9 @@ function DeleteItemBoxCtrl:initializeUiInfoData()
     if ToNumber(StringSun(self.m_data.itemId,1,2)) == materialKey then
         self.goods.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3.New(-140,-100,0)
-        LoadSprite(Material[self.m_data.itemId].img,self.iconImg,false)
     elseif ToNumber(StringSun(self.m_data.itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
         self.nameBg.transform.localPosition = Vector3.New(-140,-55,0)
-        LoadSprite(Good[self.m_data.itemId].img,self.iconImg,false)
         --如果是商品，判断原料等级
         if Good[self.m_data.itemId].luxury == 1 then
             self.levelImg.color = getColorByVector3(oneLevel)

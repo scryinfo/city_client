@@ -85,9 +85,6 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.comCenterText13 = transform:Find("root/competitiSlider/center/Image/Text"):GetComponent("Text")
 
     self.rentInput.onValueChanged:AddListener(function (str)
-        --if self.inputCanChange == nil or self.inputCanChange == false then
-        --    return
-        --end  ------------------------
         if str == "" or self.guideData == nil then
             return
         end
@@ -97,32 +94,19 @@ function OpenHouseCtrlNew:_getComponent(go)
         elseif temp == 1 then
             self.valueText.text = "<"..temp
         else
-            self.valueText.text = temp
+            self.valueText.text = string.format("%0.1f", temp)
         end
         self.sliderCanChange = false
         self.competitiSlider.value = temp
     end)
-    -------------------------------------------------------------
-    --self.rentInput.OnSelect:AddListener(function ()
-    --    self.inputCanChange = true
-    --end)
-    --self.competitiSlider.OnSelect:AddListener(function ()
-    --    self.sliderCanChange = true
-    --end)
-    -------------------------------------------------------------
 
     self.competitiSlider.onValueChanged:AddListener(function (value)
-        if self.sliderCanChange == nil or self.sliderCanChange == false then
-            return
-        end
         if self.guideData == nil then
             return
         end
         local tempSlider = value
         local price = ct.CalculationHousePrice(self.guideData.guidePrice,tempSlider)
-        --self.inputCanChange = false
         self.rentInput.text = GetClientPriceString(price)
-        --self.rentInput.text = price / 10000
     end)
 end
 --
@@ -154,8 +138,8 @@ function OpenHouseCtrlNew:_initData()
     DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)  --请求竞争力参数
 
     self.tipRoot.localScale = Vector3.zero
-    local buildingData = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
-    self.staffNum = buildingData.staffNum
+    local buildingData = PlayerBuildingBaseData[self.m_data.info.mId]
+    self.staffNum = buildingData.maxWorkerNum
     self.staffNumText.text = self.staffNum
     self.standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)
     self.roomCountText.text = string.format("%s <color=#FFFFFF>%d</color>", GetLanguage(12345678), buildingData.npc)
@@ -164,8 +148,8 @@ function OpenHouseCtrlNew:_initData()
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
     else
         self.standardWageText.text = string.format("E%s", GetClientPriceString(self.standardWage))
-        --local value = self.m_data.info.salary * staffNum * self.standardWage / 100
-        local value = buildingData.staffNum * self.standardWage  --temp修改
+        --local value = self.m_data.info.salary * self.staffNum * self.standardWage / 100
+        local value = self.staffNum * self.standardWage  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
         self.totalValue = value
     end
@@ -193,13 +177,10 @@ function OpenHouseCtrlNew:_getApartmentGuidePrice(data)
         elseif temp == 1 then
             self.valueText.text = "<"..temp
         else
-            self.valueText.text = temp
+            self.valueText.text = string.format("%0.1f", temp)
         end
-        --self.inputCanChange = true
         self.competitiSlider.value = math.floor(temp)
-        --self.sliderCanChange = false
         self.rentInput.text = GetClientPriceString(tempPrice)
-        --self.rentInput.text = tempPrice / 10000
     end
 end
 --

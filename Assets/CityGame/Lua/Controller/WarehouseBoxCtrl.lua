@@ -29,11 +29,15 @@ function WarehouseBoxCtrl:Awake(go)
     self.gameObject = go
     self:_getComponent(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
+    self.luaBehaviour:AddClick(self.bgBtn.gameObject,self._clickCloseBtn,self)
+    --self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
     self.luaBehaviour:AddClick(self.addTransportBtn.gameObject,self._clickAddTransportBtn,self)
     self.luaBehaviour:AddClick(self.deleBtn.gameObject,self._clickDeleBtn,self)
     self.numberSlider.onValueChanged:AddListener(function()
-        self:SlidingUpdateText()
+        self:UpdateSlidingText()
+    end)
+    self.numberInput.onEndEdit:AddListener(function ()
+        self:UpdateInputText()
     end)
 end
 
@@ -47,9 +51,11 @@ function WarehouseBoxCtrl:Hide()
 end
 -------------------------------------------------------------获取组件-------------------------------------------------------------------------------
 function WarehouseBoxCtrl:_getComponent(go)
-    self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
+    --bgBtn
+    self.bgBtn = go.transform:Find("bgBtn")
+    --top
+    --self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
     self.topName = go.transform:Find("contentRoot/top/topName"):GetComponent("Text")
-
     --goodsInfo
     self.iconbg = go.transform:Find("contentRoot/content/goodsInfo/iconBg")
     self.iconImg = go.transform:Find("contentRoot/content/goodsInfo/iconBg/iconImg"):GetComponent("Image")
@@ -59,27 +65,30 @@ function WarehouseBoxCtrl:_getComponent(go)
     self.brandName = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName"):GetComponent("Text")
     self.brandNameText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName/brandNameText"):GetComponent("Text")
     --如果是原料关闭商品属性展示,否则打开
-    self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
-    self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity/popularityValue"):GetComponent("Text")
-    self.qualityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
-    self.qualityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality/qualityValue"):GetComponent("Text")
+    --self.popularityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
+    self.popularityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularityValue"):GetComponent("Text")
+    --self.qualityText = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
+    self.qualityValue = go.transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/qualityValue"):GetComponent("Text")
     self.levelBg = go.transform:Find("contentRoot/content/goodsInfo/levelBg")
     self.levelImg = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg"):GetComponent("Image")
-    self.levelText = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level"):GetComponent("Text")
-    self.levelValue = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level/levelText"):GetComponent("Text")
+    --self.levelText = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level"):GetComponent("Text")
+    self.levelValue = go.transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/levelText"):GetComponent("Text")
 
     self.number = go.transform:Find("contentRoot/content/goodsInfo/number")
     self.warehouse = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber")
     self.shelf = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber")
-    self.warehouseNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/numberTipText"):GetComponent("Text")
+    --self.warehouseNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/numberTipText"):GetComponent("Text")
     self.warehouseNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/warehouseNumber/warehouseNumberText"):GetComponent("Text")
-    self.shelfNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/numberTipText"):GetComponent("Text")
+    --self.shelfNumberTipText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/numberTipText"):GetComponent("Text")
     self.shelfNumberText = go.transform:Find("contentRoot/content/goodsInfo/number/shelfNumber/shelfNumberText"):GetComponent("Text")
-    self.tipText = go.transform:Find("contentRoot/content/tipText"):GetComponent("Text")
+    --self.tipText = go.transform:Find("contentRoot/content/tipText"):GetComponent("Text")
     self.tipNumText = go.transform:Find("contentRoot/content/tipNumText"):GetComponent("Text")
+    self.numberInput = go.transform:Find("contentRoot/content/numberInput"):GetComponent("InputField")
+    self.numberTip = go.transform:Find("contentRoot/content/numberInput/numberTip"):GetComponent("Text")
     self.numberSlider = go.transform:Find("contentRoot/content/numberSlider"):GetComponent("Slider")
-    self.numberText = go.transform:Find("contentRoot/content/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
+    --self.numberText = go.transform:Find("contentRoot/content/numberSlider/HandleSlideArea/Handle/numberBg/numberText"):GetComponent("Text")
     self.deleBtn = go.transform:Find("contentRoot/bottom/deleBtn")
+    self.deleBtnText = go.transform:Find("contentRoot/bottom/deleBtn/text"):GetComponent("Text")
     self.addTransportBtn = go.transform:Find("contentRoot/bottom/addTransportBtn")
     self.addTransportText = go.transform:Find("contentRoot/bottom/addTransportBtn/text"):GetComponent("Text")
 end
@@ -121,34 +130,54 @@ function WarehouseBoxCtrl:initializeUiInfoData()
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.numberSlider.maxValue = self.m_data.dataInfo.n
     if self.warehouseCount == 0 then
-        self.numberSlider.value = 0
-        self.numberSlider.minValue = 0
         self.numberSlider.maxValue = 0
+        self.numberSlider.minValue = 0
+        self.numberSlider.value = 0
+        self.numberInput.text = "0"
+        self.numberInput.characterLimit = #tostring(self.m_data.dataInfo.n) + 1
         self.tipNumText.transform.localScale = Vector3.one
     else
-        self.numberSlider.value = 1
-        self.numberSlider.minValue = 1
         self.numberSlider.maxValue = self.warehouseCount
+        self.numberSlider.minValue = 1
+        self.numberSlider.value = 1
+        self.numberInput.text = "1"
+        self.numberInput.characterLimit = #tostring(self.m_data.dataInfo.n) + 1
         self.tipNumText.transform.localScale = Vector3.zero
     end
-    self.numberText.text = "×"..self.numberSlider.value
 end
 --设置多语言
 function WarehouseBoxCtrl:_language()
     self.topName.text = GetLanguage(28040035)
-    self.popularityText.text = GetLanguage(25020006)
-    self.qualityText.text = GetLanguage(25020005)
-    self.levelText.text = GetLanguage(25020007)
-    self.tipText.text = GetLanguage(25020008)
-    self.warehouseNumberTipText.text = GetLanguage(25020038)
-    self.shelfNumberTipText.text = GetLanguage(25020037)
+    --self.popularityText.text = GetLanguage(25020006)
+    --self.qualityText.text = GetLanguage(25020005)
+    --self.levelText.text = GetLanguage(25020007)
+    --self.tipText.text = GetLanguage(25020008)
+    --self.warehouseNumberTipText.text = GetLanguage(25020038)
+    --self.shelfNumberTipText.text = GetLanguage(25020037)
     self.tipNumText.text = GetLanguage(25020041)
+    self.numberTip.text = GetLanguage(25020008)
     self.brandName.text = GetLanguage(25020040)
-    self.addTransportText = GetLanguage(25020036)
+    self.addTransportText.text = GetLanguage(25020036)
+    self.deleBtnText.text = GetLanguage(25020010).." >"
 end
---滑动更新文本
-function WarehouseBoxCtrl:SlidingUpdateText()
-    self.numberText.text = "×"..self.numberSlider.value
+--滑动条更新输入框
+function WarehouseBoxCtrl:UpdateSlidingText()
+    --self.numberText.text = "×"..self.numberSlider.value
+    self.numberInput.text = tostring(self.numberSlider.value)
+end
+--输入框结束更新滑动条
+function WarehouseBoxCtrl:UpdateInputText()
+    if self.numberInput.text == "" or ToNumber(self.numberInput.text) <= 0 then
+        self.numberInput.text = 1
+        self.numberSlider.value = 1
+        return
+    end
+    if ToNumber(self.numberInput.text) > self.numberSlider.maxValue then
+        self.numberInput.text = self.numberSlider.maxValue
+        self.numberSlider.value = ToNumber(self.numberInput.text)
+        return
+    end
+    self.numberSlider.value = ToNumber(self.numberInput.text)
 end
 ---------------------------------------------------------------点击函数-------------------------------------------------------------------------------------
 --关闭
@@ -193,18 +222,10 @@ function WarehouseBoxCtrl:materialOrGoods(itemId)
     if Math_Floor(itemId / 100000) == materialKey then
         self.scoreBg.transform.localScale = Vector3.zero
         self.levelBg.transform.localScale = Vector3.zero
-        self.number.sizeDelta = Vector2.New(470,356)
-        self.warehouse.transform.localPosition = Vector3.New(-150,50,0)
-        self.shelf.transform.localPosition = Vector3.New(-150,-60,0)
-        self.number.transform.localPosition = Vector3.New(180,0,0)
-        self.iconbg.transform.localPosition = Vector3.New(-243,0,0)
+        self.number.transform.localPosition = Vector3.New(90,-15,0)
     elseif Math_Floor(itemId / 100000) == goodsKey then
         self.scoreBg.transform.localScale = Vector3.one
         self.levelBg.transform.localScale = Vector3.one
-        self.number.sizeDelta = Vector2.New(585,86)
-        self.number.transform.localPosition = Vector3.New(180,-135,0)
-        self.warehouse.transform.localPosition = Vector3.New(-240,0,0)
-        self.shelf.transform.localPosition = Vector3.New(45,0,0)
-        self.iconbg.transform.localPosition = Vector3.New(-298,0,0)
+        self.number.transform.localPosition = Vector3.New(90,-108,0)
     end
 end

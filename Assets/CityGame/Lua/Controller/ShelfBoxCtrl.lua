@@ -264,7 +264,7 @@ function ShelfBoxCtrl:_language()
     --self.shelfNumberTipText.text = GetLanguage(25020037)
     self.addShelfText.text = GetLanguage(25020035)
     self.brandName.text = GetLanguage(25020040)
-    self.downShelfBtnText.text = "全部下架"
+    self.downShelfBtnText.text = "全部下架".." >"
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------

@@ -182,11 +182,15 @@ function BuildingProductionDetailPart:initializeUiInfoData(lineData)
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             self.nameBg.transform.localPosition = Vector3(-140,-100,0)
             self.goods.transform.localScale = Vector3.zero
-            LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
+            --LoadSprite(Material[lineData[1].itemId].img,self.iconImg,false)
+            self.iconImg.sprite = SpriteManager.GetSpriteByPool(lineData[1].itemId)
+
             --生产一个需要的时间(毫秒)
             self.oneTotalTime = self:GetOneNumTime(self:getNumOneSec(lineData[1].itemId))
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
+            --LoadSprite(Good[lineData[1].itemId].img,self.iconImg,false)
+            self.iconImg.sprite = SpriteManager.GetSpriteByPool(lineData[1].itemId)
+
             --生产一个需要的时间(毫秒)
             self.oneTotalTime = self:GetOneNumTime(self:getNumOneSec(lineData[1].itemId))
             --如果是商品，判断原料等级

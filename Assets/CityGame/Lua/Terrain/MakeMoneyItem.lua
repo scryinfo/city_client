@@ -24,7 +24,8 @@ function MakeMoneyItem:initialize(prefab,data)
         tempPosition.x = tempPosition.x + PlayerBuildingBaseData[basebuildData.Data.buildingID].x / 2
         tempPosition.z = tempPosition.z + PlayerBuildingBaseData[basebuildData.Data.buildingID].y / 2
     end
-    self.rect.anchoredPosition = UnityEngine.Camera.main:WorldToScreenPoint(tempPosition)
+    self.Pos = tempPosition
+    self.rect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(tempPosition))
     self.icon = prefab.transform:Find("Icon")
     self.icon.transform.localScale = Vector3.zero
     --设置图片Icon
@@ -36,6 +37,7 @@ function MakeMoneyItem:initialize(prefab,data)
             self.icon.transform.localScale = Vector3.one
         end
     end
+    Event.AddListener("c_RefreshLateUpdate", self.LateUpdate, self)
     self:Show()
 end
 
@@ -44,11 +46,20 @@ function MakeMoneyItem:Show()
     local sequence = DG.Tweening.DOTween.Sequence()
     sequence:Append( self.canvasGroup:DOFade(1,0.3):SetEase(DG.Tweening.Ease.OutCubic) )
     sequence:AppendInterval(0.3)
+    sequence:Insert(0.6, self.rect:DOScale(Vector3.zero,1):SetEase(DG.Tweening.Ease.OutCirc))
     sequence:Append( self.canvasGroup:DOFade(0,1):SetEase(DG.Tweening.Ease.Linear) )
     sequence:OnComplete( function()
         MakeMoneyManager.RecyclingGameObject(self.prefab)
+        Event.RemoveListener("c_RefreshLateUpdate", self.LateUpdate, self)
         self.prefab = nil
         self.data = nil
         self = nil
     end)
+end
+
+--刷新位置
+function MakeMoneyItem:LateUpdate()
+    if self.prefab ~= nil and self.Pos ~= nil then
+        self.rect.anchoredPosition =ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.Pos))
+    end
 end

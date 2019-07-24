@@ -24,7 +24,7 @@ function NewAddProductionLineCtrl:Awake(go)
         UIPanel.ClosePage()
     end,self)
     self:_addListener()
-    NewAddProductionLineCtrl.GetAllImg()
+    --NewAddProductionLineCtrl.GetAllImg()
 end
 --
 function NewAddProductionLineCtrl:Active()
@@ -33,8 +33,8 @@ function NewAddProductionLineCtrl:Active()
 end
 --
 function NewAddProductionLineCtrl:Refresh()
-    --self:_initData()
-    NewAddProductionLineCtrl.CheckLoad()
+    self:_initData()
+    --NewAddProductionLineCtrl.CheckLoad()
 end
 --
 function NewAddProductionLineCtrl:_addListener()
@@ -256,14 +256,14 @@ local function LoadBuildingIcon(name,iIcon)
 end
 --
 function NewAddProductionLineCtrl.CheckLoad()
-    for i, img in ipairs(NewAddProductionLineCtrl.tempList) do
-        if JudgeHasBuildingIcon(img) == false then
-            LoadBuildingIcon(img)
-            return
-        end
-    end
-    --开始初始化
-    Event.Brocast("c_NewAddLineLoadFinish")
+    --for i, img in ipairs(NewAddProductionLineCtrl.tempList) do
+    --    if JudgeHasBuildingIcon(img) == false then
+    --        LoadBuildingIcon(img)
+    --        return
+    --    end
+    --end
+    ----开始初始化
+    --Event.Brocast("c_NewAddLineLoadFinish")
 end
 
 --先加载完所有图片再初始化
@@ -279,9 +279,9 @@ function NewAddProductionLineCtrl.GetAllImg()
 end
 
 --设置ICon的Sprite
-function NewAddProductionLineCtrl.SetBuildingIconSpite(name , tempImage)
-    if JudgeHasBuildingIcon(name) == true then
-        tempImage.sprite = GetBuildingIcon(name)
-        --tempImage:SetNativeSize()
-    end
+function NewAddProductionLineCtrl.SetBuildingIconSpite(itemId , tempImage)
+    tempImage.sprite = SpriteManager.GetSpriteByPool(itemId)
+    --if JudgeHasBuildingIcon(name) == true then
+    --    tempImage.sprite = GetBuildingIcon(name)
+    --end
 end

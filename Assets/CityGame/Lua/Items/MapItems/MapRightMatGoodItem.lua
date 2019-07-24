@@ -40,19 +40,20 @@ function MapRightMatGoodItem:refreshData(data)
     local itemId = data.item.key.id
     self.numberText.text = "×"..data.item.n
     self.priceText.text = GetClientPriceString(data.price)
+    local tempSprite = SpriteManager.GetSpriteByPool(itemId)
+    self.iconImg.sprite = tempSprite
 
     local materialKey, goodsKey = 21,22
     if tonumber(string.sub(itemId,1,2)) == materialKey then
         self.goods.transform.localScale = Vector3.zero
         self.nameBg.transform.localPosition = Vector3(-140, -100, 0)
-        LoadSprite(Material[itemId].img, self.iconImg,false)
+        --LoadSprite(Material[itemId].img, self.iconImg,false)
         self.nameText.text = GetLanguage(Material[itemId].name)
 
     elseif tonumber(string.sub(itemId,1,2)) == goodsKey then
         self.goods.transform.localScale = Vector3.one
-        LoadSprite(Good[itemId].img, self.iconImg,false)
+        --LoadSprite(Good[itemId].img, self.iconImg,false)
         self.nameText.text = GetLanguage(Good[itemId].name)
-
         self.brandNameText.text = data.item.key.brandName
         self.brandValue.text = data.item.key.brandScore
         self.qualityValue.text = data.item.key.qualityScore

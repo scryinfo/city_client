@@ -23,12 +23,12 @@ function AddLineDetailItemNew:initialize(viewRect, data, toggleGroup)
     self.stateData = stateData
 
     local tempData
-    if data.itemType == 0 then
-        tempData = Material[data.itemId]
-    else
-        tempData = Good[data.itemId]
-    end
-    NewAddProductionLineCtrl.SetBuildingIconSpite(tempData.img, self.iconImg)
+    --if data.itemType == 0 then
+    --    tempData = Material[data.itemId]
+    --else
+    --    tempData = Good[data.itemId]
+    --end
+    NewAddProductionLineCtrl.SetBuildingIconSpite(data.itemId, self.iconImg)
     self.bgBtn.onClick:RemoveAllListeners()
     self.bgBtn.onClick:AddListener(function()
         self:_clickFunc()

@@ -15,10 +15,6 @@ end
 
 --创建角色
 local function CreateRangePalyer(tempCollectionID,PlayerCount)
-    --Date 19_05_31 屏蔽角色
-    if true then
-        return
-    end
     if tempCollectionID == nil or PlayerCount == nil or  PlayerCount <= 0  then
         return
     end
@@ -43,7 +39,7 @@ local function CreateRangePalyer(tempCollectionID,PlayerCount)
     for i = 1, PlayerCount do
         tempPlayerSet = PathFindingConfig[Math_Random(1,#PathFindingConfig)]
         targerBlockID = CanUsedIDPath[Math_Random(1,#CanUsedIDPath)]
-        tempPalyer = PathFindItem:new(tempPlayerSet.poolName,targerBlockID,tempPlayerSet.playerEdgeDistance,idCount)
+        tempPalyer = PathFindItem:new(tempPlayerSet.poolName,targerBlockID,tempPlayerSet.playerEdgeDistance,idCount,tempPlayerSet.poolType)
         m_AllPlayer[idCount] = tempPalyer
         idCount = idCount + 1
     end

@@ -88,10 +88,6 @@ function OpenHouseCtrlNew:_getComponent(go)
 end
 --
 function OpenHouseCtrlNew:_awakeSliderInput()
-    --
-    EventTriggerMgr.Get(self.rentInput.gameObject).onSelect = function()
-        OpenHouseCtrlNew.inputCanChange = true  --当input被选中时，则可以改变自己的值
-    end
     self.rentInput.onValueChanged:AddListener(function (str)
         if str == "" or self.guideData == nil then
             return
@@ -111,14 +107,15 @@ function OpenHouseCtrlNew:_awakeSliderInput()
     EventTriggerMgr.Get(self.competitiSlider.gameObject).onSelect = function()
         OpenHouseCtrlNew.sliderCanChange = true
     end
+    EventTriggerMgr.Get(self.competitiSlider.gameObject).onUpdateSelected = function()
+        OpenHouseCtrlNew.sliderCanChange = true
+    end
     self.competitiSlider.onValueChanged:AddListener(function (value)
         if self.guideData == nil then
             return
         end
-        if value >= self.competitiSlider.maxValue or value <= self.competitiSlider.minValue then
-            if OpenHouseCtrlNew.sliderCanChange ~= true then
-                return
-            end
+        if OpenHouseCtrlNew.sliderCanChange ~= true then
+            return
         end
         local price = ct.CalculationHousePrice(self.guideData.guidePrice, value)
         self.rentInput.text = GetClientPriceString(price)
@@ -207,7 +204,6 @@ function OpenHouseCtrlNew:_getApartmentGuidePrice(data)
             self.valueText.text = string.format("%0.1f", temp)
         end
         OpenHouseCtrlNew.sliderCanChange = false
-        OpenHouseCtrlNew.inputCanChange = false
         self.competitiSlider.value = temp
         self.rentInput.text = GetClientPriceString(tempPrice)
     end

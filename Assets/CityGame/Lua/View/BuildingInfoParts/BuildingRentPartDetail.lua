@@ -103,10 +103,6 @@ function BuildingRentPartDetail:_getComponent(transform)
 end
 --
 function BuildingRentPartDetail:_awakeSliderInput()
-    --
-    EventTriggerMgr.Get(self.rentInput.gameObject).onSelect = function()
-        BuildingRentPartDetail.inputCanChange = true  --当input被选中时
-    end
     self.rentInput.onValueChanged:AddListener(function (str)
         if str == "" or self.guideData == nil then
             return
@@ -119,25 +115,25 @@ function BuildingRentPartDetail:_awakeSliderInput()
         else
             self.competValueText.text = string.format("%0.1f", temp)
         end
-        BuildingRentPartDetail.sliderCanChange = self:_checkSliderChange(str)
+        BuildingRentPartDetail.sliderCanChange = false
         self.competitiSlider.value = temp
     end)
     --
     EventTriggerMgr.Get(self.competitiSlider.gameObject).onSelect = function()
         BuildingRentPartDetail.sliderCanChange = true
     end
+    EventTriggerMgr.Get(self.competitiSlider.gameObject).onUpdateSelected = function()
+        BuildingRentPartDetail.sliderCanChange = true
+    end
     self.competitiSlider.onValueChanged:AddListener(function (value)
         if self.guideData == nil then
             return
         end
-        if value >= self.competitiSlider.maxValue or value <= self.competitiSlider.minValue then
-            if BuildingRentPartDetail.sliderCanChange ~= true then
-                return
-            end
+        if BuildingRentPartDetail.sliderCanChange ~= true then
+            return
         end
         local price = ct.CalculationHousePrice(self.guideData.guidePrice, value)
         self.rentInput.text = GetClientPriceString(price)
-        --self.rentInput.text = price / 10000
     end)
 end
 --判断是否需要改变slider的值
@@ -207,7 +203,6 @@ function BuildingRentPartDetail:_getGuidePrice(data)
             self.competValueText.text = string.format("%0.1f", temp)
         end
         BuildingRentPartDetail.sliderCanChange = false
-        BuildingRentPartDetail.inputCanChange = false
         self.competitiSlider.value = temp
     end
 end

@@ -41,7 +41,7 @@ function MapSearchResultItem:_setPos()
                 --LoadSprite(path, self.protaitImg, true)
                 --self.protaitImg.enabled = true
             else
-                PlayerInfoManger.GetInfos({[1] = data.ownerId}, self._initPersonalInfo, self)
+                --PlayerInfoManger.GetInfos({[1] = data.ownerId}, self._initPersonalInfo, self)
                 --self.protaitImg.enabled = false
                 self.selfBuildingTran.localScale = Vector3.zero
             end
@@ -66,9 +66,9 @@ function MapSearchResultItem:_clickFunc()
 end
 --
 function MapSearchResultItem:_initPersonalInfo(info)
-    local data = info[1]
-    if data ~= nil and self ~= nil and self.data ~= nil then
-        self.data.playerInfo = data
-        --self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.protaitImg.transform,0.1)
-    end
+    --local data = info[1]
+    --if data ~= nil and self ~= nil and self.data ~= nil then
+    --    self.data.playerInfo = data
+    --    --self.avatar = AvatarManger.GetSmallAvatar(data.faceId, self.protaitImg.transform,0.1)
+    --end
 end

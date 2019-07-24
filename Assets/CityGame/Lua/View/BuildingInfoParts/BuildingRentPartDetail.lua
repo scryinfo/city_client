@@ -107,6 +107,11 @@ function BuildingRentPartDetail:_awakeSliderInput()
         if str == "" or self.guideData == nil then
             return
         end
+        local finalStr = ct.getCorrectPrice(str)
+        if finalStr ~= str then
+            self.rentInput.text = finalStr  --限制用户小数输入
+            return
+        end
         local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
         if temp >= functions.maxCompetitive then
             self.competValueText.text = ">"..temp
@@ -126,28 +131,12 @@ function BuildingRentPartDetail:_awakeSliderInput()
         BuildingRentPartDetail.sliderCanChange = true
     end
     self.competitiSlider.onValueChanged:AddListener(function (value)
-        if self.guideData == nil then
-            return
-        end
-        if BuildingRentPartDetail.sliderCanChange ~= true then
+        if self.guideData == nil or BuildingRentPartDetail.sliderCanChange ~= true then
             return
         end
         local price = ct.CalculationHousePrice(self.guideData.guidePrice, value)
         self.rentInput.text = GetClientPriceString(price)
     end)
-end
---判断是否需要改变slider的值
---当input输入的值超出范围，slider被归置为边界值1/99，这时则不能改变input的值
-function BuildingRentPartDetail:_checkSliderChange(inputValue)
-    local min = ct.CalculationHousePrice(self.guideData.guidePrice, functions.maxCompetitive)
-    local max = ct.CalculationHousePrice(self.guideData.guidePrice, functions.minCompetitive)
-    --local current = tonumber(inputValue) * 10000
-    local current = GetServerPriceNumber(inputValue)
-    if current > min and current < max then
-        return true
-    else
-        return false
-    end
 end
 --
 function BuildingRentPartDetail:clickCloseBtn()

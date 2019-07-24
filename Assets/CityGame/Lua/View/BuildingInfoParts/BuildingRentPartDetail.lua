@@ -45,9 +45,9 @@ function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
             return
         end
         local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
-        if temp == 99 then
+        if temp >= 99 then
             self.competValueText.text = ">"..temp
-        elseif temp == 1 then
+        elseif temp <= 1 then
             self.competValueText.text = "<"..temp
         else
             self.competValueText.text = string.format("%0.1f", temp)
@@ -59,14 +59,21 @@ function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
         if self.guideData == nil then
             return
         end
-        local tempSlider = value
-        local price = ct.CalculationHousePrice(self.guideData.guidePrice,tempSlider)
-        self.rentInput.text = GetClientPriceString(price)
+        self:_checkChangeInputValue(value)
+        --local tempSlider = value
+        --local price = ct.CalculationHousePrice(self.guideData.guidePrice,tempSlider)
+        --self.rentInput.text = GetClientPriceString(price)
     end)
 end
 --
-function BuildingRentPartDetail:_checkChangeInputValue()
-    
+function BuildingRentPartDetail:_checkChangeInputValue(sliderValue)
+    local min = ct.CalculationHousePrice(self.guideData.guidePrice, 99)
+    local max = ct.CalculationHousePrice(self.guideData.guidePrice, 1)
+    local current = ct.CalculationHousePrice(self.guideData.guidePrice,sliderValue)
+    if current >= min and current <= max then
+
+        self.rentInput.text = GetClientPriceString(current)
+    end
 end
 --
 function BuildingRentPartDetail:_ResetTransform()
@@ -174,9 +181,9 @@ function BuildingRentPartDetail:_getGuidePrice(data)
         self.guideData = data
         --local tempPrice = ct.CalculationHouseSuggestPrice(data.guidePrice)
         local temp = ct.CalculationHouseCompetitivePower(data.guidePrice, self.m_data.rent, data.npc)
-        if temp == 99 then
+        if temp >= 99 then
             self.competValueText.text = ">"..temp
-        elseif temp == 1 then
+        elseif temp <= 1 then
             self.competValueText.text = "<"..temp
         else
             self.competValueText.text = string.format("%0.1f", temp)

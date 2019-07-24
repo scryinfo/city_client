@@ -52,18 +52,18 @@ UnitTest.Exec("abel_wk27_hartbeat", "abel_wk27_hartbeat",  function ()
         --每x秒检查一次上次心跳是否超时，超时
         ct.G_LAST_HARTBEAT = uTime.time
         ct.G_Last_SendHARTBEATTime = uTime.time
-        local timerCheck = FrameTimer.New(function()
-            local timetest = uTime.time - ct.G_LAST_HARTBEAT
-            if timetest > ct.G_TIMEOUT_NET and ct.testUpdate and CityEngineLua._networkInterface.connected then
-                --提示网络连接不稳定
-                ct.G_TIMEOUT_NET = timetest --更新时间，下次超时再次提醒
-                local okCallBack = function()
-                    CityEngineLua.LoginOut()
-                end
-                ct.MsgBox(GetLanguage(41010010), GetLanguage(41010008), nil, okCallBack, okCallBack)
-            end
-        end, 270, 1)
-        timerCheck:Start()
+        --local timerCheck = FrameTimer.New(function()
+        --    local timetest = uTime.time - ct.G_LAST_HARTBEAT
+        --    if timetest > ct.G_TIMEOUT_NET and ct.testUpdate and CityEngineLua._networkInterface.connected then
+        --        --提示网络连接不稳定
+        --        ct.G_TIMEOUT_NET = timetest --更新时间，下次超时再次提醒
+        --        local okCallBack = function()
+        --            CityEngineLua.LoginOut()
+        --        end
+        --        ct.MsgBox(GetLanguage(41010010), GetLanguage(41010008), nil, okCallBack, okCallBack)
+        --    end
+        --end, 270, 1)
+        --timerCheck:Start()
         --目前GS才有心跳协议，AS没有
         local timerSendHartBeat = FrameTimer.New(function()
             --先计算时间差

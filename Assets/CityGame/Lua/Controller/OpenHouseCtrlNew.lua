@@ -84,6 +84,10 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.competitivenessText12 = transform:Find("competitivenessRoot/tooltip/content"):GetComponent("Text")
     self.comCenterText13 = transform:Find("root/competitiSlider/center/Image/Text"):GetComponent("Text")
 
+    self:_awakeSliderInput()  --初始化
+end
+--
+function OpenHouseCtrlNew:_awakeSliderInput()
     --
     EventTriggerMgr.Get(self.rentInput.gameObject).onSelect = function()
         OpenHouseCtrlNew.inputCanChange = true  --当input被选中时，则可以改变自己的值
@@ -93,9 +97,9 @@ function OpenHouseCtrlNew:_getComponent(go)
             return
         end
         local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
-        if temp >= 99 then
+        if temp >= functions.maxCompetitive then
             self.valueText.text = ">"..temp
-        elseif temp <= 1 then
+        elseif temp <= functions.minCompetitive then
             self.valueText.text = "<"..temp
         else
             self.valueText.text = string.format("%0.1f", temp)
@@ -111,7 +115,7 @@ function OpenHouseCtrlNew:_getComponent(go)
         if self.guideData == nil then
             return
         end
-        if value >= 99 or value <= 1 then
+        if value >= self.competitiSlider.maxValue or value <= self.competitiSlider.minValue then
             if OpenHouseCtrlNew.sliderCanChange ~= true then
                 return
             end
@@ -123,24 +127,10 @@ end
 --判断是否需要改变slider的值
 --当input输入的值超出范围，slider被归置为边界值1/99，这时则不能改变input的值
 function OpenHouseCtrlNew:_checkSliderChange(inputValue)
-    local min = ct.CalculationHousePrice(self.guideData.guidePrice,99)
-    local max = ct.CalculationHousePrice(self.guideData.guidePrice,1)
+    local min = ct.CalculationHousePrice(self.guideData.guidePrice, functions.maxCompetitive)
+    local max = ct.CalculationHousePrice(self.guideData.guidePrice, functions.minCompetitive)
     local current = tonumber(inputValue) * 10000
     if current >= min and current <= max then
-        return true
-    else
-        return false
-    end
-end
---判断是否需要改变input的值
---当input输入的值超出范围，slider被归置为边界值1/99，这时则不能改变input的值
-function OpenHouseCtrlNew:_checkInputChange(inputValue, calculateValue)
-    if inputValue == "" then
-        return
-    end
-    local price = tonumber(inputValue) * 10000
-    --ct.log("system", "input值："..price.."， slider计算得到的值："..calculateValue)
-    if price == calculateValue then
         return true
     else
         return false
@@ -166,8 +156,8 @@ end
 function OpenHouseCtrlNew:_initData()
     self.rentInput.text = ""
     self.competitivenessRoot.localScale = Vector3.zero
-    self.competitiSlider.minValue = 1
-    self.competitiSlider.maxValue = 99
+    self.competitiSlider.minValue = functions.minCompetitive
+    self.competitiSlider.maxValue = functions.maxCompetitive
 
     if self.m_data == nil then
         return
@@ -209,9 +199,9 @@ function OpenHouseCtrlNew:_getApartmentGuidePrice(data)
         self.guideData = data
         local tempPrice = ct.CalculationHouseSuggestPrice(data.guidePrice)
         local temp = ct.CalculationHouseCompetitivePower(data.guidePrice, data.guidePrice, data.npc)
-        if temp >= 99 then
+        if temp >= functions.maxCompetitive then
             self.valueText.text = ">"..temp
-        elseif temp <= 1 then
+        elseif temp <= functions.minCompetitive then
             self.valueText.text = "<"..temp
         else
             self.valueText.text = string.format("%0.1f", temp)

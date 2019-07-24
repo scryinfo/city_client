@@ -1,3 +1,4 @@
+functions = {}
 --查找对象--
 local _typeof = tolua.typeof
 
@@ -952,7 +953,9 @@ local PRIDMagnification = 10000000   --推荐定价表ID倍率
 local CPMagnification = 50		  --竞争力倍率
 local BargainingPower = 49		  --议价权
 local Divisor = 2       		  --除数
-local AfterPointBit = 1 		--小数点后取1位
+local AfterPointBit = 1 		  --小数点后取1位
+functions.maxCompetitive = 99     --最大竞争力
+functions.minCompetitive = 1      --最小竞争力
 --计算小数点后取N位
 function CalculationNBitAfterDecimalPoint(nNum)
     if type(nNum) ~= "number" then
@@ -1215,11 +1218,11 @@ function ct.CalculationHouseCompetitivePower(recommendedPricing,price,npc)
         --竞争力 = (推荐定价 - 玩家定价)  / (推荐定价 / 2 / 49) + 50
         temp = (recommendedPricing - price) / ((recommendedPricing / Divisor )/ BargainingPower) + CPMagnification
     end
-    if temp <= 1 then
-        temp = 1
+    if temp <= functions.minCompetitive then
+        temp = functions.minCompetitive
     end
-    if temp >= 99 then
-        temp = 99
+    if temp >= functions.maxCompetitive then
+        temp = functions.maxCompetitive
     end
     return temp
 end

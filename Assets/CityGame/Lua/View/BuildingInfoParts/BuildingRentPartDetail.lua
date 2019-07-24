@@ -39,41 +39,6 @@ function BuildingRentPartDetail:_InitClick(mainPanelLuaBehaviour)
         self.competitivenessText05.text = ""
         self.competitivenessRoot.transform.localScale = Vector3.zero
     end , self)
-    --
-    self.rentInput.onValueChanged:AddListener(function (str)
-        if str == "" or self.guideData == nil then
-            return
-        end
-        local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
-        if temp >= 99 then
-            self.competValueText.text = ">"..temp
-        elseif temp <= 1 then
-            self.competValueText.text = "<"..temp
-        else
-            self.competValueText.text = string.format("%0.1f", temp)
-        end
-        self.competitiSlider.value = temp
-    end)
-
-    self.competitiSlider.onValueChanged:AddListener(function (value)
-        if self.guideData == nil then
-            return
-        end
-        self:_checkChangeInputValue(value)
-        --local tempSlider = value
-        --local price = ct.CalculationHousePrice(self.guideData.guidePrice,tempSlider)
-        --self.rentInput.text = GetClientPriceString(price)
-    end)
-end
---
-function BuildingRentPartDetail:_checkChangeInputValue(sliderValue)
-    local min = ct.CalculationHousePrice(self.guideData.guidePrice, 99)
-    local max = ct.CalculationHousePrice(self.guideData.guidePrice, 1)
-    local current = ct.CalculationHousePrice(self.guideData.guidePrice,sliderValue)
-    if current >= min and current <= max then
-
-        self.rentInput.text = GetClientPriceString(current)
-    end
 end
 --
 function BuildingRentPartDetail:_ResetTransform()
@@ -133,6 +98,60 @@ function BuildingRentPartDetail:_getComponent(transform)
     self.competValueText03 = transform:Find("Root/rent/priceBg/Text"):GetComponent("Text")
     self.competitivenessText04 = transform:Find("competitivenessRoot/tooltip/title"):GetComponent("Text")
     self.competitivenessText05 = transform:Find("competitivenessRoot/tooltip/content"):GetComponent("Text")
+
+    self:_awakeSliderInput()
+end
+--
+function BuildingRentPartDetail:_awakeSliderInput()
+    --
+    EventTriggerMgr.Get(self.rentInput.gameObject).onSelect = function()
+        BuildingRentPartDetail.inputCanChange = true  --当input被选中时
+    end
+    self.rentInput.onValueChanged:AddListener(function (str)
+        if str == "" or self.guideData == nil then
+            return
+        end
+        local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
+        if temp >= functions.maxCompetitive then
+            self.competValueText.text = ">"..temp
+        elseif temp <= functions.minCompetitive then
+            self.competValueText.text = "<"..temp
+        else
+            self.competValueText.text = string.format("%0.1f", temp)
+        end
+        BuildingRentPartDetail.sliderCanChange = self:_checkSliderChange(str)
+        self.competitiSlider.value = temp
+    end)
+    --
+    EventTriggerMgr.Get(self.competitiSlider.gameObject).onSelect = function()
+        BuildingRentPartDetail.sliderCanChange = true
+    end
+    self.competitiSlider.onValueChanged:AddListener(function (value)
+        if self.guideData == nil then
+            return
+        end
+        if value >= self.competitiSlider.maxValue or value <= self.competitiSlider.minValue then
+            if BuildingRentPartDetail.sliderCanChange ~= true then
+                return
+            end
+        end
+        local price = ct.CalculationHousePrice(self.guideData.guidePrice, value)
+        self.rentInput.text = GetClientPriceString(price)
+        --self.rentInput.text = price / 10000
+    end)
+end
+--判断是否需要改变slider的值
+--当input输入的值超出范围，slider被归置为边界值1/99，这时则不能改变input的值
+function BuildingRentPartDetail:_checkSliderChange(inputValue)
+    local min = ct.CalculationHousePrice(self.guideData.guidePrice, functions.maxCompetitive)
+    local max = ct.CalculationHousePrice(self.guideData.guidePrice, functions.minCompetitive)
+    --local current = tonumber(inputValue) * 10000
+    local current = GetServerPriceNumber(inputValue)
+    if current > min and current < max then
+        return true
+    else
+        return false
+    end
 end
 --
 function BuildingRentPartDetail:clickCloseBtn()
@@ -145,8 +164,8 @@ end
 -- 显示入住人数和总人数
 function BuildingRentPartDetail:_initFunc()
     DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)  --请求竞争力参数
-    self.competitiSlider.minValue = 1
-    self.competitiSlider.maxValue = 99
+    self.competitiSlider.minValue = functions.minCompetitive
+    self.competitiSlider.maxValue = functions.maxCompetitive
 
     local str = string.format("%s<color=%s>/%s</color>",self.m_data.renter, BuildingRentPartDetail.static.NumberColor, PlayerBuildingBaseData[self.m_data.info.mId].npc)
     self.occupancyText.text = GetLanguage(12345678, str)
@@ -179,16 +198,16 @@ end
 function BuildingRentPartDetail:_getGuidePrice(data)
     if data ~= nil then
         self.guideData = data
-        --local tempPrice = ct.CalculationHouseSuggestPrice(data.guidePrice)
         local temp = ct.CalculationHouseCompetitivePower(data.guidePrice, self.m_data.rent, data.npc)
-        if temp >= 99 then
+        if temp >= functions.maxCompetitive then
             self.competValueText.text = ">"..temp
-        elseif temp <= 1 then
+        elseif temp <= functions.minCompetitive then
             self.competValueText.text = "<"..temp
         else
             self.competValueText.text = string.format("%0.1f", temp)
         end
+        BuildingRentPartDetail.sliderCanChange = false
+        BuildingRentPartDetail.inputCanChange = false
         self.competitiSlider.value = temp
-        --self.rentInput.text = GetClientPriceString(tempPrice)
     end
 end

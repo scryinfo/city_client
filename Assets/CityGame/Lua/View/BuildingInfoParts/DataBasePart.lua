@@ -3,40 +3,40 @@
 --- Created by password.
 --- DateTime: 2019/7/25 15:00
 --- 市场数据parts
-DataBaseParts = class('DataBaseParts', BasePart)
+DataBasePart = class('DataBasePart', BasePart)
 --
-function DataBaseParts:PrefabName()
-    return "DataBaseParts"
+function DataBasePart:PrefabName()
+    return "DataBasePart"
 end
 --
-function DataBaseParts:GetDetailClass()
+function DataBasePart:GetDetailClass()
     return DataBaseDetailPart
 end
 --
-function DataBaseParts:_InitTransform()
+function DataBasePart:_InitTransform()
     self:_getComponent(self.transform)
 end
 --
-function DataBaseParts:_ResetTransform()
+function DataBasePart:_ResetTransform()
 
 end
 
-function DataBaseParts:ShowDetail(data)
+function DataBasePart:ShowDetail(data)
     BasePart.ShowDetail(self,data)
 end
 --
-function DataBaseParts:RefreshData(data)
+function DataBasePart:RefreshData(data)
     if data == nil then
         return
     end
     self.m_data = data
 end
 --
-function DataBaseParts:_getComponent(transform)
+function DataBasePart:_getComponent(transform)
     self.today = transform:Find("Top/Text"):GetComponent("Text")
 end
 --
-function DataBaseParts:_initFunc(info)
+function DataBasePart:_initFunc(info)
 
 end
 

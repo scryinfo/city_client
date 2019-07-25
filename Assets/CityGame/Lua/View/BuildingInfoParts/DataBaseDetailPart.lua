@@ -4,7 +4,6 @@
 --- DateTime: 2019/7/25 15:05
 --- 市场数据DetailPart
 DataBaseDetailPart = class('DataBaseDetailPart', BasePartDetail)
-local buildingTs = nil
 --
 function DataBaseDetailPart:PrefabName()
     return "DataBaseDetailPart"

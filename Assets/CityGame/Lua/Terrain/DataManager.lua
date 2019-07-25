@@ -490,7 +490,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
                     ThisRoteDatas[itemBlockID] = nil
                     --TODO:
-                    ThisPathNums[itemBlockID] = 0
+                    --ThisPathNums[itemBlockID] = 0
                 end
             end
             break

@@ -15,13 +15,16 @@ function MapMatGoodSearchItem:childInit(viewRect)
     if mat ~= nil then
         self.nameText.text = GetLanguage(mat.name)
         self.languageId = mat.name
-        LoadSprite(mat.img, self.iconImg, false)
+        --LoadSprite(mat.img, self.iconImg, false)
     else
         local good = Good[self.data.itemId]
         self.nameText.text = GetLanguage(good.name)
         self.languageId = good.name
-        LoadSprite(good.img, self.iconImg, false)
+        --LoadSprite(good.img, self.iconImg, false)
     end
+
+    local tempSprite = SpriteManager.GetSpriteByPool(self.data.itemId)
+    self.iconImg.sprite = tempSprite
 end
 --
 function MapMatGoodSearchItem:initLanguage()

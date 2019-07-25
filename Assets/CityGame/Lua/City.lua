@@ -189,9 +189,9 @@ function ct.GenerateAndSaveKeyPair(password)
 	local pubkeyStr = City.signer_ct.ByteArrayToString(pubkey); --转为字符保存
 	ct.file_saveString(publicKeyPath,pubkeyStr)
 
-	--保存支付密码
-	local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
-	ct.file_saveString(passWordPath,password)
+	----保存支付密码
+	--local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
+	--ct.file_saveString(passWordPath,password)
 
 	local pk = ct.GetPublicKeyStringLocal()
 	return privateKey, pubkeyStr

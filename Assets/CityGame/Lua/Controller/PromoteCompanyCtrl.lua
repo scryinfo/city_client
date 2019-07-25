@@ -143,7 +143,7 @@ function PromoteCompanyCtrl:_queryPromoCurAbilitys(info)
         Event.Brocast("c_PromoteBuildingCapacity",info.CurAbilitys)
         return
     else
-      Event.Brocast("c_PromoteCapacity")
+      Event.Brocast(" ")
     end
 end
 

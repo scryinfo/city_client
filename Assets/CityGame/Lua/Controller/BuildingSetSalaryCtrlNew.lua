@@ -67,10 +67,10 @@ function BuildingSetSalaryCtrlNew:_initData()
         return
     end
 
-    local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
+    local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum  --员工数量
     self.staffNum = staffNum
     self.staffNumText.text = staffNum
-    local standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)
+    local standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)  --获取行业标准工资
     if standardWage == nil then
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
     else
@@ -81,7 +81,7 @@ function BuildingSetSalaryCtrlNew:_initData()
         self.totalValue = value
     end
 end
---
+--行业工资回调
 function BuildingSetSalaryCtrlNew:_getStandardWage(data)
     if data.industryWages ~= nil then
         DataManager.SetBuildingStandardWage(data.type, data.industryWages)
@@ -96,7 +96,7 @@ end
 function BuildingSetSalaryCtrlNew:_onClickConfirm(ins)
     PlayMusEff(1002)
     if DataManager.GetMoney() < ins.totalValue then
-        Event.Brocast("SmallPop", GetLanguage(41010006), 300)
+        Event.Brocast("SmallPop", GetLanguage(41010006), 300)  --判断资金是否足够
         return
     end
 
@@ -106,7 +106,7 @@ function BuildingSetSalaryCtrlNew:_onClickConfirm(ins)
             ins.m_data.callBackFunc(100)
             UIPanel.ClosePage()
         end}
-        ct.OpenCtrl("OpenBuildingCheckCtrl", data)
+        ct.OpenCtrl("OpenBuildingCheckCtrl", data)  --打开二次确认界面
     end
 end
 --

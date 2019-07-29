@@ -615,6 +615,7 @@ function MapCtrl:_openRightOthersPage(item)
         local typeData = self:_getSearchData()
         MapPanel.closeAllRightPage()
 
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.rightOtherBuildingPageItem:refreshData(item.data, typeData)
     end
 end
@@ -635,6 +636,7 @@ end
 function MapCtrl:_openRightGAucPage(item)
     if item ~= nil then
         MapPanel.closeAllRightPage()
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.rightGroundAucPageItem:refreshData(item.data)
     end
 end
@@ -642,6 +644,7 @@ end
 function MapCtrl:_openRightGTransPage(item)
     if item ~= nil then
         MapPanel.closeAllRightPage()
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.rightGroundTransPageItem:refreshData(item.data)
     end
 end
@@ -649,6 +652,7 @@ end
 function MapCtrl:_openRightSelfBuildingPage(item)
     if item ~= nil then
         MapPanel.closeAllRightPage()
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.selfBuildingPageItem:refreshData(item.data)
     end
 end
@@ -656,6 +660,7 @@ end
 function MapCtrl:_openRightSystemPage(item)
     if item ~= nil then
         MapPanel.closeAllRightPage()
+        MapCtrl._toggleShowRightRoot(true)
         MapPanel.systemBuildingPageItem:refreshData(item.data)
     end
 end
@@ -855,7 +860,22 @@ function MapCtrl.getCurrentScaleValue()
     return MapPanel.scaleSlider.value
 end
 --
+function MapCtrl._toggleShowRightRoot(open)
+    if open == true then
+        MapPanel.rightOtherPageRoot.localScale = Vector3.one
+    else
+        MapPanel.rightOtherPageRoot.localScale = Vector3.zero
+    end
+end
+--
 function MapCtrl:_mapAOIMove()
+    --一旦移动，则关闭右侧搜索结果
+    MapCtrl._toggleShowRightRoot(false)
+    if MapCtrl.selectItem ~= nil then
+        MapCtrl.selectItem:toggleShowSelect(false)
+        MapCtrl.selectItem = nil
+    end
+
     if self.my_Scale < self.criticalScaleValue then
         return
     end

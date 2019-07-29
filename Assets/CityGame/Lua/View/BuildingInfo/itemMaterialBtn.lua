@@ -3,9 +3,9 @@
 --- Created by Fisher.
 --- DateTime: 2019/7/24 16:04
 ---建筑经营详情Item
-itemPrefabBtn = class('itemPrefabBtn')
+itemMaterialBtn = class('itemMaterialBtn')
 
-function itemPrefabBtn:initialize(data,prefab,luaBehaviour,keyId)
+function itemMaterialBtn:initialize(data,prefab,luaBehaviour,keyId)
     self.data = data
     self.keyId = keyId
 
@@ -20,7 +20,7 @@ function itemPrefabBtn:initialize(data,prefab,luaBehaviour,keyId)
     self:InitializeData()
 end
 
-function itemPrefabBtn:InitializeData()
+function itemMaterialBtn:InitializeData()
     self.iconImg.sprite = SpriteManager.GetSpriteByPool(2101001)
     self.nameText.text = self.data.name
     self.brandName.text = ""
@@ -28,6 +28,6 @@ function itemPrefabBtn:InitializeData()
     self.proportionText.text = self.data.proportion.."%"
 end
 
-function itemPrefabBtn:_clickBgBtn(ins)
+function itemMaterialBtn:_clickBgBtn(ins)
     Event.Brocast("calculateLinePanel",ins.keyId)
 end

@@ -39,6 +39,8 @@ function CompanyPanel.InitPanel()
     this.foundingTimeText = transform:Find("BottomRoot/InfoRoot/NameRoot/FoundingTimeText"):GetComponent("Text")
     this.companyRenameBtn = transform:Find("BottomRoot/InfoRoot/NameRoot/CompanyNameText/CompanyRenameBtn")
     this.yScaleRT = transform:Find("BottomRoot/InfoRoot/IEPic/yScale"):GetComponent("RectTransform")
+    this.detaiks = transform:Find("BottomRoot/InfoRoot/IEPic/detaiks").gameObject    --营收详情
+    this.detaiksText = transform:Find("BottomRoot/InfoRoot/IEPic/detaiks/Text"):GetComponent("Text")
     this.curve = transform:Find("BottomRoot/InfoRoot/IEPic/curveBg/curve")
     this.curveSlide = transform:Find("BottomRoot/InfoRoot/IEPic/curveBg/curve"):GetComponent("Slide")
     this.curveFunctionalGraph = transform:Find("BottomRoot/InfoRoot/IEPic/curveBg/curve"):GetComponent("FunctionalGraph")

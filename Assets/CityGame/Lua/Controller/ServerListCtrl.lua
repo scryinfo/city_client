@@ -68,11 +68,9 @@ end
 
 function ServerListCtrl:_initInsData()
     DataManager.OpenDetailModel(ServerListModel,self.insId )
-    ServerListPanel.oKBtn:GetComponent("Button").enabled = true
 end
 
 function ServerListCtrl:Close()
-    --destroy(self.gameObject)
     UIPanel.Close(self)
     --注销事件
     Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
@@ -120,7 +118,6 @@ function ServerListCtrl:c_OnOK(go)
     data.Index = Index
     data.serinofs = go.data
     DataManager.DetailModelRpcNoRet(go.insId , 'm_chooseGameServer',data)
-    ServerListPanel.oKBtn:GetComponent("Button").enabled = false
 end
 
 function ServerListCtrl:c_GsCreateRole()

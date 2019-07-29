@@ -34,7 +34,7 @@ function BuildingRevenueInfoCtrl:Active()
     isbool = false
     --实例表
     self.itemPrefabTab = {}
-    self.buildingType = BuildingType.MaterialFactory    --后边传数据进来要删除
+    self.buildingType = BuildingType.Laboratory    --后边传数据进来要删除
     self:language()
     Event.AddListener("calculateLinePanel",self.calculateLinePanel,self)
 end
@@ -47,6 +47,7 @@ function BuildingRevenueInfoCtrl:Refresh()
     elseif self.buildingType == BuildingType.RetailShop then
     elseif self.buildingType == BuildingType.Municipal then
     elseif self.buildingType == BuildingType.Laboratory then
+        self.topMaterialType.transform.localScale = Vector3.one
     end
     self:initializeUiBuildingInfo()
 end
@@ -121,6 +122,19 @@ function BuildingRevenueInfoCtrl:initializeUiBuildingInfo()
     elseif self.buildingType == BuildingType.RetailShop then
     elseif self.buildingType == BuildingType.Municipal then
     elseif self.buildingType == BuildingType.Laboratory then
+        for i = 1, 10 do
+            local data = {}
+            data.name = "零售店"..i
+            data.mId = 1300001
+            data.todaySales = math.random(500,20000)
+            data.proportion = math.random(1,3000)
+            table.insert(datas,data)
+        end
+        for key,value in pairs(datas) do
+            local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
+            local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
+            table.insert(self.itemPrefabTab,itemPrefab)
+        end
     end
 end
 --多语言

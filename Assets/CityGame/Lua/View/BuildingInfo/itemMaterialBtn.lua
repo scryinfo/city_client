@@ -21,7 +21,11 @@ function itemMaterialBtn:initialize(data,prefab,luaBehaviour,keyId)
 end
 
 function itemMaterialBtn:InitializeData()
-    self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.data.itemId)
+    if not self.data.itemId then
+        LoadSprite("Assets/CityGame/Resources/View/BuildIcon/SuperMarket_1x1.png",self.iconImg,true)
+    else
+        self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.data.itemId)
+    end
     self.nameText.text = self.data.name
     self.todaySalesText.text = self.data.todaySales
     self.proportionText.text = self.data.proportion.."%"

@@ -44,3 +44,13 @@ function DataSaleDetailPart:_InitTransform()
     self:_getComponent(self.transform)
 
 end
+
+--
+function DataSaleDetailPart:_getComponent(transform)
+    self.empty = transform:Find("contentRoot/empty")
+    self.tipText = transform:Find("contentRoot/empty/tipText"):GetComponent("Text")
+    self.emptyAdd = transform:Find("contentRoot/empty/add").gameObject
+    self.noEmpty = transform:Find("contentRoot/noEmpty")
+    self.add = transform:Find("contentRoot/noEmpty/add").gameObject
+    self.content = transform:Find("contentRoot/noEmpty/Scroll View/Viewport/Content"):GetComponent("Image")
+end

@@ -3,44 +3,82 @@
 --- Created by password.
 --- DateTime: 2019/7/25 16:08
 ---市场调查DetailPart
-DataSurvetDetailPart = class('DataSurvetDetailPart', BasePartDetail)
+DataSurveyDetailPart = class('DataSurveyDetailPart', BasePartDetail)
 --
-function DataSurvetDetailPart:PrefabName()
-    return "DataSurvetDetailPart"
+function DataSurveyDetailPart:PrefabName()
+    return "DataSurveyDetailPart"
 end
 --
-function  DataSurvetDetailPart:_InitEvent()
+function  DataSurveyDetailPart:_InitEvent()
 
 end
 --
-function DataSurvetDetailPart:_InitClick(mainPanelLuaBehaviour)
+function DataSurveyDetailPart:_InitClick(mainPanelLuaBehaviour)
     self.m_LuaBehaviour = mainPanelLuaBehaviour
 end
 --
-function DataSurvetDetailPart:_ResetTransform()
+function DataSurveyDetailPart:_ResetTransform()
 
 end
 --
-function DataSurvetDetailPart:_RemoveEvent()
+function DataSurveyDetailPart:_RemoveEvent()
 
 end
 --
-function DataSurvetDetailPart:_RemoveClick()
+function DataSurveyDetailPart:_RemoveClick()
 end
 
-function DataSurvetDetailPart:Show(data)
+function DataSurveyDetailPart:Show(data)
     BasePartDetail.Show(self)
 end
-function DataSurvetDetailPart:Hide()
+function DataSurveyDetailPart:Hide()
     BasePartDetail.Hide(self)
 end
 --
-function DataSurvetDetailPart:RefreshData(data)
+function DataSurveyDetailPart:RefreshData(data)
 
 end
 
 --
-function DataSurvetDetailPart:_InitTransform()
+function DataSurveyDetailPart:_InitTransform()
     self:_getComponent(self.transform)
 
+end
+
+--
+function DataSurveyDetailPart:_getComponent(transform)
+    self.bg = transform:Find("contentRoot/contentBg/bg")
+    self.surveyBg = transform:Find("contentRoot/contentBg/surveyBg")
+    self.addBtnBg = transform:Find("contentRoot/addBtnBg")
+    self.addBtn = transform:Find("contentRoot/addBtnBg/addBtn").gameObject
+    self.addTip = transform:Find("contentRoot/addBtnBg/addTip"):GetComponent("Text")
+    self.content = transform:Find("contentRoot/content")
+    self.time = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/time/timeImage/timeText"):GetComponent("Text")
+    self.delete = transform:Find("contentRoot/content/leftRoot/lineInfo/delete").gameObject
+    self.deleteText = transform:Find("contentRoot/content/leftRoot/lineInfo/delete/Text"):GetComponent("Text")
+    self.slider = transform:Find("contentRoot/content/leftRoot/lineInfo/Slider"):GetComponent("Slider")
+    self.num = transform:Find("contentRoot/content/leftRoot/lineInfo/Slider/num"):GetComponent("Text")
+    self.speed = transform:Find("contentRoot/content/leftRoot/lineInfo/Slider/time"):GetComponent("Text")
+    self.numberTipText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText"):GetComponent("Text")  --队列
+    self.lineNumberText = transform:Find("contentRoot/content/rightRoot/topBg/numberTipText/lineNumberText"):GetComponent("Text")
+    self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip"):GetComponent("Text")
+    self.ScrollView = transform:Find("contentRoot/content/rightRoot/content/ScrollView")
+    self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content"):GetComponent("RectTransform")
+    self.queueAddBtn = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn").gameObject
+
+end
+
+--空白或调查线界面
+function DataSurveyDetailPart:ShowSurvey(show)
+    if show then
+        self.addBtnBg.localScale = Vector3.zero
+        self.bg.localScale = Vector3.zero
+        self.content.localScale = Vector3.one
+        self.surveyBg.localScale = Vector3.one
+    else
+        self.addBtnBg.localScale = Vector3.one
+        self.bg.localScale = Vector3.one
+        self.content.localScale = Vector3.zero
+        self.surveyBg.localScale = Vector3.zero
+    end
 end

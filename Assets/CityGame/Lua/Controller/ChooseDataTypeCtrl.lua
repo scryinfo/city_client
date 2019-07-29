@@ -27,7 +27,7 @@ function ChooseDataTypeCtrl:Active()
 end
 
 function ChooseDataTypeCtrl:Refresh()
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
+
 end
 
 function ChooseDataTypeCtrl:Hide()
@@ -43,6 +43,10 @@ end
 function ChooseDataTypeCtrl:_getComponent(go)
     self.back = go.transform:Find("down/title/back").gameObject
     self.name = go.transform:Find("down/title/back/name"):GetComponent("Text")
+    self.surveyScrollView = go.transform:Find("down/surveyScrollView")
+    self.survey = go.transform:Find("down/surveyScrollView/Viewport/Content"):GetComponent("RectTransform")
+    self.saleScrollView = go.transform:Find("down/saleScrollView")
+    self.sale = go.transform:Find("down/saleScrollView/Viewport/Content"):GetComponent("RectTransform")
 end
 
 --初始化数据

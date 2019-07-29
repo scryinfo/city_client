@@ -46,7 +46,10 @@ function DataBaseDetailPart:_InitTransform()
 end
 --
 function DataBaseDetailPart:_getComponent(transform)
-    self.yScale = transform:Find("down/bg/yScale"):GetComponent("RectTransform");  --Y轴
+    self.empty = transform:Find("contentRoot/empty")
+    self.emptyText = transform:Find("contentRoot/empty/Image/Text"):GetComponent("Text")
+    self.scrollView = transform:Find("contentRoot/Scroll View")
+    self.content = transform:Find("contentRoot/Scroll View/Viewport/Content"):GetComponent("RectTransform")
 end
 --
 function DataBaseDetailPart:_initFunc()

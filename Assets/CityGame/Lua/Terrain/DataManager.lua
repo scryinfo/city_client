@@ -2293,7 +2293,10 @@ end
 
 --今日营业回调
 function DataManager.n_OnGetPrivateBuildingCommonInfo(info)
-    RevenueDetailsMsg.GetPrivateBuildingCommonInfo(info.infos[1].todayIncome)
+    local data = {}
+    data.todayIncome = info.infos[1].todayIncome
+    data.todayPay = info.infos[1].todayPay
+    RevenueDetailsMsg.GetPrivateBuildingCommonInfo(data)
 end
 
 --修改玩家名字

@@ -23,7 +23,7 @@ function TurnoverDetailPart:_ResetTransform()
 end
 --
 function TurnoverDetailPart:_RemoveEvent()
-    DataManager.ModelNoneInsIdRemoveNetMsg("sscode.OpCode", "queryBuildingIncomeMap", self)
+    DataManager.ModelNoneInsIdRemoveNetMsg("sscode.OpCode", "queryBuildingIncomeMap", self.n_OnBuildingIncome,self)
 end
 --
 function TurnoverDetailPart:_RemoveClick()
@@ -56,7 +56,8 @@ function TurnoverDetailPart:RefreshData(data)
 end
 
 function TurnoverDetailPart:_setValue(turnover)
-    self.turnover = turnover
+    self.turnover = turnover.todayIncome
+    self.pay = turnover.todayPay
 end
 --
 function TurnoverDetailPart:_InitTransform()
@@ -85,7 +86,6 @@ function TurnoverDetailPart:_initFunc()
     end
 
 function TurnoverDetailPart:n_OnBuildingIncome(info)
-    local expenditure = nil
     self.graph:Close()
     self.slide:Close()
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
@@ -133,24 +133,18 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
                 turnoverTab[i].money = 0
                 expendTab[i] = {}
                 expendTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 142
-                expendTab[i].money = 1
+                expendTab[i].money = 0
                 if info.nodes ~= nil then
                     for k, v in pairs(info.nodes) do
                         if updataTime == v.time /1000 then
                             turnoverTab[i].money = tonumber(GetClientPriceString(v.income))
-                        end
-                    end
-                end
-                if expenditure ~= nil then
-                    for k, v in pairs(expenditure) do
-                        if updataTime == v.time /1000 then
-                            expendTab[i].money = tonumber(GetClientPriceString(v.income))
+                            expendTab[i].money = tonumber(GetClientPriceString(v.pay))
                         end
                     end
                 end
                 if updataTime == currentTime then
                     turnoverTab[i].money = tonumber(GetClientPriceString(self.turnover))
-                    expendTab[i].money = 1
+                    expendTab[i].money = tonumber(GetClientPriceString(self.pay))
                 end
             end
             updataTime = updataTime + 86400
@@ -171,20 +165,14 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
                 for k, v in pairs(info.nodes) do
                     if updataTime == v.time then
                         turnoverTab[i].money = tonumber(GetClientPriceString(v.income))
-                    end
-                end
-            end
-            if expenditure ~= nil then
-                for k, v in pairs(expenditure) do
-                    if updataTime == v.time then
-                        expendTab[i].money = tonumber(GetClientPriceString(v.income))
+                        expendTab[i].money = tonumber(GetClientPriceString(v.pay))
                     end
                 end
             end
             updataTime = updataTime + 86400
         end
         turnoverTab[#turnoverTab].money = tonumber(GetClientPriceString(self.turnover))
-        expendTab[#expendTab].money = 1
+        expendTab[#expendTab].money = tonumber(GetClientPriceString(self.pay))
     end
 
     --转换为Vector2类型
@@ -200,8 +188,13 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     table.insert(boundaryLine,1,0)
     table.insert(turnover,1,Vector2.New(0,0))
     table.insert(expend,1,Vector2.New(0,0))
-    local max = 1
+    local max = 0
     for i, v in pairs(turnover) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+    for i, v in pairs(expend) do
         if v.y > max then
             max = v.y
         end
@@ -243,7 +236,6 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     self.graph:DrawLine(turnoverVet,Color.New(53 / 255, 72 / 255, 117 / 255, 255 / 255),1)
     self.slide:SetCoordinate(turnoverVet,turnover,Color.New(41 / 255, 61 / 255, 108 / 255, 255 / 255),1)
 
-    --self.graph:DrawLine(expendVet,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
-    --self.slide:SetCoordinate(expendVet,expend,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
-
+    self.graph:DrawLine(expendVet,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
+    self.slide:SetCoordinate(expendVet,expend,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
 end

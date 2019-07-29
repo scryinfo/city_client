@@ -41,6 +41,7 @@ function CompanyCtrl:Awake()
     luaBehaviour:AddClick(CompanyPanel.sizeBtn.gameObject, self.OnSize, self)
     luaBehaviour:AddClick(CompanyPanel.choiceOBtn.gameObject, self.OnChoiceO, self)
     luaBehaviour:AddClick(CompanyPanel.choiceTBtn.gameObject, self.OnChoiceT, self)
+    luaBehaviour:AddClick(CompanyPanel.detaiks, self.OnDetaiks, self)   --营收详情
 
     -- 土地节点
     self.landSource = UnityEngine.UI.LoopScrollDataSource.New()
@@ -85,6 +86,7 @@ function CompanyCtrl:Active()
     CompanyPanel.landBtnText.text = GetLanguage(18020001)
     CompanyPanel.buildingBtnText.text = GetLanguage(18030001)
     CompanyPanel.brandBtnText.text = GetLanguage(18030001)
+    CompanyPanel.detaiksText.text = GetLanguage(18010013)
 end
 
 function CompanyCtrl:Refresh()
@@ -255,7 +257,7 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
             max = v.y
         end
     end
-    local scale = SetYScale(max,5,CompanyPanel.yScaleRT)
+    local scale = SetYScale(max,4,CompanyPanel.yScaleRT)
     local incomeVet = {}
     local payVet = {}
     for i, v in ipairs(income) do
@@ -319,28 +321,28 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     local difference = (currentTime - buildingTs) / 86400  --距离开业的天数
     if difference < 10 then
         CompanyPanel.curve.anchoredPosition = Vector3.New(-40, 47,0)
-        CompanyPanel.curve.sizeDelta = Vector2.New(1528, 535)
+        CompanyPanel.curve.sizeDelta = Vector2.New(1528, 423)
     elseif difference < 30 then
         CompanyPanel.curve.anchoredPosition = Vector3.New(-40, 47,0)
-        CompanyPanel.curve.sizeDelta = Vector2.New(1528, 535)
+        CompanyPanel.curve.sizeDelta = Vector2.New(1528, 423)
         CompanyPanel.curve.anchoredPosition = Vector3.New(CompanyPanel.curve.anchoredPosition.x - (difference - 10) * 140, 47,0)
-        CompanyPanel.curve.sizeDelta = Vector2.New(CompanyPanel.curve.sizeDelta.x + (difference - 10) * 140, 533)
+        CompanyPanel.curve.sizeDelta = Vector2.New(CompanyPanel.curve.sizeDelta.x + (difference - 10) * 140, 423)
     else
         CompanyPanel.curve.anchoredPosition = Vector3.New(-2902, 47,0)
-        CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)
+        CompanyPanel.curve.sizeDelta = Vector2.New(4335, 423)
     end
 
     CompanyPanel.curveSlide:SetXScaleValue(time,140)
     CompanyPanel.curveFunctionalGraph:BoundaryLine(boundaryLine)
 
-    CompanyPanel.curveFunctionalGraph:DrawLine(incomeVet, getColorByInt(8, 139, 108),1) --收入
-    CompanyPanel.curveSlide:SetCoordinate(incomeVet, income, getColorByInt(41, 61, 108),1)
+    CompanyPanel.curveFunctionalGraph:DrawLine(incomeVet, getColorByInt(125, 197, 222),1) --收入
+    CompanyPanel.curveSlide:SetCoordinate(incomeVet, income, getColorByInt(125, 197, 222),1)
 
     CompanyPanel.curveFunctionalGraph:DrawLine(payVet, getColorByInt(213, 34, 76),2) --支出
-    CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(41, 61, 108),2)
+    CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(213, 34, 76),2)
 
-    --CompanyPanel.curve.localPosition = CompanyPanel.curve.localPosition + Vector3.New(0.01, 0,0)
-    --CompanyPanel.curve.sizeDelta = CompanyPanel.curve.sizeDelta + Vector2.New(0.01, 0)
+    CompanyPanel.curve.localPosition = CompanyPanel.curve.localPosition + Vector3.New(0.01, 0,0)
+    CompanyPanel.curve.sizeDelta = CompanyPanel.curve.sizeDelta + Vector2.New(0.01, 0)
 end
 
 
@@ -445,6 +447,11 @@ function CompanyCtrl:OnChoiceT(go)
     for _, v in ipairs(CompanyCtrl.brandScript) do
         v:ShowContent()
     end
+end
+
+function CompanyCtrl:OnDetaiks()
+    PlayMusEff(1002)
+    ct.OpenCtrl("CompanyWaterCtrl")
 end
 
 -- 初始数据

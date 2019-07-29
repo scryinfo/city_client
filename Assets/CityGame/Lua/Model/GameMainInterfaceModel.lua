@@ -16,6 +16,7 @@ function GameMainInterfaceModel:OnCreate()
     Event.AddListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     Event.AddListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
     Event.AddListener("m_GetFriendInfo", self.m_GetFriendInfo,self)--获取好友信息
+    Event.AddListener("m_QueryOffLineInformation", self.m_QueryOffLineInformation,self) --获取离线通知
 
     DataManager.RegisterErrorNetMsg()
     --网络回调
@@ -34,6 +35,7 @@ function GameMainInterfaceModel:OnCreate()
 
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newJoinReq","gs.JoinReq", self.n_NewJoinReq, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","exitSociety","gs.ByteBool", self.n_ExitSociety, self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryOffLineInformation","gs.UnLineInformation", self.n_UnLineInformation, self) -- 上线获得收支情况
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
     UnitTest.Exec_now("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",DataManager.GetMyOwnerID())
@@ -45,6 +47,7 @@ function GameMainInterfaceModel:Close()
     Event.RemoveListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     Event.RemoveListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
     Event.RemoveListener("m_GetFriendInfo", self.m_GetFriendInfo,self)--获取好友信息
+    Event.RemoveListener("m_QueryOffLineInformation", self.m_QueryOffLineInformation,self) --获取离线通知
     incomeNotify = {}
 end
 --客户端请求--
@@ -98,6 +101,12 @@ end
 
 function GameMainInterfaceModel:m_GetFriendInfo( friendsId )
     DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = {friendsId}})
+end
+
+-- 查询离线通知
+function GameMainInterfaceModel:m_QueryOffLineInformation()
+    local msgId = pbl.enum("gscode.OpCode","queryOffLineInformation")
+    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
 end
 
 --所有交易量
@@ -197,4 +206,18 @@ end
 -- 退出公会返回
 function GameMainInterfaceModel:n_ExitSociety(byteBool)
     Event.Brocast("c_GameMainExitSociety", byteBool)
+end
+
+-- 离线通知返回
+function GameMainInterfaceModel:n_UnLineInformation(unLineInformations)
+    local isHaveIncome = false
+    for _, v in pairs(unLineInformations) do
+        if v.totalIncome > 0 then
+            isHaveIncome = true
+            break
+        end
+    end
+    if isHaveIncome then
+        Event.Brocast("c_UnLineInformation", unLineInformations)
+    end
 end

@@ -24,4 +24,5 @@ OpenModelInsID = {
     ["HistoryCurveCtrl"] = 18,
     ["BuildingInfoId"] = 19,
     ["EvaCtrl"] = 20,
+    ["CompanyWaterCtrl"] = 21,
 }

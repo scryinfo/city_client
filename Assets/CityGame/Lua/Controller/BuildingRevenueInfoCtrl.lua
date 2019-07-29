@@ -34,7 +34,7 @@ function BuildingRevenueInfoCtrl:Active()
     isbool = false
     --实例表
     self.itemPrefabTab = {}
-    self.buildingType = BuildingType.Laboratory    --后边传数据进来要删除
+    self.buildingType = BuildingType.MaterialFactory    --后边传数据进来要删除
     self:language()
     Event.AddListener("calculateLinePanel",self.calculateLinePanel,self)
 end

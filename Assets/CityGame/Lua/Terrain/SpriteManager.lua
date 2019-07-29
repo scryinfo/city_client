@@ -34,8 +34,11 @@ function SpriteManager.Init()
     for key, value in pairs(Good) do
         LoadSpriteToPool(value.img, key)
     end
+    --初始化赚钱图片
+    for key, value in pairs(MakeMoney) do
+        LoadSpriteToPool(value.img, key)
+    end
 end
-
 
 --从对象池中拿到对应的Sprite
 function SpriteManager.GetSpriteByPool(spriteID)
@@ -46,3 +49,9 @@ function SpriteManager.GetSpriteByPool(spriteID)
     end
 end
 
+MakeMoney = {
+    --住宅图片
+    [0]={
+        ["img"]="Assets/CityGame/Resources/View/iconImg/homehouse.png",
+    },
+}

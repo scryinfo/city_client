@@ -52,15 +52,15 @@ function BuildingRevenueInfoCtrl:_getComponent(go)
     --top
     self.closeBtn = go.transform:Find("topRoot/top/closeBtn")
     self.topName = go.transform:Find("topRoot/top/topName"):GetComponent("Text")
-    --topType
-    self.goodsTypeText = go.transform:Find("topRoot/topType/goodsType/Text"):GetComponent("Text")
-    self.todaySalesText = go.transform:Find("topRoot/topType/todaySales/Text"):GetComponent("Text")
-    self.proportionText = go.transform:Find("topRoot/topType/proportion/Text"):GetComponent("Text")
+    --topMaterialType
+    self.goodsTypeText = go.transform:Find("topRoot/topMaterialType/goodsType/Text"):GetComponent("Text")
+    self.todaySalesText = go.transform:Find("topRoot/topMaterialType/todaySales/Text"):GetComponent("Text")
+    self.proportionText = go.transform:Find("topRoot/topMaterialType/proportion/Text"):GetComponent("Text")
     ---content
     --Content
     self.Content = go.transform:Find("content/ScrollView/Viewport/Content")
     self.linePanel = go.transform:Find("content/ScrollView/Viewport/Content/linePanel")
-    self.itemPrefabBtn = go.transform:Find("content/ScrollView/Viewport/Content/itemPrefabBtn").gameObject
+    self.itemMaterialBtn = go.transform:Find("content/ScrollView/Viewport/Content/itemMaterialBtn").gameObject
 end
 ---------------------------------------------------------------初始化函数------------------------------------------------------------------------------
 --初始化UI信息
@@ -77,8 +77,8 @@ function BuildingRevenueInfoCtrl:initializeUiBuildingInfo()
         table.insert(datas,data)
     end
     for key,value in pairs(datas) do
-        local obj = self:loadingItemPrefab(self.itemPrefabBtn,self.Content)
-        local itemPrefab = itemPrefabBtn:new(value,obj,self.luaBehaviour,key)
+        local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
+        local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
         table.insert(self.itemPrefabTab,itemPrefab)
     end
 end
@@ -116,7 +116,8 @@ function BuildingRevenueInfoCtrl:calculateLinePanel(index)
     if index == 1 then
         self.Content.transform.localPosition = Vector3(0,0,0)
     else
-        self.Content.transform:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, 225 * (index - 1)) --.localPosition = Vector3(0, 220 * (index - 1),0)
+        --self.Content.transform:GetComponent("RectTransform").localPosition = Vector2(0, 220 * (index - 1),0)
+        self.Content.transform:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, 225 * (index - 1))
     end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------

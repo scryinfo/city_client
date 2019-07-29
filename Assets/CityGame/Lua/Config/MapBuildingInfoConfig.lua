@@ -90,6 +90,7 @@ MapBuildingInfoConfig={
 }
 ------------------------------------------------------
 --小地图点开推广搜索之后展示的信息
+--这两个表需要一一对应
 MapPromotionInfoConfig={
     [1] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-food-w.png",

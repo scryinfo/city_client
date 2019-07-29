@@ -48,6 +48,6 @@ function MapRightSystemPage:close()
 end
 --去地图上的一个建筑
 function MapRightSystemPage:_goHereBtn()
-    local temp = {x = BagPosInfo[1].bagX, y = BagPosInfo[1].bagY}
+    local temp = {x = BagPosInfo[1].bagX, y = BagPosInfo[1].bagY}  --中心建筑的位置
     MapBubbleManager.GoHereFunc(temp)
 end

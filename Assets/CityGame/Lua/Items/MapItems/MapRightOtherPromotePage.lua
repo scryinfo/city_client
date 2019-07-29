@@ -16,11 +16,14 @@ function MapRightOtherPromotePage:initialize(viewRect)
     self.text01 = self.viewTrans:Find("abilityRoot/Text01"):GetComponent("Text")
     self.valueText = self.viewTrans:Find("abilityRoot/valueText"):GetComponent("Text")
 end
---
+--data是服务器发来的数据，typeData一定包括typeId，指的是左侧的搜索类型，该界面的类型是搜索推广公司
+--由于推广公司是有二级界面的，所以会有一个detailId
 function MapRightOtherPromotePage:refreshData(data, typeData)
     self.viewTrans.localScale = Vector3.one
     self.data = data
 
+    --服务器发来的typeIds和CurAbilitys是一一对应的，指的是对应的推广类型和推广能力值
+    --将数据转换成哈希表
     local promotType = {}
     for i, key in pairs(self.data.typeIds) do
         promotType[key] = self.data.CurAbilitys[i]
@@ -34,6 +37,7 @@ function MapRightOtherPromotePage:refreshData(data, typeData)
         self.iconImg.color = getColorByVector3(infoData.colorV3)
         self.infoText.text = GetLanguage(MapPromotionInfoConfig[typeData.detailId].languageId)
         self.valueText.text = "+"..value.."/"..GetLanguage(20100003)
+        --以上都是小卡片上显示的内容
 
         self:_language()
         self:_createPromotion()
@@ -85,7 +89,7 @@ function MapRightOtherPromotePage:_createShowItem(data, parentTrans, hasDetail)
     item:initData(data)
     return item
 end
---
+--预制回收以及清除数据
 function MapRightOtherPromotePage:_cleanItems()
     if self.items == nil then
         self.items = {}

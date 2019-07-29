@@ -99,7 +99,7 @@ function MapRightGroundTransPage:_goHereBtn()
 
     ct.OpenCtrl("GroundTransDetailCtrl", {blockId = blockId})
 end
---
+--玩家信息
 function MapRightGroundTransPage:_initPersonalInfo(info)
     local data = info[1]
     if data ~= nil then

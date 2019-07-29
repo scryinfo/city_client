@@ -42,7 +42,7 @@ local function CheckWhetherTheUIPositionIsOnTheScreen(tempUIPos,tempWidthRange,t
     --判断UI坐标是否在屏幕内
     if tempUIPos.x < - tempWidthRange or tempUIPos.x > UnityEngine.Screen.width + tempWidthRange then
         return false
-    elseif tempUIPos.y < - tempHeightRange or tempUIPos.x > UnityEngine.Screen.height + tempHeightRange  then
+    elseif tempUIPos.y < - tempHeightRange or tempUIPos.y > UnityEngine.Screen.height + tempHeightRange  then
         return false
     else
         return true

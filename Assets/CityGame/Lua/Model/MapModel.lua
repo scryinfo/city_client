@@ -28,48 +28,57 @@ end
 function MapModel.m_ReqQueryMarketSummary(itemId)
     if itemId ~= nil then
         DataManager.ModelSendNetMes("gscode.OpCode", "queryMarketSummary","gs.Num",{ num = itemId})
+        FlightMainModel.OpenFlightLoading()
     end
 end
 --请求土地交易搜索摘要
 function MapModel.m_ReqGroundTransSummary()
     local msgId = pbl.enum("gscode.OpCode", "queryGroundSummary")
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    FlightMainModel.OpenFlightLoading()
 end
 --请求科研搜索摘要
 function MapModel.m_ReqLabSummary()
     local msgId = pbl.enum("gscode.OpCode", "queryLabSummary")
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    FlightMainModel.OpenFlightLoading()
 end
 --请求推广搜索摘要
 function MapModel.m_ReqPromotionSummary()
     local msgId = pbl.enum("gscode.OpCode", "adQueryPromoSummary")
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    FlightMainModel.OpenFlightLoading()
 end
 --仓库摘要
 function MapModel.m_ReqWarehouseSummary()
     local msgId = pbl.enum("gscode.OpCode", "queryWareHouseSummary")
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    FlightMainModel.OpenFlightLoading()
 end
 --签约摘要
 function MapModel.m_ReqSigningSummary()
     local msgId = pbl.enum("gscode.OpCode", "queryContractSummary")
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
+    FlightMainModel.OpenFlightLoading()
 end
 
 --请求原料商品搜索详情
 function MapModel.m_ReqMarketDetail(gridIndexPos, itemId)
     local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, itemId = itemId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryMarketDetail","gs.QueryMarketDetail", data)
+    FlightMainModel.OpenFlightLoading()
 end
 --请求仓库详情
 function MapModel.m_ReqWarehouseDetail(gridIndexPos)
     local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryWareHouseDetail","gs.QueryWareHouseDetail", data)
+    FlightMainModel.OpenFlightLoading()
 end
 --请求签约详情
 function MapModel.m_ReqSigningDetail(gridIndexPos)
     local data = { x = gridIndexPos.x, y = gridIndexPos.y}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryContractGridDetail","gs.GridIndex", data)
+    FlightMainModel.OpenFlightLoading()
 end
 --请求推广详情
 function MapModel.m_ReqPromotionDetail(gridIndexPos)
@@ -79,16 +88,19 @@ function MapModel.m_ReqPromotionDetail(gridIndexPos)
     end
     local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, typeIds = typeIds}
     DataManager.ModelSendNetMes("gscode.OpCode", "adQueryPromoDetail","gs.QueryPromoDetail", data)
+    FlightMainModel.OpenFlightLoading()
 end
 --请求科研详情
 function MapModel.m_ReqTechnologyDetail(gridIndexPos)
     local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryLabDetail","gs.QueryLabDetail", data)
+    FlightMainModel.OpenFlightLoading()
 end
 
 --- 摘要回调 ---
 --原料商品搜索摘要
 function MapModel.n_OnReceiveQueryMarketSummary(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -97,6 +109,7 @@ function MapModel.n_OnReceiveQueryMarketSummary(stream)
 end
 --土地交易搜索摘要
 function MapModel.n_OnReceiveGroundTransSummary(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -105,6 +118,7 @@ function MapModel.n_OnReceiveGroundTransSummary(stream)
 end
 --签约摘要
 function MapModel.n_OnReceiveSigningSummary(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -113,6 +127,7 @@ function MapModel.n_OnReceiveSigningSummary(stream)
 end
 --科研摘要
 function MapModel.n_OnReceiveLabSummary(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -121,6 +136,7 @@ function MapModel.n_OnReceiveLabSummary(stream)
 end
 --推广摘要
 function MapModel.n_OnReceivePromoteSummary(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -129,6 +145,7 @@ function MapModel.n_OnReceivePromoteSummary(stream)
 end
 --仓库摘要
 function MapModel.n_OnReceiveWarehouseSummary(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -140,6 +157,7 @@ end
 --- 详情回调 ---
 --原料商品搜索详情
 function MapModel.n_OnReceiveQueryMarketDetail(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -148,6 +166,7 @@ function MapModel.n_OnReceiveQueryMarketDetail(stream)
 end
 --签约
 function MapModel.n_OnReceiveSignDetail(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -156,6 +175,7 @@ function MapModel.n_OnReceiveSignDetail(stream)
 end
 --科研
 function MapModel.n_OnReceiveTechDetail(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -164,6 +184,7 @@ function MapModel.n_OnReceiveTechDetail(stream)
 end
 --仓库
 function MapModel.n_OnReceiveWarehouseDetail(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end
@@ -172,6 +193,7 @@ function MapModel.n_OnReceiveWarehouseDetail(stream)
 end
 --推广
 function MapModel.n_OnReceivePromotionDetail(stream)
+    FlightMainModel.CloseFlightLoading()
     if stream == nil or stream == "" then
         return
     end

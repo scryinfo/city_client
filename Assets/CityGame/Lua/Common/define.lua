@@ -255,6 +255,13 @@ ReminderSelectType =
 	NotChoose = 1,
 }
 
+--移动角色类型
+MobileRolesType ={
+	pedestrians = 0,
+	cars = 1
+}
+
+
 Util = LuaFramework.Util;
 AppConst = LuaFramework.AppConst;
 LuaHelper = LuaFramework.LuaHelper;

@@ -234,6 +234,7 @@ public static class CustomSettings
         _GT(typeof(VScrollEventData)),  //滑动复用事件
         _GT(typeof(QRCodeTest)),  //二维码
         _GT(typeof(CheckAvailability)),  //二维码
+        _GT(typeof(EventTriggerMgr)),  //eventTrigger监听
     };
 
     public static List<Type> dynamicList = new List<Type>()

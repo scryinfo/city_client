@@ -42,7 +42,7 @@ local function CheckWhetherTheUIPositionIsOnTheScreen(tempUIPos,tempWidthRange,t
     --判断UI坐标是否在屏幕内
     if tempUIPos.x < - tempWidthRange or tempUIPos.x > UnityEngine.Screen.width + tempWidthRange then
         return false
-    elseif tempUIPos.y < - tempHeightRange or tempUIPos.x > UnityEngine.Screen.height + tempHeightRange  then
+    elseif tempUIPos.y < - tempHeightRange or tempUIPos.y > UnityEngine.Screen.height + tempHeightRange  then
         return false
     else
         return true
@@ -70,11 +70,8 @@ local function ReceiveMakeMoneyMessage(data)
             --判断UI坐标是否在屏幕内-->不在屏幕内可不展示
             if  CheckWhetherTheUIPositionIsOnTheScreen(tempUIPos) then
                 --显示赚钱UI
-                ct.log("system","赚钱坐标===》：  "..tempBuildPosition.x .. " , "..tempBuildPosition.z)
-                ct.log("system","交易金钱===》：  "..data.money)
                 MakeMoneyItem:new(UIPool:GetAvailableGameObject(),data)
             else
-                ct.log("system","赚钱提示坐标不在屏幕范围内：  "..tempBuildPosition.x .. " , "..tempBuildPosition.z)
                 return
             end
         else

@@ -25,7 +25,7 @@ function HouseModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","cancelContract","gs.Id",self.n_OnReceiveCancelContract)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","signContract","gs.Contract",self.n_OnReceiveSignContract)
     --
-    DataManager.ModelRegisterNetMsg(self.insId, "gscode.OpCode", "apartmentGuidePrice", "gs.AartmentMsg", self.n_OnGetApartmentGuidePrice)
+    DataManager.ModelRegisterNetMsg(self.insId, "gscode.OpCode", "queryApartmentRecommendPrice", "gs.ApartmentRecommendPrice", self.n_OnGetApartmentGuidePrice)
 
     --本地的回调注册
     Event.AddListener("m_ReqHouseChangeRent", self.m_ReqHouseChangeRent, self)

@@ -4,18 +4,70 @@ PathFindingConfig ={
         ["prefabRoute"] = "Ornament/Person_01",
         ["poolName"] = "People01",
         ["playerEdgeDistance"] = 0.28,
+        ["poolType"] = MobileRolesType.pedestrians,
     },
     [2] ={
         ["typeName"] ="行人2",
         ["prefabRoute"] = "Ornament/Person_02",
         ["poolName"] = "People02",
         ["playerEdgeDistance"] = 0.28,
+        ["poolType"] = MobileRolesType.pedestrians,
     },
-    [3] = {
+    [3] ={
+        ["typeName"] ="行人3",
+        ["prefabRoute"] = "Ornament/Person_03",
+        ["poolName"] = "People03",
+        ["playerEdgeDistance"] = 0.28,
+        ["poolType"] = MobileRolesType.pedestrians,
+    },
+    [4] ={
+        ["typeName"] ="行人4",
+        ["prefabRoute"] = "Ornament/Person_04",
+        ["poolName"] = "People04",
+        ["playerEdgeDistance"] = 0.28,
+        ["poolType"] = MobileRolesType.pedestrians,
+    },
+    [5] ={
+        ["typeName"] ="行人5",
+        ["prefabRoute"] = "Ornament/Person_05",
+        ["poolName"] = "People05",
+        ["playerEdgeDistance"] = 0.28,
+        ["poolType"] = MobileRolesType.pedestrians,
+    },
+    [6] = {
         ["typeName"] ="车辆1",
         ["prefabRoute"] = "Ornament/Transport_01",
         ["poolName"] = "Car01",
-        ["playerEdgeDistance"] = 0.07,
+        ["playerEdgeDistance"] = 0.12,
+        ["poolType"] = MobileRolesType.cars,
     },
-
+    [7] = {
+        ["typeName"] ="车辆2",
+        ["prefabRoute"] = "Ornament/Transport_02",
+        ["poolName"] = "Car02",
+        ["playerEdgeDistance"] = 0.12,
+        ["poolType"] = MobileRolesType.cars,
+    },
+    [8] = {
+        ["typeName"] ="车辆3",
+        ["prefabRoute"] = "Ornament/Transport_03",
+        ["poolName"] = "Car03",
+        ["playerEdgeDistance"] = 0.12,
+        ["poolType"] = MobileRolesType.cars,
+    },
+    [9] = {
+        ["typeName"] ="车辆4",
+        ["prefabRoute"] = "Ornament/Transport_04",
+        ["poolName"] = "Car04",
+        ["playerEdgeDistance"] = 0.12,
+        ["poolType"] = MobileRolesType.cars,
+    },
+    [10] = {
+        ["typeName"] ="车辆5",
+        ["prefabRoute"] = "Ornament/Transport_05",
+        ["poolName"] = "Car05",
+        ["playerEdgeDistance"] = 0.12,
+        ["poolType"] = MobileRolesType.cars,
+    },
 }
+

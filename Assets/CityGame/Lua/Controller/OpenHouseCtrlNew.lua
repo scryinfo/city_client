@@ -65,6 +65,10 @@ function OpenHouseCtrlNew:_getComponent(go)
     --
     self.competitivenessRoot = transform:Find("competitivenessRoot")
     self.competitivenessBtn = transform:Find("competitivenessRoot/btn").gameObject
+    --
+    self.roomCountText = transform:Find("root/roomCount/roomCountText"):GetComponent("Text")
+    self.competitiSlider = transform:Find("root/competitiSlider"):GetComponent("Slider")
+    self.comCenterText = transform:Find("root/competitiSlider/center/Image/Text/valueText"):GetComponent("Text")  --一半的竞争力
 
     self.titleText01 = transform:Find("root/titleText01"):GetComponent("Text")
     self.standardWageText02 = transform:Find("root/salary/wage/Text"):GetComponent("Text")
@@ -78,13 +82,45 @@ function OpenHouseCtrlNew:_getComponent(go)
     self.competitivenessText10 = transform:Find("root/rent/priceBg/Text"):GetComponent("Text")
     self.competitivenessText11 = transform:Find("competitivenessRoot/tooltip/title"):GetComponent("Text")
     self.competitivenessText12 = transform:Find("competitivenessRoot/tooltip/content"):GetComponent("Text")
+    self.comCenterText13 = transform:Find("root/competitiSlider/center/Image/Text"):GetComponent("Text")
 
+    self:_awakeSliderInput()  --初始化
+end
+--
+function OpenHouseCtrlNew:_awakeSliderInput()
     self.rentInput.onValueChanged:AddListener(function (str)
-        if str == "" then
+        if str == "" or self.guideData == nil then
             return
         end
-        local temp = ct.CalculationHouseCompetitivePower(self.guideData.avgPrice, tonumber(str) * 10000, self.guideData.score, self.guideData.avgScore)
-        self.valueText.text = temp
+        local finalStr = ct.getCorrectPrice(str)
+        if finalStr ~= str then
+            self.rentInput.text = finalStr  --限制用户小数输入
+            return
+        end
+        local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
+        if temp >= functions.maxCompetitive then
+            self.valueText.text = ">"..temp
+        elseif temp <= functions.minCompetitive then
+            self.valueText.text = "<"..temp
+        else
+            self.valueText.text = string.format("%0.1f", temp)
+        end
+        OpenHouseCtrlNew.sliderCanChange = false
+        self.competitiSlider.value = temp
+    end)
+    --
+    EventTriggerMgr.Get(self.competitiSlider.gameObject).onSelect = function()
+        OpenHouseCtrlNew.sliderCanChange = true
+    end
+    EventTriggerMgr.Get(self.competitiSlider.gameObject).onUpdateSelected = function()
+        OpenHouseCtrlNew.sliderCanChange = true
+    end
+    self.competitiSlider.onValueChanged:AddListener(function (value)
+        if self.guideData == nil or OpenHouseCtrlNew.sliderCanChange ~= true then
+            return
+        end
+        local price = ct.CalculationHousePrice(self.guideData.guidePrice, value)
+        self.rentInput.text = GetClientPriceString(price)
     end)
 end
 --
@@ -99,6 +135,7 @@ function OpenHouseCtrlNew:_language()
     self.rentText08.text = GetLanguage(24020015)..":"
     self.tipText09.text = GetLanguage(24020016)
     self.competitivenessText10.text = GetLanguage(43010001)
+    self.comCenterText13.text = GetLanguage(12345678)  --一半的竞争力
     --self.competitivenessText11.text = GetLanguage(43010002)
     --self.competitivenessText12.text = GetLanguage(43010003)
 end
@@ -106,6 +143,8 @@ end
 function OpenHouseCtrlNew:_initData()
     self.rentInput.text = ""
     self.competitivenessRoot.localScale = Vector3.zero
+    self.competitiSlider.minValue = functions.minCompetitive
+    self.competitiSlider.maxValue = functions.maxCompetitive
 
     if self.m_data == nil then
         return
@@ -113,17 +152,18 @@ function OpenHouseCtrlNew:_initData()
     DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)  --请求竞争力参数
 
     self.tipRoot.localScale = Vector3.zero
-    local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
-    self.staffNum = staffNum
-    self.staffNumText.text = staffNum
+    local buildingData = PlayerBuildingBaseData[self.m_data.info.mId]
+    self.staffNum = buildingData.maxWorkerNum
+    self.staffNumText.text = self.staffNum
     self.standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)
+    self.roomCountText.text = string.format("%s <color=#FFFFFF>%d</color>", GetLanguage(12345678), buildingData.npc)
 
     if self.standardWage == nil then
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
     else
         self.standardWageText.text = string.format("E%s", GetClientPriceString(self.standardWage))
-        --local value = self.m_data.info.salary * staffNum * self.standardWage / 100
-        local value = staffNum * self.standardWage  --temp修改
+        --local value = self.m_data.info.salary * self.staffNum * self.standardWage / 100
+        local value = self.staffNum * self.standardWage  --temp修改
         self.totalText.text = "E"..GetClientPriceString(value)
         self.totalValue = value
     end
@@ -142,12 +182,19 @@ function OpenHouseCtrlNew:_getStandardWage(data)
 end
 --
 function OpenHouseCtrlNew:_getApartmentGuidePrice(data)
-    if data ~= nil and data.apartmentPrice ~= nil then
-        local value = data.apartmentPrice[1]
-        self.guideData = value
-        local tempPrice = ct.CalculationHouseSuggestPrice(value.avgPrice, value.score, value.avgScore)
-        local temp = ct.CalculationHouseCompetitivePower(value.avgPrice, value.avgPrice, value.score, value.avgScore)
-        self.valueText.text = temp
+    if data ~= nil then
+        self.guideData = data
+        local tempPrice = ct.CalculationHouseSuggestPrice(data.guidePrice)
+        local temp = ct.CalculationHouseCompetitivePower(data.guidePrice, data.guidePrice, data.npc)
+        if temp >= functions.maxCompetitive then
+            self.valueText.text = ">"..temp
+        elseif temp <= functions.minCompetitive then
+            self.valueText.text = "<"..temp
+        else
+            self.valueText.text = string.format("%0.1f", temp)
+        end
+        OpenHouseCtrlNew.sliderCanChange = false
+        self.competitiSlider.value = temp
         self.rentInput.text = GetClientPriceString(tempPrice)
     end
 end

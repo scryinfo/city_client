@@ -511,9 +511,44 @@ MapGameObjectsConfig = {
             ["PathFindingConfigID"] = 2,
             ["InitCount"] = 0,
         },
+        {   --行人3
+            ["Name"] = "People03",
+            ["PathFindingConfigID"] = 3,
+            ["InitCount"] = 0,
+        },
+        {   --行人4
+            ["Name"] = "People04",
+            ["PathFindingConfigID"] = 4,
+            ["InitCount"] = 0,
+        },
+        {   --行人5
+            ["Name"] = "People05",
+            ["PathFindingConfigID"] = 5,
+            ["InitCount"] = 0,
+        },
         {   --车辆1
             ["Name"] = "Car01",
-            ["PathFindingConfigID"] = 3,
+            ["PathFindingConfigID"] = 6,
+            ["InitCount"] = 0,
+        },
+        {   --车辆2
+            ["Name"] = "Car02",
+            ["PathFindingConfigID"] = 7,
+            ["InitCount"] = 0,
+        },
+        {   --车辆3
+            ["Name"] = "Car03",
+            ["PathFindingConfigID"] = 8,
+            ["InitCount"] = 0,
+        },
+        {   --车辆4
+            ["Name"] = "Car04",
+            ["PathFindingConfigID"] = 9,
+            ["InitCount"] = 0,
+        },
+        {   --车辆5
+            ["Name"] = "Car05",
+            ["PathFindingConfigID"] = 10,
             ["InitCount"] = 0,
         },
         --TODO:湖泊

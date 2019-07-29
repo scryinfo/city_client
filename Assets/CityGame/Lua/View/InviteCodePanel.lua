@@ -21,7 +21,8 @@ function InviteCodePanel.InitPanel()
     this.name = transform:Find("nameBg/name"):GetComponent('Text');
     this.code = transform:Find("inviteCodeBg/codeBg/code"):GetComponent('Text');
     this.inviteCode = transform:Find("inviteCodeBg"):GetComponent('InputField');
-    this.placeholder = transform:Find("inviteCodeBg/Placeholder"):GetComponent('Text');
+    this.get = transform:Find("inviteCodeBg/get").gameObject;
+    this.getText = transform:Find("inviteCodeBg/get/getText"):GetComponent('Text');
     this.error = transform:Find("inviteCodeBg/error"):GetComponent('Text');
     this.back = transform:Find("back").gameObject;
     this.btn = transform:Find("btn").gameObject;

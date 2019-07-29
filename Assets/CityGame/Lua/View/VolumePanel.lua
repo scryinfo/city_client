@@ -82,6 +82,10 @@ function VolumePanel.InitPanel()
     this.houseBtnText = transform:Find("rightBg/houseBtn/houseBtnText"):GetComponent("Text");
     this.house = transform:Find("rightBg/house");    --house
     this.houseText = transform:Find("rightBg/house/houseText"):GetComponent("Text");
+    this.materialBtn = transform:Find("rightBg/materialBtn").gameObject; --material
+    this.materialBtnText = transform:Find("rightBg/materialBtn/materialBtnText"):GetComponent("Text");
+    this.material = transform:Find("rightBg/material");    --material
+    this.materialText = transform:Find("rightBg/material/materialText"):GetComponent("Text");
     this.requirement = transform:Find("rightBg/requirementLine/requirementText"):GetComponent("Text"); --Prospective requirement
     this.undateTime = transform:Find("rightBg/updateImage/undateTime"):GetComponent("Text"); --更新时间倒计时
     this.undateTimeText = transform:Find("rightBg/updateImage/Text"):GetComponent("Text"); --更新时间倒计时

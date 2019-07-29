@@ -26,6 +26,7 @@ function InviteCodeCtrl:Awake()
     inviteCodeBehaviour = self.gameObject:GetComponent('LuaBehaviour');
     inviteCodeBehaviour:AddClick(InviteCodePanel.back,self.OnBack,self)
     inviteCodeBehaviour:AddClick(InviteCodePanel.btn,self.OnBtn,self)
+    inviteCodeBehaviour:AddClick(InviteCodePanel.get,self.OnGet,self)
 end
 
 function InviteCodeCtrl:Active()
@@ -33,8 +34,8 @@ function InviteCodeCtrl:Active()
     Event.AddListener("c_InviteCodeStatus",self.c_InviteCodeStatus,self)
     InviteCodePanel.name.text = GetLanguage(10030002)
     InviteCodePanel.code.text = GetLanguage(10030002)
-    InviteCodePanel.placeholder.text = GetLanguage(10030018)
     InviteCodePanel.btnText.text = GetLanguage(10030019)
+    InviteCodePanel.getText.text = GetLanguage(33020008)
 end
 
 function InviteCodeCtrl:Hide()
@@ -60,6 +61,10 @@ function InviteCodeCtrl:OnBtn()
         InviteCodePanel.error.transform.localScale = Vector3.zero
         Event.Brocast("m_InviteCode",InviteCodePanel.inviteCode.text)
     end
+end
+
+function InviteCodeCtrl:OnGet()
+    UnityEngine.Application.OpenURL("https://www.baidu.com")
 end
 
 function InviteCodeCtrl:c_InviteCodeStatus(info)

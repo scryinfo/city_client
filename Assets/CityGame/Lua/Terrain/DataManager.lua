@@ -490,7 +490,7 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)
                     ThisRoteDatas[itemBlockID] = nil
                     --TODO:
-                    ThisPathNums[itemBlockID] = 0
+                    --ThisPathNums[itemBlockID] = 0
                 end
             end
             break
@@ -1808,8 +1808,8 @@ function DataManager.m_ReqHouseGuidPrice(buildingId)
     if buildingId == nil then
         return
     end
-    local msgId = pbl.enum("gscode.OpCode","apartmentGuidePrice")
-    local pMsg = assert(pbl.encode("gs.AartmentMsg", {buildingId = buildingId, playerId = DataManager.GetMyOwnerID()}))
+    local msgId = pbl.enum("gscode.OpCode","queryApartmentRecommendPrice")
+    local pMsg = assert(pbl.encode("gs.QueryBuildingInfo", {buildingId = buildingId, playerId = DataManager.GetMyOwnerID()}))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
 
@@ -2293,7 +2293,10 @@ end
 
 --今日营业回调
 function DataManager.n_OnGetPrivateBuildingCommonInfo(info)
-    RevenueDetailsMsg.GetPrivateBuildingCommonInfo(info.infos[1].todayIncome)
+    local data = {}
+    data.todayIncome = info.infos[1].todayIncome
+    data.todayPay = info.infos[1].todayPay
+    RevenueDetailsMsg.GetPrivateBuildingCommonInfo(data)
 end
 
 --修改玩家名字

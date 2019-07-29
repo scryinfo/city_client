@@ -12,6 +12,7 @@ local isClother
 local clothes
 local food
 local house
+local material
 local second
 local defaultPos_Y= -74
 local pool={}
@@ -27,6 +28,7 @@ NpcShopType = {
     clothes = 1,
     food = 2,
     house = 3,
+    material = 4,
 }
 local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,this)
     if not pool[class] then
@@ -77,6 +79,7 @@ function VolumeCtrl:Awake()
     volumeBehaviour:AddClick(VolumePanel.clotherBtn,self.OnClotherBtn,self)
     volumeBehaviour:AddClick(VolumePanel.foodBtn,self.OnFoodBtn,self)
     volumeBehaviour:AddClick(VolumePanel.houseBtn,self.OnHouseBtn,self)
+    volumeBehaviour:AddClick(VolumePanel.materialBtn,self.OnMaterialBtn,self)
     --volumeBehaviour:AddClick(VolumePanel.cityBg,self.OnCityBg,self)
     volumeBehaviour:AddClick(VolumePanel.volume,self.OnVolume,self)
     volumeBehaviour:AddClick(VolumePanel.titleBg,self.OnTitleBg,self)
@@ -199,6 +202,8 @@ function VolumeCtrl:language()
     VolumePanel.foodText.text = GetLanguage(20030002)
     VolumePanel.houseBtnText.text = GetLanguage(20050004)  --住宅
     VolumePanel.houseText.text = GetLanguage(20050004)
+    VolumePanel.materialBtnText.text = GetLanguage(20010002)  --原料
+    VolumePanel.materialText.text = GetLanguage(20010002)
     VolumePanel.undateTimeText.text = GetLanguage(19020019)  --秒后刷新
     VolumePanel.requirement.text = GetLanguage(19020020)
 
@@ -250,6 +255,9 @@ end
 
 --NPC数量
 function VolumeCtrl:c_NpcNum(countNpc,workNpcNum,unEmployeeNpcNum,realWorkNpc,realUnEmployeeNpcNum)
+    for i, v in pairs(material) do
+        v.demand = 0
+    end
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local time = tonumber(ts.year..ts.month..ts.day)
@@ -264,8 +272,12 @@ end
 --每种商品购买的npc数量
 function VolumeCtrl:c_OnGoodsNpcNum(info,type)
     if type == 1 then
+        for i, v in pairs(material) do
+            v.supply = 0
+        end
         VolumeCtrl:AssignmentDemandSupply(clothes , info )
         VolumeCtrl:AssignmentDemandSupply(food , info )
+
         if isClother == NpcShopType.clothes then
             VolumePanel.scroll:ActiveLoopScroll(self.supplyDemand, #clothes)
         elseif isClother == NpcShopType.food then
@@ -307,8 +319,10 @@ function VolumeCtrl:initData()
     clothes = {}
     food = {}
     house = {}
+    material = {}
     local clothesIndex = 1
     local foodIndex = 1
+    local materialIndex = 1
     for i, v in pairs(Good) do
         if math.floor(v.itemId / 1000) == 2251 then
             food[foodIndex] = {}
@@ -320,10 +334,15 @@ function VolumeCtrl:initData()
             clothesIndex = clothesIndex +1
         end
     end
+    for i, v in pairs(Material) do
+        material[materialIndex] = {}
+        material[materialIndex].itemId = v.itemId
+        material[materialIndex].demand = 0
+        material[materialIndex].supply = 0
+        materialIndex = materialIndex +1
+    end
     house[1] = {}
     house[1].itemId = 20050004
-    VolumePanel.curve.anchoredPosition = Vector3.New(-18208, 56,0)
-    VolumePanel.curve.sizeDelta = Vector2.New(19530, 450)
 end
 
 --返回
@@ -355,6 +374,7 @@ end
 function VolumeCtrl:OnClotherBtn(go)
     PlayMusEff(1002)
     isClother = NpcShopType.clothes
+    VolumePanel.material.localScale = Vector3.zero
     VolumePanel.clothes.localScale = Vector3.one
     VolumePanel.food.localScale = Vector3.zero
     VolumePanel.house.localScale = Vector3.zero
@@ -367,6 +387,7 @@ end
 function VolumeCtrl:OnFoodBtn(go)
     PlayMusEff(1002)
     isClother = NpcShopType.food
+    VolumePanel.material.localScale = Vector3.zero
     VolumePanel.clothes.localScale = Vector3.zero
     VolumePanel.food.localScale = Vector3.one
     VolumePanel.house.localScale = Vector3.zero
@@ -376,10 +397,21 @@ end
 function VolumeCtrl:OnHouseBtn(go)
     PlayMusEff(1002)
     isClother = NpcShopType.house
+    VolumePanel.material.localScale = Vector3.zero
     VolumePanel.clothes.localScale = Vector3.zero
     VolumePanel.food.localScale = Vector3.zero
     VolumePanel.house.localScale = Vector3.one
     VolumePanel.scroll:ActiveLoopScroll(go.supplyDemand, #house)
+end
+--materialBtn
+function VolumeCtrl:OnMaterialBtn(go)
+    PlayMusEff(1002)
+    isClother = NpcShopType.material
+    VolumePanel.material.localScale = Vector3.one
+    VolumePanel.clothes.localScale = Vector3.zero
+    VolumePanel.food.localScale = Vector3.zero
+    VolumePanel.house.localScale = Vector3.zero
+    VolumePanel.scroll:ActiveLoopScroll(go.supplyDemand, #material)
 end
 
 --滑动互用
@@ -393,10 +425,11 @@ VolumeCtrl.static.SupplyDemandProvideData = function(transform, idx)
         item = SupplyDemandItem:new(food[idx],transform)
     elseif isClother == NpcShopType.house then
         item = SupplyDemandItem:new(house[idx],transform)
+    elseif isClother == NpcShopType.material then
+        item = SupplyDemandItem:new(material[idx],transform)
     end
     local supplyDemand = {}
     supplyDemand[idx] = item
-
     volumeBehaviour:AddClick(transform:Find("bg").gameObject,VolumeCtrl.OnBg,item)
 end
 
@@ -440,6 +473,15 @@ function VolumeCtrl:AssignmentDemand(table , countNpc , time)
     for i, v in pairs(tempTable) do
         table[i].demand = v
     end
+    for i, v in pairs(table) do
+        for k, z in pairs(CompoundDetailConfig[v.itemId].goodsNeedMatData) do
+            for x, y in pairs(material) do
+                if z.itemId == y.itemId then
+                    y.demand = y.demand + v.demand * z.num
+                end
+            end
+        end
+    end
 end
 --给表赋值
 function VolumeCtrl:AssignmentDemandSupply(table , info )
@@ -461,7 +503,15 @@ function VolumeCtrl:AssignmentDemandSupply(table , info )
         else
             table[i].supply = 0
         end
-
+    end
+    for i, v in pairs(table) do
+        for k, z in pairs(CompoundDetailConfig[v.itemId].goodsNeedMatData) do
+            for x, y in pairs(material) do
+                if z.itemId == y.itemId then
+                    y.supply = y.supply + v.supply * z.num
+                end
+            end
+        end
     end
 end
 

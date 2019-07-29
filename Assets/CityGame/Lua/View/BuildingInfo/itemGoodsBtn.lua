@@ -3,15 +3,17 @@
 --- Created by Fisher.
 --- DateTime: 2019/7/29 15:19
 ---
-itemMaterialBtn = class('itemMaterialBtn')
+itemGoodsBtn = class('itemGoodsBtn')
 
-function itemMaterialBtn:initialize(data,prefab,luaBehaviour,keyId)
+function itemGoodsBtn:initialize(data,prefab,luaBehaviour,keyId)
     self.data = data
     self.keyId = keyId
+    self.prefab = prefab
 
     self.bgBtn = prefab.transform:Find("bgBtn")
     self.iconImg = prefab.transform:Find("info/icon/iconImg"):GetComponent("Image")
     self.nameText = prefab.transform:Find("info/nameText"):GetComponent("Text")
+    self.brandNameText = prefab.transform:Find("brandName/brandNameText"):GetComponent("Text")
     self.todaySalesText = prefab.transform:Find("todaySales/todaySalesText"):GetComponent("Text")
     self.proportionText = prefab.transform:Find("proportion/proportionText"):GetComponent("Text")
 
@@ -19,13 +21,14 @@ function itemMaterialBtn:initialize(data,prefab,luaBehaviour,keyId)
     self:InitializeData()
 end
 
-function itemMaterialBtn:InitializeData()
-    self.iconImg.sprite = SpriteManager.GetSpriteByPool(2101001)
+function itemGoodsBtn:InitializeData()
+    self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.data.itemId)
     self.nameText.text = self.data.name
+    self.brandNameText.text = self.data.brandName
     self.todaySalesText.text = self.data.todaySales
     self.proportionText.text = self.data.proportion.."%"
 end
 
-function itemMaterialBtn:_clickBgBtn(ins)
+function itemGoodsBtn:_clickBgBtn(ins)
     Event.Brocast("calculateLinePanel",ins.keyId)
 end

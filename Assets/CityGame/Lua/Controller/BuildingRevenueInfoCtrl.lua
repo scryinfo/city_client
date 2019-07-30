@@ -26,12 +26,16 @@ function BuildingRevenueInfoCtrl:Awake(go)
     self:_getComponent(go)
     self.luaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.luaBehaviour:AddClick(self.closeBtn.gameObject,self._clickCloseBtn,self)
+    self.luaBehaviour:AddClick(self.salesBtn.gameObject,self._clickSalesBtn,self)
+    self.luaBehaviour:AddClick(self.salesVolumeBtn.gameObject,self._clickSalesVolumeBtn,self)
 end
 
 function BuildingRevenueInfoCtrl:Active()
     UIPanel.Active(self)
     indexs = nil
     isbool = false
+    self.time = 0.1
+    self.timer = Timer.New(slot(self.UpData, self), 0.1, -1, true)
     --实例表
     self.itemPrefabTab = {}
     self.buildingType = BuildingType.MaterialFactory    --后边传数据进来要删除
@@ -49,11 +53,12 @@ function BuildingRevenueInfoCtrl:Refresh()
     elseif self.buildingType == BuildingType.Laboratory then
         self.topMaterialType.transform.localScale = Vector3.one
     end
-    self:initializeUiBuildingInfo()
+    self:initializeUiInfo()
 end
 
 function BuildingRevenueInfoCtrl:Hide()
     UIPanel.Hide(self)
+    self.timer:Stop()
     self:CloseDestroy(self.itemPrefabTab)
     self.linePanel.gameObject:SetActive(false)
     Event.RemoveListener("calculateLinePanel",self.calculateLinePanel,self)
@@ -64,34 +69,44 @@ function BuildingRevenueInfoCtrl:_getComponent(go)
     --top
     self.closeBtn = go.transform:Find("topRoot/top/closeBtn")
     self.topName = go.transform:Find("topRoot/top/topName"):GetComponent("Text")
-    --topMaterialType
-    self.topMaterialType = go.transform:Find("topRoot/topMaterialType")
-    self.goodsTypeText = go.transform:Find("topRoot/topMaterialType/goodsType/Text"):GetComponent("Text")
-    self.todaySalesText = go.transform:Find("topRoot/topMaterialType/todaySales/Text"):GetComponent("Text")
-    self.proportionText = go.transform:Find("topRoot/topMaterialType/proportion/Text"):GetComponent("Text")
-    --topGoodsType
-    self.topGoodsType = go.transform:Find("topRoot/topGoodsType")
-    self._goodsTypeText = go.transform:Find("topRoot/topGoodsType/goodsType/Text"):GetComponent("Text")
-    self.typeNameText = go.transform:Find("topRoot/topGoodsType/typeName/Text"):GetComponent("Text")
-    self._todaySalesText = go.transform:Find("topRoot/topGoodsType/todaySales/Text"):GetComponent("Text")
-    self._proportionText = go.transform:Find("topRoot/topGoodsType/proportion/Text"):GetComponent("Text")
     ---content
+    --topMaterialType
+    self.topMaterialType = go.transform:Find("content/topMaterialType")
+    self.goodsTypeText = go.transform:Find("content/topMaterialType/goodsType/Text"):GetComponent("Text")
+    self.todaySalesText = go.transform:Find("content/topMaterialType/todaySales/Text"):GetComponent("Text")
+    self.proportionText = go.transform:Find("content/topMaterialType/proportion/Text"):GetComponent("Text")
+    --topGoodsType
+    self.topGoodsType = go.transform:Find("content/topGoodsType")
+    self._goodsTypeText = go.transform:Find("content/topGoodsType/goodsType/Text"):GetComponent("Text")
+    self.typeNameText = go.transform:Find("content/topGoodsType/typeName/Text"):GetComponent("Text")
+    self._todaySalesText = go.transform:Find("content/topGoodsType/todaySales/Text"):GetComponent("Text")
+    self._proportionText = go.transform:Find("content/topGoodsType/proportion/Text"):GetComponent("Text")
+
     --Content
-    self.Content = go.transform:Find("content/ScrollView/Viewport/Content")
+    self.Content = go.transform:Find("content/ScrollView/Viewport/Content"):GetComponent("RectTransform")
+    self.ScrollbarVertical = go.transform:Find("content/ScrollView/ScrollbarVertical"):GetComponent("Scrollbar")
     self.linePanel = go.transform:Find("content/ScrollView/Viewport/Content/linePanel")
+
+    self.salesBtn = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/salesBtn")
+    self.selectedSales = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/salesBtn/selectedSales")
+    self.salesVolumeBtn = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/salesVolumeBtn")
+    self.selectedSalesVolume = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/salesVolumeBtn/selectedSalesVolume")
+    self.testText = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/testText"):GetComponent("Text")
+
     self.itemMaterialBtn = go.transform:Find("content/ScrollView/Viewport/Content/itemMaterialBtn").gameObject
     self.itemGoodsBtn = go.transform:Find("content/ScrollView/Viewport/Content/itemGoodsBtn").gameObject
 end
 ---------------------------------------------------------------初始化函数------------------------------------------------------------------------------
 --初始化UI信息
-function BuildingRevenueInfoCtrl:initializeUiBuildingInfo()
+function BuildingRevenueInfoCtrl:initializeUiInfo()
     --模拟数据--
     local datas = {}
     --随机数种子
     math.randomseed(os.time())
 
+    self.Content.transform.localPosition = Vector3(0,0,0)
     if self.buildingType == BuildingType.MaterialFactory then
-        for i = 1, 10 do
+        for i = 1, 15 do
             local data = {}
             data.name = "小麦"..i
             data.itemId = 2101001
@@ -137,8 +152,17 @@ function BuildingRevenueInfoCtrl:initializeUiBuildingInfo()
         end
     end
 end
+--初始化打开面板信息
+function BuildingRevenueInfoCtrl:initializePanelUiInfo()
+    self.selectedSales.transform.localScale = Vector3.one
+    self.selectedSalesVolume.transform.localScale = Vector3.zero
+    self.testText.text = self.itemPrefabTab[indexs].data.name.."今日销售额"
+end
 --多语言
 function BuildingRevenueInfoCtrl:language()
+    self.topName.text = "收入详情"
+    self.todaySalesText.text = "今日销售额"
+    self.proportionText.text = "占昨日销售额比例"
     --根据建筑显示是原料还是商品还是建筑名字（研究所）
     if self.buildingType == BuildingType.MaterialFactory then
         self.goodsTypeText.text = "原料"
@@ -151,8 +175,6 @@ function BuildingRevenueInfoCtrl:language()
     elseif self.buildingType == BuildingType.Laboratory then
         self.goodsTypeText.text = "科技资料"
     end
-    self.todaySalesText.text = "今日销售额"
-    self.proportionText.text = "占昨日销售额比例"
 end
 -----------------------------------------------------------------------------点击函数-------------------------------------------------------------------------
 --关闭
@@ -160,7 +182,20 @@ function BuildingRevenueInfoCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
-
+--查看今日销售额
+function BuildingRevenueInfoCtrl:_clickSalesBtn(ins)
+    PlayMusEff(1002)
+    ins.selectedSales.transform.localScale = Vector3.one
+    ins.selectedSalesVolume.localScale = Vector3.zero
+    ins.testText.text = ins.itemPrefabTab[indexs].data.name.."今日销售额"
+end
+--查看今日销售量
+function BuildingRevenueInfoCtrl:_clickSalesVolumeBtn(ins)
+    PlayMusEff(1002)
+    ins.selectedSales.transform.localScale = Vector3.zero
+    ins.selectedSalesVolume.localScale = Vector3.one
+    ins.testText.text = ins.itemPrefabTab[indexs].data.name.."今日销售量"
+end
 -----------------------------------------------------------------------------事件函数-------------------------------------------------------------------------
 --计算位置
 function BuildingRevenueInfoCtrl:calculateLinePanel(index)
@@ -169,9 +204,11 @@ function BuildingRevenueInfoCtrl:calculateLinePanel(index)
         return
     end
     if index == 1 then
-        self.Content.transform.localPosition = Vector3(0,0,0)
+        self.Content.transform.anchoredPosition = Vector3(0,0,0)
+        self:initializePanelUiInfo()
     else
-        self.Content.transform:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, 225 * (index - 1))
+        self.timer:Start()
+        --self.Content.transform.anchoredPosition = Vector2.New(0, 132 * (index - 1))
     end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -181,14 +218,31 @@ function BuildingRevenueInfoCtrl:openLinePanel(index)
         indexs = index
         self.linePanel.transform:SetSiblingIndex(index + 2)
         self.linePanel.gameObject:SetActive(true)
+        --self.linePanel:DOSizeDelta(Vector2.New(1904, 630),5):SetEase(DG.Tweening.Ease.OutCubic);
         isbool = true
     elseif indexs == index and isbool == true then
         indexs = nil
         self.linePanel.gameObject:SetActive(false)
+        self.timer:Stop()
+        --self.linePanel:DOSizeDelta(Vector2.New(1904, 0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         isbool = false
     elseif indexs ~= index and isbool == true then
         indexs = index
         self.linePanel.transform:SetSiblingIndex(index + 2)
+    end
+end
+function BuildingRevenueInfoCtrl:UpData()
+    self.time = self.time - 0.1
+    if self.time < 0.1 or self.time < 0 then
+        self.time = 0.1
+        if indexs == #self.itemPrefabTab then
+            --如果点击打开的是最后一个，直接把位置拉倒最后
+            self.ScrollbarVertical.value = 0
+        else
+            self.Content.transform:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5))
+        end
+        self:initializePanelUiInfo()
+        self.timer:Stop()
     end
 end
 --加载实例化Prefab

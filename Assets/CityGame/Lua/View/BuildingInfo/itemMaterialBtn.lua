@@ -27,7 +27,7 @@ function itemMaterialBtn:InitializeData()
         self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.data.itemId)
     end
     self.nameText.text = self.data.name
-    self.todaySalesText.text = self.data.todaySales
+    self.todaySalesText.text = "+E"..GetClientPriceString(self.data.todaySales)
     self.proportionText.text = self.data.proportion.."%"
 end
 

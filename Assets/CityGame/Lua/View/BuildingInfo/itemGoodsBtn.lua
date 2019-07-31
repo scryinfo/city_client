@@ -23,10 +23,10 @@ end
 
 function itemGoodsBtn:InitializeData()
     self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.data.itemId)
-    self.nameText.text = self.data.name
+    self.nameText.text = GetLanguage(self.data.itemId)
     self.brandNameText.text = self.data.brandName
-    self.todaySalesText.text = self.data.todaySales
-    self.proportionText.text = self.data.proportion.."%"
+    self.todaySalesText.text = "+E"..GetClientPriceString(self.data.saleAccount)
+    self.proportionText.text = self.data.increasePercent * 100 .."%"
 end
 
 function itemGoodsBtn:_clickBgBtn(ins)

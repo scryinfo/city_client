@@ -7,7 +7,8 @@
 BuildingRevenueInfoCtrl = class('BuildingRevenueInfoCtrl',UIPanel)
 UIPanel:ResgisterOpen(BuildingRevenueInfoCtrl)
 
-local indexs   --用来记录经营界面当前折线图索引
+local typeId  --用来区分当前建筑类型
+local indexs  --用来记录经营界面当前折线图索引
 local isbool  --用来记录经营界面当前是否有折线图处于打开状态
 function BuildingRevenueInfoCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -45,14 +46,22 @@ end
 function BuildingRevenueInfoCtrl:Refresh()
     if self.m_data then
         self.m_data.insId = OpenModelInsID.BuildingRevenueInfoCtrl
+        typeId = string.sub(self.m_data.mId,1,2)
         DataManager.OpenDetailModel(BuildingRevenueInfoModel,self.m_data.insId)
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             self.topMaterialType.transform.localScale = Vector3.one
-            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,11)
+            self.topGoodsType.transform.localScale = Vector3.zero
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,typeId)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            self.topMaterialType.transform.localScale = Vector3.zero
             self.topGoodsType.transform.localScale = Vector3.one
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,typeId)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
+            self.topMaterialType.transform.localScale = Vector3.zero
+            self.topGoodsType.transform.localScale = Vector3.one
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,typeId)
         elseif self.m_data.buildingType == BuildingType.Municipal then
+
         elseif self.m_data.buildingType == BuildingType.Laboratory then
             self.topMaterialType.transform.localScale = Vector3.one
         end
@@ -105,71 +114,36 @@ end
 ---------------------------------------------------------------初始化函数------------------------------------------------------------------------------
 --初始化UI信息
 function BuildingRevenueInfoCtrl:initializeUiInfo()
-    local aaa = self.revenueInfo
     if not self.revenueInfo.todaySaleDetail then
         self.tipImg.transform.localScale = Vector3.one
     else
         self.tipImg.transform.localScale = Vector3.zero
-
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            for key,value in pairs(self.revenueInfo.todaySaleDetail) do
+                local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
+                local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
+                table.insert(self.itemPrefabTab,itemPrefab)
+            end
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            for key,value in pairs(self.revenueInfo.todaySaleDetail) do
+                local obj = self:loadingItemPrefab(self.itemGoodsBtn,self.Content)
+                local itemPrefab = itemGoodsBtn:new(value,obj,self.luaBehaviour,key)
+                table.insert(self.itemPrefabTab,itemPrefab)
+            end
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            for key,value in pairs(self.revenueInfo.todaySaleDetail) do
+                local obj = self:loadingItemPrefab(self.itemGoodsBtn,self.Content)
+                local itemPrefab = itemGoodsBtn:new(value,obj,self.luaBehaviour,key)
+                table.insert(self.itemPrefabTab,itemPrefab)
+            end
+        end
     end
-    ----模拟数据--
-    --local datas = {}
-    ----随机数种子
-    --math.randomseed(os.time())
-    --
-    --self.Content.transform.localPosition = Vector3(0,0,0)
-    --if self.buildingType == BuildingType.MaterialFactory then
-    --    for i = 1, 15 do
-    --        local data = {}
-    --        data.name = "小麦"..i
-    --        data.itemId = 2101001
-    --        data.todaySales = math.random(500,20000)
-    --        data.proportion = math.random(1,3000)
-    --        table.insert(datas,data)
-    --    end
-    --    for key,value in pairs(datas) do
-    --        local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
-    --        local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
-    --        table.insert(self.itemPrefabTab,itemPrefab)
-    --    end
-    --elseif self.buildingType == BuildingType.ProcessingFactory then
-    --    for i = 1, 10 do
-    --        local data = {}
-    --        data.name = "小麦"..i
-    --        data.itemId = 2101001
-    --        data.brandName = "小麦牌"..i
-    --        data.todaySales = math.random(500,20000)
-    --        data.proportion = math.random(1,3000)
-    --        table.insert(datas,data)
-    --    end
-    --    for key,value in pairs(datas) do
-    --        local obj = self:loadingItemPrefab(self.itemGoodsBtn,self.Content)
-    --        local itemPrefab = itemGoodsBtn:new(value,obj,self.luaBehaviour,key)
-    --        table.insert(self.itemPrefabTab,itemPrefab)
-    --    end
-    --elseif self.buildingType == BuildingType.RetailShop then
-    --elseif self.buildingType == BuildingType.Municipal then
-    --elseif self.buildingType == BuildingType.Laboratory then
-    --    for i = 1, 10 do
-    --        local data = {}
-    --        data.name = "零售店"..i
-    --        data.mId = 1300001
-    --        data.todaySales = math.random(500,20000)
-    --        data.proportion = math.random(1,3000)
-    --        table.insert(datas,data)
-    --    end
-    --    for key,value in pairs(datas) do
-    --        local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
-    --        local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
-    --        table.insert(self.itemPrefabTab,itemPrefab)
-    --    end
-    --end
 end
 --初始化打开面板信息
 function BuildingRevenueInfoCtrl:initializePanelUiInfo()
     self.selectedSales.transform.localScale = Vector3.one
     self.selectedSalesVolume.transform.localScale = Vector3.zero
-    self.testText.text = self.itemPrefabTab[indexs].data.name.."今日销售额"
+    self.testText.text = GetLanguage(self.itemPrefabTab[indexs].itemId.."今日销售额")
 end
 --多语言
 function BuildingRevenueInfoCtrl:language()
@@ -199,6 +173,22 @@ function BuildingRevenueInfoCtrl:revenueInfoData(data)
         self:initializeUiInfo()
     end
 end
+--请求建筑历史经营详情成功
+function BuildingRevenueInfoCtrl:historyRevenueInfoData(data)
+    if data ~= nil then
+        self:openLinePanel(indexs)
+        if isbool == false then
+            return
+        end
+        if ins == 1 then
+            self.Content.anchoredPosition = Vector3(0,0,0)
+            self:initializePanelUiInfo()
+        else
+            self.timer:Start()
+            --self.Content.anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5)
+        end
+    end
+end
 -----------------------------------------------------------------------------点击函数-------------------------------------------------------------------------
 --关闭
 function BuildingRevenueInfoCtrl:_clickCloseBtn()
@@ -221,33 +211,23 @@ function BuildingRevenueInfoCtrl:_clickSalesVolumeBtn(ins)
 end
 -----------------------------------------------------------------------------事件函数-------------------------------------------------------------------------
 --计算位置
-function BuildingRevenueInfoCtrl:calculateLinePanel(index)
-    self:openLinePanel(index)
-    if isbool == false then
-        return
-    end
-    if index == 1 then
-        self.Content.anchoredPosition = Vector3(0,0,0)
-        self:initializePanelUiInfo()
-    else
-        self.timer:Start()
-        --self.Content.anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5)
-    end
+function BuildingRevenueInfoCtrl:calculateLinePanel(ins)
+    --从这里开始标记Panel是否是打开的，是否点击的是同一个
+    indexs = ins.keyId
+    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingHistoryRevenueInfo',self.m_data.id,tonumber(typeId),ins.data.itemId,ins.data.producerId)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开折线图
 function BuildingRevenueInfoCtrl:openLinePanel(index)
-    if indexs == nil and isbool == false then
-        indexs = index
+    if isbool == false then
+        --indexs = index
         self.linePanel.transform:SetSiblingIndex(index + 2)
         self.linePanel.gameObject:SetActive(true)
-        --self.linePanel:DOSizeDelta(Vector2.New(1904, 630),5):SetEase(DG.Tweening.Ease.OutCubic);
         isbool = true
     elseif indexs == index and isbool == true then
         indexs = nil
         self.linePanel.gameObject:SetActive(false)
         self.timer:Stop()
-        --self.linePanel:DOSizeDelta(Vector2.New(1904, 0),0.1):SetEase(DG.Tweening.Ease.OutCubic);
         isbool = false
     elseif indexs ~= index and isbool == true then
         indexs = index

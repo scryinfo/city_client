@@ -26,11 +26,11 @@ function itemMaterialBtn:InitializeData()
     else
         self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.data.itemId)
     end
-    self.nameText.text = self.data.name
-    self.todaySalesText.text = "+E"..GetClientPriceString(self.data.todaySales)
-    self.proportionText.text = self.data.proportion.."%"
+    self.nameText.text = GetLanguage(self.data.itemId)
+    self.todaySalesText.text = "+E"..GetClientPriceString(self.data.saleAccount)
+    self.proportionText.text = self.data.increasePercent * 100 .."%"
 end
 
 function itemMaterialBtn:_clickBgBtn(ins)
-    Event.Brocast("calculateLinePanel",ins.keyId)
+    Event.Brocast("calculateLinePanel",ins)
 end

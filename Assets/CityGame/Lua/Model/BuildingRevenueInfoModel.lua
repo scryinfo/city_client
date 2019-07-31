@@ -16,7 +16,9 @@ function BuildingRevenueInfoModel:OnCreate()
     Event.AddListener("m_ReqBuildingRevenueInfo",self.m_ReqBuildingRevenueInfo,self)
 
     --查询建筑今日经营详情
-    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryTodayBuildingSaleDetail","ss.QueryBuildingSaleDetail",self.n_BuildingRevenueInfo,self)
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryTodayBuildingSaleDetail","ss.BuildingTodaySaleDetail",self.n_BuildingRevenueInfo,self)
+    --查询建筑历史经营详情
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryHistoryBuildingSaleDetail","ss.BuildingHistorySaleDetail",self.n_BuildingHistoryRevenueInfo,self)
 end
 
 function BuildingRevenueInfoModel:Close()
@@ -24,7 +26,9 @@ function BuildingRevenueInfoModel:Close()
     Event.RemoveListener("m_ReqBuildingRevenueInfo",self.m_ReqBuildingRevenueInfo,self)
 
     --查询建筑今日经营详情
-    DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryTodayBuildingSaleDetail","ss.QueryBuildingSaleDetail",self.n_BuildingRevenueInfo,self)
+    DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryTodayBuildingSaleDetail","ss.BuildingTodaySaleDetail",self.n_BuildingRevenueInfo,self)
+    --查询建筑历史经营详情
+    DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryHistoryBuildingSaleDetail","ss.BuildingHistorySaleDetail",self.n_BuildingHistoryRevenueInfo,self)
 end
 
 ---客户端请求---
@@ -32,14 +36,25 @@ end
 function BuildingRevenueInfoModel:m_ReqBuildingRevenueInfo(buildingId,typeId)
     FlightMainModel.OpenFlightLoading()
     local msgId = pbl.enum("sscode.OpCode","queryTodayBuildingSaleDetail")
-    local lMsg = {bid = buildingId,type = typeId}
+    local lMsg = {buildingId = buildingId,type = typeId}
     local pMsg = assert(pbl.encode("ss.QueryBuildingSaleDetail", lMsg))
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
-
+--查询建筑历史经营详情
+function BuildingRevenueInfoModel:m_ReqBuildingHistoryRevenueInfo(buildingId,typeId,itemId,producerId)
+    FlightMainModel.OpenFlightLoading()
+    local msgId = pbl.enum("sscode.OpCode","queryHistoryBuildingSaleDetail")
+    local lMsg = {buildingId = buildingId,type = typeId,itemId = itemId,producerId = producerId}
+    local pMsg = assert(pbl.encode("ss.QueryHistoryBuildingSaleDetail", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
 ---服务器回调---
 --查询建筑今日经营详情
 function BuildingRevenueInfoModel:n_BuildingRevenueInfo(data)
     FlightMainModel.CloseFlightLoading()
     DataManager.ControllerRpcNoRet(self.insId,"BuildingRevenueInfoCtrl", 'revenueInfoData',data)
+end
+--查询建筑历史经营详情
+function BuildingRevenueInfoModel:n_BuildingHistoryRevenueInfo(data)
+    DataManager.ControllerRpcNoRet(self.insId,"BuildingRevenueInfoCtrl", 'historyRevenueInfoData',data)
 end

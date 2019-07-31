@@ -38,22 +38,25 @@ function BuildingRevenueInfoCtrl:Active()
     self.timer = Timer.New(slot(self.UpData, self), 0.1, -1, true)
     --实例表
     self.itemPrefabTab = {}
-    self.buildingType = BuildingType.MaterialFactory    --后边传数据进来要删除
     self:language()
     Event.AddListener("calculateLinePanel",self.calculateLinePanel,self)
 end
 
 function BuildingRevenueInfoCtrl:Refresh()
-    if self.buildingType == BuildingType.MaterialFactory then
-        self.topMaterialType.transform.localScale = Vector3.one
-    elseif self.buildingType == BuildingType.ProcessingFactory then
-        self.topGoodsType.transform.localScale = Vector3.one
-    elseif self.buildingType == BuildingType.RetailShop then
-    elseif self.buildingType == BuildingType.Municipal then
-    elseif self.buildingType == BuildingType.Laboratory then
-        self.topMaterialType.transform.localScale = Vector3.one
+    if self.m_data then
+        self.m_data.insId = OpenModelInsID.BuildingRevenueInfoCtrl
+        DataManager.OpenDetailModel(BuildingRevenueInfoModel,self.m_data.insId)
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            self.topMaterialType.transform.localScale = Vector3.one
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,11)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            self.topGoodsType.transform.localScale = Vector3.one
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+        elseif self.m_data.buildingType == BuildingType.Municipal then
+        elseif self.m_data.buildingType == BuildingType.Laboratory then
+            self.topMaterialType.transform.localScale = Vector3.one
+        end
     end
-    self:initializeUiInfo()
 end
 
 function BuildingRevenueInfoCtrl:Hide()
@@ -93,64 +96,74 @@ function BuildingRevenueInfoCtrl:_getComponent(go)
     self.selectedSalesVolume = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/salesVolumeBtn/selectedSalesVolume")
     self.testText = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/testText"):GetComponent("Text")
 
+    self.tipImg = go.transform:Find("content/tipImg")
+    self.tipText = go.transform:Find("content/tipImg/tipText"):GetComponent("Text")
+
     self.itemMaterialBtn = go.transform:Find("content/ScrollView/Viewport/Content/itemMaterialBtn").gameObject
     self.itemGoodsBtn = go.transform:Find("content/ScrollView/Viewport/Content/itemGoodsBtn").gameObject
 end
 ---------------------------------------------------------------初始化函数------------------------------------------------------------------------------
 --初始化UI信息
 function BuildingRevenueInfoCtrl:initializeUiInfo()
-    --模拟数据--
-    local datas = {}
-    --随机数种子
-    math.randomseed(os.time())
+    local aaa = self.revenueInfo
+    if not self.revenueInfo.todaySaleDetail then
+        self.tipImg.transform.localScale = Vector3.one
+    else
+        self.tipImg.transform.localScale = Vector3.zero
 
-    self.Content.transform.localPosition = Vector3(0,0,0)
-    if self.buildingType == BuildingType.MaterialFactory then
-        for i = 1, 15 do
-            local data = {}
-            data.name = "小麦"..i
-            data.itemId = 2101001
-            data.todaySales = math.random(500,20000)
-            data.proportion = math.random(1,3000)
-            table.insert(datas,data)
-        end
-        for key,value in pairs(datas) do
-            local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
-            local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
-            table.insert(self.itemPrefabTab,itemPrefab)
-        end
-    elseif self.buildingType == BuildingType.ProcessingFactory then
-        for i = 1, 10 do
-            local data = {}
-            data.name = "小麦"..i
-            data.itemId = 2101001
-            data.brandName = "小麦牌"..i
-            data.todaySales = math.random(500,20000)
-            data.proportion = math.random(1,3000)
-            table.insert(datas,data)
-        end
-        for key,value in pairs(datas) do
-            local obj = self:loadingItemPrefab(self.itemGoodsBtn,self.Content)
-            local itemPrefab = itemGoodsBtn:new(value,obj,self.luaBehaviour,key)
-            table.insert(self.itemPrefabTab,itemPrefab)
-        end
-    elseif self.buildingType == BuildingType.RetailShop then
-    elseif self.buildingType == BuildingType.Municipal then
-    elseif self.buildingType == BuildingType.Laboratory then
-        for i = 1, 10 do
-            local data = {}
-            data.name = "零售店"..i
-            data.mId = 1300001
-            data.todaySales = math.random(500,20000)
-            data.proportion = math.random(1,3000)
-            table.insert(datas,data)
-        end
-        for key,value in pairs(datas) do
-            local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
-            local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
-            table.insert(self.itemPrefabTab,itemPrefab)
-        end
     end
+    ----模拟数据--
+    --local datas = {}
+    ----随机数种子
+    --math.randomseed(os.time())
+    --
+    --self.Content.transform.localPosition = Vector3(0,0,0)
+    --if self.buildingType == BuildingType.MaterialFactory then
+    --    for i = 1, 15 do
+    --        local data = {}
+    --        data.name = "小麦"..i
+    --        data.itemId = 2101001
+    --        data.todaySales = math.random(500,20000)
+    --        data.proportion = math.random(1,3000)
+    --        table.insert(datas,data)
+    --    end
+    --    for key,value in pairs(datas) do
+    --        local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
+    --        local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
+    --        table.insert(self.itemPrefabTab,itemPrefab)
+    --    end
+    --elseif self.buildingType == BuildingType.ProcessingFactory then
+    --    for i = 1, 10 do
+    --        local data = {}
+    --        data.name = "小麦"..i
+    --        data.itemId = 2101001
+    --        data.brandName = "小麦牌"..i
+    --        data.todaySales = math.random(500,20000)
+    --        data.proportion = math.random(1,3000)
+    --        table.insert(datas,data)
+    --    end
+    --    for key,value in pairs(datas) do
+    --        local obj = self:loadingItemPrefab(self.itemGoodsBtn,self.Content)
+    --        local itemPrefab = itemGoodsBtn:new(value,obj,self.luaBehaviour,key)
+    --        table.insert(self.itemPrefabTab,itemPrefab)
+    --    end
+    --elseif self.buildingType == BuildingType.RetailShop then
+    --elseif self.buildingType == BuildingType.Municipal then
+    --elseif self.buildingType == BuildingType.Laboratory then
+    --    for i = 1, 10 do
+    --        local data = {}
+    --        data.name = "零售店"..i
+    --        data.mId = 1300001
+    --        data.todaySales = math.random(500,20000)
+    --        data.proportion = math.random(1,3000)
+    --        table.insert(datas,data)
+    --    end
+    --    for key,value in pairs(datas) do
+    --        local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
+    --        local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
+    --        table.insert(self.itemPrefabTab,itemPrefab)
+    --    end
+    --end
 end
 --初始化打开面板信息
 function BuildingRevenueInfoCtrl:initializePanelUiInfo()
@@ -160,20 +173,30 @@ function BuildingRevenueInfoCtrl:initializePanelUiInfo()
 end
 --多语言
 function BuildingRevenueInfoCtrl:language()
+    self.tipText.text = "暂无详情"
     self.topName.text = "收入详情"
     self.todaySalesText.text = "今日销售额"
     self.proportionText.text = "占昨日销售额比例"
     --根据建筑显示是原料还是商品还是建筑名字（研究所）
-    if self.buildingType == BuildingType.MaterialFactory then
+    if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.goodsTypeText.text = "原料"
-    elseif self.buildingType == BuildingType.ProcessingFactory then
+    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         self.goodsTypeText.text = "商品"
-    elseif self.buildingType == BuildingType.RetailShop then
+    elseif self.m_data.buildingType == BuildingType.RetailShop then
         self.goodsTypeText.text = "商品"
-    elseif self.buildingType == BuildingType.Municipal then
+    elseif self.m_data.buildingType == BuildingType.Municipal then
         self.goodsTypeText.text = "数据类型"
-    elseif self.buildingType == BuildingType.Laboratory then
+    elseif self.m_data.buildingType == BuildingType.Laboratory then
         self.goodsTypeText.text = "科技资料"
+    end
+end
+-----------------------------------------------------------------------------回调函数-------------------------------------------------------------------------
+--请求建筑经营详情成功
+function BuildingRevenueInfoCtrl:revenueInfoData(data)
+    if data ~= nil then
+        self.revenueInfo = data
+        --初始化UI信息
+        self:initializeUiInfo()
     end
 end
 -----------------------------------------------------------------------------点击函数-------------------------------------------------------------------------
@@ -204,11 +227,11 @@ function BuildingRevenueInfoCtrl:calculateLinePanel(index)
         return
     end
     if index == 1 then
-        self.Content.transform.anchoredPosition = Vector3(0,0,0)
+        self.Content.anchoredPosition = Vector3(0,0,0)
         self:initializePanelUiInfo()
     else
         self.timer:Start()
-        --self.Content.transform.anchoredPosition = Vector2.New(0, 132 * (index - 1))
+        --self.Content.anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5)
     end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -239,7 +262,7 @@ function BuildingRevenueInfoCtrl:UpData()
             --如果点击打开的是最后一个，直接把位置拉倒最后
             self.ScrollbarVertical.value = 0
         else
-            self.Content.transform:GetComponent("RectTransform").anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5))
+            self.Content.anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5))
         end
         self:initializePanelUiInfo()
         self.timer:Stop()

@@ -16,7 +16,8 @@ function GetCountCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
-function GetCountCtrl:Awake()
+function GetCountCtrl:Awake(obj)
+    self:_getComponent(obj)
     getCountBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     getCountBehaviour:AddClick(self.btn,self.OnBtn,self)
 end
@@ -35,7 +36,6 @@ end
 
 function GetCountCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    self:_getComponent(obj)
 end
 
 --获取组件
@@ -48,10 +48,14 @@ end
 
 --初始化数据
 function GetCountCtrl:initData()
-
+    if self.m_data then
+        self.center.text = "+" .. self.m_data.num
+        self.explain.text = "<color=#ffffffff>Current institute of science and technology points </color><color=#ffd200ff>" .. self.m_data.pointNum .."</color>"
+    end
 end
 
 --返回
 function GetCountCtrl:OnBtn()
+    UIPanel.ClosePage()
     UIPanel.ClosePage()
 end

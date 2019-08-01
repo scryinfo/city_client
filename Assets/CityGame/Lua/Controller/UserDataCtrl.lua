@@ -8,30 +8,30 @@ UIPanel:ResgisterOpen(UserDataCtrl)
 
 local userDataCtrlBehaviour
 function UserDataCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/ChooseDataTypePanel.prefab"
+    return "Assets/CityGame/Resources/View/UserDataPanel.prefab"
 end
 
 function UserDataCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)
 end
 
-function UserDataCtrl:Awake()
+function UserDataCtrl:Awake(go)
+    self:_getComponent(go)
     userDataCtrlBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     userDataCtrlBehaviour:AddClick(self.bg,self.OnBg,self)
     userDataCtrlBehaviour:AddClick(self.btn,self.OnBtn,self)
 
-    self.input.onValueChange:AddListener(function()
+    self.input.onValueChanged:AddListener(function()
         self:OnInput()
     end)
-    self.slider.onValueChange:AddListener(function()
+    self.slider.onValueChanged:AddListener(function()
         self:OnSlider()
     end)
 end
 
 function UserDataCtrl:Active()
     UIPanel.Active(self)
-    self.name = GetLanguage(24020009)
+    self.title = GetLanguage(24020009)
 end
 
 function UserDataCtrl:Refresh()
@@ -40,19 +40,24 @@ end
 
 function UserDataCtrl:Hide()
     UIPanel.Hide(self)
+    self.input.text = "0"
+    self.slider.value = 0
 end
 
 function UserDataCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    self:_getComponent(obj)
 end
 
 --获取组件
 function UserDataCtrl:_getComponent(go)
     self.bg = go.transform:Find("bg").gameObject
-    self.name = go.transform:Find("content/name"):GetComponent("Text")
+    self.title = go.transform:Find("content/title"):GetComponent("Text")
+    self.base = go.transform:Find("content/top/bg/base/Text"):GetComponent("Text")
+    self.sale = go.transform:Find("content/top/bg/sale/Text"):GetComponent("Text")
     self.dataName = go.transform:Find("content/top/bg/barnd/Text"):GetComponent("Text")
     self.impact = go.transform:Find("content/top/bg/Text"):GetComponent("Text")
+    self.name = go.transform:Find("content/top/card/name/Text"):GetComponent("Text")
+    self.icon = go.transform:Find("content/top/card/cardImage/Image"):GetComponent("Image")
     self.quantity = go.transform:Find("content/quantity"):GetComponent("Text")
     self.input = go.transform:Find("content/quantity/inputBg/input"):GetComponent("InputField")
     self.slider = go.transform:Find("content/quantity/inputBg/input/Slider"):GetComponent("Slider")
@@ -67,7 +72,10 @@ function UserDataCtrl:initData()
     --else
     --    self.btnText = GetLanguage()
     --end
-   self.slider.max = self.m_data.num
+    self.base.text = "x" .. self.m_data.wareHouse
+    self.sale.text = "x" .. self.m_data.sale
+    LoadSprite(ResearchConfig[self.m_data.itemId].iconPath, self.icon, true)
+    self.slider.maxValue = self.m_data.wareHouse
 end
 
 --返回
@@ -79,8 +87,8 @@ function UserDataCtrl:OnInput()
     if self.input.text == "" then
         return
     end
-    if tonumber(self.input.text) > self.m_data.num then
-        self.input.text = self.m_data.num
+    if tonumber(self.input.text) > self.m_data.wareHouse then
+        self.input.text = self.m_data.wareHouse
     end
     self.slider.value = tonumber(self.input.text)
 end
@@ -89,6 +97,12 @@ function UserDataCtrl:OnSlider()
     self.input.text = self.slider.value
 end
 
-function UserDataCtrl:OnBtn()
-
+function UserDataCtrl:OnBtn(go)
+    if go.slider.value == 0 then
+        Event.Brocast("SmallPop","请输入使用数量",ReminderType.Warning)
+    end
+    if go.m_data.userFunc then
+        go.m_data.userFunc(go.slider.value)
+        go.m_data.userFunc = nil
+    end
 end

@@ -10,39 +10,64 @@ function DataSurveyDetailPart:PrefabName()
 end
 --
 function  DataSurveyDetailPart:_InitEvent()
-
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getScienceLineData","gs.ScienceLineData",self.n_OnDataSurvey,self)
+    Event.AddListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
+    Event.AddListener("part_SurveyLineFinish",self.SurveyLineFinish,self)
 end
 --
 function DataSurveyDetailPart:_InitClick(mainPanelLuaBehaviour)
     self.m_LuaBehaviour = mainPanelLuaBehaviour
+    mainPanelLuaBehaviour:AddClick(self.addBtn, self.OnAddBtn, self)
+    mainPanelLuaBehaviour:AddClick(self.queueAddBtn, self.OnQueueAddBtn, self)
+    mainPanelLuaBehaviour:AddClick(self.delete, self.OnDelete, self)
 end
 --
 function DataSurveyDetailPart:_ResetTransform()
-
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
 end
 --
 function DataSurveyDetailPart:_RemoveEvent()
-
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "getScienceLineData",self.n_OnDataSurvey,self)
+    Event.RemoveListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
+    Event.RemoveListener("part_SurveyLineFinish",self.SurveyLineFinish,self)
 end
 --
 function DataSurveyDetailPart:_RemoveClick()
 end
 
 function DataSurveyDetailPart:Show(data)
-    BasePartDetail.Show(self)
+    BasePartDetail.Show(self,data)
 end
 function DataSurveyDetailPart:Hide()
     BasePartDetail.Hide(self)
+    self.content:SetActive(false)
+    if self.dataSurveyItem then
+        for i, v in pairs(self.dataSurveyItem) do
+            destroy(v.prefab.gameObject)
+        end
+    end
+    self.dataSurveyItem = {}
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
 end
 --
 function DataSurveyDetailPart:RefreshData(data)
-
+    if data == nil then
+        return
+    end
+   self.m_data = data
+    DataManager.ModelSendNetMes("gscode.OpCode", "getScienceLineData","gs.Id",{id = data.info.id})
+    --多语言
+    self.addTip.text = "Select survey type"
 end
 
 --
 function DataSurveyDetailPart:_InitTransform()
     self:_getComponent(self.transform)
-
+    self.m_Timer = Timer.New(slot(self.UpData, self), UnityEngine.Time.unscaledDeltaTime, -1, true)
 end
 
 --
@@ -52,8 +77,10 @@ function DataSurveyDetailPart:_getComponent(transform)
     self.addBtnBg = transform:Find("contentRoot/addBtnBg")
     self.addBtn = transform:Find("contentRoot/addBtnBg/addBtn").gameObject
     self.addTip = transform:Find("contentRoot/addBtnBg/addTip"):GetComponent("Text")
-    self.content = transform:Find("contentRoot/content")
+    self.content = transform:Find("contentRoot/content").gameObject
     self.time = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/time/timeImage/timeText"):GetComponent("Text")
+    self.icon = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/icon/Image"):GetComponent("Image")
+    self.name = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/name/Text"):GetComponent("Text")
     self.delete = transform:Find("contentRoot/content/leftRoot/lineInfo/delete").gameObject
     self.deleteText = transform:Find("contentRoot/content/leftRoot/lineInfo/delete/Text"):GetComponent("Text")
     self.slider = transform:Find("contentRoot/content/leftRoot/lineInfo/Slider"):GetComponent("Slider")
@@ -64,8 +91,49 @@ function DataSurveyDetailPart:_getComponent(transform)
     self.noLineTip = transform:Find("contentRoot/content/rightRoot/content/noLineTip"):GetComponent("Text")
     self.ScrollView = transform:Find("contentRoot/content/rightRoot/content/ScrollView")
     self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content"):GetComponent("RectTransform")
+    self.prefab = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content/SurveyQueneItem").gameObject
     self.queueAddBtn = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn").gameObject
 
+end
+
+function DataSurveyDetailPart:initData(info)
+    if info == nil or info == {} then
+        return
+    end
+    if info.line == nil then
+        self:ShowSurvey(false)
+    else
+        self:ShowSurvey(true)
+        if #info.line <= 1 then
+            self.noLineTip.transform.localScale = Vector3.one
+            self.info = info.line[1]
+            self.name.text = GetLanguage(ResearchConfig[info.line[1].itemId].name)
+            LoadSprite(ResearchConfig[info.line[1].itemId].iconPath, self.icon, true)
+            self.allTime =  (info.line[1].targetCount - info.line[1].nowCount) / info.line[1].speed
+            local ts = getTimeTable(self.allTime)
+            self.time.text = ts.hour..":"..ts.minute..":"..ts.second
+            self.num.text = info.line[1].nowCount.."/" .. info.line[1].targetCount
+            self.m_Timer:Start()
+        else
+            self.noLineTip.transform.localScale = Vector3.zero
+            self.info = info.line[1]
+            self.name.text = GetLanguage(ResearchConfig[info.line[1].itemId].name)
+            LoadSprite(ResearchConfig[info.line[1].itemId].iconPath, self.icon, true)
+            self.allTime = (info.line[1].targetCount - info.line[1].nowCount) / info.line[1].speed
+            local ts = getTimeTable(self.allTime)
+            self.time.text = ts.hour..":"..ts.minute..":"..ts.second
+            self.num.text = info.line[1].nowCount.."/" .. info.line[1].targetCount
+            self.m_Timer:Start()
+            self.surveyLien = {}
+            self.surveyLien = ct.deepCopy(info.line)
+            table.remove(self.surveyLien,1)
+            self.dataSurveyItem = {}
+            for i, v in ipairs(self.surveyLien) do
+                local prefabs =  self:createPrefab(self.prefab,self.Content)
+                self.dataSurveyItem[i] = SurveyQueneItem:new(self.m_LuaBehaviour,prefabs,v,info.buildingId,i)
+            end
+        end
+    end
 end
 
 --空白或调查线界面
@@ -73,12 +141,90 @@ function DataSurveyDetailPart:ShowSurvey(show)
     if show then
         self.addBtnBg.localScale = Vector3.zero
         self.bg.localScale = Vector3.zero
-        self.content.localScale = Vector3.one
+        self.content:SetActive(true)
         self.surveyBg.localScale = Vector3.one
     else
         self.addBtnBg.localScale = Vector3.one
         self.bg.localScale = Vector3.one
-        self.content.localScale = Vector3.zero
+        self.content:SetActive(false)
         self.surveyBg.localScale = Vector3.zero
     end
+end
+
+--回调
+function DataSurveyDetailPart:n_OnDataSurvey(info)
+    if self.dataSurveyItem then
+        for i, v in pairs(self.dataSurveyItem) do
+            destroy(v.prefab.gameObject)
+        end
+    end
+    self.dataSurveyItem = {}
+    self.SurveyData = {}
+    self.SurveyData = ct.deepCopy(info)
+    self:initData(info)
+end
+
+--调查线变换回调
+function DataSurveyDetailPart:SurveyLineUpData(info)
+    if self.info then
+        self.info.speed = info.speed
+    end
+    self.num.text = info.nowCount.."/" .. info.targetCount
+end
+
+--调查线完成
+function DataSurveyDetailPart:SurveyLineFinish(info)
+    if info.nextlineId == nil then
+        if self.m_Timer ~= nil then
+            self.m_Timer:Stop()
+        end
+        self:ShowSurvey(false)
+        self.SurveyData = {}
+        self:initData(self.SurveyData)
+    end
+
+end
+
+--空白界面点击生产
+function DataSurveyDetailPart:OnAddBtn(go)
+    local data = {}
+    data.insId = go.m_data.info.id
+    data.type = DataType.DataSurvey
+    ct.OpenCtrl("ChooseDataTypeCtrl",data)
+end
+
+--队列点击生产
+function DataSurveyDetailPart:OnQueueAddBtn(go)
+    local data = {}
+    data.insId = go.m_data.info.id
+    data.type = DataType.DataSurvey
+    ct.OpenCtrl("ChooseDataTypeCtrl",data)
+end
+
+--删除调查线
+function DataSurveyDetailPart:OnDelete(go)
+    DataManager.DetailModelRpcNoRet(go.m_data.info.id, 'm_delSurveyLine',go.m_data.info.id,go.SurveyData.line[1].id)
+end
+
+function DataSurveyDetailPart:UpData()
+    local ts = getTimeTable(self.allTime)
+    self.time.text = ts.hour..":"..ts.minute..":"..ts.second
+    self.slider.maxValue = (1 / self.info.speed)*1000
+    local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(豪秒)
+    self.slider.value = (currentTime - self.info.ts) % ((1/self.info.speed)*1000)
+    self.speed.text = getTimeTable(math.ceil(1/self.info.speed)).minute .. ":" .. getTimeTable(math.ceil(1/self.info.speed)).second
+    self.allTime = self.allTime - UnityEngine.Time.unscaledDeltaTime
+    if self.allTime <= 0 then
+        self.time.text = "00:00:00"
+    end
+end
+
+function DataSurveyDetailPart:createPrefab(prefab,itemRoot)
+    local obj = UnityEngine.GameObject.Instantiate(prefab)
+    local objRect = obj.transform:GetComponent("RectTransform")
+    obj.transform:SetParent(itemRoot.transform)
+    objRect.transform.localScale = Vector3.one
+    objRect.transform.localPosition = Vector3.zero
+    obj:SetActive(true)
+    return obj
 end

@@ -10,7 +10,7 @@ function DataSalePart:PrefabName()
 end
 --
 function DataSalePart:GetDetailClass()
-    return DataBaseDetailPart
+    return DataSaleDetailPart
 end
 --
 function DataSalePart:_InitTransform()
@@ -30,10 +30,13 @@ function DataSalePart:RefreshData(data)
         return
     end
     self.m_data = data
+    self.topText.text = GetLanguage(25010009)
+    self.saleText.text = data.shelfNum
 end
 --
 function DataSalePart:_getComponent(transform)
-    self.today = transform:Find("Top/Text"):GetComponent("Text")
+    self.topText = transform:Find("Top/topText"):GetComponent("Text")
+    self.saleText = transform:Find("Top/saleText"):GetComponent("Text")
 end
 --
 function DataSalePart:_initFunc(info)

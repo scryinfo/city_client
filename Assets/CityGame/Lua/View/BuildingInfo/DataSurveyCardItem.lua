@@ -6,20 +6,25 @@
 DataSurveyCardItem = class('DataSurveyCardItem')
 
 --初始化方法   数据（读配置表）
-function DataSurveyCardItem:initialize(inluabehaviour, prefab, goodsDataInfo)
+function DataSurveyCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,buildingId)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
+    self.buildingId = buildingId
 
     self.bg = self.prefab.transform:Find("bg").gameObject
-    self.num = self.prefab.transform:Find("num"):GetComponent("Text");
-    self.name = self.prefab.transform:Find("down/name"):GetComponent("Text");
-    self.speed = self.prefab.transform:Find("down/speedBg/speedImage/speedText"):GetComponent("Text");
+    self.icon = self.prefab.transform:Find("icon/Image"):GetComponent("Image")
+    self.name = self.prefab.transform:Find("down/name"):GetComponent("Text")
+    self.speed = self.prefab.transform:Find("down/speedBg/speedImage/speedText/Text"):GetComponent("Text")
 
+    LoadSprite(ResearchConfig[goodsDataInfo.type].iconPath, self.icon, true)
+    self.name.text = GetLanguage(ResearchConfig[goodsDataInfo.type].name)
+    self.speed.text = radixPointNum(1/goodsDataInfo.speed,2) .. "s/per"
     self._luabehaviour:AddClick(self.bg, self.OnBg, self);
 
 end
 
-function DataSurveyCardItem:OnBg()
+function DataSurveyCardItem:OnBg(go)
     PlayMusEff(1002)
+    DataManager.DetailModelRpcNoRet(go.buildingId, 'm_addSurveyLine',go.buildingId,go.goodsDataInfo.type)
 end

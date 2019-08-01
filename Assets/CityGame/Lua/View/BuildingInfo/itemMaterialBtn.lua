@@ -28,7 +28,7 @@ function itemMaterialBtn:InitializeData()
     end
     self.nameText.text = GetLanguage(self.data.itemId)
     self.todaySalesText.text = "+E"..GetClientPriceString(self.data.saleAccount)
-    self.proportionText.text = self.data.increasePercent * 100 .."%"
+    self.proportionText.text = math.floor(self.data.increasePercent * 100).."%"
 end
 
 function itemMaterialBtn:_clickBgBtn(ins)

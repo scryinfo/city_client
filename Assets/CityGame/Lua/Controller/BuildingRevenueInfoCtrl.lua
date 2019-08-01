@@ -193,7 +193,8 @@ function BuildingRevenueInfoCtrl:historyRevenueInfoData(data)
             return
         end
         if indexs == 1 then
-            self.Content.anchoredPosition = Vector3(0,0,0)
+            --self.Content.anchoredPosition = Vector3(0,0,0)
+            self.Content:DOLocalMove(Vector2.New(0, 0),0.1):SetEase(DG.Tweening.Ease.Linear)
             self:initializePanelUiInfo(dataInfo)
         else
             self.timer:Start()
@@ -266,9 +267,11 @@ function BuildingRevenueInfoCtrl:UpData()
         self.time = 0.1
         if indexs == #self.itemPrefabTab then
             --如果点击打开的是最后一个，直接把位置拉倒最后
-            self.ScrollbarVertical.value = 0
+            --self.ScrollbarVertical.value = 0
+            self.Content:DOLocalMove(Vector2.New(0, 132 * (indexs - 1) + (indexs * 5)),0.1):SetEase(DG.Tweening.Ease.Linear)
         else
-            self.Content.anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5))
+            --self.Content.anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5))
+            self.Content:DOLocalMove(Vector2.New(0, 132 * (indexs - 1) + (indexs * 5)),0.1):SetEase(DG.Tweening.Ease.Linear)
         end
         self:initializePanelUiInfo(dataInfo)
         self.timer:Stop()

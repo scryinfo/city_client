@@ -8,7 +8,9 @@ BuildingRevenueInfoCtrl = class('BuildingRevenueInfoCtrl',UIPanel)
 UIPanel:ResgisterOpen(BuildingRevenueInfoCtrl)
 
 local typeId  --用来区分当前建筑类型
-local indexs  --用来记录经营界面当前折线图索引
+local index   --用来记录经营界面当前折线图索引
+local dataInfo    --用来缓存当前打开历史详情的数据信息
+local indexs  --用来记录经营界面当前点击的是否是开启状态
 local isbool  --用来记录经营界面当前是否有折线图处于打开状态
 function BuildingRevenueInfoCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -33,8 +35,10 @@ end
 
 function BuildingRevenueInfoCtrl:Active()
     UIPanel.Active(self)
+    index = nil
     indexs = nil
     isbool = false
+    dataInfo = nil
     self.time = 0.1
     self.timer = Timer.New(slot(self.UpData, self), 0.1, -1, true)
     --实例表
@@ -63,7 +67,7 @@ function BuildingRevenueInfoCtrl:Refresh()
         elseif self.m_data.buildingType == BuildingType.Municipal then
 
         elseif self.m_data.buildingType == BuildingType.Laboratory then
-            self.topMaterialType.transform.localScale = Vector3.one
+
         end
     end
 end
@@ -140,10 +144,14 @@ function BuildingRevenueInfoCtrl:initializeUiInfo()
     end
 end
 --初始化打开面板信息
-function BuildingRevenueInfoCtrl:initializePanelUiInfo()
+function BuildingRevenueInfoCtrl:initializePanelUiInfo(data)
     self.selectedSales.transform.localScale = Vector3.one
     self.selectedSalesVolume.transform.localScale = Vector3.zero
-    self.testText.text = GetLanguage(self.itemPrefabTab[indexs].itemId.."今日销售额")
+    if data.historyDetail then
+        self.testText.text = GetLanguage(data.historyDetail[1].itemId).."七天的销售额是 E"..GetClientPriceString(data.historyDetail[1].saleDetail.income + data.account)
+    else
+        self.testText.text = GetLanguage(data.itemId).."七天的销售额是 E"..GetClientPriceString(data.account)
+    end
 end
 --多语言
 function BuildingRevenueInfoCtrl:language()
@@ -176,16 +184,19 @@ end
 --请求建筑历史经营详情成功
 function BuildingRevenueInfoCtrl:historyRevenueInfoData(data)
     if data ~= nil then
-        self:openLinePanel(indexs)
+        dataInfo = data
+        dataInfo.num = self.num
+        dataInfo.itemId = self.itemId
+        dataInfo.account = self.account
+        self:openLinePanel(index)
         if isbool == false then
             return
         end
-        if ins == 1 then
+        if indexs == 1 then
             self.Content.anchoredPosition = Vector3(0,0,0)
-            self:initializePanelUiInfo()
+            self:initializePanelUiInfo(dataInfo)
         else
             self.timer:Start()
-            --self.Content.anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5)
         end
     end
 end
@@ -195,32 +206,47 @@ function BuildingRevenueInfoCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
---查看今日销售额
+--查看7天的销售额
 function BuildingRevenueInfoCtrl:_clickSalesBtn(ins)
     PlayMusEff(1002)
     ins.selectedSales.transform.localScale = Vector3.one
     ins.selectedSalesVolume.localScale = Vector3.zero
-    ins.testText.text = ins.itemPrefabTab[indexs].data.name.."今日销售额"
+    if dataInfo.historyDetail then
+        ins.testText.text = GetLanguage(dataInfo.historyDetail[1].itemId).."七天的销售额是 E"..GetClientPriceString(dataInfo.historyDetail[1].saleDetail.income + dataInfo.account)
+    else
+        ins.testText.text = GetLanguage(dataInfo.itemId).."七天的销售额是 E"..GetClientPriceString(dataInfo.account)
+    end
 end
---查看今日销售量
+--查看7天的销售量
 function BuildingRevenueInfoCtrl:_clickSalesVolumeBtn(ins)
     PlayMusEff(1002)
     ins.selectedSales.transform.localScale = Vector3.zero
     ins.selectedSalesVolume.localScale = Vector3.one
-    ins.testText.text = ins.itemPrefabTab[indexs].data.name.."今日销售量"
+    if dataInfo.historyDetail then
+        ins.testText.text = GetLanguage(dataInfo.historyDetail[1].itemId).."七天的销售量是 "..(dataInfo.historyDetail[1].saleDetail.saleNum + dataInfo.num).."个"
+    else
+        ins.testText.text = GetLanguage(dataInfo.itemId).."七天的销售量是 "..(dataInfo.num).."个"
+    end
 end
 -----------------------------------------------------------------------------事件函数-------------------------------------------------------------------------
 --计算位置
 function BuildingRevenueInfoCtrl:calculateLinePanel(ins)
-    --从这里开始标记Panel是否是打开的，是否点击的是同一个
-    indexs = ins.keyId
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingHistoryRevenueInfo',self.m_data.id,tonumber(typeId),ins.data.itemId,ins.data.producerId)
+    index = ins.keyId
+    --因为7天历史统计服不包括今天的，所以在查的时候缓存下这个的数量，方便查出来把几天卖出去的数量加上
+    self.itemId = ins.data.itemId
+    self.num = ins.data.num
+    self.account = ins.data.saleAccount
+    if indexs == index and isbool == true then
+        self:openLinePanel(index)
+    else
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingHistoryRevenueInfo',self.m_data.id,tonumber(typeId),ins.data.itemId,ins.data.producerId)
+    end
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 --打开折线图
 function BuildingRevenueInfoCtrl:openLinePanel(index)
     if isbool == false then
-        --indexs = index
+        indexs = index
         self.linePanel.transform:SetSiblingIndex(index + 2)
         self.linePanel.gameObject:SetActive(true)
         isbool = true
@@ -244,7 +270,7 @@ function BuildingRevenueInfoCtrl:UpData()
         else
             self.Content.anchoredPosition = Vector2.New(0, 132 * (indexs - 1) + (indexs * 5))
         end
-        self:initializePanelUiInfo()
+        self:initializePanelUiInfo(dataInfo)
         self.timer:Stop()
     end
 end

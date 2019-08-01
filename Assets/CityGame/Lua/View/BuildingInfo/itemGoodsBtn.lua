@@ -26,9 +26,9 @@ function itemGoodsBtn:InitializeData()
     self.nameText.text = GetLanguage(self.data.itemId)
     self.brandNameText.text = self.data.brandName
     self.todaySalesText.text = "+E"..GetClientPriceString(self.data.saleAccount)
-    self.proportionText.text = self.data.increasePercent * 100 .."%"
+    self.proportionText.text = math.floor(self.data.increasePercent * 100) .."%"
 end
 
 function itemGoodsBtn:_clickBgBtn(ins)
-    Event.Brocast("calculateLinePanel",ins.keyId)
+    Event.Brocast("calculateLinePanel",ins)
 end

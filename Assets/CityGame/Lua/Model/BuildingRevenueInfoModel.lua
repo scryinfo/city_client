@@ -56,5 +56,6 @@ function BuildingRevenueInfoModel:n_BuildingRevenueInfo(data)
 end
 --查询建筑历史经营详情
 function BuildingRevenueInfoModel:n_BuildingHistoryRevenueInfo(data)
+    FlightMainModel.CloseFlightLoading()
     DataManager.ControllerRpcNoRet(self.insId,"BuildingRevenueInfoCtrl", 'historyRevenueInfoData',data)
 end

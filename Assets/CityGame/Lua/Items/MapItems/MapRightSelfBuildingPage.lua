@@ -29,9 +29,9 @@ function MapRightSelfBuildingPage:initialize(viewRect)
     end)
     --
     self.goHereText01 = self.viewRect.transform:Find("goHereBtn/Text"):GetComponent("Text")
-    Event.AddListener("c_Revenue", self._updateRevenue, self)
+    Event.AddListener("c_Revenue", self._updateRevenue, self)  --
 end
---
+--营收回调
 function MapRightSelfBuildingPage:_updateRevenue(income)
     if self.revenueItem == nil then
         return
@@ -48,7 +48,7 @@ function MapRightSelfBuildingPage:refreshData(data)
     self.data = buildingDetail
     local info = buildingDetail.info
     self.buildingNameText.text = string.format("%s %s%s", info.name, GetLanguage(PlayerBuildingBaseData[info.mId].sizeName), GetLanguage(PlayerBuildingBaseData[info.mId].typeName))
-    if info.state == "OPERATE" then
+    if info.state == "OPERATE" then  --判断开业状态
         self.notOpenTran.localScale = Vector3.zero
         self.openedTran.localScale = Vector3.one
         local buildingType = GetBuildingTypeById(info.mId)
@@ -73,8 +73,10 @@ function MapRightSelfBuildingPage:_sortInfoItems()
         pos.y = pos.y - 66  --66是item的高度+间隔得来的
     end
 end
---
+--根据建筑类型显示不同的信息，需要对着策划案一个一个做
 function MapRightSelfBuildingPage:_createInfoByType(buildingType)
+    --因为每个建筑都有营收，所以提出来
+    --因为营收需要向服务器请求，所以需要先创建出来，显示默认值，服务器回调之后再刷新
     local inconme = string.format("<color=%s>E%s</color>/%s", MapRightSelfBuildingPage.moneyColor, GetClientPriceString(0), GetLanguage(20150004))
     local revenueData = {infoTypeStr = "Revenue", value = inconme}  --今日营收
     local revenueItem = self:_createShowItem(revenueData)
@@ -195,7 +197,7 @@ function MapRightSelfBuildingPage:getLabQueued(line)
     end
     return reminderTime
 end
---判断签约状态
+--判断签约状态  --需要加多语言
 function MapRightSelfBuildingPage:getSignState(contractInfo)
     local str
     if contractInfo.isOpen == false then
@@ -243,13 +245,16 @@ function MapRightSelfBuildingPage:_getWarehouseCapacity(store)
     end
     return warehouseNowCount + lockedNowCount
 end
---
+--创建
+--data包括两个字段，infoTypeStr代表MapBuildingInfoConfig中的key，value表示需要显示的str
+--hasDetail 区分带不带图片的预制
+--虽然预制不同，但是用的是一个脚本MapRightShowInfoItem
 function MapRightSelfBuildingPage:_createShowItem(data, hasDetail)
     local obj
     if hasDetail == true then
-        obj = MapPanel.prefabPools[MapPanel.MapShowInfoHasImgPoolName]:GetAvailableGameObject()
+        obj = MapPanel.prefabPools[MapPanel.MapShowInfoHasImgPoolName]:GetAvailableGameObject()  --带图片的item
     else
-        obj = MapPanel.prefabPools[MapPanel.MapShowInfoPoolName]:GetAvailableGameObject()
+        obj = MapPanel.prefabPools[MapPanel.MapShowInfoPoolName]:GetAvailableGameObject()  --不带图片预制
     end
     obj.transform:SetParent(self.showRoot)
     obj.transform.localScale = Vector3.one

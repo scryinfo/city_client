@@ -62,18 +62,19 @@ function GroundTransContractCtrl:_initPanelData()
 end
 --根据状态显示界面
 function GroundTransContractCtrl:_setShowState(data)
+    --随便挑了个只有rent状态才有的字段来判断
     if data.rentDay then
-        GroundTransContractPanel.titleText01.text = GetLanguage(22050003)
-        GroundTransContractPanel.rentTipText.text = GetLanguage(22050008)
-        GroundTransContractPanel.chooseState(true)
-        local total = data.groundInfo.rent.rentPreDay * data.rentDay
-        GroundTransContractPanel.rentDailyRentText.text = "E"..getPriceString(GetClientPriceString(data.groundInfo.rent.rentPreDay),30,24)
-        GroundTransContractPanel.totalPriceText.text = "E"..getPriceString(GetClientPriceString(total),48,36)
-        GroundTransContractPanel.rentTenancyText.text = data.rentDay.."d"
-        local nowStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime())
-        local endStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime() + data.rentDay * 86400)
-        GroundTransContractPanel.rentTenancyTimeText.text = string.format("(%s - %s)", nowStr, endStr)
-        GroundTransContractPanel.BText03.text = GetLanguage(22060006)
+        --GroundTransContractPanel.titleText01.text = GetLanguage(22050003)
+        --GroundTransContractPanel.rentTipText.text = GetLanguage(22050008)
+        --GroundTransContractPanel.chooseState(true)
+        --local total = data.groundInfo.rent.rentPreDay * data.rentDay
+        --GroundTransContractPanel.rentDailyRentText.text = "E"..getPriceString(GetClientPriceString(data.groundInfo.rent.rentPreDay),30,24)
+        --GroundTransContractPanel.totalPriceText.text = "E"..getPriceString(GetClientPriceString(total),48,36)
+        --GroundTransContractPanel.rentTenancyText.text = data.rentDay.."d"
+        --local nowStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime())
+        --local endStr = os.date("%Y/%m/%d %H:%M", TimeSynchronized.GetTheCurrentTime() + data.rentDay * 86400)
+        --GroundTransContractPanel.rentTenancyTimeText.text = string.format("(%s - %s)", nowStr, endStr)
+        --GroundTransContractPanel.BText03.text = GetLanguage(22060006)
     else
         GroundTransContractPanel.titleText01.text = GetLanguage(22040003)
         GroundTransContractPanel.chooseState(false)
@@ -83,6 +84,7 @@ function GroundTransContractCtrl:_setShowState(data)
     GroundTransContractPanel.rentAreaText.text = "1x1"
     GroundTransContractPanel.buyAreaText.text = "1x1"
     if data.ownerInfo ~= nil then
+        --A是土地拥有者，B是合约方--自己
         self.partAAvatar = AvatarManger.GetBigAvatar(data.ownerInfo.faceId, GroundTransContractPanel.APortraitImg.transform,0.5)
         self.partBAvatar = AvatarManger.GetBigAvatar(DataManager.GetMyPersonalHomepageInfo().faceId, GroundTransContractPanel.BPortraitImg.transform,0.5)
         GroundTransContractPanel.ANameText.text = data.ownerInfo.name
@@ -116,15 +118,15 @@ function GroundTransContractCtrl:_buyBtnFunc(ins)
     end
 end
 --点击租房按钮
-function GroundTransContractCtrl:_rentBtnFunc(ins)
-    PlayMusEff(1002)
-    if ins.m_data.groundInfo.rent then
-        if ins.m_data.groundInfo.rent.rentPreDay * ins.m_data.rentDay > DataManager.GetMoney() then
-            Event.Brocast("SmallPop", GetLanguage(41010006), 300)
-            GroundTransSetPriceCtrl._closeBackToMain()
-            return
-        end
-        GroundTransModel.m_ReqRentGround(ins.m_data.groundInfo.rent, ins.m_data.rentDay)
-        GroundTransSetPriceCtrl._closeBackToMain()
-    end
-end
+--function GroundTransContractCtrl:_rentBtnFunc(ins)
+--    PlayMusEff(1002)
+--    if ins.m_data.groundInfo.rent then
+--        if ins.m_data.groundInfo.rent.rentPreDay * ins.m_data.rentDay > DataManager.GetMoney() then
+--            Event.Brocast("SmallPop", GetLanguage(41010006), 300)
+--            GroundTransSetPriceCtrl._closeBackToMain()
+--            return
+--        end
+--        GroundTransModel.m_ReqRentGround(ins.m_data.groundInfo.rent, ins.m_data.rentDay)
+--        GroundTransSetPriceCtrl._closeBackToMain()
+--    end
+--end

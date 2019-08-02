@@ -72,7 +72,8 @@ function BuildingSalaryDetailPartNew:_initFunc()
 
     local staffNum = PlayerBuildingBaseData[self.m_data.info.mId].maxWorkerNum
     self.staffNumText.text = staffNum
-    local standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)
+    local standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)  --行业标准工资
+    --行业标准工资暂时是放在DataManager中管理，不刷新，如果DataMgr没有则请求，然后_getStandardWage是回调
     if standardWage == nil then
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
     else
@@ -87,7 +88,7 @@ function BuildingSalaryDetailPartNew:_initFunc()
         self.timeText.text = os.date("%H:%M", self.effectTime)
     end
 end
---
+--收到行业工资回调
 function BuildingSalaryDetailPartNew:_getStandardWage(data)
     if data.industryWages ~= nil then
         DataManager.SetBuildingStandardWage(data.type, data.industryWages)

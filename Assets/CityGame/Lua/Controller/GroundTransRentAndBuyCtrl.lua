@@ -24,29 +24,29 @@ function GroundTransRentAndBuyCtrl:Awake(go)
     groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.backBtn.gameObject, self._backBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.ownerBtn.gameObject, self._portraitBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.buyBtn.gameObject, self._buyBtnFunc, self)
-    groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.rentBtn.gameObject, self._rentBtnFunc, self)
-    GroundTransRentAndBuyPanel.tenancySlider.onValueChanged:AddListener(function(value)
-        if GroundTransRentAndBuyCtrl.tempRentPreDay == nil then
-            return
-        end
-        GroundTransRentAndBuyPanel.tenancyInput.text = value
-        GroundTransRentAndBuyPanel.totalRentalText.text = "E"..GetClientPriceString(value * GroundTransRentAndBuyCtrl.tempRentPreDay)
-    end)
-
-    GroundTransRentAndBuyPanel.tenancyInput.onValueChanged:AddListener(function()
-        if GroundTransRentAndBuyPanel.tenancyInput.text == "" then
-            return
-        end
-        local num = tonumber(GroundTransRentAndBuyPanel.tenancyInput.text)
-        if num > GroundTransRentAndBuyPanel.tenancySlider.maxValue then
-            num = GroundTransRentAndBuyPanel.tenancySlider.maxValue
-        end
-        if num == 0 then
-            num = 1
-        end
-        GroundTransRentAndBuyPanel.tenancyInput.text = num
-        GroundTransRentAndBuyPanel.tenancySlider.value = num
-    end)
+    --groundAuctionBehaviour:AddClick(GroundTransRentAndBuyPanel.rentBtn.gameObject, self._rentBtnFunc, self)
+    --GroundTransRentAndBuyPanel.tenancySlider.onValueChanged:AddListener(function(value)
+    --    if GroundTransRentAndBuyCtrl.tempRentPreDay == nil then
+    --        return
+    --    end
+    --    GroundTransRentAndBuyPanel.tenancyInput.text = value
+    --    GroundTransRentAndBuyPanel.totalRentalText.text = "E"..GetClientPriceString(value * GroundTransRentAndBuyCtrl.tempRentPreDay)
+    --end)
+    --
+    --GroundTransRentAndBuyPanel.tenancyInput.onValueChanged:AddListener(function()
+    --    if GroundTransRentAndBuyPanel.tenancyInput.text == "" then
+    --        return
+    --    end
+    --    local num = tonumber(GroundTransRentAndBuyPanel.tenancyInput.text)
+    --    if num > GroundTransRentAndBuyPanel.tenancySlider.maxValue then
+    --        num = GroundTransRentAndBuyPanel.tenancySlider.maxValue
+    --    end
+    --    if num == 0 then
+    --        num = 1
+    --    end
+    --    GroundTransRentAndBuyPanel.tenancyInput.text = num
+    --    GroundTransRentAndBuyPanel.tenancySlider.value = num
+    --end)
 end
 
 function GroundTransRentAndBuyCtrl:Refresh()
@@ -88,14 +88,14 @@ function GroundTransRentAndBuyCtrl:_setShowState(groundInfo, groundState)
     GroundTransRentAndBuyPanel.rentRoot.localScale = Vector3.zero
 
     if groundState == GroundTransState.Rent then
-        GroundTransRentAndBuyPanel.rentRoot.localScale = Vector3.one
-        GroundTransRentAndBuyPanel.tenancySlider.minValue = groundInfo.rent.rentDaysMin
-        GroundTransRentAndBuyPanel.tenancySlider.maxValue = groundInfo.rent.rentDaysMax
-        GroundTransRentAndBuyPanel.tenancySlider.value = GroundTransRentAndBuyPanel.tenancySlider.maxValue
-        GroundTransRentAndBuyPanel.tenancyInput.text = GroundTransRentAndBuyPanel.tenancySlider.value
-        GroundTransRentAndBuyPanel.dayRentalText.text = "E"..GetClientPriceString(groundInfo.rent.rentPreDay)
-        GroundTransRentAndBuyPanel.totalRentalText.text = "E"..GetClientPriceString(groundInfo.rent.rentPreDay * GroundTransRentAndBuyPanel.tenancySlider.value)
-        GroundTransRentAndBuyCtrl.tempRentPreDay = groundInfo.rent.rentPreDay  --显示日租金
+        --GroundTransRentAndBuyPanel.rentRoot.localScale = Vector3.one
+        --GroundTransRentAndBuyPanel.tenancySlider.minValue = groundInfo.rent.rentDaysMin
+        --GroundTransRentAndBuyPanel.tenancySlider.maxValue = groundInfo.rent.rentDaysMax
+        --GroundTransRentAndBuyPanel.tenancySlider.value = GroundTransRentAndBuyPanel.tenancySlider.maxValue
+        --GroundTransRentAndBuyPanel.tenancyInput.text = GroundTransRentAndBuyPanel.tenancySlider.value
+        --GroundTransRentAndBuyPanel.dayRentalText.text = "E"..GetClientPriceString(groundInfo.rent.rentPreDay)
+        --GroundTransRentAndBuyPanel.totalRentalText.text = "E"..GetClientPriceString(groundInfo.rent.rentPreDay * GroundTransRentAndBuyPanel.tenancySlider.value)
+        --GroundTransRentAndBuyCtrl.tempRentPreDay = groundInfo.rent.rentPreDay  --显示日租金
 
     elseif groundState == GroundTransState.Sell then
         GroundTransRentAndBuyPanel.sellRoot.localScale = Vector3.one
@@ -131,12 +131,12 @@ function GroundTransRentAndBuyCtrl:_buyBtnFunc(ins)
     end
 end
 --点击租房按钮
-function GroundTransRentAndBuyCtrl:_rentBtnFunc(ins)
-    PlayMusEff(1002)
-    if ins.m_data.groundInfo.rent then
-        ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo, rentDay = tonumber(GroundTransRentAndBuyPanel.tenancySlider.value)})
-    end
-end
+--function GroundTransRentAndBuyCtrl:_rentBtnFunc(ins)
+--    PlayMusEff(1002)
+--    if ins.m_data.groundInfo.rent then
+--        ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo, rentDay = tonumber(GroundTransRentAndBuyPanel.tenancySlider.value)})
+--    end
+--end
 --点击头像
 function GroundTransRentAndBuyCtrl:_portraitBtnFunc(ins)
     PlayMusEff(1002)

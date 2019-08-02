@@ -10,6 +10,14 @@ ResearchTypeItem = class("ResearchTypeItem")
 function ResearchTypeItem:initialize(prefab, data)
     self.prefab = prefab
     self.data = data
+    local transform = prefab.transform
+    LoadSprite(data.config.iconPath, transform:Find("IconImage"):GetComponent("Image"), false)
+    transform:Find("NameText"):GetComponent("Text").text = data.config.name
+    transform:Find("SpeedText"):GetComponent("Text").text = string.format("%.2fs/per", 1/data.speed)
+
+    transform:GetComponent("Button").onClick:AddListener(function ()
+        self:_clickPrefab()
+    end)
 end
 
 -- 点击item，打开研究界面，向服务器发消息进行研究

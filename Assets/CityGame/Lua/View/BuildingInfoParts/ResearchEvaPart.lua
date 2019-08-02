@@ -16,6 +16,7 @@ end
 
 function ResearchEvaPart:_InitTransform()
     local transform = self.transform
+    self.nullText = transform:Find("Top/NullText"):GetComponent("Text")
 end
 
 function ResearchEvaPart:_ResetTransform()
@@ -27,4 +28,9 @@ function ResearchEvaPart:Refresh(data)
 end
 
 function ResearchEvaPart:RefreshData(data)
+    if data.line then
+        self.nullText.text = ""
+    else
+        self.nullText.text = "No research currently."
+    end
 end

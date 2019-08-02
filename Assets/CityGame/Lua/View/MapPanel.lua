@@ -57,6 +57,7 @@ function MapPanel.InitPanel()
     this.detailPagesRect = transform:Find("leftRoot/detailPages"):GetComponent("RectTransform")  --
     this.matPageToggleGroup = transform:Find("leftRoot/detailPages/matPage"):GetComponent("ToggleGroup")  --原料页面
     this.goodsPageToggleGroup = transform:Find("leftRoot/detailPages/goodsPage"):GetComponent("ToggleGroup")  --商品页面
+    this.buildsPageToggleGroup = transform:Find("leftRoot/detailPages/buildsPage"):GetComponent("ToggleGroup")  --建筑页面
     this.promotionPageGroup = transform:Find("leftRoot/detailPages/promotionPage"):GetComponent("ToggleGroup")  --推广
     this.technologyPageGroup = transform:Find("leftRoot/detailPages/technologyPage"):GetComponent("ToggleGroup")  --科研
 
@@ -81,6 +82,7 @@ end
 function MapPanel.showDetailPageByType(typeId)
     MapPanel.matPageToggleGroup.transform.localScale = Vector3.zero
     MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.zero
+    MapPanel.buildsPageToggleGroup.transform.localScale = Vector3.zero
     MapPanel.promotionPageGroup.transform.localScale = Vector3.zero
     MapPanel.technologyPageGroup.transform.localScale = Vector3.zero
 
@@ -88,6 +90,8 @@ function MapPanel.showDetailPageByType(typeId)
         MapPanel.matPageToggleGroup.transform.localScale = Vector3.one
     elseif typeId == EMapSearchType.Goods then
         MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.one
+    elseif typeId == EMapSearchType.Builds then
+        MapPanel.buildsPageToggleGroup.transform.localScale = Vector3.one
     elseif typeId == EMapSearchType.Promotion then
         MapPanel.promotionPageGroup.transform.localScale = Vector3.one
     elseif typeId == EMapSearchType.Technology then
@@ -101,6 +105,8 @@ function MapPanel.getPageByType(typeId)
         go = MapPanel.matPageToggleGroup.gameObject
     elseif typeId == EMapSearchType.Goods then
         go = MapPanel.goodsPageToggleGroup.gameObject
+    elseif typeId == EMapSearchType.Builds then
+        go = MapPanel.buildsPageToggleGroup.gameObject
     elseif typeId == EMapSearchType.Promotion then
         go = MapPanel.promotionPageGroup.gameObject
     elseif typeId == EMapSearchType.Technology then

@@ -24,6 +24,13 @@ end
 
 
 --- 客户端请求 ---
+--请求建筑搜索摘要
+function MapModel.m_ReqBuildsSummary(itemId)
+    if itemId ~= nil then
+        DataManager.ModelSendNetMes("gscode.OpCode", "queryTypeBuildingSummary","gs.BuildingGridSummary",{ num = itemId})
+        FlightMainModel.OpenFlightLoading()
+    end
+end
 --请求原料商品搜索摘要
 function MapModel.m_ReqQueryMarketSummary(itemId)
     if itemId ~= nil then

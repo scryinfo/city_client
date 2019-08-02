@@ -23,12 +23,12 @@ EMapSearchType =
     Default = 0,
     Material = 1,
     Goods = 2,
-    --Warehouse = 3,
-    Technology = 3,
-    Promotion = 4,
-    Deal = 5,
-    Auction = 6,
-    Signing = 7,
+    Builds = 3,
+    Technology = 4,
+    Promotion = 5,
+    Deal = 6,
+    Auction = 7,
+    Signing = 8,
     SelfBuilding = 9,
 }
 --科研推广查询的不同类型
@@ -262,6 +262,10 @@ function MapCtrl:_createType(data)
         self.typeTable[typeId] = MapSearchTypePageItem:new(data, function ()
             self:goodsSelect()
         end , go)
+    elseif typeId == EMapSearchType.Builds then
+        self.typeTable[typeId] = MapSearchTypePageItem:new(data, function ()
+            self:buildsSelect()
+        end , go)
     elseif typeId == EMapSearchType.Deal then
         self.typeTable[typeId] = MapSearchTypeNonePageItem:new(data, function ()
             self:dealSelect()
@@ -305,6 +309,11 @@ end
 function MapCtrl:goodsSelect()
     self:toggleDetailPage(true)
     self:_openPageItems(EMapSearchType.Goods)
+end
+--打开建筑搜索界面
+function MapCtrl:buildsSelect()
+    self:toggleDetailPage(true)
+    self:_openPageItems(EMapSearchType.Builds)
 end
 --推广二级菜单
 function MapCtrl:promotionSelect()
@@ -426,12 +435,14 @@ end
 function MapCtrl:refreshDetailItem(item)
     MapPanel.closeAllRightPage()
 
+    --点两次取消，检验是否已经选中
     if item == self.selectDetailItem then
         self.selectDetailItem:resetState()
         self.selectDetailItem = nil
         MapBubbleManager.cleanAllBubbleItems()
         Event.Brocast("c_ChooseTypeDetail")
     else
+        --如果之前没有搜索过，记录搜索item
         if self.selectDetailItem ~= nil then
             self.selectDetailItem:resetState()
         end
@@ -441,17 +452,24 @@ function MapCtrl:refreshDetailItem(item)
         local typeId = item:getTypeId()
         local tempItem = self.typeTable[typeId]
         if tempItem ~= nil then
+            --设置一级菜单的显示
             Event.Brocast("c_ChooseTypeDetail", typeId, item:getNameStr())
             --判断是否是科研推广
             if typeId == EMapSearchType.Promotion or typeId == EMapSearchType.Technology then
+                --向服务器请求数据
                 self:checkPromotionTechReq(typeId, item)
             elseif typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
                 self.selectSearchType = EMapSearchType.Default  --选中的搜索type
                 self.selectDetailItem = item
                 self:matGoodsReq(item:getItemId())
+            elseif typeId == EMapSearchType.Builds then
+                self.selectSearchType = EMapSearchType.Default  --选中的搜索type
+                self.selectDetailItem = item
+
             end
 
             tempItem:_clickFunc()  --隐藏右边UI
+            --以下为转圈圈CD，固定转3秒
             self:toggleLoadingState(false)  --cd
             self.m_Timer:Reset(slot(self._itemTimer, self), 1, 3, true)
             self.m_Timer:Start()
@@ -480,7 +498,7 @@ function MapCtrl:checkPromotionTechReq(typeId, item)
             self:promotionTechReq(typeId, item)
             return
         end
-
+        --10秒之内只能搜索同级菜单一次，计时器
         local time = self.searchTime[typeId]
         local remainTime = TimeSynchronized.GetTheCurrentTime() - time - MapCtrl.static.reqServerTime
         if remainTime >= 0 then
@@ -496,8 +514,9 @@ function MapCtrl:promotionTechReq(typeId, item)
         self.searchTime = {}
     end
     self.searchTime[typeId] = TimeSynchronized.GetTheCurrentTime()
-    --
+    --一级菜单类型搜索
     self.selectSearchType = EMapSearchType.Default  --选中的搜索type
+    --二级菜单类型搜索
     self.selectDetailItem = item
     if self:_getIsDetailFunc() == true then
         self:_judgeDetail()
@@ -581,6 +600,8 @@ function MapCtrl:getDetailPageByType(typeId, go)
     local item
     if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
         item = MapMatDetailPageItem:new(typeId, go)
+    elseif typeId == EMapSearchType.Builds then
+        item = MapBuildsPageItem:new(typeId, go)
     elseif typeId == EMapSearchType.Technology then
         item = MapTechnologyPageItem:new(typeId, go)
     elseif typeId == EMapSearchType.Promotion then
@@ -950,7 +971,7 @@ function MapCtrl.getNowCenterCollectionId()
     local blockCollectionId = TerrainManager.BlockIDTurnCollectionGridIndex(blockId)
     return blockCollectionId
 end
---判断是否是
+--判断小地图是否是详情搜索状态
 function MapCtrl:_getIsDetailFunc()
     if self.my_Scale ~= nil and self.my_Scale > self.criticalScaleValue then
         return true

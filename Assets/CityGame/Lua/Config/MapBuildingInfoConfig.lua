@@ -117,6 +117,46 @@ MapPromotionInfoConfig={
         ["leftColorV3"] = Vector3.New(255, 255, 255),
     },
 }
+--建筑二级菜单Items
+MapBuildInfoConfig={
+    [1] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/SuperMarket_3x3.png",
+        ["languageId"] = 20050003,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+    },
+    [2] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/SuperMarket_3x3.png",
+        ["languageId"] = 20050003,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+    },
+    [3] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/SuperMarket_3x3.png",
+        ["languageId"] = 20050003,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+    },
+    [4] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["languageId"] = 20050004,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+    },
+    [5] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/SuperMarket_3x3.png",
+        ["languageId"] = 20050003,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+    },
+    [6] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/SuperMarket_3x3.png",
+        ["languageId"] = 20050003,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+    },
+}
+
 --在evaConfig中的推广对应ID
 MapPromotionConfig={
     [1] = 1651,

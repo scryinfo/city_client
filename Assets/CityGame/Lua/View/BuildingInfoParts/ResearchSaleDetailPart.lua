@@ -11,33 +11,68 @@ function ResearchSaleDetailPart.PrefabName()
 end
 
 function ResearchSaleDetailPart:_InitTransform()
+    -- 货架有东西
+    self.shelfScrollContentTF = self.transform:Find("Root/ShelfScroll")
+    self.shelfScrollContent = self.transform:Find("Root/ShelfScroll/Viewport/Content")
+    self.addBtnTF = self.transform:Find("Root/ShelfScroll/Viewport/Content/AddBtn")
+    self.addBtn = self.transform:Find("Root/ShelfScroll/Viewport/Content/AddBtn"):GetComponent("Button")
+    self.researchMaterialItem = self.transform:Find("Root/ShelfScroll/Viewport/Content/ResearchMaterialItem").gameObject
 
+    -- 货架没东西
+    self.noTip = self.transform:Find("Root/NoTip")
+    self.noAddBtnTF = self.transform:Find("Root/NoTip/AddBtn")
+end
+
+--显示详情
+function ResearchSaleDetailPart:Show(data)
+    self.transform.localScale = Vector3.New(1,0,1)
+    self.transform:DOScale(Vector3.one,BasePartDetail.static.OpenDetailPartTime):SetEase(BasePartDetail.static.OpenDetailPartEase)
+    self:RefreshData(data)
+    -- 监听获取科技资料仓库数据(研究所、推广公司)
+    Event.AddListener("c_OnReceiveGetScienceStorageData",self.c_OnReceiveGetScienceStorageData,self)
 end
 
 -- 初始化的时候，监听事件
 function  ResearchSaleDetailPart:_InitEvent()
     -- 监听查询出售的内容（_getDatabaseInfo）
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "getScienceShelfData", "gs.ScienceShelfData", self._getScienceShelfData, self)
     -- 监听上架内容
     -- 监听下架内容
 end
 
 function ResearchSaleDetailPart:_InitClick(mainPanelLuaBehaviour)
     -- 给加号点击增加打开ResearchSaleChoiceCtrl的点击，把查询到的资料库的数据传进去
+    mainPanelLuaBehaviour:AddClick(self.addBtn.gameObject, function ()
+        ct.OpenCtrl("ResearchSaleChoiceCtrl", self.scienceStorageData)
+    end , self)
+
+    mainPanelLuaBehaviour:AddClick(self.noAddBtnTF.gameObject, function ()
+        ct.OpenCtrl("ResearchSaleChoiceCtrl", self.scienceStorageData)
+    end , self)
 end
 
 -- 销毁的时候，清除数据
 function ResearchSaleDetailPart:_ResetTransform()
+    if self.researchMaterialItems then
+        for _, m in ipairs(self.researchMaterialItems) do
+            destroy(m.prefab)
+        end
+    end
+    self.researchMaterialItems = nil
 end
 
 -- 销毁的时候，清除事件
 function ResearchSaleDetailPart:_RemoveEvent()
     -- 移除监听查询出售的内容
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "getScienceShelfData", self._getScienceShelfData, self)
     -- 移除监听上架内容
     -- 移除监听下架内容
 end
 
 function ResearchSaleDetailPart:RefreshData(data)
-    -- 监听查询资料库的内容（_getDatabaseInfo）
+    self.m_data = data
+    -- 获取科技资料仓库数据(研究所、推广公司)
+    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqGetScienceStorageData')
     -- 如果是本人打开，则需要查询仓库的内容
     -- 向服务器发消息查询出售的内容
     -- 向服务器发消息查询当前资料库的内容
@@ -50,11 +85,52 @@ function ResearchSaleDetailPart:_RemoveClick()
 end
 
 function ResearchSaleDetailPart:_ChildHide()
-    -- 移除监听查询资料库的内容
+    -- 移除获取科技资料仓库数据(研究所、推广公司)
+    Event.RemoveListener("c_OnReceiveGetScienceStorageData", self.c_OnReceiveGetScienceStorageData, self)
 end
 
-function ResearchSaleDetailPart:_getDatabaseInfo(data)
+function ResearchSaleDetailPart:_getScienceShelfData(data)
+    self.scienceShelfData = data
     -- 如果是自己打开，加号需要显示
+    if self.researchMaterialItems then
+        for _, m in ipairs(self.researchMaterialItems) do
+            destroy(m.prefab)
+        end
+    end
+    self.researchMaterialItems = {}
+    if self.m_data.info.ownerId == DataManager.GetMyOwnerID() then
+        self.addBtnTF.localScale = Vector3.one
+        self.shelfScrollContentTF.localScale = Vector3.one
+        self.noTip.localScale = Vector3.zero
+        if data.shelf and #data.shelf >= 1 then
+            for i, v in ipairs(self.m_data.boxs) do
+                local go = ct.InstantiatePrefab(self.researchMaterialItem)
+                local rect = go.transform:GetComponent("RectTransform")
+                go.transform:SetParent(self.shelfScrollContent)
+                rect.transform.localScale = Vector3.one
+                rect.transform.localPosition = Vector3.zero
+                go:SetActive(true)
+
+                local function callback()
+
+                end
+                self.researchMaterialItems[i] = ResearchMaterialItem:new(go, v,callback)
+            end
+        else
+            --self.addBtnTF.localScale = Vector3.zero
+            self.shelfScrollContentTF.localScale = Vector3.zero
+            self.noTip.localScale = Vector3.one
+        end
+    else
+        self.shelfScrollContentTF.localScale = Vector3.one
+        self.addBtnTF.localScale = Vector3.zero
+    end
     -- 如果是别人打开，加号不需要显示如果有正在出售的东西
-    -- 如果有正在出售的东西，则生成 ResearchMaterialItem（useType = 2，代表 货架上别人可购买， 4 代表我自己看货架，可以进行调整和下架操作）
+    -- 如果有正在出售的东西，则生成 ResearchMaterialItem（useType = 2 代表别人购买并使用生产资料 3 代表货架上的生产资料 4 代表选择上架的生产资料）
+end
+
+function ResearchSaleDetailPart:c_OnReceiveGetScienceStorageData(scienceStorageData)
+    self.scienceStorageData = scienceStorageData
+    -- 获取货架数据(研究所、推广公司)
+    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqGetScienceShelfData')
 end

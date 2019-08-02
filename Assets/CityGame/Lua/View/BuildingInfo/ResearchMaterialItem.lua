@@ -7,9 +7,25 @@
 ResearchMaterialItem = class("ResearchMaterialItem")
 
 -- 初始化
-function ResearchMaterialItem:initialize(prefab, data)
+function ResearchMaterialItem:initialize(prefab, data, index,  buildingId)
     self.prefab = prefab
     self.data = data
+    self.index = index
+
+    local transform = prefab.transform
+    LoadSprite(ResearchConfig[data.itemKey.id].iconPath, transform:Find("IconImage"):GetComponent("Image"), false)
+    transform:Find("NameText"):GetComponent("Text").text = ResearchConfig[data.itemKey.id].name
+    self.numText = transform:Find("NumText"):GetComponent("Text")
+    if index == 1 then   -- 货架选择界面
+        self.numText.text = "X" .. tostring(data.storeNum)
+    elseif index == 2 then   -- 仓库显示界面
+        self.numText.text = "X" .. tostring(data.storeNum + data.lockedNum)
+    end
+
+    self.btn = transform:GetComponent("Button")
+    self.btn.onClick:AddListener(function ()
+        self:_clickPrefab()
+    end)
 end
 
 function ResearchMaterialItem:ShowView()
@@ -19,7 +35,7 @@ end
 -- 点击item，打开使用界面，使用研究资料以后即可获得eva点数
 function ResearchMaterialItem:_clickPrefab()
     -- 1代表仓库里自己使用生产资料 2 代表别人购买并使用生产资料 3 代表货架上的生产资料 4 代表选择上架的生产资料
-    if self.data.useType == 3 or self.data.useType == 4 then
+    if self.index == 3 or self.index == 4 then
         ct.OpenCtrl("ResearchSaleCtrl",self.data)
     else
         ct.OpenCtrl("ResearchUseCtrl",self.data)

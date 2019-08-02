@@ -10,7 +10,19 @@ function ResearchDatabaseDetailPart.PrefabName()
 end
 
 function ResearchDatabaseDetailPart:_InitTransform()
+    self.nullImage = self.transform:Find("Root/NullImage")
 
+    self.databaseScrollContent = self.transform:Find("Root/DatabaseScroll/Viewport/Content")
+    self.researchMaterialItem = self.transform:Find("Root/DatabaseScroll/Viewport/Content/ResearchMaterialItem").gameObject
+end
+
+--显示详情
+function ResearchDatabaseDetailPart:Show(data)
+    self.transform.localScale = Vector3.New(1,0,1)
+    self.transform:DOScale(Vector3.one,BasePartDetail.static.OpenDetailPartTime):SetEase(BasePartDetail.static.OpenDetailPartEase)
+    self:RefreshData(data)
+    -- 监听获取科技资料仓库数据(研究所、推广公司)
+    Event.AddListener("c_OnReceiveGetScienceStorageData",self.c_OnReceiveGetScienceStorageData,self)
 end
 
 -- 初始化的时候，监听事件
@@ -24,6 +36,12 @@ end
 
 -- 销毁的时候，清除数据
 function ResearchDatabaseDetailPart:_ResetTransform()
+    if self.researchMaterialItems then
+        for _, m in ipairs(self.researchMaterialItems) do
+            destroy(m.prefab)
+        end
+    end
+    self.researchMaterialItems = {}
 end
 
 -- 销毁的时候，清除事件
@@ -31,7 +49,10 @@ function ResearchDatabaseDetailPart:_RemoveEvent()
 end
 
 function ResearchDatabaseDetailPart:RefreshData(data)
-    -- 监听查询资料库的内容（_getDatabaseInfo）
+    self.m_data = data
+
+    -- 获取科技资料仓库数据(研究所、推广公司)
+    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqGetScienceStorageData')
     -- 监听使用研究资料的内容（_returnUse）
     -- 向服务器发消息查询当前资料库的内容
 end
@@ -42,8 +63,8 @@ function ResearchDatabaseDetailPart:_RemoveClick()
 end
 
 function ResearchDatabaseDetailPart:_ChildHide()
-    -- 移除监听查询资料库的内容
-    -- 移除监听使用研究资料的内容（_returnUse）
+    -- 移除获取科技资料仓库数据(研究所、推广公司)
+    Event.RemoveListener("c_OnReceiveGetScienceStorageData", self.c_OnReceiveGetScienceStorageData, self)
 end
 
 -- 查询到内容返回
@@ -58,5 +79,30 @@ function ResearchDatabaseDetailPart:_returnUse(data)
     for i, v in ipairs(self.researchMaterials) do
         v.data = i -- 新的数据
         v:ShowView()
+    end
+end
+
+function ResearchDatabaseDetailPart:c_OnReceiveGetScienceStorageData(scienceStorageData)
+    self.scienceStorageData = scienceStorageData
+    if self.researchMaterialItems then
+        for _, m in ipairs(self.researchMaterialItems) do
+            destroy(m.prefab)
+        end
+    end
+    self.researchMaterialItems = {}
+    if scienceStorageData.store and scienceStorageData.store[1] then
+        self.nullImage.localScale = Vector3.zero
+        for i, v in ipairs(scienceStorageData.store) do
+            local go = ct.InstantiatePrefab(self.researchMaterialItem)
+            local rect = go.transform:GetComponent("RectTransform")
+            go.transform:SetParent(self.databaseScrollContent)
+            rect.transform.localScale = Vector3.one
+            rect.transform.localPosition = Vector3.zero
+            go:SetActive(true)
+
+            self.researchMaterialItems[i] = ResearchMaterialItem:new(go, v, 2, scienceStorageData.buildingId)
+        end
+    else
+        self.nullImage.localScale = Vector3.one
     end
 end

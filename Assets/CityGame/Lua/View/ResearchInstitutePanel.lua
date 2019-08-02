@@ -20,7 +20,7 @@ function ResearchInstitutePanel.InitPanel()
 
     this.topItem = BuildingUpperItem:new(transform:Find("TopRoot/BuildingUpperItem"))
 
-    this.openBusinessBtnItem = OpenBusinessBtnItem:new(transform:Find("TopRoot/OpenBusinessItem"))
+    this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("TopRoot/OpenBusinessItem"))
 
-    this.bubbleMessageBtn = transform:Find("BubbleMessageBtn").gameObject
+    this.bubbleMessageBtn = transform:Find("BubbleMessageBtn")
 end

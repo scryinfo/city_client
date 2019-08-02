@@ -12,45 +12,85 @@ function ChooseDataTypeCtrl:bundleName()
 end
 
 function ChooseDataTypeCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 end
 
-function ChooseDataTypeCtrl:Awake()
+function ChooseDataTypeCtrl:Awake(go)
     marketDataTypeBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    promoteBehaviour:AddClick(PromoteCompanyPanel.back,self.OnBack,self)
-    self:initData()
+    self:_getComponent(go)
+    marketDataTypeBehaviour:AddClick(self.back,self.OnBack,self)
 end
 
 function ChooseDataTypeCtrl:Active()
     UIPanel.Active(self)
+    Event.AddListener("c_SurveySpeed",self.c_SurveySpeed,self)
+    Event.AddListener("c_AddSurveyLien",self.c_AddSurveyLien,self)
 end
 
 function ChooseDataTypeCtrl:Refresh()
-    DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
+    self:initData()
 end
 
 function ChooseDataTypeCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_SurveySpeed",self.c_SurveySpeed,self)
+    Event.RemoveListener("c_AddSurveyLien",self.c_AddSurveyLien,self)
+    if self.dataSurveyItem then
+        for i, v in pairs(self.dataSurveyItem) do
+            destroy(v.prefab.gameObject)
+        end
+    end
 end
 
 function ChooseDataTypeCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
-    self:_getComponent(obj)
 end
 
 --获取组件
 function ChooseDataTypeCtrl:_getComponent(go)
     self.back = go.transform:Find("down/title/back").gameObject
     self.name = go.transform:Find("down/title/back/name"):GetComponent("Text")
+    self.surveyScrollView = go.transform:Find("down/surveyScrollView")
+    self.survey = go.transform:Find("down/surveyScrollView/Viewport/Content"):GetComponent("RectTransform")
+    self.saleScrollView = go.transform:Find("down/saleScrollView")
+    self.sale = go.transform:Find("down/saleScrollView/Viewport/Content"):GetComponent("RectTransform")
 end
 
 --初始化数据
 function ChooseDataTypeCtrl:initData()
-
+    if self.m_data.type == DataType.DataSurvey then
+        self.surveyScrollView.localScale = Vector3.one
+        self.saleScrollView.localScale = Vector3.zero
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_getSurveySpeed',self.m_data.insId)
+    elseif self.m_data.type == DataType.DataSale then
+        self.surveyScrollView.localScale = Vector3.zero
+        self.saleScrollView.localScale = Vector3.one
+    end
 end
 
 --返回
 function ChooseDataTypeCtrl:OnBack()
     UIPanel.ClosePage()
+end
+
+--速度回调
+function ChooseDataTypeCtrl:c_SurveySpeed(info)
+    if info.itemSpeed then
+        self.dataSurveyItem = {}
+        for i, v in ipairs(info.itemSpeed) do
+            local function callback(prefab)
+                self.dataSurveyItem[i] = DataSurveyCardItem:new(marketDataTypeBehaviour,prefab,v,info.buildingId)
+            end
+            createPrefab("Assets/CityGame/Resources/View/GoodsItem/DataSurveyCardItem.prefab",self.survey, callback)
+        end
+    end
+end
+
+--添加线回调
+function ChooseDataTypeCtrl:c_AddSurveyLien(info)
+    if info ~= nil then
+        TimeSynchronized.SynchronizationServerTime(info.ts)
+        Event.Brocast("SmallPop",GetLanguage(25030010),ReminderType.Succeed)
+        UIPanel.ClosePage()
+    end
 end

@@ -10,19 +10,34 @@ function DataSurveyPart:PrefabName()
 end
 --
 function DataSurveyPart:GetDetailClass()
-    return DataSurvetDetailPart
+    return DataSurveyDetailPart
 end
 --
 function DataSurveyPart:_InitTransform()
     self:_getComponent(self.transform)
+    self.m_Timer = Timer.New(slot(self.UpData, self), UnityEngine.Time.unscaledDeltaTime, -1, true)
 end
 --
 function DataSurveyPart:_ResetTransform()
-
+    Event.RemoveListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
+    Event.RemoveListener("part_SurveyLineFinish",self.SurveyLineFinish,self)
 end
+
+function DataSurveyPart:_InitChildClick(mainPanelLuaBehaviour)
+    Event.AddListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
+    Event.AddListener("part_SurveyLineFinish",self.SurveyLineFinish,self)
+end
+
 
 function DataSurveyPart:ShowDetail(data)
     BasePart.ShowDetail(self,data)
+end
+
+function DataSurveyPart:HideDetail(data)
+    BasePart.HideDetail(self,data)
+    --if self.m_Timer ~= nil then
+    --    self.m_Timer:Stop()
+    --end
 end
 --
 function DataSurveyPart:RefreshData(data)
@@ -30,13 +45,60 @@ function DataSurveyPart:RefreshData(data)
         return
     end
     self.m_data = data
+    if data.line == nil then
+        self.notLine.transform.localScale = Vector3.one
+        self.line.transform.localScale = Vector3.zero
+    else
+        self.notLine.transform.localScale = Vector3.zero
+        self.line.transform.localScale = Vector3.one
+        self.info = data.line[1]
+        LoadSprite(ResearchConfig[data.line[1].itemId].iconPath, self.icon, true)
+        self.allTime = (data.line[1].targetCount - data.line[1].nowCount) / data.line[1].speed
+        local ts = getTimeTable(self.allTime)
+        self.timeText.text = ts.hour..":"..ts.minute..":"..ts.second
+        self.num.text = data.line[1].nowCount .. "/" .. data.line[1].targetCount
+        self.slider.maxValue = data.line[1].targetCount
+        self.slider.value = data.line[1].nowCount
+        self.m_Timer:Start()
+    end
 end
 --
 function DataSurveyPart:_getComponent(transform)
-    self.today = transform:Find("Top/Text"):GetComponent("Text")
+    self.notLine = transform:Find("Top/tipText"):GetComponent("Text")
+    self.line = transform:Find("Top/TopLineInfo")
+    self.icon = transform:Find("Top/TopLineInfo/goodsIcon"):GetComponent("Image")
+    self.timeText = transform:Find("Top/TopLineInfo/timeText"):GetComponent("Text")
+    self.slider = transform:Find("Top/TopLineInfo/numberSlider"):GetComponent("Slider")
+    self.num = transform:Find("Top/TopLineInfo/numberSlider/numberText"):GetComponent("Text")
 end
 --
 function DataSurveyPart:_initFunc(info)
 
+end
+
+--调查线推送
+function DataSurveyPart:SurveyLineUpData(info)
+    self.slider.value = info.nowCount
+    self.num.text = info.nowCount .. "/" .. info.targetCount
+end
+
+--调查线完成
+function DataSurveyPart:SurveyLineFinish(info)
+    if info.nextlineId == nil then
+        self.notLine.transform.localScale = Vector3.one
+        self.line.transform.localScale = Vector3.zero
+        if self.m_Timer ~= nil then
+            self.m_Timer:Stop()
+        end
+    end
+end
+
+function DataSurveyPart:UpData()
+    local ts = getTimeTable(self.allTime)
+    self.timeText.text = ts.hour..":"..ts.minute..":"..ts.second
+    self.allTime = self.allTime - UnityEngine.Time.unscaledDeltaTime
+    if self.allTime <= 0 then
+        self.timeText.text = "00:00:00"
+    end
 end
 

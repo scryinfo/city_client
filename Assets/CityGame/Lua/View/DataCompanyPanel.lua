@@ -6,10 +6,10 @@
 local transform;
 local gameObject;
 
-PromoteCompanyPanel = {};
-local this = PromoteCompanyPanel;
+DataCompanyPanel = {};
+local this = DataCompanyPanel;
 --启动事件--
-function PromoteCompanyPanel.Awake(obj)
+function DataCompanyPanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
 
@@ -18,13 +18,10 @@ function PromoteCompanyPanel.Awake(obj)
 end
 
 --初始化面板--
-function PromoteCompanyPanel.InitPanel()
+function DataCompanyPanel.InitPanel()
     this.groupTrans = transform:Find("MainGroup")
     this.topItem = BuildingUpperItem:new(transform:Find("top/BuildingUpperItem"))
     this.open = transform:Find("open").gameObject
-    this.queue = transform:Find("quene").gameObject
     this.open = transform:Find("open").gameObject
-    this.queneText = transform:Find("quene/queneImage/queneText"):GetComponent("Text")
-    this.queneValue = transform:Find("quene/queneImage/queneText/queneValue"):GetComponent("Text")
     this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("top/OpenBusinessItem"))
 end

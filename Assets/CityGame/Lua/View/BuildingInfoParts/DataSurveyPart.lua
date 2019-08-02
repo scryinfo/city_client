@@ -52,6 +52,7 @@ function DataSurveyPart:RefreshData(data)
         self.notLine.transform.localScale = Vector3.zero
         self.line.transform.localScale = Vector3.one
         self.info = data.line[1]
+        LoadSprite(ResearchConfig[data.line[1].itemId].iconPath, self.icon, true)
         self.allTime = (data.line[1].targetCount - data.line[1].nowCount) / data.line[1].speed
         local ts = getTimeTable(self.allTime)
         self.timeText.text = ts.hour..":"..ts.minute..":"..ts.second
@@ -65,6 +66,7 @@ end
 function DataSurveyPart:_getComponent(transform)
     self.notLine = transform:Find("Top/tipText"):GetComponent("Text")
     self.line = transform:Find("Top/TopLineInfo")
+    self.icon = transform:Find("Top/TopLineInfo/goodsIcon"):GetComponent("Image")
     self.timeText = transform:Find("Top/TopLineInfo/timeText"):GetComponent("Text")
     self.slider = transform:Find("Top/TopLineInfo/numberSlider"):GetComponent("Slider")
     self.num = transform:Find("Top/TopLineInfo/numberSlider/numberText"):GetComponent("Text")

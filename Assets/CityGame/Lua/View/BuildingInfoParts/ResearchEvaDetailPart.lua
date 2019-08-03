@@ -59,7 +59,8 @@ function  ResearchEvaDetailPart:_InitEvent()
     DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "getScienceLineData", "gs.ScienceLineData", self._getScienceLineData, self)
     -- 监听生产速度
     Event.AddListener("c_OnReceiveResearchGetScienceItemSpeed",self.c_OnReceiveResearchGetScienceItemSpeed,self)
-
+    -- 监听使用宝箱
+    Event.AddListener("c_OnReceiveOpenScienceBox",self.c_OnReceiveOpenScienceBox,self)
 
     -- 监听删除生产线
     DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "ftyDelLine", "gs.DelLine", self._getFtyDelLine, self)
@@ -107,6 +108,8 @@ function ResearchEvaDetailPart:_RemoveEvent()
     DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "getScienceLineData", self._getScienceLineData, self)
     -- 移除监听生产速度
     Event.RemoveListener("c_OnReceiveResearchGetScienceItemSpeed",self.c_OnReceiveResearchGetScienceItemSpeed,self)
+    -- 移除监听使用宝箱
+    Event.RemoveListener("c_OnReceiveOpenScienceBox",self.c_OnReceiveOpenScienceBox,self)
     -- 移除监听生产线变化推送
     --DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "ftyLineChangeInform", self)
     -- 移除监听删除生产线
@@ -243,6 +246,25 @@ function ResearchEvaDetailPart:c_OnReceiveResearchGetScienceItemSpeed(scienceIte
     self.scienceItemSpeed = scienceItemSpeed
 end
 
+function ResearchEvaDetailPart:c_OnReceiveOpenScienceBox(scienceBoxACK)
+     self.totalBoxNum = self.totalBoxNum - scienceBoxACK.openNum
+     self.totalBoxNumText.text = "X" .. tostring(self.totalBoxNum)    
+    for i, v in ipairs(self.boxItems) do
+        if v.data.key.id == scienceBoxACK.key.id then
+            v.data.n = v.data.n - scienceBoxACK.openNum
+            if v.data.n <= 0 then
+                UnityEngine.GameObject.Destroy(v.prefab)
+                table.remove(self.scienceLineData.box, i)
+                table.remove(self.boxItems, i)
+            else
+                v:SetNumText()
+            end
+            break
+        end
+    end
+end
+
+-- 生产线的信息
 function ResearchEvaDetailPart:_getScienceLineData(data)
     self.scienceLineData = data
 
@@ -315,7 +337,7 @@ function ResearchEvaDetailPart:_getScienceLineData(data)
             end
             self.boxItems[i] = ResearchEvaBoxItem:new(go, v, callback)
         end
-        self.totalBoxNumText.text = tostring(self.totalBoxNum)
+        self.totalBoxNumText.text = "X" ..tostring(self.totalBoxNum)
     else
         self.boxNullImage.localScale = Vector3.one
         self.boxNumImage.localScale = Vector3.zero
@@ -325,8 +347,44 @@ end
 
 -- 生产线变化推送
 function ResearchEvaDetailPart:c_OnReceiveGetFtyLineChangeInform(data)
-    if self.targetCount ~= nil then
-        self.numText.text = data.nowCount.."/" .. self.targetCount
+    --if self.targetCount ~= nil then
+        self.numText.text = data.nowCount.."/" .. data.targetCount
+    --end
+    if self.totalBoxNum == nil then
+        self.totalBoxNum = 0
+    end
+    self.totalBoxNum = self.totalBoxNum + data.produceNum
+    self.totalBoxNumText.text = "X" .. tostring(self.totalBoxNum)
+    if self.boxItems then
+        local isExit = false
+        for _, v in ipairs(self.boxItems) do
+            if v.data.key.id == data.iKey.id then
+                v.data.n = v.data.n + data.produceNum
+                v:SetNumText()
+                isExit = true
+                break
+            end
+        end
+        if not isExit then
+            local temp = { key= {id = data.iKey.id}, n = data.produceNum}
+            if self.scienceLineData.box == nil then
+                self.scienceLineData.box = {}
+                self.boxNullImage.localScale = Vector3.zero     
+                self.boxNumImage.localScale = Vector3.one       
+            end
+            table.insert(self.scienceLineData.box, temp)
+            local go = ct.InstantiatePrefab(self.researchEvaBoxItem)
+            local rect = go.transform:GetComponent("RectTransform")
+            go.transform:SetParent(self.boxsScrollContent)
+            rect.transform.localScale = Vector3.one
+            rect.transform.localPosition = Vector3.zero
+            go:SetActive(true)
+
+            local function callback()
+                ct.OpenCtrl("ResearchOpenBoxCtrl", {insId = self.m_data.info.id, boxs = self.scienceLineData.box})
+            end
+            table.insert(self.boxItems, ResearchEvaBoxItem:new(go, temp, callback))
+        end
     end
 end
 

@@ -15,5 +15,28 @@ function ResearchSalePanel.Awake(obj)
 end
 
 function ResearchSalePanel.InitPanel()
+    this.backBtn = transform:Find("BackBtn").gameObject
 
+    this.nameText = transform:Find("MiddleRoot/LightImage/NameText"):GetComponent("Text")
+    this.warehouseBtn = transform:Find("MiddleRoot/LightImage/WarehouseBtn").gameObject
+    this.warehouseText = transform:Find("MiddleRoot/LightImage/WarehouseBtn/Text"):GetComponent("Text")
+    this.shelfBtn = transform:Find("MiddleRoot/LightImage/ShelfBtn").gameObject
+    this.shelfText = transform:Find("MiddleRoot/LightImage/ShelfBtn/Text"):GetComponent("Text")
+
+    this.autoToggle = transform:Find("MiddleRoot/AutoToggle"):GetComponent("Toggle")
+    this.autoBtnImage = transform:Find("MiddleRoot/AutoToggle/BtnImage")
+    this.quantityInputField = transform:Find("MiddleRoot/QuantityRoot/InputField"):GetComponent("InputField")
+    this.nullImage = transform:Find("MiddleRoot/QuantityRoot/NullImage")
+    this.nullText = transform:Find("MiddleRoot/QuantityRoot/NullImage/NullText"):GetComponent("Text")
+    this.priceInputField = transform:Find("MiddleRoot/PriceRoot/InputField"):GetComponent("InputField")
+
+
+    this.tipsImage = transform:Find("MiddleRoot/AutoBtn/TipsImage")
+
+    this.closeBtnTF = transform:Find("MiddleRoot/CloseTextBtn")
+    this.closeBtn = transform:Find("MiddleRoot/CloseTextBtn").gameObject
+    this.sureBtnTF = transform:Find("MiddleRoot/SureBtn")
+    this.sureBtn = transform:Find("MiddleRoot/SureBtn").gameObject
+    this.changeBtnTF = transform:Find("MiddleRoot/ChangeBtn")
+    this.changeBtn = transform:Find("MiddleRoot/ChangeBtn").gameObject
 end

@@ -20,6 +20,7 @@ function ResearchOpenBoxPanel.InitPanel()
 
     this.boxsScrollContent = transform:Find("LeftRoot/BoxsScroll/Viewport/Content")
     this.researchEvaBoxItem = transform:Find("LeftRoot/BoxsScroll/Viewport/Content/ResearchEvaBoxItem").gameObject
+    this.totalNumText = transform:Find("LeftRoot/NumText"):GetComponent("Text")
 
     -- 开点
     this.middleRoot = transform:Find("MiddleRoot")

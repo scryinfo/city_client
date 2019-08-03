@@ -475,8 +475,12 @@ function DataManager.RefreshWaysByCollectionID(tempCollectionID)
                     --add height
                     Vec = TerrainManager.BlockIDTurnPosition(itemBlockID)
                     Vec.y = Vec.y + 0.02
-                    go.transform.position = Vec
-                    ThisRoteDatas[itemBlockID].roadObj = go
+                    if go == nil then
+                        ct.log("system","对象池NIL poolName===>" ..RoadPrefabConfig[RoadNumConfig[roadNum]].poolName)
+                    else
+                        go.transform.position = Vec
+                        ThisRoteDatas[itemBlockID].roadObj = go
+                    end
                     --如果没有道路数据，但原先有道路记录，则清除
                 elseif  roadNum == 0 and ThisRoteDatas[itemBlockID] ~= nil and ThisRoteDatas[itemBlockID].roadObj ~= nil and ThisRoteDatas[itemBlockID].roadNum ~= nil then
                     MapObjectsManager.RecyclingGameObjectToPool(RoadPrefabConfig[RoadNumConfig[ThisRoteDatas[itemBlockID].roadNum]].poolName,ThisRoteDatas[itemBlockID].roadObj)

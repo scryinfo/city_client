@@ -199,6 +199,7 @@ local willRemoveList_CalculateAOI
 local willInitList_CalculateAOI
 --计算AOI移动时，哪些地块内数据需要增加，哪些地块内数据需要删除
 local function CalculateAOI(oldCollectionID,newCollectionID)
+    ct.log("system","[CalculateAOI] oldCollectionID="..oldCollectionID.."newCollectionID"..newCollectionID)
     --1.计算C新旧
     oldCollectionList_CalculateAOI =  CalculationAOICollectionIDList(oldCollectionID)
     newCollectionList_CalculateAOI =  CalculationAOICollectionIDList(newCollectionID)

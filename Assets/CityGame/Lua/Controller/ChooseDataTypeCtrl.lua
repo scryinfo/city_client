@@ -25,6 +25,8 @@ function ChooseDataTypeCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_SurveySpeed",self.c_SurveySpeed,self)
     Event.AddListener("c_AddSurveyLien",self.c_AddSurveyLien,self)
+    Event.AddListener("c_DataBase",self.c_DataBase,self)
+    Event.AddListener("c_AddShelf",self.c_AddShelf,self)
 end
 
 function ChooseDataTypeCtrl:Refresh()
@@ -35,11 +37,20 @@ function ChooseDataTypeCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_SurveySpeed",self.c_SurveySpeed,self)
     Event.RemoveListener("c_AddSurveyLien",self.c_AddSurveyLien,self)
+    Event.RemoveListener("c_DataBase",self.c_DataBase,self)
+    Event.RemoveListener("c_AddShelf",self.c_AddShelf,self)
     if self.dataSurveyItem then
         for i, v in pairs(self.dataSurveyItem) do
             destroy(v.prefab.gameObject)
         end
     end
+    self.dataSurveyItem = nil
+    if self.dataBaseItem then
+        for i, v in pairs(self.dataBaseItem) do
+            destroy(v.prefab.gameObject)
+        end
+    end
+    self.dataBaseItem = nil
 end
 
 function ChooseDataTypeCtrl:OnCreate(obj)
@@ -50,21 +61,22 @@ end
 function ChooseDataTypeCtrl:_getComponent(go)
     self.back = go.transform:Find("down/title/back").gameObject
     self.name = go.transform:Find("down/title/back/name"):GetComponent("Text")
-    self.surveyScrollView = go.transform:Find("down/surveyScrollView")
+    self.surveyScrollView = go.transform:Find("down/surveyScrollView").gameObject
     self.survey = go.transform:Find("down/surveyScrollView/Viewport/Content"):GetComponent("RectTransform")
-    self.saleScrollView = go.transform:Find("down/saleScrollView")
+    self.saleScrollView = go.transform:Find("down/saleScrollView").gameObject
     self.sale = go.transform:Find("down/saleScrollView/Viewport/Content"):GetComponent("RectTransform")
 end
 
 --初始化数据
 function ChooseDataTypeCtrl:initData()
     if self.m_data.type == DataType.DataSurvey then
-        self.surveyScrollView.localScale = Vector3.one
-        self.saleScrollView.localScale = Vector3.zero
+        self.surveyScrollView:SetActive(true)
+        self.saleScrollView:SetActive(false)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_getSurveySpeed',self.m_data.insId)
     elseif self.m_data.type == DataType.DataSale then
-        self.surveyScrollView.localScale = Vector3.zero
-        self.saleScrollView.localScale = Vector3.one
+        self.surveyScrollView:SetActive(false)
+        self.saleScrollView:SetActive(true)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_getDataBase',self.m_data.insId)
     end
 end
 
@@ -91,6 +103,32 @@ function ChooseDataTypeCtrl:c_AddSurveyLien(info)
     if info ~= nil then
         TimeSynchronized.SynchronizationServerTime(info.ts)
         Event.Brocast("SmallPop",GetLanguage(25030010),ReminderType.Succeed)
+        UIPanel.ClosePage()
+    end
+end
+
+--获取仓库数据回调
+function ChooseDataTypeCtrl:c_DataBase(info)
+    if info.store == nil then
+        return
+    else
+        self.dataBaseItem = {}
+        for i, v in ipairs(info.store) do
+            if v.storeNum ~= 0 and v.lockedNum == 0 then
+                local function callback(prefab)
+                    self.dataBaseItem[i] = DataBaseCardItem:new(marketDataTypeBehaviour,prefab,v,info.buildingId,DataType.DataSale)
+                end
+                createPrefab("Assets/CityGame/Resources/View/GoodsItem/DataBaseCardItem.prefab",self.sale, callback)
+            end
+        end
+    end
+end
+
+--上架成功回调
+function ChooseDataTypeCtrl:c_AddShelf(info)
+    if info then
+        Event.Brocast("SmallPop",GetLanguage(25060008), ReminderType.Succeed)
+        UIPanel.ClosePage()
         UIPanel.ClosePage()
     end
 end

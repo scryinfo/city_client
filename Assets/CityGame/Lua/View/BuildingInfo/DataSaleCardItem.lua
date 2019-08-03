@@ -6,20 +6,41 @@
 DataSaleCardItem = class('DataSaleCardItem')
 
 --初始化方法   数据（读配置表）
-function DataSaleCardItem:initialize(inluabehaviour, prefab, goodsDataInfo)
+function DataSaleCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,building)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
+    self.building = building
+    self.type = goodsDataInfo.k.id
+    self.n = goodsDataInfo.n
+    self.autoReplenish = goodsDataInfo.autoReplenish
+    self.storeNum = goodsDataInfo.storeNum
+    self.prices = goodsDataInfo.price
 
     self.bg = self.prefab.transform:Find("bg").gameObject
     self.num = self.prefab.transform:Find("num"):GetComponent("Text");
     self.name = self.prefab.transform:Find("down/name"):GetComponent("Text");
+    self.icon = self.prefab.transform:Find("icon/Image"):GetComponent("Image");
     self.price = self.prefab.transform:Find("down/priceBg/price"):GetComponent("Text");
+
+    LoadSprite(ResearchConfig[goodsDataInfo.k.id].iconPath, self.icon, true)
+    self.num.text = goodsDataInfo.n
+    self.name.text = GetLanguage(ResearchConfig[goodsDataInfo.k.id].name)
+    self.price.text = goodsDataInfo.price
 
     self._luabehaviour:AddClick(self.bg, self.OnBg, self);
 
 end
 
-function DataSaleCardItem:OnBg()
+function DataSaleCardItem:OnBg(go)
     PlayMusEff(1002)
+    local data = {}
+    data.wareHouse = go.storeNum
+    data.sale = go.n
+    data.itemId = go.type
+    data.building = go.building
+    data.autoReplenish = go.autoReplenish
+    data.price =  go.prices
+    data.shelf = Shelf.SetShelf
+    ct.OpenCtrl("DataShelfCtrl",data)
 end

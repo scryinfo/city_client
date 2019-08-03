@@ -10,7 +10,6 @@ function DataBaseDetailPart:PrefabName()
 end
 --
 function  DataBaseDetailPart:_InitEvent()
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getScienceStorageData","gs.ScienceStorageData",self.n_OnDataBase,self)
     Event.AddListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
     Event.AddListener("part_UserData",self.UserData,self)
 end
@@ -20,11 +19,15 @@ function DataBaseDetailPart:_InitClick(mainPanelLuaBehaviour)
 end
 --
 function DataBaseDetailPart:_ResetTransform()
-
+    if self.dataBaseItem then
+        for i, v in pairs(self.dataBaseItem) do
+            destroy(v.prefab.gameObject)
+        end
+    end
+    self.dataBaseItem = {}
 end
 --
 function DataBaseDetailPart:_RemoveEvent()
-    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "getScienceStorageData",self.n_OnDataBase,self)
     Event.RemoveListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
     Event.RemoveListener("part_UserData",self.UserData,self)
 end
@@ -34,11 +37,13 @@ end
 
 function DataBaseDetailPart:Show(data)
     BasePartDetail.Show(self,data)
+    Event.AddListener("c_DataBase",self.n_OnDataBase,self)
     DataManager.ModelSendNetMes("gscode.OpCode", "getScienceStorageData","gs.Id",{id = data.info.id})
 end
 
 function DataBaseDetailPart:Hide()
     BasePartDetail.Hide(self)
+    Event.RemoveListener("c_DataBase",self.n_OnDataBase,self)
     self.scrollView.gameObject:SetActive(false)
     if self.dataBaseItem then
         for i, v in pairs(self.dataBaseItem) do
@@ -87,7 +92,7 @@ function DataBaseDetailPart:n_OnDataBase(info)
             self.dataBaseItem = {}
             for i, v in ipairs(info.store) do
                 local function callback(prefab)
-                    self.dataBaseItem[i] = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,v,info.buildingId)
+                    self.dataBaseItem[i] = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,v,info.buildingId,DataType.DataBase)
                 end
                 createPrefab("Assets/CityGame/Resources/View/GoodsItem/DataBaseCardItem.prefab",self.content, callback)
             end

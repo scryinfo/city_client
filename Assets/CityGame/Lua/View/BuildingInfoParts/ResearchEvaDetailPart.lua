@@ -5,52 +5,382 @@
 ---
 
 ResearchEvaDetailPart = class("ResearchEvaDetailPart", BasePartDetail)
+local nowTime = 0
+local LastTime = 0
 
 function ResearchEvaDetailPart.PrefabName()
     return "ResearchEvaDetailPart"
 end
 
 function ResearchEvaDetailPart:_InitTransform()
+    -- 宝箱
+    self.boxNumImage = self.transform:Find("Root/LeftRoot/NumImage")
+    self.totalBoxNumText = self.transform:Find("Root/LeftRoot/NumText"):GetComponent("Text")
+    self.boxsScrollContent = self.transform:Find("Root/LeftRoot/BoxsScroll/Viewport/Content")
+    self.boxsScrollContentRT = self.transform:Find("Root/LeftRoot/BoxsScroll/Viewport/Content"):GetComponent("RectTransform")
+    self.researchEvaBoxItem = self.transform:Find("Root/LeftRoot/BoxsScroll/Viewport/Content/ResearchEvaBoxItem").gameObject
+    self.boxNullImage = self.transform:Find("Root/LeftRoot/NullImage")
 
+    -- 正在生产的生产线（为空）
+    self.lineBgImage = self.transform:Find("Root/LineBgImage")
+    self.lineNullImage = self.transform:Find("Root/LineNullImage")
+
+    -- 正在生产的生产线
+    self.iconImage = self.transform:Find("Root/LineBgImage/IconImage"):GetComponent("Image")
+    self.deleteBtn = self.transform:Find("Root/LineBgImage/DeleteBtn"):GetComponent("Button")
+    self.timeSlider = self.transform:Find("Root/LineBgImage/Slider"):GetComponent("Slider")
+    self.nameText = self.transform:Find("Root/LineBgImage/NameText"):GetComponent("Text")
+    self.totalTimeText = self.transform:Find("Root/LineBgImage/TimeText"):GetComponent("Text")
+    self.numText = self.transform:Find("Root/LineBgImage/NumText"):GetComponent("Text")
+    self.oneTimeText = self.transform:Find("Root/LineBgImage/OneTimeText"):GetComponent("Text")
+
+    -- 生产列表
+    self.lineNumText = self.transform:Find("Root/RightRoot/LineNumText"):GetComponent("Text")
+    self.lineScrollContent = self.transform:Find("Root/RightRoot/LineScroll/Viewport/Content")
+    self.lineScrollContentRT = self.transform:Find("Root/RightRoot/LineScroll/Viewport/Content"):GetComponent("RectTransform")
+    self.researchLineItem = self.transform:Find("Root/RightRoot/LineScroll/Viewport/Content/ResearchLineItem").gameObject
+    self.addLineBtn = self.transform:Find("Root/RightRoot/AddLineBtn"):GetComponent("Button")
+    self.nullText = self.transform:Find("Root/RightRoot/NullText"):GetComponent("Text")
+    self.nullTextTF = self.transform:Find("Root/RightRoot/NullText")
+end
+
+--显示详情
+function ResearchEvaDetailPart:Show(data)
+    self.transform.localScale = Vector3.New(1,0,1)
+    self.transform:DOScale(Vector3.one,BasePartDetail.static.OpenDetailPartTime):SetEase(BasePartDetail.static.OpenDetailPartEase)
+    self:RefreshData(data)
+    -- 监听生产线变化推送
+    Event.AddListener("c_OnReceiveGetFtyLineChangeInform",self.c_OnReceiveGetFtyLineChangeInform,self)
 end
 
 -- 初始化的时候，监听事件
 function  ResearchEvaDetailPart:_InitEvent()
-    -- 监听查询Eva研究的内容（_getDatabaseInfo）
+    -- 监听查询获取生产线信息(研究所（包含宝箱信息）、推广公司)
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "getScienceLineData", "gs.ScienceLineData", self._getScienceLineData, self)
+    -- 监听生产速度
+    Event.AddListener("c_OnReceiveResearchGetScienceItemSpeed",self.c_OnReceiveResearchGetScienceItemSpeed,self)
+
+
     -- 监听删除生产线
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "ftyDelLine", "gs.DelLine", self._getFtyDelLine, self)
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "delScienceLine", "gs.DelLine", self._getFtyDelLine, self)
     -- 监听置顶生产线
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "setScienceLineOrder", "gs.SetLineOrder", self._setLineOrder, self)
 end
 
 function ResearchEvaDetailPart:_InitClick(mainPanelLuaBehaviour)
     -- 给加号点击增加打开ResearchChoiceCtrl的点击
+    mainPanelLuaBehaviour:AddClick(self.addLineBtn.gameObject, function ()
+        self:_clickAddLineBtn()
+    end , self)
     -- 点击正在生产的删除，向服务器发送删除消息
+    mainPanelLuaBehaviour:AddClick(self.deleteBtn.gameObject, function ()
+        self:_clickDeleteLineBtn()
+    end , self)
 end
 
 -- 销毁的时候，清除数据
 function ResearchEvaDetailPart:_ResetTransform()
+    if self.isUpdate then
+        UpdateBeat:Remove(self.Update,self)
+    end
+    self.isUpdate = false
+
+    if self.lineItems then
+        for _, m in ipairs(self.lineItems) do
+            destroy(m.prefab)
+            self.lineItems[_] = nil
+        end
+    end
+
+    if self.boxItems then
+        for _, n in ipairs(self.boxItems) do
+            UnityEngine.GameObject.Destroy(n.prefab)
+        end
+        self.boxItems = {}
+    end
 end
 
 -- 销毁的时候，清除事件
 function ResearchEvaDetailPart:_RemoveEvent()
-    -- 移除监听查询Eva研究的内容
+    -- 移除监听查询获取生产线信息(研究所（包含宝箱信息）、推广公司)
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "getScienceLineData", self._getScienceLineData, self)
+    -- 移除监听生产速度
+    Event.RemoveListener("c_OnReceiveResearchGetScienceItemSpeed",self.c_OnReceiveResearchGetScienceItemSpeed,self)
+    -- 移除监听生产线变化推送
+    --DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "ftyLineChangeInform", self)
+    -- 移除监听删除生产线
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "ftyDelLine", self._getFtyDelLine, self)
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "delScienceLine", self._getFtyDelLine, self)
+
     -- 移除监听删除生产线
     -- 移除监听置顶生产线
 end
 
 function ResearchEvaDetailPart:RefreshData(data)
-    -- 向服务器发消息查询Eva研究的内容
+    self.m_data = data
+    self.nullText.text = "Press “+”to add a new research line. "
+    -- 向服务器发消息查询科技列表生产速度(研究所、推广公司)
+    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqGetScienceItemSpeed')
+
+    -- 向服务器发消息查询获取生产线信息(研究所（包含宝箱信息）、推广公司)
+    --DataManager.ModelSendNetMes("gscode.OpCode", "getScienceLineData","gs.Id",{ id = self.m_data.info.id})
+    --DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqGetScienceLineData', self.m_data.info.id)
 end
 
 -- 销毁的时候，清除点击事件
 function ResearchEvaDetailPart:_RemoveClick()
-
+    self.addLineBtn.onClick:RemoveAllListeners()
+    self.deleteBtn.onClick:RemoveAllListeners()
 end
 
 function ResearchEvaDetailPart:_ChildHide()
-
+    if self.isUpdate then
+        UpdateBeat:Remove(self.Update,self)
+        self.isUpdate = false
+    end
+    -- 移除监听生产线变化推送
+    Event.RemoveListener("c_OnReceiveGetFtyLineChangeInform", self.c_OnReceiveGetFtyLineChangeInform, self)
 end
 
-function ResearchEvaDetailPart:_getDatabaseInfo(data)
+function ResearchEvaDetailPart:_showLineOneInfo(lineData)
+    --生产一个需要的时间(秒)
+    for i, v in ipairs(self.scienceItemSpeed.itemSpeed) do
+        if v.type == lineData.itemId then
+            self.oneTotalTime = 1 / v.speed
+            break
+        end
+    end
+
+    -- 总时间
+    self.totalTimeText.text = self:GetTime(lineData)
+    UpdateBeat:Add(self.Update,self)
+    self.isUpdate = true
+
+    --缓存正在生产中的线的目标产量
+    self.targetCount = lineData.targetCount
+    self.numText.text = lineData.nowCount.."/"..self.targetCount
+
+    LoadSprite(ResearchConfig[lineData.itemId].iconPath, self.iconImage, false)
+    self.nameText.text = ResearchConfig[lineData.itemId].name
+
+    --当前生产中线开始的时间
+    self.startTime = lineData.ts
+    --当前服务器时间
+    self.serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
+    --当前生产中线已经生产的时间
+    self.pastTime = self.serverNowTime - self.startTime
+    self.timeSlider.maxValue = math.ceil(self.oneTotalTime)
+    self.timeSlider.value = (self.pastTime % (self.oneTotalTime * 1000)) / 1000
+end
+
+--计算总时间
+function ResearchEvaDetailPart:GetTime(lineData)
+    local remainingNum = lineData.targetCount - lineData.nowCount
+    if remainingNum == 0 then
+        return "00:00:00"
+    end
+    self.totalTime = remainingNum * self.oneTotalTime
+    local timeTable = getTimeBySec(self.totalTime)
+    local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+    return timeStr
+end
+
+--刷新时间
+function ResearchEvaDetailPart:Update()
+    -- 刷新总时间
+    if self.totalTime ~= nil then
+        self.totalTime = self.totalTime - UnityEngine.Time.unscaledDeltaTime
+        local timeTable = getTimeBySec(self.totalTime)
+        local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
+        self.totalTimeText.text = timeStr
+    end
+
+    ---刷新单个时间
+    --当前生产中线开始的时间
+    self.startTime = self.scienceLineData.line[1].ts
+    --当前服务器时间
+    self.serverNowTime = TimeSynchronized.GetTheCurrentServerTime()
+    --当前生产中线已经生产的时间
+    self.pastTime = self.serverNowTime - self.startTime
+    --当前一个已经生产的时间
+    local thisTime = (self.pastTime % (self.oneTotalTime * 1000))
+    nowTime = nowTime + UnityEngine.Time.unscaledDeltaTime * 1000
+    if LastTime ~= thisTime then
+        LastTime = thisTime
+        nowTime = thisTime
+    end
+    if (nowTime / (self.oneTotalTime * 1000)) >= 1 then
+        nowTime = 0
+    end
+    self.timeSlider.value = (nowTime / (self.oneTotalTime * 1000)) * self.timeSlider.maxValue
+    self.oneTimeText.text = self:GetStringTime((self.timeSlider.maxValue - self.timeSlider.value + 1) * 1000)
+end
+
+--生产一个的时间转换 时分秒
+function ResearchEvaDetailPart:GetStringTime(ms)
+    local timeTable = getTimeBySec(ms / 1000)
+    local timeStr = timeTable.minute..":"..timeTable.second
+    return timeStr
+end
+
+--生产一个的时间转换 时分秒
+function ResearchEvaDetailPart:_setLineShow(show1, show2)
+    self.lineBgImage.localScale = show1 and Vector3.one or Vector3.zero
+    self.lineNullImage.localScale = show2 and Vector3.one or Vector3.zero
+end
+----------------------------------------------按钮点击--------------------------------------------
+function ResearchEvaDetailPart:_clickAddLineBtn()
+    ct.OpenCtrl("ResearchChoiceCtrl", self.scienceItemSpeed)
+end
+
+function ResearchEvaDetailPart:_clickDeleteLineBtn()
+    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqDelScienceLine', self.scienceLineData.line[1].id)
+end
+----------------------------------------------网络回调--------------------------------------------
+-- 保存服务器发过来的生产速度的信息
+function ResearchEvaDetailPart:c_OnReceiveResearchGetScienceItemSpeed(scienceItemSpeed)
+    self.scienceItemSpeed = scienceItemSpeed
+end
+
+function ResearchEvaDetailPart:_getScienceLineData(data)
+    self.scienceLineData = data
+
     -- 如果有正在生产的线，显示生产线，如果没有显示加号，跳转选择研究类型界面生产宝箱
+    if self.lineItems then
+        for _, m in ipairs(self.lineItems) do
+            destroy(m.prefab)
+            --self.lineItems[_] = nil
+        end
+    end
+    self.lineItems = {}
+    if data.line then
+        self:_setLineShow(true, false)
+        self.lineNumText.text = "Waiting queue:" .. #data.line .. "/5"
+        if #data.line == 1 then
+            self.nullTextTF.localScale = Vector3.one
+        else
+            self.nullTextTF.localScale = Vector3.zero
+            self.lineScrollContentRT.anchoredPosition = Vector3.New(0, 0,0)
+            for j = 2, #data.line do
+                local go = ct.InstantiatePrefab(self.researchLineItem)
+                local rect = go.transform:GetComponent("RectTransform")
+                go.transform:SetParent(self.lineScrollContent)
+                rect.transform.localScale = Vector3.one
+                rect.transform.localPosition = Vector3.zero
+                go:SetActive(true)
+
+                self.lineItems[j - 1] = ResearchLineItem:new(go, data.line[j], self.m_data.info.id)
+            end
+        end
+
+        -- 刷新正在生产的数据
+        self:_showLineOneInfo(data.line[1])
+
+        if #data.line == 5 then -- 最多5条生产线
+            self.addLineBtn.interactable = false
+        else
+            self.addLineBtn.interactable = true
+        end
+    else
+        self:_setLineShow(false, true)
+        self.lineNumText.text = "Waiting queue:0/0"
+    end
+
     -- 如果有已经生产好的宝箱，则需要显示ResearchEvaBoxItem，如果没有为空。
+    if self.boxItems then
+        for _, n in ipairs(self.boxItems) do
+            UnityEngine.GameObject.Destroy(n.prefab)
+        end
+    end
+    self.boxItems = {}
+    if data.box then
+        self.boxNullImage.localScale = Vector3.zero
+        self.boxNumImage.localScale = Vector3.one
+
+        self.totalBoxNum = 0
+        self.boxsScrollContentRT.anchoredPosition = Vector3.New(0, 0,0)
+        for i, v in ipairs(data.box) do
+            self.totalBoxNum = self.totalBoxNum + v.n
+
+            local go = ct.InstantiatePrefab(self.researchEvaBoxItem)
+            local rect = go.transform:GetComponent("RectTransform")
+            go.transform:SetParent(self.boxsScrollContent)
+            rect.transform.localScale = Vector3.one
+            rect.transform.localPosition = Vector3.zero
+            go:SetActive(true)
+
+            local function callback()
+                ct.OpenCtrl("ResearchOpenBoxCtrl", {insId = self.m_data.info.id, boxs = data.box})
+            end
+            self.boxItems[i] = ResearchEvaBoxItem:new(go, v, callback)
+        end
+        self.totalBoxNumText.text = tostring(self.totalBoxNum)
+    else
+        self.boxNullImage.localScale = Vector3.one
+        self.boxNumImage.localScale = Vector3.zero
+        self.totalBoxNumText.text = ""
+    end
+end
+
+-- 生产线变化推送
+function ResearchEvaDetailPart:c_OnReceiveGetFtyLineChangeInform(data)
+    if self.targetCount ~= nil then
+        self.numText.text = data.nowCount.."/" .. self.targetCount
+    end
+end
+
+-- 删除生产线
+function ResearchEvaDetailPart:_getFtyDelLine(data)
+    if self.isUpdate then
+        UpdateBeat:Remove(self.Update,self)
+        self.isUpdate = false
+    end
+    if data.nextlineId then
+        if data.lineId == self.scienceLineData.line[1].id then -- 删除正在生产的
+            for i, v in ipairs(self.scienceLineData.line) do
+                if v.id == data.nextlineId then
+                    self.scienceLineData.line[1] = v
+                    self:_showLineOneInfo(v)
+                    UnityEngine.GameObject.Destroy(self.lineItems[i - 1].prefab)
+                    table.remove(self.lineItems, i)
+                    table.remove(self.scienceLineData.line, i)
+                    break
+                end
+            end
+        else
+            for j, k in ipairs(self.scienceLineData.line) do
+                if k.id == data.lineId then
+                    UnityEngine.GameObject.Destroy(self.lineItems[j - 1].prefab)
+                    table.remove(self.lineItems, j - 1)
+                    table.remove(self.scienceLineData.line, j)
+                    break
+                end
+            end
+        end
+        if #self.scienceLineData.line < 2 then
+            self.lineNumText.text = "Waiting queue:0/0"
+            self.nullTextTF.localScale = Vector3.one
+        else
+            self.lineNumText.text = "Waiting queue:" .. #self.scienceLineData.line .. "/5"
+        end
+    else
+        self:_setLineShow(false, true)
+        self.lineNumText.text = "Waiting queue:0/0"
+        self.nullTextTF.localScale = Vector3.one
+    end
+    self.addLineBtn.interactable = true
+end
+
+-- 调整生产线顺序(研究所、推广公司)
+function ResearchEvaDetailPart:_setLineOrder(data)
+    for i, v in ipairs(self.lineItems) do
+        if v.data.id == data.lineId then
+            v.prefab.transform:SetSiblingIndex(0)
+            local temp = self.scienceLineData.line[i + 1]
+            self.scienceLineData.line[i + 1] = self.scienceLineData.line[2]
+            self.scienceLineData.line[2] = temp
+            break
+        end
+    end
 end

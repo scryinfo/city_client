@@ -16,6 +16,8 @@ end
 
 function ResearchDatabasePart:_InitTransform()
     local transform = self.transform
+    self.text = transform:Find("Top/Text"):GetComponent("Text")
+    self.achievementsNumText = transform:Find("Top/AchievementsNumText"):GetComponent("Text")
 end
 
 function  ResearchDatabasePart:_ResetTransform()
@@ -27,4 +29,6 @@ function ResearchDatabasePart:Refresh(data)
 end
 
 function ResearchDatabasePart:RefreshData(data)
+    self.text.text = "Achievements:"
+    self.achievementsNumText.text = data.storeNum
 end

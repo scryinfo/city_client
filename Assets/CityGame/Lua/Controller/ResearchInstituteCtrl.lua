@@ -20,9 +20,9 @@ function ResearchInstituteCtrl:OnCreate(obj)
 end
 
 function ResearchInstituteCtrl:Awake(go)
-    local luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
+    self.researchluaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
 
-    luaBehaviour:AddClick(ResearchInstitutePanel.bubbleMessageBtn, self.OpenBubbleMessage, self)
+    self.researchluaBehaviour:AddClick(ResearchInstitutePanel.bubbleMessageBtn.gameObject, self.OpenBubbleMessage, self)
 end
 
 function ResearchInstituteCtrl:Active()
@@ -43,37 +43,55 @@ function ResearchInstituteCtrl:initializeData()
     if self.m_data then
         --向服务器请求建筑详情
         DataManager.OpenDetailModel(ResearchInstituteModel,self.m_data.insId)
-        --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
+        DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenTechnology',self.m_data.insId)
     end
 end
 
 -- 收到回调， 刷新研究所信息
-function ResearchInstituteCtrl:refreshResearchDataInfo(researchDataInfo)
-    ResearchInstitutePanel.openBusinessItem:initData(researchDataInfo.info, BuildingType.Laboratory)  --初始化
+function ResearchInstituteCtrl:_receiveDetailTechnology(researchDataInfo)
+    -- 开业
+    ResearchInstitutePanel.openBusinessItem:initData(researchDataInfo.info, BuildingType.Laboratory)
 
+    -- 建筑顶部组件
     researchDataInfo.info.buildingType = BuildingType.Laboratory
-    if panel.topItem ~= nil then
-        panel.topItem:refreshData(researchDataInfo.info, function ()
+    if ResearchInstitutePanel.topItem ~= nil then
+        ResearchInstitutePanel.topItem:refreshData(researchDataInfo.info, function ()
             self:_clickCloseBtn(self)
         end)
     end
 
-    --判断是自己还是别人打开了界面
-    if researchDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
-        self.m_data.isOther = true
+    -- 判断是否是开业状态，是不是自己打开对应显示不同的界面，以及气泡按钮的状态
+    if researchDataInfo.info.state == "OPERATE" then
+        ResearchInstitutePanel.groupTrans.localScale = Vector3.one
+        if researchDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then -- 别人
+            ResearchInstitutePanel.bubbleMessageBtn.localScale = Vector3.one
+            if self.groupMgr == nil then
+                self.groupMgr = BuildingInfoMainGroupMgr:new(ResearchInstitutePanel.groupTrans, self.researchluaBehaviour)
+                self.groupMgr:AddParts(ResearchSalePart, 1)
+                self.groupMgr:AddParts(TurnoverPart, 0)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0)
+                self.groupMgr:AddParts(ResearchEvaPart, 0)
+                self.groupMgr:AddParts(ResearchDatabasePart, 0)
+                self.groupMgr:RefreshData(researchDataInfo)
+                self.groupMgr:TurnOffAllOptions()
+            end
+        else -- 自己
+            ResearchInstitutePanel.bubbleMessageBtn.localScale = Vector3.zero
+            if self.groupMgr == nil then
+                self.groupMgr = BuildingInfoMainGroupMgr:new(ResearchInstitutePanel.groupTrans, self.researchluaBehaviour)
+                self.groupMgr:AddParts(ResearchSalePart, 0.2)
+                self.groupMgr:AddParts(TurnoverPart, 0.2)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0.2)
+                self.groupMgr:AddParts(ResearchEvaPart, 0.2)
+                self.groupMgr:AddParts(ResearchDatabasePart, 0.2)
+                self.groupMgr:RefreshData(researchDataInfo)
+                self.groupMgr:TurnOffAllOptions()
+            end
+        end
     else
-        self.m_data.isOther = false
+        ResearchInstitutePanel.groupTrans.localScale = Vector3.zero
+        ResearchInstitutePanel.bubbleMessageBtn.localScale = Vector3.zero
     end
-
-    -- 判断是否是开业状态，是不是自己打开对应显示不同的界面
-    self.groupMgr = BuildingInfoMainGroupMgr:new(MaterialFactoryPanel.groupTrans, self.materialBehaviour)
-    self.groupMgr:AddParts(BuildingShelfPart,1)
-    self.groupMgr:AddParts(TurnoverPart,0)
-    self.groupMgr:AddParts(BuildingSalaryPart,0)
-    self.groupMgr:AddParts(BuildingProductionPart,0)
-    self.groupMgr:AddParts(BuildingWarehousePart,0)
-    self.groupMgr:RefreshData(self.m_data)
-    self.groupMgr:TurnOffAllOptions()
 end
 
 -------------------------------------按钮点击事件-------------------------------------
@@ -82,4 +100,16 @@ function ResearchInstituteCtrl:OpenBubbleMessage(go)
     if go.m_data.info.id then
         ct.OpenCtrl("BubbleMessageCtrl", go.m_data.info)
     end
+end
+
+function ResearchInstituteCtrl:_clickCloseBtn()
+    PlayMusEff(1002)
+    if self.groupMgr ~= nil then
+        self.groupMgr:TurnOffAllOptions()
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
+    DataManager.CloseDetailModel(self.m_data.insId)
+    self.m_data = nil
+    UIPanel.ClosePage()
 end

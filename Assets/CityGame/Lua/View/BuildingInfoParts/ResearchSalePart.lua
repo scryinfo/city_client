@@ -12,11 +12,13 @@ function ResearchSalePart:PrefabName()
 end
 
 function ResearchSalePart:GetDetailClass()
-    return ResearchSaleDetailPartResearchEvaPart
+    return ResearchSaleDetailPart
 end
 
 function ResearchSalePart:_InitTransform()
     local transform = self.transform
+    self.text = transform:Find("Top/Text"):GetComponent("Text")
+    self.quantityNumText = transform:Find("Top/QuantityNumText"):GetComponent("Text")
 end
 
 function  ResearchSalePart:_ResetTransform()
@@ -28,4 +30,6 @@ function ResearchSalePart:Refresh(data)
 end
 
 function ResearchSalePart:RefreshData(data)
+    self.text.text = "Quantity:"
+    self.quantityNumText.text = data.shelfNum
 end

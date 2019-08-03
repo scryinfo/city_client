@@ -7,15 +7,31 @@
 ResearchLineItem = class("ResearchLineItem")
 
 -- 初始化
-function ResearchLineItem:initialize(prefab, data)
+function ResearchLineItem:initialize(prefab, data, buildingId)
     self.prefab = prefab
     self.data = data
+    self.buildingId = buildingId
+
+    local transform = prefab.transform
+    LoadSprite( ResearchConfig[data.itemId].iconPath, transform:Find("IconImage"):GetComponent("Image"), false)
+    transform:Find("NameText"):GetComponent("Text").text = ResearchConfig[data.itemId].name
+    transform:Find("NumText"):GetComponent("Text").text = string.format("0/%d", data.targetCount)
+
+    transform:Find("DeleteBtn"):GetComponent("Button").onClick:AddListener(function ()
+        self:_clickRemove()
+    end)
+
+    transform:Find("TopBtn"):GetComponent("Button").onClick:AddListener(function ()
+        self:_clickTop()
+    end)
 end
 
 -- 点击删除，向服务器发消息
 function ResearchLineItem:_clickRemove()
+    DataManager.DetailModelRpcNoRet(self.buildingId, 'm_ReqDelScienceLine', self.data.id)
 end
 
 -- 点击置顶，向服务器发消息
 function ResearchLineItem:_clickTop()
+    DataManager.DetailModelRpcNoRet(self.buildingId, 'm_ReqSetScienceLineOrder', self.data.id)
 end

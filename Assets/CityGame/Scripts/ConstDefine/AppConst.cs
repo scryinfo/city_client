@@ -38,8 +38,9 @@ namespace LuaFramework {
         public const string BundleExt = ".unity3d";                   //bundle扩展名
         public const string AssetDir = "StreamingAssets";           //素材目录 
 #if PUB_BUILD
-        public const string asServerIp = "139.217.115.231";                   //国内
-                                                                          //public const string asServerIp = "52.177.192.219";                  //国外 
+        public const string asServerIp = "139.217.115.231";                   //
+#elif PUB_BUILD209
+        public const string asServerIp = "47.110.156.209";                   //国内
 #elif PUB_BUILD0
         public const string asServerIp = "42.159.89.63";
 #else

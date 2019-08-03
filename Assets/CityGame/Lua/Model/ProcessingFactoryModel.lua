@@ -49,7 +49,7 @@ function ProcessingFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","produceGuidePrice","gs.GoodSummary",self.n_OnProcessingGuidePrice)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryProduceDepRecommendPrice","gs.ProduceDepRecommendPrice",self.n_OnProcessingGuidePrice)
 
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)

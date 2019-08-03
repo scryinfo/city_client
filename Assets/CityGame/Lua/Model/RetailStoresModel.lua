@@ -46,7 +46,7 @@ function RetailStoresModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","retailGuidePrice","gs.GoodSummary",self.n_OnRetailGuidePrice)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryRetailShopRecommendPrice","gs.RetailShopRecommendPrice",self.n_OnRetailGuidePrice)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
 
     --TODO:购物车协议

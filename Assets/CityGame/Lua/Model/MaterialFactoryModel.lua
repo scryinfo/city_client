@@ -48,7 +48,7 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","materialGuidePrice","gs.GoodSummary",self.n_OnMaterialGuidePrice)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryMaterialRecommendPrice","gs.MaterialRecommendPrices",self.n_OnMaterialGuidePrice)
 
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)

@@ -233,7 +233,7 @@ end
 --计算位置
 function BuildingRevenueInfoCtrl:calculateLinePanel(ins)
     index = ins.keyId
-    --因为7天历史统计服不包括今天的，所以在查的时候缓存下今天的数据，方便查出来后把今天卖出去的数量加上
+    --因为7天历史统计服不包括今天的，所以缓存今天的
     self.itemId = ins.data.itemId
     self.num = ins.data.num
     self.account = ins.data.saleAccount

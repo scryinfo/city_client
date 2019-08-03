@@ -14,6 +14,7 @@ function  DataSaleDetailPart:_InitEvent()
     Event.AddListener("c_AddShelf",self.c_AddShelf,self)
     Event.AddListener("c_DelShelf",self.c_DelShelf,self)
     Event.AddListener("c_SetShelf",self.c_SetShelf,self)
+    Event.AddListener("c_BuyCount",self.c_BuyCount,self)
 end
 --
 function DataSaleDetailPart:_InitClick(mainPanelLuaBehaviour)
@@ -35,6 +36,7 @@ function DataSaleDetailPart:_RemoveEvent()
     Event.RemoveListener("c_AddShelf",self.c_AddShelf,self)
     Event.RemoveListener("c_DelShelf",self.c_DelShelf,self)
     Event.RemoveListener("c_SetShelf",self.c_SetShelf,self)
+    Event.RemoveListener("c_BuyCount",self.c_BuyCount,self)
 end
 --
 function DataSaleDetailPart:_RemoveClick()
@@ -65,11 +67,11 @@ end
 --
 function DataSaleDetailPart:_InitTransform()
     self:_getComponent(self.transform)
-
 end
 
 --
 function DataSaleDetailPart:_getComponent(transform)
+    self.myOwnerID = DataManager.GetMyOwnerID()
     self.empty = transform:Find("contentRoot/empty")
     self.tipText = transform:Find("contentRoot/empty/tipText"):GetComponent("Text")
     self.emptyAdd = transform:Find("contentRoot/empty/add").gameObject
@@ -88,16 +90,30 @@ function DataSaleDetailPart:n_OnDataSale(info)
         self.dataSaleCardItem = {}
         for i, v in ipairs(info.shelf.good) do
             local prefabs = self:createPrefab(self.dataSaleCard,self.content)
-            self.dataSaleCardItem[i] = DataSaleCardItem:new(self.m_LuaBehaviour,prefabs,v,info.buildingId)
+            if self.m_data.info.ownerId == self.myOwnerID  then
+                self.dataSaleCardItem[i] = DataSaleCardItem:new(self.m_LuaBehaviour,prefabs,v,info.buildingId,true,self.myOwnerID)
+            else
+                self.dataSaleCardItem[i] = DataSaleCardItem:new(self.m_LuaBehaviour,prefabs,v,info.buildingId,false,self.myOwnerID)
+            end
         end
     end
 end
 
 function DataSaleDetailPart:_isEmpty(empty)
     if empty then
+        if self.m_data.info.ownerId == self.myOwnerID then
+            self.emptyAdd.transform.localScale = Vector3.one
+        else
+            self.emptyAdd.transform.localScale = Vector3.zero
+        end
         self.empty.localScale = Vector3.one
         self.noEmpty:SetActive(false)
     else
+        if self.m_data.info.ownerId == self.myOwnerID then
+            self.add:SetActive(true)
+        else
+            self.add:SetActive(false)
+        end
         self.empty.localScale = Vector3.zero
         self.noEmpty:SetActive(true)
     end
@@ -138,7 +154,12 @@ function DataSaleDetailPart:c_AddShelf(info)
     data.n = info.item.n
     data.price = info.price
     data.storeNum = info.storeNum
-    local temp = DataSaleCardItem:new(self.m_LuaBehaviour,prefabs,data,info.buildingId)
+    local temp
+    if self.m_data.info.ownerId == self.myOwnerID  then
+        temp = DataSaleCardItem:new(self.m_LuaBehaviour,prefabs,data,info.buildingId,true,self.myOwnerID)
+    else
+        temp = DataSaleCardItem:new(self.m_LuaBehaviour,prefabs,data,info.buildingId,false,self.myOwnerID)
+    end
     if self.dataSaleCardItem == nil then
         self.dataSaleCardItem = {}
     end
@@ -176,6 +197,28 @@ function DataSaleDetailPart:c_SetShelf(info)
                 v.num.text = info.item.n
                 v.price.text = info.price
             end
+        end
+    end
+end
+
+--购买点数回调
+function DataSaleDetailPart:c_BuyCount(info)
+    if self.dataSaleCardItem then
+        local index
+        for i, v in pairs(self.dataSaleCardItem) do
+            if v.type == info.item.key.id then
+                v.n = v.n - info.item.n
+                v.num.text = v.n
+                if v.n <= 0 then
+                   index = i
+                end
+            end
+        end
+        if index then
+            table.remove(self.dataSaleCardItem,index)
+        end
+        if next(self.dataSaleCardItem) == nil then
+            self:_isEmpty(true)
         end
     end
 end

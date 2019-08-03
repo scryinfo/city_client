@@ -6,7 +6,7 @@
 DataSaleCardItem = class('DataSaleCardItem')
 
 --初始化方法   数据（读配置表）
-function DataSaleCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,building)
+function DataSaleCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,building,myOwnerID,ownerId)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
     self._luabehaviour = inluabehaviour
@@ -16,6 +16,8 @@ function DataSaleCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,build
     self.autoReplenish = goodsDataInfo.autoReplenish
     self.storeNum = goodsDataInfo.storeNum
     self.prices = goodsDataInfo.price
+    self.myOwnerID = myOwnerID
+    self.ownerId = ownerId
 
     self.bg = self.prefab.transform:Find("bg").gameObject
     self.num = self.prefab.transform:Find("num"):GetComponent("Text");
@@ -34,13 +36,25 @@ end
 
 function DataSaleCardItem:OnBg(go)
     PlayMusEff(1002)
-    local data = {}
-    data.wareHouse = go.storeNum
-    data.sale = go.n
-    data.itemId = go.type
-    data.building = go.building
-    data.autoReplenish = go.autoReplenish
-    data.price =  go.prices
-    data.shelf = Shelf.SetShelf
-    ct.OpenCtrl("DataShelfCtrl",data)
+    if go.myOwnerID then
+        local data = {}
+        data.wareHouse = go.storeNum
+        data.sale = go.n
+        data.itemId = go.type
+        data.building = go.building
+        data.autoReplenish = go.autoReplenish
+        data.price =  go.prices
+        data.shelf = Shelf.SetShelf
+        ct.OpenCtrl("DataShelfCtrl",data)
+    else
+        local data = {}
+        data.sale = go.n
+        data.itemId = go.type
+        data.myOwner = go.myOwnerID
+        data.price = go.prices
+        data.buyFunc = function(num,price)
+            DataManager.DetailModelRpcNoRet(go.building, 'm_buyData',go.building,go.type,num,price,go.ownerId)
+        end
+        ct.OpenCtrl("UserDataCtrl",data)
+    end
 end

@@ -49,6 +49,7 @@ function DataBaseCardItem:OnBg(go)
         data.sale = go.lockedNum
         data.itemId = go.type
         data.building = go.building
+        data.myOwner = true
         data.shelf = Shelf.AddShelf
         ct.OpenCtrl("DataShelfCtrl",data)
     end

@@ -79,7 +79,7 @@ function DataSurveyDetailPart:_getComponent(transform)
     self.addTip = transform:Find("contentRoot/addBtnBg/addTip"):GetComponent("Text")
     self.content = transform:Find("contentRoot/content").gameObject
     self.time = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/time/timeImage/timeText"):GetComponent("Text")
-    self.icon = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/icon/Image"):GetComponent("Image")
+    self.icon = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/icon"):GetComponent("Image")
     self.name = transform:Find("contentRoot/content/leftRoot/lineInfo/goodsInfo/name/Text"):GetComponent("Text")
     self.delete = transform:Find("contentRoot/content/leftRoot/lineInfo/delete").gameObject
     self.deleteText = transform:Find("contentRoot/content/leftRoot/lineInfo/delete/Text"):GetComponent("Text")
@@ -108,7 +108,7 @@ function DataSurveyDetailPart:initData(info)
             self.noLineTip.transform.localScale = Vector3.one
             self.info = info.line[1]
             self.name.text = GetLanguage(ResearchConfig[info.line[1].itemId].name)
-            LoadSprite(ResearchConfig[info.line[1].itemId].iconPath, self.icon, true)
+            LoadSprite(ResearchConfig[info.line[1].itemId].buildingPath, self.icon, true)
             self.allTime =  (info.line[1].targetCount - info.line[1].nowCount) / info.line[1].speed
             local ts = getTimeTable(self.allTime)
             self.time.text = ts.hour..":"..ts.minute..":"..ts.second
@@ -118,7 +118,7 @@ function DataSurveyDetailPart:initData(info)
             self.noLineTip.transform.localScale = Vector3.zero
             self.info = info.line[1]
             self.name.text = GetLanguage(ResearchConfig[info.line[1].itemId].name)
-            LoadSprite(ResearchConfig[info.line[1].itemId].iconPath, self.icon, true)
+            LoadSprite(ResearchConfig[info.line[1].itemId].buildingPath, self.icon, true)
             self.allTime = (info.line[1].targetCount - info.line[1].nowCount) / info.line[1].speed
             local ts = getTimeTable(self.allTime)
             self.time.text = ts.hour..":"..ts.minute..":"..ts.second

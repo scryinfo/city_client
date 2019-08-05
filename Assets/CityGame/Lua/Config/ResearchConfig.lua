@@ -46,18 +46,21 @@ ResearchConfig =
     {
         name = 19030008,
         iconPath = "Assets/CityGame/Resources/Atlas/DataCompany/icon-goods.png",
+        buildingPath = "Assets/CityGame/Resources/Atlas/DataCompany/Factory_3x3.png",
         content = "10-100 EVA points are awarded for each achievement",
     },
     [1600013] =
     {
         name = 42020003,
         iconPath = "Assets/CityGame/Resources/Atlas/DataCompany/icon-SuperMarket.png",
+        buildingPath = "Assets/CityGame/Resources/Atlas/DataCompany/SuperMarket_3x3.png",
         content = "10-100 EVA points are awarded for each achievement",
     },
     [1600014] =
     {
         name = 42020004,
         iconPath = "Assets/CityGame/Resources/Atlas/DataCompany/icon-HomeHouse.png",
+        buildingPath = "Assets/CityGame/Resources/Atlas/DataCompany/HomeHouse_3X3.png",
         content = "10-100 EVA points are awarded for each achievement",
     },
 }

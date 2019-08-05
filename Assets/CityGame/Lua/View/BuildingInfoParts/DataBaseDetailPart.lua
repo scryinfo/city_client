@@ -30,6 +30,7 @@ end
 function DataBaseDetailPart:_RemoveEvent()
     Event.RemoveListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
     Event.RemoveListener("part_UserData",self.UserData,self)
+    Event.RemoveListener("c_DataBase",self.n_OnDataBase,self)
 end
 --
 function DataBaseDetailPart:_RemoveClick()

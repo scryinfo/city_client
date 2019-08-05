@@ -35,9 +35,6 @@ end
 
 function DataSurveyPart:HideDetail(data)
     BasePart.HideDetail(self,data)
-    --if self.m_Timer ~= nil then
-    --    self.m_Timer:Stop()
-    --end
 end
 --
 function DataSurveyPart:RefreshData(data)
@@ -52,7 +49,7 @@ function DataSurveyPart:RefreshData(data)
         self.notLine.transform.localScale = Vector3.zero
         self.line.transform.localScale = Vector3.one
         self.info = data.line[1]
-        LoadSprite(ResearchConfig[data.line[1].itemId].iconPath, self.icon, true)
+        LoadSprite(ResearchConfig[data.line[1].itemId].buildingPath, self.icon, false)
         self.allTime = (data.line[1].targetCount - data.line[1].nowCount) / data.line[1].speed
         local ts = getTimeTable(self.allTime)
         self.timeText.text = ts.hour..":"..ts.minute..":"..ts.second

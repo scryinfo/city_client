@@ -100,7 +100,7 @@ function ProcessingFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
-    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","produceGuidePrice","gs.GoodSummary",self.n_OnProcessingGuidePrice)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryProduceDepRecommendPrice","gs.ProduceDepRecommendPrice",self.n_OnProcessingGuidePrice)
 
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -363,7 +363,7 @@ function ProcessingFactoryModel:n_OnSalesNotice(data)
 end
 --获取加工厂参考价格
 function ProcessingFactoryModel:n_OnProcessingGuidePrice(data)
-    Event.Brocast("getShelfProcessingGuidePrice",data)
+    Event.Brocast("getMultiGuidePrice",data)
 end
 --仓库材料不够通知
 function ProcessingFactoryModel:n_OnBuildingWarehouse(data)

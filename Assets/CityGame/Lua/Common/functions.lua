@@ -973,29 +973,52 @@ end
 --推荐定价:recommendedPricing
 --定价:price
 --原料ID：materialID（7位ID）
-
 function ct.CalculationMaterialCompetitivePower(recommendedPricing,price,materialID)
-    if price <= 0 then
-        return CalculationNBitAfterDecimalPoint(100)
+    if recommendedPricing <= 0 then
+        recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
     end
+    local temp
+    if recommendedPricing > price then
+        --竞争力 = (推荐定价 - 玩家定价)  / (推荐定价 / 2 / 49) + 50
+        temp = (recommendedPricing - price) / ((recommendedPricing / Divisor) / BargainingPower) + CPMagnification
+    else
+        --竞争力 = (推荐定价 - 玩家定价)  / (推荐定价 / 49) + 50
+        temp = (recommendedPricing - price) / (recommendedPricing / BargainingPower) + CPMagnification
+    end
+    if temp >= functions.maxCompetitive then
+        temp = functions.maxCompetitive
+    end
+    if temp <= functions.minCompetitive then
+        temp = functions.minCompetitive
+    end
+    return temp
 
-    recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
-    --竞争力 =  推荐定价 / 定价 * 50(整数)
-    return (CalculationNBitAfterDecimalPoint((recommendedPricing/ price * CPMagnification )))
 
-    --if recommendedPricing <= 0 then
-    --    --推荐定价 = 推荐定价表
-    --    recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
+    --if price <= 0 then
+    --    return CalculationNBitAfterDecimalPoint(100)
     --end
-    ----竞争力 = 推荐定价 / 定价 * 1000 (整数)
+    --recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
+    ----竞争力 =  推荐定价 / 定价 * 50(整数)
     --return (CalculationNBitAfterDecimalPoint((recommendedPricing/ price * CPMagnification )))
+    --
+    ----if recommendedPricing <= 0 then
+    ----    --推荐定价 = 推荐定价表
+    ----    recommendedPricing = Competitive[11 * PRIDMagnification + materialID]
+    ----end
+    ------竞争力 = 推荐定价 / 定价 * 1000 (整数)
+    ----return (CalculationNBitAfterDecimalPoint((recommendedPricing/ price * CPMagnification )))
 end
 
 ---计算原料厂推荐定价
 --推荐定价:recommendedPricing
 --原料ID：materialID（7位ID）
-function ct.CalculationMaterialSuggestPrice(recommendedPricing, materialID)
-    return Competitive[11 * PRIDMagnification + materialID]  --0701修改
+function ct.CalculationMaterialSuggestPrice(recommendedPricing,materialId)
+    local price = recommendedPricing
+    if price <= 0 then
+        price = Competitive[11 * PRIDMagnification + materialId]
+    end
+    return price
+    --return Competitive[11 * PRIDMagnification + materialID]  --0701修改
 
     --if recommendedPricing <= 0 then
     --    --推荐定价 = 推荐定价表

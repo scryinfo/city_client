@@ -44,10 +44,12 @@ end
 
 function DataSaleDetailPart:Show(data)
     BasePartDetail.Show(self,data)
+    Event.AddListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
     DataManager.ModelSendNetMes("gscode.OpCode", "getScienceShelfData","gs.Id",{id = data.info.id})
 end
 function DataSaleDetailPart:Hide()
     BasePartDetail.Hide(self)
+    Event.RemoveListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
     self.noEmpty:SetActive(false)
     if self.dataSaleCardItem then
         for i, v in pairs(self.dataSaleCardItem) do
@@ -77,6 +79,7 @@ function DataSaleDetailPart:_getComponent(transform)
     self.emptyAdd = transform:Find("contentRoot/empty/add").gameObject
     self.noEmpty = transform:Find("contentRoot/noEmpty").gameObject
     self.add = transform:Find("contentRoot/noEmpty/add").gameObject
+    self.scroll = transform:Find("contentRoot/noEmpty/Scroll View"):GetComponent("RectTransform")
     self.content = transform:Find("contentRoot/noEmpty/Scroll View/Viewport/Content"):GetComponent("RectTransform")
     self.dataSaleCard = transform:Find("contentRoot/noEmpty/Scroll View/Viewport/Content/DataSaleCardItem").gameObject
 end
@@ -111,8 +114,10 @@ function DataSaleDetailPart:_isEmpty(empty)
     else
         if self.m_data.info.ownerId == self.myOwnerID then
             self.add:SetActive(true)
+            self.scroll.anchoredPosition = Vector3.New(843,-229,0)
         else
             self.add:SetActive(false)
+            self.scroll.anchoredPosition = Vector3.New(535,-229,0)
         end
         self.empty.localScale = Vector3.zero
         self.noEmpty:SetActive(true)
@@ -194,6 +199,7 @@ function DataSaleDetailPart:c_SetShelf(info)
                 v.n = info.item.n
                 v.storeNum = info.storeNum
                 v.prices = info.price
+                v.autoReplenish = info.autoRepOn
                 v.num.text = info.item.n
                 v.price.text = info.price
             end
@@ -219,6 +225,23 @@ function DataSaleDetailPart:c_BuyCount(info)
         end
         if next(self.dataSaleCardItem) == nil then
             self:_isEmpty(true)
+        end
+    end
+end
+
+--调查线变化
+function DataSaleDetailPart:SurveyLineUpData(info)
+    if self.dataSaleCardItem then
+        for i, v in pairs(self.dataSaleCardItem) do
+            if v.type == info.iKey.id then
+                if v.autoReplenish then
+                    v.n = info.nowCountInLocked
+                    v.num.text = v.n
+                    v.storeNum = 0
+                else
+                    v.storeNum = info.nowCountInStore
+                end
+            end
         end
     end
 end

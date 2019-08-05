@@ -27,7 +27,7 @@ end
 
 -- 初始化的时候，监听事件
 function  ResearchDatabaseDetailPart:_InitEvent()
-
+    Event.AddListener("part_UserData",self.UserData,self)
 end
 
 function ResearchDatabaseDetailPart:_InitClick(mainPanelLuaBehaviour)
@@ -46,6 +46,7 @@ end
 
 -- 销毁的时候，清除事件
 function ResearchDatabaseDetailPart:_RemoveEvent()
+    Event.RemoveListener("part_UserData",self.UserData,self)
 end
 
 function ResearchDatabaseDetailPart:RefreshData(data)
@@ -104,5 +105,16 @@ function ResearchDatabaseDetailPart:c_OnReceiveGetScienceStorageData(scienceStor
         end
     else
         self.nullImage.localScale = Vector3.one
+    end
+end
+
+--使用点数回调
+function ResearchDatabaseDetailPart:UserData(info)
+    for i, v in pairs(self.researchMaterialItems) do
+        if v.data.itemKey.id == info.itemId then
+            v.data.storeNum = v.data.storeNum - info.num
+            v.numText.text = "x" .. ((v.data.storeNum + v.data.lockedNum) - info.num)
+            return
+        end
     end
 end

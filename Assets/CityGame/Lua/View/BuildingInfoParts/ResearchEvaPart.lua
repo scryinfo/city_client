@@ -16,21 +16,114 @@ end
 
 function ResearchEvaPart:_InitTransform()
     local transform = self.transform
+
     self.nullText = transform:Find("Top/NullText"):GetComponent("Text")
+    self.line = transform:Find("Top/TopLineInfo")
+    self.icon = transform:Find("Top/TopLineInfo/goodsIcon"):GetComponent("Image")
+    self.timeText = transform:Find("Top/TopLineInfo/timeText"):GetComponent("Text")
+    self.slider = transform:Find("Top/TopLineInfo/numberSlider"):GetComponent("Slider")
+    self.num = transform:Find("Top/TopLineInfo/numberSlider/numberText"):GetComponent("Text")
+
+    self.m_Timer = Timer.New(slot(self.UpData, self), UnityEngine.Time.unscaledDeltaTime, -1, true)
 end
 
 function ResearchEvaPart:_ResetTransform()
+    if self.m_Timer ~= nil then
+        self.m_Timer:Stop()
+    end
+end
+
+function ResearchEvaPart:_InitChildClick(mainPanelLuaBehaviour)
+    Event.AddListener("c_OnReceiveResearchFtyLineAddInform",self.c_OnReceiveResearchFtyLineAddInform,self)
+    Event.AddListener("c_OnReceiveGetFtyLineChangeInform",self.c_OnReceiveGetFtyLineChangeInform,self)
+
+    -- 监听删除生产线
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "ftyDelLine", "gs.DelLine", self._getFtyDelLine, self)
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "delScienceLine", "gs.DelLine", self._getFtyDelLine, self)
+end
+
+function BuildingProductionPart:_ResetTransform()
+    --关闭Update
+    UpdateBeat:Remove(self.Update,self)
+    Event.RemoveListener("c_OnReceiveResearchFtyLineAddInform",self.c_OnReceiveResearchFtyLineAddInform,self)
+    Event.RemoveListener("c_OnReceiveGetFtyLineChangeInform",self.c_OnReceiveGetFtyLineChangeInform,self)
+
+    -- 移除监听删除生产线
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "ftyDelLine", self._getFtyDelLine, self)
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "delScienceLine", self._getFtyDelLine, self)
 end
 
 function ResearchEvaPart:Refresh(data)
     --刷新自身数据,不刷新详情页面数据
     self:RefreshData(data)
+
+    self.nullText.text = "No research currently."
 end
 
 function ResearchEvaPart:RefreshData(data)
-    if data.line then
-        self.nullText.text = ""
+    self.m_data = data
+    self:_initFunc()
+end
+
+function ResearchEvaPart:c_OnReceiveResearchFtyLineAddInform(data)
+    if data ~= nil then
+        if not self.m_data.line then
+            self.m_data.line = {}
+        end
+        self.m_data.line[#self.m_data.line + 1] = data.line
+        --重新初始化界面
+        self:_initFunc()
+    end
+end
+
+function ResearchEvaPart:_initFunc()
+    if self.m_data.line == nil then
+        self.nullText.transform.localScale = Vector3.one
+        self.line.transform.localScale = Vector3.zero
     else
-        self.nullText.text = "No research currently."
+        self.nullText.transform.localScale = Vector3.zero
+        self.line.transform.localScale = Vector3.one
+        self.info = self.m_data.line[1]
+        LoadSprite(ResearchConfig[self.m_data.line[1].itemId].iconPath, self.icon, false)
+        self.allTime = (self.m_data.line[1].targetCount - self.m_data.line[1].nowCount) / self.m_data.line[1].speed
+        local ts = getTimeTable(self.allTime)
+        self.timeText.text = ts.hour..":"..ts.minute..":"..ts.second
+        self.num.text = self.m_data.line[1].nowCount .. "/" .. self.m_data.line[1].targetCount
+        self.slider.maxValue = self.m_data.line[1].targetCount
+        self.slider.value = self.m_data.line[1].nowCount
+        self.m_Timer:Start()
+    end
+end
+
+function ResearchEvaPart:UpData()
+    local ts = getTimeTable(self.allTime)
+    self.timeText.text = ts.hour..":"..ts.minute..":"..ts.second
+    self.allTime = self.allTime - UnityEngine.Time.unscaledDeltaTime
+    if self.allTime <= 0 then
+        self.timeText.text = "00:00:00"
+    end
+end
+
+--调查线推送
+function ResearchEvaPart:c_OnReceiveGetFtyLineChangeInform(info)
+    self.slider.value = info.nowCount
+    self.num.text = info.nowCount .. "/" .. info.targetCount
+end
+
+-- 删除生产线
+function ResearchEvaPart:_getFtyDelLine(data)
+    if data.nextlineId then
+        if data.lineId == self.m_data.line[1].id then -- 删除正在生产的
+            if self.m_Timer ~= nil then
+                self.m_Timer:Stop()
+            end
+            DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenTechnology')
+        end
+    else
+        self.nullText.transform.localScale = Vector3.one
+        self.line.transform.localScale = Vector3.zero
+        if self.m_Timer ~= nil then
+            self.m_Timer:Stop()
+        end
     end
 end

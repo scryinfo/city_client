@@ -9,19 +9,18 @@ ResearchMaterialItem = class("ResearchMaterialItem")
 -- 初始化
 function ResearchMaterialItem:initialize(prefab, data, index,  buildingId)
     self.prefab = prefab
+    data.index = index
     self.data = data
-    self.index = index
+    self.buildingId = buildingId
 
     local transform = prefab.transform
-    LoadSprite(ResearchConfig[data.itemKey.id].iconPath, transform:Find("IconImage"):GetComponent("Image"), false)
-    transform:Find("NameText"):GetComponent("Text").text = ResearchConfig[data.itemKey.id].name
+    self.iconImage = transform:Find("IconImage"):GetComponent("Image")
     self.numText = transform:Find("NumText"):GetComponent("Text")
-    if index == 1 then   -- 货架选择界面
-        self.numText.text = "X" .. tostring(data.storeNum)
-    elseif index == 2 then   -- 仓库显示界面
-        self.numText.text = "X" .. tostring(data.storeNum + data.lockedNum)
-    end
+    self.nameText = transform:Find("NameText"):GetComponent("Text")
+    self.priceText = transform:Find("PriceText"):GetComponent("Text")
 
+
+    self:ShowView()
     self.btn = transform:GetComponent("Button")
     self.btn.onClick:AddListener(function ()
         self:_clickPrefab()
@@ -29,15 +28,46 @@ function ResearchMaterialItem:initialize(prefab, data, index,  buildingId)
 end
 
 function ResearchMaterialItem:ShowView()
-
+    if self.data.index == 1 then   -- 货架选择界面
+        self.nameText.text = ResearchConfig[self.data.itemKey.id].name
+        LoadSprite(ResearchConfig[self.data.itemKey.id].iconPath, self.iconImage , false)
+        self.numText.text = "X" .. tostring(self.data.storeNum)
+    elseif self.data.index == 2 then   -- 仓库显示界面
+        self.nameText.text = ResearchConfig[self.data.itemKey.id].name
+        LoadSprite(ResearchConfig[self.data.itemKey.id].iconPath, self.iconImage , false)
+        self.numText.text = "X" .. tostring(self.data.storeNum + self.data.lockedNum)
+    elseif self.data.index == 3 or self.data.index == 4 then   -- 货架显示界面
+        self.nameText.text = ResearchConfig[self.data.k.id].name
+        LoadSprite(ResearchConfig[self.data.k.id].iconPath, self.iconImage , false)
+        self.numText.text = "X" .. tostring(self.data.n)
+        self.priceText.text = "E" .. GetClientPriceString(self.data.price)
+    end
 end
 
 -- 点击item，打开使用界面，使用研究资料以后即可获得eva点数
 function ResearchMaterialItem:_clickPrefab()
-    -- 1代表仓库里自己使用生产资料 2 代表别人购买并使用生产资料 3 代表货架上的生产资料 4 代表选择上架的生产资料
-    if self.index == 3 or self.index == 4 then
-        ct.OpenCtrl("ResearchSaleCtrl",self.data)
-    else
-        ct.OpenCtrl("ResearchUseCtrl",self.data)
+    if self.data.index == 1 then   -- 货架选择界面
+        ct.OpenCtrl("ResearchSaleCtrl",{buildingId = self.buildingId , data = self.data})
+    elseif self.data.index == 2 then   -- 仓库显示界面
+        local temp = {}
+        temp.wareHouse = self.data.storeNum
+        temp.sale = self.data.lockedNum
+        temp.itemId = self.data.itemKey.id
+        temp.userFunc = function(num)
+            DataManager.DetailModelRpcNoRet(self.buildingId, 'm_userData',self.buildingId, self.data.itemKey.id,num)
+        end
+        ct.OpenCtrl("UserDataCtrl",temp)
+    elseif self.data.index == 3 then   -- 货架选择界面
+        ct.OpenCtrl("ResearchSaleCtrl",{buildingId = self.buildingId , data = self.data})
+    elseif self.data.index == 4 then   -- 别人上货架购买使用界面
+        local temp = {}
+        temp.sale = self.data.n
+        temp.itemId = self.data.k.id
+        temp.myOwner = false
+        temp.price = self.data.price
+        temp.buyFunc = function(num,price)
+            DataManager.DetailModelRpcNoRet(self.buildingId, 'm_buyData', self.buildingId, self.data.k.id, num, price, DataManager.GetMyOwnerID())
+        end
+        ct.OpenCtrl("UserDataCtrl",temp)
     end
 end

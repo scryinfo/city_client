@@ -15,13 +15,15 @@ function ResearchEvaBoxItem:initialize(prefab, data, fuc)
 
     self.Bg = transform:Find("Bg")
     transform:Find("NameText"):GetComponent("Text").text = ResearchConfig[data.key.id].name
-    transform:Find("NumText"):GetComponent("Text").text = "X" .. tostring(data.n)
+    self.numText = transform:Find("NumText"):GetComponent("Text")
+
     self.btn = transform:GetComponent("Button")
     self.btn.onClick:AddListener(function ()
         fuc()
     end)
 
     self:SetBg(false)
+    self:SetNumText()
 end
 
 function ResearchEvaBoxItem:SetBg(isShow)
@@ -31,4 +33,8 @@ end
 function ResearchEvaBoxItem:SetBtn(isSelect)
     self.btn.interactable = isSelect
     self:SetBg(not isSelect)
+end
+
+function ResearchEvaBoxItem:SetNumText()
+    self.numText.text = "X" .. tostring(self.data.n)
 end

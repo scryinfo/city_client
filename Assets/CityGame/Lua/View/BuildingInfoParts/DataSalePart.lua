@@ -10,15 +10,24 @@ function DataSalePart:PrefabName()
 end
 --
 function DataSalePart:GetDetailClass()
-    return DataBaseDetailPart
+    return DataSaleDetailPart
 end
 --
 function DataSalePart:_InitTransform()
     self:_getComponent(self.transform)
 end
+
+function DataSalePart:_InitChildClick(mainPanelLuaBehaviour)
+    Event.AddListener("c_AddShelf",self.c_AddShelf,self)
+    Event.AddListener("c_DelShelf",self.c_DelShelf,self)
+    Event.AddListener("c_SetShelf",self.c_SetShelf,self)
+end
+
 --
 function DataSalePart:_ResetTransform()
-
+    Event.RemoveListener("c_AddShelf",self.c_AddShelf,self)
+    Event.RemoveListener("c_DelShelf",self.c_DelShelf,self)
+    Event.RemoveListener("c_SetShelf",self.c_SetShelf,self)
 end
 
 function DataSalePart:ShowDetail(data)
@@ -30,12 +39,27 @@ function DataSalePart:RefreshData(data)
         return
     end
     self.m_data = data
+    self.topText.text = GetLanguage(25010009)
+    self.saleText.text = data.shelfNum
 end
 --
 function DataSalePart:_getComponent(transform)
-    self.today = transform:Find("Top/Text"):GetComponent("Text")
+    self.topText = transform:Find("Top/topText"):GetComponent("Text")
+    self.saleText = transform:Find("Top/saleText"):GetComponent("Text")
 end
 --
 function DataSalePart:_initFunc(info)
 
+end
+
+function DataSalePart:c_AddShelf(info)
+    self.saleText.text = info.curCount
+end
+
+function DataSalePart:c_DelShelf(info)
+    self.saleText.text = info.curCount
+end
+
+function DataSalePart:c_SetShelf(info)
+    self.saleText.text = info.curCount
 end

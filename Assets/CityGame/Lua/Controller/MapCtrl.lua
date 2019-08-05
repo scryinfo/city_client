@@ -602,7 +602,7 @@ function MapCtrl.selectCenterItem(item)
     end
 end
 --搜索完成后，选择具体的item，打开右侧原料商品界面
---item 是MapSearchResultItem 用来显示选中与未选中效果
+--item 是MapSearchResultItem
 function MapCtrl:_openRightOthersPage(item)
     if item ~= nil then
         --if self.rightSearchItem ~= nil then
@@ -622,6 +622,9 @@ end
 --获取当前搜索的类型
 function MapCtrl:_getSearchData()
     local typeData = {}
+    --selectDetailItem是拥有二级菜单的类型详情item
+    --typeId为一级菜单类型，detailId为二级菜单类型
+    --eg：研究-->eva
     if self.selectDetailItem ~= nil then
         typeData.detailId = self.selectDetailItem:getItemId()
         typeData.typeId = self.selectDetailItem:getTypeId()

@@ -8,7 +8,7 @@ UIPanel:ResgisterOpen(ShelfMarketDataCtrl)
 
 local shelfMarketDataBehaviour
 function ShelfMarketDataCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/PromoteCompanyPanel.prefab"
+    return "Assets/CityGame/Resources/View/DataCompanyPanel.prefab"
 end
 
 function ShelfMarketDataCtrl:initialize()
@@ -18,7 +18,7 @@ end
 
 function ShelfMarketDataCtrl:Awake()
     shelfMarketDataBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    shelfMarketDataBehaviour:AddClick(PromoteCompanyPanel.back,self.OnBack,self)
+    shelfMarketDataBehaviour:AddClick(DataCompanyPanel.back,self.OnBack,self)
 end
 
 function ShelfMarketDataCtrl:Active()
@@ -26,7 +26,7 @@ function ShelfMarketDataCtrl:Active()
 end
 
 function ShelfMarketDataCtrl:Refresh()
-    DataManager.OpenDetailModel(PromoteCompanyModel,self.m_data.insId)
+    DataManager.OpenDetailModel(DataCompanyModel,self.m_data.insId)
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
     self:initData()
 end

@@ -38,7 +38,7 @@ function MapPanel.InitPanel()
     this.mapGroundAucItem = transform:Find("centerRoot/prefabRoot/MapGroundAucItemNew")  --土地拍卖
     this.mapGroundTransItem = transform:Find("centerRoot/prefabRoot/MapGroundTransItem")  --土地交易
 
-    --
+    --气泡层级root
     this.mapRootRect = transform:Find("centerRoot/typeParent"):GetComponent("RectTransform")  --小地图
     this.groundTransformRoot = transform:Find("centerRoot/typeParent/GroundTransformRoot")  --交易气泡
     this.groundAuctionRoot = transform:Find("centerRoot/typeParent/GroundAuctionRoot")  --拍卖气泡
@@ -53,7 +53,7 @@ function MapPanel.InitPanel()
     this.loadingImgTran = transform:Find("leftRoot/typeOpen/loadingRoot/loadingImg"):GetComponent("RectTransform")  --loading图
     this.typeItemParent = transform:Find("leftRoot/typeOpen/typeItemParent")  --搜索类型父物体
 
-    --详情页面
+    --搜索详情页面
     this.detailPagesRect = transform:Find("leftRoot/detailPages"):GetComponent("RectTransform")  --
     this.matPageToggleGroup = transform:Find("leftRoot/detailPages/matPage"):GetComponent("ToggleGroup")  --原料页面
     this.goodsPageToggleGroup = transform:Find("leftRoot/detailPages/goodsPage"):GetComponent("ToggleGroup")  --商品页面
@@ -63,14 +63,14 @@ function MapPanel.InitPanel()
     --右侧详情界面
     --this.rightMatGoodPageItem = MapRightMatGoodPage:new(transform:Find("rightPageRoot/searchMatGood"))  --old
     this.rightOtherPageRoot = transform:Find("rightPageRoot")  --
-    this.rightOtherBuildingPageItem = MapRightOtherBuildingPage:new(transform:Find("rightPageRoot/selectOtherBuilding"))
-    this.rightGroundAucPageItem = MapRightGroundAucPage:new(transform:Find("rightPageRoot/searchGroundAuc"))
-    this.rightGroundTransPageItem = MapRightGroundTransPage:new(transform:Find("rightPageRoot/searchGroundTrans"))
-    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(transform:Find("rightPageRoot/selectSelfBuilding"))
-    this.systemBuildingPageItem = MapRightSystemPage:new(transform:Find("rightPageRoot/selectSystemBuilding"))
+    this.rightOtherBuildingPageItem = MapRightOtherBuildingPage:new(transform:Find("rightPageRoot/selectOtherBuilding"))  --点击搜索结果气泡打开建筑界面
+    this.rightGroundAucPageItem = MapRightGroundAucPage:new(transform:Find("rightPageRoot/searchGroundAuc"))  --点击拍卖气泡
+    this.rightGroundTransPageItem = MapRightGroundTransPage:new(transform:Find("rightPageRoot/searchGroundTrans"))  --土地交易
+    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(transform:Find("rightPageRoot/selectSelfBuilding"))  --自己的建筑
+    this.systemBuildingPageItem = MapRightSystemPage:new(transform:Find("rightPageRoot/selectSystemBuilding"))  --系统建筑
 
     --
-    this.mapShowInfoParentTran = transform:Find("rightPageRoot/itemsRoot")
+    this.mapShowInfoParentTran = transform:Find("rightPageRoot/itemsRoot")  --下面两种预制的回收父物体
     this.mapShowInfoItemTran = transform:Find("rightPageRoot/itemsRoot/noIconShowItem")  --不带icon的数据显示
     this.mapShowInfoIconItemTran = transform:Find("rightPageRoot/itemsRoot/hasIconShowItem")  --带有icon的数据显示
     this.prefabPools = {}

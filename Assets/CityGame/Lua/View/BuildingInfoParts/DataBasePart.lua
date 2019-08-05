@@ -17,8 +17,12 @@ function DataBasePart:_InitTransform()
     self:_getComponent(self.transform)
 end
 --
+function DataBasePart:_InitChildClick(mainPanelLuaBehaviour)
+   Event.AddListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
+end
+--
 function DataBasePart:_ResetTransform()
-
+   Event.RemoveListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
 end
 
 function DataBasePart:ShowDetail(data)
@@ -30,13 +34,21 @@ function DataBasePart:RefreshData(data)
         return
     end
     self.m_data = data
+    self.topText.text = GetLanguage(25010009)
+    self.quantity.text = data.storeNum
 end
 --
 function DataBasePart:_getComponent(transform)
-    self.today = transform:Find("Top/Text"):GetComponent("Text")
+    self.topText = transform:Find("Top/topText"):GetComponent("Text")
+    self.quantity = transform:Find("Top/quantity"):GetComponent("Text")
 end
 --
 function DataBasePart:_initFunc(info)
 
+end
+
+--调查线变换推送
+function DataBasePart:SurveyLineUpData(info)
+    self.quantity.text = info.storeAllNum
 end
 

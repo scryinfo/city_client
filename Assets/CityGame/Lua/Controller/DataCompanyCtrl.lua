@@ -3,73 +3,88 @@
 --- Created by password.
 --- DateTime: 2019/3/29 10:28
 ---推广公司ctrl
-PromoteCompanyCtrl = class('PromoteCompanyCtrl',UIPanel)
-UIPanel:ResgisterOpen(PromoteCompanyCtrl)
+DataType = {
+    DataBase = 1,
+    DataSurvey = 2,
+    DataSale = 3,
+}
+Shelf = {
+    AddShelf = 1,
+    SetShelf = 2,
+}
+DataCompanyCtrl = class('DataCompanyCtrl',UIPanel)
+UIPanel:ResgisterOpen(DataCompanyCtrl)
 
 local promoteBehaviour
 local myOwnerID
-function PromoteCompanyCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/PromoteCompanyPanel.prefab"
+function DataCompanyCtrl:bundleName()
+    return "Assets/CityGame/Resources/View/DataCompanyPanel.prefab"
 end
 
-function PromoteCompanyCtrl:initialize()
+function DataCompanyCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
     --UIPanel.initialize(self,UIType.PopUp,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
 end
 
-function PromoteCompanyCtrl:Awake()
+function DataCompanyCtrl:Awake()
     promoteBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    --promoteBehaviour:AddClick(PromoteCompanyPanel.back,self.OnBack,self)
-    promoteBehaviour:AddClick(PromoteCompanyPanel.queue,self.OnQueue,self)
-    promoteBehaviour:AddClick(PromoteCompanyPanel.open,self.OnOpen,self)
+    --promoteBehaviour:AddClick(DataCompanyPanel.back,self.OnBack,self)
+    --promoteBehaviour:AddClick(DataCompanyPanel.queue,self.OnQueue,self)
+    promoteBehaviour:AddClick(DataCompanyPanel.open,self.OnOpen,self)
     self:initData()
     myOwnerID = DataManager.GetMyOwnerID()      --自己的唯一id
 end
 
-function PromoteCompanyCtrl:Active()
+function DataCompanyCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_Revenue",self.c_Revenue,self)
-
-    PromoteCompanyPanel.queneText.text = GetLanguage(27010008)
 end
 
-function PromoteCompanyCtrl:Refresh()
-    DataManager.OpenDetailModel(PromoteCompanyModel,self.m_data.insId)
+function DataCompanyCtrl:Refresh()
+    DataManager.OpenDetailModel(DataCompanyModel,self.m_data.insId)
     RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
     DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_detailPublicFacility',self.m_data.insId)
 end
 
-function PromoteCompanyCtrl:Hide()
+function DataCompanyCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_Revenue",self.c_Revenue,self)
+    RevenueDetailsMsg.close()
+end
+
+function DataCompanyCtrl:Close()
+    UIPanel.Close(self)
     if self.groupMgr ~= nil then
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
-    RevenueDetailsMsg.close()
 end
 
-function PromoteCompanyCtrl:OnCreate(obj)
+function DataCompanyCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
 
-function PromoteCompanyCtrl:initData()
+function DataCompanyCtrl:initData()
 
 end
 
 --返回
-function PromoteCompanyCtrl:OnBack()
+function DataCompanyCtrl:OnBack()
     UIPanel.ClosePage()
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
 end
 
 --建筑个性签名
-function PromoteCompanyCtrl:OnOpen(go)
+function DataCompanyCtrl:OnOpen(go)
     PlayMusEff(1002)
     ct.OpenCtrl("BubbleMessageCtrl",go.m_data.info)
 end
 
 --点击队列
-function PromoteCompanyCtrl:OnQueue(go)
+function DataCompanyCtrl:OnQueue(go)
     PlayMusEff(1002)
     if go.m_data.selledPromCount == 0 then
         local data = {}
@@ -84,47 +99,48 @@ function PromoteCompanyCtrl:OnQueue(go)
 end
 
 --建筑详情回调
-function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
+function DataCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
     detailData.info.buildingType = BuildingType.Municipal
-    if PromoteCompanyPanel.topItem ~= nil then
-        PromoteCompanyPanel.topItem:refreshData(detailData.info, function ()
+    if DataCompanyPanel.topItem ~= nil then
+        DataCompanyPanel.topItem:refreshData(detailData.info, function ()
             self:OnBack(self)
         end)
     end
     local insId = self.m_data.insId
     self.m_data = detailData
     self.m_data.insId = insId  --temp
-    PromoteCompanyPanel.queneValue.text = self.m_data.selledPromCount
     if self.groupMgr == nil then
         if detailData.info.state == "OPERATE" then -- 营业中
-            self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
+            self.groupMgr = BuildingInfoMainGroupMgr:new(DataCompanyPanel.groupTrans, promoteBehaviour)
             if self.m_data.info.ownerId == myOwnerID then
-                self.groupMgr:AddParts(AdvertisementPart, 0.374)
-                self.groupMgr:AddParts(TurnoverPart, 0.313)
-                self.groupMgr:AddParts(BuildingSalaryPart, 0.313)
+                self.groupMgr:AddParts(DataSalePart, 0.24)
+                self.groupMgr:AddParts(TurnoverPart, 0.19)
+                self.groupMgr:AddParts(BuildingSalaryPart, 0.19)
+                self.groupMgr:AddParts(DataSurveyPart, 0.19)
+                self.groupMgr:AddParts(DataBasePart, 0.19)
                 --self.groupMgr:AddParts(AdBuildingSignPart, 0.24)
-                PromoteCompanyPanel.open.transform.localScale = Vector3.one
+                DataCompanyPanel.open.transform.localScale = Vector3.one
             else
-                self.groupMgr:AddParts(AdvertisementPart, 1)
+                self.groupMgr:AddParts(DataSalePart, 1)
                 self.groupMgr:AddParts(TurnoverPart, 0)
                 self.groupMgr:AddParts(BuildingSalaryPart, 0)
-                --self.groupMgr:AddParts(AdBuildingSignPart, 0)
-                PromoteCompanyPanel.open.transform.localScale = Vector3.zero
+                self.groupMgr:AddParts(DataSurveyPart, 0)
+                self.groupMgr:AddParts(DataBasePart, 0)
+                --self.groupMgr:AddParts(AdBuildingSignPart, 0.24)
+                DataCompanyPanel.open.transform.localScale = Vector3.zero
             end
-            PromoteCompanyPanel.groupTrans.localScale = Vector3.one
-            PromoteCompanyPanel.queue.transform.localScale = Vector3.one
+            DataCompanyPanel.groupTrans.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
         else -- 未营业
-            PromoteCompanyPanel.groupTrans.localScale = Vector3.zero
-            PromoteCompanyPanel.queue.transform.localScale = Vector3.zero
-            PromoteCompanyPanel.open.transform.localScale = Vector3.zero
+            DataCompanyPanel.groupTrans.localScale = Vector3.zero
+            DataCompanyPanel.open.transform.localScale = Vector3.zero
         end
     else
 
         self.groupMgr:RefreshData(self.m_data)
     end
-    PromoteCompanyPanel.openBusinessItem:initData(detailData.info,BuildingType.Municipal)      --开业
+    DataCompanyPanel.openBusinessItem:initData(detailData.info,BuildingType.Municipal)      --开业
     --历史记录测试
     UnitTest.Exec_now("abel_0426_AbilityHistory", "e_AbilityHistory",self.m_data.insId)
     --人流量签约列表测试
@@ -132,7 +148,7 @@ function PromoteCompanyCtrl:_receivePromoteCompanyDetailInfo(detailData)
 end
 
 --推广能力回调
-function PromoteCompanyCtrl:_queryPromoCurAbilitys(info)
+function DataCompanyCtrl:_queryPromoCurAbilitys(info)
     if info.CurAbilitys == nil then
         return
     end
@@ -148,7 +164,7 @@ function PromoteCompanyCtrl:_queryPromoCurAbilitys(info)
 end
 
 --获取推广能力回调
-function PromoteCompanyCtrl:_queryPromoCurItemInfo(info)
+function DataCompanyCtrl:_queryPromoCurItemInfo(info)
     if info.items == nil then
         return
     end
@@ -168,7 +184,7 @@ function PromoteCompanyCtrl:_queryPromoCurItemInfo(info)
 end
 
 --员工工资改变
-function PromoteCompanyCtrl:_refreshSalary(data)
+function DataCompanyCtrl:_refreshSalary(data)
     if self.m_data ~= nil then
         if self.m_data.info.state == "OPERATE" then
             Event.Brocast("SmallPop", GetLanguage(26020007), 300)
@@ -177,14 +193,15 @@ function PromoteCompanyCtrl:_refreshSalary(data)
         self.m_data.info.setSalaryTs = data.ts
 
         if self.groupMgr == nil then
-            self.groupMgr = BuildingInfoMainGroupMgr:new(PromoteCompanyPanel.groupTrans, promoteBehaviour)
-            self.groupMgr:AddParts(AdvertisementPart, 0.374)
-            self.groupMgr:AddParts(TurnoverPart, 0.313)
-            self.groupMgr:AddParts(BuildingSalaryPart, 0.313)
+            self.groupMgr = BuildingInfoMainGroupMgr:new(DataCompanyPanel.groupTrans, promoteBehaviour)
+            self.groupMgr:AddParts(DataSalePart, 0.24)
+            self.groupMgr:AddParts(TurnoverPart, 0.19)
+            self.groupMgr:AddParts(BuildingSalaryPart, 0.19)
+            self.groupMgr:AddParts(DataSurveyPart, 0.19)
+            self.groupMgr:AddParts(DataBasePart, 0.19)
             --self.groupMgr:AddParts(AdBuildingSignPart, 0.23)
-            PromoteCompanyPanel.groupTrans.localScale = Vector3.one
-            PromoteCompanyPanel.queue.transform.localScale = Vector3.one
-            PromoteCompanyPanel.open.transform.localScale = Vector3.one
+            DataCompanyPanel.groupTrans.localScale = Vector3.one
+            DataCompanyPanel.open.transform.localScale = Vector3.one
             self.groupMgr:TurnOffAllOptions()
         end
         self.groupMgr:RefreshData(self.m_data)
@@ -192,7 +209,7 @@ function PromoteCompanyCtrl:_refreshSalary(data)
 end
 
 --今日营业额
-function PromoteCompanyCtrl:c_Revenue(info)
+function DataCompanyCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)
 end

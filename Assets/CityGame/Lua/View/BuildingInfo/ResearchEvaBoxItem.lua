@@ -7,12 +7,34 @@
 ResearchEvaBoxItem = class("ResearchEvaBoxItem")
 
 -- 初始化
-function ResearchEvaBoxItem:initialize(prefab, data)
+function ResearchEvaBoxItem:initialize(prefab, data, fuc)
     self.prefab = prefab
     self.data = data
+
+    local transform = prefab.transform
+
+    self.Bg = transform:Find("Bg")
+    transform:Find("NameText"):GetComponent("Text").text = ResearchConfig[data.key.id].name
+    self.numText = transform:Find("NumText"):GetComponent("Text")
+
+    self.btn = transform:GetComponent("Button")
+    self.btn.onClick:AddListener(function ()
+        fuc()
+    end)
+
+    self:SetBg(false)
+    self:SetNumText()
 end
 
--- 点击item，打开开宝箱界面，使用研究宝箱以后即可获得研究资料
-function ResearchEvaBoxItem:_clickPrefab()
-    ct.OpenCtrl("ResearchOpenBoxCtrl",self.data)
+function ResearchEvaBoxItem:SetBg(isShow)
+    self.Bg.localScale = isShow and Vector3.one or Vector3.zero
+end
+
+function ResearchEvaBoxItem:SetBtn(isSelect)
+    self.btn.interactable = isSelect
+    self:SetBg(not isSelect)
+end
+
+function ResearchEvaBoxItem:SetNumText()
+    self.numText.text = "X" .. tostring(self.data.n)
 end

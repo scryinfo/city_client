@@ -15,5 +15,21 @@ function ResearchOpenBoxPanel.Awake(obj)
 end
 
 function ResearchOpenBoxPanel.InitPanel()
+    this.backBtn = transform:Find("BackBtn").gameObject
+    this.openBtn = transform:Find("MiddleRoot/OpenBtn").gameObject
 
+    this.boxsScrollContent = transform:Find("LeftRoot/BoxsScroll/Viewport/Content")
+    this.researchEvaBoxItem = transform:Find("LeftRoot/BoxsScroll/Viewport/Content/ResearchEvaBoxItem").gameObject
+    this.totalNumText = transform:Find("LeftRoot/NumText"):GetComponent("Text")
+
+    -- 开点
+    this.middleRoot = transform:Find("MiddleRoot")
+    this.middleNumText = transform:Find("MiddleRoot/MiddleNumText"):GetComponent("Text")
+    this.inputField = transform:Find("MiddleRoot/InputField"):GetComponent("InputField")
+
+    -- 开箱结果
+    this.researchMaterialItem = transform:Find("ResearchMaterialItem")
+    this.iconImage = transform:Find("ResearchMaterialItem/IconImage"):GetComponent("Image")
+    this.resultNumText = transform:Find("ResearchMaterialItem/NumText"):GetComponent("Text")
+    this.resultNameText = transform:Find("ResearchMaterialItem/NameText"):GetComponent("Text")
 end

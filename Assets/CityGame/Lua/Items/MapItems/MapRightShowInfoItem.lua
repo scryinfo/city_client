@@ -14,7 +14,7 @@ function MapRightShowInfoItem:initialize(viewRect)
     self.valueText = trans:Find("valueText"):GetComponent("Text")
     local detailTran = trans:Find("detailImg")
     if detailTran ~= nil then
-        self.detailImg = detailTran:GetComponent("Image")
+        self.detailImg = detailTran:GetComponent("Image")  --如果有该字段，则为有图片的预制
     end
 end
 --数据初始化

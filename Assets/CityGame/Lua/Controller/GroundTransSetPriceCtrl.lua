@@ -22,37 +22,37 @@ function GroundTransSetPriceCtrl:Awake(go)
     local groundAuctionBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.bgBtn.gameObject, self._closeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.backBtn.gameObject, self._backBtnFunc, self)
-    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentIssueBtnTran.gameObject, self._rentIssueBtnFunc, self)
-    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentCancelBtnTran.gameObject, self._cancelRentBtnFunc, self)
-    groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentChangeBtnTran.gameObject, self._rentChangeBtnFunc, self)
+    --groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentIssueBtnTran.gameObject, self._rentIssueBtnFunc, self)
+    --groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentCancelBtnTran.gameObject, self._cancelRentBtnFunc, self)
+    --groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.rentChangeBtnTran.gameObject, self._rentChangeBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellIssueBtnTran.gameObject, self._sellIssueBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellCancelBtnTran.gameObject, self._cancelSellBtnFunc, self)
     groundAuctionBehaviour:AddClick(GroundTransSetPricePanel.sellChangeBtnTran.gameObject, self._sellChangeBtnFunc, self)
 
-    GroundTransSetPricePanel.minRentDayInput.onValueChanged:AddListener(function(value)
-        if value == "" then return end
-        if tonumber(value) < 1 then
-            GroundTransSetPricePanel.maxRentDayInput.text = "1"
-        end
-        --local maxDay = tonumber(GroundTransSetPricePanel.maxRentDayInput.text)
-        --if tonumber(value) > maxDay then
-        --    GroundTransSetPricePanel.maxRentDayInput.text = "1"
-        --end
-    end)
-    GroundTransSetPricePanel.maxRentDayInput.onValueChanged:AddListener(function(value)
-        if  value == "" then return end
-        if tonumber(value) > 999 then
-            GroundTransSetPricePanel.maxRentDayInput.text = "999"
-        end
-    end)
+    --GroundTransSetPricePanel.minRentDayInput.onValueChanged:AddListener(function(value)
+    --    if value == "" then return end
+    --    if tonumber(value) < 1 then
+    --        GroundTransSetPricePanel.maxRentDayInput.text = "1"
+    --    end
+    --    --local maxDay = tonumber(GroundTransSetPricePanel.maxRentDayInput.text)
+    --    --if tonumber(value) > maxDay then
+    --    --    GroundTransSetPricePanel.maxRentDayInput.text = "1"
+    --    --end
+    --end)
+    --GroundTransSetPricePanel.maxRentDayInput.onValueChanged:AddListener(function(value)
+    --    if  value == "" then return end
+    --    if tonumber(value) > 999 then
+    --        GroundTransSetPricePanel.maxRentDayInput.text = "999"
+    --    end
+    --end)
     GroundTransSetPricePanel.sellInput.onValueChanged:AddListener(function(value)
         local temp = ct.getCorrectPrice(value)
         GroundTransSetPricePanel.sellInput.text = temp
     end)
-    GroundTransSetPricePanel.rentalInput.onValueChanged:AddListener(function(value)
-        local temp = ct.getCorrectPrice(value)
-        GroundTransSetPricePanel.rentalInput.text = temp
-    end)
+    --GroundTransSetPricePanel.rentalInput.onValueChanged:AddListener(function(value)
+    --    local temp = ct.getCorrectPrice(value)
+    --    GroundTransSetPricePanel.rentalInput.text = temp
+    --end)
 end
 
 function GroundTransSetPriceCtrl:Refresh()
@@ -92,19 +92,22 @@ function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPage
     GroundTransSetPricePanel.rentIssueBtnTran.localScale = Vector3.zero
 
     if showPageType == GroundTransState.Rent then
-        GroundTransSetPricePanel.titleText.text = GetLanguage(22020001)
-        GroundTransSetPricePanel.rentRoot.localScale = Vector3.one
-        if groundState == GroundTransState.None then
-            --显示设置租金
-            GroundTransSetPricePanel.rentIssueBtnTran.localScale = Vector3.one
-        elseif groundState == GroundTransState.Rent then
-            --显示修改/取消状态
-            GroundTransSetPricePanel.rentChangeStateTran.localScale = Vector3.one
-            GroundTransSetPricePanel.minRentDayInput.text = groundInfo.rent.rentDaysMin
-            GroundTransSetPricePanel.maxRentDayInput.text = groundInfo.rent.rentDaysMax
-            GroundTransSetPricePanel.rentalInput.text = GetClientPriceString(groundInfo.rent.rentPreDay)
-        end
+        --GroundTransSetPricePanel.titleText.text = GetLanguage(22020001)
+        --GroundTransSetPricePanel.rentRoot.localScale = Vector3.one
+        --if groundState == GroundTransState.None then
+        --    --显示设置租金
+        --    GroundTransSetPricePanel.rentIssueBtnTran.localScale = Vector3.one
+        --elseif groundState == GroundTransState.Rent then
+        --    --显示修改/取消状态
+        --    GroundTransSetPricePanel.rentChangeStateTran.localScale = Vector3.one
+        --    GroundTransSetPricePanel.minRentDayInput.text = groundInfo.rent.rentDaysMin
+        --    GroundTransSetPricePanel.maxRentDayInput.text = groundInfo.rent.rentDaysMax
+        --    GroundTransSetPricePanel.rentalInput.text = GetClientPriceString(groundInfo.rent.rentPreDay)
+        --end
     elseif showPageType == GroundTransState.Sell then
+        --showPageType 是上个界面传来的参数，用来显示打开的是出租还是出售，只有这两种情况
+        --groundState 是根据服务器值判断得到的状态，有None，Sell和Rent状态
+        --以下，如果已经有sell字段，则再次打开时修改价格或者取消出售
         GroundTransSetPricePanel.titleText.text = GetLanguage(22030001)
         GroundTransSetPricePanel.sellRoot.localScale = Vector3.one
         if groundState == GroundTransState.None then
@@ -138,9 +141,9 @@ function GroundTransSetPriceCtrl:_sellIssueBtnFunc(ins)
         GroundTransModel.m_ReqSellGround(GetServerPriceNumber(price))
         Event.Brocast("SmallPop", GetLanguage(22030003), 300)
 
-        GroundTransSetPriceCtrl._closeBackToMain()
+        GroundTransSetPriceCtrl._closeBackToMain()  --向服务器发送sellGround协议，同时返回主页
     else
-        Event.Brocast("SmallPop", GetLanguage(22070001), 300)
+        Event.Brocast("SmallPop", GetLanguage(22070001), 300)  --格式错误提示
     end
 end
 --修改出售价格按钮
@@ -168,49 +171,49 @@ function GroundTransSetPriceCtrl:_cancelSellBtnFunc(ins)
     Event.Brocast("SmallPop", GetLanguage(22030005), 300)
     GroundTransSetPriceCtrl._closeBackToMain()
 end
-
---出租发布按钮
-function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
-    PlayMusEff(1002)
-    local minDay = GroundTransSetPricePanel.minRentDayInput.text
-    local maxDay = GroundTransSetPricePanel.maxRentDayInput.text
-    local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
-    if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
-        Event.Brocast("SmallPop", GetLanguage(22070001), 300)
-        return
-    end
-    GroundTransModel.m_ReqRentOutGround(minDay, maxDay, GetServerPriceNumber(dayRentalPrice))
-
-    Event.Brocast("SmallPop", GetLanguage(22020006), 300)
-    GroundTransSetPriceCtrl._closeBackToMain()
-end
---修改出租价格按钮
-function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
-    PlayMusEff(1002)
-    local minDay = GroundTransSetPricePanel.minRentDayInput.text
-    local maxDay = GroundTransSetPricePanel.maxRentDayInput.text
-    local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
-    if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
-        Event.Brocast("SmallPop", GetLanguage(22070001), 300)
-        return
-    end
-    if minDay == ins.m_data.groundInfo.rent.rentDaysMin and maxDay == ins.m_data.groundInfo.rent.rentDaysMax and GetServerPriceNumber(dayRentalPrice) == ins.m_data.groundInfo.rent.rentPreDay then
-        Event.Brocast("SmallPop", GetLanguage(22070002), 300)
-        return
-    end
-    GroundTransModel.m_ReqCancelRentGround()
-    GroundTransModel.m_ReqRentOutGround(minDay, maxDay, GetServerPriceNumber(dayRentalPrice))
-    Event.Brocast("SmallPop", GetLanguage(22020007), 300)
-    GroundTransSetPriceCtrl._closeBackToMain()
-end
---取消出租
-function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
-    PlayMusEff(1002)
-    GroundTransModel.m_ReqCancelRentGround()
-    Event.Brocast("SmallPop", GetLanguage(22020008), 300)
-    GroundTransSetPriceCtrl._closeBackToMain()
-end
 --返回主界面
 function GroundTransSetPriceCtrl._closeBackToMain()
     UIPanel.CloseAllPageExceptMain()
 end
+
+----出租发布按钮
+--function GroundTransSetPriceCtrl:_rentIssueBtnFunc(ins)
+--    PlayMusEff(1002)
+--    local minDay = GroundTransSetPricePanel.minRentDayInput.text
+--    local maxDay = GroundTransSetPricePanel.maxRentDayInput.text
+--    local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
+--    if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
+--        Event.Brocast("SmallPop", GetLanguage(22070001), 300)
+--        return
+--    end
+--    GroundTransModel.m_ReqRentOutGround(minDay, maxDay, GetServerPriceNumber(dayRentalPrice))
+--
+--    Event.Brocast("SmallPop", GetLanguage(22020006), 300)
+--    GroundTransSetPriceCtrl._closeBackToMain()
+--end
+----修改出租价格按钮
+--function GroundTransSetPriceCtrl:_rentChangeBtnFunc(ins)
+--    PlayMusEff(1002)
+--    local minDay = GroundTransSetPricePanel.minRentDayInput.text
+--    local maxDay = GroundTransSetPricePanel.maxRentDayInput.text
+--    local dayRentalPrice = GroundTransSetPricePanel.rentalInput.text
+--    if minDay == "" or tonumber(minDay) < 1 or maxDay == "" or tonumber(maxDay) < tonumber(minDay) or dayRentalPrice == "" or tonumber(dayRentalPrice) <= 0 then
+--        Event.Brocast("SmallPop", GetLanguage(22070001), 300)
+--        return
+--    end
+--    if minDay == ins.m_data.groundInfo.rent.rentDaysMin and maxDay == ins.m_data.groundInfo.rent.rentDaysMax and GetServerPriceNumber(dayRentalPrice) == ins.m_data.groundInfo.rent.rentPreDay then
+--        Event.Brocast("SmallPop", GetLanguage(22070002), 300)
+--        return
+--    end
+--    GroundTransModel.m_ReqCancelRentGround()
+--    GroundTransModel.m_ReqRentOutGround(minDay, maxDay, GetServerPriceNumber(dayRentalPrice))
+--    Event.Brocast("SmallPop", GetLanguage(22020007), 300)
+--    GroundTransSetPriceCtrl._closeBackToMain()
+--end
+----取消出租
+--function GroundTransSetPriceCtrl:_cancelRentBtnFunc(ins)
+--    PlayMusEff(1002)
+--    GroundTransModel.m_ReqCancelRentGround()
+--    Event.Brocast("SmallPop", GetLanguage(22020008), 300)
+--    GroundTransSetPriceCtrl._closeBackToMain()
+--end

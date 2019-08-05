@@ -15,5 +15,8 @@ function ResearchChoicePanel.Awake(obj)
 end
 
 function ResearchChoicePanel.InitPanel()
+    this.backBtn = transform:Find("BottomRoot/BackBtn").gameObject
 
+    this.typeScrollContent = transform:Find("BottomRoot/TypeScroll/Viewport/Content")
+    this.researchTypeItem = transform:Find("BottomRoot/TypeScroll/Viewport/Content/ResearchTypeItem").gameObject
 end

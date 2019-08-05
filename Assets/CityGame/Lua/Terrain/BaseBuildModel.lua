@@ -56,10 +56,10 @@ function BaseBuildModel:OpenPanel()
     elseif typeID == 1400001 or typeID == 1400002 or typeID == 1400003 then    --住宅
         ct.OpenCtrl("HouseCtrl", {insId = instanceID})
     elseif typeID == 1500001 or typeID == 1500002 or typeID == 1500003 then    --研究所
-        ct.OpenCtrl("LaboratoryCtrl", {insId = instanceID})
+        ct.OpenCtrl("ResearchInstituteCtrl", {insId = instanceID})
     elseif typeID == 1600001 or typeID == 1600002 or typeID == 1600003 then    --公园
         --Event.Brocast("m_detailPublicFacility",instanceID)
-        ct.OpenCtrl("PromoteCompanyCtrl",{insId=instanceID})
+        ct.OpenCtrl("DataCompanyCtrl",{insId=instanceID})
     elseif typeID == 1700001 or typeID == 1700002 or typeID == 1700003 then    --集散中心
         --Event.Brocast("m_detailPublicFacility",instanceID)
         ct.OpenCtrl("BuidingWareHouseCtrl",{insId=instanceID})

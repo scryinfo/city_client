@@ -86,7 +86,7 @@ function OpenHouseCtrlNew:_getComponent(go)
 
     self:_awakeSliderInput()  --初始化
 end
---
+--滑动条input联动
 function OpenHouseCtrlNew:_awakeSliderInput()
     self.rentInput.onValueChanged:AddListener(function (str)
         if str == "" or self.guideData == nil then
@@ -97,7 +97,7 @@ function OpenHouseCtrlNew:_awakeSliderInput()
             self.rentInput.text = finalStr  --限制用户小数输入
             return
         end
-        local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
+        local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)  --计算竞争力
         if temp >= functions.maxCompetitive then
             self.valueText.text = ">"..temp
         elseif temp <= functions.minCompetitive then
@@ -105,14 +105,14 @@ function OpenHouseCtrlNew:_awakeSliderInput()
         else
             self.valueText.text = string.format("%0.1f", temp)
         end
-        OpenHouseCtrlNew.sliderCanChange = false
+        OpenHouseCtrlNew.sliderCanChange = false  --当input输入时，禁用slider
         self.competitiSlider.value = temp
     end)
     --
     EventTriggerMgr.Get(self.competitiSlider.gameObject).onSelect = function()
         OpenHouseCtrlNew.sliderCanChange = true
     end
-    EventTriggerMgr.Get(self.competitiSlider.gameObject).onUpdateSelected = function()
+    EventTriggerMgr.Get(self.competitiSlider.gameObject).onUpdateSelected = function()  --当slider被选中，则可以改变input的值
         OpenHouseCtrlNew.sliderCanChange = true
     end
     self.competitiSlider.onValueChanged:AddListener(function (value)
@@ -149,14 +149,14 @@ function OpenHouseCtrlNew:_initData()
     if self.m_data == nil then
         return
     end
-    DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)  --请求竞争力参数
+    DataManager.m_ReqHouseGuidPrice(self.m_data.info.id)  --向服务器请求竞争力参数
 
     self.tipRoot.localScale = Vector3.zero
     local buildingData = PlayerBuildingBaseData[self.m_data.info.mId]
     self.staffNum = buildingData.maxWorkerNum
-    self.staffNumText.text = self.staffNum
+    self.staffNumText.text = self.staffNum  --员工
     self.standardWage = DataManager.GetBuildingStandardWage(self.m_data.info.mId)
-    self.roomCountText.text = string.format("%s <color=#FFFFFF>%d</color>", GetLanguage(12345678), buildingData.npc)
+    self.roomCountText.text = string.format("%s <color=#FFFFFF>%d</color>", GetLanguage(12345678), buildingData.npc)  --
 
     if self.standardWage == nil then
         DataManager.m_ReqStandardWage(self.m_data.info.mId)
@@ -207,7 +207,7 @@ function OpenHouseCtrlNew:_onClickConfirm(ins)
     end
 
     if DataManager.GetMoney() < ins.totalValue then
-        Event.Brocast("SmallPop", GetLanguage(41010006), 300)
+        Event.Brocast("SmallPop", GetLanguage(41010006), 300)  --资金判断
         return
     end
 
@@ -217,7 +217,7 @@ function OpenHouseCtrlNew:_onClickConfirm(ins)
             ins.m_data.callBackFunc(100, tonumber(ins.rentInput.text))
             UIPanel.ClosePage()
         end}
-        ct.OpenCtrl("OpenBuildingCheckCtrl", data)
+        ct.OpenCtrl("OpenBuildingCheckCtrl", data)  --二次确认界面
         ins.tipRoot.localScale = Vector3.zero
     end
 end

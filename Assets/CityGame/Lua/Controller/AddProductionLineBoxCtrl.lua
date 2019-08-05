@@ -28,29 +28,19 @@ end
 function AddProductionLineBoxCtrl:Active()
     UIPanel.Active(self)
     addLineBox = self.gameObject:GetComponent('LuaBehaviour')
-    addLineBox:AddClick(AddProductionLineBoxPanel.closeBtn.gameObject,self.clickCloseBtn,self)
-    addLineBox:AddClick(AddProductionLineBoxPanel.leftBtn.gameObject,self.clickLeftBtn,self)
-    addLineBox:AddClick(AddProductionLineBoxPanel.rightBtn.gameObject,self.clickRightBtn,self)
+    addLineBox:AddClick(AddProductionLineBoxPanel.bgBtn.gameObject,self.clickCloseBtn,self)
     addLineBox:AddClick(AddProductionLineBoxPanel.confirmBtn.gameObject,self.clickConfirmBtn,self)
 
     AddProductionLineBoxPanel.topName.text = GetLanguage(25030003)
-    AddProductionLineBoxPanel.popularityText.text = GetLanguage(25020006)
-    AddProductionLineBoxPanel.qualityText.text = GetLanguage(25020005)
-    AddProductionLineBoxPanel.levelText.text = GetLanguage(25020007)
+    --AddProductionLineBoxPanel.levelText.text = GetLanguage(25020007)
     AddProductionLineBoxPanel.productionText.text = GetLanguage(25030004)
     AddProductionLineBoxPanel.eachText.text = GetLanguage(31010042)
     AddProductionLineBoxPanel.time.text = GetLanguage(25030005)
     AddProductionLineBoxPanel.numberTip.text = GetLanguage(25030006)
-    --addLineBox:AddClick(AddLineBoxPanel.leftBtn.gameObject,self.OnClick_leftBtn,self)
-    --addLineBox:AddClick(AddLineBoxPanel.rightBtn.gameObject,self.OnClick_rightBtn,self)
-    --addLineBox:AddClick(AddLineBoxPanel.closeBtn.gameObject,self.OnClick_closeBtn,self)
 
     AddProductionLineBoxPanel.numberSlider.onValueChanged:AddListener(function()
         self:SlidingUpdateText()
     end)
-    --AddProductionLineBoxPanel.numberInput.onValueChanged:AddListener(function()
-    --    self:inputUpdateText()
-    --end)
     AddProductionLineBoxPanel.numberInput.onEndEdit:AddListener(function()
         self:inputEndText()
     end)
@@ -69,23 +59,21 @@ function AddProductionLineBoxCtrl:InitializeData()
         return
     end
     AddProductionLineBoxPanel.tipText.transform.localScale = Vector3.zero
-    AddProductionLineBoxPanel.numberText.text = "0/0"
     AddProductionLineBoxPanel.timeText.text = "00:00:00"
     AddProductionLineBoxPanel.numberSlider.value = 1
     AddProductionLineBoxPanel.numberSlider.minValue = 1
     AddProductionLineBoxPanel.numberSlider.maxValue = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
-    AddProductionLineBoxPanel.numberInput.characterLimit = #tostring(PlayerBuildingBaseData[self.m_data.mId].storeCapacity)
+    AddProductionLineBoxPanel.numberInput.characterLimit = #tostring(PlayerBuildingBaseData[self.m_data.mId].storeCapacity) + 1
     AddProductionLineBoxPanel.nameText.text = GetLanguage(self.m_data.itemId)
+    AddProductionLineBoxPanel.iconImg.sprite = SpriteManager.GetSpriteByPool(self.m_data.itemId)
     self.workerNum = PlayerBuildingBaseData[self.m_data.mId].maxWorkerNum
-
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --如果是原料关闭商品属性展示
         AddProductionLineBoxPanel.popularity.transform.localScale = Vector3.zero
         AddProductionLineBoxPanel.quality.transform.localScale = Vector3.zero
         AddProductionLineBoxPanel.levelBg.transform.localScale = Vector3.zero
         AddProductionLineBoxPanel.scoreBg.transform.localScale = Vector3.zero
-        AddProductionLineBoxPanel.iconBg.transform.localPosition = Vector3(0,30,0)
-        LoadSprite(Material[self.m_data.itemId].img,AddProductionLineBoxPanel.iconImg,false)
+        AddProductionLineBoxPanel.iconBg.transform.localPosition = Vector3(0,0,0)
         --local speed = 1 / (Material[self.m_data.itemId].numOneSec * self.workerNum)
         local speed = 1 / self.m_data.numOneSec
         AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed)
@@ -96,8 +84,7 @@ function AddProductionLineBoxCtrl:InitializeData()
         AddProductionLineBoxPanel.quality.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.levelBg.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.scoreBg.transform.localScale = Vector3.one
-        AddProductionLineBoxPanel.iconBg.transform.localPosition = Vector3(-292,30,0)
-        LoadSprite(Good[self.m_data.itemId].img,AddProductionLineBoxPanel.iconImg,false)
+        AddProductionLineBoxPanel.iconBg.transform.localPosition = Vector3(-352,0,0)
         --local speed = 1 / (Good[self.m_data.itemId].numOneSec * self.workerNum)
         local speed = 1 / self.m_data.info.numOneSec
         AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed)
@@ -120,16 +107,9 @@ end
 --多语言
 function AddProductionLineBoxCtrl:_language()
     AddProductionLineBoxPanel.tipText.text = GetLanguage(25030030)
+    AddProductionLineBoxPanel.brandName.text = GetLanguage(25020040)
 end
 ------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------
---左Button
-function AddProductionLineBoxCtrl:clickLeftBtn()
-
-end
---右Button
-function AddProductionLineBoxCtrl:clickRightBtn()
-
-end
 --关闭Button
 function AddProductionLineBoxCtrl:clickCloseBtn()
     PlayMusEff(1002)
@@ -179,12 +159,6 @@ function AddProductionLineBoxCtrl:SlidingUpdateText()
     AddProductionLineBoxPanel.numberInput.text = AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.timeText.text = self:GetTime(AddProductionLineBoxPanel.numberSlider.value,self.workerNum)
 end
-----输入框事件
---function AddProductionLineBoxCtrl:inputUpdateText()
---    if ToNumber(AddProductionLineBoxPanel.numberInput.text) > PlayerBuildingBaseData[self.m_data.mId].storeCapacity then
---        AddProductionLineBoxPanel.numberInput.text = PlayerBuildingBaseData[self.m_data.mId].storeCapacity
---    end
---end
 --输入框结束事件
 function AddProductionLineBoxCtrl:inputEndText()
     if AddProductionLineBoxPanel.numberInput.text == "" or ToNumber(AddProductionLineBoxPanel.numberInput.text) <= 0 then

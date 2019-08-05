@@ -16,13 +16,14 @@ function AddProductionLineBoxPanel.Awake(obj)
     this.InitPanel();
 end
 function AddProductionLineBoxPanel:InitPanel()
+    this.bgBtn = transform:Find("bgBtn"):GetComponent("Button")
     --Top
-    this.closeBtn = transform:Find("contentRoot/top/closeBtn"):GetComponent("Button")
     this.topName = transform:Find("contentRoot/top/topName"):GetComponent("Text")
     --content
     this.iconImg = transform:Find("contentRoot/content/goodsInfo/iconBg/iconImg"):GetComponent("Image")
     this.nameText = transform:Find("contentRoot/content/goodsInfo/iconBg/nameBg/nameText"):GetComponent("Text")
-    this.brandNameText = transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandNameText"):GetComponent("Text")
+    this.brandName = transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName"):GetComponent("Text")
+    this.brandNameText = transform:Find("contentRoot/content/goodsInfo/scoreBg/brandBg/brandName/brandNameText"):GetComponent("Text")
     --商品属性，原料没有
     this.iconBg = transform:Find("contentRoot/content/goodsInfo/iconBg")
     this.scoreBg = transform:Find("contentRoot/content/goodsInfo/scoreBg")
@@ -30,13 +31,13 @@ function AddProductionLineBoxPanel:InitPanel()
     this.quality = transform:Find("contentRoot/content/goodsInfo/scoreBg/quality")
     this.levelBg = transform:Find("contentRoot/content/goodsInfo/levelBg")
 
-    this.popularityText = transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
-    this.popularityValue = transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity/popularityValue"):GetComponent("Text")
-    this.qualityText = transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
-    this.qualityValue = transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality/qualityValue"):GetComponent("Text")
+    --this.popularityText = transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularity"):GetComponent("Text")
+    this.popularityValue = transform:Find("contentRoot/content/goodsInfo/scoreBg/popularity/popularityValue"):GetComponent("Text")
+    --this.qualityText = transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/quality"):GetComponent("Text")
+    this.qualityValue = transform:Find("contentRoot/content/goodsInfo/scoreBg/quality/qualityValue"):GetComponent("Text")
     this.levelImg = transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg"):GetComponent("Image")
-    this.levelText = transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level"):GetComponent("Text")
-    this.levelValue = transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level/levelText"):GetComponent("Text")
+    --this.levelText = transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/level"):GetComponent("Text")
+    this.levelValue = transform:Find("contentRoot/content/goodsInfo/levelBg/levelImg/levelText"):GetComponent("Text")
 
     this.productionText = transform:Find("contentRoot/content/goodsInfo/tipBg/productionSpeed/productionText"):GetComponent("Text")
     this.speedText = transform:Find("contentRoot/content/goodsInfo/tipBg/productionSpeed/productionText/SpeedText"):GetComponent("Text")
@@ -47,11 +48,7 @@ function AddProductionLineBoxPanel:InitPanel()
     this.numberTip = transform:Find("contentRoot/content/numberTip"):GetComponent("Text")
     this.tipText = transform:Find("contentRoot/content/tip"):GetComponent("Text")
     this.numberSlider = transform:Find("contentRoot/content/numberSlider"):GetComponent("Slider")
-    --this.sliderNumberText = transform:Find("contentRoot/content/numberSlider/HandleSlideArea/Handle/sliderNumberBg/sliderNumberText"):GetComponent("Text")
-    this.numberText = transform:Find("contentRoot/content/number"):GetComponent("Text")
     this.numberInput = transform:Find("contentRoot/content/numberInput"):GetComponent("InputField")
-    this.leftBtn = transform:Find("contentRoot/content/leftBtn"):GetComponent("Button")
-    this.rightBtn = transform:Find("contentRoot/content/rightBtn"):GetComponent("Button")
     --bottom
     this.confirmBtn = transform:Find("contentRoot/bottom/confirmBtn"):GetComponent("Button")
 

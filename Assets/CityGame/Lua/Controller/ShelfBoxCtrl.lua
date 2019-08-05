@@ -48,9 +48,9 @@ function ShelfBoxCtrl:Awake(go)
     self.numberInput.onEndEdit:AddListener(function()
         self:UpdateSlidingValue()
     end)
-    self.priceInput.onValueChanged:AddListener(function()
-        self:InputUpdateText()
-    end)
+    --self.priceInput.onValueChanged:AddListener(function()
+    --    self:InputUpdateText()
+    --end)
 end
 
 function ShelfBoxCtrl:Refresh()
@@ -117,6 +117,8 @@ function ShelfBoxCtrl:_getComponent(go)
     self.tipPriceBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBtn")
     self.tipPriceBg = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn")
     self.tipPriceText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn/tipText"):GetComponent("Text")
+    self.adviceTipText = go.transform:Find("contentRoot/content/detailsInfo/adviceTip/adviceTipText"):GetComponent("Text")
+    self.competitivenessSlider = go.transform:Find("contentRoot/content/detailsInfo/competitivenessSlider"):GetComponent("Slider")
 
     --self.tipPriceDetailsBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipPriceDetailsBtn")
     --bottom
@@ -126,33 +128,14 @@ function ShelfBoxCtrl:_getComponent(go)
     self.addShelfText = go.transform:Find("contentRoot/bottom/addShelfBtn/text"):GetComponent("Text")
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn")
 
-    self:_awakeSliderInput()
 end
 --------------------------------------------------------------------------初始化--------------------------------------------------------------------------
 --初始化UI数据
 function ShelfBoxCtrl:initializeUiInfoData()
-    if self.m_data.buildingType == BuildingType.MaterialFactory then
-        local function callbacks(guidePrice)
-            self.guidePrice = guidePrice   --推荐价格
-        end
-        Event.Brocast("getShelfGuidePrice",self.m_data.itemId,callbacks)
-    elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        local function callbacks(averagePrice,averageScore,score)
-            self.averagePrice = averagePrice   --平均价
-            self.averageScore = averageScore   --平均分
-            self.score = score                 --评分
-        end
-        Event.Brocast("getShelfGuidePrice",self.m_data.itemId,callbacks)
-    elseif self.m_data.buildingType == BuildingType.RetailShop then
-        local function callbacks(averagePrice,averageScore,averageBuildingScore,playerGoodsScore,playerBuildingScore)
-            self.averagePrice = averagePrice                    --平均价
-            self.averageScore = averageScore                    --平均分
-            self.averageBuildingScore = averageBuildingScore    --评分
-            self.playerGoodsScore = playerGoodsScore            --玩家商品评分
-            self.playerBuildingScore = playerBuildingScore      --玩家店铺评分
-        end
-        Event.Brocast("getShelfGuidePrice",self.m_data.itemId,callbacks)
+    local function callbacks(guidePrice)
+        self.guidePrice = guidePrice   --推荐价格
     end
+    Event.Brocast("getShelfGuidePrice",self.m_data.itemId,callbacks)
     local materialKey,goodsKey = 21,22
     if Math_Floor(self.m_data.itemId / 100000) == materialKey then
         self:materialOrGoods(self.m_data.itemId)
@@ -208,6 +191,7 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberInput.text = self.m_data.dataInfo.n
         self.numberInput.characterLimit = #tostring(self.m_data.dataInfo.n) + 1
         self.priceInput.text = GetClientPriceString(self.m_data.dataInfo.price)
+        --self.advicePriceText.text =
         if self.automaticSwitch.isOn == true then
             self.numberSlider.transform.localScale = Vector3.zero
             self.totalNumber.transform.localScale = Vector3.one
@@ -233,61 +217,97 @@ function ShelfBoxCtrl:initializeUiInfoData()
         self.numberSlider.value = 1
         self.numberInput.text = "1"
         self.numberInput.characterLimit = #tostring(self.m_data.dataInfo.n) + 1
-        --self.numberText.text = "×"..self.numberSlider.value
         if self.m_data.buildingType == BuildingType.MaterialFactory then
             local tempPrice = ct.CalculationMaterialSuggestPrice(self.guidePrice / 10000,self.m_data.itemId)
             self.priceInput.text = GetClientPriceString(tempPrice)
+            local temp = ct.CalculationMaterialCompetitivePower(self.guidePrice, tonumber(self.priceInput.text) * 10000, self.m_data.itemId)
+            if temp >= functions.maxCompetitive then
+                self.advicePriceText.text = ">"..temp
+            elseif temp <= functions.minCompetitive then
+                self.advicePriceText.text = "<"..temp
+            else
+                self.advicePriceText.text = string.format("%0.1f", temp)
+            end
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-            local tempPrice = ct.CalculationProcessingSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.score,self.averageScore)
+            local tempPrice = ct.CalculationProcessingSuggestPrice(self.guidePrice / 10000,self.m_data.itemId)
             self.priceInput.text = GetClientPriceString(tempPrice)
+            local temp = ct.CalculationFactoryCompetitivePower(self.guidePrice, tonumber(self.priceInput.text) * 10000, self.m_data.itemId)
+            if temp >= functions.maxCompetitive then
+                self.advicePriceText.text = ">"..temp
+            elseif temp <= functions.minCompetitive then
+                self.advicePriceText.text = "<"..temp
+            else
+                self.advicePriceText.text = string.format("%0.1f", temp)
+            end
         elseif self.m_data.buildingType == BuildingType.RetailShop then
-            local tempPrice = ct.CalculationRetailSuggestPrice(self.averagePrice / 10000,self.m_data.itemId,self.playerGoodsScore,
-                    self.playerBuildingScore,self.averageScore,self.averageBuildingScore)
+            local tempPrice = ct.CalculationRetailSuggestPrice(self.guidePrice / 10000,self.m_data.itemId)
             self.priceInput.text = GetClientPriceString(tempPrice)
+            local temp = ct.CalculationSupermarketCompetitivePower(self.guidePrice, tonumber(self.priceInput.text) * 10000, self.m_data.itemId)
+            if temp >= functions.maxCompetitive then
+                self.advicePriceText.text = ">"..temp
+            elseif temp <= functions.minCompetitive then
+                self.advicePriceText.text = "<"..temp
+            else
+                self.advicePriceText.text = string.format("%0.1f", temp)
+            end
         end
     end
     self.nameText.text = GetLanguage(self.m_data.itemId)
     self.tipBg.transform.localScale = Vector3.zero
     self.tipPriceBg.transform.localScale = Vector3.zero
+
+    self:_awakeSliderInput()
 end
---改到这了，暂时注释
---competitiSlider
---function ShelfBoxCtrl:_awakeSliderInput()
---    self.priceInput.onValueChanged:AddListener(function (str)
---        if str == "" or self.guideData == nil then
---            return
---        end
---        local finalStr = ct.getCorrectPrice(str)
---        if finalStr ~= str then
---            self.priceInput.text = finalStr  --限制用户小数输入
---            return
---        end
---        local temp = ct.CalculationHouseCompetitivePower(self.guideData.guidePrice, tonumber(str) * 10000, self.guideData.npc)
---        if temp >= functions.maxCompetitive then
---            self.valueText.text = ">"..temp
---        elseif temp <= functions.minCompetitive then
---            self.valueText.text = "<"..temp
---        else
---            self.valueText.text = string.format("%0.1f", temp)
---        end
---        OpenHouseCtrlNew.sliderCanChange = false
---        self.competitiSlider.value = temp
---    end)
---    --
---    EventTriggerMgr.Get(self.competitiSlider.gameObject).onSelect = function()
---        OpenHouseCtrlNew.sliderCanChange = true
---    end
---    EventTriggerMgr.Get(self.competitiSlider.gameObject).onUpdateSelected = function()
---        OpenHouseCtrlNew.sliderCanChange = true
---    end
---    self.competitiSlider.onValueChanged:AddListener(function (value)
---        if self.guideData == nil or OpenHouseCtrlNew.sliderCanChange ~= true then
---            return
---        end
---        local price = ct.CalculationHousePrice(self.guideData.guidePrice, value)
---        self.priceInput.text = GetClientPriceString(price)
---    end)
---end
+function ShelfBoxCtrl:_awakeSliderInput()
+    self.priceInput.onValueChanged:AddListener(function (str)
+        if str == "" or self.guidePrice == nil then
+            return
+        end
+        local finalStr = ct.getCorrectPrice(str)
+        if finalStr ~= str then
+            self.priceInput.text = finalStr  --限制用户小数输入
+            return
+        end
+        local temp
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            temp = ct.CalculationMaterialCompetitivePower(self.guidePrice, tonumber(str) * 10000, self.m_data.itemId)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            temp = ct.CalculationFactoryCompetitivePower(self.guidePrice, tonumber(str) * 10000, self.m_data.itemId)
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            temp = ct.CalculationSupermarketCompetitivePower(self.guidePrice, tonumber(str) * 10000, self.m_data.itemId)
+        end
+        if temp >= functions.maxCompetitive then
+            self.advicePriceText.text = ">"..temp
+        elseif temp <= functions.minCompetitive then
+            self.advicePriceText.text = "<"..temp
+        else
+            self.advicePriceText.text = string.format("%0.1f", temp)
+        end
+        ShelfBoxCtrl.sliderCanChange = false
+        self.competitivenessSlider.value = temp
+    end)
+    --
+    EventTriggerMgr.Get(self.competitivenessSlider.gameObject).onSelect = function()
+        ShelfBoxCtrl.sliderCanChange = true
+    end
+    EventTriggerMgr.Get(self.competitivenessSlider.gameObject).onUpdateSelected = function()
+        ShelfBoxCtrl.sliderCanChange = true
+    end
+    self.competitivenessSlider.onValueChanged:AddListener(function (value)
+        if self.guidePrice == nil or ShelfBoxCtrl.sliderCanChange ~= true then
+            return
+        end
+        local price
+        if self.m_data.buildingType == BuildingType.MaterialFactory then
+            price = ct.CalculationMateriaPrice(self.guidePrice, value,self.m_data.itemId)
+        elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            price = ct.CalculationProcessingPrice(self.guidePrice, value,self.m_data.itemId)
+        elseif self.m_data.buildingType == BuildingType.RetailShop then
+            price = ct.CalculationRetailPrice(self.guidePrice, value,self.m_data.itemId)
+        end
+        self.priceInput.text = GetClientPriceString(price)
+    end)
+end
 --设置多语言
 function ShelfBoxCtrl:_language()
     self.topName.text = GetLanguage(28040035)
@@ -304,7 +324,8 @@ function ShelfBoxCtrl:_language()
     --self.shelfNumberTipText.text = GetLanguage(25020037)
     self.addShelfText.text = GetLanguage(25020035)
     self.brandName.text = GetLanguage(25020040)
-    self.downShelfBtnText.text = "全部下架"
+    self.downShelfBtnText.text = "全部下架 >"
+    self.adviceTipText.text = "Recommend:<color=#f4ad07>"..50 .."</color>"
     --self.advicePrice.text = "参考价格:"
 end
 --------------------------------------------------------------------------点击函数--------------------------------------------------------------------------

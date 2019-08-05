@@ -542,14 +542,16 @@ function BuildingProductionDetailPart:checkMaterial(itemId)
 end
 --如果是生产商品的话，生产出来扣除现有的原料
 function BuildingProductionDetailPart:getWarehouseCapacity()
-    for key,value in pairs(self.material) do
-        for key1,value1 in pairs(self.m_data.store.inHand) do
-            if value.itemId == value1.key.id then
-                value1.n = value1.n - value.num
-                if value1.n == 0 then
-                    table.remove(self.m_data.store.inHand,key1)
+    if self.material or next(self.material) ~= nil then
+        for key,value in pairs(self.material) do
+            for key1,value1 in pairs(self.m_data.store.inHand) do
+                if value.itemId == value1.key.id then
+                    value1.n = value1.n - value.num
+                    if value1.n == 0 then
+                        table.remove(self.m_data.store.inHand,key1)
+                    end
+                    break
                 end
-                break
             end
         end
     end

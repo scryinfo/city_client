@@ -48,7 +48,7 @@ function MaterialFactoryModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buyInShelf","gs.BuyInShelf",self.n_OnBuyShelfGoodsInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
-    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","materialGuidePrice","gs.GoodSummary",self.n_OnMaterialGuidePrice)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryMaterialRecommendPrice","gs.MaterialRecommendPrices",self.n_OnMaterialGuidePrice)
 
     --TODO:购物车协议
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -99,7 +99,7 @@ function MaterialFactoryModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setAutoReplenish","gs.setAutoReplenish",self.n_OnSetAutoReplenish)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","salesNotice","gs.salesNotice",self.n_OnSalesNotice)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getShelfData","gs.ShelfData",self.n_OnGetShelfData)
-    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","materialGuidePrice","gs.GoodSummary",self.n_OnMaterialGuidePrice)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryMaterialRecommendPrice","gs.MaterialRecommendPrices",self.n_OnMaterialGuidePrice)
 
     --购物车
     --DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","addShopCart","gs.GoodInfo",self.n_OnAddShoppingCart)
@@ -378,7 +378,7 @@ function MaterialFactoryModel:n_OnBuildingWarehouse(data)
 end
 --获取原料参考价格
 function MaterialFactoryModel:n_OnMaterialGuidePrice(data)
-    Event.Brocast("getShelfGuidePrice",data)
+    Event.Brocast("getMultiGuidePrice",data)
 end
 ----添加购物车
 --function MaterialFactoryModel:n_OnAddShoppingCart(data)

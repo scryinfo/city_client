@@ -82,23 +82,42 @@ function ShelfItem:InitializeData()
         self.nameBg.transform.localPosition = Vector3(-140,-100,0)
         --LoadSprite(Material[self.itemId].img,self.iconImg,false)
         self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.itemId)
-
-        local function callback(a)
-            self.Text.text = ct.CalculationMaterialCompetitivePower(a,self.dataInfo.price,self.itemId)
+        local function callback(guidePrice)
+            local temp = ct.CalculationMaterialCompetitivePower(guidePrice,self.dataInfo.price,self.itemId)
+            if temp >= functions.maxCompetitive then
+                self.Text.text = ">"..temp
+            elseif temp <= functions.minCompetitive then
+                self.Text.text = "<"..temp
+            else
+                self.Text.text = string.format("%0.1f", temp)
+            end
         end
-        Event.Brocast("getShelfItemGuidePrice",self.itemId,callback)
-
+        Event.Brocast("getShelfGuidePrice",self.itemId,callback)
     elseif ToNumber(StringSun(self.itemId,1,2)) == goodsKey then
         if self.buildingType == BuildingType.ProcessingFactory then
-            local function callback(a,b,c)
-                self.Text.text = ct.CalculationFactoryCompetitivePower(a,self.dataInfo.price,self.itemId,c,b)
+            local function callback(guidePrice)
+                local temp = ct.CalculationFactoryCompetitivePower(guidePrice,self.dataInfo.price,self.itemId)
+                if temp >= functions.maxCompetitive then
+                    self.Text.text = ">"..temp
+                elseif temp <= functions.minCompetitive then
+                    self.Text.text = "<"..temp
+                else
+                    self.Text.text = string.format("%0.1f", temp)
+                end
             end
-            Event.Brocast("getShelfItemProcessing",self.itemId,callback)
+            Event.Brocast("getShelfGuidePrice",self.itemId,callback)
         elseif self.buildingType == BuildingType.RetailShop then
-            local function callbacks(a,b,c,d,e)
-                self.Text.text = ct.CalculationSupermarketCompetitivePower(a,self.dataInfo.price,self.itemId,d,e,b,c)
+            local function callbacks(guidePrice)
+                local temp = ct.CalculationSupermarketCompetitivePower(guidePrice,self.dataInfo.price,self.itemId)
+                if temp >= functions.maxCompetitive then
+                    self.Text.text = ">"..temp
+                elseif temp <= functions.minCompetitive then
+                    self.Text.text = "<"..temp
+                else
+                    self.Text.text = string.format("%0.1f", temp)
+                end
             end
-            Event.Brocast("getRetailItemGuidePrice",self.itemId,callbacks)
+            Event.Brocast("getShelfGuidePrice",self.itemId,callbacks)
         end
         self.goods.transform.localScale = Vector3.one
         self.levelImg.transform.localScale = Vector3.one

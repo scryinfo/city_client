@@ -24,7 +24,6 @@ function MapBuildsDetailItem:initLanguage()
     end
     self.typeText.text = GetLanguage(MapBuildInfoConfig[self.data.promotionIndex].languageId)
     --self.typeText.text = MapPromotionInfoConfig[self.data.promotionIndex].languageId
-    self.data.itemId = self.data.promotionIndex
 end
 --设置toggleGroup
 function MapBuildsDetailItem:setToggleGroup(toggle)

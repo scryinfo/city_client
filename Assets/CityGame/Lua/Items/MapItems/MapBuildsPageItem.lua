@@ -18,7 +18,7 @@ function MapBuildsPageItem:createItems()
         local go = UnityEngine.GameObject.Instantiate(MapPanel.mapPromotionDetailItem)
         go.transform:SetParent(self.content.transform)
         go.transform.localScale = Vector3.one
-        local data = {promotionIndex = i, mapSearchType = EMapSearchType.Builds}
+        local data = {promotionIndex = i, mapSearchType = EMapSearchType.Builds , itemId = value.type}
         local item = MapBuildsDetailItem:new(data, go)
         self.items[i] = item
     end

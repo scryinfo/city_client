@@ -465,7 +465,7 @@ function MapCtrl:refreshDetailItem(item)
             elseif typeId == EMapSearchType.Builds then
                 self.selectSearchType = EMapSearchType.Default  --选中的搜索type
                 self.selectDetailItem = item
-
+                self:buildsReq(item:getItemId())
             end
 
             tempItem:_clickFunc()  --隐藏右边UI
@@ -475,6 +475,14 @@ function MapCtrl:refreshDetailItem(item)
             self.m_Timer:Start()
             MapPanel.loadingImgTran.transform.localScale = Vector3.one  --开始转圈
         end
+    end
+end
+--
+function MapCtrl:buildsReq(typeId)
+    if self:_getIsDetailFunc() == true then
+        self:_judgeDetail()
+    else
+        MapModel.m_ReqBuildsSummary(typeId)
     end
 end
 --
@@ -724,7 +732,11 @@ function MapCtrl:_reqMoveDetail(blockId)
 end
 
 ---服务器回调
-
+--建筑类型搜索摘要
+function MapCtrl:_receiveBuildsSummary(data)
+    MapBubbleManager.cleanAllBubbleItems()
+    MapBubbleManager.createSummaryItems(data, EMapSearchType.Builds)
+end
 --原料商品搜索摘要
 function MapCtrl:_receiveMarketSummary(data)
     MapBubbleManager.cleanAllBubbleItems()
@@ -948,6 +960,8 @@ function MapCtrl:_judgeSummary()
             MapModel.m_ReqPromotionSummary()
         elseif typeId == EMapSearchType.Technology then
             MapModel.m_ReqLabSummary()
+        elseif typeId == EMapSearchType.Builds then
+            MapModel.m_ReqBuildsSummary(self.selectDetailItem:getItemId())
         end
         return
     end

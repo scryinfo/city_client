@@ -9,6 +9,7 @@ local pbl = pbl
 --启动事件--
 function MapModel.registerNetMsg()
     --网络回调注册
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryTypeBuildingSummary"), MapModel.n_OnReceiveQueryBuildsSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketSummary"), MapModel.n_OnReceiveQueryMarketSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundSummary"), MapModel.n_OnReceiveGroundTransSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabSummary"), MapModel.n_OnReceiveLabSummary)
@@ -20,6 +21,7 @@ function MapModel.registerNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabDetail"), MapModel.n_OnReceiveTechDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adQueryPromoDetail"), MapModel.n_OnReceivePromotionDetail)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseDetail"), MapModel.n_OnReceiveWarehouseDetail)
+
 end
 
 
@@ -27,7 +29,7 @@ end
 --请求建筑搜索摘要
 function MapModel.m_ReqBuildsSummary(itemId)
     if itemId ~= nil then
-        DataManager.ModelSendNetMes("gscode.OpCode", "queryTypeBuildingSummary","gs.BuildingGridSummary",{ num = itemId})
+        DataManager.ModelSendNetMes("gscode.OpCode", "queryTypeBuildingSummary","gs.Num",{ num = itemId})
         FlightMainModel.OpenFlightLoading()
     end
 end
@@ -105,6 +107,16 @@ function MapModel.m_ReqTechnologyDetail(gridIndexPos)
 end
 
 --- 摘要回调 ---
+--建筑类型搜索摘要
+function MapModel.n_OnReceiveQueryBuildsSummary(stream)
+    FlightMainModel.CloseFlightLoading()
+    if stream == nil or stream == "" then
+        return
+    end
+    local data = assert(pbl.decode("gs.BuildingGridSummary", stream), "MapModel.n_OnReceiveQueryBuildsSummary: stream == nil")
+    MapCtrl._receiveBuildsSummary(MapCtrl, data)
+end
+
 --原料商品搜索摘要
 function MapModel.n_OnReceiveQueryMarketSummary(stream)
     FlightMainModel.CloseFlightLoading()

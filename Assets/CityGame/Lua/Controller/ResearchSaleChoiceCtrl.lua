@@ -22,7 +22,7 @@ end
 function ResearchSaleChoiceCtrl:Awake(go)
     local luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
 
-    luaBehaviour:AddClick(ResearchChoicePanel.backBtn, self.OnBack, self)
+    luaBehaviour:AddClick(ResearchSaleChoicePanel.backBtn, self.OnBack, self)
 end
 
 function ResearchSaleChoiceCtrl:Active()
@@ -48,15 +48,17 @@ function ResearchSaleChoiceCtrl:_updateData()
     -- 根据数据生成ResearchMaterialItem
     if not self.researchMaterialItems then
         self.researchMaterialItems = {}
-        for i, v in ipairs(self.m_data.store) do
-            local go = ct.InstantiatePrefab(ResearchSaleChoicePanel.researchMaterialItem)
-            local rect = go.transform:GetComponent("RectTransform")
-            go.transform:SetParent(ResearchSaleChoicePanel.materialsScrollContent)
-            rect.transform.localScale = Vector3.one
-            rect.transform.localPosition = Vector3.zero
-            go:SetActive(true)
+        if self.m_data.store then
+            for i, v in ipairs(self.m_data.store) do
+                local go = ct.InstantiatePrefab(ResearchSaleChoicePanel.researchMaterialItem)
+                local rect = go.transform:GetComponent("RectTransform")
+                go.transform:SetParent(ResearchSaleChoicePanel.materialsScrollContent)
+                rect.transform.localScale = Vector3.one
+                rect.transform.localPosition = Vector3.zero
+                go:SetActive(true)
 
-            self.researchMaterialItems[i] = ResearchMaterialItem:new(go, v, 1, self.m_data.buildingId)
+                self.researchMaterialItems[i] = ResearchMaterialItem:new(go, v, 1, self.m_data.buildingId)
+            end
         end
     end
 end

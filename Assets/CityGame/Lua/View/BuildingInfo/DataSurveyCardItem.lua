@@ -26,5 +26,14 @@ end
 
 function DataSurveyCardItem:OnBg(go)
     PlayMusEff(1002)
-    DataManager.DetailModelRpcNoRet(go.buildingId, 'm_addSurveyLine',go.buildingId,go.goodsDataInfo.type)
+    local data = {}
+    data.buildingId = go.buildingId
+    data.config = {}
+    data.config.content = ResearchConfig[go.goodsDataInfo.type].content
+    data.config.iconPath = ResearchConfig[go.goodsDataInfo.type].iconPath
+    data.config.name = ResearchConfig[go.goodsDataInfo.type].name
+    data.speed = go.goodsDataInfo.speed
+    data.type = go.goodsDataInfo.type
+    ct.OpenCtrl("ResearchCtrl",data)
+    --DataManager.DetailModelRpcNoRet(go.buildingId, 'm_addSurveyLine',go.buildingId,go.goodsDataInfo.type)
 end

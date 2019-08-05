@@ -27,6 +27,7 @@ end
 
 function ResearchInstituteCtrl:Active()
     UIPanel.Active(self)
+    Event.AddListener("c_Revenue",self.c_Revenue,self)
 end
 
 function ResearchInstituteCtrl:Refresh()
@@ -35,6 +36,8 @@ end
 
 function ResearchInstituteCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_Revenue",self.c_Revenue,self)
+    RevenueDetailsMsg.close()
 end
 
 ---------------------------------------网络回调---------------------------------------
@@ -43,6 +46,7 @@ function ResearchInstituteCtrl:initializeData()
     if self.m_data then
         --向服务器请求建筑详情
         DataManager.OpenDetailModel(ResearchInstituteModel,self.m_data.insId)
+        RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenTechnology',self.m_data.insId)
     end
 end
@@ -86,6 +90,8 @@ function ResearchInstituteCtrl:_receiveDetailTechnology(researchDataInfo)
                 self.groupMgr:AddParts(ResearchDatabasePart, 0.2)
                 self.groupMgr:RefreshData(researchDataInfo)
                 self.groupMgr:TurnOffAllOptions()
+            else
+                self.groupMgr:RefreshData(researchDataInfo)
             end
         end
     else
@@ -112,4 +118,10 @@ function ResearchInstituteCtrl:_clickCloseBtn()
     DataManager.CloseDetailModel(self.m_data.insId)
     self.m_data = nil
     UIPanel.ClosePage()
+end
+
+--今日营业额
+function ResearchInstituteCtrl:c_Revenue(info)
+    TurnoverPart:_initFunc(info)
+    TurnoverDetailPart:_setValue(info)
 end

@@ -23,8 +23,37 @@ function ResearchSaleCtrl:Awake(go)
     local luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
 
     luaBehaviour:AddClick(ResearchSalePanel.backBtn, self.OnBack, self)
-    luaBehaviour:AddClick(ResearchSalePanel.saleBtn, self.OnSale, self)
-    luaBehaviour:AddClick(ResearchSalePanel.stopSaleBtn, self.OnStopSale, self)
+    luaBehaviour:AddClick(ResearchSalePanel.sureBtn, self.OnSure, self)
+    luaBehaviour:AddClick(ResearchSalePanel.closeBtn, self.OnStopSale, self)
+    luaBehaviour:AddClick(ResearchSalePanel.changeBtn, self.OnChange, self)
+
+    ResearchSalePanel.autoToggle.onValueChanged:AddListener(function (isOn)
+        self:_autoToggleValueChange(isOn)
+    end)
+
+    ResearchSalePanel.quantityInputField.onEndEdit:AddListener(function (inputValue)
+        if inputValue == nil or inputValue == "" then
+            ResearchSalePanel.quantityInputField.text = 1
+            return
+        end
+        local num = tonumber(inputValue)
+        if num <= 0 then
+            ResearchSalePanel.quantityInputField.text = 1
+            return
+        end
+    end)
+
+    ResearchSalePanel.priceInputField.onEndEdit:AddListener(function (inputValue)
+        if inputValue == nil or inputValue == "" then
+            ResearchSalePanel.priceInputField.text = 0.0001
+            return
+        end
+        local num = tonumber(inputValue)
+        if num <= 0 then
+            ResearchSalePanel.priceInputField.text = 0.0001
+            return
+        end
+    end)
 end
 
 function ResearchSaleCtrl:Active()
@@ -42,6 +71,30 @@ end
 -- 初始化基本数据
 function ResearchSaleCtrl:_updateData()
     -- 根据useType判断是否需要显示下架
+    if self.m_data.data.index == 1 then
+        ResearchSalePanel.nameText.text = ResearchConfig[self.m_data.data.itemKey.id].name
+        ResearchSalePanel.priceInputField.text = 0.0001
+        ResearchSalePanel.closeBtnTF.localScale = Vector3.zero
+        ResearchSalePanel.sureBtnTF.localScale = Vector3.one
+        ResearchSalePanel.changeBtnTF.localScale = Vector3.zero
+        ResearchSalePanel.autoToggle.isOn = false
+        self:_autoToggleValueChange(false)
+    elseif self.m_data.data.index == 3 then
+        ResearchSalePanel.nameText.text = ResearchConfig[self.m_data.data.k.id].name
+        ResearchSalePanel.priceInputField.text = GetClientPriceString(self.m_data.data.price)
+        ResearchSalePanel.closeBtnTF.localScale = Vector3.one
+        ResearchSalePanel.sureBtnTF.localScale = Vector3.zero
+        ResearchSalePanel.changeBtnTF.localScale = Vector3.one
+        ResearchSalePanel.autoToggle.isOn = self.m_data.data.autoReplenish
+        self:_autoToggleValueChange(self.m_data.data.autoReplenish)
+    end
+
+    ResearchSalePanel.tipsImage.localScale = Vector3.zero
+    ResearchSalePanel.nullImage.localScale = Vector3.zero
+    ResearchSalePanel.warehouseText.text = self.m_data.data.storeNum
+    ResearchSalePanel.shelfText.text = self.m_data.data.lockedNum
+    ResearchSalePanel.quantityInputField.text = self.m_data.data.lockedNum
+    ResearchSalePanel.nullText.text = self.m_data.data.lockedNum
 end
 -------------------------------------按钮点击事件-------------------------------------
 function ResearchSaleCtrl:OnBack(go)
@@ -49,16 +102,65 @@ function ResearchSaleCtrl:OnBack(go)
     UIPanel.ClosePage()
 end
 
-function ResearchSaleCtrl:OnSale(go)
+function ResearchSaleCtrl:OnSure(go)
     PlayMusEff(1002)
     -- 向服务器发送上架消息
-
+    local temp = {
+        buildingId = go.m_data.buildingId,
+        item = {
+            key = {id = go.m_data.data.itemKey.id},
+            n = tonumber(ResearchSalePanel.quantityInputField.text)
+        },
+        price = GetServerPriceNumber(ResearchSalePanel.priceInputField.text),
+        autoRepOn = ResearchSalePanel.autoToggle.isOn
+    }
+    DataManager.DetailModelRpcNoRet(go.m_data.buildingId, 'm_ReqScienceShelfAdd', temp)
     UIPanel.ClosePage()
 end
 
 function ResearchSaleCtrl:OnStopSale(go)
     PlayMusEff(1002)
-    -- 向服务器发送下架消息
+    local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
+                content = "Make sure to take down the data packages?",func = function()
+            -- 向服务器发送下架消息
+            local temp = {
+                buildingId = go.m_data.buildingId,
+                item = {
+                    key = {id = go.m_data.data.k.id},
+                    n = 1
+                }
+            }
+            DataManager.DetailModelRpcNoRet(go.m_data.buildingId, 'm_ReqScienceShelfDel', temp)
+            UIPanel.ClosePage()
+        end  }
+    ct.OpenCtrl('NewReminderCtrl',data)
+end
 
+function ResearchSaleCtrl:OnChange(go)
+    PlayMusEff(1002)
+    -- 向服务器发送修改消息
+    local temp = {
+    buildingId = go.m_data.buildingId,
+    item = {
+    key = {id = go.m_data.data.k.id},
+    n = tonumber(ResearchSalePanel.quantityInputField.text)
+    },
+    price = GetServerPriceNumber(ResearchSalePanel.priceInputField.text),
+    autoRepOn = ResearchSalePanel.autoToggle.isOn
+    }
+    DataManager.DetailModelRpcNoRet(go.m_data.buildingId, 'm_ReqScienceShelfSet', temp)
     UIPanel.ClosePage()
+end
+
+function ResearchSaleCtrl:_autoToggleValueChange(isOn)
+    PlayMusEff(1002)
+
+    ResearchSalePanel.autoBtnImage.localPosition = isOn and Vector3.New(44, 0, 0) or Vector3.New(-44, 0, 0)
+    ResearchSalePanel.nullImage.localScale = isOn and Vector3.one or Vector3.zero
+    if isOn then
+        ResearchSalePanel.quantityInputField.text = "1"
+        ResearchSalePanel.nullText.text = self.m_data.data.lockedNum + self.m_data.data.storeNum
+    else
+        ResearchSalePanel.quantityInputField.text = self.m_data.data.lockedNum + self.m_data.data.storeNum
+    end
 end

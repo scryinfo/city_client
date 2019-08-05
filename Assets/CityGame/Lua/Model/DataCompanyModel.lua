@@ -36,6 +36,11 @@ function DataCompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","delScienceLine","gs.DelLine",self.n_OnDelSurveyLine) --删除调查线
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setScienceLineOrder","gs.SetLineOrder",self.n_OnTopSurveyLine) --置顶调查线
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","usePromotionPoint","gs.OpenScience",self.n_OnUserData) --使用点数
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buySciencePoint","gs.BuySciencePoint",self.n_OnBuyData) --购买点数
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getScienceStorageData","gs.ScienceStorageData",self.n_OnDataBase,self)--获取仓库数据
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","scienceShelfAdd","gs.ShelfAdd",self.n_OnAddShelf,self)--上架
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","scienceShelfSet","gs.ShelfAdd",self.n_OnSetShelf,self)--修改上架
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","scienceShelfDel","gs.ShelfDel",self.n_OnDelShelf,self)--下架
 
 end
 
@@ -57,8 +62,8 @@ function DataCompanyModel:m_getSurveySpeed(buildingId)
 end
 
 --添加调查线
-function DataCompanyModel:m_addSurveyLine(buildingId,typeId)
-    DataManager.ModelSendNetMes("gscode.OpCode", "addScienceLine","gs.AddLine",{id = buildingId,itemId = typeId,targetNum = 50})
+function DataCompanyModel:m_ReqAddScienceLine(data)
+    DataManager.ModelSendNetMes("gscode.OpCode", "addScienceLine","gs.AddLine",data)
 end
 
 --删除调查线
@@ -74,6 +79,35 @@ end
 --使用点数
 function DataCompanyModel:m_userData(buildingId,typeId,num)
     DataManager.ModelSendNetMes("gscode.OpCode", "usePromotionPoint","gs.OpenScience",{buildingId = buildingId,itemId = typeId,num = num})
+end
+
+--购买点数
+function DataCompanyModel:m_buyData(buildingId,typeId,num,price,ownerId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "buySciencePoint","gs.BuySciencePoint",
+            {buildingId = buildingId,item = {key = {id = typeId},n = num},price = price,buyerId = ownerId,})
+end
+
+--获取仓库数据
+function DataCompanyModel:m_getDataBase(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "getScienceStorageData","gs.Id",{id = buildingId})
+end
+
+--上架
+function DataCompanyModel:m_addShelf(buildingId,typeId,num,price,autoRepOn)
+    DataManager.ModelSendNetMes("gscode.OpCode", "scienceShelfAdd","gs.ShelfAdd",
+            {buildingId = buildingId,item = {key = {id = typeId},n = num},price = price,autoRepOn = autoRepOn})
+end
+
+--修改上架
+function DataCompanyModel:m_setShelf(buildingId,typeId,num,price,autoRepOn)
+    DataManager.ModelSendNetMes("gscode.OpCode", "scienceShelfSet","gs.ShelfSet",
+            {buildingId = buildingId,item = {key = {id = typeId},n = num},price = price,autoRepOn = autoRepOn})
+end
+
+--下架
+function DataCompanyModel:m_delShelf(buildingId,typeId,num)
+    DataManager.ModelSendNetMes("gscode.OpCode", "scienceShelfDel","gs.ShelfDel",
+            {buildingId = buildingId,item = {key = {id = typeId},n = num}})
 end
 
 --添加推广
@@ -165,7 +199,6 @@ end
 
 --添加调查线
 function DataCompanyModel:n_OnAddSurveyLine(info)
-    --Event.Brocast("part_AddSurveyLine",info)
     Event.Brocast("c_AddSurveyLien",info)
 end
 
@@ -197,6 +230,36 @@ function DataCompanyModel:n_OnUserData(info)
     data.num = info.num
     data.pointNum = info.pointNum
     ct.OpenCtrl("GetCountCtrl",data)
+end
+
+--购买点数回调
+function DataCompanyModel:n_OnBuyData(info)
+    self:m_detailPublicFacility(info.buildingId)
+    Event.Brocast("c_BuyCount",info)
+    local data = {}
+    data.num = info.item.n
+    data.pointNum = info.item.n
+    ct.OpenCtrl("GetCountCtrl",data)
+end
+
+--获取仓库数据回调
+function DataCompanyModel:n_OnDataBase(info)
+    Event.Brocast("c_DataBase",info)
+end
+
+--上架
+function DataCompanyModel:n_OnAddShelf(info)
+    Event.Brocast("c_AddShelf",info)
+end
+
+--修改上架
+function DataCompanyModel:n_OnSetShelf(info)
+    Event.Brocast("c_SetShelf",info)
+end
+
+--下架
+function DataCompanyModel:n_OnDelShelf(info)
+    Event.Brocast("c_DelShelf",info)
 end
 
 --添加推广回调

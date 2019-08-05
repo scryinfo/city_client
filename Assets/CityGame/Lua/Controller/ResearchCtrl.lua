@@ -28,11 +28,13 @@ function ResearchCtrl:Awake(go)
     ResearchPanel.inputField.onEndEdit:AddListener(function (inputValue)
         if inputValue == nil or inputValue == "" then
             ResearchPanel.timeText.text = "00:00:00"
+            ResearchPanel.inputField.text = "1"
             return
         end
         local num = tonumber(inputValue)
         if num <= 0 then
             ResearchPanel.timeText.text = "00:00:00"
+            ResearchPanel.inputField.text = "1"
             return
         end
         local timeTable = getTimeBySec((1 / self.m_data.speed) * num)
@@ -54,11 +56,12 @@ end
 
 -- 根据策划的配置表显示要研究的数据
 function ResearchCtrl:_updateData()
+    ResearchPanel.inputField.text = "1"
     LoadSprite(self.m_data.config.iconPath, ResearchPanel.iconImage, false)
     ResearchPanel.nameText.text = self.m_data.config.name
     ResearchPanel.contentText.text = self.m_data.config.content
     ResearchPanel.speedTitleText.text = "Speed:"
-    ResearchPanel.speedText.text = 1/self.m_data.speed .. "s/per"
+    ResearchPanel.speedText.text = string.format("%ss/per", 1/self.m_data.speed)
     ResearchPanel.timeText.text = ""
     ResearchPanel.timeTitleText.text = "Estimated time:"
 end

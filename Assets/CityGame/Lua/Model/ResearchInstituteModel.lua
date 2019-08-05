@@ -21,6 +21,8 @@ function ResearchInstituteModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId, "gscode.OpCode", "ftyLineChangeInform", "gs.LineInfo", self.n_OnReceiveGetFtyLineChangeInform)
     DataManager.ModelRegisterNetMsg(self.insId, "gscode.OpCode", "openScienceBox", "gs.ScienceBoxACK", self.n_OnReceiveOpenScienceBox)
     DataManager.ModelRegisterNetMsg(self.insId, "gscode.OpCode", "getScienceStorageData", "gs.ScienceStorageData", self.n_OnReceiveGetScienceStorageData)
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","useSciencePoint","gs.OpenScience",self.n_OnUserData) --使用点数
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buySciencePoint","gs.BuySciencePoint",self.n_OnBuyData) --购买点数
 end
 --移除事件--
 function ResearchInstituteModel:Close()
@@ -32,6 +34,8 @@ function ResearchInstituteModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId, "gscode.OpCode", "ftyLineChangeInform", "gs.LineInfo", self.n_OnReceiveGetFtyLineChangeInform)
     DataManager.ModelRemoveNetMsg(self.insId, "gscode.OpCode", "openScienceBox", "gs.ScienceBoxACK", self.n_OnReceiveOpenScienceBox)
     DataManager.ModelRemoveNetMsg(self.insId, "gscode.OpCode", "getScienceStorageData", "gs.ScienceStorageData", self.n_OnReceiveGetScienceStorageData)
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","useSciencePoint","gs.OpenScience",self.n_OnUserData) --使用点数
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buySciencePoint","gs.BuySciencePoint",self.n_OnBuyData) --购买点数
 end
 
 -- 向服务器获取建筑详情,发起查询研究所的信息
@@ -80,6 +84,32 @@ function ResearchInstituteModel:m_ReqGetScienceStorageData()
     DataManager.ModelSendNetMes("gscode.OpCode", "getScienceStorageData","gs.Id",{id = self.insId})
 end
 
+-- 向服务器发送上架(研究所、推广公司)
+function ResearchInstituteModel:m_ReqScienceShelfAdd(shelfAdd)
+    FlightMainModel.OpenFlightLoading()
+    DataManager.ModelSendNetMes("gscode.OpCode", "scienceShelfAdd","gs.ShelfAdd",shelfAdd)
+end
+
+-- 向服务器发送全部下架该科技(研究所、推广公司)
+function ResearchInstituteModel:m_ReqScienceShelfDel(shelfDel)
+    DataManager.ModelSendNetMes("gscode.OpCode", "scienceShelfDel","gs.ShelfDel",shelfDel)
+end
+
+-- 向服务器发送修改上架信息(研究所、推广公司)
+function ResearchInstituteModel:m_ReqScienceShelfSet(shelfSet)
+    DataManager.ModelSendNetMes("gscode.OpCode", "scienceShelfSet","gs.ShelfSet",shelfSet)
+end
+
+--使用点数
+function ResearchInstituteModel:m_userData(buildingId,typeId,num)
+    DataManager.ModelSendNetMes("gscode.OpCode", "useSciencePoint","gs.OpenScience",{buildingId = buildingId,itemId = typeId,num = num})
+end
+
+--购买点数
+function ResearchInstituteModel:m_buyData(buildingId,typeId,num,price,ownerId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "buySciencePoint","gs.BuySciencePoint",
+            {buildingId = buildingId,item = {key = {id = typeId},n = num},price = price,buyerId = ownerId,})
+end
 -----------------------------------------------------------回调-----------------------------------------------------------
 -- 查询研究所信息回调,传入ctrl层刷新数据
 function ResearchInstituteModel:n_OnReceiveDetailTechnology(technology)
@@ -102,10 +132,10 @@ end
 
 -- 生产线增加通知
 function ResearchInstituteModel:n_OnReceiveFtyLineAddInform(newLine)
-    --Event.Brocast("c_OnReceiveResearchFtyLineAddInform",newLine)
     FlightMainModel.CloseFlightLoading()
     UIPanel.ClosePage()
     self:m_ReqGetScienceLineData()
+    Event.Brocast("c_OnReceiveResearchFtyLineAddInform",newLine)
 end
 
 -- 生产线变化推送
@@ -121,4 +151,23 @@ end
 -- 获取科技资料仓库数据(研究所、推广公司)
 function ResearchInstituteModel:n_OnReceiveGetScienceStorageData(scienceStorageData)
     Event.Brocast("c_OnReceiveGetScienceStorageData",scienceStorageData)
+end
+
+--使用点数回调
+function ResearchInstituteModel:n_OnUserData(info)
+    Event.Brocast("part_UserData",info)
+    local data = {}
+    data.num = info.num
+    data.pointNum = info.pointNum
+    ct.OpenCtrl("GetCountCtrl",data)
+end
+
+--购买点数回调
+function ResearchInstituteModel:n_OnBuyData(info)
+    --self:m_detailPublicFacility(info.buildingId)
+    self:m_ReqGetScienceShelfData()
+    local data = {}
+    data.num = info.item.n
+    data.pointNum = info.item.n
+    ct.OpenCtrl("GetCountCtrl",data)
 end

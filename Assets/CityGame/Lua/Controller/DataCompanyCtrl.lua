@@ -4,8 +4,13 @@
 --- DateTime: 2019/3/29 10:28
 ---推广公司ctrl
 DataType = {
-    DataSurvey = 1,
-    DataSale = 2,
+    DataBase = 1,
+    DataSurvey = 2,
+    DataSale = 3,
+}
+Shelf = {
+    AddShelf = 1,
+    SetShelf = 2,
 }
 DataCompanyCtrl = class('DataCompanyCtrl',UIPanel)
 UIPanel:ResgisterOpen(DataCompanyCtrl)
@@ -23,7 +28,7 @@ end
 
 function DataCompanyCtrl:Awake()
     promoteBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    promoteBehaviour:AddClick(DataCompanyPanel.back,self.OnBack,self)
+    --promoteBehaviour:AddClick(DataCompanyPanel.back,self.OnBack,self)
     --promoteBehaviour:AddClick(DataCompanyPanel.queue,self.OnQueue,self)
     promoteBehaviour:AddClick(DataCompanyPanel.open,self.OnOpen,self)
     self:initData()
@@ -66,6 +71,10 @@ end
 --返回
 function DataCompanyCtrl:OnBack()
     UIPanel.ClosePage()
+    if self.groupMgr ~= nil then
+        self.groupMgr:Destroy()
+        self.groupMgr = nil
+    end
 end
 
 --建筑个性签名

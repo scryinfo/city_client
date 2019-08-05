@@ -24,8 +24,11 @@ function ResearchOpenBoxPanel.InitPanel()
 
     -- 开点
     this.middleRoot = transform:Find("MiddleRoot")
-    this.middleNumText = transform:Find("MiddleRoot/MiddleNumText"):GetComponent("Text")
+    this.subtractBtn = transform:Find("MiddleRoot/SubtractBtn").gameObject
+    this.addBtn = transform:Find("MiddleRoot/AddBtn").gameObject
     this.inputField = transform:Find("MiddleRoot/InputField"):GetComponent("InputField")
+    this.middleNumText = transform:Find("MiddleRoot/MiddleNumText"):GetComponent("Text")
+    this.tipsText = transform:Find("MiddleRoot/TipsText"):GetComponent("Text")
 
     -- 开箱结果
     this.researchMaterialItem = transform:Find("ResearchMaterialItem")

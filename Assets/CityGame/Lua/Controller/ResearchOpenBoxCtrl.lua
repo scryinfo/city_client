@@ -24,8 +24,10 @@ function ResearchOpenBoxCtrl:Awake(go)
 
     luaBehaviour:AddClick(ResearchOpenBoxPanel.backBtn, self.OnBack, self)
     luaBehaviour:AddClick(ResearchOpenBoxPanel.openBtn, self.OnOpen, self)
+    luaBehaviour:AddClick(ResearchOpenBoxPanel.subtractBtn, self.OnSubtract, self)
+    luaBehaviour:AddClick(ResearchOpenBoxPanel.addBtn, self.OnAdd, self)
 
-    ResearchOpenBoxPanel.inputField.onEndEdit:AddListener(function (inputValue)
+    ResearchOpenBoxPanel.inputField.onEndEdit:AddListener(function (inputValue) --onEndEdit
         if inputValue == nil or inputValue == "" then
             ResearchOpenBoxPanel.inputField.text = 1
             return
@@ -35,6 +37,11 @@ function ResearchOpenBoxCtrl:Awake(go)
             ResearchOpenBoxPanel.inputField.text = 1
             return
         end
+        if num >= self.nowItem.data.n then
+            ResearchOpenBoxPanel.inputField.text = tostring(self.nowItem.data.n)
+            return
+        end
+        ResearchOpenBoxPanel.tipsText.text = string.format("Earn %d~%d tech points", 10 * num, 100 * num)
     end)
 end
 
@@ -99,6 +106,7 @@ function ResearchOpenBoxCtrl:_updateData()
 
     self:_showTotalNum()
     ResearchOpenBoxPanel.inputField.text = 1
+    ResearchOpenBoxPanel.tipsText.text = "Earn 10~100 tech points"
 end
 -------------------------------------按钮点击事件-------------------------------------
 function ResearchOpenBoxCtrl:OnBack(go)
@@ -114,6 +122,28 @@ function ResearchOpenBoxCtrl:OnOpen(go)
     --UIPanel.ClosePage()
 end
 
+function ResearchOpenBoxCtrl:OnSubtract(go)
+    PlayMusEff(1002)
+    -- 调用ResearchInstituteModel，向服务器发送使用宝箱消息
+    local inputValue = tonumber(ResearchOpenBoxPanel.inputField.text)
+    if inputValue <= 1 then
+        return
+    end
+    ResearchOpenBoxPanel.inputField.text = tostring(inputValue - 1)
+    ResearchOpenBoxPanel.tipsText.text = string.format("Earn %d~%d tech points", 10 * (inputValue - 1), 100 * (inputValue - 1))
+end
+
+function ResearchOpenBoxCtrl:OnAdd(go)
+    PlayMusEff(1002)
+    -- 调用ResearchInstituteModel，向服务器发送使用宝箱消息
+    local inputValue = tonumber(ResearchOpenBoxPanel.inputField.text)
+    if inputValue >= go.nowItem.data.n then
+        return
+    end
+    ResearchOpenBoxPanel.inputField.text = tostring(inputValue + 1)
+    ResearchOpenBoxPanel.tipsText.text = string.format("Earn %d~%d tech points", 10 * (inputValue + 1), 100 * (inputValue + 1))
+end
+-------------------------------------网络回调-------------------------------------
 function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)
     ResearchOpenBoxPanel.researchMaterialItem.localScale = Vector3.one
     ResearchOpenBoxPanel.middleRoot.localScale = Vector3.zero

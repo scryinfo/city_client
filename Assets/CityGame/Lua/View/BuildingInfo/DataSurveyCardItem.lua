@@ -13,11 +13,11 @@ function DataSurveyCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,bui
     self.buildingId = buildingId
 
     self.bg = self.prefab.transform:Find("bg").gameObject
-    self.icon = self.prefab.transform:Find("icon/Image"):GetComponent("Image")
+    self.icon = self.prefab.transform:Find("icon"):GetComponent("Image")
     self.name = self.prefab.transform:Find("down/name"):GetComponent("Text")
     self.speed = self.prefab.transform:Find("down/speedBg/speedImage/speedText/Text"):GetComponent("Text")
 
-    LoadSprite(ResearchConfig[goodsDataInfo.type].iconPath, self.icon, true)
+    LoadSprite(ResearchConfig[goodsDataInfo.type].buildingPath, self.icon, true)
     self.name.text = GetLanguage(ResearchConfig[goodsDataInfo.type].name)
     self.speed.text = radixPointNum(1/goodsDataInfo.speed,2) .. "s/per"
     self._luabehaviour:AddClick(self.bg, self.OnBg, self);
@@ -30,10 +30,9 @@ function DataSurveyCardItem:OnBg(go)
     data.buildingId = go.buildingId
     data.config = {}
     data.config.content = ResearchConfig[go.goodsDataInfo.type].content
-    data.config.iconPath = ResearchConfig[go.goodsDataInfo.type].iconPath
+    data.config.iconPath = ResearchConfig[go.goodsDataInfo.type].buildingPath
     data.config.name = ResearchConfig[go.goodsDataInfo.type].name
     data.speed = go.goodsDataInfo.speed
     data.type = go.goodsDataInfo.type
     ct.OpenCtrl("ResearchCtrl",data)
-    --DataManager.DetailModelRpcNoRet(go.buildingId, 'm_addSurveyLine',go.buildingId,go.goodsDataInfo.type)
 end

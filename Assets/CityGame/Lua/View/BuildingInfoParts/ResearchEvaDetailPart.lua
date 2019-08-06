@@ -390,30 +390,20 @@ end
 
 -- 删除生产线
 function ResearchEvaDetailPart:_getFtyDelLine(data)
-    if self.isUpdate then
-        UpdateBeat:Remove(self.Update,self)
-        self.isUpdate = false
-    end
-    if data.nextlineId then
-        if data.lineId == self.scienceLineData.line[1].id then -- 删除正在生产的
-            for i, v in ipairs(self.scienceLineData.line) do
-                if v.id == data.nextlineId then
-                    self.scienceLineData.line[1] = v
-                    self:_showLineOneInfo(v)
-                    UnityEngine.GameObject.Destroy(self.lineItems[i - 1].prefab)
-                    table.remove(self.lineItems, i)
-                    table.remove(self.scienceLineData.line, i)
-                    break
-                end
-            end
-        else
-            for j, k in ipairs(self.scienceLineData.line) do
-                if k.id == data.lineId then
-                    UnityEngine.GameObject.Destroy(self.lineItems[j - 1].prefab)
-                    table.remove(self.lineItems, j - 1)
-                    table.remove(self.scienceLineData.line, j)
-                    break
-                end
+    if data.lineId == self.scienceLineData.line[1].id then -- 删除正在生产的
+        if self.isUpdate then
+            UpdateBeat:Remove(self.Update,self)
+            self.isUpdate = false
+        end
+        -- 向服务器发消息查询获取生产线信息(研究所（包含宝箱信息）、推广公司)
+        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqGetScienceLineData', self.m_data.info.id)
+    else
+        for j, k in ipairs(self.scienceLineData.line) do
+            if k.id == data.lineId then
+                UnityEngine.GameObject.Destroy(self.lineItems[j - 1].prefab)
+                table.remove(self.lineItems, j - 1)
+                table.remove(self.scienceLineData.line, j)
+                break
             end
         end
         if #self.scienceLineData.line < 2 then
@@ -422,10 +412,6 @@ function ResearchEvaDetailPart:_getFtyDelLine(data)
         else
             self.lineNumText.text = "Waiting queue:" .. #self.scienceLineData.line .. "/5"
         end
-    else
-        self:_setLineShow(false, true)
-        self.lineNumText.text = "Waiting queue:0/0"
-        self.nullTextTF.localScale = Vector3.one
     end
     self.addLineBtn.interactable = true
 end

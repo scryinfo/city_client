@@ -114,15 +114,20 @@ function DataShelfCtrl:initData()
         self.confirmBtn.transform.localScale = Vector3.zero
         self.automaticSwitch.isOn = false
         self.isOn = false
+        self.downShelfBtn.transform.localScale = Vector3.zero
     elseif self.m_data.shelf == Shelf.SetShelf then
         self.addShelfBtn.transform.localScale = Vector3.zero
         self.confirmBtn.transform.localScale = Vector3.one
         self.automaticSwitch.isOn = self.m_data.autoReplenish
         self.isOn = self.m_data.autoReplenish
+        if self.isOn then
+           self.totalNum.text =  self.m_data.wareHouse + self.m_data.sale
+        end
         self.inputNum.text = self.m_data.sale
         self.sliderNum.value = self.m_data.sale
         self.inputPrice.text = self.m_data.price
         self.sliderPrice.value = self.m_data.price
+        self.downShelfBtn.transform.localScale = Vector3.one
     end
 end
 
@@ -157,7 +162,12 @@ function DataShelfCtrl:OnAddShelfBtn(go)
     if go.sliderNum.value == 0 then
         Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)
     else
-        DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_addShelf',go.m_data.building,go.m_data.itemId,go.sliderNum.value,go.sliderPrice.value,go.isOn)
+        if go.isOn then
+            local num = go.m_data.wareHouse + go.m_data.sale
+            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,num,go.sliderPrice.value,go.isOn)
+        else
+            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,go.sliderNum.value,go.sliderPrice.value,go.isOn)
+        end
     end
 end
 
@@ -166,7 +176,12 @@ function DataShelfCtrl:OnConfirmBtn(go)
     if go.sliderNum.value == 0 then
         Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)
     else
-        DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,go.sliderNum.value,go.sliderPrice.value,go.isOn)
+        if go.isOn then
+            local num = go.m_data.wareHouse + go.m_data.sale
+            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,num,go.sliderPrice.value,go.isOn)
+        else
+            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,go.sliderNum.value,go.sliderPrice.value,go.isOn)
+        end
     end
 end
 

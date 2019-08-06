@@ -39,6 +39,7 @@ function DataBaseCardItem:OnBg(go)
         data.wareHouse = go.storeNum
         data.sale = go.lockedNum
         data.itemId = go.type
+        data.myOwner = true
         data.userFunc = function(num)
             DataManager.DetailModelRpcNoRet(go.building, 'm_userData',go.building,go.type,num)
         end

@@ -1070,43 +1070,59 @@ end
 ---计算研发公司竞争力【over】
 --推荐定价:recommendedPricing
 --定价:price
---玩家研发能力: RDAbility
---全城研发能力: averageRDAbility
-function ct.CalculationLaboratoryCompetitivePower(recommendedPricing, price, RDAbility, averageRDAbility)
-    if price <= 0 then
-        return CalculationNBitAfterDecimalPoint(100)
+function ct.CalculationLaboratoryCompetitivePower(recommendedPricing, price,typeId)
+    --推荐定价 >= 定价
+    --竞争力 = (推荐定价 - 玩家定价)  / (推荐定价 / 2 / 49) + 50
+    --推荐定价 < 定价
+    --竞争力 = (推荐定价 - 玩家定价)  / (推荐定价 / 49) + 50
+    if recommendedPricing <= 0 then
+        recommendedPricing = Competitive[15 * PRIDMagnification + typeId]
     end
-    recommendedPricing = Competitive[15 * PRIDMagnification + 5]
-
-    if averageRDAbility <= 0 then
-        averageRDAbility = RDAbility
+    local temp
+    if recommendedPricing > price then
+        temp = (recommendedPricing - price) / ((recommendedPricing / Divisor) / BargainingPower) + CPMagnification
+    else
+        temp = (recommendedPricing - price) / (recommendedPricing / BargainingPower) + CPMagnification
     end
-    return CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification * RDAbility / averageRDAbility))
-
-    --if recommendedPricing <= 0 then
-    --    --推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
-    --    recommendedPricing = Competitive[15 * PRIDMagnification + 5]
-    --    --竞争力 = 推荐定价 / 定价  * 50(整数)
-    --    return CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification))
-    --else
-    --    --竞争力 = 推荐定价 / (定价/(玩家研发能力))  * 50(整数)
-    --    return CalculationNBitAfterDecimalPoint((recommendedPricing / price) * (RDAbility / averageRDAbility) * CPMagnification)
-    --end
+    if temp >= functions.maxCompetitive then
+        temp = functions.maxCompetitive
+    end
+    if temp <= functions.minCompetitive then
+        temp = functions.minCompetitive
+    end
+    return temp
 end
 
----计算研发公司推荐默认值
---推荐定价:recommendedPricing
-function ct.CalculationLaboratorySuggestPrice(recommendedPricing,RDAbility, averageRDAbility)
-    if averageRDAbility <= 0 then
-        averageRDAbility = RDAbility
+---计算研发公司推荐定价
+--推荐定价:recommendedPricing(服务器发过来的值)
+--typeId（7位ID）
+function ct.CalculationLaboratorySuggestPrice(recommendedPricing,typeId)
+    local price = recommendedPricing
+    if price <= 0 then
+        price = Competitive[15 * PRIDMagnification + typeId]
     end
-    return Competitive[15 * PRIDMagnification + 5] * RDAbility / averageRDAbility --0701修改
-    --if recommendedPricing <= 0 then
-    --    --推荐定价 = 推荐定价表
-    --    recommendedPricing = Competitive[15 * PRIDMagnification + 5]
-    --    return recommendedPricing
-    --end
-    --return recommendedPricing
+    return price
+end
+
+---计算研发公司定价
+--推荐定价:recommendedPricing(服务器发过来的值)
+--竞争力:power
+--商品ID：typeId（7位ID）
+function ct.CalculationLaboratoryPrice(recommendedPricing,power,typeId)
+    --竞争力 >= 50
+    --玩家定价 = 推荐定价 -  (竞争力 - 50) * (推荐定价 / 2 / 49)
+    --竞争力 < 50
+    --玩家定价 = 推荐定价 -  (竞争力 - 50) * (推荐定价 / 49)
+    if recommendedPricing <= 0 then
+        recommendedPricing = Competitive[15 * PRIDMagnification + typeId]
+    end
+    local temp
+    if power < 50 then
+        temp = recommendedPricing - (power - CPMagnification) * (recommendedPricing / BargainingPower)
+    else
+        temp = recommendedPricing - (power - CPMagnification) * ((recommendedPricing / Divisor) / BargainingPower)
+    end
+    return temp
 end
 
 ---计算加工厂竞争力

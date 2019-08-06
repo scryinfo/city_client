@@ -53,20 +53,27 @@ function BuildingRevenueInfoCtrl:Refresh()
         typeId = string.sub(self.m_data.mId,1,2)
         DataManager.OpenDetailModel(BuildingRevenueInfoModel,self.m_data.insId)
         if self.m_data.buildingType == BuildingType.MaterialFactory then
+            --原料厂
             self.topMaterialType.transform.localScale = Vector3.one
             self.topGoodsType.transform.localScale = Vector3.zero
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,typeId)
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            --加工厂
             self.topMaterialType.transform.localScale = Vector3.zero
             self.topGoodsType.transform.localScale = Vector3.one
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,typeId)
         elseif self.m_data.buildingType == BuildingType.RetailShop then
+            --零售店
             self.topMaterialType.transform.localScale = Vector3.zero
             self.topGoodsType.transform.localScale = Vector3.one
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,typeId)
         elseif self.m_data.buildingType == BuildingType.Municipal then
-
+            --广告公司
+            self.topMaterialType.transform.localScale = Vector3.one
+            self.topGoodsType.transform.localScale = Vector3.zero
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,typeId)
         elseif self.m_data.buildingType == BuildingType.Laboratory then
+            --研究所
             self.topMaterialType.transform.localScale = Vector3.one
             self.topGoodsType.transform.localScale = Vector3.zero
             DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,typeId)
@@ -125,24 +132,35 @@ function BuildingRevenueInfoCtrl:initializeUiInfo()
     else
         self.tipImg.transform.localScale = Vector3.zero
         if self.m_data.buildingType == BuildingType.MaterialFactory then
+            --原料厂
             for key,value in pairs(self.revenueInfo.todaySaleDetail) do
                 local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
                 local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
                 table.insert(self.itemPrefabTab,itemPrefab)
             end
         elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
+            --加工厂
             for key,value in pairs(self.revenueInfo.todaySaleDetail) do
                 local obj = self:loadingItemPrefab(self.itemGoodsBtn,self.Content)
                 local itemPrefab = itemGoodsBtn:new(value,obj,self.luaBehaviour,key)
                 table.insert(self.itemPrefabTab,itemPrefab)
             end
         elseif self.m_data.buildingType == BuildingType.RetailShop then
+            --零售店
             for key,value in pairs(self.revenueInfo.todaySaleDetail) do
                 local obj = self:loadingItemPrefab(self.itemGoodsBtn,self.Content)
                 local itemPrefab = itemGoodsBtn:new(value,obj,self.luaBehaviour,key)
                 table.insert(self.itemPrefabTab,itemPrefab)
             end
+        elseif self.m_data.buildingType == BuildingType.Municipal then
+            --广告公司
+            for key,value in pairs(self.revenueInfo.todaySaleDetail) do
+                local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
+                local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
+                table.insert(self.itemPrefabTab,itemPrefab)
+            end
         elseif self.m_data.buildingType == BuildingType.Laboratory then
+            --研究所
             for key,value in pairs(self.revenueInfo.todaySaleDetail) do
                 local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
                 local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
@@ -166,14 +184,18 @@ function BuildingRevenueInfoCtrl:language()
     self.tipText.text = "暂无详情"
     self.topName.text = "收入详情"
     self.todaySalesText.text = "今日销售额"
+    self._todaySalesText.text = "今日销售额"
     self.proportionText.text = "占昨日销售额比例"
+    self._proportionText.text = "占昨日销售额比例"
     --根据建筑显示是原料还是商品还是建筑名字（研究所）
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         self.goodsTypeText.text = "原料"
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        self.goodsTypeText.text = "商品"
+        self._goodsTypeText.text = "商品"
+        self.typeNameText.text = "品牌"
     elseif self.m_data.buildingType == BuildingType.RetailShop then
-        self.goodsTypeText.text = "商品"
+        self._goodsTypeText.text = "商品"
+        self.typeNameText.text = "品牌"
     elseif self.m_data.buildingType == BuildingType.Municipal then
         self.goodsTypeText.text = "数据类型"
     elseif self.m_data.buildingType == BuildingType.Laboratory then

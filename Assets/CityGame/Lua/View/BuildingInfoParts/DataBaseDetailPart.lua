@@ -103,21 +103,56 @@ end
 
 --调查线变换回调
 function DataBaseDetailPart:SurveyLineUpData(info)
-    if self.dataBaseItem then
+    if self.dataBaseItem and next(self.dataBaseItem) ~=nil then
+        local newStore = true
         for i, v in pairs(self.dataBaseItem) do
             if v.type == info.iKey.id then
-               v.num.text = "x" .. info.nowCountInStore
+                newStore = false
+                v.num.text = "x" .. info.nowCountInStore
             end
         end
+        if newStore then
+            local data = {itemKey = {id = info.iKey.id},storeNum = info.nowCountInStore,lockedNum = info.nowCountInLocked,}
+
+            local function callback(prefab)
+                local temp = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,data,info.buildingId,DataType.DataBase)
+                table.insert(self.dataBaseItem,temp)
+            end
+            createPrefab("Assets/CityGame/Resources/View/GoodsItem/DataBaseCardItem.prefab",self.content, callback)
+        end
+    else
+        self.empty.localScale = Vector3.zero
+        self.scrollView.gameObject:SetActive(true)
+        local data = {itemKey = {id = info.iKey.id},storeNum = info.nowCountInStore,lockedNum = info.nowCountInLocked,}
+        self.dataBaseItem = {}
+        local function callback(prefab)
+            local temp = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,data,info.buildingId,DataType.DataBase)
+            table.insert(self.dataBaseItem,temp)
+        end
+        createPrefab("Assets/CityGame/Resources/View/GoodsItem/DataBaseCardItem.prefab",self.content, callback)
     end
 end
 
 --使用点数回调
 function DataBaseDetailPart:UserData(info)
+    local del
+    local index
     for i, v in pairs(self.dataBaseItem) do
         if v.type == info.itemId then
             v.num.text = "x" .. ((v.storeNum + v.lockedNum) - info.num)
-            return
+            if v.storeNum + v.lockedNum == info.num then
+                del = true
+                index = i
+                destroy(self.dataBaseItem[i].prefab.gameObject)
+            end
+            break
         end
+    end
+    if del then
+        table.remove(self.dataBaseItem,index)
+    end
+    if next(self.dataBaseItem) == nil then
+        self.empty.localScale = Vector3.one
+        self.scrollView.gameObject:SetActive(false)
     end
 end

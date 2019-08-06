@@ -26,9 +26,13 @@ function ResearchSalePanel.InitPanel()
     this.autoToggle = transform:Find("MiddleRoot/AutoToggle"):GetComponent("Toggle")
     this.autoBtnImage = transform:Find("MiddleRoot/AutoToggle/BtnImage")
     this.quantityInputField = transform:Find("MiddleRoot/QuantityRoot/InputField"):GetComponent("InputField")
+    this.quantitySlider = transform:Find("MiddleRoot/QuantityRoot/Slider"):GetComponent("Slider")
     this.nullImage = transform:Find("MiddleRoot/QuantityRoot/NullImage")
     this.nullText = transform:Find("MiddleRoot/QuantityRoot/NullImage/NullText"):GetComponent("Text")
     this.priceInputField = transform:Find("MiddleRoot/PriceRoot/InputField"):GetComponent("InputField")
+    this.priceSlider = transform:Find("MiddleRoot/PriceRoot/Slider"):GetComponent("Slider")
+
+    this.competitivenessText = transform:Find("MiddleRoot/CompetitivenessImage/CompetitivenessText"):GetComponent("Text")
 
 
     this.tipsImage = transform:Find("MiddleRoot/AutoBtn/TipsImage")

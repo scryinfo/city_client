@@ -37,7 +37,7 @@ function DataCompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setScienceLineOrder","gs.SetLineOrder",self.n_OnTopSurveyLine) --置顶调查线
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","usePromotionPoint","gs.OpenScience",self.n_OnUserData) --使用点数
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buySciencePoint","gs.BuySciencePoint",self.n_OnBuyData) --购买点数
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getScienceStorageData","gs.ScienceStorageData",self.n_OnDataBase,self)--获取仓库数据
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getScienceStorageData","gs.ScienceStorageData",self.n_OnDataBase)--获取仓库数据
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","scienceShelfAdd","gs.ShelfAdd",self.n_OnAddShelf,self)--上架
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","scienceShelfSet","gs.ShelfAdd",self.n_OnSetShelf,self)--修改上架
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","scienceShelfDel","gs.ShelfDel",self.n_OnDelShelf,self)--下架
@@ -225,6 +225,7 @@ end
 
 --使用点数回调
 function DataCompanyModel:n_OnUserData(info)
+    self:m_detailPublicFacility(info.buildingId)
     Event.Brocast("part_UserData",info)
     local data = {}
     data.num = info.num
@@ -238,7 +239,7 @@ function DataCompanyModel:n_OnBuyData(info)
     Event.Brocast("c_BuyCount",info)
     local data = {}
     data.num = info.item.n
-    data.pointNum = info.item.n
+    data.pointNum = info.typePointAllNum
     ct.OpenCtrl("GetCountCtrl",data)
 end
 

@@ -54,18 +54,23 @@ function ResearchSaleCtrl:Awake(go)
             return
         end
     end)
+
+    self:_awakeSliderInput()  --初始化
 end
 
 function ResearchSaleCtrl:Active()
     UIPanel.Active(self)
+    Event.AddListener("c_OnqueryLaboratoryRecommendPrice",self.c_OnqueryLaboratoryRecommendPrice,self)
 end
 
 function ResearchSaleCtrl:Refresh()
+    DataManager.DetailModelRpcNoRet(self.m_data.buildingId, 'm_queryLaboratoryRecommendPrice')
     self:_updateData()
 end
 
 function ResearchSaleCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("c_OnqueryLaboratoryRecommendPrice",self.c_OnqueryLaboratoryRecommendPrice,self)
 end
 
 -- 初始化基本数据
@@ -73,7 +78,7 @@ function ResearchSaleCtrl:_updateData()
     -- 根据useType判断是否需要显示下架
     if self.m_data.data.index == 1 then
         ResearchSalePanel.nameText.text = ResearchConfig[self.m_data.data.itemKey.id].name
-        ResearchSalePanel.priceInputField.text = 0.0001
+        --ResearchSalePanel.priceInputField.text = 0.0001
         ResearchSalePanel.closeBtnTF.localScale = Vector3.zero
         ResearchSalePanel.sureBtnTF.localScale = Vector3.one
         ResearchSalePanel.changeBtnTF.localScale = Vector3.zero
@@ -95,6 +100,44 @@ function ResearchSaleCtrl:_updateData()
     ResearchSalePanel.shelfText.text = self.m_data.data.lockedNum
     ResearchSalePanel.quantityInputField.text = self.m_data.data.lockedNum
     ResearchSalePanel.nullText.text = self.m_data.data.lockedNum
+end
+
+--滑动条input联动
+function ResearchSaleCtrl:_awakeSliderInput()
+    ResearchSalePanel.priceInputField.onValueChanged:AddListener(function (str)
+        if str == "" or self.guidePrice == nil then
+            return
+        end
+        local finalStr = ct.getCorrectPrice(str)
+        if finalStr ~= str then
+            ResearchSalePanel.priceInputField.text = finalStr  --限制用户小数输入
+            return
+        end
+        local temp = ct.CalculationLaboratoryCompetitivePower(self.guidePrice, tonumber(str) * 10000, self.m_data.data.itemKey.id)  --计算竞争力
+        if temp >= functions.maxCompetitive then
+            ResearchSalePanel.competitivenessText.text = ">"..temp
+        elseif temp <= functions.minCompetitive then
+            ResearchSalePanel.competitivenessText.text = "<"..temp
+        else
+            ResearchSalePanel.competitivenessText.text = string.format("%0.1f", temp)
+        end
+        ResearchSaleCtrl.sliderCanChange = false  --当input输入时，禁用slider
+        ResearchSalePanel.priceSlider.value = temp
+    end)
+    --
+    EventTriggerMgr.Get(ResearchSalePanel.priceSlider.gameObject).onSelect = function()
+        ResearchSaleCtrl.sliderCanChange = true
+    end
+    EventTriggerMgr.Get(ResearchSalePanel.priceSlider.gameObject).onUpdateSelected = function()  --当slider被选中，则可以改变input的值
+        ResearchSaleCtrl.sliderCanChange = true
+    end
+    ResearchSalePanel.priceSlider.onValueChanged:AddListener(function (value)
+        if self.guidePrice == nil or ResearchSaleCtrl.sliderCanChange ~= true then
+            return
+        end
+        local price = ct.CalculationLaboratoryPrice(self.guidePrice, value,self.m_data.data.itemKey.id)
+        ResearchSalePanel.priceInputField.text = GetClientPriceString(price)
+    end)
 end
 -------------------------------------按钮点击事件-------------------------------------
 function ResearchSaleCtrl:OnBack(go)
@@ -162,5 +205,19 @@ function ResearchSaleCtrl:_autoToggleValueChange(isOn)
         ResearchSalePanel.nullText.text = self.m_data.data.lockedNum + self.m_data.data.storeNum
     else
         ResearchSalePanel.quantityInputField.text = self.m_data.data.lockedNum + self.m_data.data.storeNum
+    end
+end
+
+function ResearchSaleCtrl:c_OnqueryLaboratoryRecommendPrice(info)
+    if info then
+        for key,value in pairs(info.msg) do
+            if value.typeId == self.m_data.data.itemKey.id then
+                --self.typeId =
+                self.guidePrice = value.guidePrice
+                break
+            end
+        end
+        local tempPrice = ct.CalculationLaboratorySuggestPrice(self.guidePrice / 10000, self.m_data.data.itemKey.id)
+        ResearchSalePanel.priceInputField.text = GetClientPriceString(tempPrice)
     end
 end

@@ -14,7 +14,7 @@ function SurveyQueneItem:initialize(inluabehaviour, prefab, goodsDataInfo,buildi
     self.id = goodsDataInfo.id
     self.index = index
 
-    self.icon = self.prefab.transform:Find("icon/iconImage/Image"):GetComponent("Image")
+    self.icon = self.prefab.transform:Find("icon/iconImage"):GetComponent("Image")
     self.time = self.prefab.transform:Find("icon/time/Text"):GetComponent("Text")
     self.num = self.prefab.transform:Find("slider/Text"):GetComponent("Text")
     self.delete = self.prefab.transform:Find("delete").gameObject
@@ -23,7 +23,7 @@ function SurveyQueneItem:initialize(inluabehaviour, prefab, goodsDataInfo,buildi
     self.topText = self.prefab.transform:Find("top/Text"):GetComponent("Text")
     self.name = self.prefab.transform:Find("icon/name/Text"):GetComponent("Text")
 
-    LoadSprite(ResearchConfig[goodsDataInfo.itemId].iconPath, self.icon, true)
+    LoadSprite(ResearchConfig[goodsDataInfo.itemId].buildingPath, self.icon, true)
     if index == 1 then
         self.top.transform.localScale = Vector3.zero
     end

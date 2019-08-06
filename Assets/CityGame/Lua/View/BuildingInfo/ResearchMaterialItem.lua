@@ -53,6 +53,7 @@ function ResearchMaterialItem:_clickPrefab()
         temp.wareHouse = self.data.storeNum
         temp.sale = self.data.lockedNum
         temp.itemId = self.data.itemKey.id
+        temp.myOwner = true
         temp.userFunc = function(num)
             DataManager.DetailModelRpcNoRet(self.buildingId, 'm_userData',self.buildingId, self.data.itemKey.id,num)
         end

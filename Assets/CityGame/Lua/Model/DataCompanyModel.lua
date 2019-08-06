@@ -26,7 +26,7 @@ function DataCompanyModel:OnCreate()
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",self.n_OnPromoAbilityHistory) -- 推广历史曲线
     --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetAllMyFlowSign","gs.GetAllMyFlowSign",self.n_OnGetAllMyFlowSign) -- 获取自己的所有签约
     --DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryBuildingLift","ss.BuildingLift",self.n_OnGetLiftCurve,self) -- 获取自己的所有签约曲线
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","promotionGuidePrice","gs.PromotionMsg",self.n_OnGuidePrice,self) -- 推荐定价
+    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","promotionGuidePrice","gs.PromotionMsg",self.n_OnGuidePrice,self) -- 推荐定价
 
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailPromotionCompany","gs.PromotionCompany",self.n_OnPublicFacility) --建筑详情
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getScienceItemSpeed","gs.ScienceItemSpeed",self.n_OnSurveySpeed) --调查速度
@@ -41,6 +41,7 @@ function DataCompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","scienceShelfAdd","gs.ShelfAdd",self.n_OnAddShelf,self)--上架
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","scienceShelfSet","gs.ShelfAdd",self.n_OnSetShelf,self)--修改上架
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","scienceShelfDel","gs.ShelfDel",self.n_OnDelShelf,self)--下架
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryPromotionRecommendPrice","gs.GMRecommendPrice",self.n_OnRecommendPrice,self)--推荐定价
 
 end
 
@@ -108,6 +109,12 @@ end
 function DataCompanyModel:m_delShelf(buildingId,typeId,num)
     DataManager.ModelSendNetMes("gscode.OpCode", "scienceShelfDel","gs.ShelfDel",
             {buildingId = buildingId,item = {key = {id = typeId},n = num}})
+end
+
+--推荐定价
+function DataCompanyModel:m_recommendPrice(buildingId,playerId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPromotionRecommendPrice","gs.QueryBuildingInfo",
+            {buildingId = buildingId,playerId = playerId})
 end
 
 --添加推广
@@ -261,6 +268,11 @@ end
 --下架
 function DataCompanyModel:n_OnDelShelf(info)
     Event.Brocast("c_DelShelf",info)
+end
+
+--推荐定价
+function DataCompanyModel:n_OnRecommendPrice(info)
+    Event.Brocast("c_RecommendPrice",info)
 end
 
 --添加推广回调

@@ -104,6 +104,7 @@ function UserDataCtrl:OnInput()
     if self.input.text == "" then
         return
     end
+    self.input.text = tonumber(self.input.text)
     if self.m_data.myOwner then
         if tonumber(self.input.text) > self.m_data.wareHouse then
             self.input.text = self.m_data.wareHouse
@@ -135,6 +136,7 @@ end
 function UserDataCtrl:OnBtn(go)
     if go.slider.value == 0 then
         Event.Brocast("SmallPop","请输入使用数量",ReminderType.Warning)
+        return
     end
     if go.m_data.userFunc then
         go.m_data.userFunc(go.slider.value)
@@ -145,6 +147,7 @@ end
 function UserDataCtrl:OnBuyBtn(go)
     if go.slider.value == 0 then
         Event.Brocast("SmallPop","请输入使用数量",ReminderType.Warning)
+        return
     end
     if go.m_data.buyFunc then
         go.m_data.buyFunc(go.slider.value,go.slider.value * go.m_data.price)

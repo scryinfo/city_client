@@ -157,7 +157,7 @@ function DataSaleDetailPart:c_AddShelf(info)
     end
     local prefabs = self:createPrefab(self.dataSaleCard,self.content)
     local data = {}
-    data.autoReplenish = info.autoReplenish
+    data.autoReplenish = info.autoRepOn
     data.k = info.item.key
     data.n = info.item.n
     data.price = info.price

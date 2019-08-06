@@ -92,6 +92,7 @@ function DataSurveyDetailPart:_getComponent(transform)
     self.ScrollView = transform:Find("contentRoot/content/rightRoot/content/ScrollView")
     self.Content = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content"):GetComponent("RectTransform")
     self.prefab = transform:Find("contentRoot/content/rightRoot/content/ScrollView/Viewport/Content/SurveyQueneItem").gameObject
+    self.queueAddBg = transform:Find("contentRoot/content/rightRoot/content/addBg")
     self.queueAddBtn = transform:Find("contentRoot/content/rightRoot/content/addBg/addBtn").gameObject
 
 end
@@ -103,6 +104,12 @@ function DataSurveyDetailPart:initData(info)
     if info.line == nil then
         self:ShowSurvey(false)
     else
+        self.lineNumberText.text = #info.line .. "/5"
+        if #info.line >= 5 then
+            self.queueAddBg.localScale = Vector3.zero
+        else
+            self.queueAddBg.localScale = Vector3.one
+        end
         self:ShowSurvey(true)
         if #info.line <= 1 then
             self.noLineTip.transform.localScale = Vector3.one

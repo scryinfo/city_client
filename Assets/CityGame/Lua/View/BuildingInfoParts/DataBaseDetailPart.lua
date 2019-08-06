@@ -10,7 +10,6 @@ function DataBaseDetailPart:PrefabName()
 end
 --
 function  DataBaseDetailPart:_InitEvent()
-    Event.AddListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
     Event.AddListener("part_UserData",self.UserData,self)
 end
 --
@@ -28,7 +27,6 @@ function DataBaseDetailPart:_ResetTransform()
 end
 --
 function DataBaseDetailPart:_RemoveEvent()
-    Event.RemoveListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
     Event.RemoveListener("part_UserData",self.UserData,self)
     Event.RemoveListener("c_DataBase",self.n_OnDataBase,self)
 end
@@ -38,12 +36,14 @@ end
 
 function DataBaseDetailPart:Show(data)
     BasePartDetail.Show(self,data)
+    Event.AddListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
     Event.AddListener("c_DataBase",self.n_OnDataBase,self)
     DataManager.ModelSendNetMes("gscode.OpCode", "getScienceStorageData","gs.Id",{id = data.info.id})
 end
 
 function DataBaseDetailPart:Hide()
     BasePartDetail.Hide(self)
+    Event.RemoveListener("part_SurveyLineUpData",self.SurveyLineUpData,self)
     Event.RemoveListener("c_DataBase",self.n_OnDataBase,self)
     self.scrollView.gameObject:SetActive(false)
     if self.dataBaseItem then
@@ -75,6 +75,7 @@ function DataBaseDetailPart:_getComponent(transform)
     self.emptyText = transform:Find("contentRoot/empty/Image/Text"):GetComponent("Text")
     self.scrollView = transform:Find("contentRoot/Scroll View")
     self.content = transform:Find("contentRoot/Scroll View/Viewport/Content"):GetComponent("RectTransform")
+    self.dataBaseCardItem = transform:Find("contentRoot/Scroll View/Viewport/Content/DataBaseCardItem").gameObject
 end
 --
 function DataBaseDetailPart:_initFunc()
@@ -92,10 +93,8 @@ function DataBaseDetailPart:n_OnDataBase(info)
         if info.store then
             self.dataBaseItem = {}
             for i, v in ipairs(info.store) do
-                local function callback(prefab)
-                    self.dataBaseItem[i] = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,v,info.buildingId,DataType.DataBase)
-                end
-                createPrefab("Assets/CityGame/Resources/View/GoodsItem/DataBaseCardItem.prefab",self.content, callback)
+               local prefab = self:createPrefab(self.dataBaseCardItem,self.content)
+                self.dataBaseItem[i] = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,v,info.buildingId,DataType.DataBase)
             end
         end
     end
@@ -108,28 +107,25 @@ function DataBaseDetailPart:SurveyLineUpData(info)
         for i, v in pairs(self.dataBaseItem) do
             if v.type == info.iKey.id then
                 newStore = false
-                v.num.text = "x" .. info.nowCountInStore
+                v.storeNum = info.nowCountInStore
+                v.lockedNum = info.nowCountInLocked
+                v.num.text = "x" .. info.nowCountInStore + info.nowCountInLocked
             end
         end
         if newStore then
             local data = {itemKey = {id = info.iKey.id},storeNum = info.nowCountInStore,lockedNum = info.nowCountInLocked,}
-
-            local function callback(prefab)
-                local temp = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,data,info.buildingId,DataType.DataBase)
-                table.insert(self.dataBaseItem,temp)
-            end
-            createPrefab("Assets/CityGame/Resources/View/GoodsItem/DataBaseCardItem.prefab",self.content, callback)
+            local prefab = self:createPrefab(self.dataBaseCardItem,self.content)
+            local temp = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,data,info.buildingId,DataType.DataBase)
+            table.insert(self.dataBaseItem,temp)
         end
     else
         self.empty.localScale = Vector3.zero
         self.scrollView.gameObject:SetActive(true)
         local data = {itemKey = {id = info.iKey.id},storeNum = info.nowCountInStore,lockedNum = info.nowCountInLocked,}
         self.dataBaseItem = {}
-        local function callback(prefab)
-            local temp = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,data,info.buildingId,DataType.DataBase)
-            table.insert(self.dataBaseItem,temp)
-        end
-        createPrefab("Assets/CityGame/Resources/View/GoodsItem/DataBaseCardItem.prefab",self.content, callback)
+        local prefab = self:createPrefab(self.dataBaseCardItem,self.content)
+        local temp = DataBaseCardItem:new(self.m_LuaBehaviour,prefab,data,info.buildingId,DataType.DataBase)
+        table.insert(self.dataBaseItem,temp)
     end
 end
 
@@ -155,4 +151,14 @@ function DataBaseDetailPart:UserData(info)
         self.empty.localScale = Vector3.one
         self.scrollView.gameObject:SetActive(false)
     end
+end
+
+function DataBaseDetailPart:createPrefab(prefab,itemRoot)
+    local obj = UnityEngine.GameObject.Instantiate(prefab)
+    local objRect = obj.transform:GetComponent("RectTransform")
+    obj.transform:SetParent(itemRoot.transform)
+    objRect.transform.localScale = Vector3.one
+    objRect.transform.localPosition = Vector3.zero
+    obj:SetActive(true)
+    return obj
 end

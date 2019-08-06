@@ -152,6 +152,9 @@ end
 
 --上架回调
 function DataSaleDetailPart:c_AddShelf(info)
+    if self.dataSaleCardItem == nil or next(self.dataSaleCardItem) == nil then
+        self:_isEmpty(false)
+    end
     local prefabs = self:createPrefab(self.dataSaleCard,self.content)
     local data = {}
     data.autoReplenish = info.autoReplenish
@@ -201,7 +204,7 @@ function DataSaleDetailPart:c_SetShelf(info)
                 v.prices = info.price
                 v.autoReplenish = info.autoRepOn
                 v.num.text = info.item.n
-                v.price.text = info.price
+                v.price.text = GetClientPriceString(info.price)
             end
         end
     end

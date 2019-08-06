@@ -28,7 +28,7 @@ function DataSaleCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,build
     LoadSprite(ResearchConfig[goodsDataInfo.k.id].iconPath, self.icon, true)
     self.num.text = goodsDataInfo.n
     self.name.text = GetLanguage(ResearchConfig[goodsDataInfo.k.id].name)
-    self.price.text = goodsDataInfo.price
+    self.price.text = GetClientPriceString(goodsDataInfo.price)
 
     self._luabehaviour:AddClick(self.bg, self.OnBg, self);
 

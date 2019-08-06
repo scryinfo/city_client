@@ -16,6 +16,7 @@ end
 --
 function TurnoverDetailPart:_InitClick(mainPanelLuaBehaviour)
     self.m_LuaBehaviour = mainPanelLuaBehaviour
+    mainPanelLuaBehaviour:AddClick(self.btn, self.OnBtn, self)
 end
 --
 function TurnoverDetailPart:_ResetTransform()
@@ -42,6 +43,7 @@ function TurnoverDetailPart:Show(data)
     self.yText.text = GetLanguage(27030003)
     self.expenditure.text = GetLanguage(19020010)
     self.income.text = GetLanguage(19020008)
+    self.btnText.text = GetLanguage(19020008)
     self:_initFunc()
 end
 function TurnoverDetailPart:Hide()
@@ -74,6 +76,8 @@ function TurnoverDetailPart:_getComponent(transform)
     self.xText = transform:Find("down/bg/xScale/Text"):GetComponent("Text");
     self.expenditure = transform:Find("down/bg/expenditure/expenditureText"):GetComponent("Text");  --支出
     self.income = transform:Find("down/bg/income/incomeText"):GetComponent("Text");  --收入
+    self.btn = transform:Find("down/btn").gameObject;
+    self.btnText = transform:Find("down/btn/Text"):GetComponent("Text");
     self.yText = transform:Find("down/bg/yScale"):GetChild(transform:Find("down/bg/yScale").childCount-1):GetComponent("Text")
 end
 --
@@ -226,7 +230,6 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
         self.curve.anchoredPosition = Vector3.New(self.curve.anchoredPosition.x - (difference - 12) * 142, 42,0)
         self.curve.sizeDelta = Vector2.New(self.curve.sizeDelta.x + (difference-12) * 142, 402)
     else
-        self.curve.anchoredPosition = Vector3.New(-2646, 42,0)
         self.curve.sizeDelta = Vector2.New(4326, 402)
     end
 
@@ -238,4 +241,8 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
 
     self.graph:DrawLine(expendVet,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
     self.slide:SetCoordinate(expendVet,expend,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
+end
+
+function TurnoverDetailPart:OnBtn()
+
 end

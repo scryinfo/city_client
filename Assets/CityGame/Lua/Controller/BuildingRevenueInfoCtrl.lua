@@ -67,7 +67,9 @@ function BuildingRevenueInfoCtrl:Refresh()
         elseif self.m_data.buildingType == BuildingType.Municipal then
 
         elseif self.m_data.buildingType == BuildingType.Laboratory then
-
+            self.topMaterialType.transform.localScale = Vector3.one
+            self.topGoodsType.transform.localScale = Vector3.zero
+            DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqBuildingRevenueInfo',self.m_data.id,typeId)
         end
     end
 end
@@ -138,6 +140,12 @@ function BuildingRevenueInfoCtrl:initializeUiInfo()
             for key,value in pairs(self.revenueInfo.todaySaleDetail) do
                 local obj = self:loadingItemPrefab(self.itemGoodsBtn,self.Content)
                 local itemPrefab = itemGoodsBtn:new(value,obj,self.luaBehaviour,key)
+                table.insert(self.itemPrefabTab,itemPrefab)
+            end
+        elseif self.m_data.buildingType == BuildingType.Laboratory then
+            for key,value in pairs(self.revenueInfo.todaySaleDetail) do
+                local obj = self:loadingItemPrefab(self.itemMaterialBtn,self.Content)
+                local itemPrefab = itemMaterialBtn:new(value,obj,self.luaBehaviour,key)
                 table.insert(self.itemPrefabTab,itemPrefab)
             end
         end

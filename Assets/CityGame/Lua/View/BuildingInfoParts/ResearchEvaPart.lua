@@ -42,7 +42,7 @@ function ResearchEvaPart:_InitChildClick(mainPanelLuaBehaviour)
     DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "delScienceLine", "gs.DelLine", self._getFtyDelLine, self)
 end
 
-function BuildingProductionPart:_ResetTransform()
+function ResearchEvaPart:_ResetTransform()
     --关闭Update
     UpdateBeat:Remove(self.Update,self)
     Event.RemoveListener("c_OnReceiveResearchFtyLineAddInform",self.c_OnReceiveResearchFtyLineAddInform,self)
@@ -112,18 +112,10 @@ end
 
 -- 删除生产线
 function ResearchEvaPart:_getFtyDelLine(data)
-    if data.nextlineId then
-        if data.lineId == self.m_data.line[1].id then -- 删除正在生产的
-            if self.m_Timer ~= nil then
-                self.m_Timer:Stop()
-            end
-            DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenTechnology')
-        end
-    else
-        self.nullText.transform.localScale = Vector3.one
-        self.line.transform.localScale = Vector3.zero
+    if data.lineId == self.m_data.line[1].id then -- 删除正在生产的
         if self.m_Timer ~= nil then
             self.m_Timer:Stop()
         end
+        DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqOpenTechnology')
     end
 end

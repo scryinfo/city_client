@@ -5,6 +5,8 @@
 ---建筑经营详情Item（三个字段属性显示）
 itemMaterialBtn = class('itemMaterialBtn')
 
+local ToNumber = tonumber
+local StringSub = string.sub
 function itemMaterialBtn:initialize(data,prefab,luaBehaviour,keyId)
     self.data = data
     self.keyId = keyId
@@ -21,12 +23,35 @@ function itemMaterialBtn:initialize(data,prefab,luaBehaviour,keyId)
 end
 
 function itemMaterialBtn:InitializeData()
-    if not self.data.itemId then
-        LoadSprite("Assets/CityGame/Resources/View/BuildIcon/SuperMarket_1x1.png",self.iconImg,true)
+    local path = nil
+    if ToNumber(StringSub(self.data.itemId,1,2)) == 11 then
+        path = BuildingInformationIcon[1100002].imgPath
+        LoadSprite(path,self.iconImg,false)
+        self.nameText.text = GetLanguage(PlayerBuildingBaseData[1100002].typeName)
+    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 12 then
+        path = BuildingInformationIcon[1200002].imgPath
+        LoadSprite(path,self.iconImg,false)
+        self.nameText.text = GetLanguage(PlayerBuildingBaseData[1200002].typeName)
+    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 13 then
+        path = BuildingInformationIcon[1300002].imgPath
+        LoadSprite(path,self.iconImg,false)
+        self.nameText.text = GetLanguage(PlayerBuildingBaseData[1300002].typeName)
+    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 14 then
+        path = BuildingInformationIcon[1400002].imgPath
+        LoadSprite(path,self.iconImg,false)
+        self.nameText.text = GetLanguage(PlayerBuildingBaseData[1400002].typeName)
+    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 15 then
+        path = BuildingInformationIcon[1500002].imgPath
+        LoadSprite(path,self.iconImg,false)
+        self.nameText.text = GetLanguage(PlayerBuildingBaseData[1500002].typeName)
+    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 16 then
+        path = BuildingInformationIcon[1600002].imgPath
+        LoadSprite(path,self.iconImg,false)
+        self.nameText.text = GetLanguage(PlayerBuildingBaseData[1600002].typeName)
     else
         self.iconImg.sprite = SpriteManager.GetSpriteByPool(self.data.itemId)
+        self.nameText.text = GetLanguage(self.data.itemId)
     end
-    self.nameText.text = GetLanguage(self.data.itemId)
     self.todaySalesText.text = "+E"..GetClientPriceString(self.data.saleAccount)
     self.proportionText.text = math.floor(self.data.increasePercent * 100).."%"
 end

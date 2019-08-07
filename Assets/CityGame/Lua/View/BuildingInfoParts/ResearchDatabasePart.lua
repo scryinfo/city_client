@@ -21,7 +21,13 @@ function ResearchDatabasePart:_InitTransform()
 end
 
 function  ResearchDatabasePart:_ResetTransform()
+    Event.RemoveListener("part_UserData",self.UserData,self)
 end
+
+function ResearchDatabasePart:_InitChildClick(mainPanelLuaBehaviour)
+    Event.AddListener("part_UserData",self.UserData,self)
+end
+
 
 function ResearchDatabasePart:Refresh(data)
     --刷新自身数据,不刷新详情页面数据
@@ -29,6 +35,13 @@ function ResearchDatabasePart:Refresh(data)
 end
 
 function ResearchDatabasePart:RefreshData(data)
+    self.m_data = data
     self.text.text = "Achievements:"
     self.achievementsNumText.text = data.storeNum
+end
+
+--使用点数回调
+function ResearchDatabasePart:UserData(info)
+    self.m_data.storeNum = self.m_data.storeNum - info.num
+    self.achievementsNumText.text = self.m_data.storeNum
 end

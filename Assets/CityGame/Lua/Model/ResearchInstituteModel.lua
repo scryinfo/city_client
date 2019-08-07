@@ -23,6 +23,8 @@ function ResearchInstituteModel:OnCreate()
     DataManager.ModelRegisterNetMsg(self.insId, "gscode.OpCode", "getScienceStorageData", "gs.ScienceStorageData", self.n_OnReceiveGetScienceStorageData)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","useSciencePoint","gs.OpenScience",self.n_OnUserData) --使用点数
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","buySciencePoint","gs.BuySciencePoint",self.n_OnBuyData) --购买点数
+    -- 获取研究所推荐价格
+    DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryLaboratoryRecommendPrice","gs.GMRecommendPrice",self.n_OnqueryLaboratoryRecommendPrice)
 end
 --移除事件--
 function ResearchInstituteModel:Close()
@@ -36,6 +38,7 @@ function ResearchInstituteModel:Close()
     DataManager.ModelRemoveNetMsg(self.insId, "gscode.OpCode", "getScienceStorageData", "gs.ScienceStorageData", self.n_OnReceiveGetScienceStorageData)
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","useSciencePoint","gs.OpenScience",self.n_OnUserData) --使用点数
     DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buySciencePoint","gs.BuySciencePoint",self.n_OnBuyData) --购买点数
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryLaboratoryRecommendPrice","gs.GMRecommendPrice",self.n_OnqueryLaboratoryRecommendPrice)
 end
 
 -- 向服务器获取建筑详情,发起查询研究所的信息
@@ -100,15 +103,20 @@ function ResearchInstituteModel:m_ReqScienceShelfSet(shelfSet)
     DataManager.ModelSendNetMes("gscode.OpCode", "scienceShelfSet","gs.ShelfSet",shelfSet)
 end
 
---使用点数
+-- 使用点数
 function ResearchInstituteModel:m_userData(buildingId,typeId,num)
     DataManager.ModelSendNetMes("gscode.OpCode", "useSciencePoint","gs.OpenScience",{buildingId = buildingId,itemId = typeId,num = num})
 end
 
---购买点数
+-- 购买点数
 function ResearchInstituteModel:m_buyData(buildingId,typeId,num,price,ownerId)
     DataManager.ModelSendNetMes("gscode.OpCode", "buySciencePoint","gs.BuySciencePoint",
             {buildingId = buildingId,item = {key = {id = typeId},n = num},price = price,buyerId = ownerId,})
+end
+
+-- 获取研究所推荐价格
+function ResearchInstituteModel:m_queryLaboratoryRecommendPrice()
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryLaboratoryRecommendPrice","gs.QueryBuildingInfo", {buildingId = self.insId, playerId = DataManager.GetMyOwnerID()})
 end
 -----------------------------------------------------------回调-----------------------------------------------------------
 -- 查询研究所信息回调,传入ctrl层刷新数据
@@ -168,6 +176,11 @@ function ResearchInstituteModel:n_OnBuyData(info)
     self:m_ReqGetScienceShelfData()
     local data = {}
     data.num = info.item.n
-    data.pointNum = info.item.n
+    data.pointNum = info.typePointAllNum
     ct.OpenCtrl("GetCountCtrl",data)
+end
+
+-- 获取研究所推荐价格
+function ResearchInstituteModel:n_OnqueryLaboratoryRecommendPrice(info)
+    Event.Brocast("c_OnqueryLaboratoryRecommendPrice",info)
 end

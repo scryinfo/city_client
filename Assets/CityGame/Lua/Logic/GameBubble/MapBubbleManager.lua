@@ -236,6 +236,13 @@ function MapBubbleManager.createSummaryItems(data, summaryType)
                 this._createSummaryItems(temp)
             end
         end
+    elseif summaryType == EMapSearchType.Builds then
+        for i, value in pairs(data.info) do
+            if value.num > 0 then
+                local temp = {num = value.num, idx = value.idx, type = value.type}
+                this._createSummaryItems(temp)
+            end
+        end
     end
 
 end

@@ -16,33 +16,33 @@ MapTypeConfig ={
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-Goods-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-goods-grey.png",
     },
-    --[3] = {
-    --    typeId = 3,  --仓库
-    --    languageId = 4301011,
-    --    name = "仓库",
-    --    selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-land-red.png",
-    --    disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-deal-grey.png",
-    --},
     [3] = {
-        typeId = 3,  --科研
+        typeId = 3,  --建筑
+        languageId = 20010003,
+        name = "建筑",
+        selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-land-red.png",
+        disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-deal-grey.png",
+    },
+    [4] = {
+        typeId = 4,  --科研
         languageId = 20010004,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-research-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-research-grey.png",
     },
-    [4] = {
-        typeId = 4,  --推广
+    [5] = {
+        typeId = 5,  --推广
         languageId = 20010009,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-ad-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-ad-grey.png",
     },
-    [5] = {
-        typeId = 5,  --土地交易
+    [6] = {
+        typeId = 6,  --土地交易
         languageId = 20010006,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-land-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-deal-grey.png",
     },
-    [6] = {
-        typeId = 6,  --土地拍卖
+    [7] = {
+        typeId = 7,  --土地拍卖
         languageId = 20010007,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-land-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-deal-grey.png",

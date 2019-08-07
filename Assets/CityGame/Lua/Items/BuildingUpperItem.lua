@@ -29,8 +29,7 @@ function BuildingUpperItem:initialize(viewRect)
 
     self.titleBgBtn.onClick:AddListener(function ()
         --Event.Brocast("c_openBuildingInfo",self.data)
-        --ct.OpenCtrl("BuildingInformationCtrl",self.data)
-        ct.OpenCtrl("BuildingRevenueInfoCtrl",self.data)
+        ct.OpenCtrl("BuildingInformationCtrl",self.data)
     end)
 end
 

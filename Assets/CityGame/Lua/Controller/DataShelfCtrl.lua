@@ -98,12 +98,16 @@ function DataShelfCtrl:_getComponent(go)
     self.price = go.transform:Find("contentRoot/content/detailsInfo/price"):GetComponent("Text")
     self.inputPrice = go.transform:Find("contentRoot/content/detailsInfo/priceInput"):GetComponent("InputField")
     self.sliderPrice = go.transform:Find("contentRoot/content/detailsInfo/competitivenessSlider"):GetComponent("Slider")
+    self.recommend = go.transform:Find("contentRoot/content/detailsInfo/competitivenessSlider/FillArea/line/Image/Text"):GetComponent("Text")
+    self.recommendValue = go.transform:Find("contentRoot/content/detailsInfo/competitivenessSlider/FillArea/line/Image/Text/value"):GetComponent("Text")
     self.downShelfBtn = go.transform:Find("contentRoot/bottom/downShelfBtn").gameObject    --下架
     self.shelfText = go.transform:Find("contentRoot/bottom/downShelfBtn/text"):GetComponent("Text")
     self.addShelfBtn = go.transform:Find("contentRoot/bottom/addShelfBtn").gameObject    --上架
     self.addShelfText = go.transform:Find("contentRoot/bottom/addShelfBtn/text"):GetComponent("Text")
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn").gameObject     --修改货架
     self.close = go.transform:Find("close").gameObject     --修改货架
+
+    self.recommendValue.text = 50
     self:_awakeSliderInput()
 end
 
@@ -152,14 +156,14 @@ function DataShelfCtrl:initData()
     self.base.text = self.m_data.wareHouse
     self.sale.text = self.m_data.sale
     self.sliderNum.maxValue = self.m_data.wareHouse + self.m_data.sale
-    self.sliderPrice.maxValue = 100
+    self.sliderPrice.maxValue = 99
+    DataManager.DetailModelRpcNoRet(self.m_data.building, 'm_recommendPrice',self.m_data.building,DataManager.GetMyOwnerID(),self.m_data.itemId)
     if self.m_data.shelf == Shelf.AddShelf then
         self.addShelfBtn.transform.localScale = Vector3.one
         self.confirmBtn.transform.localScale = Vector3.zero
         self.automaticSwitch.isOn = false
         self.isOn = false
         self.downShelfBtn.transform.localScale = Vector3.zero
-        DataManager.DetailModelRpcNoRet(self.m_data.building, 'm_recommendPrice',self.m_data.building,DataManager.GetMyOwnerID(),self.m_data.itemId)
     elseif self.m_data.shelf == Shelf.SetShelf then
         self.addShelfBtn.transform.localScale = Vector3.zero
         self.confirmBtn.transform.localScale = Vector3.one
@@ -170,8 +174,6 @@ function DataShelfCtrl:initData()
         end
         self.inputNum.text = self.m_data.sale
         self.sliderNum.value = self.m_data.sale
-        self.inputPrice.text = GetClientPriceString(self.m_data.price)
-        self.sliderPrice.value = tonumber(GetClientPriceString(self.m_data.price))
         self.downShelfBtn.transform.localScale = Vector3.one
     end
 end
@@ -302,7 +304,12 @@ end
 function DataShelfCtrl:c_RecommendPrice(info)
     if info.msg then
         self.guidePrice = ct.CalculationPromoteRecommendPrice(info.msg,self.m_data.itemId)
-        local temp = ct.CalculationAdvertisementCompetitivePower(self.guidePrice, self.guidePrice, self.m_data.itemId)
+        local temp
+        if self.m_data.shelf == Shelf.AddShelf then
+            temp = ct.CalculationAdvertisementCompetitivePower(self.guidePrice, self.guidePrice, self.m_data.itemId)
+        elseif self.m_data.shelf == Shelf.SetShelf then
+            temp = ct.CalculationAdvertisementCompetitivePower(self.guidePrice, self.m_data.price, self.m_data.itemId)
+        end
         if temp >= functions.maxCompetitive then
             self.competitivenessText.text = ">"..temp
         elseif temp <= functions.minCompetitive then
@@ -312,6 +319,10 @@ function DataShelfCtrl:c_RecommendPrice(info)
         end
         DataShelfCtrl.sliderCanChange = false
         self.sliderPrice.value = temp
-        self.inputPrice.text = GetClientPriceString(self.guidePrice)
+        if self.m_data.shelf == Shelf.AddShelf then
+            self.inputPrice.text = GetClientPriceString(self.guidePrice)
+        elseif self.m_data.shelf == Shelf.SetShelf then
+            self.inputPrice.text = GetClientPriceString(self.m_data.price)
+        end
     end
 end

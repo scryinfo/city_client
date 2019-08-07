@@ -20,12 +20,18 @@ function DataSaleCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,build
     self.ownerId = ownerId
 
     self.bg = self.prefab.transform:Find("bg").gameObject
+    self.auto = self.prefab.transform:Find("auto")
     self.num = self.prefab.transform:Find("num"):GetComponent("Text");
     self.name = self.prefab.transform:Find("down/name"):GetComponent("Text");
     self.icon = self.prefab.transform:Find("icon/Image"):GetComponent("Image");
     self.price = self.prefab.transform:Find("down/priceBg/price"):GetComponent("Text");
 
     LoadSprite(ResearchConfig[goodsDataInfo.k.id].iconPath, self.icon, true)
+    if goodsDataInfo.autoReplenish then
+        self.auto.localScale = Vector3.one
+    else
+        self.auto.localScale = Vector3.zero
+    end
     self.num.text = goodsDataInfo.n
     self.name.text = GetLanguage(ResearchConfig[goodsDataInfo.k.id].name)
     self.price.text = GetClientPriceString(goodsDataInfo.price)

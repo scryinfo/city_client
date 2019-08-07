@@ -203,6 +203,11 @@ function DataSaleDetailPart:c_SetShelf(info)
                 v.storeNum = info.storeNum
                 v.prices = info.price
                 v.autoReplenish = info.autoRepOn
+                if info.autoRepOn then
+                    v.auto.localScale = Vector3.one
+                else
+                    v.auto.localScale = Vector3.zero
+                end
                 v.num.text = info.item.n
                 v.price.text = GetClientPriceString(info.price)
             end

@@ -9,7 +9,8 @@ UIPanel:ResgisterOpen(BuildingRevenueInfoCtrl)
 
 local typeId  --用来区分当前建筑类型
 local index   --用来记录经营界面当前折线图索引
-local dataInfo    --用来缓存当前打开历史详情的数据信息
+local incomeData    --用来缓存当前打开历史详情的收入
+local numberData    --用来缓存当前打开历史详情的数量
 local indexs  --用来记录经营界面当前点击的是否是开启状态
 local isbool  --用来记录经营界面当前是否有折线图处于打开状态
 function BuildingRevenueInfoCtrl:initialize()
@@ -38,7 +39,8 @@ function BuildingRevenueInfoCtrl:Active()
     index = nil
     indexs = nil
     isbool = false
-    dataInfo = nil
+    incomeData = {}
+    numberData = {}
     self.time = 0.1
     self.timer = Timer.New(slot(self.UpData, self), 0.1, -1, true)
     --实例表
@@ -49,6 +51,17 @@ end
 
 function BuildingRevenueInfoCtrl:Refresh()
     if self.m_data then
+        self.buildingTs = self.m_data.openingTs
+        self.buildingTs = math.floor(self.buildingTs/1000)
+        if tonumber(getFormatUnixTime(self.buildingTs).second) ~= 0 then
+            self.buildingTs = self.buildingTs - tonumber(getFormatUnixTime(self.buildingTs).second)
+        end
+        if tonumber(getFormatUnixTime(self.buildingTs).minute) ~= 0 then
+            self.buildingTs = self.buildingTs - tonumber(getFormatUnixTime(self.buildingTs).minute) * 60
+        end
+        if tonumber(getFormatUnixTime(self.buildingTs).hour) ~= 0 then
+            self.buildingTs = self.buildingTs - tonumber(getFormatUnixTime(self.buildingTs).hour) * 3600
+        end
         self.m_data.insId = OpenModelInsID.BuildingRevenueInfoCtrl
         typeId = string.sub(self.m_data.mId,1,2)
         DataManager.OpenDetailModel(BuildingRevenueInfoModel,self.m_data.insId)
@@ -116,7 +129,10 @@ function BuildingRevenueInfoCtrl:_getComponent(go)
     self.selectedSales = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/salesBtn/selectedSales")
     self.salesVolumeBtn = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/salesVolumeBtn")
     self.selectedSalesVolume = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/salesVolumeBtn/selectedSalesVolume")
-    self.testText = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/testText"):GetComponent("Text")
+    self.yScale = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/yScale"):GetComponent("RectTransform")
+    self.curve = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/curveBg/curve"):GetComponent("RectTransform")
+    self.slide = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/curveBg/curve"):GetComponent("Slide")
+    self.graph = go.transform:Find("content/ScrollView/Viewport/Content/linePanel/curveBg/curve"):GetComponent("FunctionalGraph")
 
     self.tipImg = go.transform:Find("content/tipImg")
     self.tipText = go.transform:Find("content/tipImg/tipText"):GetComponent("Text")
@@ -170,14 +186,12 @@ function BuildingRevenueInfoCtrl:initializeUiInfo()
     end
 end
 --初始化打开面板信息
-function BuildingRevenueInfoCtrl:initializePanelUiInfo(data)
+function BuildingRevenueInfoCtrl:initializePanelUiInfo()
     self.selectedSales.transform.localScale = Vector3.one
     self.selectedSalesVolume.transform.localScale = Vector3.zero
-    if data.historyDetail then
-        self.testText.text = GetLanguage(data.historyDetail[1].itemId).."七天的销售额是 E"..GetClientPriceString(data.historyDetail[1].saleDetail.income + data.account)
-    else
-        self.testText.text = GetLanguage(data.itemId).."七天的销售额是 E"..GetClientPriceString(data.account)
-    end
+    --默认传销售额incomeData
+    self:DrawBuildingLine(incomeData,1)
+    --self:_clickSalesBtn(self)
 end
 --多语言
 function BuildingRevenueInfoCtrl:language()
@@ -214,10 +228,18 @@ end
 --请求建筑历史经营详情成功
 function BuildingRevenueInfoCtrl:historyRevenueInfoData(data)
     if data ~= nil then
-        dataInfo = data
-        dataInfo.num = self.num
-        dataInfo.itemId = self.itemId
-        dataInfo.account = self.account
+        local incomeDatas = {}
+        local numberDatas = {}
+        for key,value in pairs(data.historyDetail) do
+            incomeDatas.time = value.time
+            numberDatas.time = value.time
+            incomeDatas.value = value.saleDetail.income
+            numberDatas.value = value.saleDetail.saleNum
+            incomeData[key] = ct.deepCopy(incomeDatas)
+            numberData[key] = ct.deepCopy(numberDatas)
+        end
+        numberData.value = self.num
+        incomeData.value = self.account
         self:openLinePanel(index)
         if isbool == false then
             return
@@ -225,7 +247,7 @@ function BuildingRevenueInfoCtrl:historyRevenueInfoData(data)
         if indexs == 1 then
             --self.Content.anchoredPosition = Vector3(0,0,0)
             self.Content:DOLocalMove(Vector2.New(0, 0),0.1):SetEase(DG.Tweening.Ease.Linear)
-            self:initializePanelUiInfo(dataInfo)
+            self:initializePanelUiInfo()
         else
             self.timer:Start()
         end
@@ -242,29 +264,25 @@ function BuildingRevenueInfoCtrl:_clickSalesBtn(ins)
     PlayMusEff(1002)
     ins.selectedSales.transform.localScale = Vector3.one
     ins.selectedSalesVolume.localScale = Vector3.zero
-    if dataInfo.historyDetail then
-        ins.testText.text = GetLanguage(dataInfo.historyDetail[1].itemId).."七天的销售额是 E"..GetClientPriceString(dataInfo.historyDetail[1].saleDetail.income + dataInfo.account)
-    else
-        ins.testText.text = GetLanguage(dataInfo.itemId).."七天的销售额是 E"..GetClientPriceString(dataInfo.account)
-    end
+    --点击销售额传incomeData
+    ins:DrawBuildingLine(incomeData,1)
+
 end
 --查看7天的销售量
 function BuildingRevenueInfoCtrl:_clickSalesVolumeBtn(ins)
     PlayMusEff(1002)
     ins.selectedSales.transform.localScale = Vector3.zero
     ins.selectedSalesVolume.localScale = Vector3.one
-    if dataInfo.historyDetail then
-        ins.testText.text = GetLanguage(dataInfo.historyDetail[1].itemId).."七天的销售量是 "..(dataInfo.historyDetail[1].saleDetail.saleNum + dataInfo.num).."个"
-    else
-        ins.testText.text = GetLanguage(dataInfo.itemId).."七天的销售量是 "..(dataInfo.num).."个"
-    end
+    --点击销量传numberData
+    ins:DrawBuildingLine(numberData,2)
 end
 -----------------------------------------------------------------------------事件函数-------------------------------------------------------------------------
 --计算位置
 function BuildingRevenueInfoCtrl:calculateLinePanel(ins)
     index = ins.keyId
+    incomeData = {}
+    numberData = {}
     --因为7天历史统计服不包括今天的，所以缓存今天的
-    self.itemId = ins.data.itemId
     self.num = ins.data.num
     self.account = ins.data.saleAccount
     if indexs == index and isbool == true then
@@ -305,7 +323,7 @@ function BuildingRevenueInfoCtrl:UpData()
         end]]
         --暂时不要效果，隐藏
         --self.Content:DOLocalMove(Vector2.New(0, 132 * (indexs - 1) + (indexs * 5)),0.1):SetEase(DG.Tweening.Ease.Linear)
-        self:initializePanelUiInfo(dataInfo)
+        self:initializePanelUiInfo()
         self.timer:Stop()
     end
 end
@@ -328,4 +346,122 @@ function BuildingRevenueInfoCtrl:CloseDestroy(dataTable)
             dataTable[key] = nil
         end
     end
+end
+
+function BuildingRevenueInfoCtrl:DrawBuildingLine(info,id)
+    self.graph:Close()
+    self.slide:Close()
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    local hour = tonumber(ts.hour)
+    if second ~= 0 then
+        currentTime = currentTime -second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    if hour ~= 0 then
+        currentTime = currentTime - hour * 3600
+    end
+    currentTime = math.floor(currentTime)        --当天0点的时间
+    local monthAgo = currentTime - 604800 + 86400     --7天前的0点
+    local updataTime = monthAgo
+    local time = {}
+    local turnoverTab = {}
+    local buildingTs = self.buildingTs
+    if buildingTs >= monthAgo then
+        updataTime = buildingTs
+        for i = 1, 7 do
+            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
+            if updataTime <= currentTime then
+                turnoverTab[i] = {}
+                turnoverTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 234
+                turnoverTab[i].money = 0
+                if info ~= nil then
+                    for k, v in pairs(info) do
+                        if v ~= 0 then
+                            if updataTime == v.time /1000 then
+                                if id == 1 then
+                                    turnoverTab[i].money = tonumber(GetClientPriceString(v.value))
+                                elseif id == 2 then
+                                    turnoverTab[i].money = v.value
+                                end
+                            end
+                        end
+                    end
+                end
+                if updataTime == currentTime then
+                    if id == 1 then
+                        turnoverTab[i].money = tonumber(GetClientPriceString(info.value))
+                    elseif id == 2 then
+                        turnoverTab[i].money = info.value
+                    end
+                end
+            end
+            updataTime = updataTime + 86400
+        end
+    else
+        for i = 1, 7 do
+            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
+            turnoverTab[i] = {}
+            turnoverTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 234
+            turnoverTab[i].money = 0
+            if info ~= nil then
+                for k, v in pairs(info) do
+                    if v ~= 0 then
+                        if updataTime == v.time/1000 then
+                            if id == 1 then
+                                turnoverTab[i].money = tonumber(GetClientPriceString(v.value))
+                            elseif id == 2 then
+                                turnoverTab[i].money = v.value
+                            end
+                        end
+                    end
+                end
+            end
+            updataTime = updataTime + 86400
+        end
+        if id == 1 then
+            turnoverTab[#turnoverTab].money = tonumber(GetClientPriceString(info.value))
+        elseif id == 2 then
+            turnoverTab[#turnoverTab].money = info.value
+        end
+    end
+
+    --转换为Vector2类型
+    local turnover = {}
+    for i, v in pairs(turnoverTab) do
+        turnover[i] = Vector2.New(v.coordinate,v.money)
+    end
+    table.insert(time,1,"0")
+    table.insert(turnover,1,Vector2.New(0,0))
+    local max = 0
+    for i, v in pairs(turnover) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+    local scale = SetYScale(max,4,self.yScale)
+    local turnoverVet = {}
+    for i, v in pairs(turnover) do
+        if scale == 0 then
+            turnoverVet[i] = v
+        else
+            turnoverVet[i] = Vector2.New(v.x,v.y / scale * 100)
+        end
+    end
+
+    self.slide:SetXScaleValue(time,234)
+    if id == 1 then
+        self.graph:DrawLine(turnoverVet,Color.New(243 / 255, 152 / 255, 0 / 255, 255 / 255),1)
+        self.slide:SetCoordinate(turnoverVet,turnover,Color.New(243 / 255, 152 / 255, 0 / 255, 255 / 255),1)
+    elseif id == 2 then
+        self.graph:DrawLine(turnoverVet,Color.New(131 / 255, 165 / 255, 228 / 255, 255 / 255),1)
+        self.slide:SetCoordinate(turnoverVet,turnover,Color.New(131 / 255, 165 / 255, 228 / 255, 255 / 255),1)
+    end
+
+    self.curve.localPosition = self.curve.localPosition + Vector3.New(0.01, 0,0)
+    self.curve.sizeDelta = self.curve.sizeDelta + Vector2.New(0.01, 0)
 end

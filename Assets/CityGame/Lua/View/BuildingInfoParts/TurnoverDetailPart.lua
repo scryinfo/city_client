@@ -164,7 +164,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
             turnoverTab[i].money = 0
             expendTab[i] = {}
             expendTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 142
-            expendTab[i].money = 1
+            expendTab[i].money = 0
             if info.nodes ~= nil then
                 for k, v in pairs(info.nodes) do
                     if updataTime == v.time then
@@ -243,6 +243,7 @@ function TurnoverDetailPart:n_OnBuildingIncome(info)
     self.slide:SetCoordinate(expendVet,expend,Color.New(255 / 255, 0 / 255, 0 / 255, 255 / 255),2)
 end
 
-function TurnoverDetailPart:OnBtn()
-
+function TurnoverDetailPart:OnBtn(ins)
+    PlayMusEff(1002)
+    ct.OpenCtrl("BuildingRevenueInfoCtrl",ins.m_data.info)
 end

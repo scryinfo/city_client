@@ -49,7 +49,7 @@ public class FunctionalGraphBase:MonoBehaviour
     /// 
     /// X轴刻度
     /// 
-    [Range(20f, 150)] public float XScaleValue = 100f;
+    [Range(20f, 250)] public float XScaleValue = 100f;
     /// 
     /// Y轴刻度
     /// s

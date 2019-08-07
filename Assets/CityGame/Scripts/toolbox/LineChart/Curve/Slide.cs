@@ -19,7 +19,7 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private int count = 0;        //生成线的次数
     private Dictionary<int, List<GameObject>> dicGo = new Dictionary<int, List<GameObject>>();
 
-    private void Start()
+    private void Awake()
     {
         GraphBase = transform.GetComponent<FunctionalGraphBase>();
         width = gameObject.GetComponent<RectTransform>().rect.width;

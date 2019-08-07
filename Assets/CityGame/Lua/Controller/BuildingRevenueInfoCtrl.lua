@@ -38,7 +38,7 @@ function BuildingRevenueInfoCtrl:Active()
     index = nil
     indexs = nil
     isbool = false
-    dataInfo = nil
+    dataInfo = {}
     self.time = 0.1
     self.timer = Timer.New(slot(self.UpData, self), 0.1, -1, true)
     --实例表
@@ -173,11 +173,11 @@ end
 function BuildingRevenueInfoCtrl:initializePanelUiInfo(data)
     self.selectedSales.transform.localScale = Vector3.one
     self.selectedSalesVolume.transform.localScale = Vector3.zero
-    if data.historyDetail then
-        self.testText.text = GetLanguage(data.historyDetail[1].itemId).."七天的销售额是 E"..GetClientPriceString(data.historyDetail[1].saleDetail.income + data.account)
-    else
-        self.testText.text = GetLanguage(data.itemId).."七天的销售额是 E"..GetClientPriceString(data.account)
-    end
+    --if data.historyDetail then
+    --    self.testText.text = GetLanguage(data.historyDetail[1].itemId).."七天的销售额是 E"..GetClientPriceString(data.historyDetail[1].saleDetail.income + data.account)
+    --else
+    --    self.testText.text = GetLanguage(data.itemId).."七天的销售额是 E"..GetClientPriceString(data.account)
+    --end
 end
 --多语言
 function BuildingRevenueInfoCtrl:language()
@@ -214,10 +214,15 @@ end
 --请求建筑历史经营详情成功
 function BuildingRevenueInfoCtrl:historyRevenueInfoData(data)
     if data ~= nil then
-        dataInfo = data
-        dataInfo.num = self.num
-        dataInfo.itemId = self.itemId
-        dataInfo.account = self.account
+        local datas = {}
+        for key,value in pairs(data.historyDetail) do
+            datas.time = value.time
+            datas.income = value.saleDetail.income
+            datas.saleNum = value.saleDetail.saleNum
+            dataInfo[key] = ct.deepCopy(datas)
+        end
+        dataInfo.saleNum = self.num
+        dataInfo.income = self.account
         self:openLinePanel(index)
         if isbool == false then
             return
@@ -242,29 +247,29 @@ function BuildingRevenueInfoCtrl:_clickSalesBtn(ins)
     PlayMusEff(1002)
     ins.selectedSales.transform.localScale = Vector3.one
     ins.selectedSalesVolume.localScale = Vector3.zero
-    if dataInfo.historyDetail then
-        ins.testText.text = GetLanguage(dataInfo.historyDetail[1].itemId).."七天的销售额是 E"..GetClientPriceString(dataInfo.historyDetail[1].saleDetail.income + dataInfo.account)
-    else
-        ins.testText.text = GetLanguage(dataInfo.itemId).."七天的销售额是 E"..GetClientPriceString(dataInfo.account)
-    end
+    --if dataInfo.historyDetail then
+    --    ins.testText.text = GetLanguage(dataInfo.historyDetail[1].itemId).."七天的销售额是 E"..GetClientPriceString(dataInfo.historyDetail[1].saleDetail.income + dataInfo.account)
+    --else
+    --    ins.testText.text = GetLanguage(dataInfo.itemId).."七天的销售额是 E"..GetClientPriceString(dataInfo.account)
+    --end
 end
 --查看7天的销售量
 function BuildingRevenueInfoCtrl:_clickSalesVolumeBtn(ins)
     PlayMusEff(1002)
     ins.selectedSales.transform.localScale = Vector3.zero
     ins.selectedSalesVolume.localScale = Vector3.one
-    if dataInfo.historyDetail then
-        ins.testText.text = GetLanguage(dataInfo.historyDetail[1].itemId).."七天的销售量是 "..(dataInfo.historyDetail[1].saleDetail.saleNum + dataInfo.num).."个"
-    else
-        ins.testText.text = GetLanguage(dataInfo.itemId).."七天的销售量是 "..(dataInfo.num).."个"
-    end
+    --if dataInfo.historyDetail then
+    --    ins.testText.text = GetLanguage(dataInfo.historyDetail[1].itemId).."七天的销售量是 "..(dataInfo.historyDetail[1].saleDetail.saleNum + dataInfo.num).."个"
+    --else
+    --    ins.testText.text = GetLanguage(dataInfo.itemId).."七天的销售量是 "..(dataInfo.num).."个"
+    --end
 end
 -----------------------------------------------------------------------------事件函数-------------------------------------------------------------------------
 --计算位置
 function BuildingRevenueInfoCtrl:calculateLinePanel(ins)
     index = ins.keyId
+    dataInfo = {}
     --因为7天历史统计服不包括今天的，所以缓存今天的
-    self.itemId = ins.data.itemId
     self.num = ins.data.num
     self.account = ins.data.saleAccount
     if indexs == index and isbool == true then

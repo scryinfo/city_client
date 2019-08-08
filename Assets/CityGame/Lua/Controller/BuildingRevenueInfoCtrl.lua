@@ -230,13 +230,15 @@ function BuildingRevenueInfoCtrl:historyRevenueInfoData(data)
     if data ~= nil then
         local incomeDatas = {}
         local numberDatas = {}
-        for key,value in pairs(data.historyDetail) do
-            incomeDatas.time = value.time
-            numberDatas.time = value.time
-            incomeDatas.value = value.saleDetail.income
-            numberDatas.value = value.saleDetail.saleNum
-            incomeData[key] = ct.deepCopy(incomeDatas)
-            numberData[key] = ct.deepCopy(numberDatas)
+        if data.historyDetail then
+            for key,value in pairs(data.historyDetail) do
+                incomeDatas.time = value.time
+                numberDatas.time = value.time
+                incomeDatas.value = value.saleDetail.income
+                numberDatas.value = value.saleDetail.saleNum
+                incomeData[key] = ct.deepCopy(incomeDatas)
+                numberData[key] = ct.deepCopy(numberDatas)
+            end
         end
         numberData.value = self.num
         incomeData.value = self.account
@@ -381,7 +383,7 @@ function BuildingRevenueInfoCtrl:DrawBuildingLine(info,id)
                 turnoverTab[i].money = 0
                 if info ~= nil then
                     for k, v in pairs(info) do
-                        if v ~= 0 then
+                        if type(v) == "table" then
                             if updataTime == v.time /1000 then
                                 if id == 1 then
                                     turnoverTab[i].money = tonumber(GetClientPriceString(v.value))
@@ -410,7 +412,7 @@ function BuildingRevenueInfoCtrl:DrawBuildingLine(info,id)
             turnoverTab[i].money = 0
             if info ~= nil then
                 for k, v in pairs(info) do
-                    if v ~= 0 then
+                    if type(v) == "table" then
                         if updataTime == v.time/1000 then
                             if id == 1 then
                                 turnoverTab[i].money = tonumber(GetClientPriceString(v.value))

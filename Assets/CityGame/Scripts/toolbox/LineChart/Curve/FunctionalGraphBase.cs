@@ -122,4 +122,8 @@ public class FunctionalGraphBase:MonoBehaviour
     ///最大的宽高
     ///
     public Vector2 MaxWidth = Vector2.one;
+    ///
+    ///柱状图宽度
+    ///
+    [Range(2f, 100f)] public float ChartWidth = 10f;
 }

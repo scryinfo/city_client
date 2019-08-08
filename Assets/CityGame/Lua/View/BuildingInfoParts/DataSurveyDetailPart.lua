@@ -216,10 +216,12 @@ end
 function DataSurveyDetailPart:UpData()
     local ts = getTimeTable(self.allTime)
     self.time.text = ts.hour..":"..ts.minute..":"..ts.second
-    self.slider.maxValue = (1 / self.info.speed)*1000
+    local max = (1 / self.info.speed) * 1000
+    self.slider.maxValue = max
     local currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(豪秒)
-    self.slider.value = (currentTime - self.info.ts) % ((1/self.info.speed)*1000)
-    self.speed.text = getTimeTable(math.ceil(1/self.info.speed)).minute .. ":" .. getTimeTable(math.ceil(1/self.info.speed)).second
+    local value = (currentTime - self.info.ts) % max
+    self.slider.value = value
+    self.speed.text = getTimeTable(math.ceil((max - value) / 1000)).minute .. ":" .. getTimeTable(math.ceil((max - value) / 1000)).second
     self.allTime = self.allTime - UnityEngine.Time.unscaledDeltaTime
     if self.allTime <= 0 then
         self.time.text = "00:00:00"

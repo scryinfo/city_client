@@ -47,7 +47,20 @@ end
 
 function DataCompanyModel:Close()
     --清空本地UI事件
-
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","detailPromotionCompany","gs.PromotionCompany",self.n_OnPublicFacility) --建筑详情
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getScienceItemSpeed","gs.ScienceItemSpeed",self.n_OnSurveySpeed) --调查速度
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddSurveyLine) --添加调查线
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyLineChangeInform","gs.LineInfo",self.n_OnSurveyLineUpdData) --调查线变化推送
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","ftyDelLine","gs.DelLine",self.n_OnSurveyLineFinish) --调查线线完成
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","delScienceLine","gs.DelLine",self.n_OnDelSurveyLine) --删除调查线
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","setScienceLineOrder","gs.SetLineOrder",self.n_OnTopSurveyLine) --置顶调查线
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","usePromotionPoint","gs.OpenScience",self.n_OnUserData) --使用点数
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","buySciencePoint","gs.BuySciencePoint",self.n_OnBuyData) --购买点数
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","getScienceStorageData","gs.ScienceStorageData",self.n_OnDataBase)--获取仓库数据
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","scienceShelfAdd","gs.ShelfAdd",self.n_OnAddShelf,self)--上架
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","scienceShelfSet","gs.ShelfAdd",self.n_OnSetShelf,self)--修改上架
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","scienceShelfDel","gs.ShelfDel",self.n_OnDelShelf,self)--下架
+    DataManager.ModelRemoveNetMsg(self.insId,"gscode.OpCode","queryPromotionRecommendPrice","gs.GMRecommendPrice",self.n_OnRecommendPrice,self)--推荐定价
 end
 --客户端请求--
 

@@ -135,8 +135,9 @@ function DataBaseDetailPart:UserData(info)
     local index
     for i, v in pairs(self.dataBaseItem) do
         if v.type == info.itemId then
-            v.num.text = "x" .. ((v.storeNum + v.lockedNum) - info.num)
-            if v.storeNum + v.lockedNum == info.num then
+            v.storeNum = v.storeNum - info.num
+            v.num.text = "x" .. (v.storeNum + v.lockedNum)
+            if v.storeNum + v.lockedNum == 0 then
                 del = true
                 index = i
                 destroy(self.dataBaseItem[i].prefab.gameObject)

@@ -217,7 +217,7 @@ end
 
 --购买点数回调
 function DataSaleDetailPart:c_BuyCount(info)
-    if self.dataSaleCardItem then
+    if self.dataSaleCardItem and next(self.dataSaleCardItem) then
         local index
         for i, v in pairs(self.dataSaleCardItem) do
             if v.type == info.item.key.id then
@@ -225,6 +225,7 @@ function DataSaleDetailPart:c_BuyCount(info)
                 v.num.text = v.n
                 if v.n <= 0 then
                    index = i
+                    destroy(v.prefab.gameObject)
                 end
             end
         end
@@ -239,7 +240,7 @@ end
 
 --调查线变化
 function DataSaleDetailPart:SurveyLineUpData(info)
-    if self.dataSaleCardItem then
+    if self.dataSaleCardItem and next(self.dataSaleCardItem) then
         for i, v in pairs(self.dataSaleCardItem) do
             if v.type == info.iKey.id then
                 if v.autoReplenish then

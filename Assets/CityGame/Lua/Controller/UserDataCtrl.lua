@@ -116,7 +116,7 @@ function UserDataCtrl:OnInput()
     end
     self.slider.value = tonumber(self.input.text)
     if self.m_data.myOwner == false then
-        self.buyInput.text = self.slider.value * self.m_data.price
+        self.buyInput.text = GetClientPriceString(self.slider.value * self.m_data.price)
     end
 end
 

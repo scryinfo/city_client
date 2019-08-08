@@ -114,6 +114,13 @@ function ResearchDatabaseDetailPart:UserData(info)
         if v.data.itemKey.id == info.itemId then
             v.data.storeNum = v.data.storeNum - info.num
             v.numText.text = "x" .. ((v.data.storeNum + v.data.lockedNum) - info.num)
+            if v.data.storeNum <= 0 then
+                destroy(v.prefab)
+                table.remove(self.researchMaterialItems,i)
+            end
+            if #self.researchMaterialItems == 0 then
+                self.nullImage.localScale = Vector3.one
+            end
             return
         end
     end

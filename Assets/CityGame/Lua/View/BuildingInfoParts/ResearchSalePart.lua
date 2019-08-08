@@ -4,7 +4,6 @@
 --- DateTime: 2019/7/24 16:05
 ---
 
-
 ResearchSalePart = class("ResearchSalePart", BasePart)
 
 function ResearchSalePart:PrefabName()
@@ -21,7 +20,22 @@ function ResearchSalePart:_InitTransform()
     self.quantityNumText = transform:Find("Top/QuantityNumText"):GetComponent("Text")
 end
 
+function ResearchSalePart:_InitChildClick(mainPanelLuaBehaviour)
+    -- 监听上架内容
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "scienceShelfAdd", "gs.ShelfAdd", self.n_OnReceiveScienceShelfAdd, self)
+    -- 监听下架内容
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "scienceShelfDel", "gs.ShelfDel", self.n_OnReceiveScienceShelfDel, self)
+    -- 监听修改内容
+    DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "scienceShelfSet", "gs.ShelfSet", self.n_OnReceiveScienceShelfSet, self)
+end
+
 function  ResearchSalePart:_ResetTransform()
+    -- 移除监听上架内容
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "scienceShelfAdd", self.n_OnReceiveScienceShelfAdd, self)
+    -- 移除监听下架内容
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "scienceShelfDel", self.n_OnReceiveScienceShelfDel, self)
+    -- 移除监听修改内容
+    DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "scienceShelfSet", self.n_OnReceiveScienceShelfSet, self)
 end
 
 function ResearchSalePart:Refresh(data)
@@ -30,6 +44,30 @@ function ResearchSalePart:Refresh(data)
 end
 
 function ResearchSalePart:RefreshData(data)
+    self.m_data = data
     self.text.text = "Quantity:"
-    self.quantityNumText.text = data.shelfNum
+    self:_showQuantityNum()
+end
+
+-- 修改上架信息(研究所、推广公司)
+function ResearchSalePart:_showQuantityNum()
+    self.quantityNumText.text = self.m_data.shelfNum
+end
+
+-- 上架(研究所、推广公司)
+function ResearchSalePart:n_OnReceiveScienceShelfAdd(shelfAdd)
+    self.m_data.shelfNum = shelfAdd.curCount
+    self:_showQuantityNum()
+end
+
+-- 全部下架该科技(研究所、推广公司)
+function ResearchSalePart:n_OnReceiveScienceShelfDel(shelfDel)
+    self.m_data.shelfNum = shelfDel.curCount
+    self:_showQuantityNum()
+end
+
+-- 修改上架信息(研究所、推广公司)
+function ResearchSalePart:n_OnReceiveScienceShelfSet(shelfSet)
+    self.m_data.shelfNum = shelfSet.curCount
+    self:_showQuantityNum()
 end

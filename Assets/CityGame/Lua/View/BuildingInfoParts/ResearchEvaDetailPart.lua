@@ -157,7 +157,9 @@ function ResearchEvaDetailPart:_showLineOneInfo(lineData)
 
     -- 总时间
     self.totalTimeText.text = self:GetTime(lineData)
-    UpdateBeat:Add(self.Update,self)
+    if not self.isUpdate then
+        UpdateBeat:Add(self.Update,self)
+    end
     self.isUpdate = true
 
     --缓存正在生产中的线的目标产量

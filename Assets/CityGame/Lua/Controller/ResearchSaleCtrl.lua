@@ -26,6 +26,9 @@ function ResearchSaleCtrl:Awake(go)
     luaBehaviour:AddClick(ResearchSalePanel.sureBtn, self.OnSure, self)
     luaBehaviour:AddClick(ResearchSalePanel.closeBtn, self.OnStopSale, self)
     luaBehaviour:AddClick(ResearchSalePanel.changeBtn, self.OnChange, self)
+    luaBehaviour:AddClick(ResearchSalePanel.autoBtn.gameObject, self.OnAuto, self)
+    luaBehaviour:AddClick(ResearchSalePanel.competitivenessBtn.gameObject, self.OnCompetitiveness, self)
+    luaBehaviour:AddClick(ResearchSalePanel.closeTipsBtn.gameObject, self.OnCloseTips, self)
 
     ResearchSalePanel.autoToggle.onValueChanged:AddListener(function (isOn)
         self:_autoToggleValueChange(isOn)
@@ -34,13 +37,16 @@ function ResearchSaleCtrl:Awake(go)
     ResearchSalePanel.quantityInputField.onEndEdit:AddListener(function (inputValue)
         if inputValue == nil or inputValue == "" then
             ResearchSalePanel.quantityInputField.text = 1
+            ResearchSalePanel.quantitySlider.value = 1
             return
         end
         local num = tonumber(inputValue)
         if num <= 0 then
             ResearchSalePanel.quantityInputField.text = 1
+            ResearchSalePanel.quantitySlider.value = 1
             return
         end
+        ResearchSalePanel.quantitySlider.value = num
     end)
 
     ResearchSalePanel.priceInputField.onEndEdit:AddListener(function (inputValue)
@@ -53,6 +59,10 @@ function ResearchSaleCtrl:Awake(go)
             ResearchSalePanel.priceInputField.text = 0.0001
             return
         end
+    end)
+
+    ResearchSalePanel.quantitySlider.onValueChanged:AddListener(function (value)
+        ResearchSalePanel.quantityInputField.text = tostring(value)
     end)
 
     self:_awakeSliderInput()  --初始化
@@ -75,7 +85,13 @@ end
 
 -- 初始化基本数据
 function ResearchSaleCtrl:_updateData()
+
     -- 根据useType判断是否需要显示下架
+    if self.m_data.data.index == 1 then
+
+    else
+
+    end
     if self.m_data.data.index == 1 then
         ResearchSalePanel.nameText.text = ResearchConfig[self.m_data.data.itemKey.id].name
         --ResearchSalePanel.priceInputField.text = 0.0001
@@ -83,23 +99,29 @@ function ResearchSaleCtrl:_updateData()
         ResearchSalePanel.sureBtnTF.localScale = Vector3.one
         ResearchSalePanel.changeBtnTF.localScale = Vector3.zero
         ResearchSalePanel.autoToggle.isOn = false
+        self.mySaleTypeId = self.m_data.data.itemKey.id
         self:_autoToggleValueChange(false)
     elseif self.m_data.data.index == 3 then
         ResearchSalePanel.nameText.text = ResearchConfig[self.m_data.data.k.id].name
-        ResearchSalePanel.priceInputField.text = GetClientPriceString(self.m_data.data.price)
+        --ResearchSalePanel.priceInputField.text = GetClientPriceString(self.m_data.data.price)
         ResearchSalePanel.closeBtnTF.localScale = Vector3.one
         ResearchSalePanel.sureBtnTF.localScale = Vector3.zero
         ResearchSalePanel.changeBtnTF.localScale = Vector3.one
         ResearchSalePanel.autoToggle.isOn = self.m_data.data.autoReplenish
+        self.mySaleTypeId = self.m_data.data.k.id
         self:_autoToggleValueChange(self.m_data.data.autoReplenish)
     end
 
+    ResearchSalePanel.closeTipsBtn.localScale = Vector3.zero
+    ResearchSalePanel.recommendText.text = "Recommend:50"
+    ResearchSalePanel.quantitySlider.maxValue = self.m_data.data.storeNum + self.m_data.data.lockedNum
+    ResearchSalePanel.quantitySlider.value = self.m_data.data.lockedNum
     ResearchSalePanel.tipsImage.localScale = Vector3.zero
     ResearchSalePanel.nullImage.localScale = Vector3.zero
     ResearchSalePanel.warehouseText.text = self.m_data.data.storeNum
     ResearchSalePanel.shelfText.text = self.m_data.data.lockedNum
     ResearchSalePanel.quantityInputField.text = self.m_data.data.lockedNum
-    ResearchSalePanel.nullText.text = self.m_data.data.lockedNum
+    ResearchSalePanel.nullText.text = self.m_data.data.storeNum + self.m_data.data.lockedNum
 end
 
 --滑动条input联动
@@ -113,7 +135,7 @@ function ResearchSaleCtrl:_awakeSliderInput()
             ResearchSalePanel.priceInputField.text = finalStr  --限制用户小数输入
             return
         end
-        local temp = ct.CalculationLaboratoryCompetitivePower(self.guidePrice, tonumber(str) * 10000, self.m_data.data.itemKey.id)  --计算竞争力
+        local temp = ct.CalculationLaboratoryCompetitivePower(self.guidePrice, tonumber(str) * 10000, self.mySaleTypeId)  --计算竞争力
         if temp >= functions.maxCompetitive then
             ResearchSalePanel.competitivenessText.text = ">"..temp
         elseif temp <= functions.minCompetitive then
@@ -135,7 +157,7 @@ function ResearchSaleCtrl:_awakeSliderInput()
         if self.guidePrice == nil or ResearchSaleCtrl.sliderCanChange ~= true then
             return
         end
-        local price = ct.CalculationLaboratoryPrice(self.guidePrice, value,self.m_data.data.itemKey.id)
+        local price = ct.CalculationLaboratoryPrice(self.guidePrice, value, self.mySaleTypeId)
         ResearchSalePanel.priceInputField.text = GetClientPriceString(price)
     end)
 end
@@ -151,7 +173,7 @@ function ResearchSaleCtrl:OnSure(go)
     local temp = {
         buildingId = go.m_data.buildingId,
         item = {
-            key = {id = go.m_data.data.itemKey.id},
+            key = {id = go.mySaleTypeId},
             n = tonumber(ResearchSalePanel.quantityInputField.text)
         },
         price = GetServerPriceNumber(ResearchSalePanel.priceInputField.text),
@@ -195,6 +217,27 @@ function ResearchSaleCtrl:OnChange(go)
     UIPanel.ClosePage()
 end
 
+function ResearchSaleCtrl:OnAuto(go)
+    ResearchSalePanel.closeTipsBtn.localScale = Vector3.one
+    ResearchSalePanel.tipsImage.localScale = Vector3.one
+    ResearchSalePanel.tipsImage:SetParent(ResearchSalePanel.autoBtn)
+    ResearchSalePanel.tipsImage.localPosition = Vector3.New(0, 0, 0)
+    ResearchSalePanel.tipsText.text = "自动上架提示！"
+end
+
+function ResearchSaleCtrl:OnCompetitiveness(go)
+    ResearchSalePanel.closeTipsBtn.localScale = Vector3.one
+    ResearchSalePanel.tipsImage.localScale = Vector3.one
+    ResearchSalePanel.tipsImage:SetParent(ResearchSalePanel.competitivenessBtn)
+    ResearchSalePanel.tipsImage.localPosition = Vector3.New(0, 0, 0)
+    ResearchSalePanel.tipsText.text = "竞争力提示！"
+end
+
+function ResearchSaleCtrl:OnCloseTips(go)
+    ResearchSalePanel.closeTipsBtn.localScale = Vector3.zero
+    ResearchSalePanel.tipsImage.localScale = Vector3.zero
+end
+
 function ResearchSaleCtrl:_autoToggleValueChange(isOn)
     PlayMusEff(1002)
 
@@ -211,13 +254,16 @@ end
 function ResearchSaleCtrl:c_OnqueryLaboratoryRecommendPrice(info)
     if info then
         for key,value in pairs(info.msg) do
-            if value.typeId == self.m_data.data.itemKey.id then
-                --self.typeId =
+            if value.typeId == self.mySaleTypeId then
                 self.guidePrice = value.guidePrice
                 break
             end
         end
-        local tempPrice = ct.CalculationLaboratorySuggestPrice(self.guidePrice / 10000, self.m_data.data.itemKey.id)
-        ResearchSalePanel.priceInputField.text = GetClientPriceString(tempPrice)
+        if self.m_data.data.index == 1 then
+            local tempPrice = ct.CalculationLaboratorySuggestPrice(self.guidePrice / 10000, self.mySaleTypeId)
+            ResearchSalePanel.priceInputField.text = GetClientPriceString(tempPrice)
+        else
+            ResearchSalePanel.priceInputField.text = GetClientPriceString(self.m_data.data.price)
+        end
     end
 end

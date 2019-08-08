@@ -182,8 +182,6 @@ function ResearchSaleDetailPart:_getScienceShelfData(data)
             self.TipText.text = "There is no goods yet!"
         end
     end
-    -- 如果是别人打开，加号不需要显示如果有正在出售的东西
-    -- 如果有正在出售的东西，则生成 ResearchMaterialItem（useType = 2 代表别人购买并使用生产资料 3 代表货架上的生产资料 4 代表选择上架的生产资料）
 end
 
 function ResearchSaleDetailPart:c_OnReceiveGetScienceStorageData(scienceStorageData)

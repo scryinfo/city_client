@@ -71,7 +71,7 @@ function ChooseLineItem:initialize(prefab,mgr,DataInfo,pos,allNumber)
 
     local distances
     distances = math.sqrt(math.pow((pos.x-self.posX),2) + math.pow((pos.y-self.posY),2))
-    self.distance.text = math.floor(distances)
+    self.distance.text = string.format("%0.2f", distances)
     local moneys = distances * BagPosInfo[1].postageCost
     self.money.text = GetClientPriceString(moneys)
     self.price = moneys

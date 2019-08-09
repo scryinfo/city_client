@@ -37,17 +37,13 @@ function DataShelfCtrl:Awake(obj)
     self.sliderNum.onValueChanged:AddListener(function()     --数量
         self:OnSliderNum()
     end)
-    --self.inputPrice.onValueChanged:AddListener(function()     --价格
-    --    self:OnInputPrice()
-    --end)
-    --self.sliderPrice.onValueChanged:AddListener(function()     --价格
-    --    self:OnSliderPrice()
-    --end)
 end
 
 function DataShelfCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_RecommendPrice",self.c_RecommendPrice,self)
+    self.competitivenessTipText.text = GetLanguage(43060001)
+    self.competitivenessContentText.text = GetLanguage(43060002)
 end
 
 function DataShelfCtrl:Refresh()
@@ -81,6 +77,7 @@ function DataShelfCtrl:_getComponent(go)
     self.iconName = go.transform:Find("contentRoot/content/goodsInfo/card/name/Text"):GetComponent("Text")
     self.icon = go.transform:Find("contentRoot/content/goodsInfo/card/cardImage/Image"):GetComponent("Image")
     self.automaticSwitch = go.transform:Find("contentRoot/content/detailsInfo/automaticSwitch"):GetComponent("Toggle") --自动补货
+    self.automaticSwitchBtn = go.transform:Find("contentRoot/content/detailsInfo/automaticSwitch/btnImage"):GetComponent("RectTransform")
     self.replenishment = go.transform:Find("contentRoot/content/detailsInfo/tipText"):GetComponent("Text")
     self.numText = go.transform:Find("contentRoot/content/detailsInfo/totalNumber"):GetComponent("Text")
     self.totalNum = go.transform:Find("contentRoot/content/detailsInfo/totalNumber/bg/totalNumberText"):GetComponent("Text")
@@ -95,6 +92,7 @@ function DataShelfCtrl:_getComponent(go)
     self.competitivenessBtn = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBtn").gameObject
     self.competitivenessTip = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn").gameObject
     self.competitivenessTipText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn/tipText"):GetComponent("Text")
+    self.competitivenessContentText = go.transform:Find("contentRoot/content/detailsInfo/tipPriceBg/tipBgBtn/content"):GetComponent("Text")
     self.price = go.transform:Find("contentRoot/content/detailsInfo/price"):GetComponent("Text")
     self.inputPrice = go.transform:Find("contentRoot/content/detailsInfo/priceInput"):GetComponent("InputField")
     self.sliderPrice = go.transform:Find("contentRoot/content/detailsInfo/competitivenessSlider"):GetComponent("Slider")
@@ -153,8 +151,8 @@ end
 function DataShelfCtrl:initData()
     LoadSprite(ResearchConfig[self.m_data.itemId].iconPath, self.icon, true)
     self.iconName.text = GetLanguage(ResearchConfig[self.m_data.itemId].name)
-    self.base.text = self.m_data.wareHouse
-    self.sale.text = self.m_data.sale
+    self.base.text = "x" .. self.m_data.wareHouse
+    self.sale.text = "x" .. self.m_data.sale
     self.sliderNum.maxValue = self.m_data.wareHouse + self.m_data.sale
     self.sliderPrice.maxValue = 99
     DataManager.DetailModelRpcNoRet(self.m_data.building, 'm_recommendPrice',self.m_data.building,DataManager.GetMyOwnerID(),self.m_data.itemId)
@@ -170,7 +168,10 @@ function DataShelfCtrl:initData()
         self.automaticSwitch.isOn = self.m_data.autoReplenish
         self.isOn = self.m_data.autoReplenish
         if self.isOn then
-           self.totalNum.text =  self.m_data.wareHouse + self.m_data.sale
+            self.automaticSwitchBtn.localPosition = Vector3.New(45,0,0)
+            self.totalNum.text =  self.m_data.wareHouse + self.m_data.sale
+        else
+            self.automaticSwitchBtn.localPosition = Vector3.New(-45,0,0)
         end
         self.inputNum.text = self.m_data.sale
         self.sliderNum.value = self.m_data.sale
@@ -244,11 +245,13 @@ end
 function DataShelfCtrl:OnAutomaticSwitch(isOn)
     self.isOn = isOn
     if isOn then
+        self.automaticSwitchBtn:DOLocalMove(Vector3.New(45,0,0),0.1):SetEase(DG.Tweening.Ease.Linear)
         self.totalBg.localScale = Vector3.one
         self.inputNum.transform.localScale = Vector3.zero
         self.sliderNum.transform.localScale = Vector3.zero
         self.totalNum.text = self.m_data.wareHouse + self.m_data.sale
     else
+        self.automaticSwitchBtn:DOLocalMove(Vector3.New(-45,0,0),0.1):SetEase(DG.Tweening.Ease.Linear)
         self.totalBg.localScale = Vector3.zero
         self.inputNum.transform.localScale = Vector3.one
         self.sliderNum.transform.localScale = Vector3.one

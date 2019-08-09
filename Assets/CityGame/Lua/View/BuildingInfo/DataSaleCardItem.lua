@@ -32,7 +32,7 @@ function DataSaleCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,build
     else
         self.auto.localScale = Vector3.zero
     end
-    self.num.text = goodsDataInfo.n
+    self.num.text = "x" .. goodsDataInfo.n
     self.name.text = GetLanguage(ResearchConfig[goodsDataInfo.k.id].name)
     self.price.text = GetClientPriceString(goodsDataInfo.price)
 

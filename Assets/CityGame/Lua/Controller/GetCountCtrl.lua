@@ -49,7 +49,7 @@ end
 --初始化数据
 function GetCountCtrl:initData()
     if self.m_data then
-        self.center.text = "+" .. self.m_data.num
+        self.center.text = string.format("<size=%d>%s</size><size=%d>%s</size>", 120, "+", 200, self.m_data.num)
         self.explain.text = "<color=#ffffffff>Current institute of science and technology points </color><color=#ffd200ff>" .. self.m_data.pointNum .."</color>"
     end
 end

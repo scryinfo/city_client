@@ -26,6 +26,8 @@ function DataShelfCtrl:Awake(obj)
     shelfBehaviour:AddClick(self.confirmBtn,self.OnConfirmBtn,self)    --修改货架
     shelfBehaviour:AddClick(self.close,self.OnClose,self)
 
+    Event.AddListener("c_DelShelf",self.c_DelShelf,self)
+
     self.automaticSwitch.onValueChanged:AddListener(function(isOn)     --自动补货
         self:OnAutomaticSwitch(isOn)
     end)
@@ -35,17 +37,17 @@ function DataShelfCtrl:Awake(obj)
     self.sliderNum.onValueChanged:AddListener(function()     --数量
         self:OnSliderNum()
     end)
-    self.inputPrice.onValueChanged:AddListener(function()     --价格
-        self:OnInputPrice()
-    end)
-    self.sliderPrice.onValueChanged:AddListener(function()     --价格
-        self:OnSliderPrice()
-    end)
+    --self.inputPrice.onValueChanged:AddListener(function()     --价格
+    --    self:OnInputPrice()
+    --end)
+    --self.sliderPrice.onValueChanged:AddListener(function()     --价格
+    --    self:OnSliderPrice()
+    --end)
 end
 
 function DataShelfCtrl:Active()
     UIPanel.Active(self)
-    Event.AddListener("c_DelShelf",self.c_DelShelf,self)
+    Event.AddListener("c_RecommendPrice",self.c_RecommendPrice,self)
 end
 
 function DataShelfCtrl:Refresh()
@@ -54,11 +56,15 @@ end
 
 function DataShelfCtrl:Hide()
     UIPanel.Hide(self)
-    Event.RemoveListener("c_DelShelf",self,self)
+    Event.RemoveListener("c_RecommendPrice",self.c_RecommendPrice,self)
     self.inputNum.text = ""
     self.sliderNum.value = 0
     self.inputPrice.text = ""
     self.sliderPrice.value = 0
+end
+
+function DataShelfCtrl:Close()
+    Event.RemoveListener("c_DelShelf",self,c_DelShelf,self)
 end
 
 function DataShelfCtrl:OnCreate(obj)
@@ -92,6 +98,8 @@ function DataShelfCtrl:_getComponent(go)
     self.price = go.transform:Find("contentRoot/content/detailsInfo/price"):GetComponent("Text")
     self.inputPrice = go.transform:Find("contentRoot/content/detailsInfo/priceInput"):GetComponent("InputField")
     self.sliderPrice = go.transform:Find("contentRoot/content/detailsInfo/competitivenessSlider"):GetComponent("Slider")
+    self.recommend = go.transform:Find("contentRoot/content/detailsInfo/competitivenessSlider/FillArea/line/Image/Text"):GetComponent("Text")
+    self.recommendValue = go.transform:Find("contentRoot/content/detailsInfo/competitivenessSlider/FillArea/line/Image/Text/value"):GetComponent("Text")
     self.downShelfBtn = go.transform:Find("contentRoot/bottom/downShelfBtn").gameObject    --下架
     self.shelfText = go.transform:Find("contentRoot/bottom/downShelfBtn/text"):GetComponent("Text")
     self.addShelfBtn = go.transform:Find("contentRoot/bottom/addShelfBtn").gameObject    --上架
@@ -99,6 +107,46 @@ function DataShelfCtrl:_getComponent(go)
     self.confirmBtn = go.transform:Find("contentRoot/bottom/confirmBtn").gameObject     --修改货架
     self.close = go.transform:Find("close").gameObject     --修改货架
 
+    self.recommendValue.text = 50
+    self:_awakeSliderInput()
+end
+
+--滑动条input联动
+function DataShelfCtrl:_awakeSliderInput()
+    self.inputPrice.onValueChanged:AddListener(function (str)
+        if str == "" or self.guidePrice == nil then
+            return
+        end
+        local finalStr = ct.getCorrectPrice(str)
+        if finalStr ~= str then
+            self.inputPrice.text = finalStr  --限制用户小数输入
+            return
+        end
+        local temp = ct.CalculationAdvertisementCompetitivePower(self.guidePrice, tonumber(str) * 10000, self.m_data.itemId)  --计算竞争力
+        if temp >= functions.maxCompetitive then
+            self.competitivenessText.text = ">"..temp
+        elseif temp <= functions.minCompetitive then
+            self.competitivenessText.text = "<"..temp
+        else
+            self.competitivenessText.text = string.format("%0.1f", temp)
+        end
+        DataShelfCtrl.sliderCanChange = false  --当input输入时，禁用slider
+        self.sliderPrice.value = temp
+    end)
+    --
+    EventTriggerMgr.Get(self.sliderPrice.gameObject).onSelect = function()
+        DataShelfCtrl.sliderCanChange = true
+    end
+    EventTriggerMgr.Get(self.sliderPrice.gameObject).onUpdateSelected = function()  --当slider被选中，则可以改变input的值
+        DataShelfCtrl.sliderCanChange = true
+    end
+    self.sliderPrice.onValueChanged:AddListener(function (value)
+        if self.guidePrice == nil or DataShelfCtrl.sliderCanChange ~= true then
+            return
+        end
+        local price = ct.CalculationPromoteSuggestPrice(self.guidePrice, value)
+        self.inputPrice.text = GetClientPriceString(price)
+    end)
 end
 
 --初始化数据
@@ -108,7 +156,8 @@ function DataShelfCtrl:initData()
     self.base.text = self.m_data.wareHouse
     self.sale.text = self.m_data.sale
     self.sliderNum.maxValue = self.m_data.wareHouse + self.m_data.sale
-    self.sliderPrice.maxValue = 100
+    self.sliderPrice.maxValue = 99
+    DataManager.DetailModelRpcNoRet(self.m_data.building, 'm_recommendPrice',self.m_data.building,DataManager.GetMyOwnerID(),self.m_data.itemId)
     if self.m_data.shelf == Shelf.AddShelf then
         self.addShelfBtn.transform.localScale = Vector3.one
         self.confirmBtn.transform.localScale = Vector3.zero
@@ -125,8 +174,6 @@ function DataShelfCtrl:initData()
         end
         self.inputNum.text = self.m_data.sale
         self.sliderNum.value = self.m_data.sale
-        self.inputPrice.text = self.m_data.price
-        self.sliderPrice.value = self.m_data.price
         self.downShelfBtn.transform.localScale = Vector3.one
     end
 end
@@ -159,30 +206,38 @@ end
 
 --上架
 function DataShelfCtrl:OnAddShelfBtn(go)
-    if go.sliderNum.value == 0 then
-        Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)
-    else
         if go.isOn then
             local num = go.m_data.wareHouse + go.m_data.sale
-            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,num,go.sliderPrice.value,go.isOn)
+            if num == 0 then
+                Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)
+                return
+            end
+            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_addShelf',go.m_data.building,go.m_data.itemId,num,GetServerPriceNumber(go.inputPrice.text),go.isOn)
         else
-            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,go.sliderNum.value,go.sliderPrice.value,go.isOn)
+            if go.sliderNum.value == 0 then
+                Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)
+                return
+            end
+            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_addShelf',go.m_data.building,go.m_data.itemId,go.sliderNum.value,GetServerPriceNumber(go.inputPrice.text),go.isOn)
         end
-    end
 end
 
 --修改货架
 function DataShelfCtrl:OnConfirmBtn(go)
-    if go.sliderNum.value == 0 then
-        Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)
-    else
         if go.isOn then
             local num = go.m_data.wareHouse + go.m_data.sale
-            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,num,go.sliderPrice.value,go.isOn)
+            if num == 0 then
+                Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)
+                return
+            end
+            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,num,GetServerPriceNumber(go.inputPrice.text),go.isOn)
         else
-            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,go.sliderNum.value,go.sliderPrice.value,go.isOn)
+            if go.sliderNum.value == 0 then
+                Event.Brocast("SmallPop",GetLanguage(25030025), ReminderType.Warning)
+                return
+            end
+            DataManager.DetailModelRpcNoRet(go.m_data.building, 'm_setShelf',go.m_data.building,go.m_data.itemId,go.sliderNum.value,GetServerPriceNumber(go.inputPrice.text),go.isOn)
         end
-    end
 end
 
 --自动补货
@@ -211,6 +266,9 @@ function DataShelfCtrl:OnInputNum()
     if self.inputNum.text == "" then
         self.inputNum.text = 0
     end
+    if tonumber(self.inputNum.text) >= self.m_data.wareHouse + self.m_data.sale then
+        self.inputNum.text = self.m_data.wareHouse + self.m_data.sale
+    end
     self.inputNum.text = tonumber(self.inputNum.text)
     self.sliderNum.value = tonumber(self.inputNum.text)
 end
@@ -231,11 +289,40 @@ end
 
 --价格
 function DataShelfCtrl:OnSliderPrice()
-    self.inputPrice.text = self.sliderPrice.value
+    if self.sliderPrice.value <= 100 then
+        self.inputPrice.text = self.sliderPrice.value
+    end
 end
 
 --下架回调
 function DataShelfCtrl:c_DelShelf(info)
     Event.Brocast("SmallPop",GetLanguage(25060007), ReminderType.Succeed)
     UIPanel.ClosePage()
+end
+
+--推荐定价
+function DataShelfCtrl:c_RecommendPrice(info)
+    if info.msg then
+        self.guidePrice = ct.CalculationPromoteRecommendPrice(info.msg,self.m_data.itemId)
+        local temp
+        if self.m_data.shelf == Shelf.AddShelf then
+            temp = ct.CalculationAdvertisementCompetitivePower(self.guidePrice, self.guidePrice, self.m_data.itemId)
+        elseif self.m_data.shelf == Shelf.SetShelf then
+            temp = ct.CalculationAdvertisementCompetitivePower(self.guidePrice, self.m_data.price, self.m_data.itemId)
+        end
+        if temp >= functions.maxCompetitive then
+            self.competitivenessText.text = ">"..temp
+        elseif temp <= functions.minCompetitive then
+            self.competitivenessText.text = "<"..temp
+        else
+            self.competitivenessText.text = string.format("%0.1f", temp)
+        end
+        DataShelfCtrl.sliderCanChange = false
+        self.sliderPrice.value = temp
+        if self.m_data.shelf == Shelf.AddShelf then
+            self.inputPrice.text = GetClientPriceString(self.guidePrice)
+        elseif self.m_data.shelf == Shelf.SetShelf then
+            self.inputPrice.text = GetClientPriceString(self.m_data.price)
+        end
+    end
 end

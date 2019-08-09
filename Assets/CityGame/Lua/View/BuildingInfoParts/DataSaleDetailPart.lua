@@ -152,9 +152,12 @@ end
 
 --上架回调
 function DataSaleDetailPart:c_AddShelf(info)
+    if self.dataSaleCardItem == nil or next(self.dataSaleCardItem) == nil then
+        self:_isEmpty(false)
+    end
     local prefabs = self:createPrefab(self.dataSaleCard,self.content)
     local data = {}
-    data.autoReplenish = info.autoReplenish
+    data.autoReplenish = info.autoRepOn
     data.k = info.item.key
     data.n = info.item.n
     data.price = info.price
@@ -200,8 +203,13 @@ function DataSaleDetailPart:c_SetShelf(info)
                 v.storeNum = info.storeNum
                 v.prices = info.price
                 v.autoReplenish = info.autoRepOn
+                if info.autoRepOn then
+                    v.auto.localScale = Vector3.one
+                else
+                    v.auto.localScale = Vector3.zero
+                end
                 v.num.text = info.item.n
-                v.price.text = info.price
+                v.price.text = GetClientPriceString(info.price)
             end
         end
     end
@@ -209,7 +217,7 @@ end
 
 --购买点数回调
 function DataSaleDetailPart:c_BuyCount(info)
-    if self.dataSaleCardItem then
+    if self.dataSaleCardItem and next(self.dataSaleCardItem) then
         local index
         for i, v in pairs(self.dataSaleCardItem) do
             if v.type == info.item.key.id then
@@ -217,6 +225,7 @@ function DataSaleDetailPart:c_BuyCount(info)
                 v.num.text = v.n
                 if v.n <= 0 then
                    index = i
+                    destroy(v.prefab.gameObject)
                 end
             end
         end
@@ -231,7 +240,7 @@ end
 
 --调查线变化
 function DataSaleDetailPart:SurveyLineUpData(info)
-    if self.dataSaleCardItem then
+    if self.dataSaleCardItem and next(self.dataSaleCardItem) then
         for i, v in pairs(self.dataSaleCardItem) do
             if v.type == info.iKey.id then
                 if v.autoReplenish then

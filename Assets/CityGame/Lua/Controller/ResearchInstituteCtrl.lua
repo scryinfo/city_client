@@ -55,7 +55,7 @@ end
 function ResearchInstituteCtrl:_receiveDetailTechnology(researchDataInfo)
     -- 开业
     ResearchInstitutePanel.openBusinessItem:initData(researchDataInfo.info, BuildingType.Laboratory)
-
+    researchDataInfo.insId = self.m_data.insId
     -- 建筑顶部组件
     researchDataInfo.info.buildingType = BuildingType.Laboratory
     if ResearchInstitutePanel.topItem ~= nil then

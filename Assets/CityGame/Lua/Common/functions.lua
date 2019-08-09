@@ -1025,46 +1025,64 @@ end
 ---计算推广公司竞争力
 --推荐定价:recommendedPricing
 --定价:price
---推广能力:competitivePower  -- 所有不同类型推广能力和 / 4
---推广类型:Advertisementtype  --2251食品推广  2252服饰推广   13零售店推广   14住宅推广
-function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,competitivePower,Advertisementtype,averageRDAbility)
-    if price <= 0 then
-        return CalculationNBitAfterDecimalPoint(100)
+--推广类型:Advertisementtype  --1600012商品  1600013零售店   1600013住宅
+function ct.CalculationAdvertisementCompetitivePower(recommendedPricing,price,Advertisementtype)
+    --推荐定价 <= 0     推荐定价 = 推荐定价表
+    if recommendedPricing <= 0 then
+        recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
     end
-
-    recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
-    if averageRDAbility <= 0 then
-        averageRDAbility = competitivePower
+    --推荐定价 >= 定价  竞争力 = (推荐定价 - 玩家定价)  / (推荐定价 / 2 / 49) + 50
+  local temp
+    if recommendedPricing >= price then
+        temp = (recommendedPricing - price) / (recommendedPricing / Divisor / BargainingPower) + CPMagnification
+    else
+        temp = (recommendedPricing - price) / (recommendedPricing  / BargainingPower) + CPMagnification
     end
-    --竞争力 = 推荐定价 * 玩家推广能力 / 全城推广能力 / 定价 * 50
-    return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification * competitivePower / averageRDAbility))
-
-    --if recommendedPricing <= 0 then
-    --    --推荐定价 = 推荐定价表(新增-建筑ID前两位*10000000+能力id)
-    --    recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
-    --    --竞争力 = 推荐定价 / 定价  * 1000 (整数)
-    --    return  CalculationNBitAfterDecimalPoint((recommendedPricing / price * CPMagnification ))
-    --else
-    --    --竞争力 = 推荐定价 / (定价/推广能力) * 1000 (整数)
-    --    return  CalculationNBitAfterDecimalPoint((recommendedPricing / price ) * (competitivePower / averageRDAbility) * CPMagnification )
-    --end
+    if temp >= functions.maxCompetitive then
+        temp = functions.maxCompetitive
+    end
+    if temp <= functions.minCompetitive then
+        temp = functions.minCompetitive
+    end
+    return temp
 end
 
 ---计算推广公司推荐默认值
 --推荐定价:recommendedPricing
---推广类型:Advertisementtype  --2251食品推广  2252服饰推广   13零售店推广   14住宅推广
---全城
-function ct.CalculationPromoteSuggestPrice(recommendedPricing,competitivePower,averageRDAbility)
-    if averageRDAbility <= 0 then
-        averageRDAbility = competitivePower
+--竞争力： power
+--推广类型:Advertisementtype  --1600012商品  1600013零售店   1600013住宅
+function ct.CalculationPromoteSuggestPrice(recommendedPricing,power,Advertisementtype)
+    if recommendedPricing <= 0 then
+        recommendedPricing =  Competitive[16 * PRIDMagnification  + Advertisementtype]
     end
-    return Competitive[16 * PRIDMagnification + 2251] * competitivePower / averageRDAbility --0701修改
-    --if recommendedPricing <= 0 then
-    --    --推荐定价 = 推荐定价表
-    --    recommendedPricing = Competitive[16 * PRIDMagnification + 2251]
-    --    return recommendedPricing
-    --end
-    --return recommendedPricing
+    local tempPrice
+    --竞争力 >= 50  玩家定价 = 推荐定价 -  (竞争力 - 50) * (推荐定价 / 2 / 49)
+    if power >=50 then
+        tempPrice = recommendedPricing - (power - CPMagnification) * (recommendedPricing / Divisor/ BargainingPower)
+    else
+        --竞争力 < 50   玩家定价 = 推荐定价 -  (竞争力 - 50) * (推荐定价 / 49)
+        tempPrice = recommendedPricing - (power - CPMagnification) * (recommendedPricing / BargainingPower)
+    end
+    return tempPrice
+end
+
+--计算推广公司推荐定价
+--推荐定价  recommendedPricing
+--推广类型:Advertisementtype  --1600012商品  1600013零售店   1600013住宅
+function ct.CalculationPromoteRecommendPrice(recommendedPricing,Advertisementtype)
+    if recommendedPricing == nil or next(recommendedPricing) == nil then
+        return
+    end
+    local temp
+    for i, v in pairs(recommendedPricing) do
+        if v.typeId == Advertisementtype then
+            temp = v.guidePrice
+        end
+    end
+    if temp <= 0 then
+        temp =  Competitive[16 * PRIDMagnification  + Advertisementtype]
+    end
+    return temp
 end
 
 ---计算研发公司竞争力【over】

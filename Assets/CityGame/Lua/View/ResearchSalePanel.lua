@@ -31,11 +31,16 @@ function ResearchSalePanel.InitPanel()
     this.nullText = transform:Find("MiddleRoot/QuantityRoot/NullImage/NullText"):GetComponent("Text")
     this.priceInputField = transform:Find("MiddleRoot/PriceRoot/InputField"):GetComponent("InputField")
     this.priceSlider = transform:Find("MiddleRoot/PriceRoot/Slider"):GetComponent("Slider")
+    this.recommendText = transform:Find("MiddleRoot/PriceRoot/Slider/RecommendImage/Text"):GetComponent("Text")
 
     this.competitivenessText = transform:Find("MiddleRoot/CompetitivenessImage/CompetitivenessText"):GetComponent("Text")
 
 
+    this.autoBtn = transform:Find("MiddleRoot/AutoBtn")
     this.tipsImage = transform:Find("MiddleRoot/AutoBtn/TipsImage")
+    this.tipsText = transform:Find("MiddleRoot/AutoBtn/TipsImage/TipsText"):GetComponent("Text")
+
+    this.competitivenessBtn = transform:Find("MiddleRoot/CompetitivenessImage/CompetitivenessBtn")
 
     this.closeBtnTF = transform:Find("MiddleRoot/CloseTextBtn")
     this.closeBtn = transform:Find("MiddleRoot/CloseTextBtn").gameObject
@@ -43,4 +48,6 @@ function ResearchSalePanel.InitPanel()
     this.sureBtn = transform:Find("MiddleRoot/SureBtn").gameObject
     this.changeBtnTF = transform:Find("MiddleRoot/ChangeBtn")
     this.changeBtn = transform:Find("MiddleRoot/ChangeBtn").gameObject
+
+    this.closeTipsBtn = transform:Find("CloseTipsBtn")
 end

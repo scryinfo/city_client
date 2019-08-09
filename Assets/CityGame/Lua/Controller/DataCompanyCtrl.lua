@@ -71,6 +71,7 @@ end
 --返回
 function DataCompanyCtrl:OnBack()
     UIPanel.ClosePage()
+    DataManager.CloseDetailModel(self.m_data.insId)
     if self.groupMgr ~= nil then
         self.groupMgr:Destroy()
         self.groupMgr = nil
@@ -81,21 +82,6 @@ end
 function DataCompanyCtrl:OnOpen(go)
     PlayMusEff(1002)
     ct.OpenCtrl("BubbleMessageCtrl",go.m_data.info)
-end
-
---点击队列
-function DataCompanyCtrl:OnQueue(go)
-    PlayMusEff(1002)
-    if go.m_data.selledPromCount == 0 then
-        local data = {}
-        ct.OpenCtrl("QueneCtrl",data)
-    else
-        if go.m_data.info.ownerId == myOwnerID then
-            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,true)
-        else
-            DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_QueryPromote',go.m_data.insId,false)
-        end
-    end
 end
 
 --建筑详情回调

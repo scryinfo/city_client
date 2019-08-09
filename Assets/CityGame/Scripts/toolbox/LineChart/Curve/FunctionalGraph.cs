@@ -13,7 +13,8 @@ public class FunctionalGraph : MaskableGraphic
     private Vector2 _xPoint;
     private Vector2 _yPoint;
     private float[] boundary ;  //分界线
-    private Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>> dicLine = new Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>>();
+    private Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>> dicLine = new Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>>();//曲线
+    private Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>> dicChart = new Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>>();//柱状图
     private Slide slide;
     private void OnGUI()
     {
@@ -109,6 +110,28 @@ public class FunctionalGraph : MaskableGraphic
                                 vh.AddUIVertexQuad(GetQuad(new Vector2(line.Key[i][v].x, 0), line.Key[i][v],
                                line.Key[i][v + 1], new Vector2(line.Key[i][v + 1].x, 0), new Color(56f / 255, 167f / 255, 202f / 255, 77f / 255)));
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        //绘制柱状图
+        if(dicChart.Count >= 1)
+        {
+            foreach (var item in dicChart.Values)
+            {
+                foreach (var chart in item)
+                {
+                    for (int i = 0; i < chart.Key.Count; i++)
+                    {
+                        for (int k = 0; k < chart.Key[i].Length; k++)
+                        {
+                            vh.AddUIVertexQuad(GetQuad(new Vector2(chart.Key[i][k].x - GraphBase.ChartWidth / 2, 0),
+                                new Vector2(chart.Key[i][k].x - GraphBase.ChartWidth / 2, chart.Key[i][k].y),
+                                new Vector2(chart.Key[i][k].x + GraphBase.ChartWidth / 2, chart.Key[i][k].y),
+                                new Vector2(chart.Key[i][k].x + GraphBase.ChartWidth / 2, 0),
+                                chart.Value[i]));
                         }
                     }
                 }
@@ -366,5 +389,23 @@ public class FunctionalGraph : MaskableGraphic
     public void Close()
     {
         dicLine.Clear();
+    }
+    //柱状图
+    public void DrawHistogram(Vector2[] lines, Color color, int id)
+    {
+        List<Vector2[]> chart = new List<Vector2[]>();
+        List<Color> chartColor = new List<Color>();
+        chart.Add(lines);
+        chartColor.Add(color);
+        Dictionary<List<Vector2[]>, List<Color>> dic = new Dictionary<List<Vector2[]>, List<Color>>();
+        dic.Add(chart, chartColor);
+        if (!dicChart.ContainsKey(id))
+        {
+            dicChart.Add(id, dic);
+        }
+        else
+        {
+            dicChart.Remove(id);
+        }
     }
 }

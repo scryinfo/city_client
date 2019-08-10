@@ -8,7 +8,7 @@ UIPanel:ResgisterOpen(CityInfoCtrl)
 
 local cityInfoBehaviour
 function CityInfoCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/UserDataPanel.prefab"
+    return "Assets/CityGame/Resources/View/CityInfoPanel.prefab"
 end
 
 function CityInfoCtrl:initialize()
@@ -17,7 +17,9 @@ end
 
 function CityInfoCtrl:Awake(go)
     cityInfoBehaviour = self.gameObject:GetComponent('LuaBehaviour')
-    cityInfoBehaviour:AddClick(self.back,self.OnBack,self)
+    cityInfoBehaviour:AddClick(CityInfoPanel.back,self.OnBack,self)
+    cityInfoBehaviour:AddClick(CityInfoPanel.notBasic,self.OnNotBasic,self)  --基础信息
+    cityInfoBehaviour:AddClick(CityInfoPanel.notIndustry,self.OnNotIndustry,self)  --行业信息
 
 end
 
@@ -45,4 +47,18 @@ end
 --返回
 function CityInfoCtrl:OnBack()
     UIPanel.ClosePage()
+end
+
+function CityInfoCtrl:OnNotBasic()
+    CityInfoPanel.notBasic.transform.localScale = Vector3.zero
+    CityInfoPanel.basic.localScale = Vector3.one
+    CityInfoPanel.notIndustry.transform.localScale = Vector3.one
+    CityInfoPanel.industry.localScale = Vector3.zero
+end
+
+function CityInfoCtrl:OnNotIndustry()
+    CityInfoPanel.notBasic.transform.localScale = Vector3.one
+    CityInfoPanel.basic.localScale = Vector3.zero
+    CityInfoPanel.notIndustry.transform.localScale = Vector3.zero
+    CityInfoPanel.industry.localScale = Vector3.one
 end

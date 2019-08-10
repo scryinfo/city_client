@@ -24,11 +24,11 @@ function CityInfoPanel.InitPanel()
     --left
     this.notBasic = transform:Find("content/left/basic/notSelectBg").gameObject
     this.notBasicText = transform:Find("content/left/basic/notSelectBg/Image/Text"):GetComponent("Text")
-    this.basic = transform:Find("content/left/basic/selectBg").gameObject
+    this.basic = transform:Find("content/left/basic/selectBg")
     this.basicText = transform:Find("content/left/basic/selectBg/Image/Text"):GetComponent("Text")
     this.notIndustry = transform:Find("content/left/industry/notSelectBg").gameObject
     this.notIndustryText = transform:Find("content/left/industry/notSelectBg/Image/Text"):GetComponent("Text")
-    this.industry = transform:Find("content/left/industry/selectBg").gameObject
+    this.industry = transform:Find("content/left/industry/selectBg")
     this.industryText = transform:Find("content/left/industry/selectBg/Image/Text"):GetComponent("Text")
     this.content = transform:Find("content/left/content"):GetComponent("RectTransform")
     this.industryInfoItem = transform:Find("content/left/content/IndustryInfoItem").gameObject

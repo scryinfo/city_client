@@ -150,7 +150,7 @@ function ResearchSaleDetailPart:_getScienceShelfData(data)
                 rect.transform.localPosition = Vector3.zero
                 go:SetActive(true)
 
-                self.researchMaterialItems[i] = ResearchMaterialItem:new(go, v, 3, data.buildingId)
+                self.researchMaterialItems[i] = ResearchMaterialItem:new(go, v, 3, data.buildingId, true)
             end
         else
             --self.addBtnTF.localScale = Vector3.zero

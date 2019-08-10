@@ -7,11 +7,12 @@
 ResearchMaterialItem = class("ResearchMaterialItem")
 
 -- 初始化
-function ResearchMaterialItem:initialize(prefab, data, index,  buildingId)
+function ResearchMaterialItem:initialize(prefab, data, index,  buildingId, isOwn)
     self.prefab = prefab
     data.index = index
     self.data = data
     self.buildingId = buildingId
+    self.isOwn = isOwn
 
     self.transform = prefab.transform
     self.iconImage = self.transform:Find("IconImage"):GetComponent("Image")
@@ -46,16 +47,20 @@ function ResearchMaterialItem:ShowView()
         self.autoImageText = self.transform:Find("AutoImage/Text"):GetComponent("Text")
 
         if self.data.autoReplenish then -- 打开了自动补货
-            self.autoImageTF.localScale = Vector3.one
-            if self.data.lockedNum == 0 then
-                self.autoImageText.text = "vacant!"
-                local autoImageTextPreferredWidth = self.autoImageText.preferredWidth
-                self.autoImageTF.sizeDelta = Vector2.New(autoImageTextPreferredWidth + 60, 40)
-                self.autoImage.color = getColorByVector3(Vector3.New(172,0,0))
+            if self.isOwn then
+                self.autoImageTF.localScale = Vector3.one
+                if self.data.lockedNum == 0 then
+                    self.autoImageText.text = "vacant!"
+                    local autoImageTextPreferredWidth = self.autoImageText.preferredWidth
+                    self.autoImageTF.sizeDelta = Vector2.New(autoImageTextPreferredWidth + 60, 40)
+                    self.autoImage.color = getColorByVector3(Vector3.New(172,0,0))
+                else
+                    self.autoImageTF.sizeDelta = Vector2.New(60, 40)
+                    self.autoImageText = ""
+                    self.autoImage.color = getColorByVector3(Vector3.New(0,172,138))
+                end
             else
-                self.autoImageTF.sizeDelta = Vector2.New(60, 40)
-                self.autoImageText = ""
-                self.autoImage.color = getColorByVector3(Vector3.New(0,172,138))
+                self.autoImageTF.localScale = Vector3.zero
             end
         else
             self.autoImageTF.localScale = Vector3.zero

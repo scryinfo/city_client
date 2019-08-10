@@ -27,6 +27,9 @@ end
 
 function ResearchSaleChoiceCtrl:Active()
     UIPanel.Active(self)
+
+    -- 多语言
+    ResearchSaleChoicePanel.nullText.text = "There is no data!"
 end
 
 function ResearchSaleChoiceCtrl:Refresh()
@@ -48,7 +51,8 @@ function ResearchSaleChoiceCtrl:_updateData()
     -- 根据数据生成ResearchMaterialItem
     if not self.researchMaterialItems then
         self.researchMaterialItems = {}
-        if self.m_data.store then
+        if self.m_data.store and self.m_data.store[1] then
+            ResearchSaleChoicePanel.nullImage.localScale = Vector3.zero
             for i, v in ipairs(self.m_data.store) do
                 local go = ct.InstantiatePrefab(ResearchSaleChoicePanel.researchMaterialItem)
                 local rect = go.transform:GetComponent("RectTransform")
@@ -59,6 +63,8 @@ function ResearchSaleChoiceCtrl:_updateData()
 
                 self.researchMaterialItems[i] = ResearchMaterialItem:new(go, v, 1, self.m_data.buildingId)
             end
+        else
+            ResearchSaleChoicePanel.nullImage.localScale = Vector3.one
         end
     end
 end

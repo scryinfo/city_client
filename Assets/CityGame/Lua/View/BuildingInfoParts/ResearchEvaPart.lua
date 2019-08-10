@@ -84,7 +84,7 @@ function ResearchEvaPart:_initFunc()
         self.nullText.transform.localScale = Vector3.zero
         self.line.transform.localScale = Vector3.one
         self.info = self.m_data.line[1]
-        LoadSprite(ResearchConfig[self.m_data.line[1].itemId].iconPath, self.icon, false)
+        LoadSprite(ResearchConfig[self.m_data.line[1].itemId].iconPath, self.icon, true)
         self.allTime = (self.m_data.line[1].targetCount - self.m_data.line[1].nowCount) / self.m_data.line[1].speed
         local ts = getTimeTable(self.allTime)
         self.timeText.text = ts.hour..":"..ts.minute..":"..ts.second

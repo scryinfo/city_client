@@ -22,6 +22,7 @@ function EvaTitleItemTwo:_showContent()
     else
         self:_setAddNumber()
     end
+    self:_setMarketAddNumber()
 end
 
 -- 按钮点击事件、子类继承实现自己的方法
@@ -29,11 +30,11 @@ function EvaTitleItemTwo:_onClickBtn()
     BaseEvaTitleItem._onClickBtn(self)
     local optionOne = EvaCtrl.static.evaCtrl:GetEvaRecordData()[1]
     if EvaConfig[optionOne].option[self.index].option then
-        EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -206)
+        EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -282)
         EvaCtrl.static.evaCtrl.isClickEvaT = true
         EvaCtrl.static.evaCtrl:ShowOptionThere(#EvaConfig[optionOne].option[self.index].option)
     else
-        EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -134)
+        EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -192)
         EvaCtrl.static.evaCtrl.isClickEvaT = false
         EvaCtrl.static.evaCtrl:ShowOptionThere(0)
         EvaCtrl.static.evaCtrl:CreatePropertyItem(EvaConfig[optionOne].option[self.index].property)

@@ -46,3 +46,8 @@ end
 function ResultTwoItem:_isShow(isShow)
     self.transform.localScale = isShow and Vector3.one or Vector3.zero
 end
+
+-- 设置位置
+function ResultTwoItem:SetPosition(v3)
+    self.transform:GetComponent("RectTransform").anchoredPosition = v3 -- Vector3.New(0, 0, 0)
+end

@@ -18,11 +18,13 @@ end
 
 -- 查询玩家的Eva信息
 function EvaModel.m_QueryMyEva()
+    FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "queryMyEva","gs.Id",{id = DataManager.GetMyOwnerID()})
 end
 
 -- 服务器返回的Eva信息
 function EvaModel:n_OnQueryMyEva(evas)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("c_OnQueryMyEva", evas)
 end
 

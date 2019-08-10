@@ -15,9 +15,14 @@ function BaseEvaTitleItem:initialize(prefab, optionIndex, index)
 
     self.btn = self.transform:GetComponent("Button")
     self.nameText = self.transform:Find("Text"):GetComponent("Text")
-    self.iconAddImage = self.transform:Find("IconAddImage")
-    self.iconAddTextTF = self.transform:Find("IconAddText")
-    self.iconAddText = self.transform:Find("IconAddText"):GetComponent("Text")
+    self.technologyAddImage = self.transform:Find("TechnologyAddImage")
+    self.technologyAddTextTF = self.transform:Find("TechnologyAddText")
+    self.technologyAddText = self.transform:Find("TechnologyAddText"):GetComponent("Text")
+
+    self.marketAddImage = self.transform:Find("MarketAddImage")
+    self.marketAddTextTF = self.transform:Find("MarketAddText")
+    self.marketAddText = self.transform:Find("MarketAddText"):GetComponent("Text")
+
     self:_showContent()
 
     local nowOptionIndex = EvaCtrl.static.evaCtrl:GetEvaRecordData()[self.optionIndex]
@@ -42,12 +47,24 @@ end
 -- 设置已加点的数量
 function BaseEvaTitleItem:_setAddNumber(number)
     if number and number > 0 then
-        self.iconAddImage.localScale = Vector3.one
-        self.iconAddTextTF.localScale = Vector3.one
-        self.iconAddText.text = tostring(number) --string.format("E%s", number)
+        self.technologyAddImage.localScale = Vector3.one
+        self.technologyAddTextTF.localScale = Vector3.one
+        self.technologyAddText.text = tostring(number) --string.format("E%s", number)
     else
-        self.iconAddImage.localScale = Vector3.zero
-        self.iconAddTextTF.localScale = Vector3.zero
+        self.technologyAddImage.localScale = Vector3.zero
+        self.technologyAddTextTF.localScale = Vector3.zero
+    end
+end
+
+-- 设置市场已加点的数量
+function BaseEvaTitleItem:_setMarketAddNumber(number)
+    if number and number > 0 then
+        self.marketAddImage.localScale = Vector3.one
+        self.marketAddTextTF.localScale = Vector3.one
+        self.marketAddText.text = tostring(number) --string.format("E%s", number)
+    else
+        self.marketAddImage.localScale = Vector3.zero
+        self.marketAddTextTF.localScale = Vector3.zero
     end
 end
 

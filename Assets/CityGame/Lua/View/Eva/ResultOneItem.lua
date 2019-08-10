@@ -59,7 +59,7 @@ function ResultOneItem:_isShow(isShow)
 end
 
 -- 设置多语言
-function ResultOneItem:_isShow(isShow)
+function ResultOneItem:_setLanguage(isShow)
     self.largeTitleText.text = GetLanguage(31010016)
     self.mediumTitleText.text = GetLanguage(31010015)
     self.smallTitleText.text = GetLanguage(31010014)

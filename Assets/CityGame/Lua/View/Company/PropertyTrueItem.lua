@@ -16,6 +16,7 @@ PropertyTrueItem.static.BTypeIcon = -- b类型显示配置
     ["PromotionAbility"] = "Assets/CityGame/Resources/Atlas/Eva/icon-popularize.png",
     ["InventionUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-success-rate.png",
     ["EvaUpgrade"] = "Assets/CityGame/Resources/Atlas/Eva/icon-success-rate.png",
+    ["Brand"] = "Assets/CityGame/Resources/Atlas/Eva/icon-popularity.png",
     --["WarehouseUpgrade"] = "Assets/CityGame/Resources/Atlas/Company/icon-warehouse-w.png",
 }
 

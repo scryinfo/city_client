@@ -19,4 +19,7 @@ function ResearchSaleChoicePanel.InitPanel()
 
     this.materialsScrollContent = transform:Find("BottomRoot/MaterialsScroll/Viewport/Content")
     this.researchMaterialItem = transform:Find("BottomRoot/MaterialsScroll/Viewport/Content/ResearchMaterialItem").gameObject
+
+    this.nullImage = transform:Find("BottomRoot/NullImage")
+    this.nullText = transform:Find("BottomRoot/NullImage/NullText"):GetComponent("Text")
 end

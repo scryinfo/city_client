@@ -26,6 +26,7 @@ function ResearchOpenBoxCtrl:Awake(go)
     luaBehaviour:AddClick(ResearchOpenBoxPanel.openBtn, self.OnOpen, self)
     luaBehaviour:AddClick(ResearchOpenBoxPanel.subtractBtn, self.OnSubtract, self)
     luaBehaviour:AddClick(ResearchOpenBoxPanel.addBtn, self.OnAdd, self)
+    luaBehaviour:AddClick(ResearchOpenBoxPanel.closeBtn.gameObject, self.OnClose, self)
 
     ResearchOpenBoxPanel.inputField.onEndEdit:AddListener(function (inputValue) --onEndEdit
         if inputValue == nil or inputValue == "" then
@@ -143,23 +144,26 @@ function ResearchOpenBoxCtrl:OnAdd(go)
     ResearchOpenBoxPanel.inputField.text = tostring(inputValue + 1)
     ResearchOpenBoxPanel.tipsText.text = string.format("Earn %d~%d tech points", 10 * (inputValue + 1), 100 * (inputValue + 1))
 end
+
+function ResearchOpenBoxCtrl:OnClose(go)
+    PlayMusEff(1002)
+    ResearchOpenBoxPanel.closeBtn.localScale = Vector3.zero
+    ResearchOpenBoxPanel.researchMaterialItem.localScale = Vector3.zero
+    ResearchOpenBoxPanel.middleRoot.localScale = Vector3.one
+end
 -------------------------------------网络回调-------------------------------------
 function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)
+    ResearchOpenBoxPanel.closeBtn.localScale = Vector3.one
     ResearchOpenBoxPanel.researchMaterialItem.localScale = Vector3.one
     ResearchOpenBoxPanel.middleRoot.localScale = Vector3.zero
 
-    LoadSprite(ResearchConfig[scienceBoxACK.key.id].iconPath, ResearchOpenBoxPanel.iconImage, false)
+    LoadSprite(ResearchConfig[scienceBoxACK.key.id].iconPath, ResearchOpenBoxPanel.iconImage, true)
     ResearchOpenBoxPanel.resultNumText.text = "x" .. scienceBoxACK.resultPoint
     ResearchOpenBoxPanel.resultNameText.text = ResearchConfig[scienceBoxACK.key.id].name
 
     self.totalNum = self.totalNum - scienceBoxACK.openNum
     self:_showTotalNum()
 
-    if self.nowItem then
-        self.nowItem:SetBg(false)
-        self.nowItem:SetBtn(true)
-    end
-    self.nowItem = nil
     for i, v in ipairs(self.researchEvaBoxItems) do
         if v.data.key.id == scienceBoxACK.key.id then
             --v.data.n = v.data.n - scienceBoxACK.openNum

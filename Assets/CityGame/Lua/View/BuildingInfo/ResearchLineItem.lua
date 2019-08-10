@@ -13,7 +13,7 @@ function ResearchLineItem:initialize(prefab, data, buildingId)
     self.buildingId = buildingId
 
     local transform = prefab.transform
-    LoadSprite( ResearchConfig[data.itemId].iconPath, transform:Find("IconImage"):GetComponent("Image"), false)
+    LoadSprite( ResearchConfig[data.itemId].iconPath, transform:Find("IconImage"):GetComponent("Image"), true)
     transform:Find("NameText"):GetComponent("Text").text = ResearchConfig[data.itemId].name
     transform:Find("NumText"):GetComponent("Text").text = string.format("0/%d", data.targetCount)
 

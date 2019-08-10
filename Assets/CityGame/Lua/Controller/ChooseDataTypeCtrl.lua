@@ -27,6 +27,8 @@ function ChooseDataTypeCtrl:Active()
     Event.AddListener("c_AddSurveyLien",self.c_AddSurveyLien,self)
     Event.AddListener("c_DataBase",self.c_DataBase,self)
     Event.AddListener("c_AddShelf",self.c_AddShelf,self)
+
+    self.emptyText.text = GetLanguage(25030022)
 end
 
 function ChooseDataTypeCtrl:Refresh()
@@ -65,11 +67,14 @@ function ChooseDataTypeCtrl:_getComponent(go)
     self.survey = go.transform:Find("down/surveyScrollView/Viewport/Content"):GetComponent("RectTransform")
     self.saleScrollView = go.transform:Find("down/saleScrollView").gameObject
     self.sale = go.transform:Find("down/saleScrollView/Viewport/Content"):GetComponent("RectTransform")
+    self.empty = go.transform:Find("down/empty")
+    self.emptyText = go.transform:Find("down/empty/Image/Text"):GetComponent("Text")
 end
 
 --初始化数据
 function ChooseDataTypeCtrl:initData()
     if self.m_data.type == DataType.DataSurvey then
+        self.empty.localScale = Vector3.zero
         self.surveyScrollView:SetActive(true)
         self.saleScrollView:SetActive(false)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_getSurveySpeed',self.m_data.insId)
@@ -110,11 +115,14 @@ end
 --获取仓库数据回调
 function ChooseDataTypeCtrl:c_DataBase(info)
     if info.store == nil then
+        self.empty.localScale = Vector3.one
         return
     else
         self.dataBaseItem = {}
+        self.empty.localScale = Vector3.one
         for i, v in ipairs(info.store) do
             if v.storeNum ~= 0 and v.lockedNum == 0 then
+                self.empty.localScale = Vector3.zero
                 local function callback(prefab)
                     self.dataBaseItem[i] = DataBaseCardItem:new(marketDataTypeBehaviour,prefab,v,info.buildingId,DataType.DataSale)
                 end

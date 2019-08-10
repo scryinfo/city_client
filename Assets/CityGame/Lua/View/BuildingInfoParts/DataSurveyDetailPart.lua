@@ -210,7 +210,11 @@ end
 
 --删除调查线
 function DataSurveyDetailPart:OnDelete(go)
-    DataManager.DetailModelRpcNoRet(go.m_data.info.id, 'm_delSurveyLine',go.m_data.info.id,go.SurveyData.line[1].id)
+    local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
+                content = GetLanguage(25030029),func = function()
+            DataManager.DetailModelRpcNoRet(go.m_data.info.id, 'm_delSurveyLine',go.m_data.info.id,go.SurveyData.line[1].id)
+        end}
+    ct.OpenCtrl("NewReminderCtrl",data)
 end
 
 function DataSurveyDetailPart:UpData()

@@ -67,6 +67,7 @@ function UserDataCtrl:_getComponent(go)
     self.buyInputBg = go.transform:Find("content/quantity/buyInputBg")
     self.buyInput = go.transform:Find("content/quantity/buyInputBg/input"):GetComponent("InputField")
     self.slider = go.transform:Find("content/quantity/inputBg/input/Slider"):GetComponent("Slider")
+    self.titleText = go.transform:Find("content/quantity/inputBg/input/Slider/Text"):GetComponent("Text")
     self.btn =  go.transform:Find("content/quantity/inputBg/btn").gameObject
     self.btnText =  go.transform:Find("content/quantity/inputBg/btn/Text"):GetComponent("Text")
     self.buyBtn =  go.transform:Find("content/quantity/buyInputBg/buyBtn").gameObject
@@ -84,6 +85,12 @@ function UserDataCtrl:initData()
         self.base.text = "x" .. self.m_data.wareHouse
         self.sale.text = "x" .. self.m_data.sale
         self.slider.maxValue = self.m_data.wareHouse
+        if self.m_data.wareHouse == 0 and self.m_data.sale ~= 0 then
+            self.titleText.text = GetLanguage(25020041)
+            self.titleText.transform.localScale = Vector3.one
+        else
+            self.titleText.transform.localScale = Vector3.zero
+        end
     else
         --self.btnText = GetLanguage()
         self.btn.transform.localScale = Vector3.zero
@@ -91,6 +98,12 @@ function UserDataCtrl:initData()
         self.baseBg.localScale = Vector3.zero
         self.saleBg.localScale = Vector3.zero
         self.slider.maxValue = self.m_data.sale
+        if self.m_data.sale == 0 then
+            self.titleText.text = GetLanguage(25060012)
+            self.titleText.transform.localScale = Vector3.one
+        else
+            self.titleText.transform.localScale = Vector3.zero
+        end
     end
     LoadSprite(ResearchConfig[self.m_data.itemId].iconPath, self.icon, true)
 end

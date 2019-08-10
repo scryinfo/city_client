@@ -3,6 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/27 20:16
 ---GroundTransContractPanel
+---土地购买合约
 local transform
 GroundTransContractPanel = {}
 local this = GroundTransContractPanel
@@ -16,9 +17,10 @@ function GroundTransContractPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.rentBottomTran = transform:Find("bottomRoot/rent")
     this.rentBtn = transform:Find("bottomRoot/rent/rentBtn")
-    this.rentTipText = transform:Find("bottomRoot/rent/tipText"):GetComponent("Text")
+    this.rentTipText = transform:Find("bottomRoot/rent/tip/tipText"):GetComponent("Text")
     this.buyBottomBtn = transform:Find("bottomRoot/buyBtn")
 
+    this.tipText = transform:Find("centerRoot/tipText"):GetComponent("Text")
     this.totalPriceText = transform:Find("centerRoot/total/totalPriceText"):GetComponent("Text")
     this.rentCenterTran = transform:Find("centerRoot/rent")
     this.rentAreaText = transform:Find("centerRoot/rent/areaText"):GetComponent("Text")

@@ -208,7 +208,7 @@ function DataSaleDetailPart:c_SetShelf(info)
                 else
                     v.auto.localScale = Vector3.zero
                 end
-                v.num.text = info.item.n
+                v.num.text = "x" .. info.item.n
                 v.price.text = GetClientPriceString(info.price)
             end
         end
@@ -222,7 +222,7 @@ function DataSaleDetailPart:c_BuyCount(info)
         for i, v in pairs(self.dataSaleCardItem) do
             if v.type == info.item.key.id then
                 v.n = v.n - info.item.n
-                v.num.text = v.n
+                v.num.text = "x" .. v.n
                 if v.n <= 0 then
                    index = i
                     destroy(v.prefab.gameObject)
@@ -245,7 +245,7 @@ function DataSaleDetailPart:SurveyLineUpData(info)
             if v.type == info.iKey.id then
                 if v.autoReplenish then
                     v.n = info.nowCountInLocked
-                    v.num.text = v.n
+                    v.num.text = "x" .. v.n
                     v.storeNum = 0
                 else
                     v.storeNum = info.nowCountInStore

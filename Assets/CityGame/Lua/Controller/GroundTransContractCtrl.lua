@@ -31,6 +31,7 @@ end
 
 function GroundTransContractCtrl:Active()
     UIPanel.Active(self)
+    GroundTransContractPanel.tipText.text = "合约"
     GroundTransContractPanel.AText02.text = GetLanguage(22060007)
     GroundTransContractPanel.BText03.text = GetLanguage(22060009)
     GroundTransContractPanel.buyAreaText04.text = GetLanguage(22010002)

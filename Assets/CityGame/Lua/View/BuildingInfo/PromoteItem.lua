@@ -29,9 +29,9 @@ function PromoteItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
 end
 --多语言
 function PromoteItem:language()
-    self.promoteText.text = GetLanguage(30060001)
-    self.basisProduceRateTextBtn.text = GetLanguage(30060002)
-    self.produceBounusTextBtn.text = GetLanguage(30060003)
+    self.promoteText.text = --[[GetLanguage(30060001)]]"研究速度"
+    self.basisProduceRateTextBtn.text = --[[GetLanguage(30060002)]]"基础研究速度"
+    self.produceBounusTextBtn.text = --[[GetLanguage(30060003)]]"研究速度加成"
 end
 function PromoteItem:_clickpromoteItemBtn(ins)
     local data = {}

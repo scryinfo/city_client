@@ -47,7 +47,7 @@ namespace LuaFramework {
 #elif PUB_BUILD_242
         public const string asServerIp = "47.97.249.242";   //用于新功能开发及测试
 #elif PUB_BUILD_99
-        public const string asServerIp = "47.111.11.99 ";   //用于策划推演的服务器
+        public const string asServerIp = "47.111.11.99";   //用于策划推演的服务器
 #else
         public const string asServerIp = "192.168.0.191";
         //public const string WebUrl = "http://192.168.0.191:8080/CityHotUp/";      //测试更新地址

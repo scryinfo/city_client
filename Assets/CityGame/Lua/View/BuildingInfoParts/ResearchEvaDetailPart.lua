@@ -166,7 +166,7 @@ function ResearchEvaDetailPart:_showLineOneInfo(lineData)
     self.targetCount = lineData.targetCount
     self.numText.text = lineData.nowCount.."/"..self.targetCount
 
-    LoadSprite(ResearchConfig[lineData.itemId].iconPath, self.iconImage, false)
+    LoadSprite(ResearchConfig[lineData.itemId].iconPath, self.iconImage, true)
     self.nameText.text = ResearchConfig[lineData.itemId].name
 
     --当前生产中线开始的时间

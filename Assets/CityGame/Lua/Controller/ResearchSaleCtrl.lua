@@ -118,8 +118,8 @@ function ResearchSaleCtrl:_updateData()
     ResearchSalePanel.quantitySlider.value = self.m_data.data.lockedNum
     ResearchSalePanel.tipsImage.localScale = Vector3.zero
     ResearchSalePanel.nullImage.localScale = Vector3.zero
-    ResearchSalePanel.warehouseText.text = self.m_data.data.storeNum
-    ResearchSalePanel.shelfText.text = self.m_data.data.lockedNum
+    ResearchSalePanel.warehouseText.text = "X " .. self.m_data.data.storeNum
+    ResearchSalePanel.shelfText.text = "X " .. self.m_data.data.lockedNum
     ResearchSalePanel.quantityInputField.text = self.m_data.data.lockedNum
     ResearchSalePanel.nullText.text = self.m_data.data.storeNum + self.m_data.data.lockedNum
 end

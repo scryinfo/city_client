@@ -15,7 +15,7 @@ end
 function MapBuildsPageItem:createItems()
     self.items = {}
     for i, value in ipairs(MapBuildInfoConfig) do
-        local go = UnityEngine.GameObject.Instantiate(MapPanel.mapPromotionDetailItem)
+        local go = UnityEngine.GameObject.Instantiate(MapPanel.mapBuildsDetailItem)
         go.transform:SetParent(self.content.transform)
         go.transform.localScale = Vector3.one
         local data = {promotionIndex = i, mapSearchType = EMapSearchType.Builds , itemId = value.type}
@@ -36,7 +36,7 @@ function MapBuildsPageItem:sortItemPos(itemTable)
         local pos = Vector3.zero
         for i, item in ipairs(itemTable) do
             item:setPos(pos)
-            pos = pos - Vector3.New(0, 132, 0)
+            pos = pos - Vector3.New(0, 125, 0)
         end
     end
 end

@@ -30,6 +30,7 @@ function MapPanel.InitPanel()
     this.mapSearchTypeItem = transform:Find("prefabRoot/MapSearchTypeItem").gameObject  --搜索类型
     this.mapPromotionDetailItem = transform:Find("prefabRoot/MapPromotionDetailItem").gameObject  --推广item
     this.mapTechnologyDetailItem = transform:Find("prefabRoot/MapTechnologyDetailItem").gameObject  --科研
+    this.mapBuildsDetailItem = transform:Find("prefabRoot/MapBulidsDetailItem").gameObject  --建筑item
     --
     this.mapBuildingItem = transform:Find("centerRoot/prefabRoot/MapBuildingItem")  --建筑气泡
     this.mapSystemItem = transform:Find("centerRoot/prefabRoot/MapSystemItem")  --系统建筑

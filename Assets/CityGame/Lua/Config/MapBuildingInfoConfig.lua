@@ -120,42 +120,42 @@ MapPromotionInfoConfig={
 --建筑二级菜单Items
 MapBuildInfoConfig={
     [1] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/MaterialFactory.png",
         ["languageId"] = 23010001,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 11,
     },
     [2] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Factory.png",
         ["languageId"] = 23010002,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 12,
     },
     [3] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Supermarket.png",
         ["languageId"] = 23010003,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 13,
     },
     [4] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Homehouse.png",
         ["languageId"] = 23010004,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 14,
     },
     [5] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Advertising.png",
         ["languageId"] = 23010005,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 15,
     },
     [6] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Technology.png",
         ["languageId"] = 23010006,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),

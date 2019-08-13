@@ -446,6 +446,7 @@ Language_English={
 [20010007] = "Land auction",
 [20010008] = "Go to",
 [20010009] = "Ad company",
+[20010010] = "Builds",
 [20020001] = "Ingredient",
 [20020002] = "Materials",
 [20030001] = "Clothing",

@@ -13,7 +13,7 @@ function MapBuildsDetailItem:childInit(viewRect)
 
     if self.data.promotionIndex ~= nil then
         local temp = MapBuildInfoConfig[self.data.promotionIndex]
-        LoadSprite(temp.imgPath, self.iconImg, true)
+        LoadSprite(temp.imgPath, self.iconImg, false)
         self.iconImg.color = getColorByVector3(temp.leftColorV3)
     end
 end

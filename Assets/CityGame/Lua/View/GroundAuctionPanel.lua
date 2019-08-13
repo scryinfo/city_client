@@ -19,7 +19,7 @@ end
 --初始化面板--
 function GroundAuctionPanel.InitPanel()
     this.backBtn = transform:Find("bgBtn")
-    this.titleText = transform:Find("root/titleText"):GetComponent("Text")
+    --this.titleText = transform:Find("root/titleText"):GetComponent("Text")
     this.timeDownText = transform:Find("root/timeDownRoot/timeDownText"):GetComponent("Text")  --倒计时
     this.soonRoot = transform:Find("root/soon")
     this.soonStartTime = transform:Find("root/soon/startTime")
@@ -27,9 +27,17 @@ function GroundAuctionPanel.InitPanel()
 
     this.nowRoot = transform:Find("root/now")
     this.nowPrice = transform:Find("root/now/price")
+    this.showText = transform:Find("root/now/price/showText"):GetComponent("Text")
+    this.showValueText = transform:Find("root/now/price/valueText"):GetComponent("Text")
     this.noneHistoryRoot = transform:Find("root/now/noneBid")
     this.bidInput = transform:Find("root/now/input"):GetComponent("InputField")
     this.bidBtn = transform:Find("root/now/bidBtn")
+    this.bidBtnText = transform:Find("root/now/bidBtn/text"):GetComponent("Text")
+    --新加土地繁荣度，土地拍卖大小
+    this.groundSizeText = transform:Find("root/now/groundSize/groundSizeText"):GetComponent("Text")
+    this.groundSizeValue = transform:Find("root/now/groundSize/valueText"):GetComponent("Text")
+    this.prosperityText = transform:Find("root/now/prosperity/prosperityText"):GetComponent("Text")
+    this.prosperityValue = transform:Find("root/now/prosperity/valueText"):GetComponent("Text")
 
     this.historyRoot = transform:Find("root/now/historyRoot")
     this.historyContent = transform:Find("root/now/historyRoot/scrollRect/content")

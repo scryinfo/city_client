@@ -51,6 +51,9 @@ function GAucModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","auctionEnd","gs.Num",GAucModel.n_OnReceiveAuctionEnd)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidWinInform","gs.BidGround",GAucModel.n_OnReceiveWinBid)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidFailInform","gs.BidGround",GAucModel.n_OnReceiveFailBid)
+    --拍卖土地的繁荣度
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryAuctionProsperity","gs.AuctionProsperity",GAucModel.n_onReceiveGroundPerityValue)
+
 end
 
 function GAucModel.c_bubbleLateUpdate()
@@ -224,7 +227,13 @@ function GAucModel.m_ReqQueryGroundAuction()
     local msgId = pbl.enum("gscode.OpCode","queryGroundAuction")
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
-
+--请求拍卖土地信息的繁荣度
+function GAucModel.m_ReqQueryGroundprosPerityValue(id)
+    local msgId = pbl.enum("gscode.OpCode","queryAuctionProsperity")
+    local lMsg = {num = id}
+    local pMsg = assert(pbl.encode("gs.Num", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+end
 --出价
 function GAucModel.m_BidGround(id, price)
     local temp = tonumber(CityLuaUtil.scientificNotation2Normal(price))
@@ -273,7 +282,10 @@ function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream, msgId)
 
     this.getNowAucDataFunc(msgGroundAuc)
 end
-
+--收到拍卖土地的繁荣度
+function GAucModel.n_onReceiveGroundPerityValue(stream)
+    Event.Brocast("_updateShowGroundPerityValue",stream)
+end
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GAucModel.n_OnReceiveBindGround(stream, msgId)
     if msgId == 0 then
@@ -287,12 +299,12 @@ function GAucModel.n_OnReceiveBindGround(stream, msgId)
     if stream == nil or stream == "" then
         return
     end
-
-    local info = {}
-    info.titleInfo = GetLanguage(21010005)
-    info.contentInfo = GetLanguage(21010007)
-    info.tipInfo = string.format("(%s)", GetLanguage(21010006))
-    ct.OpenCtrl("BtnDialogPageCtrl", info)
+    ct.OpenCtrl("GuoundAuctionSuccessBoxCtrl")
+    --local info = {}
+    --info.titleInfo = GetLanguage(21010005)
+    --info.contentInfo = GetLanguage(21010007)
+    --info.tipInfo = string.format("(%s)", GetLanguage(21010006))
+    --ct.OpenCtrl("BtnDialogPageCtrl", info)
 end
 
 --收到服务器拍卖信息更新

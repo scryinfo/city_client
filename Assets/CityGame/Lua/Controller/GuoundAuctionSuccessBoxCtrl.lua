@@ -11,7 +11,7 @@ function GuoundAuctionSuccessBoxCtrl:initialize()
 end
 
 function GuoundAuctionSuccessBoxCtrl:bundleName()
-    return "Assets/CityGame/Resources/View/AddProductionLineBoxPanel.prefab"
+    return "Assets/CityGame/Resources/View/GuoundAuctionSuccessBoxPanel.prefab"
 end
 function GuoundAuctionSuccessBoxCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)

@@ -392,6 +392,9 @@ end
 
 -- 删除生产线
 function ResearchEvaDetailPart:_getFtyDelLine(data)
+    if self.scienceLineData == nil or self.scienceLineData.line == nil then
+        return
+    end
     if data.lineId == self.scienceLineData.line[1].id then -- 删除正在生产的
         if self.isUpdate then
             UpdateBeat:Remove(self.Update,self)

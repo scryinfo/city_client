@@ -387,10 +387,10 @@ function EvaCtrl:CreatePropertyItem(propertyTab)
         EvaPanel.iconTF.localScale = Vector3.New(0.5, 0.5, 1)
     elseif self.evaRecordData[1] == 5 then
         imgPath = ResearchConfig[propertyTab[1].Atype].iconPath
-        EvaPanel.iconTF.localScale = Vector3.New(0.5, 0.5, 1)
+        EvaPanel.iconTF.localScale = Vector3.New(0.6, 0.6, 1)
     elseif self.evaRecordData[1] == 6 then
         imgPath = ResearchConfig[propertyTab[1].Atype].buildingPath
-        EvaPanel.iconTF.localScale = Vector3.New(0.5, 0.5, 1)
+        EvaPanel.iconTF.localScale = Vector3.New(0.6, 0.6, 1)
     else
         imgPath = EvaCtrl.static.brandIcon[propertyTab[1].Atype]
         EvaPanel.iconTF.localScale = Vector3.New(1, 1, 1)

@@ -27,6 +27,7 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.configData = configData
 
     local transform = prefab.transform
+    self.titleImage = transform:Find("TitleImage"):GetComponent("Image")
     self.typeImage = transform:Find("TypeImage"):GetComponent("Image")
     self.levelText = transform:Find("LevelText"):GetComponent("Text")
     self.nameNumberText = transform:Find("NameNumberText"):GetComponent("Text")
@@ -40,6 +41,11 @@ function PropertyTrueItem:initialize(prefab, data, configData)
 
     self:_showBtnState(false)
 
+    if data.bt == "Brand" then
+        LoadSprite("Assets/CityGame/Resources/Atlas/Eva/bg-points-yellow.png", self.titleImage, true)
+    else
+        LoadSprite("Assets/CityGame/Resources/Atlas/Eva/bg-points-blue.png", self.titleImage, true)
+    end
     self.strId = string.format("%d%s", self.configData.Atype, self.configData.Btype)
     if EvaCtrl.static.evaCtrl.addEvaLvData and EvaCtrl.static.evaCtrl.addEvaLvData[self.strId] then
         self:ShowData(EvaCtrl.static.evaCtrl.addEvaLvData[self.strId].myLv, EvaCtrl.static.evaCtrl.addEvaLvData[self.strId].myCexp)

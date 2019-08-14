@@ -16,6 +16,7 @@ function MapModel.registerNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractSummary"), MapModel.n_OnReceiveSigningSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adQueryPromoSummary"), MapModel.n_OnReceivePromoteSummary)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseSummary"), MapModel.n_OnReceiveWarehouseSummary)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryTypeBuildingDetail"), MapModel.n_OnReceiveQueryBuildsDetail)  --建筑详情搜索回调
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketDetail"), MapModel.n_OnReceiveQueryMarketDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractGridDetail"), MapModel.n_OnReceiveSignDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabDetail"), MapModel.n_OnReceiveTechDetail)
@@ -70,7 +71,13 @@ function MapModel.m_ReqSigningSummary()
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
     FlightMainModel.OpenFlightLoading()
 end
-
+---详情
+--请求建筑搜索详情
+function MapModel.m_ReqBuildsDetail(gridIndexPos, itemId)
+    local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, type = itemId}
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryTypeBuildingDetail","gs.QueryTypeBuildingDetail", data)
+    FlightMainModel.OpenFlightLoading()
+end
 --请求原料商品搜索详情
 function MapModel.m_ReqMarketDetail(gridIndexPos, itemId)
     local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, itemId = itemId}
@@ -174,6 +181,15 @@ end
 
 
 --- 详情回调 ---
+--建筑类型搜索详情
+function MapModel.n_OnReceiveQueryBuildsDetail(stream)
+    FlightMainModel.CloseFlightLoading()
+    if stream == nil or stream == "" then
+        return
+    end
+    local data = assert(pbl.decode("gs.TypeBuildingDetail", stream), "MapModel.n_OnReceiveQueryBuildsDetail: stream == nil")
+    MapCtrl._receiveBuildsDetail(MapCtrl, data)
+end
 --原料商品搜索详情
 function MapModel.n_OnReceiveQueryMarketDetail(stream)
     FlightMainModel.CloseFlightLoading()

@@ -87,6 +87,37 @@ MapBuildingInfoConfig={
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
         ["languageId"] = 20160010,
     },
+    --建筑
+    ["Shelf"] = --货架
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/button-shelf.png",
+        ["languageId"] = 20170001,
+    },
+    ["Capacity"] = --入住情况
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Occupancyrate.png",
+        ["languageId"] = 20090002,
+    },
+    ["DayRent"] = --日租金
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Dailyrent.png",
+        ["languageId"] = 20090003,
+    },
+    ["CompetitivePower"] = --竞争力
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/button-competitive-s.png",
+        ["languageId"] = 43010001,
+    },
+    ["DataSale"] = --推广公司
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Datasale-s.png",
+        ["languageId"] = 20170002,
+    },
+    ["ResearchSale"] = --研究所
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-shelf-s.png",
+        ["languageId"] = 20170003,
+    },
 }
 ------------------------------------------------------
 --小地图点开推广搜索之后展示的信息

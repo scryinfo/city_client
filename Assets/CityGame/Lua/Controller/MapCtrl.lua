@@ -718,6 +718,8 @@ function MapCtrl:_reqMoveDetail(blockId)
             MapModel.m_ReqPromotionDetail(blockCollectionId)
         elseif typeId == EMapSearchType.Technology then
             MapModel.m_ReqTechnologyDetail(blockCollectionId)
+        elseif typeId == EMapSearchType.Builds then
+            MapModel.m_ReqBuildsDetail(blockCollectionId, self.selectDetailItem:getItemId())
         end
         return
     end
@@ -767,6 +769,13 @@ function MapCtrl:_receiveWarehouseSummary(data)
     MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createSummaryItems(data, EMapSearchType.Warehouse)
 end
+--建筑类型详情
+function MapCtrl:_receiveBuildsDetail(data)
+    if data ~= nil then
+        MapBubbleManager.cleanAllBubbleItems()
+        MapBubbleManager.createDetailItems(data, EMapSearchType.Builds,true)
+    end
+end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
     if data ~= nil then
@@ -784,6 +793,7 @@ function MapCtrl:_receiveMarketDetail(data)
         --end
     end
 end
+
 --签约详情
 function MapCtrl:_receiveSignDetail(data)
     MapBubbleManager.cleanAllBubbleItems()
@@ -932,6 +942,8 @@ function MapCtrl:_judgeDetail()
             MapModel.m_ReqPromotionDetail(blockCollectionId)
         elseif typeId == EMapSearchType.Technology then
             MapModel.m_ReqTechnologyDetail(blockCollectionId)
+        elseif typeId == EMapSearchType.Builds then
+            MapModel.m_ReqBuildsDetail(blockCollectionId, self.selectDetailItem:getItemId())
         end
         return
     end

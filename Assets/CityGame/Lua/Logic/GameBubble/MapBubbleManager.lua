@@ -311,6 +311,20 @@ function MapBubbleManager._createDetailByType(typeId, data)
                 end
             end
         end
+    elseif typeId == EMapSearchType.Builds and data.info ~= nil then
+        --for i, value in pairs(data.info) do
+            local value = data.info
+            if value.typeInfo ~= nil then
+                local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
+                for i, temp in pairs(value.typeInfo) do
+                    if temp.buildingInfo.ownerId ~= DataManager.GetMyOwnerID() then --过滤自己建筑
+                        this._checkDetailTable(collectionId)
+                        local blockId = TerrainManager.GridIndexTurnBlockID(temp.buildingInfo.pos)
+                        this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(temp)
+                    end
+                end
+            end
+        --end
     end
 end
 --判断table是否为空

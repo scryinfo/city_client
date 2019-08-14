@@ -73,6 +73,9 @@ function BuildingInformationCtrl:Hide()
         self.tipBoxText.text = ""
         self.tipBox.transform.localScale = Vector3.zero
     end
+    if self.avatarData then
+        AvatarManger.CollectAvatar(self.avatarData)
+    end
     self.indexTable = {}
 end
 -------------------------------------------------------------获取组件---------------------------------------------------------------------------------
@@ -506,7 +509,7 @@ function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
     else
         self.mineLandInfo.transform.localScale = Vector3.zero
         self.otherLandInfo.transform.localScale = Vector3.one
-        AvatarManger.GetSmallAvatar(self.groundOwnerData[index].faceId,self.headImg.transform,0.15)
+        self.avatarData = AvatarManger.GetSmallAvatar(self.groundOwnerData[index].faceId,self.headImg.transform,0.15)
         self.nameText.text = self.groundOwnerData[index].name
         self.companyText.text = self.groundOwnerData[index].companyName
         self.priceText.text = "E"..GetClientPriceString(self.groundData[index].Data.rent.rentPreDay)

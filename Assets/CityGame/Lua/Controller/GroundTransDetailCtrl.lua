@@ -10,7 +10,6 @@ GroundTransState =
     Rent = 2,
     Renting = 3,
 }
-
 GroundTransDetailCtrl = class('GroundTransDetailCtrl',UIPanel)
 UIPanel:ResgisterOpen(GroundTransDetailCtrl)
 
@@ -46,28 +45,44 @@ function GroundTransDetailCtrl:Active()
     GroundTransDetailPanel.titleText01.text = GetLanguage(22010001)
     --GroundTransDetailPanel.averageText02.text = GetLanguage(24010002)
     --GroundTransDetailPanel.buildingText03.text = GetLanguage(24010003)
-    GroundTransDetailPanel.areaText04.text = GetLanguage(22010002)
+    --GroundTransDetailPanel.areaText04.text = GetLanguage(22010002)
     GroundTransDetailPanel.rentText05.text = GetLanguage(22010003)
     GroundTransDetailPanel.sellText06.text = GetLanguage(22010004)
     GroundTransDetailPanel.sellingText07.text = GetLanguage(22010006)
     GroundTransDetailPanel.rentingText08.text = GetLanguage(22010005)
+    GroundTransDetailPanel.ownerText.text = "所有者"
+    GroundTransDetailPanel.prosperityText.text = "繁荣程度:"
+    Event.AddListener("_saveGroundProsperity",self._saveGroundProsperity,self)
+    self.blockData = {}
+    self:getBlockData()
 end
 
 function GroundTransDetailCtrl:Hide()
     UIPanel.Hide(self)
+    self.blockData = {}
+    Event.RemoveListener("_saveGroundProsperity",self._saveGroundProsperity,self)
+    if self.avatarData then
+        AvatarManger.CollectAvatar(self.avatarData)
+    end
 end
 
 function GroundTransDetailCtrl:Close()
     UIPanel.Close(self)
 end
-
+--获取当前1*1地块主人信息
+function GroundTransDetailCtrl:getBlockData()
+    self.groundInfo = DataManager.GetGroundDataByID(self.m_data.blockId).Data
+    local ownerId = {}
+    table.insert(ownerId,self.groundInfo.ownerId)
+    PlayerInfoManger.GetInfos(ownerId,self._saveData,self)
+end
 ---初始化
 function GroundTransDetailCtrl:_initPanelData()
     if self.m_data then
-        local groundInfo = DataManager.GetGroundDataByID(self.m_data.blockId).Data
-        if groundInfo then
+        --local groundInfo = DataManager.GetGroundDataByID(self.m_data.blockId).Data
+        if self.groundInfo then
             GroundTransModel.SetGroundBlockId(self.m_data.blockId)  --设置地块Id
-            self.m_data.groundInfo = groundInfo
+            self.m_data.groundInfo = self.groundInfo
             self:_setShowState(self.m_data.groundInfo)
         end
     end
@@ -189,6 +204,24 @@ function GroundTransDetailCtrl:_sellingFunc(ins)
         local info = {groundInfo = ins.m_data.groundInfo, groundState = GroundTransState.Sell}
         ct.OpenCtrl("GroundTransRentAndBuyCtrl", info)
     end
+end
+--缓存1*1土地信息
+function GroundTransDetailCtrl:_saveData(ownerData)
+    if self.blockData then
+        table.insert(self.blockData,ownerData[1])
+    end
+    GAucModel.m_ReqQueryOneGoundInfo(self.groundInfo.x,self.groundInfo.y)
+end
+--缓存1*1土地繁荣度
+function GroundTransDetailCtrl:_saveGroundProsperity(data)
+    if data then
+        self.blockData[1].prosperity = data.num
+    end
+    --收到数据后更新UI土地主人信息加繁荣度
+    GroundTransDetailPanel.nameText.text = self.blockData[1].name
+    GroundTransDetailPanel.companyText.text = self.blockData[1].companyName
+    GroundTransDetailPanel.prosperityValue.text = self.blockData[1].prosperity
+    self.avatarData = AvatarManger.GetSmallAvatar(self.blockData[1].faceId,GroundTransDetailPanel.headImg.transform,0.13)
 end
 --正在出租按钮
 --function GroundTransDetailCtrl:_rentingFunc(ins)

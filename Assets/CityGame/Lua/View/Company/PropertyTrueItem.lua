@@ -39,7 +39,6 @@ function PropertyTrueItem:initialize(prefab, data, configData)
     self.addExNumInputField = transform:Find("AddExNumInputField"):GetComponent("InputField")
 
     self:_showBtnState(false)
-    --self:_setBtnInteractable()
 
     self.strId = string.format("%d%s", self.configData.Atype, self.configData.Btype)
     if EvaCtrl.static.evaCtrl.addEvaLvData and EvaCtrl.static.evaCtrl.addEvaLvData[self.strId] then
@@ -47,7 +46,19 @@ function PropertyTrueItem:initialize(prefab, data, configData)
         local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
         if #recordData == 1 then
             if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] then
-                self:_setAddExNumInputField(tostring(EvaCtrl.static.evaCtrl.addData[recordData[1]].value))
+                if data.bt == "Brand" then
+                    if EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue then
+                        self:_setAddExNumInputField(tostring(EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue))
+                    else
+                        self:_setAddExNumInputField("0")
+                    end
+                else
+                    if EvaCtrl.static.evaCtrl.addData[recordData[1]].value then
+                        self:_setAddExNumInputField(tostring(EvaCtrl.static.evaCtrl.addData[recordData[1]].value))
+                    else
+                        self:_setAddExNumInputField("0")
+                    end
+                end
             end
         elseif #recordData == 2 then
             if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] then
@@ -66,13 +77,11 @@ function PropertyTrueItem:initialize(prefab, data, configData)
 
     self.addBtn.onClick:RemoveAllListeners()
     self.addBtn.onClick:AddListener(function ()
-        --self:_showBtnState(false)
         self:_onChangeInputNum(1)
     end)
 
     self.subtractBtn.onClick:RemoveAllListeners()
     self.subtractBtn.onClick:AddListener(function ()
-        --self:_showBtnState(true)
         self:_onChangeInputNum(-1)
     end)
 
@@ -90,17 +99,24 @@ function PropertyTrueItem:initialize(prefab, data, configData)
                 self:_setAddExNumInputField("0")
             end
         end
-        -- 使按钮可点
-        --self:_setBtnInteractable(true, true)
-
 
         -- 本身的点数
         local selfAddPoint = 0
+        local itemAllPoint = 0
+        local typeAllPoint = 0
+        local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
         if EvaCtrl.static.evaCtrl.addEvaLvData and EvaCtrl.static.evaCtrl.addEvaLvData[self.strId] then
-            local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
             if #recordData == 1 then
                 if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] then
-                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                    if self.data.bt == "Brand" then
+                        if EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue then
+                            selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue
+                        end
+                    else
+                        if EvaCtrl.static.evaCtrl.addData[recordData[1]].value then
+                            selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                        end
+                    end
                 end
             elseif #recordData == 2 then
                 if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] then
@@ -108,14 +124,24 @@ function PropertyTrueItem:initialize(prefab, data, configData)
                 end
             elseif #recordData == 3 then
                 if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]then
-                    --selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value
                     selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt]
                 end
             end
         end
+        if self.data.bt == "Brand" then
+            if EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] and EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint then
+                itemAllPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint
+            end
+            typeAllPoint = EvaCtrl.static.evaCtrl.buildingPoint[recordData[1]].promotionPoint.pointNum
+        else
+            if EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] and EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint then
+                itemAllPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint
+            end
+            typeAllPoint = EvaCtrl.static.evaCtrl.buildingPoint[recordData[1]].sciencePoint.pointNum
+        end
 
         -- 输入的点数不可大于可用点数
-        if addNumber > DataManager.GetEvaPoint() - EvaCtrl.static.evaCtrl.allEvaAddPoint + selfAddPoint then
+        if addNumber > typeAllPoint - itemAllPoint + selfAddPoint then
             self:_showMoneyOver()
             addNumber = 0
             self:_setAddExNumInputField("0")
@@ -127,38 +153,8 @@ end
 
 -- 显示真实数据（内有公式、要改）
 function PropertyTrueItem:ShowData(lv, cexp)
-    --if lv >= 1 then
-        --local speed = "" -- 1=品质   2=品牌（无）   3=生产速度  4=推广能力    5=发明提升  6=EVA提升    7=仓库提升
-        --if self.data.bt == "Quality" then
-        --    if self.data.at < 2100000 then -- 建筑品质加成
-        --        speed = string.format( "%.2f", (1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
-        --    else -- 商品品质值
-        --        speed = string.format( "%.2f",EvaUp[lv].add / 1000)
-        --    end
-        --elseif self.data.bt == "ProduceSpeed" then
-        --    speed = math.floor(1 / ((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)) .. "s/个"
-        --elseif self.data.bt == "PromotionAbility" then
-        --    speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue) .. "s/个"
-        --elseif self.data.bt == "InventionUpgrade" then
-        --    speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
-        --elseif self.data.bt == "EvaUpgrade" then
-        --    speed = math.floor(((1 + EvaUp[lv].add / 100000) * (self.configData.basevalue / 100000)) * 100) .. "%"
-        --elseif self.data.bt == "WarehouseUpgrade" then
-        --    speed = math.floor((1 + EvaUp[lv].add / 100000) * self.configData.basevalue)
-        --end
-
-        --if lv == 1 then
-        --    self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, speed)
-        --else
-            --self.nameNumberText.text = string.format("%s:<color=%s><b>%s</b></color>  <color=%s><b>(+%s%)</b></color>",self.configData.name, PropertyTrueItem.static.NumberColor, tostring(speed), PropertyTrueItem.static.PercentColor, tostring(EvaUp[lv].add / 1000))
-            --self.nameNumberText.text = self.configData.name .. ":<color=" .. PropertyTrueItem.static.NumberColor .. "><b>" .. speed .. "</b></color>  <color=" .. PropertyTrueItem.static.PercentColor .. "><b>(+ " .. tostring(EvaUp[lv].add / 1000) .. "%)</b></color>"
-            --self.nameNumberText.text = self.configData.name .. ":" .. speed .. EvaUp[lv].add / 1000 .. "%"
-    --    end
-    --else
-        self.nameNumberText.text = GetLanguage(self.configData.name)
-    --end
+    self.nameNumberText.text = GetLanguage(self.configData.name)
     self.levelText.text = string.format("Lv%s", lv)
-    --self.experienceText.text = string.format("%s:<color=%s><b>%s</b></color>","Current experience value", PropertyTrueItem.static.ExperienceColor, cexp)
     self.experienceText.text = tostring(cexp)
     self.levelSlider.value = cexp / EvaUp[lv].upexp
     self.totalLevelNumberText.text = EvaUp[lv].upexp
@@ -186,9 +182,6 @@ end
 -- 设置输入框的值
 function PropertyTrueItem:_setAddExNumInputField(str)
     self.addExNumInputField.text = str
-    --if tonumber(str) and tonumber(str) >= 0 then
-    --    self:_setBtnInteractable(true, true)
-    --end
 end
 
 -- 加/减一点
@@ -208,11 +201,21 @@ function PropertyTrueItem:_onChangeInputNum(num)
     if num == 1 then
         -- 本身的点数
         local selfAddPoint = 0
+        local itemAllPoint = 0
+        local typeAllPoint = 0
+        local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
         if EvaCtrl.static.evaCtrl.addEvaLvData and EvaCtrl.static.evaCtrl.addEvaLvData[self.strId] then
-            local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
             if #recordData == 1 then
                 if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] then
-                    selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                    if self.data.bt == "Brand" then
+                        if EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue then
+                            selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue
+                        end
+                    else
+                        if EvaCtrl.static.evaCtrl.addData[recordData[1]].value then
+                            selfAddPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
+                        end
+                    end
                 end
             elseif #recordData == 2 then
                 if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] then
@@ -224,28 +227,31 @@ function PropertyTrueItem:_onChangeInputNum(num)
                 end
             end
         end
+        if self.data.bt == "Brand" then
+            if EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] and EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint then
+                itemAllPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint
+            end
+            typeAllPoint = EvaCtrl.static.evaCtrl.buildingPoint[recordData[1]].promotionPoint.pointNum
+        else
+            if EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] and EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint then
+                itemAllPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint
+            end
+            typeAllPoint = EvaCtrl.static.evaCtrl.buildingPoint[recordData[1]].sciencePoint.pointNum
+        end
 
         -- 输入的点数不可大于可用点数
-        if addNumber == DataManager.GetEvaPoint() - EvaCtrl.static.evaCtrl.allEvaAddPoint + selfAddPoint then
+        if addNumber == typeAllPoint - itemAllPoint + selfAddPoint then
             self:_showMoneyOver()
             return
         end
     end
 
-    --if addNumber < 0 or tonumber(inputValue) > DataManager.GetEvaPoint() then
-    --    self:_setAddExNumInputField("")
-    --    return
-    --end
     self:_setAddExNumInputField(tostring(addNumber + num))
     self:_preAddPoint(addNumber + num)
 end
 
 -- 预看加点消息
 function PropertyTrueItem:_preAddPoint(addNumber)
-
-    --if addNumber == 0 then
-    --
-    --end
     local function AddPointCalculate(myLv, myCexp)
         if myLv > #EvaUp then
             myLv = #EvaUp
@@ -266,26 +272,46 @@ end
 function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
     -- 刷新界面
     self:ShowData(myLv, myCexp)
-    --local strId = string.format("%d%s", self.configData.Atype, self.configData.Btype)
     EvaCtrl.static.evaCtrl.addEvaLvData[self.strId] = {myLv = myLv, myCexp = myCexp}
 
     -- 获取到现在的层级
     local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
-    if recordData[1] == 2 then
-        if self.configData.Btype == "ProduceSpeed" then
-            EvaPanel.ResultRootO:_showData(myLv)
-        elseif self.configData.Btype == "Quality" then
-            EvaPanel.ResultRootTwo:_showData(myLv)
-        end
+    --if recordData[1] == 2 then
+    --    if self.configData.Btype == "ProduceSpeed" then
+    --        EvaPanel.ResultRootO:_showData(myLv)
+    --    elseif self.configData.Btype == "Quality" then
+    --        EvaPanel.ResultRootTwo:_showData(myLv)
+    --    end
+    --else
+    --    EvaPanel.ResultRootO:_showData(myLv)
+    --end
+
+    if self.configData.Btype == "Quality" then
+        EvaPanel.ResultRootTwo:_showData(myLv)
+    elseif self.configData.Btype == "Brand" then
+        EvaPanel.ResultRootThere:_showData(myLv)
     else
         EvaPanel.ResultRootO:_showData(myLv)
     end
+
+    -- 总的加点数
+    EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] = {}
+
     if #recordData == 1 then
         if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
             EvaCtrl.static.evaCtrl.addData[recordData[1]] = {}
         end
-        EvaCtrl.static.evaCtrl.addData[recordData[1]].value = addNumber
-        EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(addNumber)
+        if self.data.bt == "Brand" then
+            EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue = addNumber
+            EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setMarketAddNumber(addNumber)
+
+            EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint = addNumber
+        else
+            EvaCtrl.static.evaCtrl.addData[recordData[1]].value = addNumber
+            EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(addNumber)
+
+            EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint = addNumber
+        end
     elseif #recordData == 2 then
         if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
             EvaCtrl.static.evaCtrl.addData[recordData[1]] = {}
@@ -309,6 +335,8 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         end
         EvaCtrl.static.evaCtrl.addData[recordData[1]].value = totalNum
         EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(totalNum)
+
+        EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint = totalNum
     elseif #recordData == 3 then
         if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
             EvaCtrl.static.evaCtrl.addData[recordData[1]] = {}
@@ -329,41 +357,61 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
             EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue = {}
         end
         EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] = addNumber
-        local totalNum3 = 0
-        for _, v in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue) do
-            totalNum3 = totalNum3 + v
+        local totalNum3, totalNum32 = 0,0
+        for btName, v in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue) do
+            if btName == "Brand" then
+                totalNum32 = v
+            else
+                totalNum3 = totalNum3 + v
+            end
         end
         for _, k in ipairs(EvaCtrl.optionThereScript) do
             if k.index == recordData[3] then
                 k:_setAddNumber(totalNum3)
+                k:_setMarketAddNumber(totalNum32)
                 break
             end
         end
         EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value = totalNum3
-        local totalNum2 = 0
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].marketValue = totalNum32
+        local totalNum2,totalNum22 = 0,0
         for _, x in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue) do
             totalNum2 = totalNum2 + x.value
+            totalNum22 = totalNum22 + x.marketValue
         end
         EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value = totalNum2
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].marketValue = totalNum22
         for _, j in ipairs(EvaCtrl.optionTwoScript) do
             if j.index == recordData[2] then
                 j:_setAddNumber(totalNum2)
+                j:_setMarketAddNumber(totalNum22)
                 break
             end
         end
-        local totalNum1 = 0
+        local totalNum1,totalNum12 = 0, 0
         for _, y in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
             totalNum1 = totalNum1 + y.value
+            totalNum12 = totalNum12 + y.marketValue
         end
         EvaCtrl.static.evaCtrl.addData[recordData[1]].value = totalNum1
         EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(totalNum1)
+        EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue = totalNum12
+        EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setMarketAddNumber(totalNum12)
+
+        EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint = totalNum1
+        EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint = totalNum12
     end
 
-    -- 总的加点数
-    EvaCtrl.static.evaCtrl.allEvaAddPoint = 0
-    for _, aChild in pairs(EvaCtrl.static.evaCtrl.addData) do
-        EvaCtrl.static.evaCtrl.allEvaAddPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint + aChild.value
+    local allNowPint = 0
+    for _, h in pairs(EvaCtrl.static.evaCtrl.allEvaAddPoint) do
+        if h.sciencePoint then
+            allNowPint = allNowPint + h.sciencePoint
+        end
+        if h.promotionPoint then
+            allNowPint = allNowPint + h.promotionPoint
+        end
     end
+    EvaCtrl.static.evaCtrl:SetAddBtnState(allNowPint > 0)
 
     -- 保存需要发送的eva数据
     if addNumber == 0 then
@@ -371,27 +419,7 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
     else
         local evaData = {}
         evaData.id = self.data.id
-        evaData.at = self.data.at
-        evaData.b = -1 --self.data.b
-        evaData.cexp = self.data.cexp + addNumber
-        evaData.lv = self.data.lv
-        evaData.pid = self.data.pid
-        if self.data.bt == "Quality" then
-            evaData.bt = 1
-        elseif self.data.bt == "Brand" then
-            evaData.bt = 2
-        elseif self.data.bt == "ProduceSpeed" then
-            evaData.bt = 3
-        elseif self.data.bt == "PromotionAbility" then
-            evaData.bt = 4
-        elseif self.data.bt == "InventionUpgrade" then
-            evaData.bt = 5
-        elseif self.data.bt == "EvaUpgrade" then
-            evaData.bt = 6
-        elseif self.data.bt == "WarehouseUpgrade" then
-            evaData.bt = 7
-        end
-        evaData.decEva = addNumber
+        evaData.pointNum = addNumber
         EvaCtrl.static.evaCtrl.addEvaData[self.strId] = evaData
     end
 end

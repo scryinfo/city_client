@@ -31,12 +31,12 @@ function EvaPanel.InitPanel()
     -- 科技点数、市场点数
     this.technologyTitleText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText"):GetComponent("Text")
     this.technologyText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText"):GetComponent("Text")
-    this.technologBtn = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologBtn").gameObject
-    this.lineImageTF = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologBtn/Image")
-    this.marketTitleTextTF = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologBtn/MarketTitleText")
-    this.marketTitleText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologBtn/MarketTitleText"):GetComponent("Text")
-    this.marketText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologBtn/MarketTitleText/MarketText"):GetComponent("Text")
-    this.marketBtn = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologBtn/MarketTitleText/MarketText/MarketBtn").gameObject
+    this.technologyBtn = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn")
+    this.lineImageTF = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/Image")
+    this.marketTitleTextTF = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/MarketTitleText")
+    this.marketTitleText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/MarketTitleText"):GetComponent("Text")
+    this.marketText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/MarketTitleText/MarketText"):GetComponent("Text")
+    this.marketBtn = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/MarketTitleText/MarketText/MarketBtn")
 
     this.optionTwoScroll = transform:Find("BottomRoot/OptionRoot/OptionTwoScroll"):GetComponent("ActiveLoopScrollRect")
     this.optionThereScroll = transform:Find("BottomRoot/OptionRoot/OptionThereScroll"):GetComponent("ActiveLoopScrollRect")

@@ -17,12 +17,30 @@ function EvaTitleItemTwo:_showContent()
         EvaCtrl.static.evaCtrl.isClickEva = false
         self:_onClickBtn()
     end
-    if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index] then
-        self:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].value)
+    if recordData[1] == 2 then
+        if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index] then
+            if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].value then
+                self:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].value)
+            else
+                self:_setAddNumber()
+            end
+            if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].marketValue then
+                self:_setMarketAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].marketValue)
+            else
+                self:_setMarketAddNumber()
+            end
+        else
+            self:_setAddNumber()
+            self:_setMarketAddNumber()
+        end
     else
-        self:_setAddNumber()
+        if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index] then
+            self:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].value)
+        else
+            self:_setAddNumber()
+        end
+        self:_setMarketAddNumber()
     end
-    self:_setMarketAddNumber()
 end
 
 -- 按钮点击事件、子类继承实现自己的方法

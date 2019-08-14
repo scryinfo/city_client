@@ -23,23 +23,23 @@ function ResultTwoItem:_initData(data, configData)
     self.data = data
     self.titleText.text = GetLanguage(configData.name)
     self.contentTitleText.text = GetLanguage(configData.name)
-    if configData.Btype == "Quality" then
+    --if configData.Btype == "Quality" then
         self.addText.text = GetLanguage(31010018)
-        self.addTextTF.localScale = Vector3.one
-    else
-        self.addTextTF.localScale = Vector3.zero
-    end
+        --self.addTextTF.localScale = Vector3.one
+    --else
+    --    self.addTextTF.localScale = Vector3.zero
+    --end
     --self:_showData(data.lv)
 end
 
 -- 显示数据
 function ResultTwoItem:_showData(lv)
-    if self.configData.Btype == "Quality" then
-        self.contentText.text = GetEvaData(1, self.configData, lv)
-        self.addContentText.text = GetEvaPercent(lv)
-    elseif self.configData.Btype == "Brand" then
-        self.contentText.text = self.data.b
-    end
+    --if self.configData.Btype == "Quality" then
+    self.contentText.text = GetEvaData(1, self.configData, lv)
+    self.addContentText.text = GetEvaPercent(lv)
+    --elseif self.configData.Btype == "Brand" then
+    --    self.contentText.text = self.data.b
+    --end
 end
 
 -- 设置是否显示

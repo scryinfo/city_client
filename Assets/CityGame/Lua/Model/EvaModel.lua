@@ -13,7 +13,7 @@ end
 
 function EvaModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMyEva","gs.Evas",self.n_OnQueryMyEva,self)
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","updateMyEvas","gs.EvaResultInfos",self.n_OnUpdateMyEvas,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","updateMyEvas","gs.Evas",self.n_OnUpdateMyEvas,self)
 end
 
 -- 查询玩家的Eva信息
@@ -30,10 +30,12 @@ end
 
 -- Eva加点
 function EvaModel:m_UpdateMyEvas(evas)
-    DataManager.ModelSendNetMes("gscode.OpCode", "updateMyEvas","gs.Evas",evas)
+    FlightMainModel.OpenFlightLoading()
+    DataManager.ModelSendNetMes("gscode.OpCode", "updateMyEvas","gs.UpdateMyEvas",evas)
 end
 
 -- 服务器返回的Eva加点
 function EvaModel:n_OnUpdateMyEvas(eva)
+    FlightMainModel.CloseFlightLoading()
     Event.Brocast("c_OnUpdateMyEvas", eva)
 end

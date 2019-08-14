@@ -37,10 +37,10 @@ function EvaCtrl:Awake()
     local luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
 
     luaBehaviour:AddClick(EvaPanel.backBtn, self.OnBack, self)
-    --luaBehaviour:AddClick(EvaPanel.startAddBtn.gameObject, self.OnStartAdd, self)
     luaBehaviour:AddClick(EvaPanel.addBtn, self.OnAdd, self)
-    luaBehaviour:AddClick(EvaPanel.introductionBtn, self.OnIntroduction, self)
     luaBehaviour:AddClick(EvaPanel.closeIntroductionBtn.gameObject, self.OnCloseTips, self)
+    luaBehaviour:AddClick(EvaPanel.technologyBtn.gameObject, self.OnTechnology, self)
+    luaBehaviour:AddClick(EvaPanel.marketBtn.gameObject, self.OnMarket, self)
 
     -- Eva节点2
     self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
@@ -99,9 +99,9 @@ function EvaCtrl:updateData()
     --EvaPanel.startAddBtn.localScale = Vector3.zero
 
     -- eva界面上总的加点的点数值
-    self.allEvaAddPoint = 0
+    self.allEvaAddPoint = {}
     -- 刷新加点按钮显示
-    self:SetAddBtnState()
+    self:SetAddBtnState(false)
 
     -- 生成标题item
     if self.evaTitleItem then
@@ -151,17 +151,20 @@ function EvaCtrl:_clearEvaDataAndView()
     self.addData = {}
     self.addEvaData = {}
     self.addEvaLvData = {}
-    self.allEvaAddPoint = 0
+    self.allEvaAddPoint = {}
 
     -- 界面上显示的加点多少
     for _, v in ipairs(self.evaTitleItem) do
         v:_setAddNumber()
+        v:_setMarketAddNumber()
     end
     for _, k in pairs(EvaCtrl.optionTwoScript) do
         k:_setAddNumber()
+        k:_setMarketAddNumber()
     end
     for _, j in pairs(EvaCtrl.optionThereScript) do
         j:_setAddNumber()
+        j:_setMarketAddNumber()
     end
 
     -- 关闭加点，并清理加点的界面数据
@@ -211,15 +214,26 @@ function EvaCtrl:OnAdd(go)
         Event.Brocast("SmallPop",GetLanguage(31010050),70)
         return
     end
-    DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_UpdateMyEvas', {eva = evas})
+    DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_UpdateMyEvas', {evaSummarys = evas})
     go:_clearEvaDataAndView()
 end
 
 --显示eva介绍
-function EvaCtrl:OnIntroduction(go)
+function EvaCtrl:OnTechnology(go)
     PlayMusEff(1002)
-    --ct.OpenCtrl("CompanyIntroductionCtrl")
     go:_showIntroduction( true )
+    EvaPanel.introductionImage:SetParent(EvaPanel.technologyBtn)
+    EvaPanel.introductionImage.localPosition = Vector3.New(0, -20, 0)
+    EvaPanel.introductionText.text = "科技点数提示！"
+end
+
+--显示eva介绍
+function EvaCtrl:OnMarket(go)
+    PlayMusEff(1002)
+    go:_showIntroduction( true )
+    EvaPanel.introductionImage:SetParent(EvaPanel.marketBtn)
+    EvaPanel.introductionImage.localPosition = Vector3.New(0, -20, 0)
+    EvaPanel.introductionText.text = "市场点数提示！"
 end
 
 --关闭eva小提示
@@ -228,7 +242,6 @@ function EvaCtrl:OnCloseTips(go)
     -- 关闭eva小提示
     go:_showIntroduction( false )
 end
-
 -------------------------------------------------------------- 网络消息相关 --------------------------------------------------------
 -- 打开model
 function EvaCtrl:initInsData()
@@ -270,29 +283,32 @@ end
 -- 服务器返回的Eva加点
 function EvaCtrl:c_OnUpdateMyEvas(evas)
     Event.Brocast("SmallPop", GetLanguage(31010041),80)
-    --ct.OpenCtrl("EvaPopCtrl", evas.resultInfo)
-    local tempDecEva = 0
-    for i, v in ipairs(evas.resultInfo) do
-        tempDecEva = tempDecEva + v.evasInfo.old_eva.decEva
+
+    -- 刷新eva的数据
+    for i, v in ipairs(evas.eva) do
         for j, k in ipairs(self.evasData) do
-            if v.evasInfo.old_eva.id == k.id then
-                self.evasData[j] = v.evasInfo.new_eva
+            if v.id == k.id then
+                self.evasData[j] = v
 
                 -- 刷新加点的数据
                 for _, n in pairs(EvaCtrl.propertyScript) do
-                    if n.data.id == v.evasInfo.old_eva.id then
-                        n.data = v.evasInfo.new_eva
+                    if n.data.id == v.id then
+                        n.data = v
                     end
                 end
                 break
             end
         end
     end
-    local evaPoint = DataManager.GetEvaPoint()
-    evaPoint = evaPoint - tempDecEva
-    --EvaPanel.myEvaText.text = tostring(evaPoint)
-    DataManager.SetEvaPoint(evaPoint)
-    self:SetAddBtnState()
+
+    self.buildingPoint = {}
+    -- 不同建筑的当前点数
+    for _, v in ipairs(evas.buildingPoint) do
+        self.buildingPoint[v.buildingType - 10] = v
+    end
+
+    self:_showTechnologyAndMarketPoint(self.evaRecordData[1])
+    self:SetAddBtnState(false)
 end
 
 -------------------------------------------------------------- 滑动复用相关 --------------------------------------------------------
@@ -369,6 +385,12 @@ function EvaCtrl:CreatePropertyItem(propertyTab)
     elseif self.evaRecordData[1] == 2 then
         imgPath = Good[propertyTab[1].Atype].img
         EvaPanel.iconTF.localScale = Vector3.New(0.5, 0.5, 1)
+    elseif self.evaRecordData[1] == 5 then
+        imgPath = ResearchConfig[propertyTab[1].Atype].iconPath
+        EvaPanel.iconTF.localScale = Vector3.New(0.5, 0.5, 1)
+    elseif self.evaRecordData[1] == 6 then
+        imgPath = ResearchConfig[propertyTab[1].Atype].buildingPath
+        EvaPanel.iconTF.localScale = Vector3.New(0.5, 0.5, 1)
     else
         imgPath = EvaCtrl.static.brandIcon[propertyTab[1].Atype]
         EvaPanel.iconTF.localScale = Vector3.New(1, 1, 1)
@@ -377,7 +399,11 @@ function EvaCtrl:CreatePropertyItem(propertyTab)
 
     local isShowFrist,isShowSecond = false, false
     for m, n in ipairs(EvaCtrl.propertyAllData[2]) do
+        local strId = string.format("%d%s", EvaCtrl.propertyAllData[2][m].Atype, EvaCtrl.propertyAllData[2][m].Btype)
         local myLv = EvaCtrl.propertyAllData[1][m].lv
+        if EvaCtrl.static.evaCtrl.addEvaLvData[strId] then
+            myLv = EvaCtrl.static.evaCtrl.addEvaLvData[strId].myLv
+        end
         if n.Btype == "ProduceSpeed"  or n.Btype == "PromotionAbility" or n.Btype == "InventionUpgrade" or n.Btype == "EvaUpgrade" then
             self.resultTab[1]:_initData(EvaCtrl.propertyAllData[1][m], EvaCtrl.propertyAllData[2][m])
             self.resultTab[1]:_showData(myLv)
@@ -454,11 +480,6 @@ function EvaCtrl:SetBtnState(index)
 end
 
 -- 加点按钮控制
-function EvaCtrl:SetAddBtnState()
-    local evaPoint = DataManager.GetEvaPoint()
-    if evaPoint > 0 then
-        EvaPanel.addButton.interactable = true
-    else
-        EvaPanel.addButton.interactable = false
-    end
+function EvaCtrl:SetAddBtnState(isInteractable)
+    EvaPanel.addButton.interactable = isInteractable
 end

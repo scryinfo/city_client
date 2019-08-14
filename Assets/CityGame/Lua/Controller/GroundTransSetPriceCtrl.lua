@@ -62,9 +62,18 @@ end
 function GroundTransSetPriceCtrl:Active()
     UIPanel.Active(self)
     GroundTransSetPricePanel.sellPriceText01.text = GetLanguage(22030002)
-    GroundTransSetPricePanel.minRentText02.text = GetLanguage(22020002)
-    GroundTransSetPricePanel.maxRentText03.text = GetLanguage(22020003)
-    GroundTransSetPricePanel.rentDayText04.text = GetLanguage(22020004)
+    GroundTransSetPricePanel.priceText.text = "购买价格(E):"
+    GroundTransSetPricePanel.prosperityText.text = "繁荣程度:"
+    GroundTransSetPricePanel.competitiveness.text = "竞争力"
+    GroundTransSetPricePanel.adviceTipText.text = "Recommend:<color=#f4ad07>"..50 .."</color>"
+    GroundTransSetPricePanel.tipText.text = "Earnings deducted <color=#1E41C3FF>"..0.04 .." %</color> miner`s fee"
+    GroundTransSetPricePanel.issueBtnText.text = "发布"
+    GroundTransSetPricePanel.cancelText.text = "撤销"
+    GroundTransSetPricePanel.changeText.text = "修改"
+
+    --GroundTransSetPricePanel.minRentText02.text = GetLanguage(22020002)
+    --GroundTransSetPricePanel.maxRentText03.text = GetLanguage(22020003)
+    --GroundTransSetPricePanel.rentDayText04.text = GetLanguage(22020004)
 end
 
 function GroundTransSetPriceCtrl:Hide()
@@ -77,6 +86,8 @@ end
 
 ---初始化
 function GroundTransSetPriceCtrl:_initPanelData()
+    GroundTransSetPricePanel.peiceValue.text = GetClientPriceString(self.m_data.groundInfo.auctionPrice / 25)
+    GroundTransSetPricePanel.prosperityValue.text = self.m_data.prosperity
     if self.m_data and self.m_data.groundInfo then
         self:_setShowState(self.m_data.groundInfo, self.m_data.groundState, self.m_data.showPageType)
     end
@@ -85,11 +96,11 @@ end
 function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPageType)
     GroundTransSetPricePanel.cleanData()
     GroundTransSetPricePanel.sellRoot.localScale = Vector3.zero
-    GroundTransSetPricePanel.rentRoot.localScale = Vector3.zero
+    --GroundTransSetPricePanel.rentRoot.localScale = Vector3.zero
     GroundTransSetPricePanel.sellChangeStateTran.localScale = Vector3.zero
     GroundTransSetPricePanel.sellIssueBtnTran.localScale = Vector3.zero
-    GroundTransSetPricePanel.rentChangeStateTran.localScale = Vector3.zero
-    GroundTransSetPricePanel.rentIssueBtnTran.localScale = Vector3.zero
+    --GroundTransSetPricePanel.rentChangeStateTran.localScale = Vector3.zero
+    --GroundTransSetPricePanel.rentIssueBtnTran.localScale = Vector3.zero
 
     if showPageType == GroundTransState.Rent then
         --GroundTransSetPricePanel.titleText.text = GetLanguage(22020001)
@@ -110,6 +121,7 @@ function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPage
         --以下，如果已经有sell字段，则再次打开时修改价格或者取消出售
         GroundTransSetPricePanel.titleText.text = GetLanguage(22030001)
         GroundTransSetPricePanel.sellRoot.localScale = Vector3.one
+
         if groundState == GroundTransState.None then
             --显示设置出售金额
             GroundTransSetPricePanel.sellIssueBtnTran.localScale = Vector3.one

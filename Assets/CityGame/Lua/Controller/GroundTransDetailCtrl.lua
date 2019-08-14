@@ -187,7 +187,7 @@ end
 function GroundTransDetailCtrl:_sellFunc(ins)
     PlayMusEff(1002)
     --groundState和showPageType值都为GroundTransState枚举值，用于下个界面的状态显示，不需要重新判断状态
-    local info = {groundInfo = ins.m_data.groundInfo, groundState = ins.groundState, showPageType = GroundTransState.Sell}
+    local info = {groundInfo = ins.m_data.groundInfo, groundState = ins.groundState, showPageType = GroundTransState.Sell,prosperity = ins.blockData[1].prosperity}
     --打开设置租金/售卖金额界面，参数为info
     ct.OpenCtrl("GroundTransSetPriceCtrl", info)
 end

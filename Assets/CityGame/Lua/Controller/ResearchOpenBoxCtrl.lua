@@ -97,6 +97,8 @@ function ResearchOpenBoxCtrl:_updateData()
                 self.nowItem = self.researchEvaBoxItems[i]
                 self.nowItem:SetBg(true)
                 self.nowItem:SetBtn(false)
+                ResearchOpenBoxPanel.inputField.text = 1
+                ResearchOpenBoxPanel.tipsText.text = "Earn 10~100 tech points"
             end
             self.researchEvaBoxItems[i] = ResearchEvaBoxItem:new(go, v, callback)
             if i == 1 then
@@ -106,8 +108,6 @@ function ResearchOpenBoxCtrl:_updateData()
     end
 
     self:_showTotalNum()
-    ResearchOpenBoxPanel.inputField.text = 1
-    ResearchOpenBoxPanel.tipsText.text = "Earn 10~100 tech points"
 end
 -------------------------------------按钮点击事件-------------------------------------
 function ResearchOpenBoxCtrl:OnBack(go)
@@ -150,6 +150,17 @@ function ResearchOpenBoxCtrl:OnClose(go)
     ResearchOpenBoxPanel.closeBtn.localScale = Vector3.zero
     ResearchOpenBoxPanel.researchMaterialItem.localScale = Vector3.zero
     ResearchOpenBoxPanel.middleRoot.localScale = Vector3.one
+    if go.nowItem == nil then
+        if go.researchEvaBoxItems[1] then
+            go.nowItem = go.researchEvaBoxItems[1]
+            go.nowItem:SetBg(true)
+            go.nowItem:SetBtn(false)
+            ResearchOpenBoxPanel.inputField.text = 1
+            ResearchOpenBoxPanel.tipsText.text = "Earn 10~100 tech points"
+        else
+            ResearchOpenBoxPanel.middleRoot.localScale = Vector3.zero
+        end
+    end
 end
 -------------------------------------网络回调-------------------------------------
 function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)

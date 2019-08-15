@@ -84,7 +84,7 @@ function ResearchEvaPart:_initFunc()
         self.nullText.transform.localScale = Vector3.zero
         self.line.transform.localScale = Vector3.one
         self.info = self.m_data.line[1]
-        LoadSprite(ResearchConfig[self.m_data.line[1].itemId].iconPath, self.icon, true)
+        LoadSprite(ResearchConfig[self.m_data.line[1].itemId].iconPath, self.icon, false)
         self.allTime = (self.m_data.line[1].targetCount - self.m_data.line[1].nowCount) / self.m_data.line[1].speed
         local ts = getTimeTable(self.allTime)
         self.timeText.text = ts.hour..":"..ts.minute..":"..ts.second
@@ -112,6 +112,9 @@ end
 
 -- 删除生产线
 function ResearchEvaPart:_getFtyDelLine(data)
+    if self.m_data.line == nil then
+        return
+    end
     if data.lineId == self.m_data.line[1].id then -- 删除正在生产的
         if self.m_Timer ~= nil then
             self.m_Timer:Stop()

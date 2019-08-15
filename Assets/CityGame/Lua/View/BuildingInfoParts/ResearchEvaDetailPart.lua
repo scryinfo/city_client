@@ -24,6 +24,8 @@ function ResearchEvaDetailPart:_InitTransform()
     -- 正在生产的生产线（为空）
     self.lineBgImage = self.transform:Find("Root/LineBgImage")
     self.lineNullImage = self.transform:Find("Root/LineNullImage")
+    self.lineNullImageBtn = self.transform:Find("Root/LineNullImage"):GetComponent("Button")
+    self.lineNullText = self.transform:Find("Root/LineNullImage/NullText"):GetComponent("Text")
 
     -- 正在生产的生产线
     self.iconImage = self.transform:Find("Root/LineBgImage/IconImage"):GetComponent("Image")
@@ -35,6 +37,7 @@ function ResearchEvaDetailPart:_InitTransform()
     self.oneTimeText = self.transform:Find("Root/LineBgImage/OneTimeText"):GetComponent("Text")
 
     -- 生产列表
+    self.rightRoot = self.transform:Find("Root/RightRoot")
     self.lineNumText = self.transform:Find("Root/RightRoot/LineNumText"):GetComponent("Text")
     self.lineScrollContent = self.transform:Find("Root/RightRoot/LineScroll/Viewport/Content")
     self.lineScrollContentRT = self.transform:Find("Root/RightRoot/LineScroll/Viewport/Content"):GetComponent("RectTransform")
@@ -72,6 +75,9 @@ end
 function ResearchEvaDetailPart:_InitClick(mainPanelLuaBehaviour)
     -- 给加号点击增加打开ResearchChoiceCtrl的点击
     mainPanelLuaBehaviour:AddClick(self.addLineBtn.gameObject, function ()
+        self:_clickAddLineBtn()
+    end , self)
+    mainPanelLuaBehaviour:AddClick(self.lineNullImageBtn.gameObject, function ()
         self:_clickAddLineBtn()
     end , self)
     -- 点击正在生产的删除，向服务器发送删除消息
@@ -123,6 +129,8 @@ end
 function ResearchEvaDetailPart:RefreshData(data)
     self.m_data = data
     self.nullText.text = "Press “+”to add a new research line. "
+    self.lineNullText.text = GetLanguage(25030001)
+
     -- 向服务器发消息查询科技列表生产速度(研究所、推广公司)
     DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqGetScienceItemSpeed')
 
@@ -134,6 +142,7 @@ end
 -- 销毁的时候，清除点击事件
 function ResearchEvaDetailPart:_RemoveClick()
     self.addLineBtn.onClick:RemoveAllListeners()
+    self.lineNullImageBtn.onClick:RemoveAllListeners()
     self.deleteBtn.onClick:RemoveAllListeners()
 end
 
@@ -222,17 +231,18 @@ function ResearchEvaDetailPart:Update()
     self.oneTimeText.text = self:GetStringTime((self.timeSlider.maxValue - self.timeSlider.value + 1) * 1000)
 end
 
---生产一个的时间转换 时分秒
+-- 生产一个的时间转换 时分秒
 function ResearchEvaDetailPart:GetStringTime(ms)
     local timeTable = getTimeBySec(ms / 1000)
     local timeStr = timeTable.minute..":"..timeTable.second
     return timeStr
 end
 
---生产一个的时间转换 时分秒
+-- 设置生产线的显示
 function ResearchEvaDetailPart:_setLineShow(show1, show2)
     self.lineBgImage.localScale = show1 and Vector3.one or Vector3.zero
     self.lineNullImage.localScale = show2 and Vector3.one or Vector3.zero
+    self.rightRoot.localScale = show1 and Vector3.one or Vector3.zero
 end
 ----------------------------------------------按钮点击--------------------------------------------
 function ResearchEvaDetailPart:_clickAddLineBtn()
@@ -240,7 +250,13 @@ function ResearchEvaDetailPart:_clickAddLineBtn()
 end
 
 function ResearchEvaDetailPart:_clickDeleteLineBtn()
-    DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqDelScienceLine', self.scienceLineData.line[1].id)
+    local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
+                content = GetLanguage(25030029),func = function()
+            if self.scienceLineData and self.scienceLineData.line[1] then
+                DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqDelScienceLine', self.scienceLineData.line[1].id)
+            end
+        end}
+    ct.OpenCtrl('NewReminderCtrl',data)
 end
 ----------------------------------------------网络回调--------------------------------------------
 -- 保存服务器发过来的生产速度的信息
@@ -296,6 +312,7 @@ function ResearchEvaDetailPart:_getScienceLineData(data)
 
                 self.lineItems[j - 1] = ResearchLineItem:new(go, data.line[j], self.m_data.info.id)
             end
+            self.lineItems[1]:SetTopBtnShow(false)
         end
 
         -- 刷新正在生产的数据
@@ -426,9 +443,15 @@ function ResearchEvaDetailPart:_setLineOrder(data)
     for i, v in ipairs(self.lineItems) do
         if v.data.id == data.lineId then
             v.prefab.transform:SetSiblingIndex(0)
+            v:SetTopBtnShow(false)
             local temp = self.scienceLineData.line[i + 1]
             self.scienceLineData.line[i + 1] = self.scienceLineData.line[2]
             self.scienceLineData.line[2] = temp
+
+            local tempLine = self.lineItems[i]
+            self.lineItems[i] = self.lineItems[1]
+            self.lineItems[i]:SetTopBtnShow(true)
+            self.lineItems[1] = tempLine
             break
         end
     end

@@ -49,17 +49,17 @@ function ResearchSaleCtrl:Awake(go)
         ResearchSalePanel.quantitySlider.value = num
     end)
 
-    ResearchSalePanel.priceInputField.onEndEdit:AddListener(function (inputValue)
-        if inputValue == nil or inputValue == "" then
-            ResearchSalePanel.priceInputField.text = 0.0001
-            return
-        end
-        local num = tonumber(inputValue)
-        if num <= 0 then
-            ResearchSalePanel.priceInputField.text = 0.0001
-            return
-        end
-    end)
+    --ResearchSalePanel.priceInputField.onEndEdit:AddListener(function (inputValue)
+    --    if inputValue == nil or inputValue == "" then
+    --        ResearchSalePanel.priceInputField.text = 0.0001
+    --        return
+    --    end
+    --    local num = tonumber(inputValue)
+    --    if num <= 0 then
+    --        ResearchSalePanel.priceInputField.text = 0.0001
+    --        return
+    --    end
+    --end)
 
     ResearchSalePanel.quantitySlider.onValueChanged:AddListener(function (value)
         ResearchSalePanel.quantityInputField.text = tostring(value)
@@ -127,7 +127,7 @@ end
 --滑动条input联动
 function ResearchSaleCtrl:_awakeSliderInput()
     ResearchSalePanel.priceInputField.onValueChanged:AddListener(function (str)
-        if str == "" or self.guidePrice == nil then
+        if str == "" or str == "." or self.guidePrice == nil then
             return
         end
         local finalStr = ct.getCorrectPrice(str)

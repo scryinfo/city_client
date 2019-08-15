@@ -13,7 +13,7 @@ function MapTechnologyDetailItem:childInit(viewRect)
 
     if self.data.technologyIndex ~= nil then
         local temp = MapTechnologyInfoConfig[self.data.technologyIndex]
-        LoadSprite(temp.imgPath, self.iconImg, true)
+        LoadSprite(temp.imgPath, self.iconImg, false)
     end
 end
 --
@@ -23,7 +23,6 @@ function MapTechnologyDetailItem:initLanguage()
     end
     self.typeText.text = GetLanguage(MapTechnologyInfoConfig[self.data.technologyIndex].languageId)
     --self.typeText.text = MapTechnologyInfoConfig[self.data.technologyIndex].languageId
-    self.data.itemId = self.data.technologyIndex
 end
 --设置toggleGroup
 function MapTechnologyDetailItem:setToggleGroup(toggle)

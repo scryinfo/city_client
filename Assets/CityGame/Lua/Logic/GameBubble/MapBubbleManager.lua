@@ -99,12 +99,12 @@ function MapBubbleManager.initItemData()
         this._createBuildingItems(MyBuild.retailShop, BuildingType.RetailShop)
     end
     --生成研究所
-    if MyBuild.laboratory ~= nil then
-        this._createBuildingItems(MyBuild.laboratory, BuildingType.Laboratory)
+    if MyBuild.technology ~= nil then
+        this._createBuildingItems(MyBuild.technology, BuildingType.Laboratory)
     end
     --生成推广
-    if MyBuild.publicFacility ~= nil then
-        this._createBuildingItems(MyBuild.publicFacility, BuildingType.Municipal)
+    if MyBuild.promotionCompany ~= nil then
+        this._createBuildingItems(MyBuild.promotionCompany, BuildingType.Municipal)
     end
     --生成零售店
     --if MyBuild.retailShop ~= nil then
@@ -191,7 +191,7 @@ function MapBubbleManager._getBuildingIconPath(buildingType)
     end
     return path
 end
---
+--创建摘要item
 function MapBubbleManager.createSummaryItems(data, summaryType)
     if summaryType == EMapSearchType.Auction then  --土地拍卖是客户端维护的，所以做特殊处理
         if data == nil then
@@ -278,13 +278,14 @@ function MapBubbleManager._createDetailByType(typeId, data)
         if data.info ~= nil then
             for i, value in pairs(data.info) do
                 local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
-                if value.b ~= nil then
-                    local typeIds = value.typeIds
-                    for i, building in pairs(value.b) do
-                        building.typeIds = typeIds
-                        this._checkDetailTable(collectionId)
-                        local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
-                        this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                if value.buildingInfo ~= nil then
+                    for i, building in pairs(value.buildingInfo) do
+                        if building.ownerId ~= DataManager.GetMyOwnerID() then --过滤自己建筑
+                            building.typeIds = data.itemId
+                            this._checkDetailTable(collectionId)
+                            local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                            this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                        end
                     end
                 end
             end
@@ -308,6 +309,20 @@ function MapBubbleManager._createDetailByType(typeId, data)
                     this._checkDetailTable(collectionId)
                     local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
                     this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                end
+            end
+        end
+    elseif typeId == EMapSearchType.Builds and data.info ~= nil then
+        for i, value in pairs(data.info) do
+        --    local value = data.info
+            if value.typeInfo ~= nil then
+                local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
+                for i, temp in pairs(value.typeInfo) do
+                    if temp.buildingInfo.ownerId ~= DataManager.GetMyOwnerID() then --过滤自己建筑
+                        this._checkDetailTable(collectionId)
+                        local blockId = TerrainManager.GridIndexTurnBlockID(temp.buildingInfo.pos)
+                        this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(temp)
+                    end
                 end
             end
         end

@@ -534,10 +534,12 @@ function MapCtrl:promotionTechReq(typeId, item)
 end
 --
 function MapCtrl:switchNoDataReq(typeId)
-    if typeId == EMapSearchType.Technology then
-        MapModel.m_ReqLabSummary()
-    elseif typeId == EMapSearchType.Promotion then
-        MapModel.m_ReqPromotionSummary()
+    if self.selectDetailItem ~= nil then
+        if typeId == EMapSearchType.Technology then
+            MapModel.m_ReqLabSummary(self.selectDetailItem:getItemId())
+        elseif typeId == EMapSearchType.Promotion then
+            MapModel.m_ReqPromotionSummary(self.selectDetailItem:getItemId())
+        end
     end
 end
 
@@ -715,9 +717,11 @@ function MapCtrl:_reqMoveDetail(blockId)
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Promotion then
-            MapModel.m_ReqPromotionDetail(blockCollectionId)
+            MapModel.m_ReqPromotionDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Technology then
-            MapModel.m_ReqTechnologyDetail(blockCollectionId)
+            MapModel.m_ReqTechnologyDetail(blockCollectionId, self.selectDetailItem:getItemId())
+        elseif typeId == EMapSearchType.Builds then
+            MapModel.m_ReqBuildsDetail(blockCollectionId, self.selectDetailItem:getItemId())
         end
         return
     end
@@ -767,6 +771,13 @@ function MapCtrl:_receiveWarehouseSummary(data)
     MapBubbleManager.cleanAllBubbleItems()
     MapBubbleManager.createSummaryItems(data, EMapSearchType.Warehouse)
 end
+--建筑类型详情
+function MapCtrl:_receiveBuildsDetail(data)
+    if data ~= nil then
+        MapBubbleManager.cleanAllBubbleItems()
+        MapBubbleManager.createDetailItems(data, EMapSearchType.Builds,true)
+    end
+end
 --原料商品搜索详情
 function MapCtrl:_receiveMarketDetail(data)
     if data ~= nil then
@@ -784,6 +795,7 @@ function MapCtrl:_receiveMarketDetail(data)
         --end
     end
 end
+
 --签约详情
 function MapCtrl:_receiveSignDetail(data)
     MapBubbleManager.cleanAllBubbleItems()
@@ -929,9 +941,11 @@ function MapCtrl:_judgeDetail()
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Promotion then
-            MapModel.m_ReqPromotionDetail(blockCollectionId)
+            MapModel.m_ReqPromotionDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Technology then
-            MapModel.m_ReqTechnologyDetail(blockCollectionId)
+            MapModel.m_ReqTechnologyDetail(blockCollectionId, self.selectDetailItem:getItemId())
+        elseif typeId == EMapSearchType.Builds then
+            MapModel.m_ReqBuildsDetail(blockCollectionId, self.selectDetailItem:getItemId())
         end
         return
     end
@@ -957,9 +971,9 @@ function MapCtrl:_judgeSummary()
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqQueryMarketSummary(self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Promotion then
-            MapModel.m_ReqPromotionSummary()
+            MapModel.m_ReqPromotionSummary(self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Technology then
-            MapModel.m_ReqLabSummary()
+            MapModel.m_ReqLabSummary(self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Builds then
             MapModel.m_ReqBuildsSummary(self.selectDetailItem:getItemId())
         end

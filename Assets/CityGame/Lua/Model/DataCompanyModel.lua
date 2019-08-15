@@ -257,10 +257,12 @@ end
 function DataCompanyModel:n_OnBuyData(info)
     self:m_detailPublicFacility(info.buildingId)
     Event.Brocast("c_BuyCount",info)
-    local data = {}
-    data.num = info.item.n
-    data.pointNum = info.typePointAllNum
-    ct.OpenCtrl("GetCountCtrl",data)
+    if info.buyerId == DataManager.GetMyOwnerID() then
+        local data = {}
+        data.num = info.item.n
+        data.pointNum = info.typePointAllNum
+        ct.OpenCtrl("GetCountCtrl",data)
+    end
 end
 
 --获取仓库数据回调

@@ -836,13 +836,13 @@ function GetEvaData(index, configData, lv)
     local brandSizeNum
     if index == 1 then
         -- 小
-        brandSizeNum = 16
+        brandSizeNum = 1
     elseif index == 2 then
         -- 中
-        brandSizeNum = 64
+        brandSizeNum = 1
     elseif index == 3 then
         -- 大
-        brandSizeNum = 144
+        brandSizeNum = 1
     end
     if configData.Btype == "Quality" then
         -- 品质
@@ -851,6 +851,14 @@ function GetEvaData(index, configData, lv)
             return string.format((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
         else
             -- 商品品质值
+            return string.format((1 + EvaUp[lv].add / 100000) * configData.basevalue)
+        end
+    elseif configData.Btype == "Brand" then  -- 知名度，随便写的
+        if configData.Atype < 2100000 then
+            -- 建筑
+            return string.format((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
+        else
+            -- 商品
             return string.format((1 + EvaUp[lv].add / 100000) * configData.basevalue)
         end
     elseif configData.Btype == "ProduceSpeed" then

@@ -13,7 +13,7 @@ function ResearchLineItem:initialize(prefab, data, buildingId)
     self.buildingId = buildingId
 
     local transform = prefab.transform
-    LoadSprite( ResearchConfig[data.itemId].iconPath, transform:Find("IconImage"):GetComponent("Image"), false)
+    LoadSprite( ResearchConfig[data.itemId].iconPath, transform:Find("IconImage"):GetComponent("Image"), true)
     transform:Find("NameText"):GetComponent("Text").text = ResearchConfig[data.itemId].name
     transform:Find("NumText"):GetComponent("Text").text = string.format("0/%d", data.targetCount)
 
@@ -21,9 +21,15 @@ function ResearchLineItem:initialize(prefab, data, buildingId)
         self:_clickRemove()
     end)
 
-    transform:Find("TopBtn"):GetComponent("Button").onClick:AddListener(function ()
+    self.topBtn = transform:Find("TopBtn")
+    self.topBtn:GetComponent("Button").onClick:AddListener(function ()
         self:_clickTop()
     end)
+end
+
+-- 设置置顶是否显示
+function ResearchLineItem:SetTopBtnShow(isSelect)
+    self.topBtn.localScale = isSelect and Vector3.one or Vector3.zero
 end
 
 -- 点击删除，向服务器发消息

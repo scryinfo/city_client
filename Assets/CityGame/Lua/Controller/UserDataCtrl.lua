@@ -59,7 +59,6 @@ function UserDataCtrl:_getComponent(go)
     self.sale = go.transform:Find("content/top/bg/sale/Text"):GetComponent("Text")
     self.dataName = go.transform:Find("content/top/bg/barnd/Text"):GetComponent("Text")
     self.impact = go.transform:Find("content/top/bg/Text"):GetComponent("Text")
-    self.name = go.transform:Find("content/top/card/name/Text"):GetComponent("Text")
     self.icon = go.transform:Find("content/top/card/cardImage/Image"):GetComponent("Image")
     self.quantity = go.transform:Find("content/quantity"):GetComponent("Text")
     self.inputBg = go.transform:Find("content/quantity/inputBg")
@@ -76,6 +75,8 @@ end
 
 --初始化数据
 function UserDataCtrl:initData()
+    LoadSprite(ResearchConfig[self.m_data.itemId].iconPath, self.icon, true)
+    self.dataName.text = ResearchConfig[self.m_data.itemId].name
     if self.m_data.myOwner then
         --self.btnText = GetLanguage()
         self.btn.transform.localScale = Vector3.one
@@ -105,7 +106,6 @@ function UserDataCtrl:initData()
             self.titleText.transform.localScale = Vector3.zero
         end
     end
-    LoadSprite(ResearchConfig[self.m_data.itemId].iconPath, self.icon, true)
 end
 
 --返回

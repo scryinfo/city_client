@@ -12,14 +12,15 @@ function MapModel.registerNetMsg()
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryTypeBuildingSummary"), MapModel.n_OnReceiveQueryBuildsSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketSummary"), MapModel.n_OnReceiveQueryMarketSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundSummary"), MapModel.n_OnReceiveGroundTransSummary)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabSummary"), MapModel.n_OnReceiveLabSummary)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryTechnologySummary"), MapModel.n_OnReceiveLabSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractSummary"), MapModel.n_OnReceiveSigningSummary)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adQueryPromoSummary"), MapModel.n_OnReceivePromoteSummary)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPromotionSummary"), MapModel.n_OnReceivePromoteSummary)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseSummary"), MapModel.n_OnReceiveWarehouseSummary)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryTypeBuildingDetail"), MapModel.n_OnReceiveQueryBuildsDetail)  --建筑详情搜索回调
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketDetail"), MapModel.n_OnReceiveQueryMarketDetail)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryContractGridDetail"), MapModel.n_OnReceiveSignDetail)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryLabDetail"), MapModel.n_OnReceiveTechDetail)
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","adQueryPromoDetail"), MapModel.n_OnReceivePromotionDetail)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryTechnologyDetail"), MapModel.n_OnReceiveTechDetail)
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryPromotionsDetail"), MapModel.n_OnReceivePromotionDetail)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryWareHouseDetail"), MapModel.n_OnReceiveWarehouseDetail)
 
 end
@@ -47,16 +48,18 @@ function MapModel.m_ReqGroundTransSummary()
     FlightMainModel.OpenFlightLoading()
 end
 --请求科研搜索摘要
-function MapModel.m_ReqLabSummary()
-    local msgId = pbl.enum("gscode.OpCode", "queryLabSummary")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
-    FlightMainModel.OpenFlightLoading()
+function MapModel.m_ReqLabSummary(itemId)
+    if itemId ~= nil then
+        DataManager.ModelSendNetMes("gscode.OpCode", "queryTechnologySummary","gs.Num",{ num = itemId})
+        FlightMainModel.OpenFlightLoading()
+    end
 end
 --请求推广搜索摘要
-function MapModel.m_ReqPromotionSummary()
-    local msgId = pbl.enum("gscode.OpCode", "adQueryPromoSummary")
-    CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
-    FlightMainModel.OpenFlightLoading()
+function MapModel.m_ReqPromotionSummary(itemId)
+    if itemId ~= nil then
+        DataManager.ModelSendNetMes("gscode.OpCode", "queryPromotionSummary","gs.Num",{ num = itemId})
+        FlightMainModel.OpenFlightLoading()
+    end
 end
 --仓库摘要
 function MapModel.m_ReqWarehouseSummary()
@@ -70,7 +73,13 @@ function MapModel.m_ReqSigningSummary()
     CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
     FlightMainModel.OpenFlightLoading()
 end
-
+---详情
+--请求建筑搜索详情
+function MapModel.m_ReqBuildsDetail(gridIndexPos, itemId)
+    local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, type = itemId}
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryTypeBuildingDetail","gs.QueryTypeBuildingDetail", data)
+    FlightMainModel.OpenFlightLoading()
+end
 --请求原料商品搜索详情
 function MapModel.m_ReqMarketDetail(gridIndexPos, itemId)
     local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, itemId = itemId}
@@ -90,22 +99,17 @@ function MapModel.m_ReqSigningDetail(gridIndexPos)
     FlightMainModel.OpenFlightLoading()
 end
 --请求推广详情
-function MapModel.m_ReqPromotionDetail(gridIndexPos)
-    local typeIds = {}
-    for i, value in ipairs(MapPromotionConfig) do
-        typeIds[i] = value
-    end
-    local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, typeIds = typeIds}
-    DataManager.ModelSendNetMes("gscode.OpCode", "adQueryPromoDetail","gs.QueryPromoDetail", data)
+function MapModel.m_ReqPromotionDetail(gridIndexPos,typeIds)
+    local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, itemId = typeIds}
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryPromotionsDetail","gs.queryPromotionsDetail", data)
     FlightMainModel.OpenFlightLoading()
 end
 --请求科研详情
-function MapModel.m_ReqTechnologyDetail(gridIndexPos)
-    local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}}
-    DataManager.ModelSendNetMes("gscode.OpCode", "queryLabDetail","gs.QueryLabDetail", data)
+function MapModel.m_ReqTechnologyDetail(gridIndexPos,typeIds)
+    local data = { centerIdx = {x = gridIndexPos.x, y = gridIndexPos.y}, itemId = typeIds}
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryTechnologyDetail","gs.queryTechnologyDetail", data)
     FlightMainModel.OpenFlightLoading()
 end
-
 --- 摘要回调 ---
 --建筑类型搜索摘要
 function MapModel.n_OnReceiveQueryBuildsSummary(stream)
@@ -150,7 +154,7 @@ function MapModel.n_OnReceiveLabSummary(stream)
     if stream == nil or stream == "" then
         return
     end
-    local data = assert(pbl.decode("gs.LabSummary", stream), "MapModel.n_OnReceiveLabSummary: stream == nil")
+    local data = assert(pbl.decode("gs.TechOrPromSummary", stream), "MapModel.n_OnReceiveLabSummary: stream == nil")
     MapCtrl._receiveLabSummary(MapCtrl, data)
 end
 --推广摘要
@@ -159,7 +163,7 @@ function MapModel.n_OnReceivePromoteSummary(stream)
     if stream == nil or stream == "" then
         return
     end
-    local data = assert(pbl.decode("gs.PromoSummary", stream), "MapModel.n_OnReceivePromoteSummary: stream == nil")
+    local data = assert(pbl.decode("gs.TechOrPromSummary", stream), "MapModel.n_OnReceivePromoteSummary: stream == nil")
     MapCtrl._receivePromotionSummary(MapCtrl, data)
 end
 --仓库摘要
@@ -174,6 +178,15 @@ end
 
 
 --- 详情回调 ---
+--建筑类型搜索详情
+function MapModel.n_OnReceiveQueryBuildsDetail(stream)
+    FlightMainModel.CloseFlightLoading()
+    if stream == nil or stream == "" then
+        return
+    end
+    local data = assert(pbl.decode("gs.TypeBuildingDetail", stream), "MapModel.n_OnReceiveQueryBuildsDetail: stream == nil")
+    MapCtrl._receiveBuildsDetail(MapCtrl, data)
+end
 --原料商品搜索详情
 function MapModel.n_OnReceiveQueryMarketDetail(stream)
     FlightMainModel.CloseFlightLoading()
@@ -198,7 +211,7 @@ function MapModel.n_OnReceiveTechDetail(stream)
     if stream == nil or stream == "" then
         return
     end
-    local data = assert(pbl.decode("gs.LabDetail", stream), "MapModel.n_OnReceiveTechDetail: stream == nil")
+    local data = assert(pbl.decode("gs.TechnologyDetail", stream), "MapModel.n_OnReceiveTechDetail: stream == nil")
     MapCtrl._receiveTechDetail(MapCtrl, data)
 end
 --仓库
@@ -216,6 +229,6 @@ function MapModel.n_OnReceivePromotionDetail(stream)
     if stream == nil or stream == "" then
         return
     end
-    local data = assert(pbl.decode("gs.PromoDetail", stream), "MapModel.n_OnReceivePromotionDetail: stream == nil")
+    local data = assert(pbl.decode("gs.PromotionsDetail", stream), "MapModel.n_OnReceivePromotionDetail: stream == nil")
     MapCtrl._receivePromotionDetail(MapCtrl, data)
 end

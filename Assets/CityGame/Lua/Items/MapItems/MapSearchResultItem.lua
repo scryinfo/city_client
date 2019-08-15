@@ -22,9 +22,15 @@ function MapSearchResultItem:_childInit()
 end
 --计算位置
 function MapSearchResultItem:_setPos()
-    if self.data.detailData ~= nil and self.data.detailData.pos ~= nil then
-        local data = self.data.detailData
-
+    if self.data.detailData ~= nil then
+        local data
+        if self.data.detailData.pos ~= nil then
+            data = self.data.detailData
+        elseif self.data.detailData.buildingInfo.pos ~= nil then
+            data = self.data.detailData.buildingInfo
+        else
+            return
+        end
         local blockID = TerrainManager.GridIndexTurnBlockID(data.pos)
         local tempInfo = DataManager.GetBaseBuildDataByID(blockID)
         if tempInfo ~= nil and tempInfo.Data ~= nil then

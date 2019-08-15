@@ -17,10 +17,29 @@ function EvaTitleItemTwo:_showContent()
         EvaCtrl.static.evaCtrl.isClickEva = false
         self:_onClickBtn()
     end
-    if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index] then
-        self:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].value)
+    if recordData[1] == 2 then
+        if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index] then
+            if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].value then
+                self:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].value)
+            else
+                self:_setAddNumber()
+            end
+            if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].marketValue then
+                self:_setMarketAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].marketValue)
+            else
+                self:_setMarketAddNumber()
+            end
+        else
+            self:_setAddNumber()
+            self:_setMarketAddNumber()
+        end
     else
-        self:_setAddNumber()
+        if EvaCtrl.static.evaCtrl.addData and EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index] then
+            self:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[self.index].value)
+        else
+            self:_setAddNumber()
+        end
+        self:_setMarketAddNumber()
     end
 end
 
@@ -29,11 +48,11 @@ function EvaTitleItemTwo:_onClickBtn()
     BaseEvaTitleItem._onClickBtn(self)
     local optionOne = EvaCtrl.static.evaCtrl:GetEvaRecordData()[1]
     if EvaConfig[optionOne].option[self.index].option then
-        EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -206)
+        EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -282)
         EvaCtrl.static.evaCtrl.isClickEvaT = true
         EvaCtrl.static.evaCtrl:ShowOptionThere(#EvaConfig[optionOne].option[self.index].option)
     else
-        EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -134)
+        EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -192)
         EvaCtrl.static.evaCtrl.isClickEvaT = false
         EvaCtrl.static.evaCtrl:ShowOptionThere(0)
         EvaCtrl.static.evaCtrl:CreatePropertyItem(EvaConfig[optionOne].option[self.index].property)

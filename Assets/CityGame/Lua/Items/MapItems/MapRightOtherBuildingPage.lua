@@ -17,11 +17,18 @@ function MapRightOtherBuildingPage:initialize(viewRect)
     self.nameText = trans:Find("topRoot/nameText"):GetComponent("Text")
     self.companyText = trans:Find("topRoot/companyText"):GetComponent("Text")
     self.buildingNameText = trans:Find("topRoot/bg/buildingNameText"):GetComponent("Text")
+
+
     --self.femaleIconTran = trans:Find("topRoot/nameText/femaleIcon")
     --self.manIconTran = trans:Find("topRoot/nameText/manIcon")
+    self.notOpenTranInfo = trans:Find("bottomRoot/notOpenTran") -- 建筑未开业
+    self.notOpenText = trans:Find("bottomRoot/notOpenTran/Text"):GetComponent("Text") -- 建筑未开业Text
 
     self.simpleInfo = trans:Find("bottomRoot/simpleInfo")  --其他只显示简单信息的建筑
     self.simpleShowRoot = trans:Find("bottomRoot/simpleInfo/showInfoRoot")
+
+    self.shelfBuildItem = MapRightOtherShelfBuildPage:new(self.simpleShowRoot)
+
 
     self.promotionInfo = trans:Find("bottomRoot/promotionInfo")  --推广公司
     self.promotionItem = MapRightOtherPromotePage:new(self.promotionInfo)
@@ -47,7 +54,6 @@ end
 function MapRightOtherBuildingPage:refreshData(data, typeData)
     self.viewRect.anchoredPosition = Vector2.zero
     self:_cleanItems()
-
     self.data = data.detailData
     self:switchShowTrans(typeData.typeId)
     self:showByType(typeData)
@@ -59,6 +65,7 @@ function MapRightOtherBuildingPage:switchShowTrans(typeId)
     self.promotionInfo.localScale = Vector3.zero
     self.technologyInfo.localScale = Vector3.zero
     self.simpleInfo.localScale = Vector3.zero
+    self.notOpenTranInfo.localScale = Vector3.zero
 
     if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
         self.matGoodInfo.localScale = Vector3.one
@@ -66,14 +73,24 @@ function MapRightOtherBuildingPage:switchShowTrans(typeId)
         self.promotionInfo.localScale = Vector3.one
     elseif typeId == EMapSearchType.Technology then
         self.technologyInfo.localScale = Vector3.one
+    elseif typeId == EMapSearchType.Builds and self.data.isopen == false then
+        --未开业
+        self.notOpenTranInfo.localScale = Vector3.one
     else
         self.simpleInfo.localScale = Vector3.one
     end
 end
 --
 function MapRightOtherBuildingPage:showByType(typeData)
-    PlayerInfoManger.GetInfos({[1] = self.data.ownerId}, self._initPersonalInfo, self)
-
+    local ownerId
+    if self.data.ownerId ~= nil then
+        ownerId = self.data.ownerId
+    elseif self.data.buildingInfo.ownerId then
+        ownerId = self.data.buildingInfo.ownerId
+    else
+        return
+    end
+    PlayerInfoManger.GetInfos({[1] = ownerId}, self._initPersonalInfo, self)
     --直接搜索类型
     if typeData.detailId == nil then
         if typeData.typeId == EMapSearchType.Warehouse then
@@ -98,10 +115,15 @@ function MapRightOtherBuildingPage:showByType(typeData)
         elseif typeData.typeId == EMapSearchType.Promotion then
             self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
             self.promotionItem:refreshData(self.data, typeData)
-
         elseif typeData.typeId == EMapSearchType.Technology then
             self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
             self.technologyItem:refreshData(self.data, typeData)
+        elseif typeData.typeId == EMapSearchType.Builds then  --建筑类型搜索
+            self.buildingNameText.text = string.format("%s %s%s", self.data.buildingInfo.name, GetLanguage(PlayerBuildingBaseData[self.data.buildingInfo.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.buildingInfo.metaId].typeName))
+            if self.data.isopen == true then
+                --建筑开业的情况下
+                self.shelfBuildItem:refreshData(self.data.buildingInfo, typeData)
+            end
         end
     end
 end
@@ -211,6 +233,7 @@ end
 --多语言
 function MapRightOtherBuildingPage:_language()
     self.goHereText01.text = GetLanguage(20010008)
+    self.notOpenText.text = GetLanguage(20120001)
 end
 --关闭
 function MapRightOtherBuildingPage:close()
@@ -223,6 +246,7 @@ function MapRightOtherBuildingPage:close()
     self.technologyItem:close()
     self.promotionItem:close()
     self.matGoodItem:close()
+    self.shelfBuildItem:close()
 end
 --去地图上的一个建筑
 function MapRightOtherBuildingPage:_goHereBtn()

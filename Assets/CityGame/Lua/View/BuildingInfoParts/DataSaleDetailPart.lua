@@ -195,7 +195,9 @@ end
 
 --修改回调
 function DataSaleDetailPart:c_SetShelf(info)
-    UIPanel.ClosePage()
+    if self.m_data.info.ownerId == DataManager.GetMyOwnerID() then
+        UIPanel.ClosePage()
+    end
     if self.dataSaleCardItem then
         for i, v in pairs(self.dataSaleCardItem) do
             if v.type == info.item.key.id then
@@ -224,8 +226,18 @@ function DataSaleDetailPart:c_BuyCount(info)
                 v.n = v.n - info.item.n
                 v.num.text = "x" .. v.n
                 if v.n <= 0 then
-                   index = i
-                    destroy(v.prefab.gameObject)
+                    if v.autoReplenish then
+                        if v.myOwnerID then
+                            v.auto.localScale = Vector3.zero
+                            v.vacant.localScale = Vector3.one
+                        else
+                            v.auto.localScale = Vector3.zero
+                            v.vacant.localScale = Vector3.zero
+                        end
+                    else
+                        index = i
+                        destroy(v.prefab.gameObject)
+                    end
                 end
             end
         end
@@ -245,6 +257,15 @@ function DataSaleDetailPart:SurveyLineUpData(info)
             if v.type == info.iKey.id then
                 if v.autoReplenish then
                     v.n = info.nowCountInLocked
+                    if v.myOwnerID then
+                        if info.nowCountInLocked > 0 then
+                            v.auto.localScale = Vector3.one
+                            v.vacant.localScale = Vector3.zero
+                        end
+                    else
+                        v.auto.localScale = Vector3.zero
+                        v.vacant.localScale = Vector3.zero
+                    end
                     v.num.text = "x" .. v.n
                     v.storeNum = 0
                 else

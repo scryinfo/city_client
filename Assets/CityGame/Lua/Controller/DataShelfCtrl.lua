@@ -300,7 +300,9 @@ end
 --下架回调
 function DataShelfCtrl:c_DelShelf(info)
     Event.Brocast("SmallPop",GetLanguage(25060007), ReminderType.Succeed)
-    UIPanel.ClosePage()
+    if self.m_data.info.ownerId == DataManager.GetMyOwnerID() then
+        UIPanel.ClosePage()
+    end
 end
 
 --推荐定价

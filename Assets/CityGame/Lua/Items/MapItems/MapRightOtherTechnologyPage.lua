@@ -12,9 +12,8 @@ function MapRightOtherTechnologyPage:initialize(viewRect)
     self.viewTrans = viewRect.transform
 
     self.showInfoRoot = self.viewTrans:Find("showInfoRoot")
-    self.infoText = self.viewTrans:Find("abilityRoot/infoText"):GetComponent("Text")
-    self.text01 = self.viewTrans:Find("abilityRoot/Text01"):GetComponent("Text")
-    self.valueText = self.viewTrans:Find("abilityRoot/valueText"):GetComponent("Text")
+    self.iconImg = self.viewTrans:Find("abilityRoot/bg/iconImg"):GetComponent("Image")
+    self.infoText = self.viewTrans:Find("abilityRoot/bg/Image/infoText"):GetComponent("Text")
 end
 --
 function MapRightOtherTechnologyPage:refreshData(data, typeData)
@@ -22,14 +21,15 @@ function MapRightOtherTechnologyPage:refreshData(data, typeData)
     self.data = data
 
     if typeData.typeId == EMapSearchType.Technology then
-        if typeData.detailId == EMapTechnologyType.TechNewItem then
-            self.infoText.text = GetLanguage(20040001)
-            self.valueText.text = (self.data.goodProb / MapRightOtherTechnologyPage.successNum).."%"
-        elseif typeData.detailId == EMapTechnologyType.TechEva then
-            self.infoText.text = GetLanguage(20040002)
-            self.valueText.text = (self.data.evaProb/ MapRightOtherTechnologyPage.successNum).."%"
+        --根据类型更换Icon / 多语言
+        if self.data.metaId ~= nil then
+            for i, value in pairs(MapTechnologyInfoConfig) do --比较傻的做法
+                if value.type == self.data.metaId then
+                    self.infoText.text = GetLanguage(value.languageId)
+                    LoadSprite(value.imgPath, self.iconImg, false)
+                end
+            end
         end
-        self:_language()
         self:_createTech()
         self:_sortInfoItems()
     end
@@ -42,30 +42,22 @@ function MapRightOtherTechnologyPage:_sortInfoItems()
     local pos = Vector3.zero
     for i, item in ipairs(self.items) do
         item:setPos(pos)
-        pos.y = pos.y - 66  --66是item的高度+间隔得来的
+        pos.y = pos.y - 66  --66是item的高度+间隔得来的--TODO：//参数调整
     end
 end
 --科研
 function MapRightOtherTechnologyPage:_createTech()
-    if self.items == nil then
-        self.items = {}
-    end
-    local str2 = string.format("<color=%s>E%s</color>/%s", MapRightOtherBuildingPage.moneyColor, GetClientPriceString(self.data.price), GetLanguage(20150004))
+    --数量
+    local str1 = self.data.sale.count
+    local data1 = {infoTypeStr = "TechnologyQuantity", value = str1}  --数量
+    self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
+    --价格
+    local str2 = string.format("<color=%s>E%s</color>/", MapRightOtherPromotePage.moneyColor, GetClientPriceString(self.data.sale.price))
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.showInfoRoot)
-
-    local str1 = self.data.availableTimes..GetLanguage(20100003)
-    local data1 = {infoTypeStr = "ResearchTime", value = str1}  --科研时间
-    self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
-
-    local str3
-    if self.data.queuedTimes ~= -1 then
-        str3 = os.date("%H:%M %m/%d/%Y", self.data.queuedTimes / 1000)
-    else
-        --str3 = os.date("%H:%M %m/%d/%Y", os.time())
-        str3 = GetLanguage(27040032)
-    end
-    local data3 = {infoTypeStr = "Queued", value = str3}  --队列
+    --竞争力
+    local str3 = ct.CalculationLaboratoryCompetitivePower(self.data.sale.guidePrice,self.data.sale.price,self.data.typeIds)
+    local data3 = {infoTypeStr = "CompetitivePower", value = str3}  --竞争力
     self.items[#self.items + 1] = self:_createShowItem(data3, self.showInfoRoot)
 end
 --
@@ -98,10 +90,7 @@ function MapRightOtherTechnologyPage:_cleanItems()
     end
     self.items = {}
 end
---多语言
-function MapRightOtherTechnologyPage:_language()
-    self.text01.text = GetLanguage(20140002)
-end
+
 --关闭
 function MapRightOtherTechnologyPage:close()
     self:_cleanItems()

@@ -534,10 +534,12 @@ function MapCtrl:promotionTechReq(typeId, item)
 end
 --
 function MapCtrl:switchNoDataReq(typeId)
-    if typeId == EMapSearchType.Technology then
-        MapModel.m_ReqLabSummary()
-    elseif typeId == EMapSearchType.Promotion then
-        MapModel.m_ReqPromotionSummary()
+    if self.selectDetailItem ~= nil then
+        if typeId == EMapSearchType.Technology then
+            MapModel.m_ReqLabSummary(self.selectDetailItem:getItemId())
+        elseif typeId == EMapSearchType.Promotion then
+            MapModel.m_ReqPromotionSummary(self.selectDetailItem:getItemId())
+        end
     end
 end
 
@@ -715,9 +717,9 @@ function MapCtrl:_reqMoveDetail(blockId)
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Promotion then
-            MapModel.m_ReqPromotionDetail(blockCollectionId)
+            MapModel.m_ReqPromotionDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Technology then
-            MapModel.m_ReqTechnologyDetail(blockCollectionId)
+            MapModel.m_ReqTechnologyDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Builds then
             MapModel.m_ReqBuildsDetail(blockCollectionId, self.selectDetailItem:getItemId())
         end
@@ -939,9 +941,9 @@ function MapCtrl:_judgeDetail()
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqMarketDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Promotion then
-            MapModel.m_ReqPromotionDetail(blockCollectionId)
+            MapModel.m_ReqPromotionDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Technology then
-            MapModel.m_ReqTechnologyDetail(blockCollectionId)
+            MapModel.m_ReqTechnologyDetail(blockCollectionId, self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Builds then
             MapModel.m_ReqBuildsDetail(blockCollectionId, self.selectDetailItem:getItemId())
         end
@@ -969,9 +971,9 @@ function MapCtrl:_judgeSummary()
         if typeId == EMapSearchType.Material or typeId == EMapSearchType.Goods then
             MapModel.m_ReqQueryMarketSummary(self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Promotion then
-            MapModel.m_ReqPromotionSummary()
+            MapModel.m_ReqPromotionSummary(self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Technology then
-            MapModel.m_ReqLabSummary()
+            MapModel.m_ReqLabSummary(self.selectDetailItem:getItemId())
         elseif typeId == EMapSearchType.Builds then
             MapModel.m_ReqBuildsSummary(self.selectDetailItem:getItemId())
         end

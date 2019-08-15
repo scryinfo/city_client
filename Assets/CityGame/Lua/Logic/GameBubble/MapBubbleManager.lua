@@ -191,7 +191,7 @@ function MapBubbleManager._getBuildingIconPath(buildingType)
     end
     return path
 end
---
+--创建摘要item
 function MapBubbleManager.createSummaryItems(data, summaryType)
     if summaryType == EMapSearchType.Auction then  --土地拍卖是客户端维护的，所以做特殊处理
         if data == nil then
@@ -278,10 +278,9 @@ function MapBubbleManager._createDetailByType(typeId, data)
         if data.info ~= nil then
             for i, value in pairs(data.info) do
                 local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
-                if value.b ~= nil then
-                    local typeIds = value.typeIds
-                    for i, building in pairs(value.b) do
-                        building.typeIds = typeIds
+                if value.buildingInfo ~= nil then
+                    for i, building in pairs(value.buildingInfo) do
+                        building.typeIds = data.itemId
                         this._checkDetailTable(collectionId)
                         local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
                         this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)

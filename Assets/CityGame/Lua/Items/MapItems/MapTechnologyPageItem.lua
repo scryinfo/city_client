@@ -18,7 +18,7 @@ function MapTechnologyPageItem:createItems()
         local go = UnityEngine.GameObject.Instantiate(MapPanel.mapTechnologyDetailItem)
         go.transform:SetParent(self.content.transform)
         go.transform.localScale = Vector3.one
-        local data = {technologyIndex = i, mapSearchType = EMapSearchType.Technology}
+        local data = {technologyIndex = i, mapSearchType = EMapSearchType.Technology, itemId = value.type}
         local item = MapTechnologyDetailItem:new(data, go)
         self.items[i] = item
     end
@@ -36,7 +36,7 @@ function MapTechnologyPageItem:sortItemPos(itemTable)
         local pos = Vector3.zero
         for i, item in ipairs(itemTable) do
             item:setPos(pos)
-            pos = pos - Vector3.New(0, 132, 0)
+            pos = pos - Vector3.New(0, 125, 0)
         end
     end
 end

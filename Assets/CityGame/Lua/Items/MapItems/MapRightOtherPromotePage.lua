@@ -11,35 +11,24 @@ function MapRightOtherPromotePage:initialize(viewRect)
     self.viewTrans = viewRect.transform
 
     self.showInfoRoot = self.viewTrans:Find("showInfoRoot")
-    self.iconImg = self.viewTrans:Find("abilityRoot/iconImg"):GetComponent("Image")
-    self.infoText = self.viewTrans:Find("abilityRoot/infoText"):GetComponent("Text")
-    self.text01 = self.viewTrans:Find("abilityRoot/Text01"):GetComponent("Text")
-    self.valueText = self.viewTrans:Find("abilityRoot/valueText"):GetComponent("Text")
+    self.iconImg = self.viewTrans:Find("abilityRoot/bg/iconImg"):GetComponent("Image")
+    self.infoText = self.viewTrans:Find("abilityRoot/bg/Image/infoText"):GetComponent("Text")
 end
 --data是服务器发来的数据，typeData一定包括typeId，指的是左侧的搜索类型，该界面的类型是搜索推广公司
 --由于推广公司是有二级界面的，所以会有一个detailId
 function MapRightOtherPromotePage:refreshData(data, typeData)
     self.viewTrans.localScale = Vector3.one
     self.data = data
-
-    --服务器发来的typeIds和CurAbilitys是一一对应的，指的是对应的推广类型和推广能力值
-    --将数据转换成哈希表
-    local promotType = {}
-    for i, key in pairs(self.data.typeIds) do
-        promotType[key] = self.data.CurAbilitys[i]
-    end
     if typeData.typeId == EMapSearchType.Promotion then
-        local type1 = MapPromotionConfig[typeData.detailId]
-        local value = promotType[type1]
-        local infoData = MapPromotionInfoConfig[typeData.detailId]
-
-        LoadSprite(infoData.imgPath, self.iconImg, true)
-        self.iconImg.color = getColorByVector3(infoData.colorV3)
-        self.infoText.text = GetLanguage(MapPromotionInfoConfig[typeData.detailId].languageId)
-        self.valueText.text = "+"..value.."/"..GetLanguage(20100003)
-        --以上都是小卡片上显示的内容
-
-        self:_language()
+        --根据类型更换Icon / 多语言
+        if self.data.metaId ~= nil then
+            for i, value in pairs(MapPromotionInfoConfig) do --比较傻的做法
+                if value.type == self.data.metaId then
+                    self.infoText.text = GetLanguage(value.languageId)
+                    LoadSprite(value.imgPath, self.iconImg, false)
+                end
+            end
+        end
         self:_createPromotion()
         self:_sortInfoItems()
     end
@@ -52,27 +41,22 @@ function MapRightOtherPromotePage:_sortInfoItems()
     local pos = Vector3.zero
     for i, item in ipairs(self.items) do
         item:setPos(pos)
-        pos.y = pos.y - 66  --66是item的高度+间隔得来的
+        pos.y = pos.y - 66  --66是item的高度+间隔得来的--TODO：//参数调整
     end
 end
 --推广
 function MapRightOtherPromotePage:_createPromotion()
-    local str2 = string.format("<color=%s>E%s</color>/%s", MapRightOtherPromotePage.moneyColor, GetClientPriceString(self.data.pricePerHour), GetLanguage(20150004))
+    --数量
+    local str1 = self.data.sale.count
+    local data1 = {infoTypeStr = "PromoteQuantity", value = str1}  --数量
+    self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
+    --价格
+    local str2 = string.format("<color=%s>E%s</color>/", MapRightOtherPromotePage.moneyColor, GetClientPriceString(self.data.sale.price))
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.showInfoRoot)
-
-    local str1 = self.data.remainTime / 3600000 ..GetLanguage(20100003)
-    local data1 = {infoTypeStr = "PromotionTime", value = str1}  --时间
-    self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
-
-    local str3
-    if self.data.queuedTimes ~= -1 then
-        str3 = os.date("%H:%M %m/%d/%Y", self.data.queuedTimes / 1000)
-    else
-        --str3 = os.date("%H:%M %m/%d/%Y", os.time())
-        str3 = GetLanguage(27040032)
-    end
-    local data3 = {infoTypeStr = "Queued", value = str3}  --
+    --竞争力
+    local str3 = ct.CalculationAdvertisementCompetitivePower(self.data.sale.guidePrice,self.data.sale.price,self.data.typeIds)
+    local data3 = {infoTypeStr = "CompetitivePower", value = str3}  --竞争力
     self.items[#self.items + 1] = self:_createShowItem(data3, self.showInfoRoot)
 end
 --
@@ -104,10 +88,6 @@ function MapRightOtherPromotePage:_cleanItems()
         item = nil
     end
     self.items = {}
-end
---多语言
-function MapRightOtherPromotePage:_language()
-    self.text01.text = GetLanguage(20130004)
 end
 --关闭
 function MapRightOtherPromotePage:close()

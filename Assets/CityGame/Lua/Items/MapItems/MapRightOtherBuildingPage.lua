@@ -113,11 +113,10 @@ function MapRightOtherBuildingPage:showByType(typeData)
             self.matGoodItem:refreshData(self.data, typeData)
 
         elseif typeData.typeId == EMapSearchType.Promotion then
-            self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
+            self.buildingNameText.text = string.format("%s %s%s", self.data.buildingInfo.name, GetLanguage(PlayerBuildingBaseData[self.data.buildingInfo.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.buildingInfo.metaId].typeName))
             self.promotionItem:refreshData(self.data, typeData)
-
         elseif typeData.typeId == EMapSearchType.Technology then
-            self.buildingNameText.text = string.format("%s %s%s", self.data.name, GetLanguage(PlayerBuildingBaseData[self.data.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.metaId].typeName))
+            self.buildingNameText.text = string.format("%s %s%s", self.data.buildingInfo.name, GetLanguage(PlayerBuildingBaseData[self.data.buildingInfo.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.buildingInfo.metaId].typeName))
             self.technologyItem:refreshData(self.data, typeData)
         elseif typeData.typeId == EMapSearchType.Builds then  --建筑类型搜索
             self.buildingNameText.text = string.format("%s %s%s", self.data.buildingInfo.name, GetLanguage(PlayerBuildingBaseData[self.data.buildingInfo.metaId].sizeName), GetLanguage(PlayerBuildingBaseData[self.data.buildingInfo.metaId].typeName))

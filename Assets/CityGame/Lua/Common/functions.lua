@@ -596,6 +596,17 @@ function creatGoods(path, parent)
     return go
 end
 
+--生成预制(预制放置在子物体下)
+function createPrefabs(prefab,itemRoot)
+    local obj = UnityEngine.GameObject.Instantiate(prefab)
+    local objRect = obj.transform:GetComponent("RectTransform")
+    obj.transform:SetParent(itemRoot.transform)
+    objRect.transform.localScale = Vector3.one
+    objRect.transform.localPosition = Vector3.zero
+    obj:SetActive(true)
+    return obj
+end
+
 --生成预制(新版)
 function createPrefab(path, parent, callback)
     panelMgr:LoadPrefab_A(path, nil, nil, function(ins, obj)

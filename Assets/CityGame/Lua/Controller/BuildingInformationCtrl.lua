@@ -39,12 +39,13 @@ function BuildingInformationCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.buildingName.gameObject,self._clickBuildingName,self)
     self.luaBehaviour:AddClick(self.bgBtn.gameObject,self._clickBgBtn,self)
     --给每块地的button绑定点击事件
-    for key,value in pairs(self.mineLandBtnTable) do
-        self.luaBehaviour:AddClick(value.gameObject,self._clickMineGroundBtn,self)
-    end
-    for key,value in pairs(self.otherLandBtnTable) do
-        self.luaBehaviour:AddClick(value.gameObject,self._clickOtherGroundBtn,self)
-    end
+    --TODO:建筑信息地块修改为不能点击，所以不需要添加点击事件2019/8/15
+    --for key,value in pairs(self.mineLandBtnTable) do
+    --    self.luaBehaviour:AddClick(value.gameObject,self._clickMineGroundBtn,self)
+    --end
+    --for key,value in pairs(self.otherLandBtnTable) do
+    --    self.luaBehaviour:AddClick(value.gameObject,self._clickOtherGroundBtn,self)
+    --end
 end
 function BuildingInformationCtrl:Active()
     UIPanel.Active(self)
@@ -163,6 +164,8 @@ function BuildingInformationCtrl:_getComponent(go)
     self.buyingTimeText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingTime/time/timeText"):GetComponent("Text")
     self.buyingPrice = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingPrice/price"):GetComponent("Text")
     self.buyingPriceText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingPrice/price/priceText"):GetComponent("Text")
+    self.buildingText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buildingSize/buildingText"):GetComponent("Text")
+    self.buildingSizeText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buildingSize/buildingText/buildingSizeText"):GetComponent("Text")
     --otherLandInfo
     self.otherLandInfo = go.transform:Find("content/landInfoRoot/content/otherLandInfo")
     self.headImg = go.transform:Find("content/landInfoRoot/content/otherLandInfo/headBg/headImg"):GetComponent("Image")
@@ -213,6 +216,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     self:initializeButtonInfo()
     --调整地块UI布局
     self:initializeLandUiLayout()
+    --self.buildingSizeText.text =
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
         local data = PlayerBuildingBaseData[self.m_data.mId]
@@ -411,9 +415,11 @@ function BuildingInformationCtrl:initializeUiLandInfo()
         end
     end
     --默认框选地块1
-    self.chooseBoxImg.transform:SetParent(self.indexTable[1])
-    self.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
-    self.chooseBoxImg.transform.localScale = Vector3.one
+    --TODO:建筑信息地块不能点击，修改为不用框选
+    --self.chooseBoxImg.transform:SetParent(self.indexTable[1])
+    --self.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
+    --self.chooseBoxImg.transform.localScale = Vector3.one
+    self.chooseBoxImg.transform.localScale = Vector3.zero
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -427,6 +433,7 @@ function BuildingInformationCtrl:language()
     self.buildTimeText.text = GetLanguage(30010003)
     self.buyingTime.text = GetLanguage(30080003)
     self.buyingPrice.text = GetLanguage(30080004)
+    self.buildingText.text = "建筑规模:"
     self.leaseTime.text = GetLanguage(30080001)
     self.rentText.text = GetLanguage(30080002)
 end
@@ -482,22 +489,22 @@ function BuildingInformationCtrl:_clickBuildingName(ins)
     ct.OpenCtrl("InputDialogPageCtrl",data)
     ins:closeTipBox()
 end
---自己的地块信息
-function BuildingInformationCtrl:_clickMineGroundBtn(ins)
-    PlayMusEff(1002)
-    --改变选中框的位置
-    ins.chooseBoxImg.transform:SetParent(self.transform)
-    ins.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
-    ins:_updateGroundInfo(ins:getIndexKey(self),true)
-end
---别人的地块信息
-function BuildingInformationCtrl:_clickOtherGroundBtn(ins)
-    PlayMusEff(1002)
-    --改变选中框的位置
-    ins.chooseBoxImg.transform:SetParent(self.transform)
-    ins.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
-    ins:_updateGroundInfo(ins:getIndexKey(self),false)
-end
+----自己的地块信息
+--function BuildingInformationCtrl:_clickMineGroundBtn(ins)
+--    PlayMusEff(1002)
+--    --改变选中框的位置
+--    ins.chooseBoxImg.transform:SetParent(self.transform)
+--    ins.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
+--    ins:_updateGroundInfo(ins:getIndexKey(self),true)
+--end
+----别人的地块信息
+--function BuildingInformationCtrl:_clickOtherGroundBtn(ins)
+--    PlayMusEff(1002)
+--    --改变选中框的位置
+--    ins.chooseBoxImg.transform:SetParent(self.transform)
+--    ins.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
+--    ins:_updateGroundInfo(ins:getIndexKey(self),false)
+--end
 --刷新地块信息
 function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
     --isShow 等于true时，是买的地  false时，是租的地

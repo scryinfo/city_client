@@ -22,9 +22,9 @@ function MapRightOtherTechnologyPage:refreshData(data, typeData)
 
     if typeData.typeId == EMapSearchType.Technology then
         --根据类型更换Icon / 多语言
-        if self.data.metaId ~= nil then
+        if typeData.detailId ~= nil then
             for i, value in pairs(MapTechnologyInfoConfig) do --比较傻的做法
-                if value.type == self.data.metaId then
+                if value.type == typeData.detailId then
                     self.infoText.text = GetLanguage(value.languageId)
                     LoadSprite(value.imgPath, self.iconImg, false)
                 end
@@ -52,7 +52,7 @@ function MapRightOtherTechnologyPage:_createTech()
     local data1 = {infoTypeStr = "TechnologyQuantity", value = str1}  --数量
     self.items[#self.items + 1] = self:_createShowItem(data1, self.showInfoRoot)
     --价格
-    local str2 = string.format("<color=%s>E%s</color>/", MapRightOtherPromotePage.moneyColor, GetClientPriceString(self.data.sale.price))
+    local str2 = string.format("<color=%s>E%s</color>", MapRightOtherPromotePage.moneyColor, GetClientPriceString(self.data.sale.price))
     local data2 = {infoTypeStr = "Price", value = str2}  --价格
     self.items[#self.items + 1] = self:_createShowItem(data2, self.showInfoRoot)
     --竞争力

@@ -99,12 +99,12 @@ function MapBubbleManager.initItemData()
         this._createBuildingItems(MyBuild.retailShop, BuildingType.RetailShop)
     end
     --生成研究所
-    if MyBuild.laboratory ~= nil then
-        this._createBuildingItems(MyBuild.laboratory, BuildingType.Laboratory)
+    if MyBuild.technology ~= nil then
+        this._createBuildingItems(MyBuild.technology, BuildingType.Laboratory)
     end
     --生成推广
-    if MyBuild.publicFacility ~= nil then
-        this._createBuildingItems(MyBuild.publicFacility, BuildingType.Municipal)
+    if MyBuild.promotionCompany ~= nil then
+        this._createBuildingItems(MyBuild.promotionCompany, BuildingType.Municipal)
     end
     --生成零售店
     --if MyBuild.retailShop ~= nil then
@@ -280,10 +280,12 @@ function MapBubbleManager._createDetailByType(typeId, data)
                 local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
                 if value.buildingInfo ~= nil then
                     for i, building in pairs(value.buildingInfo) do
-                        building.typeIds = data.itemId
-                        this._checkDetailTable(collectionId)
-                        local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
-                        this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                        if building.ownerId ~= DataManager.GetMyOwnerID() then --过滤自己建筑
+                            building.typeIds = data.itemId
+                            this._checkDetailTable(collectionId)
+                            local blockId = TerrainManager.GridIndexTurnBlockID(building.pos)
+                            this.collectionDetails[collectionId].detailItems[blockId] = this._createDetailItems(building)
+                        end
                     end
                 end
             end
@@ -311,8 +313,8 @@ function MapBubbleManager._createDetailByType(typeId, data)
             end
         end
     elseif typeId == EMapSearchType.Builds and data.info ~= nil then
-        --for i, value in pairs(data.info) do
-            local value = data.info
+        for i, value in pairs(data.info) do
+        --    local value = data.info
             if value.typeInfo ~= nil then
                 local collectionId = TerrainManager.AOIGridIndexTurnCollectionID(value.idx)
                 for i, temp in pairs(value.typeInfo) do
@@ -323,7 +325,7 @@ function MapBubbleManager._createDetailByType(typeId, data)
                     end
                 end
             end
-        --end
+        end
     end
 end
 --判断table是否为空

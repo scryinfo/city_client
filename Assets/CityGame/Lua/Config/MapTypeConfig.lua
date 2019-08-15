@@ -18,7 +18,7 @@ MapTypeConfig ={
     },
     [3] = {
         typeId = 3,  --建筑
-        languageId = 20010003,
+        languageId = 20010010,
         name = "建筑",
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-land-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-deal-grey.png",

@@ -3,6 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/27 20:16
 ---GroundTransContractPanel
+---土地购买合约
 local transform
 GroundTransContractPanel = {}
 local this = GroundTransContractPanel
@@ -16,9 +17,10 @@ function GroundTransContractPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.rentBottomTran = transform:Find("bottomRoot/rent")
     this.rentBtn = transform:Find("bottomRoot/rent/rentBtn")
-    this.rentTipText = transform:Find("bottomRoot/rent/tipText"):GetComponent("Text")
+    this.rentTipText = transform:Find("bottomRoot/rent/tip/tipText"):GetComponent("Text")
     this.buyBottomBtn = transform:Find("bottomRoot/buyBtn")
 
+    this.tipText = transform:Find("centerRoot/tipText"):GetComponent("Text")
     this.totalPriceText = transform:Find("centerRoot/total/totalPriceText"):GetComponent("Text")
     this.rentCenterTran = transform:Find("centerRoot/rent")
     this.rentAreaText = transform:Find("centerRoot/rent/areaText"):GetComponent("Text")
@@ -44,6 +46,14 @@ function GroundTransContractPanel.InitPanel()
     this.rentTenancyText06 = transform:Find("centerRoot/rent/Text (2)"):GetComponent("Text")
     this.rentDailyText07 = transform:Find("centerRoot/rent/Text (3)"):GetComponent("Text")
     this.totalText08 = transform:Find("centerRoot/total/Text"):GetComponent("Text")
+
+    --新增土地繁荣度，价格，矿工费,公司名称
+    this.prosperityText = transform:Find("centerRoot/buy/prosperity/prosperityText"):GetComponent("Text")
+    this.prosperityValue = transform:Find("centerRoot/buy/prosperity/prosperityValue"):GetComponent("Text")
+    this.priceText = transform:Find("centerRoot/buy/price/priceText"):GetComponent("Text")
+    this.priceValue = transform:Find("centerRoot/buy/price/priceValue"):GetComponent("Text")
+    this.minersfeeText = transform:Find("centerRoot/buy/minersfee/minersfeeText"):GetComponent("Text")
+    this.minersfeeValue = transform:Find("centerRoot/buy/minersfee/minersfeeValue"):GetComponent("Text")
 end
 --
 function GroundTransContractPanel.chooseState(isRent)

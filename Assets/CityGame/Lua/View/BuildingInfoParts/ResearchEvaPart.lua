@@ -112,6 +112,9 @@ end
 
 -- 删除生产线
 function ResearchEvaPart:_getFtyDelLine(data)
+    if self.m_data.line == nil then
+        return
+    end
     if data.lineId == self.m_data.line[1].id then -- 删除正在生产的
         if self.m_Timer ~= nil then
             self.m_Timer:Stop()

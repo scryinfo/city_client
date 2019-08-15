@@ -40,7 +40,11 @@ function GroundAuctionCtrl:Active()
     GroundAuctionPanel.secondText03.text = GetLanguage(20160006)
     GroundAuctionPanel.noneHistoryText04.text = GetLanguage(20160009)
     GroundAuctionPanel.tipText05.text = GetLanguage(21010004)
-    GroundAuctionPanel.titleText.text = GetLanguage(21010001)
+    GroundAuctionPanel.showText.text = GetLanguage(20160007)
+    GroundAuctionPanel.bidBtnText.text = "拍卖"
+    GroundAuctionPanel.groundSizeText.text = "土地拍卖的范围"
+    GroundAuctionPanel.prosperityText.text = "土地繁荣度"
+    --GroundAuctionPanel.titleText.text = GetLanguage(21010001)
 end
 
 function GroundAuctionCtrl:Refresh()
@@ -48,7 +52,10 @@ function GroundAuctionCtrl:Refresh()
     Event.AddListener("c_BidEnd", self._bidEnd, self)  --拍卖结束
     Event.AddListener("c_BidStart", self._bidStart, self)  --拍卖开始
     Event.AddListener("c_ReturnGAucHistoryObj", self._returnHistoryObj, self)  --回收历史记录item
-
+    Event.AddListener("_updateShowGroundPerityValue",self._updateShowGroundPerityValue,self)
+    if self.m_data.id then
+        GAucModel.m_ReqQueryGroundprosPerityValue(self.m_data.id)
+    end
     self:_initPanelData()
 end
 
@@ -69,6 +76,8 @@ function GroundAuctionCtrl:Hide()
     Event.RemoveListener("c_BidEnd", self._bidEnd, self)
     Event.RemoveListener("c_BidStart", self._bidStart, self)
     Event.RemoveListener("c_ReturnGAucHistoryObj", self._returnHistoryObj, self)
+    Event.RemoveListener("_updateShowGroundPerityValue",self._updateShowGroundPerityValue,self)
+
     UIPanel.Hide(self)
 end
 
@@ -87,15 +96,17 @@ function GroundAuctionCtrl:_initPanelData()
     if self.m_data == nil then
         return
     end
-
     self.m_Timer:Start()
     self.id = self.m_data.id
+    --拍卖中土地规格
+    GroundAuctionPanel.groundSizeValue.text = #GroundAucConfig[self.m_data.id].area
     GroundAuctionPanel.bidInput.text = ""
     local groundInfo = GroundAucConfig[self.m_data.id]
     --如果开始拍卖，还需判断是否有人出价
     if self.m_data.isStartAuc then
         GroundAuctionPanel.setSoonAndNow(true)
-        self:refreshNow(groundInfo.basePrice)
+        GroundAuctionPanel.showValueText.text = string.format("<color=%s>E%s</color>", MapRightGroundTransPage.moneyColor, GetClientPriceString(groundInfo.basePrice))
+        --self:refreshNow(groundInfo.basePrice)
 
         --判断是否有人出价
         if self.m_data.endTs == nil or self.m_data.endTs == 0 then
@@ -122,12 +133,12 @@ end
 --------------------------------------------------------------------
 --刷新开始拍卖的显示数据
 function GroundAuctionCtrl:refreshNow(basePrice)
-    if self.nowPriceItem == nil then
-        self.nowPriceItem = MapRightShowInfoItem:new(GroundAuctionPanel.nowPrice)
-    end
-    local str = string.format("<color=%s>E%s</color>", MapRightGroundTransPage.moneyColor, GetClientPriceString(basePrice))
-    local tempData = {infoTypeStr = "GAucPrice", value = str}
-    self.nowPriceItem:initData(tempData)
+    --if self.nowPriceItem == nil then
+    --    self.nowPriceItem = MapRightShowInfoItem:new(GroundAuctionPanel.nowPrice)
+    --end
+    --local str = string.format("<color=%s>E%s</color>", MapRightGroundTransPage.moneyColor, GetClientPriceString(basePrice))
+    --local tempData = {infoTypeStr = "GAucPrice", value = str}
+    --self.nowPriceItem:initData(tempData)
 end
 --刷新即将拍卖的显示数据
 function GroundAuctionCtrl:refreshSoon(beginTime, basePrice)
@@ -201,6 +212,10 @@ function GroundAuctionCtrl:_returnHistoryObj(go)
     go.transform:SetParent(GroundAuctionPanel.historyRoot.transform)
     go.transform.localScale = Vector3.zero
     table.insert(self.historyObjs, 1, go)
+end
+--更新显示拍卖中地块的繁荣度
+function GroundAuctionCtrl:_updateShowGroundPerityValue(data)
+    GroundAuctionPanel.prosperityValue.text = data.prosperity
 end
 --隐藏界面时，清掉记录
 function GroundAuctionCtrl:_cleanHistoryObj()

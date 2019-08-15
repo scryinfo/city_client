@@ -24,15 +24,26 @@ function EvaPanel.InitPanel()
     this.addBtn = transform:Find("TopRoot/AddBtn").gameObject
     this.addButton = transform:Find("TopRoot/AddBtn"):GetComponent("Button")
 
+    -- 左边
     this.evaTitleItem = transform:Find("BottomRoot/LeftRoot/EvaTitleItem").gameObject
     this.optionOneScroll = transform:Find("BottomRoot/LeftRoot/OptionOneScroll/Content")
+
+    -- 科技点数、市场点数
+    this.technologyTitleText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText"):GetComponent("Text")
+    this.technologyText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText"):GetComponent("Text")
+    this.technologyBtn = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn")
+    this.lineImageTF = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/Image")
+    this.marketTitleTextTF = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/MarketTitleText")
+    this.marketTitleText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/MarketTitleText"):GetComponent("Text")
+    this.marketText = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/MarketTitleText/MarketText"):GetComponent("Text")
+    this.marketBtn = transform:Find("BottomRoot/PointRoot/TechnologyTitleText/TechnologyText/TechnologyBtn/MarketTitleText/MarketText/MarketBtn")
+
     this.optionTwoScroll = transform:Find("BottomRoot/OptionRoot/OptionTwoScroll"):GetComponent("ActiveLoopScrollRect")
     this.optionThereScroll = transform:Find("BottomRoot/OptionRoot/OptionThereScroll"):GetComponent("ActiveLoopScrollRect")
 
-    this.myEvaText = transform:Find("TopRoot/MyEvaText"):GetComponent("Text")
-    this.introductionBtn = transform:Find("TopRoot/IntroductionBtn").gameObject
-    this.introductionImage = transform:Find("TopRoot/IntroductionImage")
-    this.introductionText = transform:Find("TopRoot/IntroductionText")
+    -- 小提示
+    this.introductionImage = transform:Find("IntroductionImage")
+    this.introductionText = transform:Find("IntroductionImage/IntroductionText"):GetComponent("Text")
 
     this.iconTF = transform:Find("BottomRoot/PropertyRoot/ResultImage/Icon")
     this.iconImageTF = transform:Find("BottomRoot/PropertyRoot/ResultImage/Icon/IconImage")
@@ -47,7 +58,5 @@ function EvaPanel.InitPanel()
 
     -- 多语言
     this.titleText = transform:Find("TopRoot/TitleText"):GetComponent("Text")
-    this.desText = transform:Find("TopRoot/DesText"):GetComponent("Text")
     this.addBtnText = transform:Find("TopRoot/AddBtn/Text"):GetComponent("Text")
-    this.introductionTextT = transform:Find("TopRoot/IntroductionText"):GetComponent("Text")
 end

@@ -87,75 +87,115 @@ MapBuildingInfoConfig={
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
         ["languageId"] = 20160010,
     },
+    --建筑
+    ["Shelf"] = --货架
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/button-shelf.png",
+        ["languageId"] = 20170001,
+    },
+    ["Capacity"] = --入住情况
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Occupancyrate.png",
+        ["languageId"] = 20090002,
+    },
+    ["DayRent"] = --日租金
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Dailyrent.png",
+        ["languageId"] = 20090003,
+    },
+    ["CompetitivePower"] = --竞争力
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/button-competitive-s.png",
+        ["languageId"] = 43010001,
+    },
+    ["DataSale"] = --推广公司
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Datasale-s.png",
+        ["languageId"] = 20170002,
+    },
+    ["ResearchSale"] = --研究所
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-shelf-s.png",
+        ["languageId"] = 20170003,
+    },
+    --广告公司的研究数量
+    ["PromoteQuantity"] =
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Datasale-s.png",
+        ["languageId"] = 20180004,
+    },
+    --研究所公司的研究数量
+    ["TechnologyQuantity"] =
+    {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-shelf-s.png",
+        ["languageId"] = 20190007,
+    },
 }
 ------------------------------------------------------
 --小地图点开推广搜索之后展示的信息
 --这两个表需要一一对应
 MapPromotionInfoConfig={
     [1] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-food-w.png",
-        ["languageId"] = 20050001,
-        ["colorV3"] = Vector3.New(75, 101, 161),  --右侧显示详情的颜色
-        ["leftColorV3"] = Vector3.New(49, 49, 49),  --左侧搜索部分的颜色
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Supermarket.png",
+        ["languageId"] = 20180001,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+        ["type"] = 1600013,
     },
     [2] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-clothes-w.png",
-        ["languageId"] = 20050002,
-        ["colorV3"] = Vector3.New(65, 168, 138),
-        ["leftColorV3"] = Vector3.New(49, 49, 49),
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Homehouse.png",
+        ["languageId"] = 20180002,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+        ["type"] = 1600014,
     },
     [3] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/SuperMarket_3x3.png",
-        ["languageId"] = 20050003,
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Factory.png",
+        ["languageId"] = 20180003,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
-    },
-    [4] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
-        ["languageId"] = 20050004,
-        ["colorV3"] = Vector3.New(255, 255, 255),
-        ["leftColorV3"] = Vector3.New(255, 255, 255),
+        ["type"] = 1600012,
     },
 }
 --建筑二级菜单Items
 MapBuildInfoConfig={
     [1] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/MaterialFactory.png",
         ["languageId"] = 23010001,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 11,
     },
     [2] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Factory.png",
         ["languageId"] = 23010002,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 12,
     },
     [3] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Supermarket.png",
         ["languageId"] = 23010003,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 13,
     },
     [4] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Homehouse.png",
         ["languageId"] = 23010004,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 14,
     },
     [5] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Advertising.png",
         ["languageId"] = 23010005,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
         ["type"] = 15,
     },
     [6] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/HomeHouse_3X3.png",
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Technology.png",
         ["languageId"] = 23010006,
         ["colorV3"] = Vector3.New(255, 255, 255),
         ["leftColorV3"] = Vector3.New(255, 255, 255),
@@ -174,11 +214,45 @@ MapPromotionConfig={
 --小地图点开科研展示的信息
 MapTechnologyInfoConfig={
     [1] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-newcommodity.png",
-        ["languageId"] = 20040001,
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/MaterialFactory.png",
+        ["languageId"] = 20190001,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+        ["type"] = 1500011,
     },
     [2] = {
-        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eva.png",
-        ["languageId"] = 20040002,
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Factory.png",
+        ["languageId"] = 20190002,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+        ["type"] = 1500012,
+    },
+    [3] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Supermarket.png",
+        ["languageId"] = 20190003,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+        ["type"] = 1500013,
+    },
+    [4] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Homehouse.png",
+        ["languageId"] = 20190004,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+        ["type"] = 1500014,
+    },
+    [5] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Advertising.png",
+        ["languageId"] = 20190005,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+        ["type"] = 1500016,
+    },
+    [6] = {
+        ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Technology.png",
+        ["languageId"] = 20190006,
+        ["colorV3"] = Vector3.New(255, 255, 255),
+        ["leftColorV3"] = Vector3.New(255, 255, 255),
+        ["type"] = 1500015,
     },
 }

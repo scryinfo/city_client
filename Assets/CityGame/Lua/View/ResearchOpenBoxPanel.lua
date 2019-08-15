@@ -16,7 +16,6 @@ end
 
 function ResearchOpenBoxPanel.InitPanel()
     this.backBtn = transform:Find("BackBtn").gameObject
-    this.openBtn = transform:Find("MiddleRoot/OpenBtn").gameObject
 
     this.boxsScrollContent = transform:Find("LeftRoot/BoxsScroll/Viewport/Content")
     this.researchEvaBoxItem = transform:Find("LeftRoot/BoxsScroll/Viewport/Content/ResearchEvaBoxItem").gameObject
@@ -24,11 +23,13 @@ function ResearchOpenBoxPanel.InitPanel()
 
     -- 开点
     this.middleRoot = transform:Find("MiddleRoot")
+    this.openBtn = transform:Find("MiddleRoot/MiddleIconImage").gameObject
     this.subtractBtn = transform:Find("MiddleRoot/SubtractBtn").gameObject
     this.addBtn = transform:Find("MiddleRoot/AddBtn").gameObject
     this.inputField = transform:Find("MiddleRoot/InputField"):GetComponent("InputField")
     this.middleNumText = transform:Find("MiddleRoot/MiddleNumText"):GetComponent("Text")
     this.tipsText = transform:Find("MiddleRoot/TipsText"):GetComponent("Text")
+    this.closeBtn = transform:Find("CloseBtn")
 
     -- 开箱结果
     this.researchMaterialItem = transform:Find("ResearchMaterialItem")

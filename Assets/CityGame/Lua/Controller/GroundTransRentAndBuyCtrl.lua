@@ -62,6 +62,7 @@ function GroundTransRentAndBuyCtrl:Active()
     GroundTransRentAndBuyPanel.totalPriceText05.text = GetLanguage(22040005)
     GroundTransRentAndBuyPanel.sellBtnText07.text = GetLanguage(22040001)
     GroundTransRentAndBuyPanel.rentBtnText08.text = GetLanguage(22050001)
+    GroundTransRentAndBuyPanel.prosperityText.text = "繁荣程度:"
 end
 
 function GroundTransRentAndBuyCtrl:Hide()
@@ -100,6 +101,7 @@ function GroundTransRentAndBuyCtrl:_setShowState(groundInfo, groundState)
     elseif groundState == GroundTransState.Sell then
         GroundTransRentAndBuyPanel.sellRoot.localScale = Vector3.one
         GroundTransRentAndBuyPanel.sellPriceText.text = "E"..GetClientPriceString(groundInfo.sell.price)
+        GroundTransRentAndBuyPanel.prosperityValue.text = self.m_data.prosperity
     end
 end
 
@@ -127,7 +129,7 @@ end
 function GroundTransRentAndBuyCtrl:_buyBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.sell.price then
-        ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo})
+        ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo,prosperity = ins.m_data.prosperity})
     end
 end
 --点击租房按钮

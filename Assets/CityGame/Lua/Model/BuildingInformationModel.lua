@@ -26,10 +26,10 @@ function BuildingInformationModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryProduceDepInfo","gs.ProduceDepInfo",self.n_ProcessingFactoryInfo,self)
     --零售店
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryRetailShopOrApartmentInfo","gs.RetailShopOrApartmentInfo",self.n_RetailShopInfo,self)
-    --推广
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPromotionCompanyInfo","gs.QueryBuildingInfo",self.n_PromoteInfo,self)
-    --研究所
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryLaboratoryInfo","gs.LaboratoryInfo",self.n_LaboratoryInfo,self)
+    --推广(暂时回建筑信息)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPromotionCompanyInfo","gs.BuildingInfo",self.n_PromoteInfo,self)
+    --研究所(暂时回建筑信息)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryLaboratoryInfo","gs.BuildingInfo",self.n_LaboratoryInfo,self)
 end
 
 function BuildingInformationModel:Close()
@@ -93,11 +93,13 @@ function BuildingInformationModel:m_ReqRetailShopInfo(buildingId,playerId)
 end
 --研究所建筑信息
 function BuildingInformationModel:m_LaboratoryInfo(buildingId,playerId)
+    FlightMainModel.OpenFlightLoading()
     local lMsg = {buildingId = buildingId,playerId = playerId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryLaboratoryInfo","gs.QueryBuildingInfo",lMsg)
 end
 --推广建筑信息
 function BuildingInformationModel:m_ReqPromoteInfo(buildingId,playerId)
+    FlightMainModel.OpenFlightLoading()
     local lMsg = {buildingId = buildingId,playerId = playerId}
     DataManager.ModelSendNetMes("gscode.OpCode", "queryPromotionCompanyInfo","gs.QueryBuildingInfo",lMsg)
 end
@@ -136,10 +138,12 @@ function BuildingInformationModel:n_RetailShopInfo(data)
 end
 --研究所建筑信息
 function BuildingInformationModel:n_LaboratoryInfo(data)
+    FlightMainModel.CloseFlightLoading()
     DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'builidngInfo',data)
 end
 --推广建筑信息
 function BuildingInformationModel:n_PromoteInfo(data)
+    FlightMainModel.CloseFlightLoading()
     DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'builidngInfo',data)
 end
 

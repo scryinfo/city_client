@@ -13,7 +13,7 @@ function MapPromotionDetailItem:childInit(viewRect)
 
     if self.data.promotionIndex ~= nil then
         local temp = MapPromotionInfoConfig[self.data.promotionIndex]
-        LoadSprite(temp.imgPath, self.iconImg, true)
+        LoadSprite(temp.imgPath, self.iconImg, false)
         self.iconImg.color = getColorByVector3(temp.leftColorV3)
     end
 end
@@ -24,7 +24,6 @@ function MapPromotionDetailItem:initLanguage()
     end
     self.typeText.text = GetLanguage(MapPromotionInfoConfig[self.data.promotionIndex].languageId)
     --self.typeText.text = MapPromotionInfoConfig[self.data.promotionIndex].languageId
-    self.data.itemId = self.data.promotionIndex
 end
 --设置toggleGroup
 function MapPromotionDetailItem:setToggleGroup(toggle)

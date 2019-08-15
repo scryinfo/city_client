@@ -51,6 +51,13 @@ function GAucModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","auctionEnd","gs.Num",GAucModel.n_OnReceiveAuctionEnd)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidWinInform","gs.BidGround",GAucModel.n_OnReceiveWinBid)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","bidFailInform","gs.BidGround",GAucModel.n_OnReceiveFailBid)
+    --拍卖土地的繁荣度
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryAuctionProsperity","gs.AuctionProsperity",GAucModel.n_onReceiveGroundPerityValue)
+    --1*1土地繁荣度
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryGroundProsperity","gs.Num",GAucModel.n_onReceiveOneGroundInfo)
+    --土地交易推荐定价
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryGroundRecommendPrice","gs.Num",GAucModel.n_onReceiveGroundRecommendPricing)
+
 end
 
 function GAucModel.c_bubbleLateUpdate()
@@ -224,7 +231,25 @@ function GAucModel.m_ReqQueryGroundAuction()
     local msgId = pbl.enum("gscode.OpCode","queryGroundAuction")
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
-
+--请求拍卖土地信息的繁荣度
+function GAucModel.m_ReqQueryGroundprosPerityValue(id)
+    local msgId = pbl.enum("gscode.OpCode","queryAuctionProsperity")
+    local lMsg = {num = id}
+    local pMsg = assert(pbl.encode("gs.Num", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+end
+--请求1*1土地繁荣度
+function GAucModel.m_ReqQueryOneGoundInfo(x,y)
+    local msgId = pbl.enum("gscode.OpCode","queryGroundProsperity")
+    local lMsg = {x = x,y = y}
+    local pMsg = assert(pbl.encode("gs.MiniIndex", lMsg))
+    CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
+end
+--请求土地交易推荐定价
+function GAucModel.m_ReqQueryRecommendPricing()
+    local msgId = pbl.enum("gscode.OpCode","queryGroundRecommendPrice")
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
 --出价
 function GAucModel.m_BidGround(id, price)
     local temp = tonumber(CityLuaUtil.scientificNotation2Normal(price))
@@ -273,7 +298,18 @@ function GAucModel.n_OnReceiveQueryGroundAuctionInfo(stream, msgId)
 
     this.getNowAucDataFunc(msgGroundAuc)
 end
-
+--收到拍卖土地的繁荣度
+function GAucModel.n_onReceiveGroundPerityValue(stream)
+    Event.Brocast("_updateShowGroundPerityValue",stream)
+end
+--收到1*1土地繁荣度
+function GAucModel.n_onReceiveOneGroundInfo(stream)
+    Event.Brocast("_saveGroundProsperity",stream)
+end
+--收到土地交易推荐定价
+function GAucModel.n_onReceiveGroundRecommendPricing(stream)
+    Event.Brocast("_saveGroundRecommendPricing",stream)
+end
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GAucModel.n_OnReceiveBindGround(stream, msgId)
     if msgId == 0 then
@@ -287,12 +323,12 @@ function GAucModel.n_OnReceiveBindGround(stream, msgId)
     if stream == nil or stream == "" then
         return
     end
-
-    local info = {}
-    info.titleInfo = GetLanguage(21010005)
-    info.contentInfo = GetLanguage(21010007)
-    info.tipInfo = string.format("(%s)", GetLanguage(21010006))
-    ct.OpenCtrl("BtnDialogPageCtrl", info)
+    ct.OpenCtrl("GuoundAuctionSuccessBoxCtrl")
+    --local info = {}
+    --info.titleInfo = GetLanguage(21010005)
+    --info.contentInfo = GetLanguage(21010007)
+    --info.tipInfo = string.format("(%s)", GetLanguage(21010006))
+    --ct.OpenCtrl("BtnDialogPageCtrl", info)
 end
 
 --收到服务器拍卖信息更新

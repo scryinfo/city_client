@@ -35,9 +35,9 @@ function laboratoryItem:initialize(dataInfo,prefab,luaBehaviour,isOther)
     end
 end
 function laboratoryItem:language()
-    self.retailStoreText.text = GetLanguage(30070001)
-    self.basicQualityTextBtn.text = GetLanguage(30070002)
-    self.qualityAdditionTextBtn.text = GetLanguage(30070003)
+    self.retailStoreText.text = --[[GetLanguage(30070001)]]"研究速度"
+    self.basicQualityTextBtn.text = --[[GetLanguage(30070002)]]"基础研究速度"
+    self.qualityAdditionTextBtn.text = --[[GetLanguage(30070003)]]"研究速度加成"
     --self.popolarityTextBtn.text = "知名度"
 end
 function laboratoryItem:_clickBasicQualityTextBtn(ins)

@@ -122,7 +122,7 @@ EvaConfig = {
                                 b = 0,
                                 basevalue = 0.00284,
                             },
-							[2] = {
+                            [2] = {
                                 name = 31010019,
                                 Atype = 2251101,
                                 Btype = "Quality",
@@ -142,7 +142,7 @@ EvaConfig = {
                     [2] = {
                         name = 2251102,
                         property = {
-						    [1] = {
+                            [1] = {
                                 name = 31010020,
                                 Atype = 2251102,
                                 Btype = "ProduceSpeed",
@@ -169,7 +169,7 @@ EvaConfig = {
                     [3] = {
                         name = 2251103,
                         property = {
-							[1] = {
+                            [1] = {
                                 name = 31010020,
                                 Atype = 2251103,
                                 Btype = "ProduceSpeed",
@@ -190,13 +190,13 @@ EvaConfig = {
                                 b = 1,
                                 basevalue = 0,
                             },
-                            
+
                         },
                     },
                     [4] = {
                         name = 2251201,
                         property = {
-							[1] = {
+                            [1] = {
                                 name = 31010020,
                                 Atype = 2251201,
                                 Btype = "ProduceSpeed",
@@ -217,13 +217,13 @@ EvaConfig = {
                                 b = 1,
                                 basevalue = 0,
                             },
-                            
+
                         },
                     },
                     [5] = {
                         name = 2251202,
                         property = {
-							[1] = {
+                            [1] = {
                                 name = 31010020,
                                 Atype = 2251202,
                                 Btype = "ProduceSpeed",
@@ -244,13 +244,13 @@ EvaConfig = {
                                 b = 1,
                                 basevalue = 0,
                             },
-                            
+
                         },
                     },
                     [6] = {
                         name = 2251203,
                         property = {
-							[1] = {
+                            [1] = {
                                 name = 31010020,
                                 Atype = 2251203,
                                 Btype = "ProduceSpeed",
@@ -271,7 +271,7 @@ EvaConfig = {
                                 b = 1,
                                 basevalue = 0,
                             },
-                            
+
                         },
                     },
                 },},
@@ -283,7 +283,7 @@ EvaConfig = {
                     [1] = {
                         name = 2252101,
                         property = {
-							[1] = {
+                            [1] = {
                                 name = 31010020,
                                 Atype = 2252101,
                                 Btype = "ProduceSpeed",
@@ -304,13 +304,13 @@ EvaConfig = {
                                 b = 1,
                                 basevalue = 0,
                             },
-                           
+
                         },
                     },
                     [2] = {
                         name = 2252102,
                         property = {
-							[1] = {
+                            [1] = {
                                 name = 31010020,
                                 Atype = 2252102,
                                 Btype = "ProduceSpeed",
@@ -331,13 +331,13 @@ EvaConfig = {
                                 b = 1,
                                 basevalue = 0,
                             },
-                            
+
                         },
                     },
                     [3] = {
                         name = 2252103,
                         property = {
-							[1] = {
+                            [1] = {
                                 name = 31010020,
                                 Atype = 2252103,
                                 Btype = "ProduceSpeed",
@@ -358,7 +358,7 @@ EvaConfig = {
                                 b = 1,
                                 basevalue = 0,
                             },
-                            
+
                         },
                     },
                     [4] = {
@@ -488,10 +488,10 @@ EvaConfig = {
                 property = {
                     [1] = {
                         name = 31010030,
-                        Atype = 155,
-                        Btype = "InventionUpgrade",
+                        Atype = 1500011,
+                        Btype = "ProduceSpeed",
                         b = 0,
-                        basevalue = 40,
+                        basevalue = 0.02,
                     },
                 },
             },
@@ -500,10 +500,58 @@ EvaConfig = {
                 property = {
                     [1] = {
                         name = 31010031,
-                        Atype = 156,
-                        Btype = "EvaUpgrade",
+                        Atype = 1500012,
+                        Btype = "ProduceSpeed",
                         b = 0,
-                        basevalue = 80,
+                        basevalue = 0.02,
+                    },
+                },
+            },
+            [3] = {
+                name = 31010027,
+                property = {
+                    [1] = {
+                        name = 31010031,
+                        Atype = 1500013,
+                        Btype = "ProduceSpeed",
+                        b = 0,
+                        basevalue = 0.02,
+                    },
+                },
+            },
+            [4] = {
+                name = 31010027,
+                property = {
+                    [1] = {
+                        name = 31010031,
+                        Atype = 1500014,
+                        Btype = "ProduceSpeed",
+                        b = 0,
+                        basevalue = 0.02,
+                    },
+                },
+            },
+            [5] = {
+                name = 31010027,
+                property = {
+                    [1] = {
+                        name = 31010031,
+                        Atype = 1500015,
+                        Btype = "ProduceSpeed",
+                        b = 0,
+                        basevalue = 0.02,
+                    },
+                },
+            },
+            [6] = {
+                name = 31010027,
+                property = {
+                    [1] = {
+                        name = 31010031,
+                        Atype = 1500016,
+                        Btype = "ProduceSpeed",
+                        b = 0,
+                        basevalue = 0.02,
                     },
                 },
             },
@@ -513,70 +561,43 @@ EvaConfig = {
     {
         name=42020005,
         option = {
-
-            [1] =
-            {
-                name=31010028,
-                option = {
-
+            [1] = {
+                name = 31010026,
+                property = {
                     [1] = {
-                        name = 42020003,
-                        property = {
-                            [1] = {
-                                name = 31010008,
-                                Atype = 1613,
-                                Btype = "PromotionAbility",
-                                b = 0,
-                                basevalue = 1,
-                            },
-                        },
-                    },
-                    [2] = {
-                        name = 42020004,
-                        property = {
-                            [1] = {
-                                name = 31010008,
-                                Atype = 1614,
-                                Btype = "PromotionAbility",
-                                b = 0,
-                                basevalue = 1,
-                            },
-                        },
+                        name = 31010030,
+                        Atype = 1600012,
+                        Btype = "ProduceSpeed",
+                        b = 0,
+                        basevalue = 0.02,
                     },
                 },
             },
-            [2] =
-            {
-                name=31010029,
-                option = {
-
+            [2] = {
+                name = 31010027,
+                property = {
                     [1] = {
-                        name = 20050001,
-                        property = {
-                            [1] = {
-                                name = 31010008,
-                                Atype = 1651,
-                                Btype = "PromotionAbility",
-                                b = 0,
-                                basevalue = 1,
-                            },
-                        },
-                    },
-                    [2] = {
-                        name = 20050002,
-                        property = {
-                            [1] = {
-                                name = 31010008,
-                                Atype = 1652,
-                                Btype = "PromotionAbility",
-                                b = 0,
-                                basevalue = 1,
-                            },
-                        },
+                        name = 31010031,
+                        Atype = 1600013,
+                        Btype = "ProduceSpeed",
+                        b = 0,
+                        basevalue = 0.02,
                     },
                 },
             },
-        }, 
+            [3] = {
+                name = 31010027,
+                property = {
+                    [1] = {
+                        name = 31010031,
+                        Atype = 1600014,
+                        Btype = "ProduceSpeed",
+                        b = 0,
+                        basevalue = 0.02,
+                    },
+                },
+            },
+        },
     },
     --[7] = {
     --    name = "集散中心",

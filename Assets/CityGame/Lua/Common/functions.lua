@@ -847,13 +847,13 @@ function GetEvaData(index, configData, lv)
     local brandSizeNum
     if index == 1 then
         -- 小
-        brandSizeNum = 16
+        brandSizeNum = 1
     elseif index == 2 then
         -- 中
-        brandSizeNum = 64
+        brandSizeNum = 1
     elseif index == 3 then
         -- 大
-        brandSizeNum = 144
+        brandSizeNum = 1
     end
     if configData.Btype == "Quality" then
         -- 品质
@@ -862,6 +862,14 @@ function GetEvaData(index, configData, lv)
             return string.format((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
         else
             -- 商品品质值
+            return string.format((1 + EvaUp[lv].add / 100000) * configData.basevalue)
+        end
+    elseif configData.Btype == "Brand" then  -- 知名度，随便写的
+        if configData.Atype < 2100000 then
+            -- 建筑
+            return string.format((1 + EvaUp[lv].add / 100000) * configData.basevalue * brandSizeNum)
+        else
+            -- 商品
             return string.format((1 + EvaUp[lv].add / 100000) * configData.basevalue)
         end
     elseif configData.Btype == "ProduceSpeed" then
@@ -1032,7 +1040,42 @@ function ct.CalculationMateriaPrice(recommendedPricing,power,materialId)
     end
     return tempPrice
 end
-
+-----暂时没有土地交易推荐定价
+----推荐定价:recommendedPricing(服务器发过来的值)
+---计算土地交易竞争力
+--推荐定价:recommendedPricing(服务器发过来的值)
+--定价:price
+function ct.CalculationGroundCompetitivePower(recommendedPricing,price)
+    local temp
+    if recommendedPricing > price then
+        --竞争力 = (推荐定价 - 玩家定价)  / (推荐定价 / 2 / 49) + 50
+        temp = (recommendedPricing - price) / ((recommendedPricing / Divisor) / BargainingPower) + CPMagnification
+    else
+        --竞争力 = (推荐定价 - 玩家定价)  / (推荐定价 / 49) + 50
+        temp = (recommendedPricing - price) / (recommendedPricing / BargainingPower) + CPMagnification
+    end
+    if temp >= functions.maxCompetitive then
+        temp = functions.maxCompetitive
+    end
+    if temp <= functions.minCompetitive then
+        temp = functions.minCompetitive
+    end
+    return temp
+end
+---计算土地交易定价
+--推荐定价:recommendedPricing(服务器发过来的值)
+--竞争力:power
+function ct.CalculationGroundPrice(recommendedPricing,power)
+    local tempPrice
+    if power < 50 then
+        --玩家定价 = 推荐定价 -  (竞争力 - 50) * (推荐定价 / 49)
+        tempPrice = recommendedPricing - (power - CPMagnification) * (recommendedPricing / BargainingPower)
+    else
+        --玩家定价 = 推荐定价 -  (竞争力 - 50) * (推荐定价 / 2 / 49)
+        tempPrice = recommendedPricing - (power - CPMagnification) * ((recommendedPricing / Divisor) / BargainingPower)
+    end
+    return tempPrice
+end
 ---计算推广公司竞争力
 --推荐定价:recommendedPricing
 --定价:price

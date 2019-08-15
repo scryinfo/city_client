@@ -155,8 +155,11 @@ function MapRightSelfBuildingPage:_createRetailShop()
 end
 --研究所
 function MapRightSelfBuildingPage:_createLab()
-    local data3 = {infoTypeStr = "Queued", value = self:getLabQueued(self.data.inProcess).."h"}  --研究所队列
-    self.items[#self.items + 1] = self:_createShowItem(data3)
+    --local data3 = {infoTypeStr = "Queued", value = self:getLabQueued(self.data.inProcess).."h"}  --研究所队列
+    --self.items[#self.items + 1] = self:_createShowItem(data3)
+    local temp = self.data
+
+
 end
 --仓库
 function MapRightSelfBuildingPage:_createWarehouse()
@@ -173,7 +176,7 @@ function MapRightSelfBuildingPage:_createWarehouse()
 end
 --推广公司
 function MapRightSelfBuildingPage:_createPromotion()
-    local temp = 0
+    --[[local temp = 0
     if self.data.newPromoStartTs ~= nil and self.data.newPromoStartTs ~= -1 then
         local index = self.data.newPromoStartTs - TimeSynchronized.GetTheCurrentServerTime()  --剩余时间
         if index > 0 then
@@ -183,7 +186,8 @@ function MapRightSelfBuildingPage:_createPromotion()
     end
     local data1 = {infoTypeStr = "Queued", value = temp..GetLanguage(20100003)}  --队列
     self.items[#self.items + 1] = self:_createShowItem(data1)
-
+    --]]
+    local temp = self.data
     --local data3 = {infoTypeStr = "ADSign", value = self.data.curflowPromoAbTotall.."%"}  --流量签约
     --self.items[#self.items + 1] = self:_createShowItem(data3)
 end

@@ -32,12 +32,16 @@ end
 function GroundTransContractCtrl:Active()
     UIPanel.Active(self)
     GroundTransContractPanel.tipText.text = "合约"
-    GroundTransContractPanel.AText02.text = GetLanguage(22060007)
-    GroundTransContractPanel.BText03.text = GetLanguage(22060009)
-    GroundTransContractPanel.buyAreaText04.text = GetLanguage(22010002)
-    GroundTransContractPanel.rentAreaText05.text = GetLanguage(22040006)
-    GroundTransContractPanel.rentTenancyText06.text = GetLanguage(22050005)
-    GroundTransContractPanel.rentDailyText07.text = GetLanguage(22050006)
+    --GroundTransContractPanel.AText02.text = GetLanguage(22060007)
+    --GroundTransContractPanel.BText03.text = GetLanguage(22060009)
+    --GroundTransContractPanel.buyAreaText04.text = GetLanguage(22010002)
+    --GroundTransContractPanel.rentAreaText05.text = GetLanguage(22040006)
+    --GroundTransContractPanel.rentTenancyText06.text = GetLanguage(22050005)
+    --GroundTransContractPanel.rentDailyText07.text = GetLanguage(22050006)
+    GroundTransContractPanel.prosperityText.text = "繁荣度:"
+    GroundTransContractPanel.priceText.text = "价格:"
+    GroundTransContractPanel.minersfeeText.text = "矿工费用:"
+    GroundTransContractPanel.minersfeeValue.text = "0.4%"--暂时写死，后边改成读表
     GroundTransContractPanel.totalText08.text = GetLanguage(22040005)
 end
 
@@ -77,17 +81,25 @@ function GroundTransContractCtrl:_setShowState(data)
         --GroundTransContractPanel.rentTenancyTimeText.text = string.format("(%s - %s)", nowStr, endStr)
         --GroundTransContractPanel.BText03.text = GetLanguage(22060006)
     else
-        GroundTransContractPanel.titleText01.text = GetLanguage(22040003)
-        GroundTransContractPanel.chooseState(false)
-        GroundTransContractPanel.totalPriceText.text = "E"..getPriceString(GetClientPriceString(data.groundInfo.sell.price),48,36)
-        GroundTransContractPanel.BText03.text = GetLanguage(22060009)
+        --GroundTransContractPanel.titleText01.text = GetLanguage(22040003)
+        --GroundTransContractPanel.chooseState(false)
+        --GroundTransContractPanel.BText03.text = GetLanguage(22060009)
     end
-    GroundTransContractPanel.rentAreaText.text = "1x1"
-    GroundTransContractPanel.buyAreaText.text = "1x1"
+    GroundTransContractPanel.titleText01.text = GetLanguage(22040003)
+    GroundTransContractPanel.chooseState(false)
+    GroundTransContractPanel.prosperityValue.text = data.prosperity
+    GroundTransContractPanel.priceValue.text = "E"..GetClientPriceString(data.groundInfo.sell.price)
+    GroundTransContractPanel.minersfeeValue.text = "E"..GetClientPriceString(data.groundInfo.sell.price * 0.4)
+    GroundTransContractPanel.totalPriceText.text = "E"..GetClientPriceString(data.groundInfo.sell.price + (data.groundInfo.sell.price * 0.4))
+
+    --GroundTransContractPanel.rentAreaText.text = "1x1"
+    --GroundTransContractPanel.buyAreaText.text = "1x1"
     if data.ownerInfo ~= nil then
         --A是土地拥有者，B是合约方--自己
         self.partAAvatar = AvatarManger.GetBigAvatar(data.ownerInfo.faceId, GroundTransContractPanel.APortraitImg.transform,0.5)
         self.partBAvatar = AvatarManger.GetBigAvatar(DataManager.GetMyPersonalHomepageInfo().faceId, GroundTransContractPanel.BPortraitImg.transform,0.5)
+        GroundTransContractPanel.AText02.text = data.ownerInfo.companyName
+        GroundTransContractPanel.BText03.text = DataManager.GetCompanyName()
         GroundTransContractPanel.ANameText.text = data.ownerInfo.name
         GroundTransContractPanel.BNameText.text = DataManager.GetMyPersonalHomepageInfo().name
     end

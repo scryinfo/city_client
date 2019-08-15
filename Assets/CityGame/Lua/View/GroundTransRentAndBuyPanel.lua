@@ -31,11 +31,16 @@ function GroundTransRentAndBuyPanel.InitPanel()
     this.dayRentalText = transform:Find("root/rentRoot/rentalText"):GetComponent("Text")
     this.totalRentalText = transform:Find("root/rentRoot/total/totalRentalText"):GetComponent("Text")
     --
-    this.titleText01 = transform:Find("root/titleText"):GetComponent("Text")
+    this.titleText01 = transform:Find("root/titleBg/titleText"):GetComponent("Text")
     this.sellBtnText07 = transform:Find("root/sellRoot/buyBtn/Text"):GetComponent("Text")
     this.rentBtnText08 = transform:Find("root/rentRoot/rentBtn/Text"):GetComponent("Text")
     this.sellPriceText02 = transform:Find("root/sellRoot/Text"):GetComponent("Text")
     this.tenancyText03 = transform:Find("root/rentRoot/Text01"):GetComponent("Text")
     this.rentalText04 = transform:Find("root/rentRoot/Text02"):GetComponent("Text")
     this.totalPriceText05 = transform:Find("root/rentRoot/total/Text03"):GetComponent("Text")
+
+    --新增公司名称土地繁荣度
+    this.companyText = transform:Find("root/companyIcon/companyText"):GetComponent("Text")
+    this.prosperityText = transform:Find("root/sellRoot/prosperity/prosperityText"):GetComponent("Text")
+    this.prosperityValue = transform:Find("root/sellRoot/prosperity/prosperityValue"):GetComponent("Text")
 end

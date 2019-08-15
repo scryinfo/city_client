@@ -55,6 +55,8 @@ function GAucModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryAuctionProsperity","gs.AuctionProsperity",GAucModel.n_onReceiveGroundPerityValue)
     --1*1土地繁荣度
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryGroundProsperity","gs.Num",GAucModel.n_onReceiveOneGroundInfo)
+    --土地交易推荐定价
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryGroundRecommendPrice","gs.Num",GAucModel.n_onReceiveGroundRecommendPricing)
 
 end
 
@@ -243,6 +245,11 @@ function GAucModel.m_ReqQueryOneGoundInfo(x,y)
     local pMsg = assert(pbl.encode("gs.MiniIndex", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg)
 end
+--请求土地交易推荐定价
+function GAucModel.m_ReqQueryRecommendPricing()
+    local msgId = pbl.enum("gscode.OpCode","queryGroundRecommendPrice")
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
 --出价
 function GAucModel.m_BidGround(id, price)
     local temp = tonumber(CityLuaUtil.scientificNotation2Normal(price))
@@ -298,6 +305,10 @@ end
 --收到1*1土地繁荣度
 function GAucModel.n_onReceiveOneGroundInfo(stream)
     Event.Brocast("_saveGroundProsperity",stream)
+end
+--收到土地交易推荐定价
+function GAucModel.n_onReceiveGroundRecommendPricing(stream)
+    Event.Brocast("_saveGroundRecommendPricing",stream)
 end
 --拍卖出价回调 --出价成功之后会不会有提示信息？
 function GAucModel.n_OnReceiveBindGround(stream, msgId)

@@ -56,7 +56,8 @@ function GroundTransSetPriceCtrl:Awake(go)
 end
 
 function GroundTransSetPriceCtrl:Refresh()
-    self:_initPanelData()
+    --打开设置金额界面先获取土地交易定价
+    GAucModel.m_ReqQueryRecommendPricing()
 end
 
 function GroundTransSetPriceCtrl:Active()
@@ -71,6 +72,7 @@ function GroundTransSetPriceCtrl:Active()
     GroundTransSetPricePanel.cancelText.text = "撤销"
     GroundTransSetPricePanel.changeText.text = "修改"
 
+    Event.AddListener("_saveGroundRecommendPricing",self._saveGroundRecommendPricing,self)
     --GroundTransSetPricePanel.minRentText02.text = GetLanguage(22020002)
     --GroundTransSetPricePanel.maxRentText03.text = GetLanguage(22020003)
     --GroundTransSetPricePanel.rentDayText04.text = GetLanguage(22020004)
@@ -78,6 +80,7 @@ end
 
 function GroundTransSetPriceCtrl:Hide()
     UIPanel.Hide(self)
+    Event.RemoveListener("_saveGroundRecommendPricing",self._saveGroundRecommendPricing,self)
 end
 
 function GroundTransSetPriceCtrl:Close()
@@ -86,7 +89,7 @@ end
 
 ---初始化
 function GroundTransSetPriceCtrl:_initPanelData()
-    GroundTransSetPricePanel.peiceValue.text = GetClientPriceString(self.m_data.groundInfo.auctionPrice / 25)
+    GroundTransSetPricePanel.peiceValue.text = GetClientPriceString(self.m_data.groundInfo.auctionPrice / self.m_data.groundInfo.groundNum)
     GroundTransSetPricePanel.prosperityValue.text = self.m_data.prosperity
     if self.m_data and self.m_data.groundInfo then
         self:_setShowState(self.m_data.groundInfo, self.m_data.groundState, self.m_data.showPageType)
@@ -125,6 +128,15 @@ function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPage
         if groundState == GroundTransState.None then
             --显示设置出售金额
             GroundTransSetPricePanel.sellIssueBtnTran.localScale = Vector3.one
+            GroundTransSetPricePanel.sellInput.text = GetClientPriceString(self.guidePrice)
+            local temp = ct.CalculationGroundCompetitivePower(self.guidePrice, tonumber(GroundTransSetPricePanel.sellInput.text) * 10000)
+            if temp >= functions.maxCompetitive then
+                GroundTransSetPricePanel.competitionValue.text = ">"..temp
+            elseif temp <= functions.minCompetitive then
+                GroundTransSetPricePanel.competitionValue.text = "<"..temp
+            else
+                GroundTransSetPricePanel.competitionValue.text = string.format("%0.1f", temp)
+            end
         elseif groundState == GroundTransState.Sell then
             --显示修改/取消状态
             GroundTransSetPricePanel.sellChangeStateTran.localScale = Vector3.one
@@ -132,7 +144,63 @@ function GroundTransSetPriceCtrl:_setShowState(groundInfo, groundState, showPage
         end
     end
 end
-
+--获取到土地交易推荐定价
+function GroundTransSetPriceCtrl:_saveGroundRecommendPricing(data)
+    if data then
+        self.guidePrice = data.num
+        --土地推荐定价
+        local tempPrice = self.guidePrice
+        GroundTransSetPricePanel.sellInput.text = GetClientPriceString(tempPrice)
+        local temp = ct.CalculationGroundCompetitivePower(self.guidePrice, tonumber(GroundTransSetPricePanel.sellInput.text))
+        if temp >= functions.maxCompetitive then
+            GroundTransSetPricePanel.competitionValue.text = ">"..temp
+        elseif temp <= functions.minCompetitive then
+            GroundTransSetPricePanel.competitionValue.text = "<"..temp
+        else
+            GroundTransSetPricePanel.competitionValue.text = string.format("%0.1f", temp)
+        end
+        self:_awakeSliderInput()
+        self:_initPanelData()
+    end
+end
+function GroundTransSetPriceCtrl:_awakeSliderInput()
+    GroundTransSetPricePanel.sellInput.onValueChanged:AddListener(function (str)
+        if str == "" or str == "." or self.guidePrice == nil then
+            return
+        end
+        local finalStr = ct.getCorrectPrice(str)
+        if finalStr ~= str then
+            GroundTransSetPricePanel.sellInput.text = finalStr  --限制用户小数输入
+            return
+        end
+        local temp
+        temp = ct.CalculationGroundCompetitivePower(self.guidePrice, tonumber(str) * 10000)
+        if temp >= functions.maxCompetitive then
+            GroundTransSetPricePanel.competitionValue.text = ">"..temp
+        elseif temp <= functions.minCompetitive then
+            GroundTransSetPricePanel.competitionValue.text = "<"..temp
+        else
+            GroundTransSetPricePanel.competitionValue.text = string.format("%0.1f", temp)
+        end
+        GroundTransSetPriceCtrl.sliderCanChange = false
+        GroundTransSetPricePanel.competitivenessSlider.value = temp
+    end)
+    --
+    EventTriggerMgr.Get(GroundTransSetPricePanel.competitivenessSlider.gameObject).onSelect = function()
+        GroundTransSetPriceCtrl.sliderCanChange = true
+    end
+    EventTriggerMgr.Get(GroundTransSetPricePanel.competitivenessSlider.gameObject).onUpdateSelected = function()
+        GroundTransSetPriceCtrl.sliderCanChange = true
+    end
+    GroundTransSetPricePanel.competitivenessSlider.onValueChanged:AddListener(function (value)
+        if self.guidePrice == nil or GroundTransSetPriceCtrl.sliderCanChange ~= true then
+            return
+        end
+        local price
+        price = ct.CalculationGroundPrice(self.guidePrice, value)
+        GroundTransSetPricePanel.sellInput.text = GetClientPriceString(price)
+    end)
+end
 ---按钮方法
 --点其他地方则关闭整个堆栈，打开主界面
 function GroundTransSetPriceCtrl:_closeBtnFunc()

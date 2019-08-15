@@ -46,6 +46,14 @@ function GroundTransContractPanel.InitPanel()
     this.rentTenancyText06 = transform:Find("centerRoot/rent/Text (2)"):GetComponent("Text")
     this.rentDailyText07 = transform:Find("centerRoot/rent/Text (3)"):GetComponent("Text")
     this.totalText08 = transform:Find("centerRoot/total/Text"):GetComponent("Text")
+
+    --新增土地繁荣度，价格，矿工费,公司名称
+    this.prosperityText = transform:Find("centerRoot/buy/prosperity/prosperityText"):GetComponent("Text")
+    this.prosperityValue = transform:Find("centerRoot/buy/prosperity/prosperityValue"):GetComponent("Text")
+    this.priceText = transform:Find("centerRoot/buy/price/priceText"):GetComponent("Text")
+    this.priceValue = transform:Find("centerRoot/buy/price/priceValue"):GetComponent("Text")
+    this.minersfeeText = transform:Find("centerRoot/buy/minersfee/minersfeeText"):GetComponent("Text")
+    this.minersfeeValue = transform:Find("centerRoot/buy/minersfee/minersfeeValue"):GetComponent("Text")
 end
 --
 function GroundTransContractPanel.chooseState(isRent)

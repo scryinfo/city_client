@@ -216,10 +216,10 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     self:initializeButtonInfo()
     --调整地块UI布局
     self:initializeLandUiLayout()
-    --self.buildingSizeText.text =
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
         local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingSizeText.text = data.x.."×"..data.y
         self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020001)
         local function callback(obj)
@@ -229,6 +229,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --加工厂
         local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingSizeText.text = data.x.."×"..data.y
         self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020002)
         local function callback(obj)
@@ -238,6 +239,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     elseif self.m_data.buildingType == BuildingType.RetailShop then
         --零售店
         local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingSizeText.text = data.x.."×"..data.y
         self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020003)
         local function callback(obj)
@@ -247,6 +249,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     elseif self.m_data.buildingType == BuildingType.House then
         --住宅
         local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingSizeText.text = data.x.."×"..data.y
         self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020004)
         local function callback(obj)
@@ -256,6 +259,7 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     elseif self.m_data.buildingType == BuildingType.Municipal then
         --推广公司
         local data = PlayerBuildingBaseData[self.m_data.mId]
+        self.buildingSizeText.text = data.x.."×"..data.y
         self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020005)
         local function callback(obj)
@@ -266,10 +270,13 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         --研究所
         if self.m_data.mId == 1500001 then
             self.buildingTypeText.text = GetLanguage(self.m_data.mId)
+            self.buildingSizeText.text = "1×1"
         elseif self.m_data.mId == 1500002 then
             self.buildingTypeText.text = GetLanguage(self.m_data.mId)
+            self.buildingSizeText.text = "2×2"
         elseif self.m_data.mId == 1500003 then
             self.buildingTypeText.text = GetLanguage(self.m_data.mId)
+            self.buildingSizeText.text = "3×3"
         end
         self.tipText.text = GetLanguage(23020006)
         local function callback(obj)
@@ -349,9 +356,12 @@ end
 
 --初始化UI土地地块信息
 function BuildingInformationCtrl:initializeUiLandInfo()
+    --建筑规模大小
     local buildingSize = PlayerBuildingBaseData[self.m_data.mId].x
     --1*1 小型建筑
     if buildingSize == 1 then
+        --规模
+        local buildingGroundNum = 1
         for key,value in pairs(self.groundData) do
             --是租的地
             if value.Data.rent then
@@ -367,8 +377,12 @@ function BuildingInformationCtrl:initializeUiLandInfo()
                 self:_updateGroundInfo(1,true)
             end
         end
+        --TODO:价格显示修改为当前建筑规模（1*1或2*2或3*3）的总价格  self.groundData[1].Data.auctionPrice大块地拍卖总价  self.groundData[1].Data.groundNum总地块数量 * 规模
+        self.buyingPriceText.text = "E"..GetClientPriceString(self.groundData[1].Data.auctionPrice / self.groundData[1].Data.groundNum * buildingGroundNum)
         --2*2 中型建筑
     elseif buildingSize == 2 then
+        --规模
+        local buildingGroundNum = 4
         for key,value in pairs(self.groundData) do
             --该地块是买的还是租的
             if value.Data.rent then
@@ -395,8 +409,12 @@ function BuildingInformationCtrl:initializeUiLandInfo()
         else
             self:_updateGroundInfo(1,true)
         end
+        --TODO:价格显示修改为当前建筑规模（1*1或2*2或3*3）的总价格  self.groundData[1].Data.auctionPrice大块地拍卖总价  self.groundData[1].Data.groundNum总地块数量 * 规模
+        self.buyingPriceText.text = "E"..GetClientPriceString(self.groundData[1].Data.auctionPrice / self.groundData[1].Data.groundNum * buildingGroundNum)
         --3*3 大型建筑
     elseif buildingSize == 3 then
+        --规模
+        local buildingGroundNum = 9
         for key,value in pairs(self.groundData) do
             --该地块是买的还是租的
             if value.Data.rent then
@@ -413,6 +431,8 @@ function BuildingInformationCtrl:initializeUiLandInfo()
         else
             self:_updateGroundInfo(1,true)
         end
+        --TODO:价格显示修改为当前建筑规模（1*1或2*2或3*3）的总价格  self.groundData[1].Data.auctionPrice大块地拍卖总价  self.groundData[1].Data.groundNum总地块数量 * 规模
+        self.buyingPriceText.text = "E"..GetClientPriceString(self.groundData[1].Data.auctionPrice / self.groundData[1].Data.groundNum * buildingGroundNum)
     end
     --默认框选地块1
     --TODO:建筑信息地块不能点击，修改为不用框选
@@ -512,7 +532,8 @@ function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
         self.mineLandInfo.transform.localScale = Vector3.one
         self.otherLandInfo.transform.localScale = Vector3.zero
         self.buyingTimeText.text = self:getStringTime(self.groundData[index].Data.auctionTs)
-        self.buyingPriceText.text = "E"..GetClientPriceString(self.groundData[index].Data.auctionPrice)
+        --TODO:以前是点击每块地显示每块地的信息，不能点击之后显示的是建筑大小的价格（1*1的价格或2*2的价格或3*3的价格）改在上边调用这个方法的时候赋值
+        --self.buyingPriceText.text = "E"..GetClientPriceString(self.groundData[index].Data.auctionPrice)
     else
         self.mineLandInfo.transform.localScale = Vector3.zero
         self.otherLandInfo.transform.localScale = Vector3.one

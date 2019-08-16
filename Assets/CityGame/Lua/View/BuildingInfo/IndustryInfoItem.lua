@@ -86,9 +86,20 @@ end
 function IndustryInfoItem:_initPanel()
     lastBg.notSelect.transform.localScale = Vector3.one
     lastBg.select.localScale = Vector3.zero
+    if next(titleItem) then
+        titleItem[1]:SetLast(titleItem[1])
+    end
+end
+
+function IndustryInfoItem:GetLast()
+    return lastBg
 end
 
 function IndustryInfoItem:SetLast(ins)
     lastBg = ins
+end
+
+function IndustryInfoItem:GetTitle()
+    return titleItem[1]
 end
 

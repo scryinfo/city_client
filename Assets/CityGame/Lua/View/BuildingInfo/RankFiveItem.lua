@@ -13,7 +13,7 @@ function RankFiveItem:initialize(inluabehaviour, prefab, goodsDataInfo,id)
     self.id = id
 
     self.rank = self.prefab.transform:Find("rank"):GetComponent("Text")
-    self.icon = self.prefab.transform:Find("head/icon"):GetComponent("Image");
+    self.icon = self.prefab.transform:Find("head/icon")
     self.name = self.prefab.transform:Find("head/name"):GetComponent("Text");
     self.income = self.prefab.transform:Find("income"):GetComponent("Text");
     self.staff = self.prefab.transform:Find("staff"):GetComponent("Text");

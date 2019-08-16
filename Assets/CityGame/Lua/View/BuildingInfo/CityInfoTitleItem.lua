@@ -57,6 +57,8 @@ function CityInfoTitleItem:ShowPanel(data)
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_querySupplyAndDemand',data.type)  --查询行业供需
         CityInfoPanel.supplyDemandBg.localScale = Vector3.one
         CityInfoPanel.rankList.localScale = Vector3.zero
+        CityInfoPanel.shelves.localScale = Vector3.one
+        CityInfoPanel.purchases.localScale = Vector3.one
     elseif data.id == 2 then
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryIndustryTopInfo',data.msg.msg.ownerId,data.type)  --查询收入排行
         CityInfoPanel.supplyDemandBg.localScale = Vector3.zero
@@ -68,5 +70,15 @@ function CityInfoTitleItem:ShowPanel(data)
         elseif data.type ==12 or data.type ==13 or data.type ==14 then
             CityInfoPanel.six.gameObject:SetActive(true)
         end
+    elseif data.id == 5 then
+        CityInfoPanel.shelves.localScale = Vector3.zero
+        CityInfoPanel.purchases.localScale = Vector3.zero
+        local bool
+        if data.type == 14 then
+            bool = true
+        elseif data.type == 20 then
+            bool = false
+        end
+        DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryAvgPrice',bool)  --查询收入排行
     end
 end

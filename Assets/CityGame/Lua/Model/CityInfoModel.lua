@@ -19,6 +19,7 @@ function CityInfoModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryIndustryIncome","ss.IndustryIncome",self.n_OnIndustryIncome,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","querySupplyAndDemand","gs.SupplyAndDemand",self.n_OnSupplyAndDemand,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryIndustryTopInfo","gs.IndustryTopInfo",self.n_OnIndustryTopInfo,self)
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGroundOrApartmentAvgPrice","ss.AverageTransactionprice",self.n_OnAvgPrice,self)
 
 end
 
@@ -29,6 +30,7 @@ function CityInfoModel:Close()
     DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryIndustryIncome","ss.IndustryIncome",self.n_OnIndustryIncome,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","querySupplyAndDemand","gs.SupplyAndDemand",self.n_OnSupplyAndDemand,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryIndustryTopInfo","gs.IndustryTopInfo",self.n_OnIndustryTopInfo,self)
+    DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryGroundOrApartmentAvgPrice","ss.AverageTransactionprice",self.n_OnAvgPrice,self)
 
 end
 --客户端请求--
@@ -61,6 +63,14 @@ function CityInfoModel:m_queryIndustryTopInfo(ownerId,type)
     DataManager.ModelSendNetMes("gscode.OpCode", "queryIndustryTopInfo","gs.QueryIndustry",{pid = ownerId,type = type})
 end
 
+--查询成交均价
+function CityInfoModel:m_queryAvgPrice(bool)
+    local msgId = pbl.enum("sscode.OpCode","queryGroundOrApartmentAvgPrice")
+    local lMsg = { b = bool }
+    local pMsg = assert(pbl.encode("gs.Bool", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
 --服务器回调
 
 --npc类型数量
@@ -86,5 +96,10 @@ end
 --行业排行
 function CityInfoModel:n_OnIndustryTopInfo(info)
     DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveIndustryTopInfo',info)
+end
+
+--成交均价
+function CityInfoModel:n_OnAvgPrice(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveAvgPrice',info)
 end
 

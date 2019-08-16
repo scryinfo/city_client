@@ -12,12 +12,23 @@ end
 function  BuildingSalaryDetailPartNew:_InitEvent()
     DataManager.ModelRegisterNetMsg(nil, "gscode.OpCode", "queryIndustryWages", "gs.QueryIndustryWages", self._getStandardWage, self)
 end
+
+function BuildingSalaryDetailPartNew:_InitClick(mainPanelLuaBehaviour)
+    mainPanelLuaBehaviour:AddClick(self.tipsBtn.gameObject, function ()
+        self:_showTips(true)
+    end , self)
+    mainPanelLuaBehaviour:AddClick(self.closeBtn.gameObject, function ()
+        self:_showTips(false)
+    end , self)
+end
+
 --
 function BuildingSalaryDetailPartNew:_ResetTransform()
     self.standardWageText.text = "E0.0000"
     self.staffNumText.text = "0"
     self.totalText.text = "E0.0000"
-    self.timeText.text = "00:00"
+    --self.timeText.text = "00:00"
+    self:_showTips(false)
 
     self:_language()
 end
@@ -25,6 +36,12 @@ end
 function BuildingSalaryDetailPartNew:_RemoveEvent()
     DataManager.ModelNoneInsIdRemoveNetMsg("gscode.OpCode", "queryIndustryWages", self)
 end
+
+function BuildingSalaryDetailPartNew:_RemoveClick()
+    self.tipsBtn.onClick:RemoveAllListeners()
+    self.closeBtn.onClick:RemoveAllListeners()
+end
+
 --
 function BuildingSalaryDetailPartNew:_ChildHide()
 
@@ -53,15 +70,22 @@ function BuildingSalaryDetailPartNew:_getComponent(transform)
     self.staffNumText02 = transform:Find("root/bg03/staffNum/Text"):GetComponent("Text")
     self.totalText = transform:Find("root/bg03/total/totalText"):GetComponent("Text")
     self.totalText03 = transform:Find("root/bg03/total/Text"):GetComponent("Text")
-    self.timeText = transform:Find("root/bg03/time/timeText"):GetComponent("Text")
-    self.timeText04 = transform:Find("root/bg03/time/Text"):GetComponent("Text")
+    --self.timeText = transform:Find("root/bg03/time/timeText"):GetComponent("Text")
+    --self.timeText04 = transform:Find("root/bg03/time/Text"):GetComponent("Text")
+    self.tipsBtn = transform:Find("root/bg03/wage/TipsBtn"):GetComponent("Button")
+    self.tipsImage = transform:Find("root/bg03/wage/TipsBtn/TipsImage")
+    self.tipsTitleText = transform:Find("root/bg03/wage/TipsBtn/TipsImage/TitleText"):GetComponent("Text")
+    self.tipsContentText = transform:Find("root/bg03/wage/TipsBtn/TipsImage/ContentText"):GetComponent("Text")
+    self.closeBtn = transform:Find("CloseBtn"):GetComponent("Button")
 end
 --
 function BuildingSalaryDetailPartNew:_language()
     self.standardWageText01.text = GetLanguage(26020001)
     self.staffNumText02.text = GetLanguage(26020003)
     self.totalText03.text = GetLanguage(26020005)
-    self.timeText04.text = GetLanguage(26020006)
+    self.tipsTitleText.text = "Salary description:"
+    self.tipsContentText.text = "1.The increase of urban wages is determined by the number of EVA points consumed by the city."
+    --self.timeText04.text = GetLanguage(26020006)
 end
 
 --
@@ -84,9 +108,9 @@ function BuildingSalaryDetailPartNew:_initFunc()
     end
 
     self.effectTime = self.m_data.info.setSalaryTs / 1000
-    if self.effectTime ~= nil then
-        self.timeText.text = os.date("%H:%M", self.effectTime)
-    end
+    --if self.effectTime ~= nil then
+    --    self.timeText.text = os.date("%H:%M", self.effectTime)
+    --end
 end
 --收到行业工资回调
 function BuildingSalaryDetailPartNew:_getStandardWage(data)
@@ -103,4 +127,9 @@ end
 --
 function BuildingSalaryDetailPartNew:clickCloseBtn()
     self.groupClass.TurnOffAllOptions(self.groupClass)
+end
+
+function BuildingSalaryDetailPartNew:_showTips(isShow)
+    self.tipsImage.localScale = isShow and Vector3.one or Vector3.zero
+    self.closeBtn.transform.localScale = isShow and Vector3.one or Vector3.zero
 end

@@ -222,7 +222,7 @@ function GroundTransDetailCtrl:_saveGroundProsperity(data)
     GroundTransDetailPanel.nameText.text = self.blockData[1].name
     GroundTransDetailPanel.companyText.text = self.blockData[1].companyName
     GroundTransDetailPanel.prosperityValue.text = self.blockData[1].prosperity
-    self.avatarData = AvatarManger.GetSmallAvatar(self.blockData[1].faceId,GroundTransDetailPanel.headImg.transform,0.13)
+    self.avatarData = AvatarManger.GetSmallAvatar(self.blockData[1].faceId,GroundTransDetailPanel.headImg.transform,0.14)
 end
 --正在出租按钮
 --function GroundTransDetailCtrl:_rentingFunc(ins)

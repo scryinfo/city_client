@@ -41,6 +41,8 @@ namespace LuaFramework {
         public const string asServerIp = "139.217.115.231";                   //
 #elif PUB_BUILD209
         public const string asServerIp = "47.110.156.209";                   //国内
+#elif PUB_BUILD_42
+        public const string asServerIp = "47.96.97.42";                   //国内
 #elif PUB_BUILD0
         public const string asServerIp = "42.159.89.63";
 #else
@@ -52,6 +54,8 @@ namespace LuaFramework {
         public const string WebUrl = "http://40.73.5.184:8080/HotFixed01/";       //测试更新地址
 #elif HOT_CATA2
         public const string WebUrl = "http://40.73.5.184:8080/HotFixed02/";       //测试更新地址
+#elif HOT_42
+        public const string WebUrl = "http://40.73.5.184:8080/42/";       //测试更新地址
 #elif HOT_CATA3
         public const string WebUrl = "http://40.73.5.184:8080/HotFixed03/";       //测试更新地址
 #elif HOT_CATA4

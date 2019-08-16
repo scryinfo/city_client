@@ -16,10 +16,13 @@ function BuildingInformationModel:OnCreate()
     Event.AddListener("m_ReqClosedBuilding",self.m_ReqClosedBuilding,self)
     Event.AddListener("m_ReqDemolitionBuilding",self.m_ReqDemolitionBuilding,self)
     Event.AddListener("m_ReqSetBuildingName",self.m_ReqSetBuildingName,self)
+    Event.AddListener("m_ReqBuildingProsperity",self.m_ReqBuildingProsperity,self)
     --建筑停业
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","shutdownBusiness","gs.Id",self.n_ClosedBuilding,self)
     --建筑改名
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","updateBuildingName","gs.BuildingInfo",self.n_SetBuildingInfo,self)
+    --建筑繁荣度
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryBuildingProsperity","gs.BuildingProsperity",self.n_buildingProsperity,self)
     --原料厂
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMaterialInfo","gs.MaterialInfo",self.n_MaterialFactoryInfo,self)
     --加工厂
@@ -30,6 +33,7 @@ function BuildingInformationModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryPromotionCompanyInfo","gs.BuildingInfo",self.n_PromoteInfo,self)
     --研究所(暂时回建筑信息)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryLaboratoryInfo","gs.BuildingInfo",self.n_LaboratoryInfo,self)
+
 end
 
 function BuildingInformationModel:Close()
@@ -37,10 +41,13 @@ function BuildingInformationModel:Close()
     Event.RemoveListener("m_ReqClosedBuilding",self.m_ReqClosedBuilding,self)
     Event.RemoveListener("m_ReqDemolitionBuilding",self.m_ReqDemolitionBuilding,self)
     Event.RemoveListener("m_ReqSetBuildingName",self.m_ReqSetBuildingName,self)
+    Event.RemoveListener("m_ReqBuildingProsperity",self.m_ReqBuildingProsperity,self)
     --建筑停业
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","shutdownBusiness","gs.Id",self.n_ClosedBuilding,self)
     --建筑改名
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","updateBuildingName","gs.BuildingInfo",self.n_SetBuildingInfo,self)
+    --建筑繁荣度
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryBuildingProsperity","gs.BuildingProsperity",self.n_buildingProsperity,self)
     --原料厂
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryMaterialInfo","gs.MaterialInfo",self.n_MaterialFactoryInfo,self)
     --加工厂
@@ -70,6 +77,10 @@ end
 function BuildingInformationModel:m_ReqSetBuildingName(buildingId,name)
     FlightMainModel.OpenFlightLoading()
     DataManager.ModelSendNetMes("gscode.OpCode", "updateBuildingName","gs.UpdateBuildingName",{buildingId = buildingId,name = name})
+end
+--建筑繁荣度
+function BuildingInformationModel:m_ReqBuildingProsperity(buildingId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryBuildingProsperity","gs.Id",{id = buildingId})
 end
 
 --请求建筑信息
@@ -118,6 +129,10 @@ function BuildingInformationModel:n_SetBuildingInfo(data,msgId)
     else
         DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'setBuildingNameSucceed',data)
     end
+end
+--建筑繁荣度
+function BuildingInformationModel:n_buildingProsperity(data)
+    DataManager.ControllerRpcNoRet(self.insId,"BuildingInformationCtrl", 'saveBuildingProsperity',data)
 end
 
 --请求建筑信息

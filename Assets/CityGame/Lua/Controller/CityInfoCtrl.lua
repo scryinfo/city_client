@@ -723,6 +723,11 @@ end
 function CityInfoCtrl:_receiveIndustryTopInfo(info)
     if self.rankItem and next(self.rankItem) then
         for i, v in pairs(self.rankItem) do
+            --回收avatar
+            if v.my_avatarData ~= nil then
+                AvatarManger.CollectAvatar(v.my_avatarData)
+                v.my_avatarData = nil
+            end
             destroy(v.prefab.gameObject)
         end
     end
@@ -733,7 +738,11 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
             local data = ct.deepCopy(info.topInfo)
             if #info.topInfo > 10 then
                 CityInfoPanel.fourMyRankFourItem.localScale = Vector3.one
-                AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.fourMyIcon,0.15)
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.fourMyIcon,0.15)
                 CityInfoPanel.fourMyRank.text = ">10"
                 CityInfoPanel.fourMyMame.text = info.topInfo[#info.topInfo].name
                 CityInfoPanel.fourMyIncome.text = info.topInfo[#info.topInfo].income
@@ -755,7 +764,11 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
             local data = ct.deepCopy(info.topInfo)
             if #info.topInfo > 10 then
                 CityInfoPanel.fiveMyRankFiveItem.localScale = Vector3.one
-                AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.fiveMyIcon,0.15)
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.fiveMyIcon,0.15)
                 CityInfoPanel.fiveMyRank.text = ">10"
                 CityInfoPanel.fiveMyMame.text = info.topInfo[#info.topInfo].name
                 CityInfoPanel.fiveMyIncome.text = info.topInfo[#info.topInfo].income
@@ -778,7 +791,11 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
             local data = ct.deepCopy(info.topInfo)
             if #info.topInfo > 10 then
                 CityInfoPanel.sixMyRankSixItem.localScale = Vector3.one
-                AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.sixMyIcon,0.15)
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.sixMyIcon,0.15)
                 CityInfoPanel.sixMyRank.text = ">10"
                 CityInfoPanel.sixMyMame.text = info.topInfo[#info.topInfo].name
                 CityInfoPanel.sixMyIncome.text = info.topInfo[#info.topInfo].income

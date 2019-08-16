@@ -18,7 +18,7 @@ function RankFourItem:initialize(inluabehaviour, prefab, goodsDataInfo,id)
     self.income = self.prefab.transform:Find("income"):GetComponent("Text");
     self.volume = self.prefab.transform:Find("volume"):GetComponent("Text");
 
-    AvatarManger.GetSmallAvatar(goodsDataInfo.faceId,self.icon,0.15)
+    self.my_avatarData = AvatarManger.GetSmallAvatar(goodsDataInfo.faceId,self.icon,0.15)
     self.rank.text = id
     self.name.text = goodsDataInfo.name
     self.income.text = goodsDataInfo.income

@@ -19,7 +19,7 @@ function RankFiveItem:initialize(inluabehaviour, prefab, goodsDataInfo,id)
     self.staff = self.prefab.transform:Find("staff"):GetComponent("Text");
     self.technology = self.prefab.transform:Find("technology"):GetComponent("Text");
 
-    AvatarManger.GetSmallAvatar(goodsDataInfo.faceId,self.icon,0.15)
+    self.my_avatarData = AvatarManger.GetSmallAvatar(goodsDataInfo.faceId,self.icon,0.15)
     self.rank.text = id
     self.name.text = goodsDataInfo.name
     self.income.text = goodsDataInfo.income

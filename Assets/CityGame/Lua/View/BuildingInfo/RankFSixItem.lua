@@ -20,7 +20,7 @@ function RankSixItem:initialize(inluabehaviour, prefab, goodsDataInfo,id)
     self.technology = self.prefab.transform:Find("technology"):GetComponent("Text");
     self.market = self.prefab.transform:Find("market"):GetComponent("Text");
 
-    AvatarManger.GetSmallAvatar(goodsDataInfo.faceId,self.icon,0.15)
+    self.my_avatarData = AvatarManger.GetSmallAvatar(goodsDataInfo.faceId,self.icon,0.15)
     self.rank.text = id
     self.name.text = goodsDataInfo.name
     self.income.text = goodsDataInfo.income

@@ -9,6 +9,7 @@ UIPanel:ResgisterOpen(BuildingInformationCtrl)
 
 local isShow = false
 local businessState = false
+local oneself = nil  --是否是建筑主人
 --建筑信息Item路径
 BuildingInformationCtrl.MaterialFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/materialFactoryItem.prefab"         --原料厂
 BuildingInformationCtrl.ProcessingFactoryItem_Path = "Assets/CityGame/Resources/View/NewItems/processingFactoryItem.prefab"     --加工厂
@@ -78,6 +79,9 @@ function BuildingInformationCtrl:Hide()
         AvatarManger.CollectAvatar(self.avatarData)
     end
     self.indexTable = {}
+    --繁荣度清空，保证下次打开建筑信息获取到的是最新的
+    self.prosperity = nil
+    oneself = nil
 end
 -------------------------------------------------------------获取组件---------------------------------------------------------------------------------
 function BuildingInformationCtrl:_getComponent(go)
@@ -161,11 +165,11 @@ function BuildingInformationCtrl:_getComponent(go)
     --mineLandInfo
     self.mineLandInfo = go.transform:Find("content/landInfoRoot/content/mineLandInfo")
     self.buyingTime = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingTime/time"):GetComponent("Text")
-    self.buyingTimeText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingTime/time/timeText"):GetComponent("Text")
+    self.buyingTimeText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingTime/timeText"):GetComponent("Text")
     self.buyingPrice = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingPrice/price"):GetComponent("Text")
-    self.buyingPriceText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingPrice/price/priceText"):GetComponent("Text")
+    self.buyingPriceText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buyingPrice/priceText"):GetComponent("Text")
     self.buildingText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buildingSize/buildingText"):GetComponent("Text")
-    self.buildingSizeText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buildingSize/buildingText/buildingSizeText"):GetComponent("Text")
+    self.buildingSizeText = go.transform:Find("content/landInfoRoot/content/mineLandInfo/buildingSize/buildingSizeText"):GetComponent("Text")
     --otherLandInfo
     self.otherLandInfo = go.transform:Find("content/landInfoRoot/content/otherLandInfo")
     self.headImg = go.transform:Find("content/landInfoRoot/content/otherLandInfo/headBg/headImg"):GetComponent("Image")
@@ -216,11 +220,14 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
     self:initializeButtonInfo()
     --调整地块UI布局
     self:initializeLandUiLayout()
-    --self.buildingSizeText.text =
+    --初始化相同的信息
+    local data = PlayerBuildingBaseData[self.m_data.mId]
+    --缓存一个建筑规模给不是自己进来的时候用
+    self.buildingSize = data.x
+    self.buildingSizeText.text = data.x.."×"..data.y
+    self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         --原料厂
-        local data = PlayerBuildingBaseData[self.m_data.mId]
-        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020001)
         local function callback(obj)
             self.buildingInfoItem = materialFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
@@ -228,8 +235,6 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         createPrefab(BuildingInformationCtrl.MaterialFactoryItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
         --加工厂
-        local data = PlayerBuildingBaseData[self.m_data.mId]
-        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020002)
         local function callback(obj)
             self.buildingInfoItem = processingFactoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
@@ -237,8 +242,6 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         createPrefab(BuildingInformationCtrl.ProcessingFactoryItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.RetailShop then
         --零售店
-        local data = PlayerBuildingBaseData[self.m_data.mId]
-        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020003)
         local function callback(obj)
             self.buildingInfoItem = retailStoreItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
@@ -246,8 +249,6 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         createPrefab(BuildingInformationCtrl.RetailStoreItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.House then
         --住宅
-        local data = PlayerBuildingBaseData[self.m_data.mId]
-        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020004)
         local function callback(obj)
             self.buildingInfoItem = houseBuildingInfoItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
@@ -255,8 +256,6 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         createPrefab(BuildingInformationCtrl.HouseItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.Municipal then
         --推广公司
-        local data = PlayerBuildingBaseData[self.m_data.mId]
-        self.buildingTypeText.text = GetLanguage(data.sizeName)..GetLanguage(data.typeName)
         self.tipText.text = GetLanguage(23020005)
         local function callback(obj)
             self.buildingInfoItem = PromoteItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
@@ -264,13 +263,6 @@ function BuildingInformationCtrl:initializeUiBuildingInfo()
         createPrefab(BuildingInformationCtrl.PromoteItem_Path,self.buildingTypeContent,callback)
     elseif self.m_data.buildingType == BuildingType.Laboratory then
         --研究所
-        if self.m_data.mId == 1500001 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        elseif self.m_data.mId == 1500002 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        elseif self.m_data.mId == 1500003 then
-            self.buildingTypeText.text = GetLanguage(self.m_data.mId)
-        end
         self.tipText.text = GetLanguage(23020006)
         local function callback(obj)
             self.buildingInfoItem = laboratoryItem:new(self.buildingInfo,obj,self.luaBehaviour,self.m_data.ownerId)
@@ -291,10 +283,12 @@ function BuildingInformationCtrl:initializeButtonInfo()
             self.switchBtn.text = GetLanguage(30010005)
             businessState = false
         end
+        oneself = true
         self.switchBtn.transform.localScale = Vector3.one
         self.modifyImg.transform.localScale = Vector3.one
         self.buildingName:GetComponent("Button").interactable = true
     else
+        oneself = false
         self.switchBtn.transform.localScale = Vector3.zero
         self.modifyImg.transform.localScale = Vector3.zero
         self.buildingName:GetComponent("Button").interactable = false
@@ -349,26 +343,31 @@ end
 
 --初始化UI土地地块信息
 function BuildingInformationCtrl:initializeUiLandInfo()
+    --建筑规模大小
     local buildingSize = PlayerBuildingBaseData[self.m_data.mId].x
     --1*1 小型建筑
     if buildingSize == 1 then
+        --规模
+        self.buildingGroundNum = 1
         for key,value in pairs(self.groundData) do
             --是租的地
             if value.Data.rent then
                 self.otherLandBtnTable[5].transform.localScale = Vector3.one
                 table.insert(self.indexTable,self.otherLandBtnTable[5])
-                --默认打开第一块地的信息
-                self:_updateGroundInfo(1,false)
+                --默认打开第一块地的信息 --TODO:现在不区分地块信息，所以暂时注释掉
+                --self:_updateGroundInfo(1,false)
             else
                 --是买的地
                 self.mineLandBtnTable[5].transform.localScale = Vector3.one
                 table.insert(self.indexTable,self.mineLandBtnTable[5])
-                --默认打开第一块地的信息
-                self:_updateGroundInfo(1,true)
+                --默认打开第一块地的信息 --TODO:现在不区分地块信息，所以暂时注释掉
+                --self:_updateGroundInfo(1,true)
             end
         end
         --2*2 中型建筑
     elseif buildingSize == 2 then
+        --规模
+        self.buildingGroundNum = 4
         for key,value in pairs(self.groundData) do
             --该地块是买的还是租的
             if value.Data.rent then
@@ -389,14 +388,16 @@ function BuildingInformationCtrl:initializeUiLandInfo()
                 end
             end
         end
-        --默认打开第一块地的信息
-        if self.groundData[1].Data.rent then
-            self:_updateGroundInfo(1,false)
-        else
-            self:_updateGroundInfo(1,true)
-        end
+        --默认打开第一块地的信息 --TODO:现在不区分地块信息，所以暂时注释掉
+        --if self.groundData[1].Data.rent then
+        --    self:_updateGroundInfo(1,false)
+        --else
+        --    self:_updateGroundInfo(1,true)
+        --end
         --3*3 大型建筑
     elseif buildingSize == 3 then
+        --规模
+        self.buildingGroundNum = 9
         for key,value in pairs(self.groundData) do
             --该地块是买的还是租的
             if value.Data.rent then
@@ -407,19 +408,20 @@ function BuildingInformationCtrl:initializeUiLandInfo()
                 table.insert(self.indexTable,self.mineLandBtnTable[key])
             end
         end
-        --默认打开第一块地的信息
-        if self.groundData[1].Data.rent then
-            self:_updateGroundInfo(1,false)
-        else
-            self:_updateGroundInfo(1,true)
-        end
+        --默认打开第一块地的信息 --TODO:现在不区分地块信息，所以暂时注释掉
+        --if self.groundData[1].Data.rent then
+        --    self:_updateGroundInfo(1,false)
+        --else
+        --    self:_updateGroundInfo(1,true)
+        --end
     end
-    --默认框选地块1
-    --TODO:建筑信息地块不能点击，修改为不用框选
+    --默认框选地块1    --TODO:建筑信息地块不能点击，修改为不用框选
     --self.chooseBoxImg.transform:SetParent(self.indexTable[1])
     --self.chooseBoxImg.transform.localPosition = Vector3(0,0,0)
     --self.chooseBoxImg.transform.localScale = Vector3.one
     self.chooseBoxImg.transform.localScale = Vector3.zero
+    --打开建筑土地信息
+    self:_updateGroundInfo(oneself)
 end
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -431,11 +433,11 @@ function BuildingInformationCtrl:language()
     self.landNomalText.text = GetLanguage(30010002)
     self.landChooseText.text = GetLanguage(30010002)
     self.buildTimeText.text = GetLanguage(30010003)
-    self.buyingTime.text = GetLanguage(30080003)
+    self.buyingTime.text = --[[GetLanguage(30080003)]]"建筑繁荣度:"
     self.buyingPrice.text = GetLanguage(30080004)
     self.buildingText.text = "建筑规模:"
-    self.leaseTime.text = GetLanguage(30080001)
-    self.rentText.text = GetLanguage(30080002)
+    self.leaseTime.text = --[[GetLanguage(30080001)]]"建筑规模:"
+    self.rentText.text = --[[GetLanguage(30080002)]]"建筑繁荣度:"
 end
 ---------------------------------------------------------------点击函数--------------------------------------------------------------------------------
 --打开建筑信息
@@ -449,6 +451,9 @@ end
 --打开土地信息
 function BuildingInformationCtrl:_clickLandNomal(ins)
     PlayMusEff(1002)
+    if ins.prosperity == nil then
+        Event.Brocast("m_ReqBuildingProsperity",ins.m_data.id)
+    end
     ins.landChoose.transform.localScale = Vector3.one
     ins.landInfoRoot.gameObject:SetActive(true)
     ins.buildingChoose.transform.localScale = Vector3.zero
@@ -506,13 +511,37 @@ end
 --    ins:_updateGroundInfo(ins:getIndexKey(self),false)
 --end
 --刷新地块信息
-function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
-    --isShow 等于true时，是买的地  false时，是租的地
+function BuildingInformationCtrl:_updateGroundInfo(isShow)
+    --TODO:建筑土地信息只区分自己还是别人  isShow为true是自己，flase是别人
     if isShow then
+        --本人
         self.mineLandInfo.transform.localScale = Vector3.one
         self.otherLandInfo.transform.localScale = Vector3.zero
-        self.buyingTimeText.text = self:getStringTime(self.groundData[index].Data.auctionTs)
-        self.buyingPriceText.text = "E"..GetClientPriceString(self.groundData[index].Data.auctionPrice)
+        --TODO:价格显示修改为当前建筑规模（1*1或2*2或3*3）的总价格  self.groundData[1].Data.auctionPrice大块地拍卖总价  self.groundData[1].Data.groundNum总地块数量 * 规模
+        self.buyingPriceText.text = "E"..GetClientPriceString(self.groundData[1].Data.auctionPrice / self.groundData[1].Data.groundNum * self.buildingGroundNum)
+    else
+        --别人
+        self.mineLandInfo.transform.localScale = Vector3.zero
+        self.otherLandInfo.transform.localScale = Vector3.one
+        self.avatarData = AvatarManger.GetSmallAvatar(self.groundOwnerData[1].faceId,self.headImg.transform,0.15)
+        self.nameText.text = self.groundOwnerData[1].name
+        self.companyText.text = self.groundOwnerData[1].companyName
+        self.leaseTimeText.text = self.buildingSize.."×"..self.buildingSize
+        if self.groundOwnerData[1].male then
+            LoadSprite("Assets/CityGame/Resources/Atlas/BuildingInformation/male.png",self.genderImg,true)
+        else
+            LoadSprite("Assets/CityGame/Resources/Atlas/BuildingInformation/famale.png",self.genderImg,true)
+        end
+    end
+
+    --isShow 等于true时，是买的地  false时，是租的地 --TODO:现在不区分地块信息，所以暂时注释掉
+    --[[if isShow then
+        self.mineLandInfo.transform.localScale = Vector3.one
+        self.otherLandInfo.transform.localScale = Vector3.zero
+        --TODO:以前显示的建造时间，现在改成显示建筑繁荣度
+        --self.buyingTimeText.text = self:getStringTime(self.groundData[index].Data.auctionTs)
+        --TODO:以前是点击每块地显示每块地的信息，不能点击之后显示的是建筑大小的价格（1*1的价格或2*2的价格或3*3的价格）改在上边调用这个方法的时候赋值
+        --self.buyingPriceText.text = "E"..GetClientPriceString(self.groundData[index].Data.auctionPrice)
     else
         self.mineLandInfo.transform.localScale = Vector3.zero
         self.otherLandInfo.transform.localScale = Vector3.one
@@ -530,7 +559,7 @@ function BuildingInformationCtrl:_updateGroundInfo(index,isShow)
         else
             self.leaseTimeText.text = self:getStringTime(self.groundData[index].Data.rent.rentBeginTs).." - "..self:getStringTime(self.groundData[index].Data.rent.rentDueTime)
         end
-    end
+    end]]
 end
 --关闭提示框
 function BuildingInformationCtrl:_clickBgBtn(ins)
@@ -567,6 +596,14 @@ function BuildingInformationCtrl:setBuildingNameSucceed(dataInfo)
         UIPanel.ClosePage()
         self.buildingName.text = dataInfo.name
         Event.Brocast("SmallPop",GetLanguage(30010016), ReminderType.Succeed)
+    end
+end
+--保存建筑繁荣度
+function BuildingInformationCtrl:saveBuildingProsperity(data)
+    if data then
+        self.prosperity = data.prosperity_value
+        self.buyingTimeText.text = self.prosperity
+        self.priceText.text = self.prosperity
     end
 end
 ----------------------------------------------------------------事件函数---------------------------------------------------------------------------

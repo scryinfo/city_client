@@ -1817,7 +1817,7 @@ CityEngineLua.onConnectionStateChange = function(state )
 					CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
 				end
 			end
-		end, 1, 0)
+		end, 10, 0)
 		timer:Start()
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
 	elseif state.error == 'Manual close connection' then --客户端主动断开成功（无需处理）

@@ -20,6 +20,11 @@ function CityInfoModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","querySupplyAndDemand","gs.SupplyAndDemand",self.n_OnSupplyAndDemand,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryIndustryTopInfo","gs.IndustryTopInfo",self.n_OnIndustryTopInfo,self)
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGroundOrApartmentAvgPrice","ss.AverageTransactionprice",self.n_OnAvgPrice,self)
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryCityTransactionAmount","ss.CityTransactionAmount",self.n_OnTransactionAmount,self)
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryCityMoneyPool","ss.CityTransactionAmount",self.n_OnMoneyPool,self)  --历史
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMoneyPoolInfo","gs.MoneyPool",self.n_OnMoneyPoolInfo,self)  --今日
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryRegalRanking","gs.RegalRanking",self.n_OnRanking,self)
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryCityLevel","gs.CityLevel",self.n_OnLevel,self)
 
 end
 
@@ -31,6 +36,11 @@ function CityInfoModel:Close()
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","querySupplyAndDemand","gs.SupplyAndDemand",self.n_OnSupplyAndDemand,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryIndustryTopInfo","gs.IndustryTopInfo",self.n_OnIndustryTopInfo,self)
     DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryGroundOrApartmentAvgPrice","ss.AverageTransactionprice",self.n_OnAvgPrice,self)
+    DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryCityTransactionAmount","ss.CityTransactionAmount",self.n_OnTransactionAmount,self)
+    DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryCityMoneyPool","ss.CityTransactionAmount",self.n_OnMoneyPool,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryMoneyPoolInfo","gs.MoneyPool",self.n_OnMoneyPoolInfo,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryRegalRanking","gs.RegalRanking",self.n_OnRanking,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryCityLevel","gs.CityLevel",self.n_OnLevel,self)
 
 end
 --客户端请求--
@@ -71,6 +81,37 @@ function CityInfoModel:m_queryAvgPrice(bool)
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 
+--查询全城销售额
+function CityInfoModel:m_queryTransactionAmount(bool)
+    local msgId = pbl.enum("sscode.OpCode","queryCityTransactionAmount")
+    local lMsg = { b = bool }
+    local pMsg = assert(pbl.encode("gs.Bool", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
+--查询全城奖金池（今日）
+function CityInfoModel:m_queryMoneyPoolInfo()
+    local msgId = pbl.enum("gscode.OpCode","queryMoneyPoolInfo")
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
+
+--查询全城奖金池(历史)
+function CityInfoModel:m_queryMoneyPool()
+    local msgId = pbl.enum("sscode.OpCode","queryCityMoneyPool")
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
+--查询排行榜
+function CityInfoModel:m_queryRanking(playerId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryRegalRanking","gs.Id",{id = playerId})
+end
+
+--查询等级
+function CityInfoModel:m_queryLevel()
+    local msgId = pbl.enum("gscode.OpCode","queryCityLevel")
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
+
 --服务器回调
 
 --npc类型数量
@@ -101,5 +142,34 @@ end
 --成交均价
 function CityInfoModel:n_OnAvgPrice(info)
     DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveAvgPrice',info)
+end
+
+--全城销售额
+function CityInfoModel:n_OnTransactionAmount(info)
+    if info.flag then  --历史
+        DataManager.ControllerRpcNoRet(self.insId,"CityVolumeCtrl", '_receiveTransactionAmount',info.amount)
+    else  --今日
+        DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveTransactionAmount',info.amount)
+    end
+end
+
+--全城奖金池(历史)
+function CityInfoModel:n_OnMoneyPool(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityVolumeCtrl", '_receiveMoneyPool',info.amount)
+end
+
+--全城奖金池(今日)
+function CityInfoModel:n_OnMoneyPoolInfo(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveMoneyPoolInfo',info)
+end
+
+--排行榜
+function CityInfoModel:n_OnRanking(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityRickListCtrl", '_receiveRanking',info)
+end
+
+--等级
+function CityInfoModel:n_OnLevel(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveLevel',info)
 end
 

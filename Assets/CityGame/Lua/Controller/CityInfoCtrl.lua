@@ -3,6 +3,10 @@
 --- Created by password.
 --- DateTime: 2019/8/10 10:55
 ---城市信息Ctrl
+CityBasicType = {
+    Volume = 1,
+    fundPool = 2,
+}
 CityInfoCtrl = class('CityInfoCtrl',UIPanel)
 UIPanel:ResgisterOpen(CityInfoCtrl)
 
@@ -21,6 +25,10 @@ function CityInfoCtrl:Awake(go)
     cityInfoBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     cityInfoBehaviour:AddClick(CityInfoPanel.back,self.OnBack,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.notBasic,self.OnNotBasic,self)  --基础信息
+    cityInfoBehaviour:AddClick(CityInfoPanel.levelBtn,self.OnLevelBtn,self)
+    cityInfoBehaviour:AddClick(CityInfoPanel.volumeBtn,self.OnVolumeBtn,self)
+    cityInfoBehaviour:AddClick(CityInfoPanel.fundPoolBtn,self.OnFundPoolBtn,self)
+    cityInfoBehaviour:AddClick(CityInfoPanel.richBtn,self.OnRichBtn,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.notIndustry,self.OnNotIndustry,self)  --行业信息
     cityInfoBehaviour:AddClick(CityInfoPanel.homeHouse,self.OnHomeHouse,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.supermarket,self.OnSupermarket,self)
@@ -81,6 +89,9 @@ function CityInfoCtrl:Refresh()
     DataManager.OpenDetailModel(CityInfoModel,self.m_data.insId)
     DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_GetNpcNum')
     DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_GetPlayerNum')
+    DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_queryTransactionAmount',false)
+    DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_queryMoneyPoolInfo')
+    DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_queryLevel')
     self:initData()
 end
 
@@ -207,6 +218,28 @@ function CityInfoCtrl:OnNotIndustry(go)
     end
 end
 
+--科技等级
+function CityInfoCtrl:OnLevelBtn(go)
+    ct.OpenCtrl("TechLevelCtrl",{level = go.cityLevel})
+end
+
+--交易额
+function CityInfoCtrl:OnVolumeBtn(go)
+    local data = {insId = go.m_data.insId,type = CityBasicType.Volume,today = go.todayVolume}
+    ct.OpenCtrl("CityVolumeCtrl",data)
+end
+
+--奖金池
+function CityInfoCtrl:OnFundPoolBtn(go)
+    local data = {insId = go.m_data.insId,type = CityBasicType.fundPool,today = go.todayFundPool}
+    ct.OpenCtrl("CityVolumeCtrl",data)
+end
+
+--排行榜
+function CityInfoCtrl:OnRichBtn(go)
+    ct.OpenCtrl("CityRickListCtrl",{insId = go.m_data.insId})
+end
+
 --npc数量
 function CityInfoCtrl:c_NpcNum(info)
     CityInfoPanel.citizenNum.text = info.workNpcNum,info.unEmployeeNpcNum
@@ -215,6 +248,29 @@ end
 --玩家数量
 function CityInfoCtrl:c_PlayerNum(info)
     CityInfoPanel.playerNum.text = info
+end
+
+--城市交易额
+function CityInfoCtrl:_receiveTransactionAmount(info)
+    if info then
+        CityInfoPanel.volume.text = GetClientPriceString(info[1].sum)
+        self.todayVolume = info[1].sum
+    end
+end
+
+--奖金池（今日）
+function CityInfoCtrl:_receiveMoneyPoolInfo(info)
+    CityInfoPanel.fundPool.text = GetClientPriceString(info.money)
+    self.todayFundPool = info.money
+end
+
+--科技等级
+function CityInfoCtrl:_receiveLevel(info)
+    CityInfoPanel.level.text = "Lv.1"
+    CityInfoPanel.levelSlider.maxValue = 1000
+    CityInfoPanel.levelSlider.value = info.sumValue
+    CityInfoPanel.levelSliderText.text = info.sumValue .. "/1000"
+    self.cityLevel = info.sumValue
 end
 
 --行业收入回调
@@ -742,7 +798,7 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
                     AvatarManger.CollectAvatar(self.my_avatarData)
                     self.my_avatarData = nil
                 end
-                self.my_avatarData = AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.fourMyIcon,0.15)
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.fourMyIcon,0.15)
                 CityInfoPanel.fourMyRank.text = ">10"
                 CityInfoPanel.fourMyMame.text = info.topInfo[#info.topInfo].name
                 CityInfoPanel.fourMyIncome.text = info.topInfo[#info.topInfo].income
@@ -768,7 +824,7 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
                     AvatarManger.CollectAvatar(self.my_avatarData)
                     self.my_avatarData = nil
                 end
-                self.my_avatarData = AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.fiveMyIcon,0.15)
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.fiveMyIcon,0.15)
                 CityInfoPanel.fiveMyRank.text = ">10"
                 CityInfoPanel.fiveMyMame.text = info.topInfo[#info.topInfo].name
                 CityInfoPanel.fiveMyIncome.text = info.topInfo[#info.topInfo].income
@@ -795,7 +851,7 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
                     AvatarManger.CollectAvatar(self.my_avatarData)
                     self.my_avatarData = nil
                 end
-                self.my_avatarData = AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.sixMyIcon,0.15)
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.sixMyIcon,0.15)
                 CityInfoPanel.sixMyRank.text = ">10"
                 CityInfoPanel.sixMyMame.text = info.topInfo[#info.topInfo].name
                 CityInfoPanel.sixMyIncome.text = info.topInfo[#info.topInfo].income

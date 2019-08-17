@@ -38,6 +38,19 @@ function CityInfoPanel.InitPanel()
     this.citizenNum = transform:Find("content/right/basicInfoBg/topBg/sumBg/citizenNum/Text"):GetComponent("Text")
     this.playerNum = transform:Find("content/right/basicInfoBg/topBg/sumBg/playerNum/Text"):GetComponent("Text")
 
+    this.level = transform:Find("content/right/basicInfoBg/topBg/developeBg/score/Text"):GetComponent("Text") --科技等级
+    this.levelBtn = transform:Find("content/right/basicInfoBg/topBg/developeBg/downBg").gameObject
+    this.levelSlider = transform:Find("content/right/basicInfoBg/topBg/developeBg/Slider"):GetComponent("Slider")
+    this.levelSliderText = transform:Find("content/right/basicInfoBg/topBg/developeBg/Slider/Text"):GetComponent("Text")
+
+    this.volume = transform:Find("content/right/basicInfoBg/topBg/volumeBg/score/Text"):GetComponent("Text") --城市交易额
+    this.volumeBtn = transform:Find("content/right/basicInfoBg/topBg/volumeBg/downBg").gameObject
+
+    this.fundPool = transform:Find("content/right/basicInfoBg/topBg/fundBg/score/Text"):GetComponent("Text") --城市奖金池
+    this.fundPoolBtn = transform:Find("content/right/basicInfoBg/topBg/fundBg/downBg").gameObject
+
+    this.richBtn = transform:Find("content/right/basicInfoBg/topBg/richBg/downBg").gameObject      --城市排行榜
+
     this.industryInfo = transform:Find("content/right/industryInfo")   --行业信息
 
     this.industryBg = transform:Find("content/right/industryInfo/industryBg")   --行业销售额

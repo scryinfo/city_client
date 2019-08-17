@@ -3,14 +3,21 @@ local AllMaterial = {}
 local AllObjectPools = {}
 local RendererType = nil
 local PoolsRoot = nil
+local AllCount = 0
 
 --创建Prefab成功后初始对应Pool
 local function CreateBasePrefabSuccess(tempPrefab,item)
     if tempPrefab ~= nil then
         --初始化对象池
         AllObjectPools[item.Name] = LuaGameObjectPool:new(item.Name,tempPrefab,item.InitCount,MapGameObjectsConfig.HidePosition,PoolsRoot)
+        AllCount = AllCount - 1
     end
 end
+
+function MapObjectsManager.GetLoadingAssetsCount()
+    return AllCount
+end
+
 
 function MapObjectsManager.AddMaterial(ParentObj)
     --collectgarbage("collect")
@@ -43,6 +50,7 @@ function MapObjectsManager.Init()
     --初始化基础建筑Prefeb（异步）
     local PoolInstantiates = MapGameObjectsConfig.PoolInstantiate
     for i, item in pairs(PoolInstantiates) do
+        AllCount = AllCount + 1
         if item.PlayerBuildingBaseDataID ~= nil then
             buildMgr:CreateBuild(PlayerBuildingBaseData[item.PlayerBuildingBaseDataID]["prefabRoute"] ,CreateBasePrefabSuccess,item)
         elseif item.RoadPrefabConfigID ~= nil then

@@ -26,4 +26,5 @@ OpenModelInsID = {
     ["EvaCtrl"] = 20,
     ["CompanyWaterCtrl"] = 21,
     ["BuildingRevenueInfoCtrl"] = 30,
+    ["CityInfoCtrl"] = 40,
 }

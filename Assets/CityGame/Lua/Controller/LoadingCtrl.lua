@@ -53,8 +53,10 @@ end
 
 function LoadingCtrl:_Update()
     LoadingPanel.rotateIconTrans:Rotate( self.RotateDirection * self.RotateSpeed * UnityEngine.Time.deltaTime )
-    if self.MinDurationTime <= 0 then
-        self:EnterTheLogin()
+    if self.MinDurationTime <= 0  then
+        if MapObjectsManager.GetLoadingAssetsCount() <= 0 then
+            self:EnterTheLogin()
+        end
     else
         self.MinDurationTime =  self.MinDurationTime - UnityEngine.Time.deltaTime
     end

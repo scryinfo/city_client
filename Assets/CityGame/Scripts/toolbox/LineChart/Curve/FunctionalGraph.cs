@@ -389,6 +389,7 @@ public class FunctionalGraph : MaskableGraphic
     public void Close()
     {
         dicLine.Clear();
+        dicChart.Clear();
     }
     //柱状图
     public void DrawHistogram(Vector2[] lines, Color color, int id)

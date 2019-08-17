@@ -57,5 +57,5 @@ end
 --点击城市交易
 function CenterBuildingCtrl:OnBtn()
     PlayMusEff(1002)
-    ct.OpenCtrl("VolumeCtrl")
+    ct.OpenCtrl("CityInfoCtrl")
 end

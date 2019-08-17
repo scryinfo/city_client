@@ -22,6 +22,5 @@ function DataCompanyPanel.InitPanel()
     this.groupTrans = transform:Find("MainGroup")
     this.topItem = BuildingUpperItem:new(transform:Find("top/BuildingUpperItem"))
     this.open = transform:Find("open").gameObject
-    this.open = transform:Find("open").gameObject
     this.openBusinessItem = OpenBusinessBtnItem:new(transform:Find("top/OpenBusinessItem"))
 end

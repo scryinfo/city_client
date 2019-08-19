@@ -23,7 +23,8 @@ namespace LuaFramework
         void Awake()
         {
             Loadcanvas = GameObject.Find("LoadCanvas");
-            Loadcanvas.SetActive(true);
+            if (Loadcanvas)
+                Loadcanvas.SetActive(true);
             if (AppConst.UpdateMode)
             {
                 StartLoadPanel();
@@ -259,7 +260,8 @@ namespace LuaFramework
                 OnResourceInited();
                 yield return new WaitForSeconds(1.2f);
                 Destroy(panel);
-                Loadcanvas.SetActive(true);
+                if (Loadcanvas)
+                    Loadcanvas.SetActive(true);
             }
         }
         //游戏加载提示界面
@@ -351,7 +353,8 @@ namespace LuaFramework
             OnResourceInited();
             yield return new WaitForSeconds(1.2f);
             Destroy(panel);
-            Loadcanvas.SetActive(true);
+            if(Loadcanvas)
+                Loadcanvas.SetActive(true);
         }
         /// <summary>
         /// 是否下载完成

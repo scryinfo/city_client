@@ -174,7 +174,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
                 GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
             elseif dataInfo.type == "INSHELF" then
                 GameMainInterfacePanel.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-                LoadSprite("Assets/CityGame/Resources/View/iconImg/" .. dataInfo.itemId .. ".png", GameMainInterfacePanel.simplePicture)
+                GameMainInterfacePanel.simplePicture.sprite = SpriteManager.GetSpriteByPool(dataInfo.itemId)
                 GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
             elseif dataInfo.type == "PROMO" then
                 if dataInfo.itemId == 1300 then
@@ -183,7 +183,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
                 elseif dataInfo.itemId == 1400 then
                     LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/icon-ad.png", GameMainInterfacePanel.simplePicture, true)
                 else
-                    LoadSprite(Good[dataInfo.itemId].img, GameMainInterfacePanel.simplePicture)
+                    GameMainInterfacePanel.simplePicture.sprite = SpriteManager.GetSpriteByPool(dataInfo.itemId)
                 end
                 GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.duration .. "h"
             elseif dataInfo.type == "LAB" then
@@ -204,7 +204,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
                 GameMainInterfacePanel.simplePictureText.text = "X1"
             elseif dataInfo.type == "INSHELF" then
                 GameMainInterfacePanel.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-                LoadSprite(Good[dataInfo.itemId].img, GameMainInterfacePanel.simplePicture)
+                GameMainInterfacePanel.simplePicture.sprite = SpriteManager.GetSpriteByPool(dataInfo.itemId)
                 GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
             end
         end

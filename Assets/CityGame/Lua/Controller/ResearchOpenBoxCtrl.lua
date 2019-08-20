@@ -172,10 +172,10 @@ function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)
     ResearchOpenBoxPanel.resultNumText.text = "x" .. scienceBoxACK.resultPoint
     ResearchOpenBoxPanel.resultNameText.text = ResearchConfig[scienceBoxACK.key.id].name
 
-    self.totalNum = self.totalNum - scienceBoxACK.openNum
-    self:_showTotalNum()
+    self.totalNum = 0
 
     for i, v in ipairs(self.researchEvaBoxItems) do
+        self.totalNum = self.totalNum + v.data.n
         if v.data.key.id == scienceBoxACK.key.id then
             --v.data.n = v.data.n - scienceBoxACK.openNum
             if v.data.n <= 0 then
@@ -185,7 +185,8 @@ function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)
             else
                 v:SetNumText()
             end
-            break
         end
     end
+
+    self:_showTotalNum()
 end

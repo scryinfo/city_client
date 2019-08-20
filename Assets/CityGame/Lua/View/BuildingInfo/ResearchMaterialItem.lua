@@ -90,8 +90,8 @@ function ResearchMaterialItem:_clickPrefab()
         temp.itemId = self.data.k.id
         temp.myOwner = false
         temp.price = self.data.price
-        temp.buyFunc = function(num,price)
-            DataManager.DetailModelRpcNoRet(self.buildingId, 'm_buyData', self.buildingId, self.data.k.id, num, price, DataManager.GetMyOwnerID())
+        temp.buyFunc = function(num)
+            DataManager.DetailModelRpcNoRet(self.buildingId, 'm_buyData', self.buildingId, self.data.k.id, num, self.data.price, DataManager.GetMyOwnerID())
         end
         ct.OpenCtrl("UserDataCtrl",temp)
     end

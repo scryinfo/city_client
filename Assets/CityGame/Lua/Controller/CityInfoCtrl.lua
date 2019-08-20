@@ -3,6 +3,10 @@
 --- Created by password.
 --- DateTime: 2019/8/10 10:55
 ---城市信息Ctrl
+CityBasicType = {
+    Volume = 1,
+    fundPool = 2,
+}
 CityInfoCtrl = class('CityInfoCtrl',UIPanel)
 UIPanel:ResgisterOpen(CityInfoCtrl)
 
@@ -21,6 +25,10 @@ function CityInfoCtrl:Awake(go)
     cityInfoBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     cityInfoBehaviour:AddClick(CityInfoPanel.back,self.OnBack,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.notBasic,self.OnNotBasic,self)  --基础信息
+    cityInfoBehaviour:AddClick(CityInfoPanel.levelBtn,self.OnLevelBtn,self)
+    cityInfoBehaviour:AddClick(CityInfoPanel.volumeBtn,self.OnVolumeBtn,self)
+    cityInfoBehaviour:AddClick(CityInfoPanel.fundPoolBtn,self.OnFundPoolBtn,self)
+    cityInfoBehaviour:AddClick(CityInfoPanel.richBtn,self.OnRichBtn,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.notIndustry,self.OnNotIndustry,self)  --行业信息
     cityInfoBehaviour:AddClick(CityInfoPanel.homeHouse,self.OnHomeHouse,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.supermarket,self.OnSupermarket,self)
@@ -29,11 +37,6 @@ function CityInfoCtrl:Awake(go)
     cityInfoBehaviour:AddClick(CityInfoPanel.advertising,self.OnAdvertising,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.technology,self.OnTechnology,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.land,self.OnLand,self)
-
-    local msgId = pbl.enum("sscode.OpCode","queryGroundOrApartmentAvgPrice")
-    local lMsg = { b = true }
-    local pMsg = assert(pbl.encode("gs.Bool", lMsg))
-    --CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 
     self.width = CityInfoPanel.titleBg.sizeDelta.x
     self.ownerId = DataManager.GetMyOwnerID()
@@ -86,6 +89,9 @@ function CityInfoCtrl:Refresh()
     DataManager.OpenDetailModel(CityInfoModel,self.m_data.insId)
     DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_GetNpcNum')
     DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_GetPlayerNum')
+    DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_queryTransactionAmount',false)
+    DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_queryMoneyPoolInfo')
+    DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_queryLevel')
     self:initData()
 end
 
@@ -111,6 +117,11 @@ function CityInfoCtrl:Hide()
     CityInfoPanel.landTag.localScale = Vector3.one
 
     self.industryInfoItem[1]:_initPanel()
+
+    CityInfoPanel.four.gameObject:SetActive(false)
+    CityInfoPanel.five.gameObject:SetActive(false)
+    CityInfoPanel.six.gameObject:SetActive(false)
+
 end
 
 function CityInfoCtrl:Close()
@@ -151,7 +162,7 @@ function CityInfoCtrl:OnBack()
     UIPanel.ClosePage()
 end
 
-function CityInfoCtrl:OnNotBasic()
+function CityInfoCtrl:OnNotBasic(go)
     CityInfoPanel.notBasic.transform.localScale = Vector3.zero
     CityInfoPanel.basic.localScale = Vector3.one
     CityInfoPanel.notIndustry.transform.localScale = Vector3.one
@@ -162,6 +173,19 @@ function CityInfoCtrl:OnNotBasic()
 
     CityInfoPanel.content.localScale = Vector3.zero
     --CityInfoPanel.content:DOScale(Vector3.New(0,0,0),0.5):SetEase(DG.Tweening.Ease.OutCubic);
+    local last = go.industryInfoItem[1]:GetLast():GetTitle()
+    if last then
+        local temp = last:GetLast()
+        if temp.id == 2 then
+            if temp.type == 20 then
+                CityInfoPanel.four.gameObject:SetActive(false)
+            elseif temp.type ==11 or temp.type ==15 or temp.type ==16 then
+                CityInfoPanel.five.gameObject:SetActive(false)
+            elseif temp.type ==12 or temp.type ==13 or temp.type ==14 then
+                CityInfoPanel.six.gameObject:SetActive(false)
+            end
+        end
+    end
 end
 
 function CityInfoCtrl:OnNotIndustry(go)
@@ -179,6 +203,41 @@ function CityInfoCtrl:OnNotIndustry(go)
         DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_queryIndustryIncome')  --查询行业收入
     end
     go.first = false
+    local last = go.industryInfoItem[1]:GetLast():GetTitle()
+    if last then
+        local temp = last:GetLast()
+        if temp.id == 2 then
+            if temp.type == 20 then
+                CityInfoPanel.four.gameObject:SetActive(true)
+            elseif temp.type ==11 or temp.type ==15 or temp.type ==16 then
+                CityInfoPanel.five.gameObject:SetActive(true)
+            elseif temp.type ==12 or temp.type ==13 or temp.type ==14 then
+                CityInfoPanel.six.gameObject:SetActive(true)
+            end
+        end
+    end
+end
+
+--科技等级
+function CityInfoCtrl:OnLevelBtn(go)
+    ct.OpenCtrl("TechLevelCtrl",{level = go.cityLevel})
+end
+
+--交易额
+function CityInfoCtrl:OnVolumeBtn(go)
+    local data = {insId = go.m_data.insId,type = CityBasicType.Volume,today = go.todayVolume}
+    ct.OpenCtrl("CityVolumeCtrl",data)
+end
+
+--奖金池
+function CityInfoCtrl:OnFundPoolBtn(go)
+    local data = {insId = go.m_data.insId,type = CityBasicType.fundPool,today = go.todayFundPool}
+    ct.OpenCtrl("CityVolumeCtrl",data)
+end
+
+--排行榜
+function CityInfoCtrl:OnRichBtn(go)
+    ct.OpenCtrl("CityRickListCtrl",{insId = go.m_data.insId})
 end
 
 --npc数量
@@ -189,6 +248,29 @@ end
 --玩家数量
 function CityInfoCtrl:c_PlayerNum(info)
     CityInfoPanel.playerNum.text = info
+end
+
+--城市交易额
+function CityInfoCtrl:_receiveTransactionAmount(info)
+    if info then
+        CityInfoPanel.volume.text = GetClientPriceString(info[1].sum)
+        self.todayVolume = info[1].sum
+    end
+end
+
+--奖金池（今日）
+function CityInfoCtrl:_receiveMoneyPoolInfo(info)
+    CityInfoPanel.fundPool.text = GetClientPriceString(info.money)
+    self.todayFundPool = info.money
+end
+
+--科技等级
+function CityInfoCtrl:_receiveLevel(info)
+    CityInfoPanel.level.text = "Lv.1"
+    CityInfoPanel.levelSlider.maxValue = 1000
+    CityInfoPanel.levelSlider.value = info.sumValue
+    CityInfoPanel.levelSliderText.text = info.sumValue .. "/1000"
+    self.cityLevel = info.sumValue
 end
 
 --行业收入回调
@@ -210,8 +292,8 @@ function CityInfoCtrl:_receiveIndustryIncome(info)
         currentTime = currentTime - hour * 3600
     end
     currentTime = math.floor(currentTime)        --当天0点的时间
-    local monthAgo = currentTime - 604800 + 86400     --7天前的0点
-    local updataTime = monthAgo
+    local sevenAgo = currentTime - 604800 + 86400     --7天前的0点
+    local updataTime = sevenAgo
     local time = {}
     local homeHouseTab = {}
     local supermarketTab = {}
@@ -220,7 +302,7 @@ function CityInfoCtrl:_receiveIndustryIncome(info)
     local advertisingTab = {}
     local technologyTab = {}
     local landTab = {}
-    if createTs >= monthAgo then
+    if createTs >= sevenAgo then
         updataTime = createTs
         for i = 1, 7 do
             time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
@@ -280,25 +362,25 @@ function CityInfoCtrl:_receiveIndustryIncome(info)
         for i = 1, 7 do
             time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
             homeHouseTab[i] = {}
-            homeHouseTab[i].coordinate = ((updataTime - monthAgo + 86400) / 86400 * 184) - 60
+            homeHouseTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 184) - 60
             homeHouseTab[i].money = 0
             supermarketTab[i] = {}
-            supermarketTab[i].coordinate = ((updataTime - monthAgo + 86400) / 86400 * 184) - 40
+            supermarketTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 184) - 40
             supermarketTab[i].money = 0
             materialPlantTab[i] = {}
-            materialPlantTab[i].coordinate = ((updataTime - monthAgo + 86400) / 86400 * 184) - 20
+            materialPlantTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 184) - 20
             materialPlantTab[i].money = 0
             factoryTab[i] = {}
-            factoryTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 184
+            factoryTab[i].coordinate = (updataTime - sevenAgo + 86400) / 86400 * 184
             factoryTab[i].money = 0
             advertisingTab[i] = {}
-            advertisingTab[i].coordinate = ((updataTime - monthAgo + 86400) / 86400 * 184) + 20
+            advertisingTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 184) + 20
             advertisingTab[i].money = 0
             technologyTab[i] = {}
-            technologyTab[i].coordinate = ((updataTime - monthAgo + 86400) / 86400 * 184) + 40
+            technologyTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 184) + 40
             technologyTab[i].money = 0
             landTab[i] = {}
-            landTab[i].coordinate = ((updataTime - monthAgo + 86400) / 86400 * 184) +60
+            landTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 184) +60
             landTab[i].money = 0
             if info ~= nil then
                 for k, z in pairs(info) do
@@ -582,32 +664,32 @@ function CityInfoCtrl:_receiveSupplyAndDemand(info)
         currentTime = currentTime - hour * 3600
     end
     currentTime = math.floor(currentTime)        --当天0点的时间
-    local monthAgo = currentTime - 604800 + 86400     --7天前的0点
-    local updataTime = monthAgo
+    local sevenAgo = currentTime - 604800 + 86400     --7天前的0点
+    local updataTime = sevenAgo
     local time = {}
-    local shelvesTab = {}       --上架数量(供应)
+    local avgPriceTab = {}       --上架数量(供应)
     local purchasesTab = {}     --购买量(需求)
-    if createTs >= monthAgo then
+    if createTs >= sevenAgo then
         updataTime = createTs
         for i = 1, 7 do
             time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
             if updataTime <= currentTime then
-                shelvesTab[i] = {}
-                shelvesTab[i].coordinate = ((updataTime - createTs + 86400) / 86400 * 190) - 30
-                shelvesTab[i].money = 0
+                avgPriceTab[i] = {}
+                avgPriceTab[i].coordinate = ((updataTime - createTs + 86400) / 86400 * 190) - 30
+                avgPriceTab[i].money = 0
                 purchasesTab[i] = {}
                 purchasesTab[i].coordinate = ((updataTime - createTs + 86400) / 86400 * 190) +30
                 purchasesTab[i].money = 0
                 if info.info ~= nil then
                     for k, v in pairs(info.info) do
                         if updataTime == v.time / 1000 then
-                            shelvesTab[i].money = v.supply
+                            avgPriceTab[i].money = v.supply
                             purchasesTab[i].money = v.demand
                         end
                     end
                 end
                 if updataTime == currentTime then
-                    shelvesTab[i].money = info.todayS
+                    avgPriceTab[i].money = info.todayS
                     purchasesTab[i].money = info.todayD
                 end
             end
@@ -616,42 +698,42 @@ function CityInfoCtrl:_receiveSupplyAndDemand(info)
     else
         for i = 1, 7 do
             time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
-            shelvesTab[i] = {}
-            shelvesTab[i].coordinate = ((updataTime - monthAgo + 86400) / 86400 * 190) - 30
-            shelvesTab[i].money = 0
+            avgPriceTab[i] = {}
+            avgPriceTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 190) - 30
+            avgPriceTab[i].money = 0
             purchasesTab[i] = {}
-            purchasesTab[i].coordinate = ((updataTime - monthAgo + 86400) / 86400 * 190) +30
+            purchasesTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 190) +30
             purchasesTab[i].money = 0
             if info.info ~= nil then
                 for k, v in pairs(info.info) do
                     if updataTime == v.time / 1000 then
-                        shelvesTab[i].money = v.supply
+                        avgPriceTab[i].money = v.supply
                         purchasesTab[i].money = v.demand
                     end
                 end
             end
             updataTime = updataTime + 86400
         end
-        shelvesTab[#shelvesTab].money = info.todayS
+        avgPriceTab[#avgPriceTab].money = info.todayS
         purchasesTab[#purchasesTab].money = info.todayD
     end
 
     --转换为Vector2类型
-    local shelves = {}
+    local avgPrice = {}
     local purchases = {}
 
-    for i, v in pairs(shelvesTab) do
-        shelves[i] = Vector2.New(v.coordinate,v.money)
+    for i, v in pairs(avgPriceTab) do
+        avgPrice[i] = Vector2.New(v.coordinate,v.money)
     end
     for i, v in pairs(purchasesTab) do
         purchases[i] = Vector2.New(v.coordinate,v.money)
     end
 
     table.insert(time,1,"0")
-    table.insert(shelves,1,Vector2.New(0,0))
+    table.insert(avgPrice,1,Vector2.New(0,0))
     table.insert(purchases,1,Vector2.New(0,0))
     local max = 0
-    for i, v in pairs(shelves) do
+    for i, v in pairs(avgPrice) do
         if v.y > max then
             max = v.y
         end
@@ -663,12 +745,12 @@ function CityInfoCtrl:_receiveSupplyAndDemand(info)
     end
 
     local scale = SetYScale(max,8,CityInfoPanel.supplyDemandYScale)
-    local shelvesVet = {}
-    for i, v in pairs(shelves) do
+    local avgPriceVet = {}
+    for i, v in pairs(avgPrice) do
         if scale == 0 then
-            shelvesVet[i] = v
+            avgPriceVet[i] = v
         else
-            shelvesVet[i] = Vector2.New(v.x,v.y / scale * 78)
+            avgPriceVet[i] = Vector2.New(v.x,v.y / scale * 78)
         end
     end
     local purchasesVet = {}
@@ -683,11 +765,11 @@ function CityInfoCtrl:_receiveSupplyAndDemand(info)
 
     CityInfoPanel.supplyDemandSlide:SetXScaleValue(time,190)
 
-    CityInfoPanel.supplyDemandGraph:DrawHistogram(shelvesVet,Color.New(158 / 255, 190 / 255, 255 / 255, 179 / 255),1)
-    CityInfoPanel.supplyDemandSlide:SetCoordinate(shelvesVet,shelves,Color.New(158 / 255, 190 / 255, 255 / 255, 179 / 255),1)
+    CityInfoPanel.supplyDemandGraph:DrawHistogram(avgPriceVet,Color.New(158 / 255, 190 / 255, 255 / 255, 179 / 255),1)
+    CityInfoPanel.supplyDemandSlide:SetCoordinate(avgPriceVet,avgPrice,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
 
     CityInfoPanel.supplyDemandGraph:DrawHistogram(purchasesVet,Color.New(255 / 255, 82 / 255, 48 / 255, 179 / 255),2)
-    CityInfoPanel.supplyDemandSlide:SetCoordinate(purchasesVet,purchases,Color.New(255 / 255, 82 / 255, 48 / 255, 179 / 255),2)
+    CityInfoPanel.supplyDemandSlide:SetCoordinate(purchasesVet,purchases,Color.New(255 / 255, 82 / 255, 48 / 255, 255 / 255),2)
 
     CityInfoPanel.supplyDemandCurve.localPosition = CityInfoPanel.supplyDemandCurve.localPosition + Vector3.New(0.01, 0,0)
     CityInfoPanel.supplyDemandCurve.sizeDelta = CityInfoPanel.supplyDemandCurve.sizeDelta + Vector2.New(0.01, 0)
@@ -697,6 +779,11 @@ end
 function CityInfoCtrl:_receiveIndustryTopInfo(info)
     if self.rankItem and next(self.rankItem) then
         for i, v in pairs(self.rankItem) do
+            --回收avatar
+            if v.my_avatarData ~= nil then
+                AvatarManger.CollectAvatar(v.my_avatarData)
+                v.my_avatarData = nil
+            end
             destroy(v.prefab.gameObject)
         end
     end
@@ -707,7 +794,11 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
             local data = ct.deepCopy(info.topInfo)
             if #info.topInfo > 10 then
                 CityInfoPanel.fourMyRankFourItem.localScale = Vector3.one
-                AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.fourMyIcon,0.15)
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.fourMyIcon,0.15)
                 CityInfoPanel.fourMyRank.text = ">10"
                 CityInfoPanel.fourMyMame.text = info.topInfo[#info.topInfo].name
                 CityInfoPanel.fourMyIncome.text = info.topInfo[#info.topInfo].income
@@ -729,7 +820,11 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
             local data = ct.deepCopy(info.topInfo)
             if #info.topInfo > 10 then
                 CityInfoPanel.fiveMyRankFiveItem.localScale = Vector3.one
-                AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.fiveMyIcon,0.15)
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.fiveMyIcon,0.15)
                 CityInfoPanel.fiveMyRank.text = ">10"
                 CityInfoPanel.fiveMyMame.text = info.topInfo[#info.topInfo].name
                 CityInfoPanel.fiveMyIncome.text = info.topInfo[#info.topInfo].income
@@ -752,7 +847,11 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
             local data = ct.deepCopy(info.topInfo)
             if #info.topInfo > 10 then
                 CityInfoPanel.sixMyRankSixItem.localScale = Vector3.one
-                AvatarManger.GetSmallAvatar(info.faceId,CityInfoPanel.sixMyIcon,0.15)
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.sixMyIcon,0.15)
                 CityInfoPanel.sixMyRank.text = ">10"
                 CityInfoPanel.sixMyMame.text = info.topInfo[#info.topInfo].name
                 CityInfoPanel.sixMyIncome.text = info.topInfo[#info.topInfo].income
@@ -769,4 +868,95 @@ function CityInfoCtrl:_receiveIndustryTopInfo(info)
             end
         end
     end
+end
+
+--成交均价
+function CityInfoCtrl:_receiveAvgPrice(info)
+    CityInfoPanel.supplyDemandGraph:Close()
+    CityInfoPanel.supplyDemandSlide:Close()
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    local hour = tonumber(ts.hour)
+    if second ~= 0 then
+        currentTime = currentTime -second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    if hour ~= 0 then
+        currentTime = currentTime - hour * 3600
+    end
+    currentTime = math.floor(currentTime)        --当天0点的时间
+    local sevenAgo = currentTime - 604800 + 86400     --7天前的0点
+    local updataTime = sevenAgo
+    local time = {}
+    local avgPriceTab = {}      --成交均价
+    if createTs >= sevenAgo then
+        updataTime = createTs
+        for i = 1, 7 do
+            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
+            if updataTime <= currentTime then
+                avgPriceTab[i] = {}
+                avgPriceTab[i].coordinate = ((updataTime - createTs + 86400) / 86400 * 190)
+                avgPriceTab[i].money = 0
+                if info.avg ~= nil then
+                    for k, v in pairs(info.avg) do
+                        if updataTime == v.time / 1000 then
+                            avgPriceTab[i].money = tonumber(GetClientPriceString(v.price))
+                        end
+                    end
+                end
+            end
+            updataTime = updataTime + 86400
+        end
+    else
+        for i = 1, 7 do
+            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
+            avgPriceTab[i] = {}
+            avgPriceTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 190)
+            avgPriceTab[i].money = 0
+            if info.avg ~= nil then
+                for k, v in pairs(info.avg) do
+                    if updataTime == v.time / 1000 then
+                        avgPriceTab[i].money = tonumber(GetClientPriceString(v.price))
+                    end
+                end
+            end
+            updataTime = updataTime + 86400
+        end
+    end
+
+    --转换为Vector2类型
+    local avgPrice = {}
+    for i, v in pairs(avgPriceTab) do
+        avgPrice[i] = Vector2.New(v.coordinate,v.money)
+    end
+    table.insert(time,1,"0")
+    table.insert(avgPrice,1,Vector2.New(0,0))
+    local max = 0
+    for i, v in pairs(avgPrice) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+
+    local scale = SetYScale(max,8,CityInfoPanel.supplyDemandYScale)
+    local avgPriceVet = {}
+    for i, v in pairs(avgPrice) do
+        if scale == 0 then
+            avgPriceVet[i] = v
+        else
+            avgPriceVet[i] = Vector2.New(v.x,v.y / scale * 78)
+        end
+    end
+
+    CityInfoPanel.supplyDemandSlide:SetXScaleValue(time,190)
+
+    CityInfoPanel.supplyDemandGraph:DrawLine(avgPriceVet,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
+    CityInfoPanel.supplyDemandSlide:SetCoordinate(avgPriceVet,avgPrice,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
+
+    CityInfoPanel.supplyDemandCurve.localPosition = CityInfoPanel.supplyDemandCurve.localPosition + Vector3.New(0.01, 0,0)
+    CityInfoPanel.supplyDemandCurve.sizeDelta = CityInfoPanel.supplyDemandCurve.sizeDelta + Vector2.New(0.01, 0)
 end

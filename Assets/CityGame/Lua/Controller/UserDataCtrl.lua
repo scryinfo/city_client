@@ -163,7 +163,7 @@ function UserDataCtrl:OnBuyBtn(go)
         return
     end
     if go.m_data.buyFunc then
-        go.m_data.buyFunc(go.slider.value,go.slider.value * go.m_data.price)
+        go.m_data.buyFunc(go.slider.value)
         go.m_data.buyFunc = nil
     end
 end

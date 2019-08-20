@@ -74,7 +74,7 @@ function DataSaleCardItem:OnBg(go)
         data.myOwner = go.myOwnerID
         data.price = go.prices
         data.buyFunc = function(num,price)
-            DataManager.DetailModelRpcNoRet(go.building, 'm_buyData',go.building,go.type,num,price,go.ownerId)
+            DataManager.DetailModelRpcNoRet(go.building, 'm_buyData',go.building,go.type,num,go.prices,go.ownerId)
         end
         ct.OpenCtrl("UserDataCtrl",data)
     end

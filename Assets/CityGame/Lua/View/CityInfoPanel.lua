@@ -38,6 +38,19 @@ function CityInfoPanel.InitPanel()
     this.citizenNum = transform:Find("content/right/basicInfoBg/topBg/sumBg/citizenNum/Text"):GetComponent("Text")
     this.playerNum = transform:Find("content/right/basicInfoBg/topBg/sumBg/playerNum/Text"):GetComponent("Text")
 
+    this.level = transform:Find("content/right/basicInfoBg/topBg/developeBg/score/Text"):GetComponent("Text") --科技等级
+    this.levelBtn = transform:Find("content/right/basicInfoBg/topBg/developeBg/downBg").gameObject
+    this.levelSlider = transform:Find("content/right/basicInfoBg/topBg/developeBg/Slider"):GetComponent("Slider")
+    this.levelSliderText = transform:Find("content/right/basicInfoBg/topBg/developeBg/Slider/Text"):GetComponent("Text")
+
+    this.volume = transform:Find("content/right/basicInfoBg/topBg/volumeBg/score/Text"):GetComponent("Text") --城市交易额
+    this.volumeBtn = transform:Find("content/right/basicInfoBg/topBg/volumeBg/downBg").gameObject
+
+    this.fundPool = transform:Find("content/right/basicInfoBg/topBg/fundBg/score/Text"):GetComponent("Text") --城市奖金池
+    this.fundPoolBtn = transform:Find("content/right/basicInfoBg/topBg/fundBg/downBg").gameObject
+
+    this.richBtn = transform:Find("content/right/basicInfoBg/topBg/richBg/downBg").gameObject      --城市排行榜
+
     this.industryInfo = transform:Find("content/right/industryInfo")   --行业信息
 
     this.industryBg = transform:Find("content/right/industryInfo/industryBg")   --行业销售额
@@ -80,6 +93,10 @@ function CityInfoPanel.InitPanel()
     this.title = transform:Find("content/right/industryInfo/oneContent/titleBg/title").gameObject
     this.supplyDemandBg = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg")   --行业供需
 
+    this.shelves = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/shelves")
+    this.shelvesText = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/shelves/Text"):GetComponent("Text")
+    this.purchases = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/purchases")
+    this.purchasesText = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/purchases/Text"):GetComponent("Text")
     this.supplyDemandYScale = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/yScale"):GetComponent("RectTransform")
     this.supplyDemandSum = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/sum"):GetComponent("Text")
     this.supplyDemandCurve = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/curveBg/curve"):GetComponent("RectTransform")
@@ -98,7 +115,7 @@ function CityInfoPanel.InitPanel()
     this.fourRankFourItem = transform:Find("content/right/industryInfo/oneContent/rankList/four/Scroll View/Viewport/Content/RankFourItem").gameObject
     this.fourMyRankFourItem = transform:Find("content/right/industryInfo/oneContent/rankList/four/Scroll View/myRankFourItem")
     this.fourMyRank = transform:Find("content/right/industryInfo/oneContent/rankList/four/Scroll View/myRankFourItem/rank"):GetComponent("Text")
-    this.fourMyIcon = transform:Find("content/right/industryInfo/oneContent/rankList/four/Scroll View/myRankFourItem/head/icon"):GetComponent("Image")
+    this.fourMyIcon = transform:Find("content/right/industryInfo/oneContent/rankList/four/Scroll View/myRankFourItem/head/icon")
     this.fourMyMame = transform:Find("content/right/industryInfo/oneContent/rankList/four/Scroll View/myRankFourItem/head/name"):GetComponent("Text")
     this.fourMyIncome = transform:Find("content/right/industryInfo/oneContent/rankList/four/Scroll View/myRankFourItem/income"):GetComponent("Text")
     this.fourMyVolume = transform:Find("content/right/industryInfo/oneContent/rankList/four/Scroll View/myRankFourItem/volume"):GetComponent("Text")
@@ -116,7 +133,7 @@ function CityInfoPanel.InitPanel()
     this.fiveRankFiveItem = transform:Find("content/right/industryInfo/oneContent/rankList/five/Scroll View/Viewport/Content/RankFiveItem").gameObject
     this.fiveMyRankFiveItem = transform:Find("content/right/industryInfo/oneContent/rankList/five/Scroll View/myRankFiveItem")
     this.fiveMyRank = transform:Find("content/right/industryInfo/oneContent/rankList/five/Scroll View/myRankFiveItem/rank"):GetComponent("Text")
-    this.fiveMyIcon = transform:Find("content/right/industryInfo/oneContent/rankList/five/Scroll View/myRankFiveItem/head/icon"):GetComponent("Image")
+    this.fiveMyIcon = transform:Find("content/right/industryInfo/oneContent/rankList/five/Scroll View/myRankFiveItem/head/icon")
     this.fiveMyMame = transform:Find("content/right/industryInfo/oneContent/rankList/five/Scroll View/myRankFiveItem/head/name"):GetComponent("Text")
     this.fiveMyIncome = transform:Find("content/right/industryInfo/oneContent/rankList/five/Scroll View/myRankFiveItem/income"):GetComponent("Text")
     this.fiveMyStaff = transform:Find("content/right/industryInfo/oneContent/rankList/five/Scroll View/myRankFiveItem/staff"):GetComponent("Text")
@@ -136,7 +153,7 @@ function CityInfoPanel.InitPanel()
     this.sixRankSixItem = transform:Find("content/right/industryInfo/oneContent/rankList/six/Scroll View/Viewport/Content/RankSixItem").gameObject
     this.sixMyRankSixItem = transform:Find("content/right/industryInfo/oneContent/rankList/six/Scroll View/myRankSixItem")
     this.sixMyRank = transform:Find("content/right/industryInfo/oneContent/rankList/six/Scroll View/myRankSixItem/rank"):GetComponent("Text")
-    this.sixMyIcon = transform:Find("content/right/industryInfo/oneContent/rankList/six/Scroll View/myRankSixItem/head/icon"):GetComponent("Image")
+    this.sixMyIcon = transform:Find("content/right/industryInfo/oneContent/rankList/six/Scroll View/myRankSixItem/head/icon")
     this.sixMyMame = transform:Find("content/right/industryInfo/oneContent/rankList/six/Scroll View/myRankSixItem/head/name"):GetComponent("Text")
     this.sixMyIncome = transform:Find("content/right/industryInfo/oneContent/rankList/six/Scroll View/myRankSixItem/income"):GetComponent("Text")
     this.sixMyStaff = transform:Find("content/right/industryInfo/oneContent/rankList/six/Scroll View/myRankSixItem/staff"):GetComponent("Text")

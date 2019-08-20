@@ -174,7 +174,7 @@ function GameMainInterfaceCtrl:c_IncomeNotify(dataInfo)
                 GameMainInterfacePanel.simplePictureText.text = "("..dataInfo.coord[1].x..","..dataInfo.coord[1].y..")"
             elseif dataInfo.type == "INSHELF" then
                 GameMainInterfacePanel.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-                LoadSprite(Good[dataInfo.itemId].img, GameMainInterfacePanel.simplePicture)
+                LoadSprite("Assets/CityGame/Resources/View/iconImg/" .. dataInfo.itemId .. ".png", GameMainInterfacePanel.simplePicture)
                 GameMainInterfacePanel.simplePictureText.text = "X"..dataInfo.count
             elseif dataInfo.type == "PROMO" then
                 if dataInfo.itemId == 1300 then

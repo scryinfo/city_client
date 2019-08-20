@@ -51,7 +51,7 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             end
         elseif dataInfo.type == "INSHELF" then
             self.income.text = GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            LoadSprite(Good[dataInfo.itemId].img, self.picture)
+            LoadSprite("Assets/CityGame/Resources/View/iconImg/" .. dataInfo.itemId .. ".png", self.picture)
             self.pictureText.text =  GetLanguage(dataInfo.itemId) .. "X"..dataInfo.count
         elseif dataInfo.type == "PROMO" then
             self.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)

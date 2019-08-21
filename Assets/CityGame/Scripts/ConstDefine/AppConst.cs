@@ -50,7 +50,7 @@ namespace LuaFramework {
         public const string asServerIp = "47.96.97.42";   //用于新功能开发及测试
 #elif PUB_BUILD_99
         public const string asServerIp = "47.111.11.99";   //用于策划推演的服务器
-#elif PUB_BUIL_188
+#elif PUB_BUILD_188
         public const string asServerIp = "192.168.0.188";   //用于策划推演的服务器
 #else
         public const string asServerIp = "192.168.0.191";

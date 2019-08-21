@@ -24,27 +24,27 @@ end
 
 function itemMaterialBtn:InitializeData()
     local path = nil
-    if ToNumber(StringSub(self.data.itemId,1,2)) == 11 then
+    if ToNumber(StringSub(self.data.itemId,5,7)) == 11 then
         path = BuildingInformationIcon[1100002].imgPath
         LoadSprite(path,self.iconImg,false)
         self.nameText.text = GetLanguage(PlayerBuildingBaseData[1100002].typeName)
-    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 12 then
+    elseif ToNumber(StringSub(self.data.itemId,5,7)) == 12 then
         path = BuildingInformationIcon[1200002].imgPath
         LoadSprite(path,self.iconImg,false)
         self.nameText.text = GetLanguage(PlayerBuildingBaseData[1200002].typeName)
-    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 13 then
+    elseif ToNumber(StringSub(self.data.itemId,5,7)) == 13 then
         path = BuildingInformationIcon[1300002].imgPath
         LoadSprite(path,self.iconImg,false)
         self.nameText.text = GetLanguage(PlayerBuildingBaseData[1300002].typeName)
-    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 14 then
+    elseif ToNumber(StringSub(self.data.itemId,5,7)) == 14 then
         path = BuildingInformationIcon[1400002].imgPath
         LoadSprite(path,self.iconImg,false)
         self.nameText.text = GetLanguage(PlayerBuildingBaseData[1400002].typeName)
-    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 15 then
+    elseif ToNumber(StringSub(self.data.itemId,5,7)) == 15 then
         path = BuildingInformationIcon[1500002].imgPath
         LoadSprite(path,self.iconImg,false)
         self.nameText.text = GetLanguage(PlayerBuildingBaseData[1500002].typeName)
-    elseif ToNumber(StringSub(self.data.itemId,1,2)) == 16 then
+    elseif ToNumber(StringSub(self.data.itemId,5,7)) == 16 then
         path = BuildingInformationIcon[1600002].imgPath
         LoadSprite(path,self.iconImg,false)
         self.nameText.text = GetLanguage(PlayerBuildingBaseData[1600002].typeName)

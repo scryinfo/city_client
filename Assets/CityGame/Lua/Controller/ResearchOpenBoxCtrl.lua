@@ -77,11 +77,16 @@ end
 
 -- 初始化基本数据
 function ResearchOpenBoxCtrl:_updateData()
+    ResearchOpenBoxPanel.closeBtn.localScale = Vector3.zero
+    ResearchOpenBoxPanel.researchMaterialItem.localScale = Vector3.zero
+    ResearchOpenBoxPanel.middleRoot.localScale = Vector3.one
+    
     -- 根据useType生成不用的效果
     self.totalNum = 0
+    self.openBoxsData = ct.deepCopy(self.m_data.boxs)
     if not self.researchEvaBoxItems then
         self.researchEvaBoxItems = {}
-        for i, v in ipairs(self.m_data.boxs) do
+        for i, v in ipairs(self.openBoxsData) do
             self.totalNum = self.totalNum + v.n
             local go = ct.InstantiatePrefab(ResearchOpenBoxPanel.researchEvaBoxItem)
             local rect = go.transform:GetComponent("RectTransform")
@@ -104,7 +109,7 @@ function ResearchOpenBoxCtrl:_updateData()
                 ResearchOpenBoxPanel.inputField.text = 1
                 ResearchOpenBoxPanel.tipsText.text = "Earn 10~100 tech points"
             end
-            self.researchEvaBoxItems[i] = ResearchEvaBoxItem:new(go, self.m_data.boxs[i], callback)
+            self.researchEvaBoxItems[i] = ResearchEvaBoxItem:new(go, self.openBoxsData[i], callback)
             if i == 1 then
                 callback(self.researchEvaBoxItems[1])
             end
@@ -180,9 +185,8 @@ function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)
     self:_showTotalNum()
 
     for i, v in ipairs(self.researchEvaBoxItems) do
-        --self.totalNum = self.totalNum + v.data.n
         if v.data.key.id == scienceBoxACK.key.id then
-            --v.data.n = v.data.n - scienceBoxACK.openNum
+            v:ChangeNumber(- scienceBoxACK.openNum)
             if v.data.n <= 0 then
                 UnityEngine.GameObject.Destroy(v.prefab)
                 table.remove(self.researchEvaBoxItems, i)
@@ -203,14 +207,16 @@ function ResearchOpenBoxCtrl:c_OnReceiveGetFtyLineChangeInform(data)
         local isExit = false
         for _, v in ipairs(self.researchEvaBoxItems) do
             if v.data.key.id == data.iKey.id then
+                v:ChangeNumber(data.produceNum)
                 v:SetNumText()
                 isExit = true
                 break
             end
         end
         if not isExit then
-            local index = #self.m_data.boxs
-            local temp = self.m_data.boxs[index]
+            local temp = { key= {id = data.iKey.id}, n = data.produceNum}
+            table.insert(self.openBoxsData, temp)
+
             local go = ct.InstantiatePrefab(ResearchOpenBoxPanel.researchEvaBoxItem)
             local rect = go.transform:GetComponent("RectTransform")
             go.transform:SetParent(ResearchOpenBoxPanel.boxsScrollContent)
@@ -232,7 +238,7 @@ function ResearchOpenBoxCtrl:c_OnReceiveGetFtyLineChangeInform(data)
                 ResearchOpenBoxPanel.inputField.text = 1
                 ResearchOpenBoxPanel.tipsText.text = "Earn 10~100 tech points"
             end
-            self.researchEvaBoxItems[index] = ResearchEvaBoxItem:new(go, temp, callback)
+            self.researchEvaBoxItems[#self.openBoxsData] = ResearchEvaBoxItem:new(go, temp, callback)
         end
     end
 end

@@ -330,47 +330,32 @@ function ResearchEvaDetailPart:_getScienceLineData(data)
     end
 
     -- 如果有已经生产好的宝箱，则需要显示ResearchEvaBoxItem，如果没有为空。
-    --if self.boxItems then
-    --    for _, n in ipairs(self.boxItems) do
-    --        UnityEngine.GameObject.Destroy(n.prefab)
-    --    end
-    --end
-
+    if self.boxItems then
+        for _, n in ipairs(self.boxItems) do
+            UnityEngine.GameObject.Destroy(n.prefab)
+        end
+    end
+    self.boxItems = {}
     if data.box then
+        self.boxNullImage.localScale = Vector3.zero
+        self.boxNumImage.localScale = Vector3.one
+
         self.totalBoxNum = 0
-        if self.boxItems == nil then
-            self.boxItems = {}
+        self.boxsScrollContentRT.anchoredPosition = Vector3.New(0, 0,0)
+        for i, v in ipairs(data.box) do
+            self.totalBoxNum = self.totalBoxNum + v.n
 
-            self.boxNullImage.localScale = Vector3.zero
-            self.boxNumImage.localScale = Vector3.one
+            local go = ct.InstantiatePrefab(self.researchEvaBoxItem)
+            local rect = go.transform:GetComponent("RectTransform")
+            go.transform:SetParent(self.boxsScrollContent)
+            rect.transform.localScale = Vector3.one
+            rect.transform.localPosition = Vector3.zero
+            go:SetActive(true)
 
-            self.boxsScrollContentRT.anchoredPosition = Vector3.New(0, 0,0)
-            for i, v in ipairs(data.box) do
-                self.totalBoxNum = self.totalBoxNum + v.n
-
-                local go = ct.InstantiatePrefab(self.researchEvaBoxItem)
-                local rect = go.transform:GetComponent("RectTransform")
-                go.transform:SetParent(self.boxsScrollContent)
-                rect.transform.localScale = Vector3.one
-                rect.transform.localPosition = Vector3.zero
-                go:SetActive(true)
-
-                local function callback()
-                    ct.OpenCtrl("ResearchOpenBoxCtrl", {insId = self.m_data.info.id, boxs = data.box})
-                end
-                ct.log("system","新New了一个ResearchEvaBoxItem")
-                self.boxItems[i] = ResearchEvaBoxItem:new(go, v, callback)
+            local function callback()
+                ct.OpenCtrl("ResearchOpenBoxCtrl", {insId = self.m_data.info.id, boxs = data.box})
             end
-        else
-            for a, b in ipairs(data.box) do
-                self.totalBoxNum = self.totalBoxNum + b.n
-                for _, v in ipairs(self.boxItems) do
-                    if v.data.key.id == b.key.id then
-                        v.data.n = b.n
-                        v:SetNumText()
-                    end
-                end
-            end
+            self.boxItems[i] = ResearchEvaBoxItem:new(go, v, callback)
         end
         self.totalBoxNumText.text = "X" ..tostring(self.totalBoxNum)
     else

@@ -49,6 +49,8 @@ end
 function ResearchOpenBoxCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_OnReceiveOpenScienceBox",self.c_OnReceiveOpenScienceBox,self)
+    -- 监听生产线变化推送
+    Event.AddListener("c_OnReceiveGetFtyLineChangeInform",self.c_OnReceiveGetFtyLineChangeInform,self)
 end
 
 function ResearchOpenBoxCtrl:Refresh()
@@ -58,6 +60,8 @@ end
 function ResearchOpenBoxCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_OnReceiveOpenScienceBox",self.c_OnReceiveOpenScienceBox,self)
+    -- 移除监听生产线变化推送
+    Event.RemoveListener("c_OnReceiveGetFtyLineChangeInform", self.c_OnReceiveGetFtyLineChangeInform, self)
     if self.researchEvaBoxItems then
         for _, v in ipairs(self.researchEvaBoxItems) do
             UnityEngine.GameObject.Destroy(v.prefab)
@@ -86,23 +90,23 @@ function ResearchOpenBoxCtrl:_updateData()
             rect.transform.localPosition = Vector3.zero
             go:SetActive(true)
 
-            local function callback()
+            local function callback(clickItem)
                 ResearchOpenBoxPanel.researchMaterialItem.localScale = Vector3.zero
                 ResearchOpenBoxPanel.middleRoot.localScale = Vector3.one
-                ResearchOpenBoxPanel.middleNumText.text = "x" .. v.n
+                ResearchOpenBoxPanel.middleNumText.text = "x" .. clickItem.data.n
                 if self.nowItem then
                     self.nowItem:SetBg(false)
                     self.nowItem:SetBtn(true)
                 end
-                self.nowItem = self.researchEvaBoxItems[i]
+                self.nowItem = clickItem
                 self.nowItem:SetBg(true)
                 self.nowItem:SetBtn(false)
                 ResearchOpenBoxPanel.inputField.text = 1
                 ResearchOpenBoxPanel.tipsText.text = "Earn 10~100 tech points"
             end
-            self.researchEvaBoxItems[i] = ResearchEvaBoxItem:new(go, v, callback)
+            self.researchEvaBoxItems[i] = ResearchEvaBoxItem:new(go, self.m_data.boxs[i], callback)
             if i == 1 then
-                callback()
+                callback(self.researchEvaBoxItems[1])
             end
         end
     end
@@ -172,10 +176,11 @@ function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)
     ResearchOpenBoxPanel.resultNumText.text = "x" .. scienceBoxACK.resultPoint
     ResearchOpenBoxPanel.resultNameText.text = ResearchConfig[scienceBoxACK.key.id].name
 
-    self.totalNum = 0
+    self.totalNum = self.totalNum - scienceBoxACK.openNum
+    self:_showTotalNum()
 
     for i, v in ipairs(self.researchEvaBoxItems) do
-        self.totalNum = self.totalNum + v.data.n
+        --self.totalNum = self.totalNum + v.data.n
         if v.data.key.id == scienceBoxACK.key.id then
             --v.data.n = v.data.n - scienceBoxACK.openNum
             if v.data.n <= 0 then
@@ -185,8 +190,49 @@ function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)
             else
                 v:SetNumText()
             end
+            break
         end
     end
+end
 
+-- 生产线变化推送
+function ResearchOpenBoxCtrl:c_OnReceiveGetFtyLineChangeInform(data)
+    self.totalNum = self.totalNum + data.produceNum
     self:_showTotalNum()
+    if self.researchEvaBoxItems then
+        local isExit = false
+        for _, v in ipairs(self.researchEvaBoxItems) do
+            if v.data.key.id == data.iKey.id then
+                v:SetNumText()
+                isExit = true
+                break
+            end
+        end
+        if not isExit then
+            local index = #self.m_data.boxs
+            local temp = self.m_data.boxs[index]
+            local go = ct.InstantiatePrefab(ResearchOpenBoxPanel.researchEvaBoxItem)
+            local rect = go.transform:GetComponent("RectTransform")
+            go.transform:SetParent(ResearchOpenBoxPanel.boxsScrollContent)
+            rect.transform.localScale = Vector3.one
+            rect.transform.localPosition = Vector3.zero
+            go:SetActive(true)
+
+            local function callback(clickItem)
+                ResearchOpenBoxPanel.researchMaterialItem.localScale = Vector3.zero
+                ResearchOpenBoxPanel.middleRoot.localScale = Vector3.one
+                ResearchOpenBoxPanel.middleNumText.text = "x" .. clickItem.data.n
+                if self.nowItem then
+                    self.nowItem:SetBg(false)
+                    self.nowItem:SetBtn(true)
+                end
+                self.nowItem = clickItem
+                self.nowItem:SetBg(true)
+                self.nowItem:SetBtn(false)
+                ResearchOpenBoxPanel.inputField.text = 1
+                ResearchOpenBoxPanel.tipsText.text = "Earn 10~100 tech points"
+            end
+            self.researchEvaBoxItems[index] = ResearchEvaBoxItem:new(go, temp, callback)
+        end
+    end
 end

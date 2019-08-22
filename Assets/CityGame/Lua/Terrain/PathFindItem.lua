@@ -222,7 +222,7 @@ function PathFindItem:FindNectTarget()
     if #PointsAccessible >= 1 then
         self.nowPos = PointsAccessible[Math_Random(1,#PointsAccessible)]
     else
-        ct.log("system","移动到没路可走了！！！！！" )
+        --ct.log("system","移动到没路可走了！！！！！" )
         self:CloseSelf()
         return
     end

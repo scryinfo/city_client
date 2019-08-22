@@ -269,8 +269,9 @@ function ResearchEvaDetailPart:c_OnReceiveOpenScienceBox(scienceBoxACK)
      self.totalBoxNumText.text = "X" .. tostring(self.totalBoxNum)    
     for i, v in ipairs(self.boxItems) do
         if v.data.key.id == scienceBoxACK.key.id then
-            v.data.n = v.data.n - scienceBoxACK.openNum
-            if v.data.n <= 0 then
+            --v.data.n = v.data.n - scienceBoxACK.openNum
+            v:ChangeNumber(- scienceBoxACK.openNum)
+            if v:GetNumber() <= 0 then
                 UnityEngine.GameObject.Destroy(v.prefab)
                 table.remove(self.scienceLineData.box, i)
                 table.remove(self.boxItems, i)
@@ -329,32 +330,47 @@ function ResearchEvaDetailPart:_getScienceLineData(data)
     end
 
     -- 如果有已经生产好的宝箱，则需要显示ResearchEvaBoxItem，如果没有为空。
-    if self.boxItems then
-        for _, n in ipairs(self.boxItems) do
-            UnityEngine.GameObject.Destroy(n.prefab)
-        end
-    end
-    self.boxItems = {}
+    --if self.boxItems then
+    --    for _, n in ipairs(self.boxItems) do
+    --        UnityEngine.GameObject.Destroy(n.prefab)
+    --    end
+    --end
+
     if data.box then
-        self.boxNullImage.localScale = Vector3.zero
-        self.boxNumImage.localScale = Vector3.one
-
         self.totalBoxNum = 0
-        self.boxsScrollContentRT.anchoredPosition = Vector3.New(0, 0,0)
-        for i, v in ipairs(data.box) do
-            self.totalBoxNum = self.totalBoxNum + v.n
+        if self.boxItems == nil then
+            self.boxItems = {}
 
-            local go = ct.InstantiatePrefab(self.researchEvaBoxItem)
-            local rect = go.transform:GetComponent("RectTransform")
-            go.transform:SetParent(self.boxsScrollContent)
-            rect.transform.localScale = Vector3.one
-            rect.transform.localPosition = Vector3.zero
-            go:SetActive(true)
+            self.boxNullImage.localScale = Vector3.zero
+            self.boxNumImage.localScale = Vector3.one
 
-            local function callback()
-                ct.OpenCtrl("ResearchOpenBoxCtrl", {insId = self.m_data.info.id, boxs = data.box})
+            self.boxsScrollContentRT.anchoredPosition = Vector3.New(0, 0,0)
+            for i, v in ipairs(data.box) do
+                self.totalBoxNum = self.totalBoxNum + v.n
+
+                local go = ct.InstantiatePrefab(self.researchEvaBoxItem)
+                local rect = go.transform:GetComponent("RectTransform")
+                go.transform:SetParent(self.boxsScrollContent)
+                rect.transform.localScale = Vector3.one
+                rect.transform.localPosition = Vector3.zero
+                go:SetActive(true)
+
+                local function callback()
+                    ct.OpenCtrl("ResearchOpenBoxCtrl", {insId = self.m_data.info.id, boxs = data.box})
+                end
+                ct.log("system","新New了一个ResearchEvaBoxItem")
+                self.boxItems[i] = ResearchEvaBoxItem:new(go, v, callback)
             end
-            self.boxItems[i] = ResearchEvaBoxItem:new(go, v, callback)
+        else
+            for a, b in ipairs(data.box) do
+                self.totalBoxNum = self.totalBoxNum + b.n
+                for _, v in ipairs(self.boxItems) do
+                    if v.data.key.id == b.key.id then
+                        v.data.n = b.n
+                        v:SetNumText()
+                    end
+                end
+            end
         end
         self.totalBoxNumText.text = "X" ..tostring(self.totalBoxNum)
     else
@@ -378,7 +394,8 @@ function ResearchEvaDetailPart:c_OnReceiveGetFtyLineChangeInform(data)
         local isExit = false
         for _, v in ipairs(self.boxItems) do
             if v.data.key.id == data.iKey.id then
-                v.data.n = v.data.n + data.produceNum
+                --v.data.n = v.data.n + data.produceNum
+                v:ChangeNumber(data.produceNum)
                 v:SetNumText()
                 isExit = true
                 break

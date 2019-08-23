@@ -19,7 +19,7 @@ function ResearchEvaBoxItem:initialize(prefab, data, fuc)
 
     self.btn = transform:GetComponent("Button")
     self.btn.onClick:AddListener(function ()
-        fuc()
+        fuc(self)
     end)
 
     self:SetBg(false)
@@ -36,5 +36,17 @@ function ResearchEvaBoxItem:SetBtn(isSelect)
 end
 
 function ResearchEvaBoxItem:SetNumText()
-    self.numText.text = "X" .. tostring(self.data.n)
+    self.numText.text = "X" .. self.data.n
+    ct.log("system","刷新研究所宝箱个数 " .. self.data.n )
+end
+
+function ResearchEvaBoxItem:ChangeNumber(num)
+    ct.log("system","研究所宝箱个数  old：" .. self.data.n .. "  changeNum  " .. num )
+    self.data.n = self.data.n + num
+end
+
+function ResearchEvaBoxItem:GetNumber()
+    if  self.data.n ~= nil then
+        return self.data.n
+    end
 end

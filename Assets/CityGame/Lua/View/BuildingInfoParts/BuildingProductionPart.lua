@@ -163,6 +163,9 @@ function BuildingProductionPart:saveMaterialOrGoodsInfo(data)
             self.materialOrGoodsInfo.buildingType = self.m_data.buildingType
             self.materialOrGoodsInfo.mId = self.m_data.info.mId
             self:_initFunc()
+            ----TODO:测试调用方法把变转成配置表
+            --BuildingProductionPart.test = {}
+            --self:testTable(data.items)
         else
             return
         end
@@ -273,3 +276,37 @@ function BuildingProductionPart:getNumOneSec(itemId)
         end
     end
 end
+--TODO:测试发明，最后要改成在登录时转出该表，后期维护更新这个表
+--TODO:测试把服务器发过来的可以生产的表转成另一张配置表（要在退出当前建筑的时候清空）
+--local ToNumber = tonumber
+--local StringSub = string.sub
+--function BuildingProductionPart:testTable(data)
+--    if data then
+--        --TODO   如:2101001-2252101
+--        --TODO   1、itemId前两位代表类型（如：21代表原料，22代表商品）
+--        --TODO   2、itemId第三四位代表小类型（如：01食品，02副食品，03基础材料）
+--        --TODO   3、20020001--(食材)   20020002--(生产原料)   20030001--(服装)   20030002--(食物)
+--        local materialFood,materialProductionMaterial,goodFood,goodClothing = 2101,2102,2251,2252
+--        for key,value in pairs(data) do
+--            if BuildingProductionPart.test[ToNumber(StringSub(value.key,1,4))] == nil then
+--                BuildingProductionPart.test[ToNumber(StringSub(value.key,1,4))] = {}
+--            end
+--            local data = {}
+--            data.itemId = value.key
+--            if ToNumber(StringSub(value.key,1,4)) == materialFood then
+--                data.itemType= 0
+--                data.name = 20020001
+--            elseif ToNumber(StringSub(value.key,1,4)) == materialProductionMaterial then
+--                data.itemType= 0
+--                data.name = 20020002
+--            elseif ToNumber(StringSub(value.key,1,4)) == goodFood then
+--                data.itemType= 1
+--                data.name = 20030002
+--            elseif ToNumber(StringSub(value.key,1,4)) == goodClothing then
+--                data.itemType= 1
+--                data.name = 20030001
+--            end
+--            table.insert(BuildingProductionPart.test[ToNumber(StringSub(value.key,1,4))], data)
+--        end
+--    end
+--end

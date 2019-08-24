@@ -5,6 +5,9 @@
 ---城市信息titleItem
 CityInfoTitleItem = class('CityInfoTitleItem')
 local lastBg
+local titleGoodsItem = {}
+local titleInfoItem = {}
+local prefabs = {}
 
 --初始化方法   数据（读配置表）
 function CityInfoTitleItem:initialize(inluabehaviour, prefab, goodsDataInfo,msg)
@@ -56,13 +59,18 @@ function CityInfoTitleItem:ShowPanel(data)
     if data.id == 1 then
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_querySupplyAndDemand',data.type)  --查询行业供需
         CityInfoPanel.supplyDemandBg.localScale = Vector3.one
+        CityInfoPanel.twoContent:SetActive(false)
         CityInfoPanel.rankList.localScale = Vector3.zero
+        CityInfoPanel.twoContent:SetActive(false)
         CityInfoPanel.shelves.localScale = Vector3.one
         CityInfoPanel.purchases.localScale = Vector3.one
+        CityInfoPanel.eva.localScale = Vector3.zero
     elseif data.id == 2 then
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryIndustryTopInfo',data.msg.msg.ownerId,data.type)  --查询收入排行
         CityInfoPanel.supplyDemandBg.localScale = Vector3.zero
+        CityInfoPanel.twoContent:SetActive(false)
         CityInfoPanel.rankList.localScale = Vector3.one
+        CityInfoPanel.twoContent:SetActive(false)
         if data.type == 20 then
             CityInfoPanel.four.gameObject:SetActive(true)
         elseif data.type ==11 or data.type ==15 or data.type ==16 then
@@ -70,9 +78,55 @@ function CityInfoTitleItem:ShowPanel(data)
         elseif data.type ==12 or data.type ==13 or data.type ==14 then
             CityInfoPanel.six.gameObject:SetActive(true)
         end
-    elseif data.id == 5 then
+    elseif data.id == 3 then
+        DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryItemSales',data.type,data.goodsDataInfo.inside[1].itemId)  --查询营业额
+        if data.type == 11 or data.type == 12 or data.type == 13 then
+            CityInfoPanel.productIcon.sprite = SpriteManager.GetSpriteByPool(data.goodsDataInfo.inside[1].itemId)
+        end
+        CityInfoPanel.productText.text = data.goodsDataInfo.inside[1].name
+        if data.goodsDataInfo.inside[1].date then
+            if #prefabs < #data.goodsDataInfo.inside[1].date then
+                for i = 1, #data.goodsDataInfo.inside[1].date - #prefabs do
+                    local temp = createPrefabs(CityInfoPanel.productTitleInfoItem,CityInfoPanel.productContent)
+                    table.insert(prefabs,temp)
+                end
+            elseif #prefabs > #data.goodsDataInfo.inside[1].date then
+                for i = 1, #prefabs - #data.goodsDataInfo.inside[1].date do
+                    destroy(prefabs[#prefabs].gameObject)
+                    table.remove(prefabs)
+                end
+            end
+            for i, v in ipairs(data.goodsDataInfo.inside[1].date) do
+                titleInfoItem[i] = TitleInfoItem:new(self._luabehaviour,prefabs[i],v,data.goodsDataInfo.inside[1].itemId,data.type,data.msg.msg.m_data.insId)
+            end
+            titleInfoItem[1]:ShowPanel(titleInfoItem[1])
+        end
+        CityInfoPanel.twoContent:SetActive(true)
+        CityInfoPanel.supplyDemandBg.localScale = Vector3.zero
+        --CityInfoPanel.rankList.localScale = Vector3.zero
+        self:Close()
+        if data.goodsDataInfo.inside then
+            for i, v in ipairs(data.goodsDataInfo.inside) do
+                local prefab = createPrefabs(CityInfoPanel.productsListTitleGoodsItem,CityInfoPanel.productsListContent)
+                titleGoodsItem[i] = TitleGoodsItem:new(self._luabehaviour,prefab,v,self,titleInfoItem,data.type,data.msg.msg.m_data.insId)
+            end
+        end
+        CityInfoPanel.productContent.localPosition = Vector3.zero
+    elseif data.id == 4 then
+        DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryEvaGrade',data.type,data.type,2)  --获取Eva分布
+        CityInfoPanel.supplyDemandBg.localScale = Vector3.one
+        CityInfoPanel.twoContent:SetActive(false)
+        CityInfoPanel.rankList.localScale = Vector3.zero
         CityInfoPanel.shelves.localScale = Vector3.zero
         CityInfoPanel.purchases.localScale = Vector3.zero
+        CityInfoPanel.eva.localScale = Vector3.one
+    elseif data.id == 5 then
+        CityInfoPanel.supplyDemandBg.localScale = Vector3.one
+        CityInfoPanel.twoContent:SetActive(false)
+        CityInfoPanel.rankList.localScale = Vector3.zero
+        CityInfoPanel.shelves.localScale = Vector3.zero
+        CityInfoPanel.purchases.localScale = Vector3.zero
+        CityInfoPanel.eva.localScale = Vector3.zero
         local bool
         if data.type == 14 then
             bool = true
@@ -80,5 +134,15 @@ function CityInfoTitleItem:ShowPanel(data)
             bool = false
         end
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryAvgPrice',bool)  --查询收入排行
+    end
+end
+
+function CityInfoTitleItem:Close()
+    if next(titleGoodsItem) then
+        for i, v in pairs(titleGoodsItem) do
+            destroy(v.prefab.gameObject)
+        end
+        titleGoodsItem[1]:Close()
+        titleGoodsItem = {}
     end
 end

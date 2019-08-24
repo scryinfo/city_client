@@ -55,28 +55,12 @@ function DetailsEarningItem:initialize(dataInfo, viewRect,id)
             self.pictureText.text =  GetLanguage(dataInfo.itemId) .. "X"..dataInfo.count
         elseif dataInfo.type == "PROMO" then
             self.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            if dataInfo.itemId == 1300 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-supermarket.png", self.picture, true)
-                self.pictureText.text =  GetLanguage(42020003) .. "X"..dataInfo.duration .. "h"
-            elseif dataInfo.itemId == 1400 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-house.png", self.picture, true)
-                self.pictureText.text =  GetLanguage(42020004) .. "X"..dataInfo.duration .. "h"
-            else
-                self.picture.sprite = SpriteManager.GetSpriteByPool(dataInfo.itemId)
-                self.pictureText.text =  GetLanguage(dataInfo.itemId) .. "X"..dataInfo.duration .. "h"
-            end
+            LoadSprite(ResearchConfig[dataInfo.itemId].buildingPath, self.picture)
+            self.pictureText.text =  ResearchConfig[dataInfo.itemId].name .. "X"..dataInfo.count
         elseif dataInfo.type == "LAB" then
             self.income.text =  GetLanguage(PlayerBuildingBaseData[dataInfo.bid].sizeName) .. GetLanguage(PlayerBuildingBaseData[dataInfo.bid].typeName)
-            if dataInfo.itemId == 51 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-food.png", self.picture, true)
-                self.pictureText.text =  GetLanguage(20030002) .. "X"..dataInfo.duration .. "h"
-            elseif dataInfo.itemId == 52 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-clothes.png",self.picture, true)
-                self.pictureText.text =  GetLanguage(20030001) .. "X"..dataInfo.duration .. "h"
-            elseif dataInfo.itemId == 0 then
-                LoadSprite("Assets/CityGame/Resources/Atlas/GameMainInterface/earnings/picture/icon-EVA-s.png", self.picture, true)
-                self.pictureText.text =  GetLanguage(11010001) .. "X"..dataInfo.duration .. "h"
-            end
+            LoadSprite(ResearchConfig[dataInfo.itemId].iconPath, self.picture)
+            self.pictureText.text =  ResearchConfig[dataInfo.itemId].name .. "X"..dataInfo.count
         end
     elseif dataInfo.buyer == "NPC" then
         self.faceId = 0

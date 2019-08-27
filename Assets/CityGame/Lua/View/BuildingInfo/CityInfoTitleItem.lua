@@ -78,7 +78,7 @@ function CityInfoTitleItem:ShowPanel(data)
         elseif data.type ==12 or data.type ==13 or data.type ==14 then
             CityInfoPanel.six.gameObject:SetActive(true)
         end
-    elseif data.id == 3 then
+    elseif data.id == 3 then            --详情
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryItemSales',data.type,data.goodsDataInfo.inside[1].itemId)  --查询营业额
         if data.type == 11 or data.type == 12 or data.type == 13 then
             CityInfoPanel.productIcon.sprite = SpriteManager.GetSpriteByPool(data.goodsDataInfo.inside[1].itemId)
@@ -103,7 +103,7 @@ function CityInfoTitleItem:ShowPanel(data)
         end
         CityInfoPanel.twoContent:SetActive(true)
         CityInfoPanel.supplyDemandBg.localScale = Vector3.zero
-        --CityInfoPanel.rankList.localScale = Vector3.zero
+        CityInfoPanel.rankList.localScale = Vector3.zero
         self:Close()
         if data.goodsDataInfo.inside then
             for i, v in ipairs(data.goodsDataInfo.inside) do

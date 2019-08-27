@@ -235,8 +235,7 @@ end
 
 --详情排行
 function CityInfoModel:n_OnProductRanking(info)
-    local a = info
-    --DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveEvaGrade',info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveProductRanking',info)
 end
 
 

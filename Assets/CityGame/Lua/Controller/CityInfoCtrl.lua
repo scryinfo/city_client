@@ -793,74 +793,6 @@ function CityInfoCtrl:_receiveEvaGrade(info)
     else
         self:Eva(info,CityInfoPanel.threeGraph,CityInfoPanel.threeSlide,CityInfoPanel.threeCurve,CityInfoPanel.threeYScale,7)
     end
-
-    --CityInfoPanel.supplyDemandGraph:Close()
-    --CityInfoPanel.supplyDemandSlide:Close()
-    --local data = {}
-    --for i, v in pairs(info.grade) do
-    --    data[v.lv] = v.sum
-    --end
-    --local lv = 1
-    --local max = 0
-    --local eva = {}
-    --local time = {}
-    --for i, v in pairs(info.grade) do
-    --    if v.sum > max then
-    --        max = v.sum
-    --        lv = v.lv
-    --    end
-    --    if v.lv > lv then
-    --        lv = v.lv
-    --    end
-    --end
-    --local yScale = SetYScale(max,8,CityInfoPanel.supplyDemandYScale)
-    --if lv <= 6 then
-    --    local xScale = 1330 /lv
-    --    for i = 1, lv do
-    --        time[i] = tostring(i)
-    --        eva[i] = {}
-    --        if yScale == 0 then
-    --            eva[i] = Vector2.New(i * xScale -64 ,0)
-    --        else
-    --            if data[i] then
-    --                eva[i] = Vector2.New(i * xScale -64,data[i] / yScale * 78)
-    --            else
-    --                eva[i] = Vector2.New(i * xScale -64,0)
-    --            end
-    --        end
-    --    end
-    --    table.insert(time,1,"0")
-    --    CityInfoPanel.supplyDemandSlide:SetXScaleValue(time,xScale)
-    --
-    --else
-    --    local temp = math.ceil(lv / 6)
-    --    local xScale = 1140 / (temp * 6)
-    --    for i = 1, lv do
-    --        eva[i] = {}
-    --        if i <= 7 then
-    --            time[i] = tostring((i - 1) * temp)
-    --        end
-    --        if yScale == 0 then
-    --            eva[i] = Vector2.New((i  ) * xScale + 190,0)
-    --
-    --        else
-    --            if data[i] then
-    --                eva[i] = Vector2.New((i ) * xScale + 190,data[i] / yScale * 78)
-    --            else
-    --                eva[i] = Vector2.New((i ) * xScale + 190,0)
-    --            end
-    --        end
-    --    end
-    --    table.insert(time,1,"0")
-    --
-    --    CityInfoPanel.supplyDemandSlide:SetXScaleValue(time,190)
-    --end
-    --table.insert(eva,1,Vector2.New(0,0))
-    --
-    --CityInfoPanel.supplyDemandGraph:DrawLine(eva,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
-    --
-    --CityInfoPanel.supplyDemandCurve.localPosition = CityInfoPanel.supplyDemandCurve.localPosition + Vector3.New(0.01, 0,0)
-    --CityInfoPanel.supplyDemandCurve.sizeDelta = CityInfoPanel.supplyDemandCurve.sizeDelta + Vector2.New(0.01, 0)
 end
 
 --详情供需
@@ -1159,4 +1091,9 @@ function CityInfoCtrl:Eva(info,graph,slide,curve,yScale,int)
 
     curve.localPosition = curve.localPosition + Vector3.New(0.01, 0,0)
     curve.sizeDelta = curve.sizeDelta + Vector2.New(0.01, 0)
+end
+
+--详情排行
+function CityInfoCtrl:_receiveProductRanking()
+
 end

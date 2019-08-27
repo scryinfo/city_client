@@ -550,6 +550,7 @@ function BuildingProductionDetailPart:getWarehouseCapacity()
                     if value1.n == 0 then
                         table.remove(self.m_data.store.inHand,key1)
                     end
+                    Event.Brocast("_refreshMaterial",value1.key.id,value1.n)
                     break
                 end
             end

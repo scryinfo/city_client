@@ -98,6 +98,7 @@ function BuildingWarehouseDetailPart:_InitEvent()
     Event.AddListener("transportSucceed",self.transportSucceed,self)
     Event.AddListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.AddListener("deleteSucceed",self.deleteSucceed,self)
+    Event.AddListener("_refreshMaterial",self._refreshMaterial,self)
     Event.AddListener("getItemIdCount",self.getItemIdCount,self)
     Event.AddListener("changeStoreInfoData",self.changeStoreInfoData,self)
     Event.AddListener("detailPartUpdateCapacity",self.updateCapacity,self)
@@ -111,6 +112,7 @@ function BuildingWarehouseDetailPart:_RemoveEvent()
     Event.RemoveListener("transportSucceed",self.transportSucceed,self)
     Event.RemoveListener("deleteWarehouseItem",self.deleteWarehouseItem,self)
     Event.RemoveListener("deleteSucceed",self.deleteSucceed,self)
+    Event.RemoveListener("_refreshMaterial",self._refreshMaterial,self)
     Event.RemoveListener("getItemIdCount",self.getItemIdCount,self)
     Event.RemoveListener("changeStoreInfoData",self.changeStoreInfoData,self)
     Event.RemoveListener("detailPartUpdateCapacity",self.updateCapacity,self)
@@ -527,6 +529,20 @@ function BuildingWarehouseDetailPart:deleteSucceed(data,msgId)
     self.warehouseCapacitySlider.value = self.warehouseCapacitySlider.value - data.item.n
     self.capacityNumberText.text = self.warehouseCapacitySlider.value.."/"..self.warehouseCapacitySlider.maxValue
     Event.Brocast("SmallPop", GetLanguage(25020012), ReminderType.Succeed)
+end
+--如果生产的是商品，刷新原料数量
+function BuildingWarehouseDetailPart:_refreshMaterial(itemId,number)
+    if itemId and number then
+        for key,value in pairs(self.warehouseDatas) do
+            if value.dataInfo.key.id == itemId then
+                if number == 0 then
+                    self:deleteGoodsItem(self.warehouseDatas,key)
+                else
+                    value.numberText.text = "×"..number
+                end
+            end
+        end
+    end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 --获取仓库容量

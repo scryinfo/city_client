@@ -11,7 +11,7 @@ EvaTitleItemThere.static.SelectNameColor = Vector3.New(74, 97, 189) -- 被选中
 -- 子类继承实现自己的方法用以显示具体的内容
 function EvaTitleItemThere:_showContent()
     local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
-    self.nameText.text = GetLanguage(EvaConfig[recordData[1]].option[recordData[2]].option[self.index].name)
+    self.nameText.text = GetLanguage(EvaCtrl.static.evaCtrl.allUIData[recordData[1]].option[recordData[2]].option[self.index].name)
     if EvaCtrl.static.evaCtrl.isClickEvaT then
         EvaCtrl.static.evaCtrl.isClickEvaT = false
         self:_onClickBtn()
@@ -46,7 +46,7 @@ end
 function EvaTitleItemThere:_onClickBtn()
     BaseEvaTitleItem._onClickBtn(self)
     local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
-    EvaCtrl.static.evaCtrl:CreatePropertyItem(EvaConfig[recordData[1]].option[recordData[2]].option[recordData[3]].property)
+    EvaCtrl.static.evaCtrl:CreatePropertyItem(EvaCtrl.static.evaCtrl.allUIData[recordData[1]].option[recordData[2]].option[recordData[3]].property)
 end
 
 -- 设置按钮文字的颜色、子类继承实现自己的方法

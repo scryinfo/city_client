@@ -66,10 +66,11 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             if (XScaleValue.Count != 0)
             {
-                for (int i = 1; i < XScaleValue.Count; i++)
+                for (int i = 1; i <= XScaleValue.Count; i++)
                 {
-                    XScaleValue[i-1].transform.localPosition = new Vector3(value * i, -60, 0);
-                    XScaleValue[i-1].GetComponent<Text>().text = str[i];
+                    XScaleValue[i - 1].transform.localPosition = new Vector3(value * i, -60, 0);
+                    XScaleValue[i - 1].transform.localScale = Vector3.one;
+                    XScaleValue[i - 1].GetComponent<Text>().text = str[i];
                 }
             }
             for (int i = XScaleValue.Count + 1; i < str.Length; i++)
@@ -88,8 +89,13 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             for (int i = 1; i < str.Length; i++)
             {
-                XScaleValue[i-1].transform.localPosition = new Vector3(value * i - 60, -60, 0);
-                XScaleValue[i-1].GetComponent<Text>().text = str[i];
+                XScaleValue[i - 1].transform.localPosition = new Vector3(value * i - 60, -60, 0);
+                XScaleValue[i - 1].transform.localScale = Vector3.one;
+                XScaleValue[i - 1].GetComponent<Text>().text = str[i];
+            }
+            for (int i = str.Length; i <= XScaleValue.Count; i++)
+            {
+                XScaleValue[i - 1].transform.localScale = Vector3.zero;
             }
         }      
     }

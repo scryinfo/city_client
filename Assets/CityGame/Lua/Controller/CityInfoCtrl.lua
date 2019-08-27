@@ -37,6 +37,10 @@ function CityInfoCtrl:Awake(go)
     cityInfoBehaviour:AddClick(CityInfoPanel.advertising,self.OnAdvertising,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.technology,self.OnTechnology,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.land,self.OnLand,self)
+    cityInfoBehaviour:AddClick(CityInfoPanel.productDown,self.OnDown,self)  --第二层列表
+    cityInfoBehaviour:AddClick(CityInfoPanel.close,self.OnClose,self)  --关闭第二层列表
+    --cityInfoBehaviour:AddClick(CityInfoPanel.evaTechnology,self.OnEvaTechnology,self)  --eva分布
+    --cityInfoBehaviour:AddClick(CityInfoPanel.evaAdvertising,self.OnEvaAdvertising,self)
 
     self.width = CityInfoPanel.titleBg.sizeDelta.x
     self.ownerId = DataManager.GetMyOwnerID()
@@ -121,6 +125,11 @@ function CityInfoCtrl:Hide()
     CityInfoPanel.four.gameObject:SetActive(false)
     CityInfoPanel.five.gameObject:SetActive(false)
     CityInfoPanel.six.gameObject:SetActive(false)
+
+    local last = self.industryInfoItem[1]:GetLast():GetTitle()
+    if last then
+        last:Close()
+    end
 
 end
 
@@ -633,6 +642,20 @@ function CityInfoCtrl:OnLand(go)
     go:ShowHide(go.isLand,CityInfoPanel.landTag,data)
 end
 
+function CityInfoCtrl:OnDown(go)
+    CityInfoPanel.productDown.transform.localScale = Vector3.zero
+    CityInfoPanel.productUp.localScale = Vector3.one
+    CityInfoPanel.productsList:SetActive(true)
+    CityInfoPanel.close.transform.localScale = Vector3.one
+end
+
+function CityInfoCtrl:OnClose()
+    CityInfoPanel.productDown.transform.localScale = Vector3.one
+    CityInfoPanel.productUp.localScale = Vector3.zero
+    CityInfoPanel.close.transform.localScale = Vector3.zero
+    CityInfoPanel.productsList:SetActive(false)
+end
+
 function CityInfoCtrl:ShowHide(show,tag,data)
     if show then
         tag.localScale = Vector3.one
@@ -647,132 +670,7 @@ end
 
 --行业供需
 function CityInfoCtrl:_receiveSupplyAndDemand(info)
-    CityInfoPanel.supplyDemandGraph:Close()
-    CityInfoPanel.supplyDemandSlide:Close()
-    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
-    local ts = getFormatUnixTime(currentTime)
-    local second = tonumber(ts.second)
-    local minute = tonumber(ts.minute)
-    local hour = tonumber(ts.hour)
-    if second ~= 0 then
-        currentTime = currentTime -second
-    end
-    if minute ~= 0 then
-        currentTime = currentTime - minute * 60
-    end
-    if hour ~= 0 then
-        currentTime = currentTime - hour * 3600
-    end
-    currentTime = math.floor(currentTime)        --当天0点的时间
-    local sevenAgo = currentTime - 604800 + 86400     --7天前的0点
-    local updataTime = sevenAgo
-    local time = {}
-    local avgPriceTab = {}       --上架数量(供应)
-    local purchasesTab = {}     --购买量(需求)
-    if createTs >= sevenAgo then
-        updataTime = createTs
-        for i = 1, 7 do
-            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
-            if updataTime <= currentTime then
-                avgPriceTab[i] = {}
-                avgPriceTab[i].coordinate = ((updataTime - createTs + 86400) / 86400 * 190) - 30
-                avgPriceTab[i].money = 0
-                purchasesTab[i] = {}
-                purchasesTab[i].coordinate = ((updataTime - createTs + 86400) / 86400 * 190) +30
-                purchasesTab[i].money = 0
-                if info.info ~= nil then
-                    for k, v in pairs(info.info) do
-                        if updataTime == v.time / 1000 then
-                            avgPriceTab[i].money = v.supply
-                            purchasesTab[i].money = v.demand
-                        end
-                    end
-                end
-                if updataTime == currentTime then
-                    avgPriceTab[i].money = info.todayS
-                    purchasesTab[i].money = info.todayD
-                end
-            end
-            updataTime = updataTime + 86400
-        end
-    else
-        for i = 1, 7 do
-            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
-            avgPriceTab[i] = {}
-            avgPriceTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 190) - 30
-            avgPriceTab[i].money = 0
-            purchasesTab[i] = {}
-            purchasesTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 190) +30
-            purchasesTab[i].money = 0
-            if info.info ~= nil then
-                for k, v in pairs(info.info) do
-                    if updataTime == v.time / 1000 then
-                        avgPriceTab[i].money = v.supply
-                        purchasesTab[i].money = v.demand
-                    end
-                end
-            end
-            updataTime = updataTime + 86400
-        end
-        avgPriceTab[#avgPriceTab].money = info.todayS
-        purchasesTab[#purchasesTab].money = info.todayD
-    end
-
-    --转换为Vector2类型
-    local avgPrice = {}
-    local purchases = {}
-
-    for i, v in pairs(avgPriceTab) do
-        avgPrice[i] = Vector2.New(v.coordinate,v.money)
-    end
-    for i, v in pairs(purchasesTab) do
-        purchases[i] = Vector2.New(v.coordinate,v.money)
-    end
-
-    table.insert(time,1,"0")
-    table.insert(avgPrice,1,Vector2.New(0,0))
-    table.insert(purchases,1,Vector2.New(0,0))
-    local max = 0
-    for i, v in pairs(avgPrice) do
-        if v.y > max then
-            max = v.y
-        end
-    end
-    for i, v in pairs(purchases) do
-        if v.y > max then
-            max = v.y
-        end
-    end
-
-    local scale = SetYScale(max,8,CityInfoPanel.supplyDemandYScale)
-    local avgPriceVet = {}
-    for i, v in pairs(avgPrice) do
-        if scale == 0 then
-            avgPriceVet[i] = v
-        else
-            avgPriceVet[i] = Vector2.New(v.x,v.y / scale * 78)
-        end
-    end
-    local purchasesVet = {}
-    for i, v in pairs(purchases) do
-        if scale == 0 then
-            purchasesVet[i] = v
-        else
-            purchasesVet[i] = Vector2.New(v.x,v.y / scale * 78)
-        end
-    end
-
-
-    CityInfoPanel.supplyDemandSlide:SetXScaleValue(time,190)
-
-    CityInfoPanel.supplyDemandGraph:DrawHistogram(avgPriceVet,Color.New(158 / 255, 190 / 255, 255 / 255, 179 / 255),1)
-    CityInfoPanel.supplyDemandSlide:SetCoordinate(avgPriceVet,avgPrice,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
-
-    CityInfoPanel.supplyDemandGraph:DrawHistogram(purchasesVet,Color.New(255 / 255, 82 / 255, 48 / 255, 179 / 255),2)
-    CityInfoPanel.supplyDemandSlide:SetCoordinate(purchasesVet,purchases,Color.New(255 / 255, 82 / 255, 48 / 255, 255 / 255),2)
-
-    CityInfoPanel.supplyDemandCurve.localPosition = CityInfoPanel.supplyDemandCurve.localPosition + Vector3.New(0.01, 0,0)
-    CityInfoPanel.supplyDemandCurve.sizeDelta = CityInfoPanel.supplyDemandCurve.sizeDelta + Vector2.New(0.01, 0)
+    self:SupplyAndDemand(info,CityInfoPanel.supplyDemandGraph,CityInfoPanel.supplyDemandSlide,CityInfoPanel.supplyDemandCurve,CityInfoPanel.supplyDemandYScale,8)
 end
 
 --行业排行回调
@@ -872,8 +770,169 @@ end
 
 --成交均价
 function CityInfoCtrl:_receiveAvgPrice(info)
-    CityInfoPanel.supplyDemandGraph:Close()
-    CityInfoPanel.supplyDemandSlide:Close()
+    self:OneCurve(info.avg,CityInfoPanel.supplyDemandGraph,CityInfoPanel.supplyDemandSlide,CityInfoPanel.supplyDemandCurve,CityInfoPanel.supplyDemandYScale,8)
+end
+
+--营业额
+function CityInfoCtrl:_receiveItemSales(info)
+    self:OneCurve(info.sales,CityInfoPanel.threeGraph,CityInfoPanel.threeSlide,CityInfoPanel.threeCurve,CityInfoPanel.threeYScale,7)
+end
+
+--详情成交均价
+function CityInfoCtrl:_receiveItemAvgPrice(info)
+    self:OneCurve(info.avg,CityInfoPanel.threeGraph,CityInfoPanel.threeSlide,CityInfoPanel.threeCurve,CityInfoPanel.threeYScale,7)
+end
+
+--Eva等级分布
+function CityInfoCtrl:_receiveEvaGrade(info)
+    if info.grade == nil then
+        return
+    end
+    if info.itemId == 13 or info.itemId == 14 then
+        self:Eva(info,CityInfoPanel.supplyDemandGraph,CityInfoPanel.supplyDemandSlide,CityInfoPanel.supplyDemandCurve,CityInfoPanel.supplyDemandYScale,8)
+    else
+        self:Eva(info,CityInfoPanel.threeGraph,CityInfoPanel.threeSlide,CityInfoPanel.threeCurve,CityInfoPanel.threeYScale,7)
+    end
+end
+
+--详情供需
+function CityInfoCtrl:_receiveItemSupplyAndDemand(info)
+    self:SupplyAndDemand(info,CityInfoPanel.threeGraph,CityInfoPanel.threeSlide,CityInfoPanel.threeCurve,CityInfoPanel.threeYScale,7)
+end
+
+--供需
+function CityInfoCtrl:SupplyAndDemand(info,graph,slide,curve,yScale,int)
+    graph:Close()
+    slide:Close()
+    local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local ts = getFormatUnixTime(currentTime)
+    local second = tonumber(ts.second)
+    local minute = tonumber(ts.minute)
+    local hour = tonumber(ts.hour)
+    if second ~= 0 then
+        currentTime = currentTime -second
+    end
+    if minute ~= 0 then
+        currentTime = currentTime - minute * 60
+    end
+    if hour ~= 0 then
+        currentTime = currentTime - hour * 3600
+    end
+    currentTime = math.floor(currentTime)        --当天0点的时间
+    local sevenAgo = currentTime - 604800 + 86400     --7天前的0点
+    local updataTime = sevenAgo
+    local time = {}
+    local avgPriceTab = {}       --上架数量(供应)
+    local purchasesTab = {}     --购买量(需求)
+    if createTs >= sevenAgo then
+        updataTime = createTs
+        for i = 1, 7 do
+            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
+            if updataTime <= currentTime then
+                avgPriceTab[i] = {}
+                avgPriceTab[i].coordinate = ((updataTime - createTs + 86400) / 86400 * 190) - 30
+                avgPriceTab[i].money = 0
+                purchasesTab[i] = {}
+                purchasesTab[i].coordinate = ((updataTime - createTs + 86400) / 86400 * 190) +30
+                purchasesTab[i].money = 0
+                if info.info ~= nil then
+                    for k, v in pairs(info.info) do
+                        if updataTime == v.time / 1000 then
+                            avgPriceTab[i].money = v.supply
+                            purchasesTab[i].money = v.demand
+                        end
+                    end
+                end
+                if updataTime == currentTime then
+                    avgPriceTab[i].money = info.todayS
+                    purchasesTab[i].money = info.todayD
+                end
+            end
+            updataTime = updataTime + 86400
+        end
+    else
+        for i = 1, 7 do
+            time[i] = getFormatUnixTime(updataTime).month .. "." .. getFormatUnixTime(updataTime).day
+            avgPriceTab[i] = {}
+            avgPriceTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 190) - 30
+            avgPriceTab[i].money = 0
+            purchasesTab[i] = {}
+            purchasesTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 190) +30
+            purchasesTab[i].money = 0
+            if info.info ~= nil then
+                for k, v in pairs(info.info) do
+                    if updataTime == v.time / 1000 then
+                        avgPriceTab[i].money = v.supply
+                        purchasesTab[i].money = v.demand
+                    end
+                end
+            end
+            updataTime = updataTime + 86400
+        end
+        avgPriceTab[#avgPriceTab].money = info.todayS
+        purchasesTab[#purchasesTab].money = info.todayD
+    end
+
+    --转换为Vector2类型
+    local avgPrice = {}
+    local purchases = {}
+
+    for i, v in pairs(avgPriceTab) do
+        avgPrice[i] = Vector2.New(v.coordinate,v.money)
+    end
+    for i, v in pairs(purchasesTab) do
+        purchases[i] = Vector2.New(v.coordinate,v.money)
+    end
+
+    table.insert(time,1,"0")
+    table.insert(avgPrice,1,Vector2.New(0,0))
+    table.insert(purchases,1,Vector2.New(0,0))
+    local max = 0
+    for i, v in pairs(avgPrice) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+    for i, v in pairs(purchases) do
+        if v.y > max then
+            max = v.y
+        end
+    end
+
+    local scale = SetYScale(max,int,yScale)
+    local avgPriceVet = {}
+    for i, v in pairs(avgPrice) do
+        if scale == 0 then
+            avgPriceVet[i] = v
+        else
+            avgPriceVet[i] = Vector2.New(v.x,v.y / scale * 78)
+        end
+    end
+    local purchasesVet = {}
+    for i, v in pairs(purchases) do
+        if scale == 0 then
+            purchasesVet[i] = v
+        else
+            purchasesVet[i] = Vector2.New(v.x,v.y / scale * 78)
+        end
+    end
+
+
+    slide:SetXScaleValue(time,190)
+
+    graph:DrawHistogram(avgPriceVet,Color.New(158 / 255, 190 / 255, 255 / 255, 179 / 255),1)
+    slide:SetCoordinate(avgPriceVet,avgPrice,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
+
+    graph:DrawHistogram(purchasesVet,Color.New(255 / 255, 82 / 255, 48 / 255, 179 / 255),2)
+    slide:SetCoordinate(purchasesVet,purchases,Color.New(255 / 255, 82 / 255, 48 / 255, 255 / 255),2)
+
+    curve.localPosition = curve.localPosition + Vector3.New(0.01, 0,0)
+    curve.sizeDelta = curve.sizeDelta + Vector2.New(0.01, 0)
+end
+
+function CityInfoCtrl:OneCurve(info,graph,slide,curve,yScale,int)
+    graph:Close()
+    slide:Close()
     local currentTime = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
@@ -901,10 +960,10 @@ function CityInfoCtrl:_receiveAvgPrice(info)
                 avgPriceTab[i] = {}
                 avgPriceTab[i].coordinate = ((updataTime - createTs + 86400) / 86400 * 190)
                 avgPriceTab[i].money = 0
-                if info.avg ~= nil then
-                    for k, v in pairs(info.avg) do
+                if info ~= nil then
+                    for k, v in pairs(info) do
                         if updataTime == v.time / 1000 then
-                            avgPriceTab[i].money = tonumber(GetClientPriceString(v.price))
+                            avgPriceTab[i].money = tonumber(GetClientPriceString(v.sum))
                         end
                     end
                 end
@@ -917,10 +976,10 @@ function CityInfoCtrl:_receiveAvgPrice(info)
             avgPriceTab[i] = {}
             avgPriceTab[i].coordinate = ((updataTime - sevenAgo + 86400) / 86400 * 190)
             avgPriceTab[i].money = 0
-            if info.avg ~= nil then
-                for k, v in pairs(info.avg) do
+            if info ~= nil then
+                for k, v in pairs(info) do
                     if updataTime == v.time / 1000 then
-                        avgPriceTab[i].money = tonumber(GetClientPriceString(v.price))
+                        avgPriceTab[i].money = tonumber(GetClientPriceString(v.sum))
                     end
                 end
             end
@@ -942,7 +1001,7 @@ function CityInfoCtrl:_receiveAvgPrice(info)
         end
     end
 
-    local scale = SetYScale(max,8,CityInfoPanel.supplyDemandYScale)
+    local scale = SetYScale(max,int,yScale)
     local avgPriceVet = {}
     for i, v in pairs(avgPrice) do
         if scale == 0 then
@@ -952,11 +1011,89 @@ function CityInfoCtrl:_receiveAvgPrice(info)
         end
     end
 
-    CityInfoPanel.supplyDemandSlide:SetXScaleValue(time,190)
+    slide:SetXScaleValue(time,190)
 
-    CityInfoPanel.supplyDemandGraph:DrawLine(avgPriceVet,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
-    CityInfoPanel.supplyDemandSlide:SetCoordinate(avgPriceVet,avgPrice,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
+    graph:DrawLine(avgPriceVet,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
+    slide:SetCoordinate(avgPriceVet,avgPrice,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
 
-    CityInfoPanel.supplyDemandCurve.localPosition = CityInfoPanel.supplyDemandCurve.localPosition + Vector3.New(0.01, 0,0)
-    CityInfoPanel.supplyDemandCurve.sizeDelta = CityInfoPanel.supplyDemandCurve.sizeDelta + Vector2.New(0.01, 0)
+    curve.localPosition = curve.localPosition + Vector3.New(0.01, 0,0)
+    curve.sizeDelta = curve.sizeDelta + Vector2.New(0.01, 0)
+end
+
+--Eva等级分布
+function CityInfoCtrl:Eva(info,graph,slide,curve,yScale,int)
+    if info.grade == nil then
+        return
+    end
+    graph:Close()
+    slide:Close()
+    local data = {}
+    for i, v in pairs(info.grade) do
+        data[v.lv] = v.sum
+    end
+    local lv = 1
+    local max = 0
+    local eva = {}
+    local time = {}
+    for i, v in pairs(info.grade) do
+        if v.sum > max then
+            max = v.sum
+            lv = v.lv
+        end
+        if v.lv > lv then
+            lv = v.lv
+        end
+    end
+    local yScale = SetYScale(max,int,yScale)
+    if lv <= 6 then
+        local xScale = 1330 /lv
+        for i = 1, lv do
+            time[i] = tostring(i)
+            eva[i] = {}
+            if yScale == 0 then
+                eva[i] = Vector2.New(i * xScale -64 ,0)
+            else
+                if data[i] then
+                    eva[i] = Vector2.New(i * xScale -64,data[i] / yScale * 78)
+                else
+                    eva[i] = Vector2.New(i * xScale -64,0)
+                end
+            end
+        end
+        table.insert(time,1,"0")
+        slide:SetXScaleValue(time,xScale)
+
+    else
+        local temp = math.ceil(lv / 6)
+        local xScale = 1140 / (temp * 6)
+        for i = 1, lv do
+            eva[i] = {}
+            if i <= 7 then
+                time[i] = tostring((i - 1) * temp)
+            end
+            if yScale == 0 then
+                eva[i] = Vector2.New((i  ) * xScale + 190,0)
+
+            else
+                if data[i] then
+                    eva[i] = Vector2.New((i ) * xScale + 190,data[i] / yScale * 78)
+                else
+                    eva[i] = Vector2.New((i ) * xScale + 190,0)
+                end
+            end
+        end
+        table.insert(time,1,"0")
+        slide:SetXScaleValue(time,190)
+    end
+    table.insert(eva,1,Vector2.New(0,0))
+
+    graph:DrawLine(eva,Color.New(158 / 255, 190 / 255, 255 / 255, 255 / 255),1)
+
+    curve.localPosition = curve.localPosition + Vector3.New(0.01, 0,0)
+    curve.sizeDelta = curve.sizeDelta + Vector2.New(0.01, 0)
+end
+
+--详情排行
+function CityInfoCtrl:_receiveProductRanking()
+
 end

@@ -20,7 +20,7 @@ function MapMatDetailPageItem:createItems()
 end
 --
 function MapMatDetailPageItem:_createMatGoodRoot(type)
-    for i, value in pairs(CompoundTypeConfig) do
+    for i, value in pairs(BuildingProductionPart.test) do
         if (i < 2250 and type == EMapSearchType.Material) or (i > 2250 and type == EMapSearchType.Goods) then
             local go = UnityEngine.GameObject.Instantiate(MapPanel.mapMatGoodRootItem)
             go.transform:SetParent(self.content.transform)

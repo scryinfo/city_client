@@ -1150,20 +1150,27 @@ function  DataManager.InitPersonDatas(tempData)
         createTs = tempData.createTs
     }
 
-    ----初始化可用原料表
-    --if tempData.cityGoodInfo.material.num then
-    --    PersonDataStack.m_material = {}
-    --    for i, v in ipairs(tempData.cityGoodInfo.material.num) do
-    --       table.insert(PersonDataStack.m_material,v)
-    --    end
-    --end
-    ----初始化可用商品表
-    --if tempData.cityGoodInfo.goods.num then
-    --    PersonDataStack.m_goods = {}
-    --    for i, v in ipairs(tempData.cityGoodInfo.goods.num) do
-    --        table.insert(PersonDataStack.m_goods,v)
-    --    end
-    --end
+    --初始化可用原料表
+    if tempData.cityGoodInfo.material.num then
+        PersonDataStack.m_material = {}
+        for i, v in ipairs(tempData.cityGoodInfo.material.num) do
+           table.insert(PersonDataStack.m_material,v)
+        end
+    end
+    --初始化可用商品表
+    if tempData.cityGoodInfo.goods.num then
+        PersonDataStack.m_goods = {}
+        for i, v in ipairs(tempData.cityGoodInfo.goods.num) do
+            table.insert(PersonDataStack.m_goods,v)
+        end
+    end
+    ---合并一下两张表，原料厂加工厂要用  fisher
+    if next(PersonDataStack.m_material) ~= nil and next(PersonDataStack.m_goods) ~= nil then
+        PersonDataStack.allMaterialAndGoods = ct.deepCopy(PersonDataStack.m_material)
+        for k,v in pairs(PersonDataStack.m_goods) do
+            table.insert(PersonDataStack.allMaterialAndGoods,v)
+        end
+    end
 
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
@@ -1350,6 +1357,8 @@ function DataManager.SetMaterial(material)
     if material then
         for i, v in ipairs(material) do
             table.insert(PersonDataStack.m_material,v)
+            --fisher 添加到原料商品的同一张表里
+            table.insert(PersonDataStack.allMaterialAndGoods,v)
         end
     end
 end
@@ -1364,10 +1373,15 @@ function DataManager.SetGoods(goods)
     if goods then
         for i, v in ipairs(goods) do
             table.insert(PersonDataStack.m_goods,v)
+            --fisher 添加到原料商品的同一张表里
+            table.insert(PersonDataStack.allMaterialAndGoods,v)
         end
     end
 end
-
+--获取所有可以生产的表  fisher
+function DataManager.GetAllMaterialAndGoods()
+    return PersonDataStack.allMaterialAndGoods
+end
 -- 所选服务器创建时间
 PersonDataStack.createTime = nil
 

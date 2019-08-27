@@ -98,9 +98,7 @@ function CityInfoTitleItem:ShowPanel(data)
         end
     elseif data.id == 3 then            --详情
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryItemSales',data.type,data.goodsDataInfo.inside[1].itemId)  --查询营业额
-        if data.type == 11 or data.type == 12 or data.type == 13 then
-            CityInfoPanel.productIcon.sprite = SpriteManager.GetSpriteByPool(data.goodsDataInfo.inside[1].itemId)
-        end
+        CityInfoPanel.productIcon.sprite = SpriteManager.GetSpriteByPool(data.goodsDataInfo.inside[1].itemId)
         CityInfoPanel.productText.text = data.goodsDataInfo.inside[1].name
         if data.goodsDataInfo.inside[1].date then
             if #prefabs < #data.goodsDataInfo.inside[1].date then
@@ -123,13 +121,87 @@ function CityInfoTitleItem:ShowPanel(data)
         CityInfoPanel.supplyDemandBg.localScale = Vector3.zero
         CityInfoPanel.rankList.localScale = Vector3.zero
         self:Close()
-        if data.goodsDataInfo.inside then
-            for i, v in ipairs(data.goodsDataInfo.inside) do
+        if data.type == 11 then
+            local material = DataManager.GetMaterial()
+            local dataInfo = {}
+            for i, v in ipairs(material) do
+                dataInfo[i] = {}
+                dataInfo[i].name = v
+                dataInfo[i].itemId = v
+                dataInfo[i].date = {
+                    [1] ={
+                        name ="销售额",
+                        id = 1,
+                    },
+                    [2] ={
+                        name ="供需",
+                        id = 2,
+                    },
+                    [3] ={
+                        name ="成交均价",
+                        id = 3,
+                    },
+                    [4] ={
+                        name ="玩家排行",
+                        id = 4,
+                    },
+                    [5] ={
+                        name ="EVA等级分布",
+                        id = 5,
+                    },
+                }
+            end
+            for i, v in ipairs(dataInfo) do
                 local prefab = createPrefabs(CityInfoPanel.productsListTitleGoodsItem,CityInfoPanel.productsListContent)
                 titleGoodsItem[i] = TitleGoodsItem:new(self._luabehaviour,prefab,v,self,titleInfoItem,data.type,data.msg.msg.m_data.insId)
             end
             titleGoodsItem[1].bg.color = getColorByInt(225,233,255,255)
             titleGoodsItem[1]:SetLast(titleGoodsItem[1].bg)
+        elseif data.type == 12 or data.type == 13 then
+            local goods = DataManager.GetGoods()
+            local dataInfo = {}
+            for i, v in ipairs(goods) do
+                dataInfo[i] = {}
+                dataInfo[i].name = v
+                dataInfo[i].itemId = v
+                dataInfo[i].date = {
+                    [1] ={
+                        name ="销售额",
+                        id = 1,
+                    },
+                    [2] ={
+                        name ="供需",
+                        id = 2,
+                    },
+                    [3] ={
+                        name ="成交均价",
+                        id = 3,
+                    },
+                    [4] ={
+                        name ="玩家排行",
+                        id = 4,
+                    },
+                    [5] ={
+                        name ="EVA等级分布",
+                        id = 5,
+                    },
+                }
+            end
+            for i, v in ipairs(dataInfo) do
+                local prefab = createPrefabs(CityInfoPanel.productsListTitleGoodsItem,CityInfoPanel.productsListContent)
+                titleGoodsItem[i] = TitleGoodsItem:new(self._luabehaviour,prefab,v,self,titleInfoItem,data.type,data.msg.msg.m_data.insId)
+            end
+            titleGoodsItem[1].bg.color = getColorByInt(225,233,255,255)
+            titleGoodsItem[1]:SetLast(titleGoodsItem[1].bg)
+        else
+            if data.goodsDataInfo.inside then
+                for i, v in ipairs(data.goodsDataInfo.inside) do
+                    local prefab = createPrefabs(CityInfoPanel.productsListTitleGoodsItem,CityInfoPanel.productsListContent)
+                    titleGoodsItem[i] = TitleGoodsItem:new(self._luabehaviour,prefab,v,self,titleInfoItem,data.type,data.msg.msg.m_data.insId)
+                end
+                titleGoodsItem[1].bg.color = getColorByInt(225,233,255,255)
+                titleGoodsItem[1]:SetLast(titleGoodsItem[1].bg)
+            end
         end
     elseif data.id == 4 then
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryEvaGrade',data.type,data.type,2)  --获取Eva分布

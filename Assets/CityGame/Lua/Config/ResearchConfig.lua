@@ -10,36 +10,42 @@ ResearchConfig =
     {
         name = "EVA-Material",
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Material factory.png",
+        buildingPath = "Assets/CityGame/Resources/Atlas/Research/Material factory.png",
         content = "10-100 EVA points are awarded for each achievement",
     },
     [1500012] =
     {
         name = "EVA-Factory",
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Factory.png",
+        buildingPath = "Assets/CityGame/Resources/Atlas/Research/Factory.png",
         content = "10-100 EVA points are awarded for each achievement",
     },
     [1500013] =
     {
         name = "EVA-SuperMarket",
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Supermarket.png",
+        buildingPath = "Assets/CityGame/Resources/Atlas/Research/Supermarket.png",
         content = "10-100 EVA points are awarded for each achievement",
     },
     [1500014] =
     {
         name = "EVA-HomeHouse",
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Homehouse.png",
+        buildingPath = "Assets/CityGame/Resources/Atlas/Research/Homehouse.png",
         content = "10-100 EVA points are awarded for each achievement",
     },
     [1500015] =
     {
         name = "EVA-Technology",
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Technology.png",
+        buildingPath = "Assets/CityGame/Resources/Atlas/Research/Technology.png",
         content = "10-100 EVA points are awarded for each achievement",
     },
     [1500016] =
     {
         name = "EVA-Advertising",
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Advertising.png",
+        buildingPath = "Assets/CityGame/Resources/Atlas/Research/Advertising.png",
         content = "10-100 EVA points are awarded for each achievement",
     },
     [1600012] =

@@ -38,6 +38,10 @@ function SpriteManager.Init()
     for key, value in pairs(MakeMoney) do
         LoadSpriteToPool(value.img, key)
     end
+    --初始化研究所与数据公司建筑图片
+    for key, value in pairs(ResearchConfig) do
+        LoadSpriteToPool(value.buildingPath, key)
+    end
 end
 
 --从对象池中拿到对应的Sprite

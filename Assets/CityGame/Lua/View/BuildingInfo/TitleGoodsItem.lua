@@ -20,9 +20,7 @@ function TitleGoodsItem:initialize(inluabehaviour, prefab, goodsDataInfo,msg,tit
     self.icon = self.prefab.transform:Find("icon"):GetComponent("Image")
     self.iconText = self.prefab.transform:Find("icon/Text"):GetComponent("Text")
 
-    if self.msg.type == 11 or self.msg.type == 12 or self.msg.type == 13 then
-        self.icon.sprite = SpriteManager.GetSpriteByPool(goodsDataInfo.itemId)
-    end
+    self.icon.sprite = SpriteManager.GetSpriteByPool(goodsDataInfo.itemId)
     self.iconText.text = goodsDataInfo.name
 
     self._luabehaviour:AddClick(self.bg.gameObject, self.OnBg, self);

@@ -131,7 +131,6 @@ function CityInfoTitleItem:ShowPanel(data)
             titleGoodsItem[1].bg.color = getColorByInt(225,233,255,255)
             titleGoodsItem[1]:SetLast(titleGoodsItem[1].bg)
         end
-        CityInfoPanel.productContent.localPosition = Vector3.zero
     elseif data.id == 4 then
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryEvaGrade',data.type,data.type,2)  --获取Eva分布
         CityInfoPanel.supplyDemandBg.localScale = Vector3.one

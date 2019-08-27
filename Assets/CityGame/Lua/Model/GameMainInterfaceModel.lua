@@ -36,7 +36,7 @@ function GameMainInterfaceModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newJoinReq","gs.JoinReq", self.n_NewJoinReq, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","exitSociety","gs.ByteBool", self.n_ExitSociety, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryOffLineInformation","gs.UnLineInformation", self.n_UnLineInformation, self) -- 上线获得收支情况
-    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newGoodMessage","gs.CityGoodInfo", self.n_OnCityGoodInfo, self)   -- 城市科技等级推送
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","newGoodMessage","gs.CityGoodInfo", self.n_OnCityGoodInfo, self)   -- 城市科技等级推送
     --开启心跳模拟
     UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStart")
     UnitTest.Exec_now("abel_0529_ddd_createUser", "e_abel_0529_ddd_createUser",DataManager.GetMyOwnerID())

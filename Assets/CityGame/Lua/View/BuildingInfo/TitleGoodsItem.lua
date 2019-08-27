@@ -30,7 +30,6 @@ end
 
 function TitleGoodsItem:OnBg(go)
     DataManager.DetailModelRpcNoRet(go.insId, 'm_queryItemSales',go.type,go.goodsDataInfo.itemId)  --查询营业额
-    --CityInfoPanel.productContent.anchoredPosition = Vector3.zero
     if lastBg then
         lastBg.color = getColorByInt(255,255,255,255)
     end

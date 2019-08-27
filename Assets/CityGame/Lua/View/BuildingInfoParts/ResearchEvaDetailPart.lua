@@ -269,8 +269,9 @@ function ResearchEvaDetailPart:c_OnReceiveOpenScienceBox(scienceBoxACK)
      self.totalBoxNumText.text = "X" .. tostring(self.totalBoxNum)    
     for i, v in ipairs(self.boxItems) do
         if v.data.key.id == scienceBoxACK.key.id then
-            v.data.n = v.data.n - scienceBoxACK.openNum
-            if v.data.n <= 0 then
+            --v.data.n = v.data.n - scienceBoxACK.openNum
+            v:ChangeNumber(- scienceBoxACK.openNum)
+            if v:GetNumber() <= 0 then
                 UnityEngine.GameObject.Destroy(v.prefab)
                 table.remove(self.scienceLineData.box, i)
                 table.remove(self.boxItems, i)
@@ -378,7 +379,8 @@ function ResearchEvaDetailPart:c_OnReceiveGetFtyLineChangeInform(data)
         local isExit = false
         for _, v in ipairs(self.boxItems) do
             if v.data.key.id == data.iKey.id then
-                v.data.n = v.data.n + data.produceNum
+                --v.data.n = v.data.n + data.produceNum
+                v:ChangeNumber(data.produceNum)
                 v:SetNumText()
                 isExit = true
                 break

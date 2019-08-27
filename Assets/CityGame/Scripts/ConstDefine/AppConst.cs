@@ -46,8 +46,12 @@ namespace LuaFramework {
         public const string asServerIp = "47.110.156.209";  //用于压测
 #elif PUB_BUILD_242
         public const string asServerIp = "47.97.249.242";   //用于新功能开发及测试
+#elif PUB_BUILD_42
+        public const string asServerIp = "47.96.97.42";   //用于新功能开发及测试
 #elif PUB_BUILD_99
         public const string asServerIp = "47.111.11.99";   //用于策划推演的服务器
+#elif PUB_BUILD_188
+        public const string asServerIp = "192.168.0.188";   //用于策划推演的服务器
 #else
         public const string asServerIp = "192.168.0.191";
         //public const string WebUrl = "http://192.168.0.191:8080/CityHotUp/";      //测试更新地址
@@ -61,6 +65,8 @@ namespace LuaFramework {
         public const string WebUrl = "http://40.73.5.184:8080/HotFixed03/";       //测试更新地址
 #elif HOT_CATA4
         public const string WebUrl = "http://192.168.0.191:8080/CityHotUp/";      //测试更新地址
+#elif HOT_42
+        public const string WebUrl = "http://192.168.0.191:8080/42/";      //测试更新地址
 #else
         public const string WebUrl = "http://40.73.5.184:8080/city/";       //测试更新地址
 #endif

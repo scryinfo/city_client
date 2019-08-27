@@ -154,10 +154,10 @@ end
 --确认销毁
 function DeleteItemBoxCtrl:_clickConfirmBtn(ins)
     local data = {}
-    data.itemId = ins.m_data.itemId
+    data.itemId = ins.m_data.Info.key.id
     data.num = ins.numberSlider.value
-    data.producerId = ins.m_data.producerId
-    data.qty = ins.m_data.qty
+    data.producerId = ins.m_data.Info.key.producerId
+    data.qty = ins.m_data.Info.key.qty
     Event.Brocast("deleteWarehouseItem",data)
     UIPanel.ClosePage()
 end

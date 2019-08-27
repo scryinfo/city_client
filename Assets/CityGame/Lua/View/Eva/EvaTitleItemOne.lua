@@ -34,17 +34,21 @@ end
 -- 按钮点击事件、子类继承实现自己的方法
 function EvaTitleItemOne:_onClickBtn()
     BaseEvaTitleItem._onClickBtn(self)
-    EvaCtrl.static.evaCtrl:_showIntroduction(false)
-    EvaCtrl.static.evaCtrl:_showTechnologyAndMarketPoint(self.index)
-    if EvaConfig[self.index].option then
-        EvaCtrl.static.evaCtrl.isClickEva = true
-        EvaCtrl.static.evaCtrl:ShowOptionTwo(#EvaConfig[self.index].option)
+    --EvaCtrl.static.evaCtrl:_showIntroduction(false)
+    if EvaCtrl.static.evaCtrl.allUIData[self.index] then
+        EvaCtrl.static.evaCtrl:_showTechnologyAndMarketPoint(self.index)
+        if EvaCtrl.static.evaCtrl.allUIData[self.index].option then
+            EvaCtrl.static.evaCtrl.isClickEva = true
+            EvaCtrl.static.evaCtrl:ShowOptionTwo(#EvaCtrl.static.evaCtrl.allUIData[self.index].option)
+        else
+            EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -82)
+            EvaCtrl.static.evaCtrl.isClickEva = false
+            EvaCtrl.static.evaCtrl:ShowOptionTwo(0)
+            EvaCtrl.static.evaCtrl:ShowOptionThere(0)
+            EvaCtrl.static.evaCtrl:CreatePropertyItem(EvaCtrl.static.evaCtrl.allUIData[self.index].property)
+        end
     else
-        EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -82)
-        EvaCtrl.static.evaCtrl.isClickEva = false
-        EvaCtrl.static.evaCtrl:ShowOptionTwo(0)
-        EvaCtrl.static.evaCtrl:ShowOptionThere(0)
-        EvaCtrl.static.evaCtrl:CreatePropertyItem(EvaConfig[self.index].property)
+        DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_QueryMyEva', self.index + 10)
     end
 end
 

@@ -12,7 +12,7 @@ EvaTitleItemTwo.static.SelectNameColor = Vector3.New(255, 255, 255) -- 被选中
 -- 子类继承实现自己的方法用以显示具体的内容
 function EvaTitleItemTwo:_showContent()
     local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
-    self.nameText.text = GetLanguage(EvaConfig[recordData[1]].option[self.index].name)
+    self.nameText.text = GetLanguage(EvaCtrl.static.evaCtrl.allUIData[recordData[1]].option[self.index].name)
     if EvaCtrl.static.evaCtrl.isClickEva then
         EvaCtrl.static.evaCtrl.isClickEva = false
         self:_onClickBtn()
@@ -47,15 +47,15 @@ end
 function EvaTitleItemTwo:_onClickBtn()
     BaseEvaTitleItem._onClickBtn(self)
     local optionOne = EvaCtrl.static.evaCtrl:GetEvaRecordData()[1]
-    if EvaConfig[optionOne].option[self.index].option then
+    if EvaCtrl.static.evaCtrl.allUIData[optionOne].option[self.index].option then
         EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -282)
         EvaCtrl.static.evaCtrl.isClickEvaT = true
-        EvaCtrl.static.evaCtrl:ShowOptionThere(#EvaConfig[optionOne].option[self.index].option)
+        EvaCtrl.static.evaCtrl:ShowOptionThere(#EvaCtrl.static.evaCtrl.allUIData[optionOne].option[self.index].option)
     else
         EvaPanel.propertyRootRt.offsetMax = Vector2.New(0, -192)
         EvaCtrl.static.evaCtrl.isClickEvaT = false
         EvaCtrl.static.evaCtrl:ShowOptionThere(0)
-        EvaCtrl.static.evaCtrl:CreatePropertyItem(EvaConfig[optionOne].option[self.index].property)
+        EvaCtrl.static.evaCtrl:CreatePropertyItem(EvaCtrl.static.evaCtrl.allUIData[optionOne].option[self.index].property)
     end
 end
 

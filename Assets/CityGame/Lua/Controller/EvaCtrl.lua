@@ -80,6 +80,20 @@ end
 
 function EvaCtrl:Hide()
     self:_removeListener()
+    -- Eva选择记录的个数
+    self.evaRecordData = nil
+    -- eva界面上总的eva数据
+    self.allEvaData = nil
+    -- eva界面上结构数据
+    self.allUIData = nil
+    -- 当前点数数据
+    self.buildingPoint = nil
+    -- 加点的点数数据，用于界面上显示
+    self.addData = nil
+    -- 加点的eva数据，用于给服务器发加点的消息结构
+    self.addEvaData = nil
+    -- 加点的eva的等级和当前经验数据，用于界面上显示
+    self.addEvaLvData = nil
     UIPanel.Hide(self)
 end
 
@@ -90,22 +104,30 @@ end
 
 -- 初始化基本数据
 function EvaCtrl:updateData()
-    -- 显示eva点数
-    --EvaPanel.myEvaText.text = DataManager.GetEvaPoint()
     -- Eva选择记录的个数
     self.evaRecordData = {}
-    -- 打开开始加点，关闭加点
-    --EvaPanel.addBtn.localScale = Vector3.one
-    --EvaPanel.startAddBtn.localScale = Vector3.zero
-
+    -- eva界面上总的eva数据
+    self.allEvaData = {}
+    -- eva界面上结构数据
+    self.allUIData = {}
+    -- 当前点数数据
+    self.buildingPoint = {}
     -- eva界面上总的加点的点数值
-    self.allEvaAddPoint = {}
+    --self.allEvaAddPoint = {}
+    -- 加点的点数数据，用于界面上显示
+    self.addData = {}
+    -- 加点的eva数据，用于给服务器发加点的消息结构
+    self.addEvaData = {}
+    -- 加点的eva的等级和当前经验数据，用于界面上显示
+    self.addEvaLvData = {}
     -- 刷新加点按钮显示
     self:SetAddBtnState(false)
+    -- 刷新提示小窗口显示
+    self:_showIntroduction( false )
 
     -- 生成标题item
     if self.evaTitleItem then
-        DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_QueryMyEva')
+        DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_QueryMyEva', 11)
     else
         -- 生成大标题
         self.evaTitleItem = {}
@@ -119,7 +141,7 @@ function EvaCtrl:updateData()
 
             self.evaTitleItem[i] = EvaTitleItemOne:new(go, 1, i)
             if i == #EvaConfig then
-                DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_QueryMyEva')
+                DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_QueryMyEva', 11)
             end
         end
     end
@@ -151,7 +173,7 @@ function EvaCtrl:_clearEvaDataAndView()
     self.addData = {}
     self.addEvaData = {}
     self.addEvaLvData = {}
-    self.allEvaAddPoint = {}
+    --self.allEvaAddPoint = {}
 
     -- 界面上显示的加点多少
     for _, v in ipairs(self.evaTitleItem) do
@@ -202,10 +224,6 @@ end
 -- 加点，向服务器发起加点消息
 function EvaCtrl:OnAdd(go)
     PlayMusEff(1002)
-    --EvaPanel.startAddBtn.localScale = Vector3.one
-    --EvaPanel.addBtn.localScale = Vector3.zero
-    --go.isStartAdd = false
-
     local evas = {}
     for _, v in pairs(go.addEvaData) do
         table.insert(evas, v)
@@ -261,50 +279,64 @@ function EvaCtrl:_removeListener()
 end
 
 -- 服务器查询Eva，并把Eva信息保存下來，并默认显示第一项
-function EvaCtrl:c_OnQueryMyEva(evas)
-    self.evasData = evas.eva
+function EvaCtrl:c_OnQueryMyEva(buildingEva)
+    -- 当前点数的Id
+    local buildingIndex = buildingEva.buildingType - 10
 
-    self.buildingPoint = {}
-    -- 不同建筑的当前点数
-    for _, v in ipairs(evas.buildingPoint) do
-        self.buildingPoint[v.buildingType - 10] = v
+    -- 当前点数
+    self.buildingPoint[buildingIndex] = buildingEva.buildingPoint
+
+    -- eva数据
+    self.allEvaData[buildingIndex] = {}
+    for _, v in ipairs(buildingEva.eva) do
+        if self.allEvaData[buildingIndex][v.at] == nil then
+            self.allEvaData[buildingIndex][v.at] = {}
+        end
+        self.allEvaData[buildingIndex][v.at][v.bt] = v
     end
 
-    -- 加点的点数数据，用于界面上显示
-    self.addData = {}
-    -- 加点的eva数据，用于给服务器发加点的消息结构
-    self.addEvaData = {}
-    -- 加点的eva的等级和当前经验数据，用于界面上显示
-    self.addEvaLvData = {}
-    -- 默认打开第一个选项
-    self.evaTitleItem[1]:_onClickBtn()
-end
-
--- 服务器返回的Eva加点
-function EvaCtrl:c_OnUpdateMyEvas(evas)
-    Event.Brocast("SmallPop", GetLanguage(31010041),80)
-
-    -- 刷新eva的数据
-    for i, v in ipairs(evas.eva) do
-        for j, k in ipairs(self.evasData) do
-            if v.id == k.id then
-                self.evasData[j] = v
-
-                -- 刷新加点的数据
-                for _, n in pairs(EvaCtrl.propertyScript) do
-                    if n.data.id == v.id then
-                        n.data = v
-                    end
+    -- 实际要显示的数据
+    self.allUIData[buildingIndex] = ct.deepCopy(EvaConfig[buildingIndex])
+    if buildingIndex == 1 then
+        for i = #self.allUIData[buildingIndex].option, 1, -1 do
+            if self.allEvaData[buildingIndex][self.allUIData[buildingIndex].option[i].property[1].Atype] == nil then
+                table.remove(self.allUIData[buildingIndex].option, i)
+            end
+        end
+    elseif buildingIndex == 2 then
+        for _, v in ipairs(self.allUIData[buildingIndex].option) do
+            for i = #v.option, 1, -1 do
+                if self.allEvaData[buildingIndex][v.option[i].property[1].Atype] == nil then
+                    table.remove(v.option, i)
                 end
-                break
             end
         end
     end
 
-    self.buildingPoint = {}
-    -- 不同建筑的当前点数
-    for _, v in ipairs(evas.buildingPoint) do
-        self.buildingPoint[v.buildingType - 10] = v
+    -- 默认打开第一个选项
+    self.evaTitleItem[buildingIndex]:_onClickBtn()
+end
+
+-- 服务器返回的Eva加点
+function EvaCtrl:c_OnUpdateMyEvas(buildingEvas)
+    Event.Brocast("SmallPop", GetLanguage(31010041),80)
+
+    -- 刷新eva的数据
+    for i, v in ipairs(buildingEvas.buildingEvas) do
+        -- 当前点数的Id
+        local buildingIndex = v.buildingType - 10
+
+        -- 当前点数
+        self.buildingPoint[buildingIndex] = v.buildingPoint
+
+        for a, b in ipairs(v.eva) do
+            self.allEvaData[buildingIndex][b.at][b.bt] = b
+        end
+    end
+
+    -- 刷新加点的数据
+    for _, n in pairs(EvaCtrl.propertyScript) do
+        n.data = self.allEvaData[self.evaRecordData[1]][n.data.at][n.data.bt]
     end
 
     self:_showTechnologyAndMarketPoint(self.evaRecordData[1])
@@ -333,11 +365,7 @@ end
 -- 属性信息显示
 EvaCtrl.static.propertyData = function(transform, idx)
     idx = idx + 1
-    --if EvaCtrl.propertyAllData[1][idx].b == -1 then -- 可升级
-        EvaCtrl.propertyScript[idx] = PropertyTrueItem:new(transform, EvaCtrl.propertyAllData[1][idx], EvaCtrl.propertyAllData[2][idx])
-    --else
-    --    PropertyFalseItem:new(transform, EvaCtrl.propertyAllData[1][idx], EvaCtrl.propertyAllData[2][idx].name)
-    --end
+    EvaCtrl.propertyScript[idx] = PropertyTrueItem:new(transform, EvaCtrl.propertyAllData[1][idx], EvaCtrl.propertyAllData[2][idx])
 end
 
 EvaCtrl.static.propertyClearData = function(transform)
@@ -364,16 +392,11 @@ function EvaCtrl:CreatePropertyItem(propertyTab)
         return
     end
     EvaCtrl.propertyAllData = {{}, {}}
-    --local propertyPrefabList = {}
 
     -- 获得显示数据
     for _, b in ipairs(propertyTab) do
-        for a, v in ipairs(self.evasData) do
-            if b.Atype == v.at and b.Btype == v.bt then
-                table.insert(EvaCtrl.propertyAllData[1], v) -- 保存实际数据
-                table.insert(EvaCtrl.propertyAllData[2], b) -- 保存本地配置
-            end
-        end
+        table.insert(EvaCtrl.propertyAllData[1], self.allEvaData[self.evaRecordData[1]][b.Atype][b.Btype]) -- 保存实际数据
+        table.insert(EvaCtrl.propertyAllData[2], b) -- 保存本地配置
     end
 
     -- 刷新界面上的数据显示

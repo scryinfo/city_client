@@ -36,6 +36,7 @@ function IndustryInfoItem:OnNotSelect(go)
     go.select.localScale = Vector3.one
     lastBg = go
 
+    CityInfoPanel.threeRank:SetActive(false)
     if go.goodsDataInfo.content == nil then
         DataManager.DetailModelRpcNoRet(go.msg.m_data.insId, 'm_queryIndustryIncome')  --查询行业收入
         CityInfoPanel.industryBg.localScale = Vector3.one

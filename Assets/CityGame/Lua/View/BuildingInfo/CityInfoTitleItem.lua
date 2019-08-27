@@ -30,6 +30,8 @@ function CityInfoTitleItem:initialize(inluabehaviour, prefab, goodsDataInfo,msg)
     self.selectText.text = goodsDataInfo.name
 
     self._luabehaviour:AddClick(self.notSelect, self.OnNotSelect, self);
+    self._luabehaviour:AddClick(CityInfoPanel.evaTechnologyBtn, self.OnEvaTechnologyBtn, self);
+    self._luabehaviour:AddClick(CityInfoPanel.evaAdvertisingBtn, self.OnEvaAdvertisingBtn, self);
 end
 
 function CityInfoTitleItem:OnNotSelect(go)
@@ -42,6 +44,20 @@ function CityInfoTitleItem:OnNotSelect(go)
     lastBg = go
 
     go:ShowPanel(go)
+end
+
+-- 点击Eva科技
+function CityInfoTitleItem:OnEvaTechnologyBtn(go)
+    DataManager.DetailModelRpcNoRet(go.msg.msg.m_data.insId, 'm_queryEvaGrade',go.type,go.type,2)
+    CityInfoPanel.evaTechnologyBtn.transform.localScale = Vector3.zero
+    CityInfoPanel.evaAdvertisingBtn.transform.localScale = Vector3.one
+end
+
+-- 点击Eva推广
+function CityInfoTitleItem:OnEvaAdvertisingBtn(go)
+    DataManager.DetailModelRpcNoRet(go.msg.msg.m_data.insId, 'm_queryEvaGrade',go.type,go.type,1)
+    CityInfoPanel.evaTechnologyBtn.transform.localScale = Vector3.one
+    CityInfoPanel.evaAdvertisingBtn.transform.localScale = Vector3.zero
 end
 
 function CityInfoTitleItem:SetLast(ins)
@@ -62,6 +78,7 @@ function CityInfoTitleItem:ShowPanel(data)
         CityInfoPanel.twoContent:SetActive(false)
         CityInfoPanel.rankList.localScale = Vector3.zero
         CityInfoPanel.twoContent:SetActive(false)
+        CityInfoPanel.threeRank:SetActive(false)
         CityInfoPanel.shelves.localScale = Vector3.one
         CityInfoPanel.purchases.localScale = Vector3.one
         CityInfoPanel.eva.localScale = Vector3.zero
@@ -69,6 +86,7 @@ function CityInfoTitleItem:ShowPanel(data)
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryIndustryTopInfo',data.msg.msg.ownerId,data.type)  --查询收入排行
         CityInfoPanel.supplyDemandBg.localScale = Vector3.zero
         CityInfoPanel.twoContent:SetActive(false)
+        CityInfoPanel.threeRank:SetActive(false)
         CityInfoPanel.rankList.localScale = Vector3.one
         CityInfoPanel.twoContent:SetActive(false)
         if data.type == 20 then
@@ -110,19 +128,25 @@ function CityInfoTitleItem:ShowPanel(data)
                 local prefab = createPrefabs(CityInfoPanel.productsListTitleGoodsItem,CityInfoPanel.productsListContent)
                 titleGoodsItem[i] = TitleGoodsItem:new(self._luabehaviour,prefab,v,self,titleInfoItem,data.type,data.msg.msg.m_data.insId)
             end
+            titleGoodsItem[1].bg.color = getColorByInt(225,233,255,255)
+            titleGoodsItem[1]:SetLast(titleGoodsItem[1].bg)
         end
         CityInfoPanel.productContent.localPosition = Vector3.zero
     elseif data.id == 4 then
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryEvaGrade',data.type,data.type,2)  --获取Eva分布
         CityInfoPanel.supplyDemandBg.localScale = Vector3.one
         CityInfoPanel.twoContent:SetActive(false)
+        CityInfoPanel.threeRank:SetActive(false)
         CityInfoPanel.rankList.localScale = Vector3.zero
         CityInfoPanel.shelves.localScale = Vector3.zero
         CityInfoPanel.purchases.localScale = Vector3.zero
         CityInfoPanel.eva.localScale = Vector3.one
+        CityInfoPanel.evaTechnologyBtn.transform.localScale = Vector3.zero
+        CityInfoPanel.evaAdvertisingBtn.transform.localScale = Vector3.one
     elseif data.id == 5 then
         CityInfoPanel.supplyDemandBg.localScale = Vector3.one
         CityInfoPanel.twoContent:SetActive(false)
+        CityInfoPanel.threeRank:SetActive(false)
         CityInfoPanel.rankList.localScale = Vector3.zero
         CityInfoPanel.shelves.localScale = Vector3.zero
         CityInfoPanel.purchases.localScale = Vector3.zero

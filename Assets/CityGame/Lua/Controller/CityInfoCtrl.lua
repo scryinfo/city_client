@@ -39,8 +39,6 @@ function CityInfoCtrl:Awake(go)
     cityInfoBehaviour:AddClick(CityInfoPanel.land,self.OnLand,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.productDown,self.OnDown,self)  --第二层列表
     cityInfoBehaviour:AddClick(CityInfoPanel.close,self.OnClose,self)  --关闭第二层列表
-    --cityInfoBehaviour:AddClick(CityInfoPanel.evaTechnology,self.OnEvaTechnology,self)  --eva分布
-    --cityInfoBehaviour:AddClick(CityInfoPanel.evaAdvertising,self.OnEvaAdvertising,self)
 
     self.width = CityInfoPanel.titleBg.sizeDelta.x
     self.ownerId = DataManager.GetMyOwnerID()
@@ -125,6 +123,7 @@ function CityInfoCtrl:Hide()
     CityInfoPanel.four.gameObject:SetActive(false)
     CityInfoPanel.five.gameObject:SetActive(false)
     CityInfoPanel.six.gameObject:SetActive(false)
+    CityInfoPanel.threeRank:SetActive(false)
 
     local last = self.industryInfoItem[1]:GetLast():GetTitle()
     if last then
@@ -181,6 +180,7 @@ function CityInfoCtrl:OnNotBasic(go)
     CityInfoPanel.industryInfo.localScale = Vector3.zero
 
     CityInfoPanel.content.localScale = Vector3.zero
+    CityInfoPanel.threeRank:SetActive(false)
     --CityInfoPanel.content:DOScale(Vector3.New(0,0,0),0.5):SetEase(DG.Tweening.Ease.OutCubic);
     local last = go.industryInfoItem[1]:GetLast():GetTitle()
     if last then
@@ -229,7 +229,7 @@ end
 
 --科技等级
 function CityInfoCtrl:OnLevelBtn(go)
-    ct.OpenCtrl("TechLevelCtrl",{level = go.cityLevel})
+    ct.OpenCtrl("TechLevelCtrl",{level = go.cityLevel,exp = go.exp})
 end
 
 --交易额
@@ -262,8 +262,11 @@ end
 --城市交易额
 function CityInfoCtrl:_receiveTransactionAmount(info)
     if info then
-        CityInfoPanel.volume.text = GetClientPriceString(info[1].sum)
+        CityInfoPanel.volume.text = GetClientPriceString(ct.scientificNotation2Normal(info[1].sum))
         self.todayVolume = info[1].sum
+    else
+        CityInfoPanel.volume.text = "0.0000"
+        self.todayVolume = 0
     end
 end
 
@@ -275,11 +278,12 @@ end
 
 --科技等级
 function CityInfoCtrl:_receiveLevel(info)
-    CityInfoPanel.level.text = "Lv.1"
-    CityInfoPanel.levelSlider.maxValue = 1000
-    CityInfoPanel.levelSlider.value = info.sumValue
-    CityInfoPanel.levelSliderText.text = info.sumValue .. "/1000"
-    self.cityLevel = info.sumValue
+    CityInfoPanel.level.text = "Lv." .. info.lv
+    CityInfoPanel.levelSlider.maxValue = CityLevel[info.lv].exp
+    CityInfoPanel.levelSlider.value = info.exp
+    CityInfoPanel.levelSliderText.text = info.exp .. "/" .. CityLevel[info.lv].exp
+    self.cityLevel = info.lv
+    self.exp = info.exp
 end
 
 --行业收入回调
@@ -642,8 +646,9 @@ function CityInfoCtrl:OnLand(go)
     go:ShowHide(go.isLand,CityInfoPanel.landTag,data)
 end
 
-function CityInfoCtrl:OnDown(go)
+function CityInfoCtrl:OnDown()
     CityInfoPanel.productDown.transform.localScale = Vector3.zero
+    CityInfoPanel.productDowns.localScale = Vector3.zero
     CityInfoPanel.productUp.localScale = Vector3.one
     CityInfoPanel.productsList:SetActive(true)
     CityInfoPanel.close.transform.localScale = Vector3.one
@@ -651,6 +656,7 @@ end
 
 function CityInfoCtrl:OnClose()
     CityInfoPanel.productDown.transform.localScale = Vector3.one
+    CityInfoPanel.productDowns.localScale = Vector3.one
     CityInfoPanel.productUp.localScale = Vector3.zero
     CityInfoPanel.close.transform.localScale = Vector3.zero
     CityInfoPanel.productsList:SetActive(false)
@@ -782,7 +788,6 @@ end
 function CityInfoCtrl:_receiveItemAvgPrice(info)
     self:OneCurve(info.avg,CityInfoPanel.threeGraph,CityInfoPanel.threeSlide,CityInfoPanel.threeCurve,CityInfoPanel.threeYScale,7)
 end
-
 --Eva等级分布
 function CityInfoCtrl:_receiveEvaGrade(info)
     if info.grade == nil then
@@ -1094,6 +1099,67 @@ function CityInfoCtrl:Eva(info,graph,slide,curve,yScale,int)
 end
 
 --详情排行
-function CityInfoCtrl:_receiveProductRanking()
-
+function CityInfoCtrl:_receiveProductRanking(info)
+    if self.rankItem and next(self.rankItem) then
+        for i, v in pairs(self.rankItem) do
+            --回收avatar
+            if v.my_avatarData ~= nil then
+                AvatarManger.CollectAvatar(v.my_avatarData)
+                v.my_avatarData = nil
+            end
+            destroy(v.prefab.gameObject)
+        end
+    end
+    self.rankItem = {}
+    if info.industryId ==11 or info.industryId ==15 or info.industryId ==16 then
+        if info.topInfo then
+            local data = ct.deepCopy(info.topInfo)
+            if #info.topInfo > 10 then
+                CityInfoPanel.detailFiveMyRankFiveItem.localScale = Vector3.one
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.detailFiveMyIcon,0.15)
+                CityInfoPanel.detailFiveMyRank.text = ">10"
+                CityInfoPanel.detailFiveMyMame.text = info.topInfo[#info.topInfo].name
+                CityInfoPanel.detailFiveMyIncome.text = info.topInfo[#info.topInfo].income
+                CityInfoPanel.detailFiveMyStaff.text = info.topInfo[#info.topInfo].woker
+                CityInfoPanel.detailFiveMyTechnology.text = info.topInfo[#info.topInfo].science
+                table.remove(data)
+            else
+                CityInfoPanel.detailFiveMyRankFiveItem.localScale = Vector3.zero
+            end
+            self.rankFiveItem = {}
+            for i, v in ipairs(data) do
+                local prefab = createPrefabs(CityInfoPanel.detailFiveRankFiveItem,CityInfoPanel.detailFiveContent)
+                self.rankItem[i] = RankFiveItem:new(cityInfoBehaviour,prefab,v,i)
+            end
+        end
+    elseif info.industryId ==12 or info.industryId ==13 then
+        if info.topInfo then
+            local data = ct.deepCopy(info.topInfo)
+            if #info.topInfo > 10 then
+                CityInfoPanel.detailSixMyRankSixItem.localScale = Vector3.one
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.detailSixMyIcon,0.15)
+                CityInfoPanel.detailSixMyRank.text = ">10"
+                CityInfoPanel.detailSixMyMame.text = info.topInfo[#info.topInfo].name
+                CityInfoPanel.detailSixMyIncome.text = info.topInfo[#info.topInfo].income
+                CityInfoPanel.detailSixMyStaff.text = info.topInfo[#info.topInfo].woker
+                CityInfoPanel.detailSixMyTechnology.text = info.topInfo[#info.topInfo].science
+                CityInfoPanel.detailSixMyMarket.text = info.topInfo[#info.topInfo].promotion
+                table.remove(data)
+            else
+                CityInfoPanel.detailSixMyRankSixItem.localScale = Vector3.zero
+            end
+            for i, v in ipairs(data) do
+                local prefab = createPrefabs(CityInfoPanel.detailSixRankSixItem,CityInfoPanel.detailSixContent)
+                self.rankItem[i] = RankSixItem:new(cityInfoBehaviour,prefab,v,i)
+            end
+        end
+    end
 end

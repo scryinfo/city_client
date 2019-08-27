@@ -25,6 +25,9 @@ function TitleInfoItem:initialize(inluabehaviour, prefab, goodsDataInfo,itemId,t
     self.selectText.text = goodsDataInfo.name
 
     self._luabehaviour:AddClick(self.notSelect, self.OnNotSelect, self);
+    self._luabehaviour:AddClick(CityInfoPanel.threeEvaTechnologyBtn, self.OnThreeEvaTechnologyBtn, self);
+    self._luabehaviour:AddClick(CityInfoPanel.threeEvaAdvertisingBtn, self.OnThreeEvaAdvertisingBtn, self);
+    self._luabehaviour:AddClick(CityInfoPanel.threeEvaSpeedBtn, self.OnThreeEvaSpeedBtn, self);
 end
 
 function TitleInfoItem:OnNotSelect(go)
@@ -34,13 +37,61 @@ function TitleInfoItem:OnNotSelect(go)
         DataManager.DetailModelRpcNoRet(go.insId, 'm_queryItemSales',go.type,go.itemId)  --查询营业额
     elseif go.id == 2 then
         DataManager.DetailModelRpcNoRet(go.insId, 'm_ItemSupplyAndDemand',go.type,go.itemId)  --查询供需
+        CityInfoPanel.threeSupplyDemand.localScale = Vector3.one
     elseif go.id == 3 then
         DataManager.DetailModelRpcNoRet(go.insId, 'm_queryItemAvgPrice',go.type,go.itemId)  --查询详情成交均价
     elseif go.id == 4 then
         DataManager.DetailModelRpcNoRet(go.insId, 'm_queryProductRanking',go.type,go.itemId,DataManager.GetMyOwnerID())  --查询详情玩家排行
+        CityInfoPanel.threeCurveBg.localScale = Vector3.zero
+        CityInfoPanel.threeRank:SetActive(true)
+        if go.type == 11 or go.type == 15 or go.type == 16 then
+            CityInfoPanel.detailFive:SetActive(true)
+            CityInfoPanel.detailSix:SetActive(false)
+        elseif go.type == 12 or go.type == 13 then
+            CityInfoPanel.detailFive:SetActive(false)
+            CityInfoPanel.detailSix:SetActive(true)
+        end
     elseif go.id == 5 then
         DataManager.DetailModelRpcNoRet(go.insId, 'm_queryEvaGrade',go.type,go.itemId,2)  --查询详情玩家Eva
+        CityInfoPanel.threeEva.localScale = Vector3.one
+        CityInfoPanel.threeEvaTechnologyBtn.transform.localScale = Vector3.zero
+        CityInfoPanel.threeEvaAdvertisingBtn.transform.localScale = Vector3.one
+        CityInfoPanel.threeEvaSpeedBtn.transform.localScale = Vector3.one
+        if go.type == 12 then
+            CityInfoPanel.threeEvaSpeed.localScale = Vector3.one
+            CityInfoPanel.threeEvaAdvertising.localScale = Vector3.one
+        elseif go.type == 11 then
+            CityInfoPanel.threeEvaSpeed.localScale = Vector3.zero
+            CityInfoPanel.threeEvaAdvertising.localScale = Vector3.one
+        elseif go.type == 15 or go.type == 16 then
+            CityInfoPanel.threeEvaAdvertising.localScale = Vector3.zero
+            CityInfoPanel.threeEvaSpeed.localScale = Vector3.zero
+        end
     end
+end
+
+--详情Eva分布科技
+function TitleInfoItem:OnThreeEvaTechnologyBtn(go)
+    DataManager.DetailModelRpcNoRet(go.insId, 'm_queryEvaGrade',go.type,go.itemId,2)
+    CityInfoPanel.threeEvaTechnologyBtn.transform.localScale = Vector3.zero
+    CityInfoPanel.threeEvaAdvertisingBtn.transform.localScale = Vector3.one
+    CityInfoPanel.threeEvaSpeedBtn.transform.localScale = Vector3.one
+end
+
+--详情Eva分布推广
+function TitleInfoItem:OnThreeEvaAdvertisingBtn(go)
+    DataManager.DetailModelRpcNoRet(go.insId, 'm_queryEvaGrade',go.type,go.itemId,1)
+    CityInfoPanel.threeEvaTechnologyBtn.transform.localScale = Vector3.one
+    CityInfoPanel.threeEvaAdvertisingBtn.transform.localScale = Vector3.zero
+    CityInfoPanel.threeEvaSpeedBtn.transform.localScale = Vector3.one
+end
+
+--详情Eva分布速度
+function TitleInfoItem:OnThreeEvaSpeedBtn(go)
+    DataManager.DetailModelRpcNoRet(go.insId, 'm_queryEvaGrade',go.type,go.itemId,3)
+    CityInfoPanel.threeEvaTechnologyBtn.transform.localScale = Vector3.one
+    CityInfoPanel.threeEvaAdvertisingBtn.transform.localScale = Vector3.one
+    CityInfoPanel.threeEvaSpeedBtn.transform.localScale = Vector3.zero
 end
 
 function TitleInfoItem:ShowPanel(go)
@@ -52,6 +103,10 @@ function TitleInfoItem:ShowPanel(go)
     go.select.localScale = Vector3.one
     lastBg = go
     CityInfoPanel.productContent.anchoredPosition = Vector3.zero
+    CityInfoPanel.threeCurveBg.localScale = Vector3.one
+    CityInfoPanel.threeRank:SetActive(false)
+    CityInfoPanel.threeSupplyDemand.localScale = Vector3.zero
+    CityInfoPanel.threeEva.localScale = Vector3.zero
 end
 
 function TitleInfoItem:SetLast(bg)

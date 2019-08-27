@@ -42,8 +42,10 @@ function TitleGoodsItem:OnBg(go)
     end
     CityInfoPanel.productText.text = go.goodsDataInfo.name
     CityInfoPanel.productDown.transform.localScale = Vector3.one
+    CityInfoPanel.productDowns.localScale = Vector3.one
     CityInfoPanel.productUp.localScale = Vector3.zero
     CityInfoPanel.productsList:SetActive(false)
+    CityInfoPanel.close.transform.localScale = Vector3.zero
 
     if go.titleInfoItem and next(go.titleInfoItem) then
         for i, v in pairs(go.titleInfoItem) do
@@ -51,6 +53,10 @@ function TitleGoodsItem:OnBg(go)
         end
         go.titleInfoItem[1]:ShowPanel(go.titleInfoItem[1])
     end
+end
+
+function TitleGoodsItem:SetLast(bg)
+    lastBg = bg
 end
 
 function TitleGoodsItem:Close()

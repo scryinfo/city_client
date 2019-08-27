@@ -90,15 +90,10 @@ function CityInfoPanel.InitPanel()
     this.landTag = transform:Find("content/right/industryInfo/industryBg/land/tag")
 
     this.eva = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva")    --Eva等级分布
-    this.evaTechnology = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva/technology")
     this.evaTechnologyText = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva/technology/Text"):GetComponent("Text")
     this.evaTechnologyBtn = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva/technology/unChoose").gameObject
-    this.evaAdvertising = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva/advertising")
     this.evaAdvertisingText = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva/advertising/Text"):GetComponent("Text")
     this.evaAdvertisingBtn = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva/advertising/unChoose").gameObject
-    this.speed = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva/speed")
-    this.speedText = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva/speed/Text"):GetComponent("Text")
-    this.speedBtn = transform:Find("content/right/industryInfo/oneContent/supplyDemandBg/eva/speed/unChoose").gameObject
 
     this.oneContent = transform:Find("content/right/industryInfo/oneContent")          --第一层信息
     this.titleBg = transform:Find("content/right/industryInfo/oneContent/titleBg"):GetComponent("RectTransform")
@@ -176,6 +171,7 @@ function CityInfoPanel.InitPanel()
     this.productIcon = transform:Find("content/right/industryInfo/oneContent/twoContent/products/iconBg/icon"):GetComponent("Image")
     this.productText = transform:Find("content/right/industryInfo/oneContent/twoContent/products/iconBg/Text"):GetComponent("Text")
     this.productDown = transform:Find("content/right/industryInfo/oneContent/twoContent/products/line/down").gameObject
+    this.productDowns = transform:Find("content/right/industryInfo/oneContent/twoContent/products/line/downs")
     this.productUp = transform:Find("content/right/industryInfo/oneContent/twoContent/products/line/up")
     this.productContent = transform:Find("content/right/industryInfo/oneContent/twoContent/Scroll View/Viewport/Content"):GetComponent("RectTransform")
     this.productTitleInfoItem = transform:Find("content/right/industryInfo/oneContent/twoContent/Scroll View/Viewport/Content/TitleInfoItem").gameObject
@@ -184,30 +180,28 @@ function CityInfoPanel.InitPanel()
     this.productsListTitleGoodsItem = transform:Find("content/right/industryInfo/oneContent/twoContent/productsList/Scroll View/Viewport/Content/TitleGoodsItem").gameObject
     this.close = transform:Find("content/right/industryInfo/oneContent/twoContent/close").gameObject
 
-    this.threeSupplyDemand = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/supplyDemand")  --第三层
+    this.threeCurveBg = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve")  --第三层曲线
+    this.threeSupplyDemand = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/supplyDemand")
+    this.threeEva = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva")
+
+    this.threeEvaTechnologyText = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva/technology/Text"):GetComponent("Text")
+    this.threeEvaTechnologyBtn = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva/technology/unChoose").gameObject
+    this.threeEvaAdvertising = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva/advertising")
+    this.threeEvaAdvertisingText = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva/advertising/Text"):GetComponent("Text")
+    this.threeEvaAdvertisingBtn = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva/advertising/unChoose").gameObject
+    this.threeEvaSpeed = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva/speed")
+    this.threeEvaSpeedText = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva/speed/Text"):GetComponent("Text")
+    this.threeEvaSpeedBtn = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva/speed/unChoose").gameObject
+
     this.threeYScale = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/yScale"):GetComponent("RectTransform")
     this.threeSum = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/sum"):GetComponent("Text")
     this.threeCurve = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/curveBg/curve"):GetComponent("RectTransform")
     this.threeSlide = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/curveBg/curve"):GetComponent("Slide")  --滑动
     this.threeGraph = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/curveBg/curve"):GetComponent("FunctionalGraph")  --绘制曲线
 
-    this.threeRank = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank").gameObject   --详细收入排行
-    this.detailFour = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four")   --4列详细收入排行
+    this.threeRank = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank").gameObject   --第三层排行
 
-    this.detailFourRank = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/title/rank"):GetComponent("Text")
-    this.detailFourUser = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/title/user"):GetComponent("Text")
-    this.detailFourIncome = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/title/income"):GetComponent("Text")
-    this.detailFourVolume = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/title/volume"):GetComponent("Text")
-    this.detailFourContent = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/Scroll View/Viewport/Content"):GetComponent("RectTransform")
-    this.detailFourRankFourItem = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/Scroll View/Viewport/Content/RankFourItem").gameObject
-    this.detailFourMyRankFourItem = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/Scroll View/myRankFourItem")
-    this.detailFourMyRank = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/Scroll View/myRankFourItem/rank"):GetComponent("Text")
-    this.detailFourMyIcon = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/Scroll View/myRankFourItem/head/icon")
-    this.detailFourMyMame = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/Scroll View/myRankFourItem/head/name"):GetComponent("Text")
-    this.detailFourMyIncome = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/Scroll View/myRankFourItem/income"):GetComponent("Text")
-    this.detailFourMyVolume = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/four/Scroll View/myRankFourItem/volume"):GetComponent("Text")
-
-    this.detailFive = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/five")   --5列详细收入排行
+    this.detailFive = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/five").gameObject   --5列详细收入排行
 
     this.detailFiveRank = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/five/title/rank"):GetComponent("Text")
     this.detailFiveUser = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/five/title/user"):GetComponent("Text")
@@ -224,7 +218,7 @@ function CityInfoPanel.InitPanel()
     this.detailFiveMyStaff = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/five/Scroll View/myRankFiveItem/staff"):GetComponent("Text")
     this.detailFiveMyTechnology = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/five/Scroll View/myRankFiveItem/technology"):GetComponent("Text")
 
-    this.detailSix = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/six")   --6列详细收入排行
+    this.detailSix = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/six").gameObject   --6列详细收入排行
 
     this.detailSixRank = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/six/title/rank"):GetComponent("Text")
     this.detailSixUser = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threeRank/six/title/user"):GetComponent("Text")

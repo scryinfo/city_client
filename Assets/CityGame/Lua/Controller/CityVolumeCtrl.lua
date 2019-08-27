@@ -136,7 +136,7 @@ function CityVolumeCtrl:LineChart(info)
                     end
                 end
                 if updataTime == currentTime then
-                    volumeTab[i].money = tonumber(GetClientPriceString(self.m_data.today))
+                    volumeTab[i].money = tonumber(GetClientPriceString(ct.scientificNotation2Normal(self.m_data.today)))
                 end
             end
             updataTime = updataTime + 86400
@@ -156,7 +156,7 @@ function CityVolumeCtrl:LineChart(info)
             end
             updataTime = updataTime + 86400
         end
-        volumeTab[#volumeTab].money = tonumber(GetClientPriceString(self.m_data.today))
+        volumeTab[#volumeTab].money = tonumber(GetClientPriceString(ct.scientificNotation2Normal(self.m_data.today)))
     end
 
     --转换为Vector2类型

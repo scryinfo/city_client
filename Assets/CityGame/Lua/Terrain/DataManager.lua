@@ -1150,20 +1150,20 @@ function  DataManager.InitPersonDatas(tempData)
         createTs = tempData.createTs
     }
 
-    --初始化可用原料表
-    if tempData.cityGoodInfo.material.num then
-        PersonDataStack.m_material = {}
-        for i, v in ipairs(tempData.cityGoodInfo.material.num) do
-           table.insert(PersonDataStack.m_material,v)
-        end
-    end
-    --初始化可用商品表
-    if tempData.cityGoodInfo.goods.num then
-        PersonDataStack.m_goods = {}
-        for i, v in ipairs(tempData.cityGoodInfo.goods.num) do
-            table.insert(PersonDataStack.m_goods,v)
-        end
-    end
+    ----初始化可用原料表
+    --if tempData.cityGoodInfo.material.num then
+    --    PersonDataStack.m_material = {}
+    --    for i, v in ipairs(tempData.cityGoodInfo.material.num) do
+    --       table.insert(PersonDataStack.m_material,v)
+    --    end
+    --end
+    ----初始化可用商品表
+    --if tempData.cityGoodInfo.goods.num then
+    --    PersonDataStack.m_goods = {}
+    --    for i, v in ipairs(tempData.cityGoodInfo.goods.num) do
+    --        table.insert(PersonDataStack.m_goods,v)
+    --    end
+    --end
 
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then

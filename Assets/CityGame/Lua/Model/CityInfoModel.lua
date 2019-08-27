@@ -25,6 +25,11 @@ function CityInfoModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryMoneyPoolInfo","gs.MoneyPool",self.n_OnMoneyPoolInfo,self)  --今日
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryRegalRanking","gs.RegalRanking",self.n_OnRanking,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryCityLevel","gs.CityLevel",self.n_OnLevel,self)
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryItemSales","ss.ItemSales",self.n_OnItemSales,self)  --营业额
+    DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryItemAvgPrice","ss.AverageTransactionprice",self.n_OnItemAvgPrice,self)  --详情成交均价
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryEvaGrade","gs.EvaGrade",self.n_OnEvaGrade,self)  --Eva分布
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryItemSupplyAndDemand","gs.SupplyAndDemand",self.n_OnItemSupplyAndDemand,self)  --详情供需
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryProductRanking","gs.ProductRanking",self.n_OnProductRanking,self)  --详情排行
 
 end
 
@@ -40,7 +45,11 @@ function CityInfoModel:Close()
     DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryCityMoneyPool","ss.CityTransactionAmount",self.n_OnMoneyPool,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryMoneyPoolInfo","gs.MoneyPool",self.n_OnMoneyPoolInfo,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryRegalRanking","gs.RegalRanking",self.n_OnRanking,self)
-    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryCityLevel","gs.CityLevel",self.n_OnLevel,self)
+    DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryItemSales","ss.ItemSales",self.n_OnItemSales,self)
+    DataManager.ModelRemoveNetMsg(nil,"sscode.OpCode","queryItemAvgPrice","ss.AverageTransactionprice",self.n_OnItemAvgPrice,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryEvaGrade","gs.EvaGrade",self.n_OnEvaGrade,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryItemSupplyAndDemand","gs.SupplyAndDemand",self.n_OnItemSupplyAndDemand,self)
+    DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","queryProductRanking","gs.ProductRanking",self.n_OnProductRanking,self)
 
 end
 --客户端请求--
@@ -109,7 +118,38 @@ end
 --查询等级
 function CityInfoModel:m_queryLevel()
     local msgId = pbl.enum("gscode.OpCode","queryCityLevel")
-    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+    --CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+end
+
+--查询营业额
+function CityInfoModel:m_queryItemSales(type,itemId)
+    local msgId = pbl.enum("sscode.OpCode","queryItemSales")
+    local lMsg = { industryId = type,itemId = itemId }
+    local pMsg = assert(pbl.encode("ss.queryItemSales", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
+--查询详情成交均价
+function CityInfoModel:m_queryItemAvgPrice(type,itemId)
+    local msgId = pbl.enum("sscode.OpCode","queryItemAvgPrice")
+    local lMsg = { industryId = type,itemId = itemId }
+    local pMsg = assert(pbl.encode("ss.queryItemAvgPrice", lMsg))
+    CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
+end
+
+--查询Eva分布
+function CityInfoModel:m_queryEvaGrade(industryId,itemId,type)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryEvaGrade","gs.queryEvaGrade",{industryId = industryId,itemId= itemId,type = type})
+end
+
+--查询详情供需
+function CityInfoModel:m_ItemSupplyAndDemand(industryId,itemId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryItemSupplyAndDemand","gs.queryItemSupplyAndDemand",{industryId = industryId,itemId= itemId})
+end
+
+--查询详情排行
+function CityInfoModel:m_queryProductRanking(industryId,itemId,playerId)
+    DataManager.ModelSendNetMes("gscode.OpCode", "queryProductRanking","gs.queryProductRanking",{industryId = industryId,itemId= itemId,playerId = playerId})
 end
 
 --服务器回调
@@ -172,4 +212,30 @@ end
 function CityInfoModel:n_OnLevel(info)
     DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveLevel',info)
 end
+
+--营业额
+function CityInfoModel:n_OnItemSales(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveItemSales',info)
+end
+
+--详情成交均价
+function CityInfoModel:n_OnItemAvgPrice(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveItemAvgPrice',info)
+end
+
+--Eva分布
+function CityInfoModel:n_OnEvaGrade(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveEvaGrade',info)
+end
+
+--详情供需
+function CityInfoModel:n_OnItemSupplyAndDemand(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveItemSupplyAndDemand',info)
+end
+
+--详情排行
+function CityInfoModel:n_OnProductRanking(info)
+    DataManager.ControllerRpcNoRet(self.insId,"CityInfoCtrl", '_receiveProductRanking',info)
+end
+
 

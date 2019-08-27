@@ -1150,6 +1150,21 @@ function  DataManager.InitPersonDatas(tempData)
         createTs = tempData.createTs
     }
 
+    ----初始化可用原料表
+    --if tempData.cityGoodInfo.material.num then
+    --    PersonDataStack.m_material = {}
+    --    for i, v in ipairs(tempData.cityGoodInfo.material.num) do
+    --       table.insert(PersonDataStack.m_material,v)
+    --    end
+    --end
+    ----初始化可用商品表
+    --if tempData.cityGoodInfo.goods.num then
+    --    PersonDataStack.m_goods = {}
+    --    for i, v in ipairs(tempData.cityGoodInfo.goods.num) do
+    --        table.insert(PersonDataStack.m_goods,v)
+    --    end
+    --end
+
     --初始化自己所拥有建筑品牌值
     if  PersonDataStack.m_buildingBrands == nil then
         PersonDataStack.m_buildingBrands = {}
@@ -1323,6 +1338,34 @@ end
 --获取中心仓库Id
 function DataManager.GetBagId()
     return PersonDataStack.m_bagId
+end
+
+--获取可用原料表
+function DataManager.GetMaterial()
+    return PersonDataStack.m_material
+end
+
+--设置可用原料表
+function DataManager.SetMaterial(material)
+    if material then
+        for i, v in ipairs(material) do
+            table.insert(PersonDataStack.m_material,v)
+        end
+    end
+end
+
+--获取可用商品表
+function DataManager.GetGoods()
+    return PersonDataStack.m_goods
+end
+
+--设置可用商品表
+function DataManager.SetGoods(goods)
+    if goods then
+        for i, v in ipairs(goods) do
+            table.insert(PersonDataStack.m_goods,v)
+        end
+    end
 end
 
 -- 所选服务器创建时间

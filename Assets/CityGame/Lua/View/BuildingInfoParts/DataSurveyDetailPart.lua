@@ -106,9 +106,9 @@ function DataSurveyDetailPart:initData(info)
     else
         self.lineNumberText.text = #info.line .. "/5"
         if #info.line >= 5 then
-            self.queueAddBg.localScale = Vector3.zero
+            self.queueAddBtn:GetComponent("Button").interactable = false
         else
-            self.queueAddBg.localScale = Vector3.one
+            self.queueAddBtn:GetComponent("Button").interactable = true
         end
         self:ShowSurvey(true)
         if #info.line <= 1 then

@@ -135,13 +135,13 @@ function PropertyTrueItem:initialize(prefab, data, configData)
             end
         end
         if self.data.bt == "Brand" then
-            if EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] and EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint then
-                itemAllPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint
+            if EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue then
+                itemAllPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue
             end
             typeAllPoint = EvaCtrl.static.evaCtrl.buildingPoint[recordData[1]].promotionPoint.pointNum
         else
-            if EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] and EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint then
-                itemAllPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint
+            if EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].value then
+                itemAllPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
             end
             typeAllPoint = EvaCtrl.static.evaCtrl.buildingPoint[recordData[1]].sciencePoint.pointNum
         end
@@ -234,13 +234,13 @@ function PropertyTrueItem:_onChangeInputNum(num)
             end
         end
         if self.data.bt == "Brand" then
-            if EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] and EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint then
-                itemAllPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint
+            if EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue then
+                itemAllPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue
             end
             typeAllPoint = EvaCtrl.static.evaCtrl.buildingPoint[recordData[1]].promotionPoint.pointNum
         else
-            if EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] and EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint then
-                itemAllPoint = EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint
+            if EvaCtrl.static.evaCtrl.addData[recordData[1]] and EvaCtrl.static.evaCtrl.addData[recordData[1]].value then
+                itemAllPoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
             end
             typeAllPoint = EvaCtrl.static.evaCtrl.buildingPoint[recordData[1]].sciencePoint.pointNum
         end
@@ -282,15 +282,6 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
 
     -- 获取到现在的层级
     local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
-    --if recordData[1] == 2 then
-    --    if self.configData.Btype == "ProduceSpeed" then
-    --        EvaPanel.ResultRootO:_showData(myLv)
-    --    elseif self.configData.Btype == "Quality" then
-    --        EvaPanel.ResultRootTwo:_showData(myLv)
-    --    end
-    --else
-    --    EvaPanel.ResultRootO:_showData(myLv)
-    --end
 
     if self.configData.Btype == "Quality" then
         EvaPanel.ResultRootTwo:_showData(myLv)
@@ -301,7 +292,7 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
     end
 
     -- 总的加点数
-    EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]] = {}
+    --EvaCtrl.static.evaCtrl.addData[recordData[1]] = {}
 
     if #recordData == 1 then
         if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
@@ -311,12 +302,12 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
             EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue = addNumber
             EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setMarketAddNumber(addNumber)
 
-            EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint = addNumber
+            --EvaCtrl.static.evaCtrl.addData[recordData[1]].promotionPoint = addNumber
         else
             EvaCtrl.static.evaCtrl.addData[recordData[1]].value = addNumber
             EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(addNumber)
 
-            EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint = addNumber
+            --EvaCtrl.static.evaCtrl.addData[recordData[1]].sciencePoint = addNumber
         end
     elseif #recordData == 2 then
         if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
@@ -328,6 +319,16 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         if not EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] then
             EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]] = {}
         end
+
+        if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value then
+            EvaCtrl.static.evaCtrl.addData[recordData[1]].value = EvaCtrl.static.evaCtrl.addData[recordData[1]].value - EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value + addNumber
+        else
+            if EvaCtrl.static.evaCtrl.addData[recordData[1]].value then
+                EvaCtrl.static.evaCtrl.addData[recordData[1]].value = EvaCtrl.static.evaCtrl.addData[recordData[1]].value + addNumber
+            else
+                EvaCtrl.static.evaCtrl.addData[recordData[1]].value = addNumber
+            end
+        end
         EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value = addNumber
         for _, k in ipairs(EvaCtrl.optionTwoScript) do
             if k.index == recordData[2] then
@@ -335,14 +336,13 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
                 break
             end
         end
-        local totalNum = 0
-        for _, v in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
-            totalNum = totalNum + v.value
-        end
-        EvaCtrl.static.evaCtrl.addData[recordData[1]].value = totalNum
-        EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(totalNum)
+        EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].value)
+        --local totalNum = 0
+        --for _, v in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
+        --    totalNum = totalNum + v.value
+        --end
 
-        EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint = totalNum
+        --EvaCtrl.static.evaCtrl.addData[recordData[1]].sciencePoint = EvaCtrl.static.evaCtrl.addData[recordData[1]].value
     elseif #recordData == 3 then
         if not EvaCtrl.static.evaCtrl.addData[recordData[1]] then
             EvaCtrl.static.evaCtrl.addData[recordData[1]] = {}
@@ -362,59 +362,81 @@ function PropertyTrueItem:ShowResultData(myLv, addNumber, myCexp)
         if not EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue then
             EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue = {}
         end
-        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] = addNumber
-        local totalNum3, totalNum32 = 0,0
-        for btName, v in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue) do
-            if btName == "Brand" then
-                totalNum32 = v
+        --if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] then
+            if self.data.bt == "Brand" then
+                if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] then
+                    EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].marketValue = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].marketValue - EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] + addNumber
+                    EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue = EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue - EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] + addNumber
+                else
+                    if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].marketValue then
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].marketValue = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].marketValue + addNumber
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue = EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue + addNumber
+                    else
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].marketValue = addNumber
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue = addNumber
+                    end
+                end
+                EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].marketValue = addNumber
+                EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] = addNumber
+                for _, k in ipairs(EvaCtrl.optionThereScript) do
+                    if k.index == recordData[3] then
+                        k:_setMarketAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].marketValue)
+                        break
+                    end
+                end
+                for _, j in ipairs(EvaCtrl.optionTwoScript) do
+                    if j.index == recordData[2] then
+                        j:_setMarketAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].marketValue)
+                        break
+                    end
+                end
+                EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setMarketAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue)
             else
-                totalNum3 = totalNum3 + v
+                if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] then
+                    EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value - EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] + addNumber
+                    EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value - EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] + addNumber
+                    EvaCtrl.static.evaCtrl.addData[recordData[1]].value = EvaCtrl.static.evaCtrl.addData[recordData[1]].value - EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] + addNumber
+                else
+                    if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value then
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value + addNumber
+                    else
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value = addNumber
+                    end
+                    if EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value then
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value = EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value + addNumber
+                    else
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value = addNumber
+                    end
+                    if EvaCtrl.static.evaCtrl.addData[recordData[1]].value then
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].value = EvaCtrl.static.evaCtrl.addData[recordData[1]].value + addNumber
+                    else
+                        EvaCtrl.static.evaCtrl.addData[recordData[1]].value = addNumber
+                    end
+                end
+                EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].optionValue[self.data.bt] = addNumber
+                for _, k in ipairs(EvaCtrl.optionThereScript) do
+                    if k.index == recordData[3] then
+                        k:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value)
+                        break
+                    end
+                end
+                for _, j in ipairs(EvaCtrl.optionTwoScript) do
+                    if j.index == recordData[2] then
+                        j:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value)
+                        break
+                    end
+                end
+                EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(EvaCtrl.static.evaCtrl.addData[recordData[1]].value)
             end
-        end
-        for _, k in ipairs(EvaCtrl.optionThereScript) do
-            if k.index == recordData[3] then
-                k:_setAddNumber(totalNum3)
-                k:_setMarketAddNumber(totalNum32)
-                break
-            end
-        end
-        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].value = totalNum3
-        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue[recordData[3]].marketValue = totalNum32
-        local totalNum2,totalNum22 = 0,0
-        for _, x in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].optionValue) do
-            totalNum2 = totalNum2 + x.value
-            totalNum22 = totalNum22 + x.marketValue
-        end
-        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].value = totalNum2
-        EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue[recordData[2]].marketValue = totalNum22
-        for _, j in ipairs(EvaCtrl.optionTwoScript) do
-            if j.index == recordData[2] then
-                j:_setAddNumber(totalNum2)
-                j:_setMarketAddNumber(totalNum22)
-                break
-            end
-        end
-        local totalNum1,totalNum12 = 0, 0
-        for _, y in pairs(EvaCtrl.static.evaCtrl.addData[recordData[1]].optionValue) do
-            totalNum1 = totalNum1 + y.value
-            totalNum12 = totalNum12 + y.marketValue
-        end
-        EvaCtrl.static.evaCtrl.addData[recordData[1]].value = totalNum1
-        EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setAddNumber(totalNum1)
-        EvaCtrl.static.evaCtrl.addData[recordData[1]].marketValue = totalNum12
-        EvaCtrl.static.evaCtrl.evaTitleItem[recordData[1]]:_setMarketAddNumber(totalNum12)
-
-        EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].sciencePoint = totalNum1
-        EvaCtrl.static.evaCtrl.allEvaAddPoint[recordData[1]].promotionPoint = totalNum12
     end
 
     local allNowPint = 0
-    for _, h in pairs(EvaCtrl.static.evaCtrl.allEvaAddPoint) do
-        if h.sciencePoint then
-            allNowPint = allNowPint + h.sciencePoint
+    for _, h in pairs(EvaCtrl.static.evaCtrl.addData) do
+        if h.value then
+            allNowPint = allNowPint + h.value
         end
-        if h.promotionPoint then
-            allNowPint = allNowPint + h.promotionPoint
+        if h.marketValue then
+            allNowPint = allNowPint + h.marketValue
         end
     end
     EvaCtrl.static.evaCtrl:SetAddBtnState(allNowPint > 0)

@@ -268,7 +268,6 @@ function BuildingRevenueInfoCtrl:_clickSalesBtn(ins)
     ins.selectedSalesVolume.localScale = Vector3.zero
     --点击销售额传incomeData
     ins:DrawBuildingLine(incomeData,1)
-
 end
 --查看7天的销售量
 function BuildingRevenueInfoCtrl:_clickSalesVolumeBtn(ins)

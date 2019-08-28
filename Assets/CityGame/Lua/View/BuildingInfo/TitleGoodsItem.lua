@@ -21,7 +21,7 @@ function TitleGoodsItem:initialize(inluabehaviour, prefab, goodsDataInfo,msg,tit
     self.iconText = self.prefab.transform:Find("icon/Text"):GetComponent("Text")
 
     self.icon.sprite = SpriteManager.GetSpriteByPool(goodsDataInfo.itemId)
-    self.iconText.text = goodsDataInfo.name
+    self.iconText.text = GetLanguage(goodsDataInfo.name)
 
     self._luabehaviour:AddClick(self.bg.gameObject, self.OnBg, self);
 end

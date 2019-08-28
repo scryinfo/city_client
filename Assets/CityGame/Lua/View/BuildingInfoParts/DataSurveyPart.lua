@@ -41,6 +41,9 @@ function DataSurveyPart:RefreshData(data)
     if data == nil then
         return
     end
+    self.notLine.text = GetLanguage(20100007)
+    self.unTitleText.text = GetLanguage(27010006)
+    self.titleText.text = GetLanguage(27010006)
     self.m_data = data
     if data.line == nil then
         self.notLine.transform.localScale = Vector3.one
@@ -67,6 +70,8 @@ function DataSurveyPart:_getComponent(transform)
     self.timeText = transform:Find("Top/TopLineInfo/timeText"):GetComponent("Text")
     self.slider = transform:Find("Top/TopLineInfo/numberSlider"):GetComponent("Slider")
     self.num = transform:Find("Top/TopLineInfo/numberSlider/numberText"):GetComponent("Text")
+    self.unTitleText = transform:Find("UnselectBtn/titleText"):GetComponent("Text")
+    self.titleText = transform:Find("SelectBtn/titleText"):GetComponent("Text")
 end
 --
 function DataSurveyPart:_initFunc(info)

@@ -44,6 +44,8 @@ end
 
 function ResearchCtrl:Active()
     UIPanel.Active(self)
+    ResearchPanel.TitleText.text = GetLanguage(27040005)
+    ResearchPanel.quantityText.text = GetLanguage(27040007)
 end
 
 function ResearchCtrl:Refresh()
@@ -58,12 +60,12 @@ end
 function ResearchCtrl:_updateData()
     ResearchPanel.inputField.text = "1"
     LoadSprite(self.m_data.config.iconPath, ResearchPanel.iconImage, false)
-    ResearchPanel.nameText.text = self.m_data.config.name
-    ResearchPanel.contentText.text = self.m_data.config.content
-    ResearchPanel.speedTitleText.text = "Speed:"
-    ResearchPanel.speedText.text = string.format("%ss/per", 1/self.m_data.speed)
+    ResearchPanel.nameText.text = GetLanguage(self.m_data.config.name)
+    ResearchPanel.contentText.text = GetLanguage(self.m_data.config.content)
+    ResearchPanel.speedTitleText.text = GetLanguage(27050005)
+    ResearchPanel.speedText.text = GetLanguage(27050006,string.format("%0.2f", 1/self.m_data.speed))
     ResearchPanel.timeText.text = ""
-    ResearchPanel.timeTitleText.text = "Estimated time:"
+    ResearchPanel.timeTitleText.text = GetLanguage(27050007)
 end
 
 -------------------------------------按钮点击事件-------------------------------------

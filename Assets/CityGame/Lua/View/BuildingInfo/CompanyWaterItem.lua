@@ -28,7 +28,7 @@ function CompanyWaterItem:initialize(viewRect, goodsDataInfo,isIncome)
     self.freight = self.viewRect:Find("freight"):GetComponent("Text")   --运费
 
     self.freight.transform.localScale = Vector3.zero
-    if goodsDataInfo.metaId then
+    if goodsDataInfo.metaId and math.floor(goodsDataInfo.metaId / 100000) ~= 15 and math.floor(goodsDataInfo.metaId / 100000) ~= 16 then
         self.sizeName.text = goodsDataInfo.name .. GetLanguage(PlayerBuildingBaseData[goodsDataInfo.metaId].sizeName) .. GetLanguage(PlayerBuildingBaseData[goodsDataInfo.metaId].typeName)
     end
     local ts = getFormatUnixTime(goodsDataInfo.time / 1000)
@@ -51,12 +51,12 @@ function CompanyWaterItem:initialize(viewRect, goodsDataInfo,isIncome)
         else   --商品原料
             self.goodsBg.localScale = Vector3.one
             self.bg.localScale = Vector3.zero
-            self.name.text = GetLanguage(19030005)
-            if math.floor(goodsDataInfo.itemId / 100000) == 21 then  --原料
-                LoadSprite(Material[goodsDataInfo.itemId].img, self.goods)
-            elseif math.floor(goodsDataInfo.itemId / 100000) == 22 then --商品
-                LoadSprite(Good[goodsDataInfo.itemId].img, self.goods)
-            end
+            --if math.floor(goodsDataInfo.itemId / 100000) == 21 then  --原料
+            --    LoadSprite(Material[goodsDataInfo.itemId].img, self.goods)
+            --elseif math.floor(goodsDataInfo.itemId / 100000) == 22 then --商品
+            --    LoadSprite(Good[goodsDataInfo.itemId].img, self.goods)
+            --end
+            self.goods.sprite = SpriteManager.GetSpriteByPool(goodsDataInfo.itemId)
             self.goodsName.text = GetLanguage(goodsDataInfo.itemId)
             self.num.text = "x" .. goodsDataInfo.num
         end
@@ -67,7 +67,7 @@ function CompanyWaterItem:initialize(viewRect, goodsDataInfo,isIncome)
             self.goodsBg.localScale = Vector3.zero
             self.bg.localScale = Vector3.one
             LoadSprite("Assets/CityGame/Resources/Atlas/Company/water/icon-Employee'swages.png", self.icon,true)
-            self.name.text = GetLanguage(24020006)
+            self.name.text = GetLanguage(18050010)
         elseif goodsDataInfo.itemId == 3000 then  --土地购买
             self.goodsBg.localScale = Vector3.zero
             self.bg.localScale = Vector3.one
@@ -80,21 +80,28 @@ function CompanyWaterItem:initialize(viewRect, goodsDataInfo,isIncome)
             LoadSprite("Assets/CityGame/Resources/Atlas/Company/water/icon-land.png", self.icon,true)
             self.name.text = GetLanguage(20010007)
             self.sizeName.text = GetLanguage(18030003) .. goodsDataInfo.name
+        elseif goodsDataInfo.itemId == 5000 then  --Eva点数购买
+            self.goodsBg.localScale = Vector3.zero
+            self.bg.localScale = Vector3.one
+            LoadSprite("Assets/CityGame/Resources/Atlas/Eva/icon-eva.png", self.icon,true)
+            --self.name.text = GetLanguage(20010007)
+            self.name.text = "Eva点数购买"
+            self.sizeName.text = ResearchConfig[goodsDataInfo.metaId].name
         else   --商品原料
             self.goodsBg.localScale = Vector3.one
             self.bg.localScale = Vector3.zero
-            self.name.text = GetLanguage(19030005)
-            if math.floor(goodsDataInfo.itemId / 100000) == 21 then  --原料
-                LoadSprite(Material[goodsDataInfo.itemId].img, self.goods)
-            elseif math.floor(goodsDataInfo.itemId / 100000) == 22 then --商品
-                LoadSprite(Good[goodsDataInfo.itemId].img, self.goods)
-            end
+            --if math.floor(goodsDataInfo.itemId / 100000) == 21 then  --原料
+            --    LoadSprite(Material[goodsDataInfo.itemId].img, self.goods)
+            --elseif math.floor(goodsDataInfo.itemId / 100000) == 22 then --商品
+            --    LoadSprite(Good[goodsDataInfo.itemId].img, self.goods)
+            --end
+            self.goods.sprite = SpriteManager.GetSpriteByPool(goodsDataInfo.itemId)
             self.goodsName.text = GetLanguage(goodsDataInfo.itemId)
             self.num.text = "x" .. goodsDataInfo.num
             if goodsDataInfo.amount == 0 then
                 self.freight.transform.localScale = Vector3.one
                 self.money.text = "-E" .. GetClientPriceString(goodsDataInfo.freight * goodsDataInfo.num)
-                self.freight.text = "(" .. GetLanguage(18010015) .. ")"
+                self.freight.text = "(" .. GetLanguage(18050013) .. ")"
             end
         end
         end

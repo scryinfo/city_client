@@ -34,13 +34,17 @@ function DataBasePart:RefreshData(data)
         return
     end
     self.m_data = data
-    self.topText.text = GetLanguage(25010009)
+    self.topText.text = GetLanguage(27010008)
+    self.unTitleText.text = GetLanguage(27010005)
+    self.titleText.text = GetLanguage(27010005)
     self.quantity.text = data.storeNum
 end
 --
 function DataBasePart:_getComponent(transform)
     self.topText = transform:Find("Top/topText"):GetComponent("Text")
     self.quantity = transform:Find("Top/quantity"):GetComponent("Text")
+    self.unTitleText = transform:Find("UnselectBtn/titleText"):GetComponent("Text")
+    self.titleText = transform:Find("SelectBtn/titleText"):GetComponent("Text")
 end
 --
 function DataBasePart:_initFunc(info)

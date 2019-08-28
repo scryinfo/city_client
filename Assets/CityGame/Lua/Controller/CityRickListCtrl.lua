@@ -25,6 +25,12 @@ end
 
 function CityRickListCtrl:Active()
     UIPanel.Active(self)
+    self.name.text = GetLanguage(45010007)
+    self.rank.text = GetLanguage(45010015)
+    self.income.text = GetLanguage(45010017)
+    self.staff.text = GetLanguage(45010018)
+    self.technology.text = GetLanguage(45010019)
+    self.market.text = GetLanguage(45010020)
 end
 
 function CityRickListCtrl:Refresh()

@@ -26,4 +26,6 @@ function ResearchPanel.InitPanel()
     this.timeText = transform:Find("MiddleRoot/TimeText"):GetComponent("Text")
     this.timeTitleText = transform:Find("MiddleRoot/TimeTitleText"):GetComponent("Text")
     this.inputField = transform:Find("MiddleRoot/InputField"):GetComponent("InputField")
+    this.TitleText = transform:Find("MiddleRoot/TitleText"):GetComponent("Text")
+    this.quantityText = transform:Find("MiddleRoot/QuantityText"):GetComponent("Text")
 end

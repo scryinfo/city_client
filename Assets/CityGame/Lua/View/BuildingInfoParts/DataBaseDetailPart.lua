@@ -61,7 +61,7 @@ function DataBaseDetailPart:RefreshData(data)
     self.m_data = data
 
     --多語言
-    --self.emptyText.text = GetLanguage()
+    self.emptyText.text = GetLanguage(27040001)
 end
 
 --

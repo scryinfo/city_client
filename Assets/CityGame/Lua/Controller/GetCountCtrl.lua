@@ -24,6 +24,7 @@ end
 
 function GetCountCtrl:Active()
     UIPanel.Active(self)
+    LoadSprite(GetSprite("UsePoint"), self.title, true)
 end
 
 function GetCountCtrl:Refresh()
@@ -50,7 +51,7 @@ end
 function GetCountCtrl:initData()
     if self.m_data then
         self.center.text = string.format("<size=%d>%s</size><size=%d>%s</size>", 120, "+", 200, self.m_data.num)
-        self.explain.text = "<color=#ffffffff>Current institute of science and technology points </color><color=#ffd200ff>" .. self.m_data.pointNum .."</color>"
+        self.explain.text = string.format("<color=#ffffffff>%s</color><color=#ffd200ff>%s</color>",GetLanguage(27040015),self.m_data.pointNum)
     end
 end
 

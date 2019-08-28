@@ -21,8 +21,8 @@ function TitleInfoItem:initialize(inluabehaviour, prefab, goodsDataInfo,itemId,t
     self.select = self.prefab.transform:Find("selectBg")
     self.selectText = self.prefab.transform:Find("selectBg/Text"):GetComponent("Text");
 
-    self.notSelectText.text = goodsDataInfo.name
-    self.selectText.text = goodsDataInfo.name
+    self.notSelectText.text = GetLanguage(goodsDataInfo.name)
+    self.selectText.text = GetLanguage(goodsDataInfo.name)
 
     self._luabehaviour:AddClick(self.notSelect, self.OnNotSelect, self);
     self._luabehaviour:AddClick(CityInfoPanel.threeEvaTechnologyBtn, self.OnThreeEvaTechnologyBtn, self);
@@ -35,11 +35,17 @@ function TitleInfoItem:OnNotSelect(go)
     go:ShowPanel(go)
     if go.id == 1 then
         DataManager.DetailModelRpcNoRet(go.insId, 'm_queryItemSales',go.type,go.itemId)  --查询营业额
+        CityInfoPanel.threeSum.text = GetLanguage(45020027)
+        CityInfoPanel.threeDate.text = GetLanguage(45010014)
     elseif go.id == 2 then
         DataManager.DetailModelRpcNoRet(go.insId, 'm_ItemSupplyAndDemand',go.type,go.itemId)  --查询供需
+        CityInfoPanel.threeSum.text = GetLanguage(45010013)
+        CityInfoPanel.threeDate.text = GetLanguage(45010014)
         CityInfoPanel.threeSupplyDemand.localScale = Vector3.one
     elseif go.id == 3 then
         DataManager.DetailModelRpcNoRet(go.insId, 'm_queryItemAvgPrice',go.type,go.itemId)  --查询详情成交均价
+        CityInfoPanel.threeSum.text = GetLanguage(45020030)
+        CityInfoPanel.threeDate.text = GetLanguage(45010014)
     elseif go.id == 4 then
         DataManager.DetailModelRpcNoRet(go.insId, 'm_queryProductRanking',go.type,go.itemId,DataManager.GetMyOwnerID())  --查询详情玩家排行
         CityInfoPanel.threeCurveBg.localScale = Vector3.zero
@@ -53,6 +59,8 @@ function TitleInfoItem:OnNotSelect(go)
         end
     elseif go.id == 5 then
         DataManager.DetailModelRpcNoRet(go.insId, 'm_queryEvaGrade',go.type,go.itemId,2)  --查询详情玩家Eva
+        CityInfoPanel.threeSum.text = GetLanguage(45020023)
+        CityInfoPanel.threeDate.text = GetLanguage(45020024)
         CityInfoPanel.threeEva.localScale = Vector3.one
         CityInfoPanel.threeEvaTechnologyBtn.transform.localScale = Vector3.zero
         CityInfoPanel.threeEvaAdvertisingBtn.transform.localScale = Vector3.one

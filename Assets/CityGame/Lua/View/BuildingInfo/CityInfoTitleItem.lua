@@ -26,8 +26,8 @@ function CityInfoTitleItem:initialize(inluabehaviour, prefab, goodsDataInfo,msg)
     self.notSelect.transform.localScale = Vector3.one
     self.select.localScale = Vector3.zero
 
-    self.notSelectText.text = goodsDataInfo.name
-    self.selectText.text = goodsDataInfo.name
+    self.notSelectText.text = GetLanguage(goodsDataInfo.name)
+    self.selectText.text = GetLanguage(goodsDataInfo.name)
 
     self._luabehaviour:AddClick(self.notSelect, self.OnNotSelect, self);
     self._luabehaviour:AddClick(CityInfoPanel.evaTechnologyBtn, self.OnEvaTechnologyBtn, self);
@@ -74,6 +74,7 @@ function CityInfoTitleItem:ShowPanel(data)
     CityInfoPanel.six.gameObject:SetActive(false)
     if data.id == 1 then
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_querySupplyAndDemand',data.type)  --查询行业供需
+        CityInfoPanel.supplyDemandSum.text = GetLanguage(45010013)
         CityInfoPanel.supplyDemandBg.localScale = Vector3.one
         CityInfoPanel.twoContent:SetActive(false)
         CityInfoPanel.rankList.localScale = Vector3.zero
@@ -99,7 +100,7 @@ function CityInfoTitleItem:ShowPanel(data)
     elseif data.id == 3 then            --详情
         DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryItemSales',data.type,data.goodsDataInfo.inside[1].itemId)  --查询营业额
         CityInfoPanel.productIcon.sprite = SpriteManager.GetSpriteByPool(data.goodsDataInfo.inside[1].itemId)
-        CityInfoPanel.productText.text = data.goodsDataInfo.inside[1].name
+        CityInfoPanel.productText.text = GetLanguage(data.goodsDataInfo.inside[1].name)
         if data.goodsDataInfo.inside[1].date then
             if #prefabs < #data.goodsDataInfo.inside[1].date then
                 for i = 1, #data.goodsDataInfo.inside[1].date - #prefabs do
@@ -130,23 +131,23 @@ function CityInfoTitleItem:ShowPanel(data)
                 dataInfo[i].itemId = v
                 dataInfo[i].date = {
                     [1] ={
-                        name ="销售额",
+                        name = 45020017,
                         id = 1,
                     },
                     [2] ={
-                        name ="供需",
+                        name = 45020033,
                         id = 2,
                     },
                     [3] ={
-                        name ="成交均价",
+                        name = 45020018,
                         id = 3,
                     },
                     [4] ={
-                        name ="玩家排行",
+                        name = 45020019,
                         id = 4,
                     },
                     [5] ={
-                        name ="EVA等级分布",
+                        name = 45020020,
                         id = 5,
                     },
                 }
@@ -166,23 +167,23 @@ function CityInfoTitleItem:ShowPanel(data)
                 dataInfo[i].itemId = v
                 dataInfo[i].date = {
                     [1] ={
-                        name ="销售额",
+                        name = 45020017,
                         id = 1,
                     },
                     [2] ={
-                        name ="供需",
+                        name = 45020033,
                         id = 2,
                     },
                     [3] ={
-                        name ="成交均价",
+                        name = 45020018,
                         id = 3,
                     },
                     [4] ={
-                        name ="玩家排行",
+                        name = 45020019,
                         id = 4,
                     },
                     [5] ={
-                        name ="EVA等级分布",
+                        name = 45020020,
                         id = 5,
                     },
                 }
@@ -215,6 +216,14 @@ function CityInfoTitleItem:ShowPanel(data)
         CityInfoPanel.evaTechnologyBtn.transform.localScale = Vector3.zero
         CityInfoPanel.evaAdvertisingBtn.transform.localScale = Vector3.one
     elseif data.id == 5 then
+        local bool
+        if data.type == 14 then
+            bool = true
+        elseif data.type == 20 then
+            bool = false
+        end
+        DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryAvgPrice',bool)  --查询成交均价
+        CityInfoPanel.supplyDemandSum.text = GetLanguage(45020030)
         CityInfoPanel.supplyDemandBg.localScale = Vector3.one
         CityInfoPanel.twoContent:SetActive(false)
         CityInfoPanel.threeRank:SetActive(false)
@@ -222,13 +231,6 @@ function CityInfoTitleItem:ShowPanel(data)
         CityInfoPanel.shelves.localScale = Vector3.zero
         CityInfoPanel.purchases.localScale = Vector3.zero
         CityInfoPanel.eva.localScale = Vector3.zero
-        local bool
-        if data.type == 14 then
-            bool = true
-        elseif data.type == 20 then
-            bool = false
-        end
-        DataManager.DetailModelRpcNoRet(data.msg.msg.m_data.insId, 'm_queryAvgPrice',bool)  --查询收入排行
     end
 end
 

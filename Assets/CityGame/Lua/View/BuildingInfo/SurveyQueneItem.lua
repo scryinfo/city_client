@@ -27,9 +27,9 @@ function SurveyQueneItem:initialize(inluabehaviour, prefab, goodsDataInfo,buildi
     if index == 1 then
         self.top.transform.localScale = Vector3.zero
     end
-    --self.time.text = GetLanguage()
-    --self.deleteText.text = GetLanguage()
-    --self.topText.text = GetLanguage()
+    self.time.text = GetLanguage(27050010)
+    self.deleteText.text = GetLanguage(27050011)
+    self.topText.text = GetLanguage(27050012)
     self.num.text = "0/" .. goodsDataInfo.targetCount
     self.name.text = GetLanguage(ResearchConfig[goodsDataInfo.itemId].name)
 

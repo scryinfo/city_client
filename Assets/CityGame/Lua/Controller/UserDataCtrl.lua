@@ -32,7 +32,8 @@ end
 
 function UserDataCtrl:Active()
     UIPanel.Active(self)
-    self.title = GetLanguage(24020009)
+    self.title.text = GetLanguage(27040005)
+    self.quantity.text = GetLanguage(27040007)
 end
 
 function UserDataCtrl:Refresh()
@@ -76,9 +77,10 @@ end
 --初始化数据
 function UserDataCtrl:initData()
     LoadSprite(ResearchConfig[self.m_data.itemId].iconPath, self.icon, true)
-    self.dataName.text = ResearchConfig[self.m_data.itemId].name
+    self.dataName.text = GetLanguage(ResearchConfig[self.m_data.itemId].name)
+    self.impact.text = GetLanguage(ResearchConfig[self.m_data.itemId].use)
     if self.m_data.myOwner then
-        --self.btnText = GetLanguage()
+        self.btnText = GetLanguage(27040008)
         self.btn.transform.localScale = Vector3.one
         self.buyInputBg.localScale = Vector3.zero
         self.baseBg.localScale = Vector3.one
@@ -87,13 +89,13 @@ function UserDataCtrl:initData()
         self.sale.text = "x" .. self.m_data.sale
         self.slider.maxValue = self.m_data.wareHouse
         if self.m_data.wareHouse == 0 and self.m_data.sale ~= 0 then
-            self.titleText.text = GetLanguage(25020041)
+            self.titleText.text = GetLanguage(27040011)
             self.titleText.transform.localScale = Vector3.one
         else
             self.titleText.transform.localScale = Vector3.zero
         end
     else
-        --self.btnText = GetLanguage()
+        self.btnText = GetLanguage(27070003)
         self.btn.transform.localScale = Vector3.zero
         self.buyInputBg.localScale = Vector3.one
         self.baseBg.localScale = Vector3.zero
@@ -148,7 +150,7 @@ end
 
 function UserDataCtrl:OnBtn(go)
     if go.slider.value == 0 then
-        Event.Brocast("SmallPop","请输入使用数量",ReminderType.Warning)
+        Event.Brocast("SmallPop",GetLanguage(27040014),ReminderType.Warning)
         return
     end
     if go.m_data.userFunc then
@@ -159,7 +161,7 @@ end
 
 function UserDataCtrl:OnBuyBtn(go)
     if go.slider.value == 0 then
-        Event.Brocast("SmallPop","请输入使用数量",ReminderType.Warning)
+        Event.Brocast("SmallPop",GetLanguage(27040014),ReminderType.Warning)
         return
     end
     if go.m_data.buyFunc then

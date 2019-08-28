@@ -61,7 +61,10 @@ function DataSurveyDetailPart:RefreshData(data)
    self.m_data = data
     DataManager.ModelSendNetMes("gscode.OpCode", "getScienceLineData","gs.Id",{id = data.info.id})
     --多语言
-    self.addTip.text = "Select survey type"
+    self.addTip.text = GetLanguage(27050001)
+    self.deleteText.text = GetLanguage(27050011)
+    self.numberTipText.text = GetLanguage(27050009)
+    self.noLineTip.text = GetLanguage(27050008)
 end
 
 --

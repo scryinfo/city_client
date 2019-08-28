@@ -1,22 +1,22 @@
 CityInfoConfig = {
 	[1] ={
-		name = '行业销售额',
+		name = 45020001,
 	},
 	[2] ={
-		name = '原料厂',
+		name = 45020002,
 		content = {
 			[1] = {
-				name = '行业供需',	
+				name = 45020009,
 				type = 11,
 				id = 1,
 			},
 			[2] = {
-				name = '收入排行',
+				name = 45020032,
 				type = 11,
 				id = 2,
 			},
 			[3] = {
-				name = '行业详细数据',
+				name = 45020011,
 				type = 11,
 				id = 3,
 				 inside={
@@ -25,23 +25,23 @@ CityInfoConfig = {
 						itemId = 2101001,
 						date = {
 							[1] ={
-							name ="销售额",
+							name =45020017,
 							id = 1,
 							},
 							[2] ={
-							name ="供需",
+							name = 45020033 ,
 							id = 2,
 							},
 							[3] ={
-							name ="成交均价",
+							name = 45020018,
 							id = 3,
 							},
 							[4] ={
-							name ="玩家排行",
+							name = 45020019,
 							id = 4,
 							},
 							[5] ={
-							name ="EVA等级分布",
+							name = 45020020,
 							id = 5,
 							},
 						},
@@ -51,20 +51,20 @@ CityInfoConfig = {
 		}
 	},
 	[3] ={
-		name = '加工厂',
+		name = 45020003,
 		content = {
 			[1] = {
-				name = '行业供需',
+				name = 45020009,
 				type = 12,
 				id = 1,
 			},
 			[2] = {
-				name = '收入排行',
+				name = 45020032,
 				type = 12,
 				id = 2,
 			},
 			[3] = {
-				name = '行业详细数据',
+				name = 45020011,
 				type = 12,
 				id = 3,
 				 inside={
@@ -73,23 +73,23 @@ CityInfoConfig = {
 						itemId = 2251101,
 						date = {
 							[1] ={
-							name ="销售额",
+							name = 45020017,
 							id = 1,
 							},
 							[2] ={
-							name ="供需",
+							name = 45020033 ,
 							id = 2,
 							},
 							[3] ={
-							name ="成交均价",
+							name = 45020018,
 							id = 3,
 							},
 							[4] ={
-							name ="玩家排行",
+							name = 45020019,
 							id = 4,
 							},
 							[5] ={
-							name ="EVA等级分布",
+							name = 45020020,
 							id = 5,
 							},
 						},
@@ -100,25 +100,25 @@ CityInfoConfig = {
 		},
 	},
 	[4] ={
-		name = '零售店',	
+		name = 45020004,
 		content = {
 			[1] = {
-				name = '行业供需',
+				name = 45020009,
 				type = 13,
 				id = 1,
 			},
 			[2] = {
-				name = '收入排行',
+				name = 45020032,
 				type = 13,
 				id = 2,
 			},
 			[3] = {
-				name = '建筑EVA等级分布',
+				name = 45020020,
 				type = 13,
 				id = 4,
 			},
 			[4] = {
-				name = '行业详细数据',
+				name = 45020011,
 				type = 13,
 				id = 3,
 				 inside={
@@ -127,19 +127,19 @@ CityInfoConfig = {
 						itemId = 2251101,
 						date = {
 							[1] ={
-							name ="销售额",
+							name = 45020017,
 							id = 1,
 							},
 							[2] ={
-							name ="供需",
+							name = 45020033 ,
 							id = 2,
 							},
 							[3] ={
-							name ="成交均价",
+							name = 45020018,
 							id = 3,
 							},
 							[4] ={
-							name ="玩家排行",
+							name = 45020019,
 							id = 4,
 							},
 						},
@@ -149,122 +149,122 @@ CityInfoConfig = {
 		},
 	},
 	[5] ={
-		name = '住宅',
+		name = 45020005,
 		content = {
 			[1] = {
-				name = '行业供需',
+				name = 45020009,
 				type = 14,
 				id = 1,
 			},
 			[2] = {
-				name ='成交均价',
+				name = 45020018,
 				type = 14,
 				id = 5,
 			},
 			[3] = {
-				name = '收入排行',
+				name = 45020032,
 				type = 14,
 				id = 2,
 			},
 			[4] = {
-				name ='EVA等级分布',
+				name = 45020020,
 				type = 14,
 				id = 4,
 		    },
 		},
 	},
 	[6] ={
-		name = '数据公司',
+		name = 45020006,
 		content = {
 			[1] = {
-				name = '行业供需',
+				name = 45020009,
 				type = 16,
 				id = 1,
 			},
 			[2] = {
-				name = '收入排行',
+				name = 45020032,
 				type = 16,
 				id = 2,
 			},
 			[3] = {
-				name = '行业详细数据',
+				name = 45020011,
 				type = 16,
 				id = 3,
 				inside = {
 					[1] = {
-						name = '加工厂数据资料',
+						name = 27040002,
 						itemId = 1600012,
 						date = {
 							[1] = {
-								name ='销售额',
+								name = 45020017,
 								id = 1,
 							},
 							[2] = {
-								name ='供需',
+								name = 45020033 ,
 								id = 2,
 							},
 							[3] = {
-								name ='成交均价',
+								name = 45020018,
 								id = 3,
 							},
 							[4] = {
-								name ='玩家排行',
+								name = 45020019,
 								id = 4,
 							},
 							[5] = {
-								name ='EVA等级分布',
+								name = 45020020,
 								id = 5,
 							},
 						},
 					},
 					[2] = {
-						name = '零售店数据资料',
+						name = 27040003,
 						itemId = 1600013,
 						date = {
 							[1] = {
-								name ='销售额',
+								name = 45020017,
 								id = 1,
 							},
 							[2] = {
-								name ='供需',
+								name = 45020033 ,
 								id = 2,
 							},
 							[3] = {
-								name ='成交均价',
+								name = 45020018,
 								id = 3,
 							},
 							[4] = {
-								name ='玩家排行',
+								name = 45020019,
 								id = 4,
 							},
 							[5] = {
-								name ='EVA等级分布',
+								name = 45020020,
 								id = 5,
 							},
 						},
 					},
 					[3] = {
-						name = '住宅数据资料',
+						name = 27040004,
 						itemId = 1600014,
 						date = {
 							[1] = {
-								name ='销售额',
+								name = 45020017,
 								id = 1,
 							},
 							[2] = {
-								name ='供需',
+								name = 45020033 ,
 								id = 2,
 							},
 							[3] = {
-								name ='成交均价',
+								name = 45020018,
 								id = 3,
 							},
 							[4] = {
-								name ='玩家排行',
+								name = 45020019,
 								id = 4,
 							},
 							[5] = {
-								name ='EVA等级分布',
+								name = 45020020,
 								id = 5,
 							},
 						},
@@ -274,175 +274,175 @@ CityInfoConfig = {
 		},
 	},
 	[7] ={
-		name = '研究所',
+		name = 45020007,
 		content = {
 			[1] = {
-				name = '行业供需',
+				name = 45020009,
 				type = 15,
 				id = 1,
 			},
 			[2] = {
-				name = '收入排行',
+				name = 45020032,
 				type = 15,
 				id = 2,
 			},
 			[3] = {
-				name = '行业详细数据',
+				name = 45020011,
 				type = 15,
 				id = 3,
 				inside = {
 					[1] = {
-						name = 'EVA原料厂',
+						name = 28040001,
 						itemId = 1500011,
 						date = {
 							[1] = {
-								name ='销售额',
+								name = 45020017,
 								id = 1,
 							},
 							[2] = {
-								name ='供需',
+								name = 45020033 ,
 								id = 2,
 							},
 							[3] = {
-								name ='成交均价',
+								name = 45020018,
 								id = 3,
 							},
 							[4] = {
-								name ='玩家排行',
+								name = 45020019,
 								id = 4,
 							},
 							[5] = {
-								name ='EVA等级分布',
+								name = 45020020,
 								id = 5,
 							},
 						},
 					},
 					[2] = {
-						name = 'EVA加工厂',
+						name = 28040002,
 						itemId = 1500012,
 						date = {
 							[1] = {
-								name ='销售额',
+								name = 45020017,
 								id = 1,
 							},
 							[2] = {
-								name ='供需',
+								name = 45020033 ,
 								id = 2,
 							},
 							[3] = {
-								name ='成交均价',
+								name = 45020018,
 								id = 3,
 							},
 							[4] = {
-								name ='玩家排行',
+								name = 45020019,
 								id = 4,
 							},
 							[5] = {
-								name ='EVA等级分布',
+								name = 45020020,
 								id = 5,
 							},
 						},
 					},
 					[3] = {
-						name = 'EVA零售店',
+						name = 28040003,
 						itemId = 1500013,
 						date = {
 							[1] = {
-								name ='销售额',
+								name = 45020017,
 								id = 1,
 							},
 							[2] = {
-								name ='供需',
+								name = 45020033 ,
 								id = 2,
 							},
 							[3] = {
-								name ='成交均价',
+								name = 45020018,
 								id = 3,
 							},
 							[4] = {
-								name ='玩家排行',
+								name = 45020019,
 								id = 4,
 							},
 							[5] = {
-								name ='EVA等级分布',
+								name = 45020020,
 								id = 5,
 							},
 						},
 					},
 					[4] = {
-						name = 'EVA住宅',
+						name = 28040004,
 						itemId = 1500014,
 						date = {
 							[1] = {
-								name ='销售额',
+								name = 45020017,
 								id = 1,
 							},
 							[2] = {
-								name ='供需',
+								name = 45020033 ,
 								id = 2,
 							},
 							[3] = {
-								name ='成交均价',
+								name = 45020018,
 								id = 3,
 							},
 							[4] = {
-								name ='玩家排行',
+								name = 45020019,
 								id = 4,
 							},
 							[5] = {
-								name ='EVA等级分布',
+								name = 45020020,
 								id = 5,
 							},
 						},
 					},
 					[5] = {
-						name = 'EVA数据公司',
+						name = 28040005,
 						itemId = 1500016,
 						date = {
 							[1] = {
-								name ='销售额',
+								name = 45020017,
 								id = 1,
 							},
 							[2] = {
-								name ='供需',
+								name = 45020033 ,
 								id = 2,
 							},
 							[3] = {
-								name ='成交均价',
+								name = 45020018,
 								id = 3,
 							},
 							[4] = {
-								name ='玩家排行',
+								name = 45020019,
 								id = 4,
 							},
 							[5] = {
-								name ='EVA等级分布',
+								name = 45020020,
 								id = 5,
 							},
 						},
 					},
 					[6] = {
-						name = 'EVA研究所',
+						name = 28040006,
 						itemId = 1500015,
 						date = {
 							[1] = {
-								name ='销售额',
+								name = 45020017,
 								id = 1,
 							},
 							[2] = {
-								name ='供需',
+								name = 45020033 ,
 								id = 2,
 							},
 							[3] = {
-								name ='成交均价',
+								name = 45020018,
 								id = 3,
 							},
 							[4] = {
-								name ='玩家排行',
+								name = 45020019,
 								id = 4,
 							},
 							[5] = {
-								name ='EVA等级分布',
+								name = 45020020,
 								id = 5,
 							},
 						},
@@ -452,20 +452,20 @@ CityInfoConfig = {
 		},
 	},
 	[8] ={
-		name = '土地交易',
+		name = 45020008,
 		content = {
 			[1] = {
-				name = '行业供需',
+				name = 45020009,
 				type = 20,
 				id = 1,
 			},
 			[2] = {
-				name ='成交均价',id = 3,
+				name =45020018,
 				type = 20,
 				id = 5,
 			},
 			[3] = {
-				name = '收入排行',
+				name = 45020032,
 				type = 20,
 				id = 2,
 			},

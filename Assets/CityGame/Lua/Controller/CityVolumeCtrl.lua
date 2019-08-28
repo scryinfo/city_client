@@ -38,6 +38,8 @@ end
 
 function CityVolumeCtrl:Active()
     UIPanel.Active(self)
+    self.sum.text = GetLanguage(45010013)
+    self.date.text = GetLanguage(45010014)
 end
 
 function CityVolumeCtrl:Refresh()
@@ -70,6 +72,7 @@ function CityVolumeCtrl:_getComponent(go)
     self.fundPoolImage = go.transform:Find("content/down/fundPoolImage")
     self.yScale = go.transform:Find("content/down/yScale"):GetComponent("RectTransform")
     self.sum = go.transform:Find("content/down/sum"):GetComponent("Text")
+    self.date = go.transform:Find("content/down/xScale/Text"):GetComponent("Text")
     self.curve = go.transform:Find("content/down/curveBg/curve"):GetComponent("RectTransform")
     self.slide = go.transform:Find("content/down/curveBg/curve"):GetComponent("Slide")  --滑动
     self.graph = go.transform:Find("content/down/curveBg/curve"):GetComponent("FunctionalGraph")  --绘制曲线
@@ -77,10 +80,14 @@ end
 
 function CityVolumeCtrl:initData()
     if self.m_data.type == CityBasicType.Volume then
+        self.name.text = GetLanguage(45010005)
+        self.title.text = GetLanguage(45010011)
         self.volumeImage.localScale = Vector3.one
         self.fundPoolImage.localScale = Vector3.zero
         DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_queryTransactionAmount',true)
     elseif self.m_data.type == CityBasicType.fundPool then
+        self.name.text = GetLanguage(45010006)
+        self.title.text = GetLanguage(45010012)
         self.volumeImage.localScale = Vector3.zero
         self.fundPoolImage.localScale = Vector3.one
         DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_queryMoneyPool')

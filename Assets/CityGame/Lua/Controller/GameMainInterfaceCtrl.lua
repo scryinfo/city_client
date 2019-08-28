@@ -1071,9 +1071,9 @@ end
 --       LoadSprite(RadioType[table[index].type], GameMainInterfacePanel.radioImage, true)
 --    end
 
-    --todo 交易量
-    function GameMainInterfaceCtrl:OnVolume()
-    ct.OpenCtrl("VolumeCtrl")
-    end
+--todo 交易量
+function GameMainInterfaceCtrl:OnVolume()
+    ct.OpenCtrl("CityInfoCtrl")
+end
 
 

@@ -196,6 +196,8 @@ function CityInfoPanel.InitPanel()
 
     this.threeCurveBg = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve")  --第三层曲线
     this.threeSupplyDemand = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/supplyDemand")
+    this.threeShelves = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/supplyDemand/shelves/Text"):GetComponent("Text")
+    this.threePurchases = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/supplyDemand/purchases/Text"):GetComponent("Text")
     this.threeEva = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva")
 
     this.threeEvaTechnologyText = transform:Find("content/right/industryInfo/oneContent/twoContent/threeContent/threeContentBg/threecurve/eva/technology/Text"):GetComponent("Text")

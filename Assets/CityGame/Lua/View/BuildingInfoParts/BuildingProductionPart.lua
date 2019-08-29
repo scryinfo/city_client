@@ -309,6 +309,5 @@ function BuildingProductionPart:testTable()
             end
             table.insert(BuildingProductionPart.test[ToNumber(StringSub(value,1,4))], data)
         end
-        local aaa = ""
     end
 end

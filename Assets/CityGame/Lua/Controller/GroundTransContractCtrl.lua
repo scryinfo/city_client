@@ -38,8 +38,8 @@ function GroundTransContractCtrl:Active()
     --GroundTransContractPanel.rentAreaText05.text = GetLanguage(22040006)
     --GroundTransContractPanel.rentTenancyText06.text = GetLanguage(22050005)
     --GroundTransContractPanel.rentDailyText07.text = GetLanguage(22050006)
-    GroundTransContractPanel.prosperityText.text = "繁荣度:"
-    GroundTransContractPanel.priceText.text = "价格:"
+    GroundTransContractPanel.prosperityText.text = GetLanguage(20170003)
+    GroundTransContractPanel.priceText.text = GetLanguage(20150001)
     GroundTransContractPanel.minersfeeText.text = "矿工费用:"
     GroundTransContractPanel.minersfeeValue.text = "0.4%"--暂时写死，后边改成读表
     GroundTransContractPanel.totalText08.text = GetLanguage(22040005)

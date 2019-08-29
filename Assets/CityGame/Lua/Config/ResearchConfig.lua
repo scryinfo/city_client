@@ -64,7 +64,7 @@ ResearchConfig =
     },
     [1600013] =
     {
-        name = 27040003,
+        name = 27040004,
         iconPath = "Assets/CityGame/Resources/Atlas/DataCompany/icon-SuperMarket.png",
         buildingPath = "Assets/CityGame/Resources/Atlas/Research/Supermarket.png",
         content = 27040012,
@@ -72,7 +72,7 @@ ResearchConfig =
     },
     [1600014] =
     {
-        name = 27040004,
+        name = 27040003,
         iconPath = "Assets/CityGame/Resources/Atlas/DataCompany/icon-HomeHouse.png",
         buildingPath = "Assets/CityGame/Resources/Atlas/Research/Homehouse.png",
         content = 27040013,

@@ -27,8 +27,8 @@ function CompanyWaterCtrl:Awake()
     companyWaterBehaviour:AddClick(CompanyWaterPanel.expendBg,self.c_OnExpendBg,self);
     companyWaterBehaviour:AddClick(CompanyWaterPanel.off.gameObject,self.c_OnOff,self);
 
-    CompanyWaterPanel.income.text = GetLanguage(19020008)   --收入
-    CompanyWaterPanel.expend.text = GetLanguage(19020010)   --支出
+    CompanyWaterPanel.income.text = GetLanguage(18050011)   --收入
+    CompanyWaterPanel.expend.text = GetLanguage(18050012)   --支出
 
     --玩家id
     self.playerId = DataManager.GetMyOwnerID()
@@ -57,13 +57,13 @@ function CompanyWaterCtrl:Active()
     Event.AddListener("c_companyWater",self.c_companyWater,self)
 
     if self.income then
-        CompanyWaterPanel.income.text = GetLanguage(19020008)   --收入
-        CompanyWaterPanel.expend.text = GetLanguage(19020010)   --支出
+        CompanyWaterPanel.income.text = GetLanguage(18050011)   --收入
+        CompanyWaterPanel.expend.text = GetLanguage(18050012)   --支出
     else
-        CompanyWaterPanel.income.text = GetLanguage(19020010)   --支出
-        CompanyWaterPanel.expend.text = GetLanguage(19020008)   --收入
+        CompanyWaterPanel.income.text = GetLanguage(18050011)   --支出
+        CompanyWaterPanel.expend.text = GetLanguage(18050012)   --收入
     end
-    CompanyWaterPanel.emptyText.text = GetLanguage(18010014)
+    CompanyWaterPanel.emptyText.text = GetLanguage(18050015)
 
 end
 
@@ -127,11 +127,11 @@ function CompanyWaterCtrl:c_OnExpendBg(go)
     PlayMusEff(1002)
     go.income = not go.income
     if go.income then
-        CompanyWaterPanel.income.text = GetLanguage(19020008)   --收入
-        CompanyWaterPanel.expend.text = GetLanguage(19020010)   --支出
+        CompanyWaterPanel.income.text = GetLanguage(18050011)   --收入
+        CompanyWaterPanel.expend.text = GetLanguage(18050012)   --支出
     else
-        CompanyWaterPanel.income.text = GetLanguage(19020010)   --支出
-        CompanyWaterPanel.expend.text = GetLanguage(19020008)   --收入
+        CompanyWaterPanel.income.text = GetLanguage(18050011)   --支出
+        CompanyWaterPanel.expend.text = GetLanguage(18050012)   --收入
     end
     go:OpenClose(false)
     DataManager.DetailModelRpcNoRet(go.insId, 'm_queryPlayerIncomePay',go.playerId, go.bType,go.income)

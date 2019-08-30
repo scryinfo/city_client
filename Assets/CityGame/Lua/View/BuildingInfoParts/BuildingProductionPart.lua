@@ -165,7 +165,7 @@ function BuildingProductionPart:saveMaterialOrGoodsInfo(data)
             self:_initFunc()
             ----TODO:测试调用方法把变转成配置表
             BuildingProductionPart.test = {}
-            self:testTable()
+            --self:testTable()
         else
             return
         end

@@ -19,7 +19,7 @@ function DataSurveyCardItem:initialize(inluabehaviour, prefab, goodsDataInfo,bui
 
     LoadSprite(ResearchConfig[goodsDataInfo.type].buildingPath, self.icon, true)
     self.name.text = GetLanguage(ResearchConfig[goodsDataInfo.type].name)
-    self.speed.text = radixPointNum(1/goodsDataInfo.speed,2) .. "s/per"
+    self.speed.text = GetLanguage(27050006,string.format("%0.2f", 1/goodsDataInfo.speed))
     self._luabehaviour:AddClick(self.bg, self.OnBg, self);
 
 end

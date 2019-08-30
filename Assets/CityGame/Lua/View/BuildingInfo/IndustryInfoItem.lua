@@ -20,8 +20,8 @@ function IndustryInfoItem:initialize(inluabehaviour, prefab, goodsDataInfo,msg)
     self.select = self.prefab.transform:Find("selectBg")
     self.selectText = self.prefab.transform:Find("selectBg/Text"):GetComponent("Text");
 
-    self.notSelectText.text = goodsDataInfo.name
-    self.selectText.text = goodsDataInfo.name
+    self.notSelectText.text = GetLanguage(goodsDataInfo.name)
+    self.selectText.text = GetLanguage(goodsDataInfo.name)
 
     self._luabehaviour:AddClick(self.notSelect, self.OnNotSelect, self);
 end
@@ -36,6 +36,7 @@ function IndustryInfoItem:OnNotSelect(go)
     go.select.localScale = Vector3.one
     lastBg = go
 
+    CityInfoPanel.threeRank:SetActive(false)
     if go.goodsDataInfo.content == nil then
         DataManager.DetailModelRpcNoRet(go.msg.m_data.insId, 'm_queryIndustryIncome')  --查询行业收入
         CityInfoPanel.industryBg.localScale = Vector3.one

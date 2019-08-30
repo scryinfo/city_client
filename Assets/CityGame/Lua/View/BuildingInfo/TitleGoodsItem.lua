@@ -20,17 +20,14 @@ function TitleGoodsItem:initialize(inluabehaviour, prefab, goodsDataInfo,msg,tit
     self.icon = self.prefab.transform:Find("icon"):GetComponent("Image")
     self.iconText = self.prefab.transform:Find("icon/Text"):GetComponent("Text")
 
-    if self.msg.type == 11 or self.msg.type == 12 or self.msg.type == 13 then
-        self.icon.sprite = SpriteManager.GetSpriteByPool(goodsDataInfo.itemId)
-    end
-    self.iconText.text = goodsDataInfo.name
+    self.icon.sprite = SpriteManager.GetSpriteByPool(goodsDataInfo.itemId)
+    self.iconText.text = GetLanguage(goodsDataInfo.name)
 
     self._luabehaviour:AddClick(self.bg.gameObject, self.OnBg, self);
 end
 
 function TitleGoodsItem:OnBg(go)
     DataManager.DetailModelRpcNoRet(go.insId, 'm_queryItemSales',go.type,go.goodsDataInfo.itemId)  --查询营业额
-    --CityInfoPanel.productContent.anchoredPosition = Vector3.zero
     if lastBg then
         lastBg.color = getColorByInt(255,255,255,255)
     end
@@ -42,8 +39,10 @@ function TitleGoodsItem:OnBg(go)
     end
     CityInfoPanel.productText.text = go.goodsDataInfo.name
     CityInfoPanel.productDown.transform.localScale = Vector3.one
+    CityInfoPanel.productDowns.localScale = Vector3.one
     CityInfoPanel.productUp.localScale = Vector3.zero
     CityInfoPanel.productsList:SetActive(false)
+    CityInfoPanel.close.transform.localScale = Vector3.zero
 
     if go.titleInfoItem and next(go.titleInfoItem) then
         for i, v in pairs(go.titleInfoItem) do
@@ -51,6 +50,10 @@ function TitleGoodsItem:OnBg(go)
         end
         go.titleInfoItem[1]:ShowPanel(go.titleInfoItem[1])
     end
+end
+
+function TitleGoodsItem:SetLast(bg)
+    lastBg = bg
 end
 
 function TitleGoodsItem:Close()

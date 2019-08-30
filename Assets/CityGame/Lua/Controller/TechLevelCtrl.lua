@@ -25,6 +25,12 @@ end
 
 function TechLevelCtrl:Active()
     UIPanel.Active(self)
+    self.name.text = GetLanguage(45010004)
+    self.salary.text = GetLanguage(45010008)
+    self.quit.text = GetLanguage(45010009)
+    self.grades.text = GetLanguage(45010021)
+    self.dotOne.text = GetLanguage(45010022)
+    self.dotTwo.text = GetLanguage(45010023)
 end
 
 function TechLevelCtrl:Refresh()
@@ -61,12 +67,21 @@ function TechLevelCtrl:_getComponent(go)
     self.quit = go.transform:Find("contentRoot/content/quit"):GetComponent("Text")
     self.quitText = go.transform:Find("contentRoot/content/quitText"):GetComponent("Text")
     self.nextQuit = go.transform:Find("contentRoot/content/NextImage/Text"):GetComponent("Text")
+    self.grades = go.transform:Find("contentRoot/grades"):GetComponent("Text")
+    self.dotOne = go.transform:Find("contentRoot/dot/Text"):GetComponent("Text")
+    self.dotTwo = go.transform:Find("contentRoot/dot/Text/dot/Text"):GetComponent("Text")
 end
 
 function TechLevelCtrl:initData()
-    self.slider.maxValue = 1000
-    self.slider.value = self.m_data.level
-    self.lv.text = "Lv.1"
-    self.nextLv.text = "Lv.2"
+    self.slider.maxValue =  CityLevel[self.m_data.level].exp
+    self.slider.value = self.m_data.exp
+    self.lv.text = "Lv." .. self.m_data.level
+    self.nextLv.text = "Lv." .. self.m_data.level + 1
+    self.salaryText.text = GetClientPriceString(CityLevel[self.m_data.level].salary)
+    self.nextSalary.text = string.format("<color=%s>%s</color><color=%s>(%s)</color>","#5f6ba0", GetClientPriceString(CityLevel[self.m_data.level + 1].salary),
+            "#00b7ee",tonumber(GetClientPriceString(CityLevel[self.m_data.level + 1].salary - CityLevel[self.m_data.level].salary)))
+    self.quitText.text = CityLevel[self.m_data.level].inventCount
+    self.nextQuit.text =  string.format("<color=%s>%s</color><color=%s>(%s)</color>","#5f6ba0", CityLevel[self.m_data.level + 1].inventCount,
+            "#00b7ee", CityLevel[self.m_data.level + 1].inventCount)
 
 end

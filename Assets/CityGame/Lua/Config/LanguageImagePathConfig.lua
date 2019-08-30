@@ -17,6 +17,8 @@ Sprite_Chinese =
     --建筑自带仓库、货架
     ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse-C.png",
     ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf-C.png",
+    --使用点数
+    ["UsePoint"] = "Assets/CityGame/Resources/Atlas/DataCompany/chinese.png",
 }
 
 Sprite_English={
@@ -32,6 +34,8 @@ Sprite_English={
     --建筑自带仓库、货架
    ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
    ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
+    --使用点数
+   ["UsePoint"] = "Assets/CityGame/Resources/Atlas/DataCompany/English.png",
 }
 
 Sprite_Korean = {
@@ -46,7 +50,8 @@ Sprite_Korean = {
     --建筑自带仓库、货架
     ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
     ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
-
+    --使用点数
+    ["UsePoint"] = "Assets/CityGame/Resources/Atlas/DataCompany/korea.png",
 }
 
 Sprite_Japanese ={
@@ -61,5 +66,6 @@ Sprite_Japanese ={
     --建筑自带仓库、货架
     ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
     ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
-
+    --使用点数
+    ["UsePoint"] = "Assets/CityGame/Resources/Atlas/DataCompany/japan.png",
 }

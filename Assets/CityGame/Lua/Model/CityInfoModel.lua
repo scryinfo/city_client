@@ -118,7 +118,7 @@ end
 --查询等级
 function CityInfoModel:m_queryLevel()
     local msgId = pbl.enum("gscode.OpCode","queryCityLevel")
-    --CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
+    CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 end
 
 --查询营业额

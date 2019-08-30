@@ -64,6 +64,7 @@ function DataSaleDetailPart:RefreshData(data)
         return
     end
     self.m_data = data
+    self.tipText.text = GetLanguage(27060001)
 end
 
 --

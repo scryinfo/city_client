@@ -74,11 +74,13 @@ end
 --初始化数据
 function ChooseDataTypeCtrl:initData()
     if self.m_data.type == DataType.DataSurvey then
+        self.name.text = GetLanguage(27050001)
         self.empty.localScale = Vector3.zero
         self.surveyScrollView:SetActive(true)
         self.saleScrollView:SetActive(false)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_getSurveySpeed',self.m_data.insId)
     elseif self.m_data.type == DataType.DataSale then
+        self.name.text = GetLanguage(27060002)
         self.surveyScrollView:SetActive(false)
         self.saleScrollView:SetActive(true)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_getDataBase',self.m_data.insId)
@@ -135,7 +137,7 @@ end
 --上架成功回调
 function ChooseDataTypeCtrl:c_AddShelf(info)
     if info then
-        Event.Brocast("SmallPop",GetLanguage(25060008), ReminderType.Succeed)
+        Event.Brocast("SmallPop",GetLanguage(27060011), ReminderType.Succeed)
         UIPanel.ClosePage()
         UIPanel.ClosePage()
     end

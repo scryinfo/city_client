@@ -39,8 +39,6 @@ function CityInfoCtrl:Awake(go)
     cityInfoBehaviour:AddClick(CityInfoPanel.land,self.OnLand,self)
     cityInfoBehaviour:AddClick(CityInfoPanel.productDown,self.OnDown,self)  --第二层列表
     cityInfoBehaviour:AddClick(CityInfoPanel.close,self.OnClose,self)  --关闭第二层列表
-    --cityInfoBehaviour:AddClick(CityInfoPanel.evaTechnology,self.OnEvaTechnology,self)  --eva分布
-    --cityInfoBehaviour:AddClick(CityInfoPanel.evaAdvertising,self.OnEvaAdvertising,self)
 
     self.width = CityInfoPanel.titleBg.sizeDelta.x
     self.ownerId = DataManager.GetMyOwnerID()
@@ -87,6 +85,72 @@ end
 
 function CityInfoCtrl:Active()
     UIPanel.Active(self)
+    CityInfoPanel.name.text = GetLanguage(11010004)
+    CityInfoPanel.notBasicText.text = GetLanguage(45010001)
+    CityInfoPanel.basicText.text = GetLanguage(45010001)
+    CityInfoPanel.notIndustryText.text = GetLanguage(45020036)
+    CityInfoPanel.industryText.text = GetLanguage(45020036)
+    CityInfoPanel.city.text = GetLanguage(10050002)
+    CityInfoPanel.citizenNumBg.text = GetLanguage(45010003)
+    CityInfoPanel.playerNumBg.text = GetLanguage(45010002)
+    CityInfoPanel.levelText.text = GetLanguage(45010004)
+    CityInfoPanel.volumeText.text = GetLanguage(45010005)
+    CityInfoPanel.fundPoolText.text = GetLanguage(45010006)
+    CityInfoPanel.richText.text = GetLanguage(45010007)
+    CityInfoPanel.income.text = GetLanguage(45020031)
+    CityInfoPanel.sum.text = GetLanguage(45010013)
+    CityInfoPanel.date.text = GetLanguage(45010014)
+    CityInfoPanel.homeHouseText.text = GetLanguage(42020004)
+    CityInfoPanel.supermarketText.text = GetLanguage(42020003)
+    CityInfoPanel.materialPlantText.text = GetLanguage(42020001)
+    CityInfoPanel.factoryText.text = GetLanguage(42020002)
+    CityInfoPanel.advertisingText.text = GetLanguage(42020005)
+    CityInfoPanel.technologyText.text = GetLanguage(42020006)
+    CityInfoPanel.landText.text = GetLanguage(44010005)
+    CityInfoPanel.shelvesText.text = GetLanguage(45020025)
+    CityInfoPanel.purchasesText.text = GetLanguage(45020026)
+    CityInfoPanel.supplyDemandSum.text = GetLanguage(45010013)
+    CityInfoPanel.supplyDemandDate.text = GetLanguage(45010014)
+    CityInfoPanel.evaTechnologyText.text = GetLanguage(45020021)
+    CityInfoPanel.evaAdvertisingText.text = GetLanguage(45020022)
+    CityInfoPanel.fourTotalBg.text = GetLanguage(45020016)
+    CityInfoPanel.fourRank.text = GetLanguage(45010015)
+    CityInfoPanel.fourUser.text = GetLanguage(45010016)
+    CityInfoPanel.fourIncome.text = GetLanguage(45010017)
+    CityInfoPanel.fourVolume.text = GetLanguage(45020034)
+    CityInfoPanel.fiveEmployeesBg.text = GetLanguage(45020015)
+    CityInfoPanel.fiveTotalIncomeBg.text = GetLanguage(45020016)
+    CityInfoPanel.fiveRank.text = GetLanguage(45010015)
+    CityInfoPanel.fiveUser.text = GetLanguage(45010016)
+    CityInfoPanel.fiveIncome.text = GetLanguage(45010017)
+    CityInfoPanel.fiveStaff.text = GetLanguage(45010018)
+    CityInfoPanel.fiveTechnology.text = GetLanguage(45010019)
+    CityInfoPanel.sixEmployeesBg.text = GetLanguage(45020015)
+    CityInfoPanel.sixTotalIncomeBg.text = GetLanguage(45020016)
+    CityInfoPanel.sixRank.text = GetLanguage(45010015)
+    CityInfoPanel.sixUser.text = GetLanguage(45010016)
+    CityInfoPanel.sixIncome.text = GetLanguage(45010017)
+    CityInfoPanel.sixStaff.text = GetLanguage(45010018)
+    CityInfoPanel.sixTechnology.text = GetLanguage(45010019)
+    CityInfoPanel.sixMarket.text = GetLanguage(45010020)
+    CityInfoPanel.threeSum.text = GetLanguage(45020027)
+    CityInfoPanel.threeDate.text = GetLanguage(45010014)
+    CityInfoPanel.threeShelves.text = GetLanguage(45020025)
+    CityInfoPanel.threePurchases.text = GetLanguage(45020026)
+    CityInfoPanel.detailFiveRank.text = GetLanguage(45010015)
+    CityInfoPanel.detailFiveUser.text = GetLanguage(45010016)
+    CityInfoPanel.detailFiveIncome.text = GetLanguage(45010017)
+    CityInfoPanel.detailFiveStaff.text = GetLanguage(45010018)
+    CityInfoPanel.detailFiveTechnology.text = GetLanguage(45010019)
+    CityInfoPanel.detailSixRank.text = GetLanguage(45010015)
+    CityInfoPanel.detailSixUser.text = GetLanguage(45010016)
+    CityInfoPanel.detailSixIncome.text = GetLanguage(45010017)
+    CityInfoPanel.detailSixStaff.text = GetLanguage(45010018)
+    CityInfoPanel.detailSixTechnology.text = GetLanguage(45010019)
+    CityInfoPanel.detailSixMarket.text = GetLanguage(45010020)
+    CityInfoPanel.threeEvaTechnologyText.text = GetLanguage(45020021)
+    CityInfoPanel.threeEvaAdvertisingText.text = GetLanguage(45020022)
+    CityInfoPanel.threeEvaSpeedText.text = GetLanguage(45020035)
 end
 
 function CityInfoCtrl:Refresh()
@@ -125,6 +189,7 @@ function CityInfoCtrl:Hide()
     CityInfoPanel.four.gameObject:SetActive(false)
     CityInfoPanel.five.gameObject:SetActive(false)
     CityInfoPanel.six.gameObject:SetActive(false)
+    CityInfoPanel.threeRank:SetActive(false)
 
     local last = self.industryInfoItem[1]:GetLast():GetTitle()
     if last then
@@ -181,6 +246,7 @@ function CityInfoCtrl:OnNotBasic(go)
     CityInfoPanel.industryInfo.localScale = Vector3.zero
 
     CityInfoPanel.content.localScale = Vector3.zero
+    CityInfoPanel.threeRank:SetActive(false)
     --CityInfoPanel.content:DOScale(Vector3.New(0,0,0),0.5):SetEase(DG.Tweening.Ease.OutCubic);
     local last = go.industryInfoItem[1]:GetLast():GetTitle()
     if last then
@@ -229,7 +295,7 @@ end
 
 --科技等级
 function CityInfoCtrl:OnLevelBtn(go)
-    ct.OpenCtrl("TechLevelCtrl",{level = go.cityLevel})
+    ct.OpenCtrl("TechLevelCtrl",{level = go.cityLevel,exp = go.exp})
 end
 
 --交易额
@@ -262,8 +328,11 @@ end
 --城市交易额
 function CityInfoCtrl:_receiveTransactionAmount(info)
     if info then
-        CityInfoPanel.volume.text = GetClientPriceString(info[1].sum)
+        CityInfoPanel.volume.text = GetClientPriceString(ct.scientificNotation2Normal(info[1].sum))
         self.todayVolume = info[1].sum
+    else
+        CityInfoPanel.volume.text = "0.0000"
+        self.todayVolume = 0
     end
 end
 
@@ -275,11 +344,12 @@ end
 
 --科技等级
 function CityInfoCtrl:_receiveLevel(info)
-    CityInfoPanel.level.text = "Lv.1"
-    CityInfoPanel.levelSlider.maxValue = 1000
-    CityInfoPanel.levelSlider.value = info.sumValue
-    CityInfoPanel.levelSliderText.text = info.sumValue .. "/1000"
-    self.cityLevel = info.sumValue
+    CityInfoPanel.level.text = "Lv." .. info.lv
+    CityInfoPanel.levelSlider.maxValue = CityLevel[info.lv].exp
+    CityInfoPanel.levelSlider.value = info.exp
+    CityInfoPanel.levelSliderText.text = info.exp .. "/" .. CityLevel[info.lv].exp
+    self.cityLevel = info.lv
+    self.exp = info.exp
 end
 
 --行业收入回调
@@ -642,8 +712,9 @@ function CityInfoCtrl:OnLand(go)
     go:ShowHide(go.isLand,CityInfoPanel.landTag,data)
 end
 
-function CityInfoCtrl:OnDown(go)
+function CityInfoCtrl:OnDown()
     CityInfoPanel.productDown.transform.localScale = Vector3.zero
+    CityInfoPanel.productDowns.localScale = Vector3.zero
     CityInfoPanel.productUp.localScale = Vector3.one
     CityInfoPanel.productsList:SetActive(true)
     CityInfoPanel.close.transform.localScale = Vector3.one
@@ -651,6 +722,7 @@ end
 
 function CityInfoCtrl:OnClose()
     CityInfoPanel.productDown.transform.localScale = Vector3.one
+    CityInfoPanel.productDowns.localScale = Vector3.one
     CityInfoPanel.productUp.localScale = Vector3.zero
     CityInfoPanel.close.transform.localScale = Vector3.zero
     CityInfoPanel.productsList:SetActive(false)
@@ -782,7 +854,6 @@ end
 function CityInfoCtrl:_receiveItemAvgPrice(info)
     self:OneCurve(info.avg,CityInfoPanel.threeGraph,CityInfoPanel.threeSlide,CityInfoPanel.threeCurve,CityInfoPanel.threeYScale,7)
 end
-
 --Eva等级分布
 function CityInfoCtrl:_receiveEvaGrade(info)
     if info.grade == nil then
@@ -1094,6 +1165,67 @@ function CityInfoCtrl:Eva(info,graph,slide,curve,yScale,int)
 end
 
 --详情排行
-function CityInfoCtrl:_receiveProductRanking()
-
+function CityInfoCtrl:_receiveProductRanking(info)
+    if self.rankItem and next(self.rankItem) then
+        for i, v in pairs(self.rankItem) do
+            --回收avatar
+            if v.my_avatarData ~= nil then
+                AvatarManger.CollectAvatar(v.my_avatarData)
+                v.my_avatarData = nil
+            end
+            destroy(v.prefab.gameObject)
+        end
+    end
+    self.rankItem = {}
+    if info.industryId ==11 or info.industryId ==15 or info.industryId ==16 then
+        if info.topInfo then
+            local data = ct.deepCopy(info.topInfo)
+            if #info.topInfo > 10 then
+                CityInfoPanel.detailFiveMyRankFiveItem.localScale = Vector3.one
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.detailFiveMyIcon,0.15)
+                CityInfoPanel.detailFiveMyRank.text = ">10"
+                CityInfoPanel.detailFiveMyMame.text = info.topInfo[#info.topInfo].name
+                CityInfoPanel.detailFiveMyIncome.text = info.topInfo[#info.topInfo].income
+                CityInfoPanel.detailFiveMyStaff.text = info.topInfo[#info.topInfo].woker
+                CityInfoPanel.detailFiveMyTechnology.text = info.topInfo[#info.topInfo].science
+                table.remove(data)
+            else
+                CityInfoPanel.detailFiveMyRankFiveItem.localScale = Vector3.zero
+            end
+            self.rankFiveItem = {}
+            for i, v in ipairs(data) do
+                local prefab = createPrefabs(CityInfoPanel.detailFiveRankFiveItem,CityInfoPanel.detailFiveContent)
+                self.rankItem[i] = RankFiveItem:new(cityInfoBehaviour,prefab,v,i)
+            end
+        end
+    elseif info.industryId ==12 or info.industryId ==13 then
+        if info.topInfo then
+            local data = ct.deepCopy(info.topInfo)
+            if #info.topInfo > 10 then
+                CityInfoPanel.detailSixMyRankSixItem.localScale = Vector3.one
+                if self.my_avatarData ~= nil then
+                    AvatarManger.CollectAvatar(self.my_avatarData)
+                    self.my_avatarData = nil
+                end
+                self.my_avatarData = AvatarManger.GetSmallAvatar(info.topInfo[#info.topInfo].faceId,CityInfoPanel.detailSixMyIcon,0.15)
+                CityInfoPanel.detailSixMyRank.text = ">10"
+                CityInfoPanel.detailSixMyMame.text = info.topInfo[#info.topInfo].name
+                CityInfoPanel.detailSixMyIncome.text = info.topInfo[#info.topInfo].income
+                CityInfoPanel.detailSixMyStaff.text = info.topInfo[#info.topInfo].woker
+                CityInfoPanel.detailSixMyTechnology.text = info.topInfo[#info.topInfo].science
+                CityInfoPanel.detailSixMyMarket.text = info.topInfo[#info.topInfo].promotion
+                table.remove(data)
+            else
+                CityInfoPanel.detailSixMyRankSixItem.localScale = Vector3.zero
+            end
+            for i, v in ipairs(data) do
+                local prefab = createPrefabs(CityInfoPanel.detailSixRankSixItem,CityInfoPanel.detailSixContent)
+                self.rankItem[i] = RankSixItem:new(cityInfoBehaviour,prefab,v,i)
+            end
+        end
+    end
 end

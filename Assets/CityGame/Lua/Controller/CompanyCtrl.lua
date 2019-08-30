@@ -86,7 +86,7 @@ function CompanyCtrl:Active()
     CompanyPanel.landBtnText.text = GetLanguage(18020001)
     CompanyPanel.buildingBtnText.text = GetLanguage(18030001)
     CompanyPanel.brandBtnText.text = GetLanguage(18030001)
-    CompanyPanel.detaiksText.text = GetLanguage(18010013)
+    CompanyPanel.detaiksText.text = GetLanguage(18050001)
 end
 
 function CompanyCtrl:Refresh()

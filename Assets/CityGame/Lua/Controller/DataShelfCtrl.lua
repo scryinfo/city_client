@@ -44,6 +44,16 @@ function DataShelfCtrl:Active()
     Event.AddListener("c_RecommendPrice",self.c_RecommendPrice,self)
     self.competitivenessTipText.text = GetLanguage(43060001)
     self.competitivenessContentText.text = GetLanguage(43060002)
+    self.tipText.text = GetLanguage(25020027)
+    self.name.text = GetLanguage(27060006)
+    self.explain.text = GetLanguage(ResearchConfig[self.m_data.itemId].content)
+    self.replenishment.text = GetLanguage(27060009)
+    self.numText.text = GetLanguage(27060008)
+    self.competitiveness.text = GetLanguage(27060015)
+    self.price.text = GetLanguage(27060010)
+    self.recommend.text = GetLanguage(27060016)
+    self.addShelfText.text = GetLanguage(27060017)
+    self.shelfText.text = GetLanguage(27060013)
 end
 
 function DataShelfCtrl:Refresh()
@@ -299,7 +309,7 @@ end
 
 --下架回调
 function DataShelfCtrl:c_DelShelf(info)
-    Event.Brocast("SmallPop",GetLanguage(25060007), ReminderType.Succeed)
+    Event.Brocast("SmallPop",GetLanguage(27060014), ReminderType.Succeed)
     UIPanel.ClosePage()
 end
 

@@ -39,13 +39,17 @@ function DataSalePart:RefreshData(data)
         return
     end
     self.m_data = data
-    self.topText.text = GetLanguage(25010009)
+    self.topText.text = GetLanguage(27010008)
+    self.unSaleText.text = GetLanguage(27010007)
+    self.saleText.text = GetLanguage(27010007)
     self.saleText.text = data.shelfNum
 end
 --
 function DataSalePart:_getComponent(transform)
     self.topText = transform:Find("Top/topText"):GetComponent("Text")
     self.saleText = transform:Find("Top/saleText"):GetComponent("Text")
+    self.unSaleText = transform:Find("UnselectBtn/titleText"):GetComponent("Text")
+    self.saleText = transform:Find("SelectBtn/titleText"):GetComponent("Text")
 end
 --
 function DataSalePart:_initFunc(info)

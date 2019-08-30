@@ -164,7 +164,7 @@ function AddLineMgrNew:_createDetail(typeId)
     local count = #self.detailPrefabList - #data
     if count > 0 then
         for i = 1, count do
-            --self:_releaseObj(self.detailPrefabList[i - 1])
+            self:_releaseObj(self.detailPrefabList[i - 1])
         end
     end  --将多余的预制回收隐藏
 

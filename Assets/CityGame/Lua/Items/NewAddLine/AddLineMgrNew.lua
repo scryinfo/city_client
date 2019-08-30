@@ -29,7 +29,7 @@ function AddLineMgrNew:initialize(viewRect, sideValue)
     self.keyToggleItems = {}
     self.keyContentItems = {}
 
-    for i, typeItem in pairs(BuildingProductionPart.test) do
+    for i, typeItem in pairs(CompoundTypeConfig) do
         if (sideValue == AddLineSideValue.Left) and i < 2200 or (sideValue == AddLineSideValue.Right and i > 2200) then
             local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
             go.transform:SetParent(self.typeContent.transform)
@@ -160,11 +160,11 @@ function AddLineMgrNew:_createDetail(typeId)
     self.keyContentItems = {}
 
     --暂时是直接使用content下的子物体，多了的就移出content
-    local data = BuildingProductionPart.test[typeId]
+    local data = CompoundTypeConfig[typeId]
     local count = #self.detailPrefabList - #data
     if count > 0 then
         for i = 1, count do
-            self:_releaseObj(self.detailPrefabList[i - 1])
+            --self:_releaseObj(self.detailPrefabList[i - 1])
         end
     end  --将多余的预制回收隐藏
 

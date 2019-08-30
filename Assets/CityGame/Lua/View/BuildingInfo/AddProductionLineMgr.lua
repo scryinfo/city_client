@@ -28,7 +28,7 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
     self.keyToggleItems = {}
     self.keyContentItems = {}
 
-    for i, typeItem in pairs(BuildingProductionPart.test) do
+    for i, typeItem in pairs(CompoundTypeConfig) do
         if (sideValue == AddLineButtonPosValue.Left) and i < 2200 or (sideValue == AddLineButtonPosValue.Right and i > 2200) then
             local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
             go.transform:SetParent(self.typeContent.transform)
@@ -114,7 +114,7 @@ function AddProductionLineMgr:_showDetails(typeId)
     self.contentItems = {}
 
     --暂时是直接使用content下的子物体，多了的就移出content
-    local data = BuildingProductionPart.test[typeId]
+    local data = CompoundTypeConfig[typeId]
     local count = #self.detailPrefabList - #data
     if count > 0 then
         for i = 1, count do

@@ -62,7 +62,7 @@ function GroundTransRentAndBuyCtrl:Active()
     GroundTransRentAndBuyPanel.totalPriceText05.text = GetLanguage(22040005)
     GroundTransRentAndBuyPanel.sellBtnText07.text = GetLanguage(22040001)
     GroundTransRentAndBuyPanel.rentBtnText08.text = GetLanguage(22050001)
-    GroundTransRentAndBuyPanel.prosperityText.text = "繁荣程度:"
+    GroundTransRentAndBuyPanel.prosperityText.text = GetLanguage(20170003)
 end
 
 function GroundTransRentAndBuyCtrl:Hide()

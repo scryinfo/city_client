@@ -50,8 +50,8 @@ function GroundTransDetailCtrl:Active()
     GroundTransDetailPanel.sellText06.text = GetLanguage(22010004)
     GroundTransDetailPanel.sellingText07.text = GetLanguage(22010006)
     GroundTransDetailPanel.rentingText08.text = GetLanguage(22010005)
-    GroundTransDetailPanel.ownerText.text = "所有者"
-    GroundTransDetailPanel.prosperityText.text = "繁荣程度:"
+    GroundTransDetailPanel.ownerText.text = "所有者:"
+    GroundTransDetailPanel.prosperityText.text = GetLanguage(20170003)
     Event.AddListener("_saveGroundProsperity",self._saveGroundProsperity,self)
     self.blockData = {}
     self:getBlockData()

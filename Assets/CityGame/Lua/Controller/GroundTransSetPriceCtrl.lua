@@ -63,9 +63,9 @@ end
 function GroundTransSetPriceCtrl:Active()
     UIPanel.Active(self)
     GroundTransSetPricePanel.sellPriceText01.text = GetLanguage(22030002)
-    GroundTransSetPricePanel.priceText.text = "购买价格(E):"
-    GroundTransSetPricePanel.prosperityText.text = "繁荣程度:"
-    GroundTransSetPricePanel.competitiveness.text = "竞争力"
+    GroundTransSetPricePanel.priceText.text = GetLanguage(30080004).."(E):"
+    GroundTransSetPricePanel.prosperityText.text = GetLanguage(20170003)
+    GroundTransSetPricePanel.competitiveness.text = GetLanguage(27060015)
     GroundTransSetPricePanel.adviceTipText.text = "Recommend:<color=#f4ad07>"..50 .."</color>"
     GroundTransSetPricePanel.tipText.text = "Earnings deducted <color=#1E41C3FF>"..0.04 .." %</color> miner`s fee"
     GroundTransSetPricePanel.issueBtnText.text = "发布"

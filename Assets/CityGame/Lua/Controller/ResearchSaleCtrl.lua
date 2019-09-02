@@ -79,7 +79,7 @@ function ResearchSaleCtrl:Active()
     ResearchSalePanel.autoLabel.text = GetLanguage(28060012)
     ResearchSalePanel.sureText.text = GetLanguage(28060020)
     ResearchSalePanel.closeTextBtnText.text = GetLanguage(28060021)
-    ResearchSalePanel.recommendText.text = GetLanguage(28060022)
+    ResearchSalePanel.recommendText.text = GetLanguage(28060022) .. "50"
 end
 
 function ResearchSaleCtrl:Refresh()

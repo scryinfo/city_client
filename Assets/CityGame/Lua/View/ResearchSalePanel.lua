@@ -50,4 +50,12 @@ function ResearchSalePanel.InitPanel()
     this.changeBtn = transform:Find("MiddleRoot/ChangeBtn").gameObject
 
     this.closeTipsBtn = transform:Find("CloseTipsBtn")
+
+    -- 多语言
+    this.titleText = transform:Find("MiddleRoot/TitleText"):GetComponent("Text")
+    this.priceRootTitleText = transform:Find("MiddleRoot/PriceRoot/TitleText"):GetComponent("Text")
+    this.quantityRootTitleText = transform:Find("MiddleRoot/QuantityRoot/TitleText"):GetComponent("Text")
+    this.autoLabel = transform:Find("MiddleRoot/AutoToggle/Label"):GetComponent("Text")
+    this.sureText = transform:Find("MiddleRoot/SureBtn/Text"):GetComponent("Text")
+    this.closeTextBtnText = transform:Find("MiddleRoot/CloseTextBtn"):GetComponent("Text")
 end

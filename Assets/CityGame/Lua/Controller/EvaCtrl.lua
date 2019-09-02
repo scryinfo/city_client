@@ -69,8 +69,8 @@ function EvaCtrl:Active()
     -- 多语言适配
     EvaPanel.titleText.text = GetLanguage(31010043)
     EvaPanel.addBtnText.text = GetLanguage(31010013)
-    EvaPanel.technologyTitleText.text = "Technology points:"
-    EvaPanel.marketTitleText.text = "Market data:"
+    EvaPanel.technologyTitleText.text = GetLanguage(31010062)
+    EvaPanel.marketTitleText.text = GetLanguage(31010063)
 end
 
 function EvaCtrl:Refresh()

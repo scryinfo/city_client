@@ -22,4 +22,5 @@ function ResearchSaleChoicePanel.InitPanel()
 
     this.nullImage = transform:Find("BottomRoot/NullImage")
     this.nullText = transform:Find("BottomRoot/NullImage/NullText"):GetComponent("Text")
+    this.titleText = transform:Find("BottomRoot/TitleText"):GetComponent("Text")
 end

@@ -12,8 +12,9 @@ function ResearchTypeItem:initialize(prefab, data)
     self.data = data
     local transform = prefab.transform
     LoadSprite(data.config.iconPath, transform:Find("IconImage"):GetComponent("Image"), true)
-    transform:Find("NameText"):GetComponent("Text").text = data.config.name
-    transform:Find("SpeedText"):GetComponent("Text").text = string.format("%.2fs/per", 1/data.speed)
+    transform:Find("NameText"):GetComponent("Text").text = GetLanguage(data.config.packageName)
+    transform:Find("SpeedTitleText"):GetComponent("Text").text = GetLanguage(28050016)
+    transform:Find("SpeedText"):GetComponent("Text").text = GetLanguage(28050017, string.format("%.2f", 1/data.speed))
 
     transform:GetComponent("Button").onClick:AddListener(function ()
         self:_clickPrefab()

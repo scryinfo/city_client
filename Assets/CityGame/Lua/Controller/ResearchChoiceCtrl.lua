@@ -27,7 +27,7 @@ end
 
 function ResearchChoiceCtrl:Active()
     UIPanel.Active(self)
-    --Event.AddListener("c_OnReceiveResearchGetScienceItemSpeed",self.c_OnReceiveResearchGetScienceItemSpeed,self)
+    ResearchChoicePanel.titleText.text = GetLanguage(28050002)
 end
 
 function ResearchChoiceCtrl:Refresh()

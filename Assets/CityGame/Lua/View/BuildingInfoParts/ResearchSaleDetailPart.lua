@@ -156,7 +156,7 @@ function ResearchSaleDetailPart:_getScienceShelfData(data)
             --self.addBtnTF.localScale = Vector3.zero
             self.shelfScrollContentTF.localScale = Vector3.zero
             self.noTip.localScale = Vector3.one
-            self.TipText.text = "There is no goods yet!\njust Press the '+' to add some."
+            self.TipText.text = GetLanguage(28060001)
             self.noAddBtnTF.localScale = Vector3.one
         end
     else

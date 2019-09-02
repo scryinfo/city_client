@@ -16,8 +16,12 @@ end
 
 function ResearchDatabasePart:_InitTransform()
     local transform = self.transform
-    self.text = transform:Find("Top/Text"):GetComponent("Text")
     self.achievementsNumText = transform:Find("Top/AchievementsNumText"):GetComponent("Text")
+
+    -- 多语言
+    self.text = transform:Find("Top/Text"):GetComponent("Text")
+    self.unselectText = transform:Find("UnselectBtn/Text"):GetComponent("Text")
+    self.selectText = transform:Find("SelectBtn/Text"):GetComponent("Text")
 end
 
 function  ResearchDatabasePart:_ResetTransform()
@@ -36,7 +40,9 @@ end
 
 function ResearchDatabasePart:RefreshData(data)
     self.m_data = data
-    self.text.text = "Achievements:"
+    self.text.text = GetLanguage(28010002)
+    self.unselectText.text = GetLanguage(28010001)
+    self.selectText.text = GetLanguage(28010001)
     self.achievementsNumText.text = data.storeNum
 end
 

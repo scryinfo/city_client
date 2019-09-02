@@ -20,6 +20,8 @@ function ResearchEvaDetailPart:_InitTransform()
     self.boxsScrollContentRT = self.transform:Find("Root/LeftRoot/BoxsScroll/Viewport/Content"):GetComponent("RectTransform")
     self.researchEvaBoxItem = self.transform:Find("Root/LeftRoot/BoxsScroll/Viewport/Content/ResearchEvaBoxItem").gameObject
     self.boxNullImage = self.transform:Find("Root/LeftRoot/NullImage")
+    self.leftTitleText = self.transform:Find("Root/LeftRoot/TitleText"):GetComponent("Text")
+    self.leftNullText = self.transform:Find("Root/LeftRoot/NullImage/NullText"):GetComponent("Text")
 
     -- 正在生产的生产线（为空）
     self.lineBgImage = self.transform:Find("Root/LineBgImage")
@@ -128,8 +130,10 @@ end
 
 function ResearchEvaDetailPart:RefreshData(data)
     self.m_data = data
-    self.nullText.text = "Press “+”to add a new research line. "
-    self.lineNullText.text = GetLanguage(25030001)
+    self.nullText.text = GetLanguage(28050022)
+    self.lineNullText.text = GetLanguage(28050001)
+    self.leftTitleText.text = GetLanguage(28050026)
+    self.leftNullText.text = GetLanguage(28050027)
 
     -- 向服务器发消息查询科技列表生产速度(研究所、推广公司)
     DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqGetScienceItemSpeed')
@@ -176,7 +180,7 @@ function ResearchEvaDetailPart:_showLineOneInfo(lineData)
     self.numText.text = lineData.nowCount.."/"..self.targetCount
 
     LoadSprite(ResearchConfig[lineData.itemId].iconPath, self.iconImage, true)
-    self.nameText.text = ResearchConfig[lineData.itemId].name
+    self.nameText.text = GetLanguage(ResearchConfig[lineData.itemId].packageName)
 
     --当前生产中线开始的时间
     self.startTime = lineData.ts
@@ -297,7 +301,7 @@ function ResearchEvaDetailPart:_getScienceLineData(data)
     self.lineItems = {}
     if data.line then
         self:_setLineShow(true, false)
-        self.lineNumText.text = "Waiting queue:" .. #data.line .. "/5"
+        self.lineNumText.text = GetLanguage(28050023) .. #data.line .. "/5"
         if #data.line == 1 then
             self.nullTextTF.localScale = Vector3.one
         else
@@ -326,7 +330,7 @@ function ResearchEvaDetailPart:_getScienceLineData(data)
         end
     else
         self:_setLineShow(false, true)
-        self.lineNumText.text = "Waiting queue:0/0"
+        self.lineNumText.text = GetLanguage( 28050023) .. "0/0"
     end
 
     -- 如果有已经生产好的宝箱，则需要显示ResearchEvaBoxItem，如果没有为空。
@@ -431,10 +435,10 @@ function ResearchEvaDetailPart:_getFtyDelLine(data)
             end
         end
         if #self.scienceLineData.line < 2 then
-            self.lineNumText.text = "Waiting queue:0/0"
+            self.lineNumText.text = GetLanguage(28050023) .. "0/0"
             self.nullTextTF.localScale = Vector3.one
         else
-            self.lineNumText.text = "Waiting queue:" .. #self.scienceLineData.line .. "/5"
+            self.lineNumText.text = GetLanguage( 28050023) .. #self.scienceLineData.line .. "/5"
         end
     end
     self.addLineBtn.interactable = true

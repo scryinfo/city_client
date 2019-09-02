@@ -16,8 +16,12 @@ end
 
 function ResearchSalePart:_InitTransform()
     local transform = self.transform
-    self.text = transform:Find("Top/Text"):GetComponent("Text")
     self.quantityNumText = transform:Find("Top/QuantityNumText"):GetComponent("Text")
+
+    -- 多语言
+    self.text = transform:Find("Top/Text"):GetComponent("Text")
+    self.unselectText = transform:Find("UnselectBtn/Text"):GetComponent("Text")
+    self.selectText = transform:Find("SelectBtn/Text"):GetComponent("Text")
 end
 
 function ResearchSalePart:_InitChildClick(mainPanelLuaBehaviour)
@@ -45,7 +49,9 @@ end
 
 function ResearchSalePart:RefreshData(data)
     self.m_data = data
-    self.text.text = "Quantity:"
+    self.text.text = GetLanguage(28010006)
+    self.unselectText.text = GetLanguage(28010003)
+    self.selectText.text = GetLanguage(28010003)
     self:_showQuantityNum()
 end
 

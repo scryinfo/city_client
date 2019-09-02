@@ -14,7 +14,7 @@ function ResearchEvaBoxItem:initialize(prefab, data, fuc)
     local transform = prefab.transform
 
     self.Bg = transform:Find("Bg")
-    transform:Find("NameText"):GetComponent("Text").text = ResearchConfig[data.key.id].name
+    transform:Find("NameText"):GetComponent("Text").text = GetLanguage(ResearchConfig[data.key.id].packageName)
     self.numText = transform:Find("NumText"):GetComponent("Text")
 
     self.btn = transform:GetComponent("Button")

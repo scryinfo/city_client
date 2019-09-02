@@ -9,6 +9,7 @@ ResearchConfig =
     [1500011] =
     {
         name = 28040001,
+        packageName = 28050003,
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Material factory.png",
         buildingPath = "Assets/CityGame/Resources/Atlas/Research/Material factory.png",
         content = 28050018,
@@ -17,6 +18,7 @@ ResearchConfig =
     [1500012] =
     {
         name = 28040002,
+        packageName = 28050004,
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Factory.png",
         buildingPath = "Assets/CityGame/Resources/Atlas/Research/Factory.png",
         content = 28050018,
@@ -25,6 +27,7 @@ ResearchConfig =
     [1500013] =
     {
         name = 28040003,
+        packageName = 28050005,
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Supermarket.png",
         buildingPath = "Assets/CityGame/Resources/Atlas/Research/Supermarket.png",
         content = 28050018,
@@ -33,6 +36,7 @@ ResearchConfig =
     [1500014] =
     {
         name = 28040004,
+        packageName = 28050006,
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Homehouse.png",
         buildingPath = "Assets/CityGame/Resources/Atlas/Research/Homehouse.png",
         content = 28050018,
@@ -41,6 +45,7 @@ ResearchConfig =
     [1500015] =
     {
         name = 28040006,
+        packageName = 28050007,
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Technology.png",
         buildingPath = "Assets/CityGame/Resources/Atlas/Research/Technology.png",
         content = 28050018,
@@ -49,6 +54,7 @@ ResearchConfig =
     [1500016] =
     {
         name = 28040005,
+        packageName = 28050008,
         iconPath = "Assets/CityGame/Resources/Atlas/Research/Advertising.png",
         buildingPath = "Assets/CityGame/Resources/Atlas/Research/Advertising.png",
         content = 28050018,

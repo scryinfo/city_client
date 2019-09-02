@@ -30,15 +30,15 @@ end
 
 function ResearchMaterialItem:ShowView()
     if self.data.index == 1 then   -- 货架选择界面
-        self.nameText.text = ResearchConfig[self.data.itemKey.id].name
+        self.nameText.text = GetLanguage(ResearchConfig[self.data.itemKey.id].name)
         LoadSprite(ResearchConfig[self.data.itemKey.id].iconPath, self.iconImage , true)
         self.numText.text = "X" .. tostring(self.data.storeNum)
     elseif self.data.index == 2 then   -- 仓库显示界面
-        self.nameText.text = ResearchConfig[self.data.itemKey.id].name
+        self.nameText.text = GetLanguage(ResearchConfig[self.data.itemKey.id].name)
         LoadSprite(ResearchConfig[self.data.itemKey.id].iconPath, self.iconImage , true)
         self.numText.text = "X" .. tostring(self.data.storeNum + self.data.lockedNum)
     elseif self.data.index == 3 or self.data.index == 4 then   -- 货架显示界面
-        self.nameText.text = ResearchConfig[self.data.k.id].name
+        self.nameText.text = GetLanguage(ResearchConfig[self.data.k.id].name)
         LoadSprite(ResearchConfig[self.data.k.id].iconPath, self.iconImage , true)
         self.numText.text = "X" .. tostring(self.data.n)
         self.priceText.text = "E" .. GetClientPriceString(self.data.price)

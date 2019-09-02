@@ -51,6 +51,9 @@ function ResearchOpenBoxCtrl:Active()
     Event.AddListener("c_OnReceiveOpenScienceBox",self.c_OnReceiveOpenScienceBox,self)
     -- 监听生产线变化推送
     Event.AddListener("c_OnReceiveGetFtyLineChangeInform",self.c_OnReceiveGetFtyLineChangeInform,self)
+
+    ResearchOpenBoxPanel.leftTitleText.text = GetLanguage(28050026)
+    ResearchOpenBoxPanel.titleText.text = GetLanguage(28050024)
 end
 
 function ResearchOpenBoxCtrl:Refresh()

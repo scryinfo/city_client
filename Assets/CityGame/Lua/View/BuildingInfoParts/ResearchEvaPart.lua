@@ -17,12 +17,16 @@ end
 function ResearchEvaPart:_InitTransform()
     local transform = self.transform
 
-    self.nullText = transform:Find("Top/NullText"):GetComponent("Text")
     self.line = transform:Find("Top/TopLineInfo")
     self.icon = transform:Find("Top/TopLineInfo/goodsIcon"):GetComponent("Image")
     self.timeText = transform:Find("Top/TopLineInfo/timeText"):GetComponent("Text")
     self.slider = transform:Find("Top/TopLineInfo/numberSlider"):GetComponent("Slider")
     self.num = transform:Find("Top/TopLineInfo/numberSlider/numberText"):GetComponent("Text")
+
+    -- 多语言
+    self.nullText = transform:Find("Top/NullText"):GetComponent("Text")
+    self.unselectText = transform:Find("UnselectBtn/Text"):GetComponent("Text")
+    self.selectText = transform:Find("SelectBtn/Text"):GetComponent("Text")
 
     self.m_Timer = Timer.New(slot(self.UpData, self), UnityEngine.Time.unscaledDeltaTime, -1, true)
 end
@@ -57,7 +61,9 @@ function ResearchEvaPart:Refresh(data)
     --刷新自身数据,不刷新详情页面数据
     self:RefreshData(data)
 
-    self.nullText.text = "No research currently."
+    self.nullText.text = GetLanguage(28010005)
+    self.unselectText.text = GetLanguage(28010004)
+    self.selectText.text = GetLanguage(28010004)
 end
 
 function ResearchEvaPart:RefreshData(data)

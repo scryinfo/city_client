@@ -11,6 +11,7 @@ end
 
 function ResearchDatabaseDetailPart:_InitTransform()
     self.nullImage = self.transform:Find("Root/NullImage")
+    self.nullText = self.transform:Find("Root/NullImage/NullText"):GetComponent("Text")
 
     self.databaseScrollContent = self.transform:Find("Root/DatabaseScroll/Viewport/Content")
     self.researchMaterialItem = self.transform:Find("Root/DatabaseScroll/Viewport/Content/ResearchMaterialItem").gameObject
@@ -56,6 +57,7 @@ function ResearchDatabaseDetailPart:RefreshData(data)
     DataManager.DetailModelRpcNoRet(self.m_data.info.id, 'm_ReqGetScienceStorageData')
     -- 监听使用研究资料的内容（_returnUse）
     -- 向服务器发消息查询当前资料库的内容
+    self.nullText.text = GetLanguage(28040014)
 end
 
 -- 销毁的时候，清除点击事件

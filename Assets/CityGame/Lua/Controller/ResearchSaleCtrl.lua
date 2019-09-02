@@ -71,6 +71,15 @@ end
 function ResearchSaleCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_OnqueryLaboratoryRecommendPrice",self.c_OnqueryLaboratoryRecommendPrice,self)
+
+    -- 多语言
+    ResearchSalePanel.titleText.text = GetLanguage(28060009)
+    ResearchSalePanel.priceRootTitleText.text = GetLanguage(28060013)
+    ResearchSalePanel.quantityRootTitleText.text = GetLanguage(28060011)
+    ResearchSalePanel.autoLabel.text = GetLanguage(28060012)
+    ResearchSalePanel.sureText.text = GetLanguage(28060020)
+    ResearchSalePanel.closeTextBtnText.text = GetLanguage(28060021)
+    ResearchSalePanel.recommendText.text = GetLanguage(28060022)
 end
 
 function ResearchSaleCtrl:Refresh()
@@ -93,7 +102,7 @@ function ResearchSaleCtrl:_updateData()
 
     end
     if self.m_data.data.index == 1 then
-        ResearchSalePanel.nameText.text = ResearchConfig[self.m_data.data.itemKey.id].name
+        ResearchSalePanel.nameText.text = GetLanguage(ResearchConfig[self.m_data.data.itemKey.id].name)
         --ResearchSalePanel.priceInputField.text = 0.0001
         ResearchSalePanel.closeBtnTF.localScale = Vector3.zero
         ResearchSalePanel.sureBtnTF.localScale = Vector3.one
@@ -113,7 +122,7 @@ function ResearchSaleCtrl:_updateData()
     end
 
     ResearchSalePanel.closeTipsBtn.localScale = Vector3.zero
-    ResearchSalePanel.recommendText.text = "Recommend:50"
+
     ResearchSalePanel.quantitySlider.maxValue = self.m_data.data.storeNum + self.m_data.data.lockedNum
     ResearchSalePanel.quantitySlider.value = self.m_data.data.lockedNum
     ResearchSalePanel.tipsImage.localScale = Vector3.zero

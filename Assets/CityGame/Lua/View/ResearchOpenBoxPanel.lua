@@ -36,4 +36,8 @@ function ResearchOpenBoxPanel.InitPanel()
     this.iconImage = transform:Find("ResearchMaterialItem/IconImage"):GetComponent("Image")
     this.resultNumText = transform:Find("ResearchMaterialItem/NumText"):GetComponent("Text")
     this.resultNameText = transform:Find("ResearchMaterialItem/NameText"):GetComponent("Text")
+
+    -- 多语言
+    this.leftTitleText = transform:Find("LeftRoot/TitleText"):GetComponent("Text")
+    this.titleText = transform:Find("TitleText"):GetComponent("Text")
 end

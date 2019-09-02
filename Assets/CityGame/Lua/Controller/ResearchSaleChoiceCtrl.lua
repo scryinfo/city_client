@@ -29,7 +29,8 @@ function ResearchSaleChoiceCtrl:Active()
     UIPanel.Active(self)
 
     -- 多语言
-    ResearchSaleChoicePanel.nullText.text = "There is no data!"
+    ResearchSaleChoicePanel.nullText.text = GetLanguage(28060002)
+    ResearchSaleChoicePanel.titleText.text = GetLanguage(28060023)
 end
 
 function ResearchSaleChoiceCtrl:Refresh()

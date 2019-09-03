@@ -34,10 +34,8 @@ function TitleGoodsItem:OnBg(go)
     go.bg.color = getColorByInt(225,233,255,255)
     lastBg = go.bg
 
-    if go.msg.type == 11 or go.msg.type == 12 or go.msg.type == 13 then
-        CityInfoPanel.productIcon.sprite = SpriteManager.GetSpriteByPool(go.goodsDataInfo.itemId)
-    end
-    CityInfoPanel.productText.text = go.goodsDataInfo.name
+    CityInfoPanel.productIcon.sprite = SpriteManager.GetSpriteByPool(go.goodsDataInfo.itemId)
+    CityInfoPanel.productText.text = GetLanguage(go.goodsDataInfo.name)
     CityInfoPanel.productDown.transform.localScale = Vector3.one
     CityInfoPanel.productDowns.localScale = Vector3.one
     CityInfoPanel.productUp.localScale = Vector3.zero

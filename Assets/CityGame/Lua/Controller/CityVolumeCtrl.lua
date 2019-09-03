@@ -79,13 +79,13 @@ function CityVolumeCtrl:_getComponent(go)
 end
 
 function CityVolumeCtrl:initData()
-    if self.m_data.type == CityBasicType.Volume then
+    if self.m_data.type == CityBasicType.Volume then  --城市交易额
         self.name.text = GetLanguage(45010005)
         self.title.text = GetLanguage(45010011)
         self.volumeImage.localScale = Vector3.one
         self.fundPoolImage.localScale = Vector3.zero
         DataManager.DetailModelRpcNoRet(self.m_data.insId , 'm_queryTransactionAmount',true)
-    elseif self.m_data.type == CityBasicType.fundPool then
+    elseif self.m_data.type == CityBasicType.fundPool then   --城市奖金池
         self.name.text = GetLanguage(45010006)
         self.title.text = GetLanguage(45010012)
         self.volumeImage.localScale = Vector3.zero

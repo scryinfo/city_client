@@ -16,18 +16,6 @@ function DataCompanyModel:OnCreate()
     --网络回调
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","startBusiness","gs.Id",self.n_OnReceiveOpenBusiness)
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailPublicFacility","gs.PublicFacility",self.n_OnPublicFacility) --建筑详情
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adAddNewPromoOrder","gs.AdAddNewPromoOrder",self.n_OnAddPromote) --添加推广
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adQueryPromotion","gs.AdQueryPromotion",self.n_OnQueryPromotion) -- 推广列表
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adQueryPromoCurAbilitys","gs.AdQueryPromoCurAbilitys",self.n_OnAdQueryPromoCurAbilitys) -- 推广能力列表
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","queryPromotionItemInfo","gs.PromotionItemInfo",self.n_OnPromotionItemInfo) -- 获取推广能力列表
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adjustPromoSellingSetting","gs.AdjustPromoSellingSetting",self.n_OnPromotionSetting) -- 推广设置
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adRemovePromoOrder","gs.AdRemovePromoOrder",self.n_OnRemovePromo) -- 删除推广
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetPromoAbilityHistory","gs.AdGetPromoAbilityHistory",self.n_OnPromoAbilityHistory) -- 推广历史曲线
-    --DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adGetAllMyFlowSign","gs.GetAllMyFlowSign",self.n_OnGetAllMyFlowSign) -- 获取自己的所有签约
-    --DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryBuildingLift","ss.BuildingLift",self.n_OnGetLiftCurve,self) -- 获取自己的所有签约曲线
-    --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","promotionGuidePrice","gs.PromotionMsg",self.n_OnGuidePrice,self) -- 推荐定价
-
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailPromotionCompany","gs.PromotionCompany",self.n_OnPublicFacility) --建筑详情
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","getScienceItemSpeed","gs.ScienceItemSpeed",self.n_OnSurveySpeed) --调查速度
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","ftyLineAddInform","gs.FtyLineAddInform",self.n_OnAddSurveyLine) --添加调查线
@@ -290,16 +278,6 @@ function DataCompanyModel:n_OnRecommendPrice(info)
     Event.Brocast("c_RecommendPrice",info)
 end
 
---添加推广回调
-function DataCompanyModel:n_OnAddPromote(info)
-    DataCompanyModel:m_detailPublicFacility(info.sellerBuildingId)
-    if info.buildingType == 1300 or info.buildingType == 1400 then
-        Event.Brocast("c_ClosePromoteBuildingExtension")
-    else
-        Event.Brocast("c_ClosePromoteGoodsExtension")
-    end
-end
-
 --删除推广回调
 function DataCompanyModel:n_OnRemovePromo(info)
     DataCompanyModel:m_detailPublicFacility(info.buildingId)
@@ -337,49 +315,6 @@ function DataCompanyModel:n_OnPromotionSetting(info)
     Event.Brocast("c_CloseSetOpenUp")
 end
 
---推广列表回调
-function DataCompanyModel:n_OnQueryPromotion(info)
-    if not info.Promotions then
-       return
-    end
-    self.data = {}
-    for i, v in pairs(info.Promotions) do
-       self.data[i] = v
-        self.data[i].createTs = v.promStartTs
-        self.data[i].queneTime = v.promStartTs
-        self.data[i].proposerId = v.buyerId
-    end
-    ct.OpenCtrl("QueneCtrl",{name = "View/GoodsItem/QueueItem",data = self.data,insClass = PromoteQueueItem})
-end
-
---推广能力回调
-function DataCompanyModel:n_OnAdQueryPromoCurAbilitys(info)
-    DataManager.ControllerRpcNoRet(self.insId,"DataCompanyCtrl", '_queryPromoCurAbilitys', info)
-end
-
---获取推广能力回调
-function DataCompanyModel:n_OnPromotionItemInfo(info)
-    DataManager.ControllerRpcNoRet(self.insId,"DataCompanyCtrl", '_queryPromoCurItemInfo', info)
-end
-
---推广历史曲线回调
-function DataCompanyModel:n_OnPromoAbilityHistory(info)
-    DataManager.ControllerRpcNoRet(self.insId,"PromoteCurveCtrl", 'm_PromoteHistoryCurve', info.recordsList[1].list)
-end
-
---签约回调
-function DataCompanyModel:n_OnGetAllMyFlowSign(info)
-    local a = info
-    --DataManager.ControllerRpcNoRet(self.insId,"AdBuildingSignDetailPart", 'm_GetAllMyFlowSign', info.info)
-    Event.Brocast("m_GetAllMyFlowSign",info.info)
-end
-
---签约曲线回调
-function DataCompanyModel:n_OnGetLiftCurve(info)
-    --DataManager.ControllerRpcNoRet(self.insId,"PromoteSignCurveCtrl", 'c_PromoteSignCurve', info)
-    Event.Brocast("c_PromoteSignCurve",info)
-end
-
 --员工工资改变
 function DataCompanyModel:n_OnReceiveHouseSalaryChange(data)
     DataManager.ControllerRpcNoRet(self.insId,"DataCompanyCtrl", '_refreshSalary', data)
@@ -390,9 +325,4 @@ function DataCompanyModel:n_OnReceiveOpenBusiness(data)
         self:m_detailPublicFacility(self.insId)
         Event.Brocast("SmallPop", GetLanguage(24020018), ReminderType.Succeed)  --开业成功提示
     end
-end
-
---推荐定价
-function DataCompanyModel:n_OnGuidePrice(info)
-    Event.Brocast("c_GuidePrice",info)
 end

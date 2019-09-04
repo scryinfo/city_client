@@ -73,7 +73,6 @@ function ServerListModel:m_GsOK()
     ServerListModel:registerGsNetMsg()
     -----------------------------------------------------------------------------
     ----临时单独处理的协议，后边统走datamanager
-    StopAndBuildModel.Awake()
     -----------------------------------------------------------------------------
     GAucModel.registerNetMsg()  --拍卖的网络回调
     GroundTransModel.registerNetMsg()  --土地交易网络回调

@@ -13,14 +13,14 @@ namespace City
 		WARNING,
 		ERROR,
 
-		NOLOG,  // 放在最后面，使用这个时表示不输出任何日志（!!!慎用!!!）
+		NOLOG,  // Put it at the end, when using this, it means that no logs will be output (!!!Use with caution!!!)
 	}
 
     public enum SYSEVENT : int
     {
         SYSEVENT_DEFAULT = 0,
         SYSEVENT_DISCONNECT,
-        SYSEVENT_NONE,  // 放在最后面，使用这个时表示不输出任何日志（!!!慎用!!!）
+        SYSEVENT_NONE,  // Put it at the end, when using this, it means that no logs will be output (!!!Use with caution!!!)
     }
 
     public class Dbg 

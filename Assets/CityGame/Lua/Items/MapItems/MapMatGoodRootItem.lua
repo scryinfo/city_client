@@ -4,9 +4,9 @@
 --- DateTime: 2019/2/27 18:13
 ---
 MapMatGoodRootItem = class('MapMatGoodRootItem')
-MapMatGoodRootItem.static.TitleHeight = 68  --类型标题的高度
+MapMatGoodRootItem.static.TitleHeight = 68  --Type header height
 
---初始化方法
+--Initialization method
 function MapMatGoodRootItem:initialize(data, viewRect)
     self.viewRect = viewRect
     self.data = data
@@ -19,14 +19,14 @@ function MapMatGoodRootItem:initialize(data, viewRect)
     self:_createItems()
     self:_language()
 end
---重置状态
+--Reset state
 function MapMatGoodRootItem:resetState()
     self:_language()
     for i, value in pairs(self.items) do
         value:resetState()
     end
 end
---多语言
+--multi-language
 function MapMatGoodRootItem:_language()
     self.typeNameText.text = GetLanguage(self.data.detailData[1].name)
     local width = self.typeNameText.preferredWidth + 35

@@ -14,18 +14,18 @@ local protoc = require "Framework/pbl/protoc"
 protoc:addpath("./Assets/CityGame/Lua/pb")
 local log = log
 
------------------可配置信息---------------
+-----------------Configurable information---------------
 --CityEngineLua.ip = "127.0.0.1";
 --CityEngineLua.port = "20013";
 
---李宁
+--lining
 --CityEngineLua.ip = "192.168.0.50";
 --CityEngineLua.port = "10000";
 
---服务器
+--server
 CityEngineLua.ip = AppConst.asServerIp
-CityEngineLua.port = "9001";-- 国内
---CityEngineLua.port = "4601";-- 国外
+CityEngineLua.port = "9001";-- domestic
+--CityEngineLua.port = "4601";-- foreign
 
 -- Mobile(Phone, Pad)	= 1,
 -- Windows Application program	= 2,
@@ -43,8 +43,8 @@ CityEngineLua.useAliasEntityID = true;
 
 CityEngineLua.CITY_FLT_MAX = 3.402823466e+38;
 
------ player的相关信息
--- 当前玩家的实体id与实体类别
+----- player related information
+-- Entity id and entity category of current player
 CityEngineLua.entity_uuid = nil;
 CityEngineLua.entity_id = 0;
 CityEngineLua.entity_type = "";
@@ -55,39 +55,39 @@ CityEngineLua.entityServerPos = Vector3.New(0.0, 0.0, 0.0);
 
 CityEngineLua.syncPlayer = true;
 
--- 空间的信息
+-- Spatial information
 CityEngineLua.spacedata = {};
 CityEngineLua.spaceID = 0;
 CityEngineLua.spaceResPath = "";
 CityEngineLua.isLoadedGeometry = false;
 
---entityDef管理模块
+--entityDef management module
 CityEngineLua.entityDef =CityEngineLua.EntityDef:New()
 
--- 账号信息
+-- account information
 CityEngineLua.username = "City";
 CityEngineLua.password = "123456";
 
--- 网络信息
+-- Internet Information
 CityEngineLua.currserver = "";
 CityEngineLua.currstate = "";
 
--- 服务端分配的baseapp地址
+-- The baseapp address assigned by the server
 CityEngineLua.baseappIP = "";
 CityEngineLua.baseappPort = nil;
 CityEngineLua.token = ""
 
--- 交易服务器的地址
+-- The address of the trading server
 CityEngineLua.tradeappIP = "";
 CityEngineLua.tradeappPort = nil;
 
 CityEngineLua._serverdatas = {};
 CityEngineLua._clientdatas = {};
 
--- 通信协议加密，blowfish协议--没用过~
+-- Communication protocol encryption, blowCommunication protocol encryption, blowfish protocolfish protocol--
 CityEngineLua._encryptedKey = "";
 
--- 服务端与客户端的版本号以及协议MD5
+-- Version number and protocol MD5 of server and client
 CityEngineLua.clientVersion = "2.0.0";
 CityEngineLua.clientScriptVersion = "0.1.0";
 CityEngineLua.serverVersion = "";
@@ -95,35 +95,35 @@ CityEngineLua.serverScriptVersion = "";
 CityEngineLua.serverProtocolMD5 = "";
 CityEngineLua.serverEntitydefMD5 = "";
 
--- 各种存储结构
+-- Various storage structures
 CityEngineLua.moduledefs = {};
 CityEngineLua.serverErrs = {};
 
--- 所有实体都保存于这里， 请参看API手册关于entities部分
+-- All entities are stored here, please refer to the API section about entities
 -- https://github.com/City/City/tree/master/docs/api
 CityEngineLua.entities = {};
 
--- 在玩家View范围小于256个实体时我们可以通过一字节索引来找到entity
+-- When the player View range is less than 256 entities, we can find the entity through a one-byte index
 CityEngineLua.entityIDAliasIDList = {};
 CityEngineLua.bufferedCreateEntityMessage = {};
 
--- 持久化
+-- Persistence
 CityEngineLua._persistentInfos = nil;
 
--- 是否正在加载本地消息协议
+-- Whether the local message protocol is being loaded
 CityEngineLua.loadingLocalMessages_ = false;
--- 各种协议是否已经导入了
+-- Whether the various protocols have been imported
 CityEngineLua.loginappMessageImported_ = false;
 CityEngineLua.baseappMessageImported_ = false;
 CityEngineLua.entitydefImported_ = false;
 CityEngineLua.isImportServerErrorsDescr_ = false;
 
--- 控制网络间隔
+-- Control network interval
 CityEngineLua._lastTickTime = os.clock();
 CityEngineLua._lastTickCBTime = os.clock();
 CityEngineLua._lastUpdateToServerTime = os.clock();
 
---网络接口
+--Network Interface
 CityEngineLua._networkInterface = nil;
 CityEngineLua._tradeNetworkInterface1 = nil;
 
@@ -135,21 +135,21 @@ function ct.getCredentialPath()
 	return CityLuaUtil.getAssetsPath().."/Lua/"..hash
 end
 
---使用密码获取私钥
+--Use password to get private key
 function ct.CheckPrivateKeyLocal()
-	--获取私钥保存路径
+	--Get private key save path
 	local privateKeyPath = ct.getCredentialPath().."priKey.data"
-	--读取
+	--Read
 	return ct.file_readString(privateKeyPath) ~= nil
 end
 
 function ct.VerifyPassword(password)
-	--验证密码
-	--1 从本地读取保存的公钥
+	--verify password
+	--1 Read saved public key locally
 	local publicKeyPathToRead = ct.getCredentialPath().."pubKey.data"
-	--进一步验证，思路是使用新密码解密保存的私钥，然后生成一个公钥比对与保存的私钥是否相同
+	--Further verification, the idea is to use the new password to decrypt the saved private key, and then generate a public key comparison is the same as the saved private key
 	local pubkeyStrLoaded = ct.file_readString(publicKeyPathToRead)
-	--如果本地没有这个公钥，说明密码错误，返回
+	--If the public key is not available locally, the password is incorrect and returns
 	if pubkeyStrLoaded == nil then
 		return false
 	end
@@ -158,38 +158,38 @@ function ct.VerifyPassword(password)
 	local teststr = City.signer_ct.ByteArrayToString(testpubkey)
 	return teststr == pubkeyStrLoaded
 
---[[	--2 从本地读取保存的私钥
-	--读取
+--[[	--2 Read saved private key locally
+	--Read
 	local privateKeyPath = ct.getCredentialPath(password).."priKey.data"
 	local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
 	if privateKeyEncryptedSaved == nil then
 		return false
 	end
-	--用密码解密私钥
+	--Decrypt the private key with a password
 	local privateKeyToTest = City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
 	local pubkeyToTest = City.signer_ct.GetPublicKeyFromPrivateKey(privateKeyToTest);
 	return City.signer_ct.ByteArrayToString(pubkeyToTest) == pubkeyStrLoaded
-	--使用私钥生成公钥]]
+	--Use private key to generate public key]]
 end
 
---输入密钥保护密码
+--Enter the key protection password
 function ct.GenerateAndSaveKeyPair(password)
-	--生成并保存私钥
+	--Generate and save the private key
 	local privateKey = City.CityLuaUtil.NewGuid()
 	local privateKeyEncrypted = City.signer_ct.Encrypt(password, privateKey)
-	--保存私钥
-	--获取私钥保存路径
+	--Save private key
+	--Get private key save path
 	local privateKeyPath = ct.getCredentialPath().."priKey.data"
 	ct.file_saveString(privateKeyPath,privateKeyEncrypted)
 
-	--用私钥字符串生成公钥并保存
+	--Generate public key with private key string and save
 	local pubkey = City.signer_ct.GetPublicKeyFromPrivateKey(privateKey);
-	--获取公钥保存路径
+	--Get public key save path
 	local publicKeyPath = ct.getCredentialPath().."pubKey.data"
-	local pubkeyStr = City.signer_ct.ByteArrayToString(pubkey); --转为字符保存
+	local pubkeyStr = City.signer_ct.ByteArrayToString(pubkey); --Convert to character save
 	ct.file_saveString(publicKeyPath,pubkeyStr)
 
-	----保存支付密码
+	----Save payment password
 	--local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
 	--ct.file_saveString(passWordPath,password)
 
@@ -197,33 +197,33 @@ function ct.GenerateAndSaveKeyPair(password)
 	return privateKey, pubkeyStr
 end
 
---从本地读取保存的公钥
+--Read saved public key locally
 function ct.GetPublicKeyStringLocal()
-	--获取私钥保存路径
+	--Get private key save path
 	local publicKeyPath = ct.getCredentialPath().."pubKey.data"
-	--读取
+	--Read
 	local pubkeyStr = ct.file_readString(publicKeyPath)
 	if pubkeyStr == nil then
 		return nil
 	end
-	--用密码解密私钥
+	--Decrypt the private key with a password
 	return pubkeyStr
 end
 
---使用密码获取私钥
+--Use password to get private key
 function ct.GetPrivateKeyLocal(password)
-	--获取私钥保存路径
+	--Get private key save path
 	local privateKeyPath = ct.getCredentialPath().."priKey.data"
-	--读取
+	--Read
 	local privateKeyEncryptedSaved = ct.file_readString(privateKeyPath)
 	if privateKeyEncryptedSaved == nil then
 		return nil
 	end
-	--用密码解密私钥
+	--Decrypt the private key with a password
 	return City.signer_ct.Decrypt(password, privateKeyEncryptedSaved)
 end
 
---使用密码获取公钥
+--Use password to get public key
 function ct.GenPublicKeyString(password)
 	local privateKey = ct.GetPrivateKeyLocal(password)
 	if privateKey == nil then
@@ -323,7 +323,7 @@ CityEngineLua.InitEngine = function()
 	CityEngineLua.Message.bindFixedMessage();
 	this._persistentInfos = CityEngineLua.PersistentInfos:New(UnityEngine.Application.persistentDataPath);
 	FixedUpdateBeat:Add(this.process, this);
-	--测试
+	--test
 	pbl_errorTest()
 end
 
@@ -419,8 +419,8 @@ CityEngineLua.createDataTypeFromStream = function(stream, canprint)
 	local name = stream:readString();
 	local valname = stream:readString();
 	
-	-- 有一些匿名类型，我们需要提供一个唯一名称放到datatypes中
-	-- 如：
+	-- There are some anonymous types, we need to provide a unique name to put in datatypes
+	-- Such as：
 	-- <onRemoveAvatar>
 	-- 	<Arg>	ARRAY <of> INT8 </of>		</Arg>
 	-- </onRemoveAvatar>				
@@ -459,7 +459,7 @@ CityEngineLua.createDataTypeFromStream = function(stream, canprint)
 
 	CityEngineLua.datatypes[utype] = CityEngineLua.datatypes[valname];
 	
-	-- 将用户自定义的类型补充到映射表中
+	-- Add user-defined types to the mapping table
 	CityEngineLua.datatype2id[valname] = utype;
 end
 
@@ -509,7 +509,7 @@ CityEngineLua.onImportClientEntityDef = function(stream)
 			local name = stream:readString();
 			local defaultValStr = stream:readString();
 			local utype = CityEngineLua.datatypes[stream:readUint16()];
-			local setmethod = nil;--函数
+			local setmethod = nil;--function
 			if(Class ~= nil) then
 				setmethod = Class["set_" .. name];
 			end
@@ -719,7 +719,7 @@ CityEngineLua.onImportServerErrorsDescr = function(stream)
 		--ct.log("Client_onImportServerErrorsDescr: id=" + e.id + ", name=" + e.name + ", descr=" + e.descr);
 	end
 end
-	-- 从二进制流导入消息协议完毕了
+	-- Import message protocol from binary stream is complete
 CityEngineLua.onImportClientMessagesCompleted = function()
 	if(this.currserver == "loginapp") then
 		if(not this.isImportServerErrorsDescr_ and not this.loadingLocalMessages_) then
@@ -822,9 +822,9 @@ CityEngineLua.getViewEntityIDFromStream = function(stream)
 	else
 		local aliasID = stream:readUint8();
 
-		-- -- 如果为0且客户端上一步是重登陆或者重连操作并且服务端entity在断线期间一直处于在线状态
-		-- -- 则可以忽略这个错误, 因为cellapp可能一直在向baseapp发送同步消息， 当客户端重连上时未等
-		-- -- 服务端初始化步骤开始则收到同步信息, 此时这里就会出错。
+		-- -- If it is 0 and the client's last step is to re-login or reconnect and the server entity is always online during the disconnection
+		-- -- You can ignore this error, because cellapp may have been sending synchronization messages to baseapp, but did not wait when the client reconnected
+		-- -- At the beginning of the initialization step of the server, the synchronization information is received.
 		if(#CityEngineLua.entityIDAliasIDList <= aliasID) then
 			return 0;
 		end
@@ -848,7 +848,7 @@ CityEngineLua.onUpdatePropertys_ = function(eid, stream)
 		
 		local stream1 = City.MemoryStream.New();
 		stream1:copy(stream);
-		stream1.rpos = stream1.rpos - 4;--让出一个id
+		stream1.rpos = stream1.rpos - 4;--Give out an id
 
 		CityEngineLua.bufferedCreateEntityMessage[eid] = stream1;
 		return;
@@ -882,7 +882,7 @@ CityEngineLua.onUpdatePropertys_ = function(eid, stream)
 		entity[propertydata[3]] = val;
 		if(setmethod ~= nil) then
 
-			-- base类属性或者进入世界后cell类属性会触发set_*方法
+			-- The base class attribute or the cell class attribute will trigger the set_* method after entering the world
 			if(flags == 0x00000020 or flags == 0x00000040) then
 				if(entity.inited) then
 					setmethod(entity, oldval);
@@ -958,7 +958,7 @@ CityEngineLua.Client_onRemoteMethodCall = function(stream)
 end
 
 
---服务端通知一个实体进入了世界(如果实体是当前玩家则玩家第一次在一个space中创建了， 如果是其他实体则是其他实体进入了玩家的View)
+--The server notifies an entity that it has entered the world (if the entity is the current player, the player creates it for the first time in a space, and if it is another entity, the other entity enters the player's View)
 CityEngineLua.Client_onEntityEnterWorld = function(stream)
 	local eid = stream:readInt32();
 	if(CityEngineLua.entity_id > 0 and eid ~= CityEngineLua.entity_id) then
@@ -1028,9 +1028,9 @@ CityEngineLua.Client_onEntityEnterWorld = function(stream)
 			entity.cellEntityCall.className = entityType;
 			entity.cellEntityCall.type = CityEngineLua.ENTITYCALL_TYPE_CELL;
 
-			-- 安全起见， 这里清空一下
-			-- 如果服务端上使用giveClientTo切换控制权
-			-- 之前的实体已经进入世界， 切换后的实体也进入世界， 这里可能会残留之前那个实体进入世界的信息
+			-- For safety, here is an empty
+			-- If you use giveClientTo to switch control on the server
+			-- The previous entity has entered the world, and the entity after the switch has also entered the world. Here may leave the information that the previous entity entered the world
 			CityEngineLua.entityIDAliasIDList = {};
 			CityEngineLua.entities = {}
 			CityEngineLua.entities[entity.id] = entity;
@@ -1054,14 +1054,14 @@ CityEngineLua.Client_onEntityEnterWorld = function(stream)
 end
 
 
---服务端使用优化的方式通知一个实体离开了世界(如果实体是当前玩家则玩家离开了space， 如果是其他实体则是其他实体离开了玩家的View)
+--The server uses an optimized method to notify an entity that it has left the world (if the entity is the current player, the player has left the space, if it is another entity, then the other entity has left the player's View)
 CityEngineLua.Client_onEntityLeaveWorldOptimized = function(stream)
 	local eid = CityEngineLua.getViewEntityIDFromStream(stream);
 	CityEngineLua.Client_onEntityLeaveWorld(eid);
 end
 
 
---服务端通知一个实体离开了世界(如果实体是当前玩家则玩家离开了space， 如果是其他实体则是其他实体离开了玩家的View)
+--The server notifies an entity that it has left the world (if the entity is the current player, the player has left the space, if it is another entity, then the other entity has left the player's View)
 CityEngineLua.Client_onEntityLeaveWorld = function(eid)
 	local entity = CityEngineLua.entities[eid];
 	if(entity == nil) then
@@ -1111,7 +1111,7 @@ CityEngineLua.Client_onEntityDestroyed = function(eid)
 
 end
 
---服务端通知当前玩家进入了一个新的space
+--The server notifies the current player that a new space has been entered
 CityEngineLua.Client_onEntityEnterSpace = function(stream)
 
 	local eid = stream:readInt32();
@@ -1134,7 +1134,7 @@ CityEngineLua.Client_onEntityEnterSpace = function(stream)
 	entity:enterSpace();
 end
 
---服务端通知当前玩家离开了space
+--The server informs the current player that he has left the space
 CityEngineLua.Client_onEntityLeaveSpace = function(eid)
 	local entity = CityEngineLua.entities[eid];
 	if(entity == nil) then
@@ -1146,7 +1146,7 @@ CityEngineLua.Client_onEntityLeaveSpace = function(eid)
 	entity:leaveSpace();
 end
 
---账号创建返回结果
+--Account creation returns results
 CityEngineLua.Client_v_onCreateAccountResult = function(stream)
 
 	local retcode = stream:readUint16();
@@ -1164,7 +1164,7 @@ CityEngineLua.Client_v_onCreateAccountResult = function(stream)
 end
 
 
---	告诉客户端：你当前负责（或取消）控制谁的位移同步
+--	Tell the client: you are currently responsible (or cancel) who controls the displacement synchronization
 CityEngineLua.Client_onControlEntity = function(eid, isControlled)
 
 	local entity = this.entities[eid];
@@ -1176,8 +1176,8 @@ CityEngineLua.Client_onControlEntity = function(eid, isControlled)
 
 	local isCont = isControlled ~= 0;
 	if (isCont) then
-		-- 如果被控制者是玩家自己，那表示玩家自己被其它人控制了
-		-- 所以玩家自己不应该进入这个被控制列表
+		-- If the controlled person is the player, it means that the player is controlled by another person
+		-- So the player should not enter this controlled list
 		if (this.player().id ~= entity.id) then
 			table.insert(this.controlledEntities, entity);
 		end
@@ -1215,7 +1215,7 @@ CityEngineLua.updatePlayerToServer = function()
     --ct.log(player.position.x .. " " .. player.position.y);
 	if(Vector3.Distance(player._entityLastLocalPos, player.position) > 0.001 or Vector3.Distance(player._entityLastLocalDir, player.direction) > 0.001) then
 	
-		-- 记录玩家最后一次上报位置时自身当前的位置
+		-- Record the player's current position when the player last reported the position
 		player._entityLastLocalPos.x = player.position.x;
 		player._entityLastLocalPos.y = player.position.y;
 		player._entityLastLocalPos.z = player.position.z;
@@ -1232,8 +1232,8 @@ CityEngineLua.updatePlayerToServer = function()
 		local x = player.direction.x * CityEngineLua.deg2rad;
 		local y = player.direction.y * CityEngineLua.deg2rad;
 		local z = player.direction.z * CityEngineLua.deg2rad;
-		-- 根据弧度转角度公式会出现负数
-		-- unity会自动转化到0~360度之间，这里需要做一个还原
+		-- Negative numbers appear according to the formula of radians to angles
+		-- Unity will automatically convert between 0~360 degrees, here need to do a restore
 		if(x - Mathf.PI > 0.0) then
 			x = x - Mathf.PI * 2;
 		end
@@ -1254,7 +1254,7 @@ CityEngineLua.updatePlayerToServer = function()
 		bundle:send();
 	end
 
-	-- 开始同步所有被控制了的entity的位置
+	-- Start to synchronize the positions of all controlled entities
 	for i, e in ipairs(this.controlledEntities) do
 		local entity = this.controlledEntities[i];
 		position = entity.position;
@@ -1278,8 +1278,8 @@ CityEngineLua.updatePlayerToServer = function()
 			--double y = ((double)direction.y / 360 * (System.Math.PI * 2));
 			--double z = ((double)direction.z / 360 * (System.Math.PI * 2));
 		
-			-- 根据弧度转角度公式会出现负数
-			-- unity会自动转化到0~360度之间，这里需要做一个还原
+			-- According to the radian to angle formula, a negative number will appear
+			-- Unity will automatically convert between 0~360 degrees, here need to do a reduction
 			--if(x - System.Math.PI > 0.0)
 			--	x -= System.Math.PI * 2;
 
@@ -1458,7 +1458,7 @@ CityEngineLua.Client_onSetEntityPosAndDir = function(stream)
 	entity.direction.y = stream:readFloat();
 	entity.direction.z = stream:readFloat();
 	
-	-- 记录玩家最后一次上报位置时自身当前的位置
+	-- Record the player's current position when the player last reported the position
 	entity._entityLastLocalPos.x = entity.position.x;
 	entity._entityLastLocalPos.y = entity.position.y;
 	entity._entityLastLocalPos.z = entity.position.z;
@@ -1732,14 +1732,14 @@ CityEngineLua._updateVolatileData = function(entityID, x, y, z, yaw, pitch, roll
 
 	local entity = CityEngineLua.entities[entityID];
 	if(entity == nil) then
-		-- 如果为0且客户端上一步是重登陆或者重连操作并且服务端entity在断线期间一直处于在线状态
-		-- 则可以忽略这个错误, 因为cellapp可能一直在向baseapp发送同步消息， 当客户端重连上时未等
-		-- 服务端初始化步骤开始则收到同步信息, 此时这里就会出错。			
+		-- If it is 0 and the client's last step is to re-login or reconnect operation and the server entity is always online during the disconnection
+		-- you can ignore this error, because cellapp may have been sending synchronization messages to baseapp, but did not wait when the client reconnected
+		-- At the beginning of the server initialization step, the synchronization message is received. At this time, an error occurs.			
 		ct.log("CityEngineApp::_updateVolatileData: entity(" .. entityID .. ") not found!");
 		return;
 	end
 	
-	-- 小于0不设置
+	-- Less than 0 is not set
 	if(isOnGround >= 0) then
 		entity.isOnGround = (isOnGround > 0);
 	end
@@ -1794,40 +1794,40 @@ end
 --	CityEngineLua.login_loginapp(true);
 --end
 
---注意，这里在运行时会调用不过来
+--Note that this will not be called at runtime
 CityEngineLua.onConnectionStateChange = function(state )
 	ct.log("system","[m_onConnectionState]",state.error)
 	Event.Brocast("c_ConnectionStateChange", state );
 	local okCallBack = function()
 		CityEngineLua.LoginOut()
 	end
-	if state.error == '' then -- 默认成功
+	if state.error == '' then -- Default success
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
-	elseif state.error == 'Connect server succeed' then --连接成功
+	elseif state.error == 'Connect server succeed' then --connection succeeded
 		local timer = FrameTimer.New(function()
-			--AS连接成功后隔一帧再登录，因为要等接受和发送的线程开起来
+			--Log in every other frame after the AS connection is successful, because you have to wait for the receiving and sending threads to open up
 			if CityEngineLua.currserver == "loginapp" then
-				if CityEngineLua.currstate == "login" then  --登录
+				if CityEngineLua.currstate == "login" then  --log in
 					local msgId = pbl.enum("ascode.OpCode","login")
 					local msglogion = {
 						account = CityEngineLua.username,pwd = CityEngineLua.password
 					}
 					local pb_login = assert(pbl.encode("as.Account", msglogion))
-					--发包
+					--Outsourcing
 					CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
 				end
 			end
 		end, 10, 0)
 		timer:Start()
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
-	elseif state.error == 'Manual close connection' then --客户端主动断开成功（无需处理）
+	elseif state.error == 'Manual close connection' then --The client actively disconnected successfully (no processing required)
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
-	elseif state.error == 'Disconnect by server' then --服务器断开连接（需提示）
+	elseif state.error == 'Disconnect by server' then --Server disconnected (prompt required)
 		ct.log("system","[CityEngineLua.onConnectionState]"..state.error)
-		--ct.MsgBox("网络连接错误", "错误原因：" ..state.error)
+		--ct.MsgBox("Network connection error", "wrong reason：" ..state.error)
 		ct.MsgBox(GetLanguage(41010010), GetLanguage(41010007), nil, okCallBack, okCallBack)
 	else
-		--统计服只提示，不退出
+		--The statistical service only prompts, does not exit
 		if CityEngineLua.tradeappIP == state.connectIP  and CityEngineLua.tradeappPort == tostring(state.connectPort) then
 			ct.MsgBox("NetworkingError", "resason：" ..state.connectIP..":"..state.connectPort.." "..state.error)
 		else
@@ -1838,7 +1838,7 @@ CityEngineLua.onConnectionStateChange = function(state )
 end
 
 
---登录到服务端(loginapp), 登录成功后还必须登录到网关(baseapp)登录流程才算完毕
+--Log in to the server (loginapp), after successful login, you must log in to the gateway (baseapp) login process to complete
 CityEngineLua.login_loginapp = function( noconnect )
 	if noconnect then
 		this.reset();
@@ -1875,7 +1875,7 @@ CityEngineLua.connectToGs = function()
 	this._networkInterface:connectTo(this.baseappIP, this.baseappPort, this.onConnectTo_baseapp_callback, nil);
 end
 
------登录到服务端，登录到网关(baseapp)
+-----Log in to the server, log in to the gateway (baseapp)
 CityEngineLua.login_baseapp = function(noconnect)
 	if(noconnect) then
 		--Event.fireOut("onLoginBaseapp", new object[]{});
@@ -1890,13 +1890,13 @@ CityEngineLua.login_baseapp = function(noconnect)
 		--	this._networkInterface:connectTo(this.baseappIP, this.baseappPort, this.onConnectTo_baseapp_callback, nil);
 		--end
 	else
-		--gs 登录
-		----1、 获取协议id
+		--gs log in
+		----1. Get protocol id
 		local msgId = pbl.enum("gscode.OpCode","login")
-		----2、 填充 protobuf 内部协议数据
+		----2. Fill protobuf internal protocol data
 		local lMsg = { account = CityEngineLua.username, token = CityEngineLua.token}
 		local pMsg = assert(pbl.encode("gs.Login", lMsg))
-		----3、 创建包，填入数据并发包
+		----3. Create a package and fill in the data concurrent packagez 
 		CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 	end
 end
@@ -1913,20 +1913,20 @@ CityEngineLua.onConnectTo_baseapp_callback = function(ip, port, success, netStat
 	this.login_baseapp(false);
 end
 
---登录到服务端，登录到交易服务器
+--Log in to the server, log in to the transaction server
 CityEngineLua.login_tradeapp = function(noconnect)
 	if(noconnect) then
 		this._tradeNetworkInterface1 = City.NetworkInterface.New();
 		this._tradeNetworkInterface1:connectTo(this.tradeappIP, this.tradeappPort, this.onConnectTo_tradeapp_callback, nil);
 	else
 		--UnitTest.Exec_now("wk24_abel_mutiConnect_revMsg", "c_wk24_abel_mutiConnect_revMsg",self)
-		----ss 登录
-		----1、 获取协议id
+		----ss log in
+		----1. Get the protocol id
 		--local msgId = pbl.enum("sscode.OpCode","queryPlayerEconomy")
-		----2、 填充 protobuf 内部协议数据
+		----2. Fill in protobuf internal protocol data
 		--local lMsg = { id = "123"}
 		--local pMsg = assert(pbl.encode("ss.Id", lMsg))
-		----3、 创建包，填入数据并发包
+		----3. Create a package and fill in the data concurrent package
 		--CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, this._tradeNetworkInterface1);
 		if this._tradeNetworkInterface1 then
 			this._tradeNetworkInterface1:reset()
@@ -1976,7 +1976,7 @@ end
 
 
 
-	--登录loginapp失败了
+	--Login loginapp failed
 CityEngineLua.Client_v_onLoginFailed = function(stream)
 	local failedcode = stream:readUint16();
 	this._serverdatas = stream:readBlob();
@@ -2039,16 +2039,16 @@ function CityEngineLua.LoginOut()
 		--   CityEngineLua._networkInterface:connectTo(CityEngineLua.ip, CityEngineLua.port, ins.onConnectTo_loginapp_callback, nil);
 		UIPanel.CloseAllFixedPanel()
 		UIPanel.ClearAllPages()
-		--清除之前的所有注册的网络消息
+		--Clear all previously registered network messages
 		DataManager.UnAllModelRegisterNetMsg()
 		DataManager.Close()
-		-- ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
+		-- ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) -- Note that the class name is passed in
 		CityEngineLua.currserver = "";
 		CityEngineLua.currstate = "";
 		CityEngineLua.Message.clear()
 		--停止
 		UnitTest.Exec_now("abel_wk27_hartbeat", "e_HartBeatStop")
-		ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
+		ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --Note that the class name is passed in
 	end, 10, 0)
 	timerCheck:Start()
 end
@@ -2069,14 +2069,14 @@ CityEngineLua.onOpenLoginapp_resetpassword = function()
 	end
 end
 
-	--重置密码, 通过loginapp
+	--Reset password, through loginapp
 CityEngineLua.resetPassword = function(username)
 	this.username = username;
 	this.resetpassword_loginapp(true);
 end
 
 
-	--重置密码, 通过loginapp
+	--Reset password, through loginapp
 CityEngineLua.resetpassword_loginapp = function(noconnect)
 	if(noconnect) then
 		this.reset();
@@ -2109,7 +2109,7 @@ CityEngineLua.Client_onReqAccountResetPasswordCB = function(failcode)
 	ct.log("City::Client_onReqAccountResetPasswordCB: " .. this.username .. " is successfully!");
 end
 
-	--绑定Email，通过baseapp
+	--Bind Email via baseapp
 
 CityEngineLua.bindAccountEmail = function(emailAddress)
 	local bundle = CityEngineLua.Bundle:new();
@@ -2129,7 +2129,7 @@ CityEngineLua.Client_onReqAccountBindEmailCB = function(failcode)
 	ct.log("City::Client_onReqAccountBindEmailCB: " .. this.username .. " is successfully!");
 end
 
-----设置新密码，通过baseapp， 必须玩家登录在线操作所以是baseapp。
+----Set a new password, through baseapp, players must log in online operation so it is baseapp
 
 CityEngineLua.newPassword = function(old_password, new_password)
 	local bundle = CityEngineLua.Bundle:new();
@@ -2158,7 +2158,7 @@ CityEngineLua.createAccount = function(username, password, data)
 end
 
 
-	--创建账号，通过loginapp
+	--Create an account via loginapp
 
 CityEngineLua.createAccount_loginapp = function(noconnect)
 	if(noconnect) then
@@ -2203,7 +2203,7 @@ CityEngineLua.onConnectTo_createAccount_callback = function(ip, port, success, u
 end
 
 
---	引擎版本不匹配
+--	Engine version does not match
 
 CityEngineLua.Client_onVersionNotMatch = function(stream)
 	this.serverVersion = stream:readString();
@@ -2216,7 +2216,7 @@ CityEngineLua.Client_onVersionNotMatch = function(stream)
 	end
 end
 
---	脚本版本不匹配
+--	Script version does not match
 
 CityEngineLua.Client_onScriptVersionNotMatch = function(stream)
 	this.serverScriptVersion = stream:readString();
@@ -2229,15 +2229,15 @@ CityEngineLua.Client_onScriptVersionNotMatch = function(stream)
 	end
 end
 
---	被服务端踢出
+--	Kicked out by the server
 
 CityEngineLua.Client_onKicked = function(failedcode)
 	ct.log("Client_onKicked: failedcode=" .. failedcode);
 	--Event.fireAll("onKicked", new object[]{failedcodeend);
 end
 
---	重登录到网关(baseapp)
---	一些移动类应用容易掉线，可以使用该功能快速的重新与服务端建立通信
+--	Log back in to the gateway (baseapp)
+--	Some mobile applications are easy to go offline, you can use this function to quickly re-establish communication with the server
 
 CityEngineLua.reConnect = function()
 	if CityEngineLua.currserver == "loginapp" then
@@ -2267,19 +2267,19 @@ CityEngineLua.onReConnectTo_baseapp_callback = function(ip, port, success, userD
 	CityEngineLua.login_loginapp(false)
 end
 
-	--登录baseapp失败了
+	--Login to baseapp failed
 CityEngineLua.Client_onLoginBaseappFailed = function(failedcode)
 	ct.log("City::Client_onLoginBaseappFailed: failedcode(" .. failedcode .. ")!");
 	--Event.fireAll("onLoginBaseappFailed", new object[]{failedcode});
 end
 
-	--重登录baseapp失败了
+	--Re-login to baseapp failed
 CityEngineLua.Client_onReloginBaseappFailed = function(failedcode)
 	ct.log("City::Client_onReloginBaseappFailed: failedcode(" .. failedcode .. ")!");
 	--Event.fireAll("onReloginBaseappFailed", new object[]{failedcodeend);
 end
 
-	--登录baseapp成功了
+	--Login to baseapp successfully
 CityEngineLua.Client_onReloginBaseappSuccessfully = function(stream)
 	this.entity_uuid = stream:readUint64();
 	ct.log("City::Client_onReloginBaseappSuccessfully: name(" .. this.username .. ")!");
@@ -2298,14 +2298,14 @@ CityEngineLua.sendTick = function()
 	
 	local span = os.clock() - this._lastTickTime; 
 	
-	-- 更新玩家的位置与朝向到服务端
+	-- Update the player's position and orientation to the server
 	this.updatePlayerToServer();
 	
 	if(span > 15) then
 		span = this._lastTickCBTime - this._lastTickTime;
 
-		-- 如果心跳回调接收时间小于心跳发送时间，说明没有收到回调
-		-- 此时应该通知客户端掉线了
+		-- If the heartbeat callback receiving time is less than the heartbeat sending time, it means that no callback was received
+		-- At this point, the client should be notified that it is offline
 		if(span < 0) then
 			ct.log("sendTick: Receive appTick timeout!");
 			this._networkInterface:close();
@@ -2335,23 +2335,23 @@ end
 
 
 --
---	服务器心跳回调
+--	Server heartbeat callback
 --		
 CityEngineLua.Client_onAppActiveTickCB = function()
 	this._lastTickCBTime = os.clock();
 end
 
-	---插件的主循环处理函数
+	---The main loop processing function of the plugin
 
 CityEngineLua.process = function()
-	-- 处理网络
+	-- Processing network
 	this._networkInterface:process();
 
 	if this._tradeNetworkInterface1 then
 		this._tradeNetworkInterface1:process();
 	end
 
-	-- 向服务端发送心跳以及同步角色信息到服务端
+	-- Send heartbeat and synchronize role information to the server
     this.sendTick();
 end
 

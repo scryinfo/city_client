@@ -1,6 +1,6 @@
 -----
 TransportBoxCtrl = class('TransportBoxCtrl',UIPanel);
-UIPanel:ResgisterOpen(TransportBoxCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(TransportBoxCtrl) --How to open the registration
 local transportbox
 
 function TransportBoxCtrl:initialize()
@@ -32,7 +32,7 @@ function TransportBoxCtrl:Refresh()
     end
     self:refreshUiInfo()
 end
---刷新数据
+----Refresh data
 function TransportBoxCtrl:refreshUiInfo()
     if not self.m_data.goodsPrice then
         TransportBoxPanel.goodsObj.localScale = Vector3.zero

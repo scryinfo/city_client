@@ -1,4 +1,4 @@
---合成详情表
+--Synthesis Details Table
 CompoundDetailConfig ={
 [2101001] = {
 matCompoundGoods = {2251101,2251102,2251103,2251201,2251203},

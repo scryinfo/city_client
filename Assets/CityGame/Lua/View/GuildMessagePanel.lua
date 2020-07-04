@@ -18,25 +18,24 @@ end
 
 function GuildMessagePanel.InitPanel()
     this.backBtn = transform:Find("TopRoot/BackBtn").gameObject
-
-    -- 联盟信息
+    -- Alliance Information
     this.guildNameText = transform:Find("TopRoot/Bg/GuildNameText"):GetComponent("Text")
     this.memberTitleText = transform:Find("TopRoot/Bg/MemberTitleText"):GetComponent("Text")
     this.memberNumberText = transform:Find("TopRoot/Bg/MemberNumberText"):GetComponent("Text")
     this.timeTitleText = transform:Find("TopRoot/Bg/TimeTitleText"):GetComponent("Text")
     this.timeText = transform:Find("TopRoot/Bg/TimeText"):GetComponent("Text")
 
-    -- 联盟信息
+    --Alliance Information
     this.guildInfoScroll = transform:Find("MiddleRoot/Scroll View"):GetComponent("ActiveLoopScrollRect")
 
-    -- 联盟列表
+    -- Alliance list
     this.guildListBtn = transform:Find("TopRoot/GuildListBtn").gameObject
-    -- 联盟申请
+    -- Alliance application
     this.applyListBtn = transform:Find("TopRoot/Bg/ApplyListBtn")
     this.applyListNotice = transform:Find("TopRoot/Bg/ApplyListBtn/Notice")
-    -- 退出联盟
+    -- Withdraw from the alliance
     this.quitBtn = transform:Find("TopRoot/Bg/QuitBtn").gameObject
 
-    -- 多语言
+    -- multi-language
     this.messageTitleText = transform:Find("MiddleRoot/MessageTitleText"):GetComponent("Text")
 end

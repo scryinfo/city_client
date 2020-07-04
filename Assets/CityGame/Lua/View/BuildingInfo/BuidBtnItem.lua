@@ -6,7 +6,7 @@
 
 BuidBtnItem = class('BuidBtnItem')
 
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function BuidBtnItem:initialize(prefab,luabehaviour,detailCtrl)
     self.prefab=prefab
     self.detailCtrl=detailCtrl
@@ -22,12 +22,12 @@ function BuidBtnItem:updateData(topicName,name)
     self.nameText.text=GetLanguage(tonumber(name))
 end
 
----添加
+---Add to
 function BuidBtnItem:OnClick_Add(ins)
     DetailGuidPanel.detailText.text=GetLanguage(tonumber(ins.name))
     DetailGuidPanel.detailIma.localScale=Vector3.one
     DetailGuidPanel.scroll.localScale=Vector3.zero
-    --刷新
+    --Refresh
    ins.detailCtrl:updateIntroduce(ins.topicName,ins.name)
     PlayMusEff(1002)
 end

@@ -12,8 +12,8 @@
 SkillPageCtrl = class('SkillPageCtrl',UIPage)
 
 function SkillPageCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--You can go back and hide other panels after the UI opens
+    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--Can go back, after the UI is opened, other UI is not hidden
 end
 
 function SkillPageCtrl:bundleName()

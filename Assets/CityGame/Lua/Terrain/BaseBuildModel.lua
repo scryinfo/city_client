@@ -3,7 +3,7 @@
 local class = require 'Framework/class'
 BaseBuildModel = class('BaseBuildModel')
 
---初始化
+--initialization
 --将protobuf内数据拷贝出来
 function BaseBuildModel:initialize(data)
     self.Data = {}
@@ -47,20 +47,20 @@ function BaseBuildModel:OpenPanel()
     --TODO:在具体子类中做打开操作
     local typeID = self.Data.buildingID
     local instanceID = self.Data.id
-    if typeID == 1100001 or typeID == 1100002 or typeID == 1100003 then         --原料厂
+    if typeID == 1100001 or typeID == 1100002 or typeID == 1100003 then         --Raw material factory
         ct.OpenCtrl("MaterialFactoryCtrl", {insId = instanceID})
-    elseif typeID == 1200001 or typeID == 1200002 or typeID == 1200003 then    --加工厂
+    elseif typeID == 1200001 or typeID == 1200002 or typeID == 1200003 then    --Processing plant
         ct.OpenCtrl('ProcessingFactoryCtrl',{insId = instanceID})
-    elseif typeID == 1300001 or typeID == 1300002 or typeID == 1300003 then    --零售店
+    elseif typeID == 1300001 or typeID == 1300002 or typeID == 1300003 then    --Retail store
         ct.OpenCtrl("RetailStoresCtrl",{insId = instanceID})
-    elseif typeID == 1400001 or typeID == 1400002 or typeID == 1400003 then    --住宅
+    elseif typeID == 1400001 or typeID == 1400002 or typeID == 1400003 then    --Residential
         ct.OpenCtrl("HouseCtrl", {insId = instanceID})
-    elseif typeID == 1500001 or typeID == 1500002 or typeID == 1500003 then    --研究所
+    elseif typeID == 1500001 or typeID == 1500002 or typeID == 1500003 then    --graduate School
         ct.OpenCtrl("ResearchInstituteCtrl", {insId = instanceID})
-    elseif typeID == 1600001 or typeID == 1600002 or typeID == 1600003 then    --公园
+    elseif typeID == 1600001 or typeID == 1600002 or typeID == 1600003 then    --park
         --Event.Brocast("m_detailPublicFacility",instanceID)
         ct.OpenCtrl("DataCompanyCtrl",{insId=instanceID})
-    elseif typeID == 1700001 or typeID == 1700002 or typeID == 1700003 then    --集散中心
+    elseif typeID == 1700001 or typeID == 1700002 or typeID == 1700003 then    --Distribution center
         --Event.Brocast("m_detailPublicFacility",instanceID)
         ct.OpenCtrl("BuidingWareHouseCtrl",{insId=instanceID})
     end

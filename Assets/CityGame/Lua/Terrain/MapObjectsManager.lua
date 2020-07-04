@@ -5,10 +5,10 @@ local RendererType = nil
 local PoolsRoot = nil
 local AllCount = 0
 
---创建Prefab成功后初始对应Pool
+--After the creation of Prefab is successful, the initial corresponding Pool
 local function CreateBasePrefabSuccess(tempPrefab,item)
     if tempPrefab ~= nil then
-        --初始化对象池
+        --Initialize the object pool
         AllObjectPools[item.Name] = LuaGameObjectPool:new(item.Name,tempPrefab,item.InitCount,MapGameObjectsConfig.HidePosition,PoolsRoot)
         AllCount = AllCount - 1
     end
@@ -41,13 +41,13 @@ function MapObjectsManager.AddMaterial(ParentObj)
 end
 
 
---初始化所有的建筑对象池
+--Initialize all building object pools
 function MapObjectsManager.Init()
     AllMaterial = {}
     AllObjectPools = {}
     PoolsRoot = UnityEngine.GameObject.New("PoolsRoot").transform
     RendererType = typeof(UnityEngine.Renderer)
-    --初始化基础建筑Prefeb（异步）
+    --Initialize the basic building Prefeb (asynchronous)
     local PoolInstantiates = MapGameObjectsConfig.PoolInstantiate
     for i, item in pairs(PoolInstantiates) do
         AllCount = AllCount + 1
@@ -59,13 +59,13 @@ function MapObjectsManager.Init()
             buildMgr:CreateBuild(PathFindingConfig[item.PathFindingConfigID]["prefabRoute"] ,CreateBasePrefabSuccess,item)
         end
     end
-    --初始化中心建筑
+    --Initialize the central building
     --TerrainManager.CreateCenterBuilding()
 end
 local starttime ,endtime
 local go_GetGameObjectByPool
 local tempPool_GetGameObjectByPool
---向某个对象池请求获取一个可用的GameObject
+--Request an available GameObject from an object pool
 function MapObjectsManager.GetGameObjectByPool(poolName)
     if poolName ~= nil and AllObjectPools[poolName] ~= nil then
         --starttime = os.clock()
@@ -79,7 +79,7 @@ function MapObjectsManager.GetGameObjectByPool(poolName)
     return nil
 end
 
---向某个对象池还回不再使用的GameObject
+--Return a GameObject that is no longer in use to an object pool
 function MapObjectsManager.RecyclingGameObjectToPool(poolName,go)
     if poolName ~= nil and AllObjectPools[poolName] ~= nil and go ~= nil then
         AllObjectPools[poolName]:RecyclingGameObjectToPool(go)

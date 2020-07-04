@@ -10,7 +10,7 @@ public class Line
 
     private int _startVertexIndex = 0;
     /// <summary>
-    /// 起点索引
+    /// Starting point index
     /// </summary>
     public int StartVertexIndex
     {
@@ -22,7 +22,7 @@ public class Line
 
     private int _endVertexIndex = 0;
     /// <summary>
-    /// 终点索引
+    /// End index
     /// </summary>
     public int EndVertexIndex
     {
@@ -34,7 +34,7 @@ public class Line
 
     private int _vertexCount = 0;
     /// <summary>
-    /// 该行占的点数目
+    /// The number of points occupied by the line
     /// </summary>
     public int VertexCount
     {
@@ -77,7 +77,7 @@ public class TextSpacing : BaseMeshEffect
         vh.GetUIVertexStream(vertexs);
         int indexCount = vh.currentIndexCount;
 
-        //获取文本锚点
+        //Get text anchor
         TextAnchor tempAnchor = text.alignment;
 
         if (tempAnchor == TextAnchor.MiddleCenter || tempAnchor == TextAnchor.LowerCenter || tempAnchor == TextAnchor.UpperCenter)
@@ -90,10 +90,10 @@ public class TextSpacing : BaseMeshEffect
 
         Line[] lines = new Line[lineTexts.Length];
 
-        //根据lines数组中各个元素的长度计算每一行中第一个点的索引，每个字、字母、空母均占6个点
+        //Calculate the index of the first point in each line according to the length of each element in the lines array, each word, letter, and empty mother occupy 6 points
         for (int i = 0; i < lines.Length; i++)
         {
-            //除最后一行外，vertexs对于前面几行都有回车符占了6个点
+            //Except for the last line, vertexs have carriage returns for the first few lines and take up 6 points
             if (i == 0)
             {
                 lines[i] = new Line(0, lineTexts[i].Length + 1);
@@ -111,13 +111,13 @@ public class TextSpacing : BaseMeshEffect
         UIVertex vt;
         if (isCenter)
         {
-            int charIndex; //当前Vertexs的点对应的所在行字符索引，1开始
-            float center;//当前所在行中点
+            int charIndex; //The character index of the line corresponding to the current Vertexs point, starting with 1
+            float center;//Midpoint of current line
             for (int i = 0; i < lines.Length; i++)
             {
-                //根据字间距计算每行第一个锚点的距离，对锚点距离进行偏移
+                //Calculate the distance of the first anchor point of each line according to the word spacing, and offset the anchor point distance
                 center = (lineTexts[i].Length + 1) / 2;
-                for (int j = lines[i].StartVertexIndex; j <= lines[i].EndVertexIndex; j++)//此处避开了第一个点
+                for (int j = lines[i].StartVertexIndex; j <= lines[i].EndVertexIndex; j++)//The first point is avoided here
                 {
                     if (j < 0 || j >= vertexs.Count)
                     {
@@ -127,7 +127,7 @@ public class TextSpacing : BaseMeshEffect
                     vt = vertexs[j];
                     vt.position += new Vector3(_textSpacing * (charIndex - center), 0, 0);
                     vertexs[j] = vt;
-                    //以下注意点与索引的对应关系
+                    //The correspondence between the following points and indexes
                     if (j % 6 <= 2)
                     {
                         vh.SetUIVertex(vt, (j / 6) * 4 + j % 6);
@@ -143,8 +143,8 @@ public class TextSpacing : BaseMeshEffect
         {
             for (int i = 0; i < lines.Length; i++)
             {
-                //TODO:根据字间距计算每行第一个锚点的距离，对锚点距离进行偏移
-                for (int j = lines[i].StartVertexIndex + 6; j <= lines[i].EndVertexIndex; j++)//此处避开了第一个点
+                //TODO: Calculate the distance of the first anchor point of each line according to the word spacing, and offset the distance of the anchor point
+                for (int j = lines[i].StartVertexIndex + 6; j <= lines[i].EndVertexIndex; j++)//The first point is avoided here
                 {
                     if (j < 0 || j >= vertexs.Count)
                     {
@@ -153,7 +153,7 @@ public class TextSpacing : BaseMeshEffect
                     vt = vertexs[j];
                     vt.position += new Vector3(_textSpacing * ((j - lines[i].StartVertexIndex) / 6), 0, 0);
                     vertexs[j] = vt;
-                    //以下注意点与索引的对应关系
+                    //The correspondence between the following points and indexes
                     if (j % 6 <= 2)
                     {
                         vh.SetUIVertex(vt, (j / 6) * 4 + j % 6);

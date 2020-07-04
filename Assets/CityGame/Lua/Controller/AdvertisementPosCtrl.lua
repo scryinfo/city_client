@@ -11,10 +11,10 @@ require('Framework/UI/UIPanel')
 require "View/BuildingInfo/ItemCreatDeleteMgr"
 
 AdvertisementPosCtrl = class('AdvertisementPosCtrl',UIPanel)
-UIPanel:ResgisterOpen(AdvertisementPosCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(AdvertisementPosCtrl) --How to open
 
 local panel
---构建函数
+--Constructor
 function AdvertisementPosCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -95,7 +95,7 @@ function AdvertisementPosCtrl:Awake(go)
 end
 
 
---返回
+--return
 function AdvertisementPosCtrl:OnClick_backBtn(ins)
     ins:Hide()
 end
@@ -111,7 +111,7 @@ end
 function AdvertisementPosCtrl:Refresh()
     MunicipalModel=DataManager.GetDetailModelByID(MunicipalPanel.buildingId)
 
-    ---创建广告
+    ---Create ad
     if MunicipalPanel.buildingId~=AdvertisementPosPanel.currentBuildingId then
         local temp=MunicipalPanel.buildingId
         local creatData={model=MunicipalModel,buildingType=BuildingType.Municipal,lMsg=MunicipalPanel.lMsg}
@@ -119,7 +119,7 @@ function AdvertisementPosCtrl:Refresh()
         AdvertisementPosPanel.currentBuildingId=temp
     end
 
-    if DataManager.GetMyOwnerID()==MunicipalModel.buildingOwnerId then---自已进入
+    if DataManager.GetMyOwnerID()==MunicipalModel.buildingOwnerId then---Enter yourself
        if #MunicipalModel.SlotList>0 then
         panel.qunayityInp.text=#MunicipalModel.SlotList
         panel.leaseInp.text=MunicipalModel.SlotList[1].maxDayToRent
@@ -137,7 +137,7 @@ function AdvertisementPosCtrl:Refresh()
        end
     panel.buyGo.localScale=Vector3.zero
 
-        else---他人进入
+        else---Others enter
     panel.buyGo.localScale=Vector3.one
         if MunicipalModel.SlotList[1] then
             panel.rentText.text=getPriceString(MunicipalModel.SlotList[1].rentPreDay..".0000",30,24)
@@ -146,27 +146,27 @@ function AdvertisementPosCtrl:Refresh()
             panel.rentText.text=getPriceString("0"..".0000",30,24)
             panel.dotText.text=getPriceString("0"..".0000",30,24)
         end
-    panel.manageBtn.gameObject:SetActive(false)--管理我的广告位
+    panel.manageBtn.gameObject:SetActive(false)--Manage my ad slots
     panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.noPos
         self.myBuySlots={}
         if MunicipalModel.lMsg.ad.soldSlot then
 
             for i, v in pairs(MunicipalModel.lMsg.ad.soldSlot) do
-                if v.renterId==DataManager.GetMyOwnerID() then--有槽位
-                    ---筛选
+                if v.renterId==DataManager.GetMyOwnerID() then--Slotted
+                    --filter
                     table.insert(self.myBuySlots,v)
-                else --无槽位
-                    panel.manageBtn.gameObject:SetActive(false)--管理我的广告位
+                else --No slot
+                    panel.manageBtn.gameObject:SetActive(false)--Manage my ad slots
                     panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.noPos
                 end
             end
         else
-            panel.manageBtn.gameObject:SetActive(false)--管理我的广告位
+            panel.manageBtn.gameObject:SetActive(false)--Manage my ad slots
             panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.noPos
         end
-        if self.myBuySlots  then--给（/）赋值
-            if #self.myBuySlots>0 then panel.manageBtn.gameObject:SetActive(true)--管理我的广告位
-            panel.manageBtn.gameObject:SetActive(true)--管理我的广告位
+        if self.myBuySlots  then--Assign value to (/)
+            if #self.myBuySlots>0 then panel.manageBtn.gameObject:SetActive(true)--Manage my ad slots
+            panel.manageBtn.gameObject:SetActive(true)--Manage my ad slots
             panel.manageBtn.parent:GetComponent("RectTransform").anchoredPosition=panel.hasPos
             end
 
@@ -182,7 +182,7 @@ function AdvertisementPosCtrl:Refresh()
 end
 
 
----管理广告按钮
+---Manage advertising buttons
 function AdvertisementPosCtrl:OnClick_manageBtn(ins)
     ct.OpenCtrl("ManageAdvertisementPosCtrl",ins)
 end
@@ -190,22 +190,22 @@ end
 
 function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
     local buildingID=MunicipalPanel.buildingId
-    --主人点击确认按钮
+    --The host clicks the confirm button
     if panel.qunayityInp.text==""  or tonumber(panel.qunayityInp.text)==0 or
        panel.leaseInp.text==""  or tonumber(panel.leaseInp.text)==0 or
        panel.rentInp.text==""  or tonumber(panel.rentInp.text)==0 then
 
         return
     end
-    -----发送网络消息
-    if tonumber(panel.qunayityInp.text)>tonumber(panel.adAllday) then---添加槽位
+    -----Send network message
+    if tonumber(panel.qunayityInp.text)>tonumber(panel.adAllday) then---Add slot
         for i = 1, panel.qunayityInp.text-panel.adAllday do
         DataManager.DetailModelRpcNoRet(buildingID, 'm_addSlot',buildingID,1,tonumber(panel.leaseInp.text),tonumber(panel.rentInp.text))
         --Event.Brocast("m_addSlot",buildingID,1,tonumber(panel.leaseInp.text), tonumber(panel.rentInp.text))
         end
         panel.adAllday=panel.qunayityInp.text
 
-    elseif  tonumber(panel.qunayityInp.text)<tonumber(panel.adAllday)  then---删除槽位
+    elseif  tonumber(panel.qunayityInp.text)<tonumber(panel.adAllday)  then---Delete slot
     for i = 1, panel.adAllday-panel.qunayityInp.text do
         DataManager.DetailModelRpcNoRet(buildingID, 'm_deleteSlot',buildingID,DataManager.GetDetailModelByID(buildingID).SlotList[1].id)
         --Event.Brocast("m_deleteSlot",buildingID,MunicipalModel.SlotList[1].id)
@@ -213,7 +213,7 @@ function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
     end
         panel.adAllday=panel.qunayityInp.text
 
-    else---设置租金和最大天数
+    else---Set rent and maximum days
         for i, v in pairs(DataManager.GetDetailModelByID(buildingID).SlotList) do
         DataManager.DetailModelRpcNoRet(buildingID, 'm_SetSlot',buildingID,v.id,tonumber(panel.rentInp.text),1,tonumber(panel.leaseInp.text))
         --Event.Brocast("m_SetSlot",buildingID,v.id,tonumber(panel.rentInp.text),1,tonumber(panel.leaseInp.text))
@@ -226,7 +226,7 @@ function AdvertisementPosCtrl:OnClick_masterConfirm(ins)
 end
 
 function AdvertisementPosCtrl:OnClick_otherConfirm(ins)
-    --他人点击
+    --Others click
     if ins.acount==""or ins.acount==0 or ins.dayAcount==""or ins.dayAcount==0 or not ins.acount or not ins.dayAcount then
        return
     end

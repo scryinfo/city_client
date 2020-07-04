@@ -9,7 +9,7 @@ require('Common/functions')
 class = require 'Framework/class'
 require "LuaUtil"
 --require "Entity"
---调试信息
+--Debug information
 require('ImpTestGroup')
 require("Dbg")
 luaunit = require "Framework/pbl/luaunit"

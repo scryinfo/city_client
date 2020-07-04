@@ -6,9 +6,9 @@
 MapModel = {}
 local pbl = pbl
 
---启动事件--
+--Start event--
 function MapModel.registerNetMsg()
-    --网络回调注册
+    --Network callback registration
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryTypeBuildingSummary"), MapModel.n_OnReceiveQueryBuildsSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryMarketSummary"), MapModel.n_OnReceiveQueryMarketSummary)
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundSummary"), MapModel.n_OnReceiveGroundTransSummary)
@@ -26,7 +26,7 @@ function MapModel.registerNetMsg()
 end
 
 
---- 客户端请求 ---
+--- Client request ---
 --请求建筑搜索摘要
 function MapModel.m_ReqBuildsSummary(itemId)
     if itemId ~= nil then

@@ -5,7 +5,7 @@
 ---
 
 CommonDialogCtrl = class('CommonDialogCtrl',UIPanel)
-UIPanel:ResgisterOpen(CommonDialogCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(CommonDialogCtrl) --How to open the registration
 
 function CommonDialogCtrl:initialize()
     UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
@@ -33,11 +33,11 @@ function CommonDialogCtrl:Refresh()
     self.luaBehaviour:AddClick(self.closeBtn, self._onClickClose, self)
     self.luaBehaviour:AddClick(self.confimBtn, self._onClickConfim, self)
     self.input.onValueChanged:AddListener(function ()
-        ct.log("cycle_w12_hosueServer", "----")  --敏感词检测
+        ct.log("cycle_w12_hosueServer", "----")  --Sensitive word detection
     end)
 end
 
---寻找组件
+--Find components
 function CommonDialogCtrl:_getComponent(go)
     self.titleText = go.transform:Find("Root/TitleText").gameObject:GetComponent("Text")
     self.closeBtn = go.transform:Find("Root/CloseBtn").gameObject
@@ -46,7 +46,7 @@ function CommonDialogCtrl:_getComponent(go)
     self.tipsText = go.transform:Find("Root/TipsText"):GetComponent("Text")
 end
 
---初始化
+--initialization
 function CommonDialogCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.tipsText.text = self.m_data.tipInfo
@@ -55,22 +55,22 @@ function CommonDialogCtrl:_initData()
     end
 end
 
---点击确认按钮
+--Click the confirm button
 function CommonDialogCtrl:_onClickConfim(ins)
-    ---在这的self 是传进来的btn组件，table才是实例
+    ---Here self is the btn component passed in, and table is the instance
     local inputValue = ins.input.text
     if inputValue == "" then
         return
     end
 
-    ---测试
+    ---test
     if ins.m_data.btnCallBack then
         ins.m_data.btnCallBack(inputValue)
     end
     ins:_onClickClose(ins)
 end
 
---点击关闭按钮
+--Click the close button
 function CommonDialogCtrl:_onClickClose(ins)
     PlayMusEff(1002)
     --ct.log("cycle_w12_hosueServer", "InputDialogPageCtrl:_onClickClose")

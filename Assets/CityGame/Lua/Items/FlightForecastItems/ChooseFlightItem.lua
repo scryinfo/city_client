@@ -5,17 +5,17 @@
 ---
 ChooseFlightItem = class('ChooseFlightItem')
 
---初始化方法
+--Initialization method
 function ChooseFlightItem:initialize(viewRect, data)
     self.viewRect = viewRect.transform
     self.btn = self.viewRect:Find("btn"):GetComponent("Button")
 
-    self.flightCodeText = self.viewRect:Find("01/Text"):GetComponent("Text")  --航班号
-    self.planStartTimeText = self.viewRect:Find("02/Text"):GetComponent("Text")  --计划起飞时间
-    self.trueStartTimeText = self.viewRect:Find("03/Text"):GetComponent("Text")  --实际起飞时间
-    self.planArriveTimeText = self.viewRect:Find("04/Text"):GetComponent("Text")  --计划到达时间
-    self.trueArriveTimeText = self.viewRect:Find("05/Text"):GetComponent("Text")  --实际到达时间
-    self.stateText = self.viewRect:Find("06/Text"):GetComponent("Text")  --状态
+    self.flightCodeText = self.viewRect:Find("01/Text"):GetComponent("Text")  --flight number
+    self.planStartTimeText = self.viewRect:Find("02/Text"):GetComponent("Text")  --Planned departure time
+    self.trueStartTimeText = self.viewRect:Find("03/Text"):GetComponent("Text")  --Actual departure time
+    self.planArriveTimeText = self.viewRect:Find("04/Text"):GetComponent("Text")  --Planned arrival time
+    self.trueArriveTimeText = self.viewRect:Find("05/Text"):GetComponent("Text")  --Actual arrival time
+    self.stateText = self.viewRect:Find("06/Text"):GetComponent("Text")  --status
 
     self.btn.onClick:RemoveAllListeners()
     self.btn.onClick:AddListener(function ()
@@ -27,14 +27,14 @@ end
 --
 function ChooseFlightItem:initData(data)
     self.data = data
-    self.flightCodeText.text = data.FlightNo  --航班号
-    self.planStartTimeText.text = self:_getSecondStr(data.FlightDeptimePlanDate)  --计划起飞时间
-    self.trueStartTimeText.text = self:_getSecondStr(data.FlightDeptimeDate)  --实际起飞时间
-    self.planArriveTimeText.text = self:_getSecondStr(data.FlightArrtimePlanDate)  --计划到达时间
-    self.trueArriveTimeText.text = self:_getSecondStr(data.FlightArrtimeDate)  --实际到达时间
-    self.stateText.text = GetLanguage(FlightStateConfig[data.FlightState])  --状态
+    self.flightCodeText.text = data.FlightNo  --flight number
+    self.planStartTimeText.text = self:_getSecondStr(data.FlightDeptimePlanDate)  --Planned departure time
+    self.trueStartTimeText.text = self:_getSecondStr(data.FlightDeptimeDate)  --Actual departure time
+    self.planArriveTimeText.text = self:_getSecondStr(data.FlightArrtimePlanDate)  --Planned arrival time
+    self.trueArriveTimeText.text = self:_getSecondStr(data.FlightArrtimeDate)  --Actual arrival time
+    self.stateText.text = GetLanguage(FlightStateConfig[data.FlightState])  --status
 end
---获得xx分xx秒格式的时间
+--Get time in xx minutes xx seconds format
 function ChooseFlightItem:_getSecondStr(str)
     if str == nil or str == "" then
         return "--"
@@ -45,7 +45,7 @@ end
 --
 function ChooseFlightItem:ClickFunc()
     PlayMusEff(1002)
-    --0代表热门，1代表历史，2代表搜索
+    --0 for popular, 1 for history, 2 for search
     ct.OpenCtrl("FlightDetailCtrl", {detail = self.data, dataType = 2})
 end
 --

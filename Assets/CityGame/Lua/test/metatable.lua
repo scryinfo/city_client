@@ -17,10 +17,10 @@ local parent = {
     house = 1
 }
 
-parent.__index = parent    --如果没有这一句话  child即使是设置parent为元表  也不能找到parent中的内容. __index指向的内容是nil（补充：更关键的是，派生类不能做到动态绑定）
+parent.__index = parent    --If there is no such sentence, even if the parent is set to the metatable, the content in the parent cannot be found. The content pointed to by __index is nil (Supplement: more importantly, the derived class cannot be dynamically bound)
 
---__index 只有两个形参， table 和 key， 这里的第三个参数是nil， 所以只适查找操作，而不适合赋值操作，如果当前表中没有对应key，那么找原表中对应的__index指向的方法或者表进行查找操作
--- __index 应对的是表中key的查找；  __newindex处理得是表中key的赋值
+--__index has only two formal parameters, table and key. The third parameter here is nil, so it is only suitable for search operations, not for assignment operations. If there is no corresponding key in the current table, then find the corresponding _ in the original table _index refers to the method or table to perform the search operation
+-- __index deals with the lookup of the key in the table; __newindex handles the assignment of the key in the table
 --parent.__index = function ( t, k ,v )
 --    -- t[k] = v
 --    local ret = 0
@@ -38,7 +38,7 @@ local child = {
     wife = 2
 }
 
-local returnTb = setmetatable(child, parent) --setmetatable 返回值是传入的参数中第一个表
+local returnTb = setmetatable(child, parent) --setmetatable The return value is the first table in the incoming parameters
 
 ct.log("[metatable] setmetatable child"..tostring(child))
 ct.log("[metatable] setmetatable parent"..tostring(parent))
@@ -47,13 +47,13 @@ ct.log("[metatable] setmetatable returnTb"..tostring(returnTb))
 ct.log("[metatable] __index test: child.house"..tostring(child.house))
 ct.log("[metatable] __index test: child.wife"..tostring(child.wife))
 
-parent.__newindex = function ( t, k ,v )  --赋值操作，如果当前表中没有对应key，那么找原表中对应的__newindex指向的方法或者表进行赋值操作
+parent.__newindex = function (t, k ,v) --Assignment operation, if there is no corresponding key in the current table, then find the method or table pointed to by the corresponding __newindex in the original table to perform the assignment operation
     -- t[k] = v
     if k == "house" then
         parent[k] = v * 2
     end
 end
--- 等效于
+-- equal to
 -- parent.__newindex = parent
 
 UnitTest.Exec("abel_w4", "test_metatable__newindex",  function ()
@@ -93,7 +93,7 @@ parent = Parent:new()
 parent:Wife()
 
 
---通过类似类的方式来继承
+--Inherit in a similar way
 Child = Parent:new()
 function Child:Position()
     local ChildHouse = self.house
@@ -101,7 +101,7 @@ function Child:Position()
     self:Wife()
 end
 
---通过类似类的方式来继承
+--Inherit in a similar way
 Child1 = Parent:new()
 function Child1:Position()
     local ChildHouse = self.house
@@ -123,14 +123,14 @@ UnitTest.Exec("abel_w4", "test_metatable_DynamicBind",  function ()
     end
 end)
 
--- lua中检查某值得顺序：比如child 的house 属性。  先到Child中去检查有没有某个字段。就会去检索__index这个元方法。
--- 即当需要访问一个字段在table中不存在的时候，解释器会去查找一个叫__index的元方法，如果没有该元方法，那么访问结果就是nil,不然就由这个元方法来提供最终结果。
-UnitTest.Exec("abel_w4", "test_metatable__index",  function ()
-    test1 = { param1 = 1}
-    test2 = { param2 = 2}
-    test3 = { param3 = 3}
-
-    -- test2.__index = test1  等价于:
+-- In Lua, check the order of a certain value: for example, the house property of child. First go to Child to check if there is a certain field. Will retrieve the meta method __index.
+-- That is, when you need to access a field that does not exist in the table, the interpreter will look for a meta method called __index, if there is no meta method, then the access result is nil, otherwise this meta method will provide the final result.
+    UnitTest.Exec("abel_w4", "test_metatable__index", function ()
+         test1 = {param1 = 1}
+         test2 = {param2 = 2}
+         test3 = {param3 = 3}
+    
+         -- test2.__index = test1 is equivalent to:
     test2.__index = function(testTable , key)
         ct.log("abel_w4",testTable)
         ct.log("abel_w4",test3)
@@ -144,9 +144,9 @@ UnitTest.Exec("abel_w4", "test_metatable__index",  function ()
     ct.log("abel_w4","test3.param2: "..tostring(test3.param2))
     ct.log("abel_w4","test3.param3: "..tostring(test3.param3))
 
-    -- 这里的__index赋值就相当于  test2.__index = test1
+    -- The __index assignment here is equivalent to test2.__index = test1
 
-    --注释部分打印得出的结果是:
+     --The result printed in the comment section is:
     -- table: 0x7fe038c05440
     -- table: 0x7fe038c05440
     -- param1
@@ -160,7 +160,7 @@ UnitTest.Exec("abel_w4", "test_metatable__index",  function ()
     -- 3
 end)
 
---testTable的地址和test3的地址相同 ,由此可知，__index这种元方法会有一个默认形参是该表本身。而这里setmetatable只是给表设置了元表，
---真正查询字段的是根据元表中__index元方法所指向的表中的字段。而不是元表中的字段。
+--The address of testTable is the same as the address of test3. It can be seen that the meta method of __index has a default parameter that is the table itself. And here setmetatable just sets the metatable to the table,
+--The real query field is the field in the table pointed to by the __index meta method in the meta table. Instead of the fields in the metatable.
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

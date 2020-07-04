@@ -12,10 +12,10 @@ require "View/BuildingInfo/ItemCreatDeleteMgr"
 
 local class = require 'Framework/class'
 MunicipalCtrl = class('MunicipalCtrl',UIPanel)
-UIPanel:ResgisterOpen(MunicipalCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(MunicipalCtrl) --Open the registration method.
 
 
---构建函数
+--Constructor
 function MunicipalCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 end
@@ -54,24 +54,24 @@ function MunicipalCtrl:OnClick_prepareOpen(ins)
     Event.Brocast("c_beginBuildingInfo",MunicipalPanel.lMsg.info,ins.Refresh)
 end
 
---更改名字
+--Change name
 function MunicipalCtrl:OnClick_changeName(ins)
     local data = {}
     data.titleInfo = "RENAME"
     data.tipInfo = "Modified every seven days"
     data.inputDialogPageServerType = InputDialogPageServerType.UpdateBuildingName
     data.btnCallBack = function(name)
-        ---临时代码，直接改变名字
+        ---Temporary code, directly change the name
         ins:_updateName(name)
     end
     ct.OpenCtrl("InputDialogPageCtrl", data)
 end
----更改名字成功
+---Successful name change
 function MunicipalCtrl:_updateName(name)
     MunicipalPanel.nameText.text = name
 end
 
---返回
+--return
 function MunicipalCtrl:OnClick_backBtn(ins)
     UIPanel.ClosePage()
 
@@ -121,32 +121,32 @@ function MunicipalCtrl:c_receiveParkData(parkData)
         MunicipalPanel.stopIconRoot.localScale=Vector3.one
     end
 
-    ---是否可以改名
-    if DataManager.GetMyOwnerID()~=model.buildingOwnerId then--他人
+    ---Is it possible to change the name
+    if DataManager.GetMyOwnerID()~=model.buildingOwnerId then--others
     MunicipalPanel.changeNameBtn.localScale=Vector3.zero
-    else--自已
+    else--Self
     MunicipalPanel.changeNameBtn.localScale=Vector3.one
     end
-    ---效验
+    ---Test
     if MunicipalPanel.buildingId~=self.currentBuildingId then
-    ---清空数据
+    ---Clear data
     if self.pastManger then
     self:ClearData(self.pastManger)
     end
-        ---创建外部广告
+        ---Create external ads
         local creatData={model=model,buildingType=BuildingType.ProcessingFactory,lMsg=lMsg}
         model.manger:creat(ServerListCtrl.serverListBehaviour,creatData)
-        ---标记管理器
+        ---Tag manager
         self.pastManger=model.manger
     end
-    ---标记buildingId
+    ---Mark buildingId
     self.currentBuildingId=parkData.info.id
-    --跟新左右
+    --Around new
     lMsg.buildingType=BuildingType.Municipal
     BuildMgr:updateInfo(lMsg)
-    ---刷新门票
+    ---Refresh tickets
     Event.Brocast("c_TicketValueChange", model.buildingOwnerId,parkData.visitorCount)
-    ---刷新showItem
+    ---Refresh showItem
     if #model.SlotList>0 then
         Event.Brocast("c_ShowItemValueChange", model.SlotList[1].rentPreDay,#model.SlotList,model.SlotList[1].maxDayToRent)
     else

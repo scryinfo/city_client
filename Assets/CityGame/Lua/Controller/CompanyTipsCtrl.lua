@@ -4,7 +4,7 @@
 --- DateTime: 2019/5/17 10:07
 ---
 
----只含有按钮的简单弹框
+---Simple box with only buttons
 CompanyTipsCtrl = class('CompanyTipsCtrl',UIPanel)
 UIPanel:ResgisterOpen(CompanyTipsCtrl)
 
@@ -31,7 +31,7 @@ function CompanyTipsCtrl:Refresh()
     self:_initData()
 end
 
----寻找组件
+---Find components
 function CompanyTipsCtrl:_getComponent(go)
     self.titleText = go.transform:Find("Root/TitleText"):GetComponent("Text")
     self.mainContentText = go.transform:Find("Root/ContentText"):GetComponent("Text")
@@ -39,7 +39,7 @@ function CompanyTipsCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("Root/CloseBtn")
     self.confimBtn = go.transform:Find("Root/ConfimBtn")
 end
----初始化
+---initialization
 function CompanyTipsCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.mainContentText.text = self.m_data.contentInfo

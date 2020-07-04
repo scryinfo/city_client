@@ -1,5 +1,5 @@
 ---
----合成界面
+---Synthesis interface
 ---
 NewAddProductionLineCtrl = class('NewAddProductionLineCtrl',UIPanel)
 UIPanel:ResgisterOpen(NewAddProductionLineCtrl)
@@ -78,7 +78,7 @@ function NewAddProductionLineCtrl:_initData()
 end
 
 function NewAddProductionLineCtrl:_changeAddLineData(posValue, itemId)
-    --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
+    --Create all the left and right toggle information at the beginning, and then only need to set the default value each time you initialize
     if posValue == AddLineSideValue.Left then
         NewAddProductionLinePanel.leftToggleMgr:initData(itemId)
         local matTypeId = NewAddProductionLinePanel.leftToggleMgr:getCurrentTypeId()
@@ -95,7 +95,7 @@ end
 ----
 
 
---根据itemId获得当前应该显示的状态
+--Get the status that should be displayed according to itemId
 function NewAddProductionLineCtrl.GetItemState(itemId)
     local data = {}
     data.enableShow = true
@@ -111,7 +111,7 @@ function NewAddProductionLineCtrl.GetItemState(itemId)
     return data
 end
 
---左边的detail被点击，需要改变中心线
+--The detail on the left is clicked and the centerline needs to be changed
 function NewAddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow)
     --NewAddProductionLinePanel.leftBtnParent.transform.position = rectPosition
     --NewAddProductionLinePanel.leftBtnParent.anchoredPosition = NewAddProductionLinePanel.leftBtnParent.anchoredPosition + Vector2.New(174, 0)
@@ -119,7 +119,7 @@ function NewAddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow
     --ct.log("system", "-----------选中 left: "..itemId)
 
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
-    local lineDatas = {}  --获取线的数据
+    local lineDatas = {}  --Get line data
     for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
         lineDatas[#lineDatas + 1] = matData
     end
@@ -134,7 +134,7 @@ function NewAddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow
         NewAddProductionLinePanel.leftDisableImg.localScale = Vector3.one
     end
 end
---右侧的detail被点击，改变中心线
+--The detail on the right is clicked to change the centerline
 function NewAddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableShow)
     --NewAddProductionLinePanel.rightBtnParent.transform.position = rectPosition
     --NewAddProductionLinePanel.rightBtnParent.anchoredPosition = NewAddProductionLinePanel.rightBtnParent.anchoredPosition - Vector2.New(174, 0)
@@ -153,7 +153,7 @@ function NewAddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableSho
         NewAddProductionLinePanel.rightDisableImg.localScale = Vector3.one
     end
 end
---设置原料线的信息  根据个数显示位置
+--Set the information of the raw material line to display the position according to the number
 function NewAddProductionLineCtrl:_setLineDetailInfo(datas)
     local lineCount = #datas
     if lineCount == 1 then
@@ -185,7 +185,7 @@ function NewAddProductionLineCtrl:_setLineDetailInfo(datas)
         NewAddProductionLinePanel.centerItems[3]:initData(datas[3])
     end
 end
---获取选中原料或商品当前的生产速度(含Eva加成值)
+--Get the current production speed of selected raw materials or commodities (including Eva bonus value)
 function NewAddProductionLineCtrl:getPresentSpeed(itemId)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         for key,value in pairs(self.m_data.items) do
@@ -215,7 +215,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------------
 local m_MatGoodIconSpriteList = {}
 
---添加BuildingIcon的sprite列表
+--Add BuildingIcon's sprite list
 local function AddBuildingIcon(name,sprite)
     if m_MatGoodIconSpriteList == nil or type(m_MatGoodIconSpriteList) ~= 'table' then
         m_MatGoodIconSpriteList = {}
@@ -262,11 +262,11 @@ function NewAddProductionLineCtrl.CheckLoad()
     --        return
     --    end
     --end
-    ----开始初始化
+    ----Start initialization
     --Event.Brocast("c_NewAddLineLoadFinish")
 end
 
---先加载完所有图片再初始化
+--Load all pictures before initializing
 function NewAddProductionLineCtrl.GetAllImg()
     NewAddProductionLineCtrl.tempList = {}
     for i, mat in pairs(Material) do
@@ -278,7 +278,7 @@ function NewAddProductionLineCtrl.GetAllImg()
     NewAddProductionLineCtrl.CheckLoad()
 end
 
---设置ICon的Sprite
+--Set up ICon Sprite
 function NewAddProductionLineCtrl.SetBuildingIconSpite(itemId , tempImage)
     tempImage.sprite = SpriteManager.GetSpriteByPool(itemId)
     --if JudgeHasBuildingIcon(name) == true then

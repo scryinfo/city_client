@@ -16,7 +16,7 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public string path;
     private List<GameObject> XScaleValue = new List<GameObject>();
     public  List<GameObject> Coordinate = new List<GameObject>();
-    private int count = 0;        //生成线的次数
+    private int count = 0;        //The number of times the line is generated
     private Dictionary<int, List<GameObject>> dicGo = new Dictionary<int, List<GameObject>>();
 
     private void Awake()
@@ -100,7 +100,7 @@ public class Slide : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }      
     }
     /// <summary>
-    /// 将点的坐标显示出来
+    /// Display the coordinates of the point
     /// </summary>
     public void SetCoordinate(Vector2[] str,Vector2[] value, Color color,int id)
     {

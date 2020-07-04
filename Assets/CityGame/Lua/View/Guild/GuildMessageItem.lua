@@ -5,8 +5,8 @@
 ---
 
 GuildMessageItem = class("GuildMessageItem")
-GuildMessageItem.static.NORMAL_COLOR = "#393939"  -- 正常颜色
-GuildMessageItem.static.NAME_COLOR = "#f4c563"  -- 名字的颜色
+GuildMessageItem.static.NORMAL_COLOR = "#393939"  -- Normal color
+GuildMessageItem.static.NAME_COLOR = "#f4c563"  -- Color of name
 
 function GuildMessageItem:initialize(prefab, data)
     self.prefab = prefab
@@ -22,80 +22,80 @@ function GuildMessageItem:initialize(prefab, data)
 
 
     if data.type == "JOIN_SOCIETY" then
-        --str = data.createId .. "同意" .. data.affectedId .. "加入了商业联盟"
+        ---str = data.createId .. "Agree" .. data.affectedId .. "Joined Business Alliance"
         PlayerInfoManger.GetInfos({data.createId, data.affectedId}, self._showNameHead, self)
     elseif data.type == "EXIT_SOCIETY" then
-        --str = data.createId .. "退出了商业联盟"
+        --str = data.createId .. "Exited the business alliance"
         PlayerInfoManger.GetInfos({data.createId}, self._showNameHead, self)
     elseif data.type == "CREATE_SOCIETY" then
-        --str = data.createId .. "创建了商业联盟"
+        --str = data.createId .. "Created business alliance"
         PlayerInfoManger.GetInfos({data.createId}, self._showNameHead, self)
     elseif data.type == "KICK_OUT_SOCIETY" then
-        --str = data.affectedId .. "被" .. data.createId .. "踢出了商业联盟"
+        --str = data.affectedId .. "was" .. data.createId .. "kicked out of the business alliance"
         PlayerInfoManger.GetInfos({data.affectedId, data.createId}, self._showNameHead, self)
     elseif data.type == "APPOINT_TO_MEMBER" then
-        --str = data.affectedId .. "被" .. data.createId .. "任命为成员"
+        --str = data.affectedId .. "was" .. data.createId .. "appoint as member"
         PlayerInfoManger.GetInfos({data.affectedId, data.createId}, self._showNameHead, self)
     elseif data.type == "APPOINT_TO_CHAIRMAN" then
-        --str = data.affectedId .. "被" .. data.createId .. "任命为会长"
+        --str = data.affectedId .. "was" .. data.createId .. "appoint as chairman"
         PlayerInfoManger.GetInfos({data.affectedId, data.createId}, self._showNameHead, self)
     elseif data.type == "APPOINT_TO_VICE_CHAIRMAN" then
-        --str = data.affectedId .. "被" .. data.createId .. "任命为副会长"
+        --str = data.affectedId .. "was" .. data.createId .. "appointed as vice president"
         PlayerInfoManger.GetInfos({data.affectedId, data.createId}, self._showNameHead, self)
     elseif data.type == "APPOINT_TO_ADMINISTRATOR" then
-        --str = data.affectedId .. "被" .. data.createId .. "任命为管理"
+       --str = data.affectedId .. "was" .. data.createId .. "appoint as admin"
         PlayerInfoManger.GetInfos({data.affectedId, data.createId}, self._showNameHead, self)
     elseif data.type == "MODIFY_NAME" then
-        --str = data.createId .. "修改了联盟名字"
+       --str = data.createId .. "The alliance name has been modified"
         PlayerInfoManger.GetInfos({data.createId}, self._showNameHead, self)
     elseif data.type == "MODIFY_DECLARATION" then
-        --str = data.createId .. "修改了商业宣言"
+       --str = data.createId .. "modified business declaration"
         PlayerInfoManger.GetInfos({data.createId}, self._showNameHead, self)
     elseif data.type == "MODIFY_INTRODUCTION" then
-        --str = data.createId .. "修改了商业介绍"
+        --str = data.createId .. "modified business introduction"
         PlayerInfoManger.GetInfos({data.createId}, self._showNameHead, self)
     end
 end
 
--- 显示成员信息
+--Display member information
 function GuildMessageItem:_showNameHead(playerData)
     local str = "1111"
     local data = self.data
 
     if data.type == "JOIN_SOCIETY" then
         str = GetLanguage(12040017, playerData[1].name, playerData[2].name)
-        --str = playerData[1].name .. "同意" .. playerData[2].name .. "加入了商业联盟"
+     --str = playerData[1].name .. "Agree" .. playerData[2].name .. "Joined a business alliance"
         --str = string.format("<color=%s>%s</color><color=%s>同意</color><color=%s>%s</color><color=%s>加入了商业联盟</color>", GuildMessageItem.static.NAME_COLOR, playerData[1].name, GuildMessageItem.static.NORMAL_COLOR, GuildMessageItem.static.NAME_COLOR, playerData[2].name, GuildMessageItem.static.NORMAL_COLOR)
     elseif data.type == "EXIT_SOCIETY" then
         str = GetLanguage(12040018, playerData[1].name)
-        --str = playerData[1].name .. "退出了商业联盟"
+        --str = playerData[1].name .. "Quit from the business alliance"
     elseif data.type == "CREATE_SOCIETY" then
         str = GetLanguage(12040004, playerData[1].name)
-        --str = playerData[1].name .. "创建了商业联盟"
+        ---str = playerData[1].name .. "Created a business alliance"
     elseif data.type == "KICK_OUT_SOCIETY" then
         str = GetLanguage(12040005, playerData[1].name, playerData[2].name)
-        --str = playerData[1].name .. "被" .. playerData[2].name .. "踢出了商业联盟"
+        --str = playerData[1].name .. "was" .. playerData[2].name .. "kicked out of the business alliance"
     elseif data.type == "APPOINT_TO_MEMBER" then
         str = GetLanguage(12040009, playerData[1].name, playerData[2].name)
-        --str = playerData[1].name .. "被" .. playerData[2].name .. "任命为成员"
+       --str = playerData[1].name .. "was" .. playerData[2].name .. "appointed as a member"
     elseif data.type == "APPOINT_TO_CHAIRMAN" then
         str = GetLanguage(12040006, playerData[1].name, playerData[2].name)
         str = playerData[1].name .. "被" .. playerData[2].name .. "任命为会长"
     elseif data.type == "APPOINT_TO_VICE_CHAIRMAN" then
         str = GetLanguage(12040007, playerData[1].name, playerData[2].name)
-        --str = playerData[1].name .. "被" .. playerData[2].name .. "任命为副会长"
+        --str = playerData[1].name .. "was" .. playerData[2].name .. "appointed as vice president"
     elseif data.type == "APPOINT_TO_ADMINISTRATOR" then
         str = GetLanguage(12040008, playerData[1].name, playerData[2].name)
-        --str = playerData[1].name .. "被" .. playerData[2].name .. "任命为管理"
+        --str = playerData[1].name .. "was" .. playerData[2].name .. "appointed as management"
     elseif data.type == "MODIFY_NAME" then
         str = GetLanguage(12040010, playerData[1].name)
-        --str = playerData[1].name .. "修改了联盟名字"
+        --str = playerData[1].name .. "The alliance name has been modified"
     elseif data.type == "MODIFY_DECLARATION" then
         str = GetLanguage(12040011, playerData[1].name)
-        --str = playerData[1].name .. "修改了商业宣言"
+     --str = playerData[1].name .. "modified business declaration"
     elseif data.type == "MODIFY_INTRODUCTION" then
         str = GetLanguage(12040012, playerData[1].name)
-        --str = playerData[1].name .. "修改了商业介绍"
+        --str = playerData[1].name .. "modified business introduction"
     end
     self.describeText.text = str
 end

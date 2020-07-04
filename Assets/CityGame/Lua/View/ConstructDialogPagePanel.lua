@@ -5,7 +5,7 @@ ConstructDialogPagePanel = {};
 local this = ConstructDialogPagePanel;
 
 
---启动事件--
+--Start event--
 function ConstructDialogPagePanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
@@ -13,7 +13,7 @@ function ConstructDialogPagePanel.Awake(obj)
     this.InitPanel();
 end
 
---初始化面板--
+--Initialization panel--
 function ConstructDialogPagePanel.InitPanel()
     this.btn_confirm = transform:Find("root/confimBtn")
     this.btn_abolish = transform:Find("root/closeBtn")

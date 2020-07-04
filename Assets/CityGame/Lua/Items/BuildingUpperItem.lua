@@ -5,10 +5,10 @@
 ---
 
 BuildingUpperItem = class('BuildingUpperItem')
-BuildingUpperItem.static.NameColor = "#FFD562" -- 建筑名字颜色
-BuildingUpperItem.static.BuildingTypeColor = "#EFEFEF" -- 建筑类型颜色
+BuildingUpperItem.static.NameColor = "#FFD562" -- Building name color
+BuildingUpperItem.static.BuildingTypeColor = "#EFEFEF" -- Building type color
 
---初始化方法
+--Initialization method
 function BuildingUpperItem:initialize(viewRect)
     self.viewRect = viewRect
 
@@ -33,7 +33,7 @@ function BuildingUpperItem:initialize(viewRect)
     end)
 end
 
---刷新数据
+--Refresh data
 function BuildingUpperItem:refreshData(data, closeCallBack)
     if data == nil then
         return
@@ -47,11 +47,11 @@ function BuildingUpperItem:refreshData(data, closeCallBack)
     local name = data.name or "SRCY CITY"
     self.nameText.text = name -- .. GetLanguage(PlayerBuildingBaseData[data.mId].typeName)
     self.peopleNumberText.text = tostring(data.todayVisitor)
-    -- 建筑类型
+    -- Building Type
     local type = string.sub(tostring(data.mId), 1, 2)
     if type == "13" or type == "14" then
         self.gradeBg.localScale = Vector3.one
-        self.gradeText.text = math.ceil((data.brand + data.quality) / 2)   -- 公式，必改
+        self.gradeText.text = math.ceil((data.brand + data.quality) / 2)   -- The formula must be changed
     else
         self.gradeBg.localScale = Vector3.zero
     end

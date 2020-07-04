@@ -6,7 +6,7 @@
 
 
 RentTimeItem = class('RentTimeItem')
---初始化方法
+--Initialization method
 function RentTimeItem:initialize(dataInfo, viewRect,id,class)
     self.dataInfo = dataInfo
     self.viewRect = viewRect
@@ -15,16 +15,16 @@ function RentTimeItem:initialize(dataInfo, viewRect,id,class)
     local viewTrans = self.viewRect
 
     --self.head = viewTrans:Find("icon"):GetComponent("Image")
-    self.renternum = viewTrans:Find("numberbg/numberText"):GetComponent("Text")       --租户编号
-    self.rentertime = viewTrans:Find("timeText"):GetComponent("Text")                 --租户剩余时长
-    self.iconBtn = viewTrans:Find("detailsBtn")                                        --租户按钮
+    self.renternum = viewTrans:Find("numberbg/numberText"):GetComponent("Text")       --Tenant ID
+    self.rentertime = viewTrans:Find("timeText"):GetComponent("Text")                 --Tenant remaining time
+    self.iconBtn = viewTrans:Find("detailsBtn")                                        --Tenant button
 
     self.renternum.text = self.id
-    --总时间
+    --total time
     local rentetime = self.dataInfo.hourToRent * 3600 * 1000
-    --用的时间
+    --Time spent
     local servertime = TimeSynchronized.GetTheCurrentServerTime() - dataInfo.beginTs
-    --剩余时间
+    --the remaining time
     self.remaintime = (math.floor(rentetime - servertime)) / 1000
     self.rentertime.text = self:getStringTime()
     UpdateBeat:Add(self.Update,self)

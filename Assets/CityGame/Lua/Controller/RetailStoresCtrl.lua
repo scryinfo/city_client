@@ -6,10 +6,9 @@
 -----
 
 RetailStoresCtrl = class('RetailStoresCtrl',UIPanel)
-UIPanel:ResgisterOpen(RetailStoresCtrl) --注册打开的方法
-
+UIPanel:ResgisterOpen(RetailStoresCtrl) --How to open the registration
 local this
---构建函数
+--Build function
 function RetailStoresCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -41,15 +40,15 @@ end
 
 function RetailStoresCtrl:initializeData()
     if self.m_data then
-        --向服务器请求建筑详情
+        --Request building details from the server
         DataManager.OpenDetailModel(RetailStoresModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenRetailShop',self.m_data.insId)
     end
 end
 
---刷新原料厂信息
+--Refresh the raw material factory information
 function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
-    --初始化
+    --initialization
     RetailStoresPanel.openBusinessItem:initData(retailShopDataInfo.info, BuildingType.RetailShop)
     local insId = self.m_data.insId
     self.m_data = retailShopDataInfo
@@ -63,7 +62,7 @@ function RetailStoresCtrl:refreshmRetailShopDataInfo(retailShopDataInfo)
         end)
     end
 
-    --判断是自己还是别人打开了界面
+    --Determine if you or someone else has opened the interface
     if retailShopDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
     else
@@ -145,21 +144,21 @@ function RetailStoresCtrl:OnClick_prepareOpen(ins)
     PlayMusEff(1002)
     Event.Brocast("c_beginBuildingInfo",ins.m_data.info,ins.Refresh)
 end
---关闭显示
+--Close display
 function RetailStoresCtrl:_selfCloseSign()
     self.m_data.contractInfo.isOpen = false
     self.m_data.contractInfo.price = nil
     self.m_data.contractInfo.hours = nil
     self.groupMgr:RefreshData(self.m_data)
 end
---开启/调整签约
+--Close display
 function RetailStoresCtrl:_changeSignInfo(data)
     self.m_data.contractInfo.isOpen = true
     self.m_data.contractInfo.price = data.price
     self.m_data.contractInfo.hours = data.hours
     self.groupMgr:RefreshData(self.m_data)
 end
---自己取消自己的签约
+--Cancel your own contract
 function RetailStoresCtrl:_selfCancelSign()
     self.m_data.contractInfo.isOpen = false
     self.m_data.contractInfo.price = nil
@@ -167,12 +166,12 @@ function RetailStoresCtrl:_selfCancelSign()
     self.m_data.contractInfo.contract = nil
     self.groupMgr:RefreshData(self.m_data)
 end
---签约成功
+--Signed successfully
 function RetailStoresCtrl:_signSuccess(data)
     self.m_data.contractInfo.contract = data
     self.groupMgr:RefreshData(self.m_data)
 end
---营收曲线
+--Revenue curve
 function RetailStoresCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)
@@ -189,9 +188,9 @@ function RetailStoresCtrl:_clickCloseBtn()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
-    --关闭原料厂推送
+    --Close raw material factory push
     Event.Brocast("m_ReqCloseMaterial",self.m_data.insId)
-    --关闭当前建筑Model
+    --Close the current building
     DataManager.CloseDetailModel(self.m_data.insId)
     self.m_data = nil
     RevenueDetailsMsg.close()

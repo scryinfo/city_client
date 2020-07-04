@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CheckAvailability : MonoBehaviour
 {
-    //检查钱包是否可用
+    //Check if the wallet is available
     public void OnActivityResult(string resultData)
     {
         if (resultData == "NoCashBox")

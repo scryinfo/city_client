@@ -5,10 +5,10 @@
 ---
 
 TutorialChoiceItem = class("TutorialChoiceItem")
-TutorialChoiceItem.static.NomalNameColor = Vector3.New(78, 106, 178) -- 默认的名字颜色
-TutorialChoiceItem.static.SelectNameColor = Vector3.New(255, 255, 255) -- 被选中的名字颜色
+TutorialChoiceItem.static.NomalNameColor = Vector3.New(78, 106, 178) -- Default name color
+TutorialChoiceItem.static.SelectNameColor = Vector3.New(255, 255, 255) -- Selected name color
 
--- 初始化
+-- initialization
 function TutorialChoiceItem:initialize(prefab, index, ctrl)
     self.prefab = prefab
     self.index = index
@@ -28,19 +28,19 @@ function TutorialChoiceItem:initialize(prefab, index, ctrl)
     self:SetSelect(true)
 end
 
--- 设置按钮的是否可点
+-- Set whether the button is clickable
 function TutorialChoiceItem:SetSelect(isSelect)
     self.btn.interactable = isSelect
     self.transform.sizeDelta = isSelect and Vector2.New(314, 110) or Vector2.New(318, 110)
     self.choiceNameText.color = getColorByVector3(isSelect and TutorialChoiceItem.static.NomalNameColor or TutorialChoiceItem.static.SelectNameColor)
 end
 
--- 设置选择项的名字
+-- Set the name of the selection
 function TutorialChoiceItem:SetNameText()
     self.choiceNameText.text = GetLanguage(NoviceTutorialConfig[self.index].name)
 end
 
--- 按钮的点击事件
+-- Button click event
 function TutorialChoiceItem:_onClickBtn()
     self:SetSelect(false)
     self.ctrl:_setBtnState(self)

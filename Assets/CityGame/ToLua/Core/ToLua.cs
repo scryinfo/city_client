@@ -96,7 +96,7 @@ namespace LuaInterface
             LuaDLL.tolua_pushcfunction(L, TableToArray);
             LuaDLL.lua_rawset(L, -3);
 
-            //手动模拟gc
+            //Manually simulate gc
             //LuaDLL.lua_pushstring(L, "collect");
             //LuaDLL.lua_pushcfunction(L, Collect);
             //LuaDLL.lua_rawset(L, -3);            
@@ -116,7 +116,7 @@ namespace LuaInterface
 #endif
         }
 
-        /*--------------------------------对于tolua扩展函数------------------------------------------*/
+        /*--------------------------------For tolua extension function------------------------------------------*/
         #region TOLUA_EXTEND_FUNCTIONS
         static void AddLuaLoader(IntPtr L)
         {
@@ -198,7 +198,7 @@ namespace LuaInterface
                         }
                     }
 
-                    Debugger.Log(sb.ToString());            //200行与_line一致
+                    Debugger.Log(sb.ToString());            //200 lines are consistent with _line
                 }
                 return 0;
             }
@@ -781,7 +781,7 @@ namespace LuaInterface
             }
         }
 
-        //for Generic Array and List, 转换double为指定type在存入object
+        //for Generic Array and List, Convert double to specified type and save in object
         public static object ToVarObject(IntPtr L, int stackPos, Type t)
         {
             LuaTypes type = LuaDLL.lua_type(L, stackPos);

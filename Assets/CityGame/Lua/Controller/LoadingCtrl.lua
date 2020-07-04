@@ -37,13 +37,13 @@ function LoadingCtrl:Awake(...)
     PlayerInfoManger.Awake()
     DataManager.Init()
     TerrainManager.Init()
-    --Avatar管理器
+    --Avatar Manager
     AvatarManger.Awake()
 
     PathFindManager.Init()
-    --营收详情
+    --Revenue details
     RevenueDetailsMsg.Awake()
-    --初始图片加载
+    --Initial image loading
     SpriteManager.Init()
 end
 

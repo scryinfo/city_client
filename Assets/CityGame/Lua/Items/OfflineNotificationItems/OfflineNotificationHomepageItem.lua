@@ -7,11 +7,11 @@
 OfflineNotificationHomepageItem = class("OfflineNotificationHomepageItem")
 OfflineNotificationHomepageItem.static.TypeIconImagePath =
 {
-    -- 航班预测
+    -- Flight forecast
     ["flight"] = "Assets/CityGame/Resources/Atlas/OfflineNotification/icon-airplane.png",
-    -- 币图
+    -- Coin graph
     ["eee"] = "Assets/CityGame/Resources/Atlas/OfflineNotification/icon-eee.png",
-    -- 幸运值图
+    -- Lucky value graph
     ["luckycoupon"] = "Assets/CityGame/Resources/Atlas/OfflineNotification/icon-luckycoupon.png"
 }
 
@@ -25,7 +25,7 @@ function OfflineNotificationHomepageItem:initialize(prefab, data, ctrl)
     self.iconImage = transform:Find("IconImage")
     local path1,path2
     if data.unLineIncome then
-        -- 排除部分没有盈利的建筑
+        -- Exclude some unprofitable buildings
         for i = #data.unLineIncome, 1, -1 do
             if data.unLineIncome[i].income <= 0 then
                 table.remove(data.unLineIncome, i)

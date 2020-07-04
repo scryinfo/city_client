@@ -5,7 +5,7 @@
 ---
 FlightDateMonthItem = class('FlightDateMonthItem', FlightDateBase)
 
---初始化方法
+--Initialization method
 function FlightDateMonthItem:initialize(viewRect, data)
     self.viewRect = viewRect.transform
     self.data = data

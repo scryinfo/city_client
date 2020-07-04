@@ -14,47 +14,47 @@ function StopAndBuildModel.Awake()
 end
 
 function StopAndBuildModel:OnCreate()
-    Event.AddListener("m_startBusiness", StopAndBuildModel.m_startBusiness,self);--开业
-    Event.AddListener("m_shutdownBusiness", StopAndBuildModel.m_shutdownBusiness,self);--停业
-    Event.AddListener("m_delBuilding", StopAndBuildModel.m_delBuilding,self);--拆建筑发包
+    Event.AddListener("m_startBusiness", StopAndBuildModel.m_startBusiness,self);--Opening
+    Event.AddListener("m_shutdownBusiness", StopAndBuildModel.m_shutdownBusiness,self);--Closed
+    Event.AddListener("m_delBuilding", StopAndBuildModel.m_delBuilding,self);--Demolition of buildings and contracting
 
-    ----注册 AccountServer消息
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","startBusiness"),this.n_startBusiness);--开业
-    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shutdownBusiness"),this.n_shutdownBusiness);--停业
+    ----Register AccountServer Message
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","startBusiness"),this.n_startBusiness);--Opening
+    CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","shutdownBusiness"),this.n_shutdownBusiness);--Closed
 end
----开业发包
+---Opening contract
 function StopAndBuildModel:m_startBusiness(buildingID)
 DataManager.ModelSendNetMes("gscode.OpCode", "startBusiness","gs.Id",{ id = buildingID})
 end
----开业收包
+---Opening package
 function StopAndBuildModel.n_startBusiness(lMsg)
  Event.Brocast("c_successBuilding")
 end
 
----停业发包
+---Out of business
 function StopAndBuildModel:m_shutdownBusiness(buildingID)
     DataManager.ModelSendNetMes("gscode.OpCode", "shutdownBusiness","gs.Id",{ id = buildingID})
 end
 
----停业收包
+---Out of business
 function StopAndBuildModel.n_shutdownBusiness(lMsg)
     Event.Brocast("SmallPop",GetLanguage(40010018),300)
 end
 
----拆建筑发包
+---Demolition of buildings and contracting
 function StopAndBuildModel:m_delBuilding(buildingID)
     DataManager.ModelSendNetMes("gscode.OpCode", "delBuilding","gs.Id",{ id = buildingID})
 end
 
------拆建筑收包
+-----Demolition and construction
 --function StopAndBuildModel.n_delBuilding(lMsg)
 --    Event.Brocast("SmallPop","Success",300)
 --end
 
 function StopAndBuildModel:_updateTime()
-    --Event.AddListener("m_startBusiness", StopAndBuildModel.m_startBusiness,self);--开业
-    --Event.AddListener("m_shutdownBusiness", StopAndBuildModel.m_shutdownBusiness,self);--停业
-    --Event.AddListener("m_delBuilding", StopAndBuildModel.m_delBuilding,self);--拆建筑发包
+    --Event.AddListener("m_startBusiness", StopAndBuildModel.m_startBusiness,self);--Opening
+    --Event.AddListener("m_shutdownBusiness", StopAndBuildModel.m_shutdownBusiness,self);--Closed
+    --Event.AddListener("m_delBuilding", StopAndBuildModel.m_delBuilding,self);--Demolition building and contracting
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.X) then
         ct.log("system","aaaaaaaaaaaaaaaaa")
         Event.Brocast("m_delBuilding",MunicipalPanel.buildingId)

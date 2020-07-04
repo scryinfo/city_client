@@ -7,7 +7,7 @@
 EvaPopCtrl = class("EvaPopCtrl", UIPanel)
 UIPanel:ResgisterOpen(EvaPopCtrl)
 
-EvaPopCtrl.static.EvaResultItemPath = "View/Eva/EvaResultItem"  -- 滑动预制路径
+EvaPopCtrl.static.EvaResultItemPath = "View/Eva/EvaResultItem"  -- Sliding prefabricated path
 
 function EvaPopCtrl:initialize()
     UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.None)
@@ -29,7 +29,7 @@ function EvaPopCtrl:Awake()
 
     luaBehaviour:AddClick(sureBtn.gameObject, self.OnBack, self)
 
-    -- 结果节点
+    -- Result node
     self.evaResultSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.evaResultSource.mProvideData = EvaPopCtrl.static.evaResultData
     self.evaResultSource.mClearData = EvaPopCtrl.static.evaResultClearData
@@ -49,13 +49,13 @@ function EvaPopCtrl:Hide()
     UIPanel.Hide(self)
 end
 
--- 关闭Eva结果界面
+-- Close Eva results interface
 function EvaPopCtrl:OnBack(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 
--- Eva结果信息显示
+-- Eva result information display
 EvaPopCtrl.static.evaResultData = function(transform, idx)
     idx = idx + 1
     EvaResultItem:new(transform, EvaPopCtrl.resultInfo[idx], idx)

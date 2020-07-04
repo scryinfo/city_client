@@ -7,7 +7,7 @@ MapGroundTransItem = class('MapGroundTransItem', MapBubbleBase)
 
 --
 function MapGroundTransItem:_childInit()
-    self.scaleRoot = self.viewRect.transform:Find("root")  --需要缩放的部分
+    self.scaleRoot = self.viewRect.transform:Find("root")  --The part to be zoomed
 
     local trans = self.viewRect.transform
     self.groundSell = trans:Find("root/groundSell")

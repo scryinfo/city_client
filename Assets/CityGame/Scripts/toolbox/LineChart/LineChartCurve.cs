@@ -8,7 +8,7 @@ using System.Reflection;
 public class LineChartCurve : BaseLineChart
 {
     /// <summary>
-    /// 画出折线图
+    /// Draw a line chart
     /// </summary>
     /// <param name="vh"></param>
     /// <param name="vRect"></param>
@@ -58,7 +58,7 @@ public class LineChartCurve : BaseLineChart
 public class LineChartDataMediator
 {
     /// <summary>
-    /// 通过反射获得格式数据
+    /// Obtain format data through reflection
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="vertexs"></param>
@@ -68,7 +68,7 @@ public class LineChartDataMediator
         IList<Vector2> result = new List<Vector2>();
         Type type = typeof(T);
         PropertyInfo[] PropertyInfo = type.GetProperties();
-        //反射遍历属性获取顶点值
+        //Reflection traversal property to get vertex value
         foreach (T vertex in vertexs)
         {
             float x = 0.0f;
@@ -81,7 +81,7 @@ public class LineChartDataMediator
                     y = (float)info.GetValue(vertex, null);
             }
             result.Add(new Vector2(x, y));
-            //Debug.Log("!!!!!!!!画出来的顶点X" + x + "!!!!!!!!画出来的顶点Y" + y);
+            //Debug.Log("!!!!!!!!Painted vertex X" + x + "!!!!!!!!Painted vertex Y" + y);
         }
         return result;
     }

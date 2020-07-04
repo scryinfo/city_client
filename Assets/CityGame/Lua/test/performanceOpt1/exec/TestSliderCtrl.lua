@@ -4,7 +4,7 @@
 --- DateTime: 2018/12/5 16:41
 ---
 TestSliderCtrl = class('TestSliderCtrl',UIPage)
-UIPage:ResgisterOpen(TestSliderCtrl) --这个是注册打开的类方法
+UIPage:ResgisterOpen(TestSliderCtrl) --This is the registered open class method
 
 TestSliderCtrl.static.staticData = {}
 
@@ -39,7 +39,7 @@ function TestSliderCtrl:Close()
 
 end
 
----初始化界面
+---Initialize the interface
 function TestSliderCtrl:_initPanelData()
 
     TestSliderCtrl.static.mainPanelLuaBehaviour = self.luaBehaviour
@@ -75,7 +75,7 @@ function TestSliderCtrl:_initPanelData()
 
 end
 
---这里添加测试ICON
+--Add test ICON here
 TestSliderCtrl.static.ProvideData = function(transform, idx)
     idx = idx + 1
     if not TestSliderCtrl.static.sourceInfo[idx] then
@@ -88,22 +88,22 @@ TestSliderCtrl.static.ProvideData = function(transform, idx)
     if subScroll ~= nil then
         local dataSource = UnityEngine.UI.LoopScrollDataSource.New()
 
-        --加载 Icon_Prefab
+        --Load Icon_Prefab
             local funHorizontalSb = function(self, obj,i,trans)
             local loadedOjb = ct.InstantiatePrefab(obj);
             local type = ct.getType(UnityEngine.Sprite)
-            --加载图片，赋值给 Icon_Prefab 的 Image 组件的 sprite
-            panelMgr:LoadPrefab_A("TempIcon/A"..i, type, nil, function(staticData, obj )
+            -- Load the image and assign it to the sprite of the Image component of Icon_Prefab
+            panelMgr:LoadPrefab_A("TempIcon/A"..i, type, nil, function(staticData, obj)
                 if obj ~= nil then
                     local texture = ct.InstantiatePrefab(obj)
-                    local pngImage =  trans:GetComponent("Image")
+                    local pngImage = trans:GetComponent("Image")
                     pngImage.sprite = texture
                 end
             end)
             --staticData[i] = {text = 001,image = go}
         end
 
-        --TestSliderPanel 更新 item 时的回调，每次更新，都会更新该元素内部所有的 Icon_Prefab
+        --TestSliderPanel callback when item is updated, each update will update all Icon_Prefab inside the element
         dataSource.mProvideData = function(trans, i)
             i = i + 1
             funHorizontalSb(nil, _Icon_Prefab, i,trans)

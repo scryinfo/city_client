@@ -14,20 +14,20 @@ function TransportBoxPanel.InitPanel()
     this.confirmBtn = transform:Find("box_bg/confirmBtn");
     this.closeBtn = transform:Find("box_bg/closeBtn");
     this.name = transform:Find("box_bg/name"):GetComponent("Text");
-    this.fromName = transform:Find("box_bg/from/fromName"):GetComponent("Text");   --出发
-    this.targetName = transform:Find("box_bg/target/targetName"):GetComponent("Text");   --终点
-    this.distanceText = transform:Find("box_bg/distance/distanceText"):GetComponent("Text");   --距离
-    this.numberText = transform:Find("box_bg/number/numberText"):GetComponent("Text");   --数量
+    this.fromName = transform:Find("box_bg/from/fromName"):GetComponent("Text"); --Start
+    this.targetName = transform:Find("box_bg/target/targetName"):GetComponent("Text"); --End
+    this.distanceText = transform:Find("box_bg/distance/distanceText"):GetComponent("Text"); --Distance
+    this.numberText = transform:Find("box_bg/number/numberText"):GetComponent("Text"); --Number
 
-    this.goodsObj = transform:Find("box_bg/fee/goods"):GetComponent("RectTransform");  --购买要用的
-    this.goodsMoney = transform:Find("box_bg/fee/goods/goodsMoney"):GetComponent("Text");   --商品的价钱
-    this.transportObj = transform:Find("box_bg/fee/transport"):GetComponent("RectTransform");  --购买要用的
-    this.transportMoney = transform:Find("box_bg/fee/transport/transportMoney"):GetComponent("Text");   --需要的运费
+    this.goodsObj = transform:Find("box_bg/fee/goods"):GetComponent("RectTransform"); --Purchase
+    this.goodsMoney = transform:Find("box_bg/fee/goods/goodsMoney"):GetComponent("Text"); --   the price of the product
+    this.transportObj = transform:Find("box_bg/fee/transport"):GetComponent("RectTransform"); --Purchase
+    this.transportMoney = transform:Find("box_bg/fee/transport/transportMoney"):GetComponent("Text");  --  required freight
 
-    this.transportsObj = transform:Find("box_bg/fee/transports"):GetComponent("RectTransform");  --运输要用的
-    this.transportsMoney = transform:Find("box_bg/fee/transports/transportsMoney"):GetComponent("Text");    --运输要用的运费
-    this.totalMoney = transform:Find("box_bg/fee/total/totalMoney"):GetComponent("Text");   --总计价钱
-    this.total = transform:Find("box_bg/fee/total"):GetComponent("Text");  --总计
+    this.transportsObj = transform:Find("box_bg/fee/transports"):GetComponent("RectTransform"); --Used for transportation
+    this.transportsMoney = transform:Find("box_bg/fee/transports/transportsMoney"):GetComponent("Text"); --The freight to be used for transportation
+    this.totalMoney = transform:Find("box_bg/fee/total/totalMoney"):GetComponent("Text");  -- total price
+    this.total = transform:Find("box_bg/fee/total"):GetComponent("Text"); --Total
 
 end
 function ChooseWarehousePanel.OnDestroy()

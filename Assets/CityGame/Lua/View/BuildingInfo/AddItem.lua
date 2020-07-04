@@ -10,7 +10,7 @@ local class = require 'Framework/class'
 
 AddItem = class('AddItem')
 
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function AddItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.prefab = prefab;
     self.prefabData = prefabData;
@@ -19,7 +19,7 @@ function AddItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.id = id
     self.ItemList=mgr.addItemList
 
-    self.addBtn=self.prefab.transform:Find("Image")--添加按钮
+    self.addBtn=self.prefab.transform:Find("Image")--Add button
     self.parent=prefab.transform
 
     self.angleRoot=prefab.transform:Find("bg/angleRoot")
@@ -30,7 +30,7 @@ function AddItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self._luabehaviour:AddClick(self.addBtn.gameObject, self.OnClick_Add, self);
 
 end
----添加
+---Add to
 function AddItem:OnClick_Add(go)
     -- go.manager.transform=go.parent
     if   go.manager.current then

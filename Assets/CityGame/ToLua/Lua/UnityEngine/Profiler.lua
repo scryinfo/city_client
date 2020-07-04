@@ -6,7 +6,7 @@
 local LuaProfiler = LuaProfiler
 local vmdef = jit and require("jit.vmdef")
 
---通过文件名和行数指定一个函数名字
+--Specify a function name by file name and number of lines
 local ffnames = 
 {
 	event =
@@ -26,7 +26,7 @@ local ffnames =
     }
 }
 
---不需要Profiler的函数
+--Functions that do not require Profiler
 local blacklist = 
 {
     ["ipairs_aux"] = 1,

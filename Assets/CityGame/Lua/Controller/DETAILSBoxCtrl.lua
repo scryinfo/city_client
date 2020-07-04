@@ -115,7 +115,7 @@ function DETAILSBoxCtrl:Refresh()
     DETAILSBoxPanel.numberSlider.value = self.m_data.num
     DETAILSBoxPanel.priceInput.text = GetClientPriceString(self.m_data.price)
 end
---修改数量价格
+--Modify quantity price
 function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
     PlayMusEff(1002)
     local number = DETAILSBoxPanel.numberSlider.value
@@ -124,7 +124,7 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
         return
     end
     local price = GetServerPriceNumber(DETAILSBoxPanel.priceInput.text)
-    --如果当前是原料厂
+    --If it is currently a raw material factory
     if ins.m_data.buildingType == 1 then
         if number ~= ins.m_data.num and price ~= ins.m_data.price then
             local num = ins.m_data.num - number
@@ -148,7 +148,7 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
             UIPanel.ClosePage()
             return
         end
-        --如果是加工厂
+        --If it is a processing plant
     elseif ins.m_data.buildingType == 4 then
         if number ~= ins.m_data.num and price ~= ins.m_data.price then
             local num = ins.m_data.num - number
@@ -197,7 +197,7 @@ function DETAILSBoxCtrl:OnClick_confirmBtn(ins)
         end
     end
 end
---刷新滑动条
+--Refresh slider
 function DETAILSBoxCtrl:numberInputInfo()
     local number = DETAILSBoxPanel.numberInput.text
     if number ~= "" then
@@ -206,7 +206,7 @@ function DETAILSBoxCtrl:numberInputInfo()
         DETAILSBoxPanel.numberSlider.value = 0
     end
 end
---刷新输入框
+--Refresh the input box
 function DETAILSBoxCtrl:numberSliderInfo()
     DETAILSBoxPanel.numberInput.text = DETAILSBoxPanel.numberSlider.value;
 end

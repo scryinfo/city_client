@@ -1,7 +1,7 @@
 
 ShelfIconItem = class('ShelfIconItem')
 
---初始化方法
+--Initialization method
 function ShelfIconItem:initialize()
 
 end

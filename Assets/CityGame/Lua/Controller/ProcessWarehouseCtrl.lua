@@ -1,15 +1,15 @@
 ProcessWarehouseCtrl = class('ProcessWarehouseCtrl',BuildingBaseCtrl)
-UIPanel:ResgisterOpen(ProcessWarehouseCtrl)--注册打开的方法
+UIPanel:ResgisterOpen(ProcessWarehouseCtrl)--How to open the registration
 
 local warehouse
 local switchRightPanel
 local itemStateBool
-local switchIsShow    --false 打开上架  true 打开运输
-local itemNumber  --用来记录销毁的数量
+local switchIsShow    --false open shelf true open shipping
+local itemNumber  --Used to record the quantity destroyed
 ct.itemPrefab =
 {
-    shelfItem  = 0,  --上架
-    transportItem = 1,  --运输
+    shelfItem  = 0,  --Shelf
+    transportItem = 1,  --transport
 }
 function ProcessWarehouseCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
@@ -34,9 +34,9 @@ function ProcessWarehouseCtrl:Awake(go)
     switchRightPanel = false
     itemStateBool = nil
     switchIsShow = nil
-    self.tempItemList = {}  --选中的数据
-    self.recordIdList = {}  --记录选中的id
-    self.warehouseDatas = {}  --仓库数据
+    self.tempItemList = {}  --Selected data
+    self.recordIdList = {}  --Record the selected id
+    self.warehouseDatas = {}  --Warehouse data
     self.loadItemPrefab = nil
 end
 function ProcessWarehouseCtrl:Active()
@@ -65,7 +65,7 @@ function ProcessWarehouseCtrl:Refresh()
     if next(self.warehouseDatas) == nil then
         self:CreateGoodsItems(self.store.inHand,ProcessWarehousePanel.warehouseItem,ProcessWarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
     end
-    --如果是从货架进来的
+    --If you come in from the shelf
     if self.m_data.isShelf == true then
         switchIsShow = false
         ProcessWarehousePanel.shelfCloseBtn.transform.localScale = Vector3.zero
@@ -77,8 +77,8 @@ function ProcessWarehouseCtrl:Hide()
     self:_removeListener()
     return {insId = self.m_data.info.id,self.m_data}
 end
-----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
---初始化仓库容量
+----------------------------------------------------------------------Initialization function------------------------------------------------------------------------------------------
+--Initialize warehouse capacity
 function ProcessWarehouseCtrl:InitializeCapacity()
     ProcessWarehousePanel.Warehouse_Slider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
     ProcessWarehousePanel.Warehouse_Slider.value = self:GetWarehouseNum(self.store)
@@ -94,21 +94,21 @@ function ProcessWarehouseCtrl:InitializeCapacity()
     numTab["col3"] = "white"
     ProcessWarehousePanel.numberText.text = getColorString(numTab)
 end
-----------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------
---点击打开上架Panel
+----------------------------------------------------------------------Click function---------------------------------------------------------------------------------------------
+--Click to open Panel
 function ProcessWarehouseCtrl:ClickRightShelfBtn(ins)
     PlayMusEff(1002)
     switchIsShow = false
     ProcessWarehousePanel.shelfCloseBtn.transform.localScale = Vector3.one
     ins:OpenRightPanel(not switchRightPanel,switchIsShow)
 end
---点击打开运输Panel
+--Click to open the Transport Panel
 function ProcessWarehouseCtrl:ClickRightTransportBtn(ins)
     PlayMusEff(1002)
     switchIsShow = true
     ins:OpenRightPanel(not switchRightPanel,switchIsShow)
 end
---跳转选择仓库
+--Jump to select warehouse
 function ProcessWarehouseCtrl:OnClick_transportopenBtn(ins)
     PlayMusEff(1002)
     local data = {}
@@ -119,12 +119,12 @@ function ProcessWarehouseCtrl:OnClick_transportopenBtn(ins)
     data.nameText = ProcessWarehousePanel.nameText
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
---上架确认
+--Confirmation
 function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
     PlayMusEff(1002)
     local noMatch = {}
     for key1,value1 in pairs(ins.tempItemList) do
-        --如果架子上是空的
+        --If the shelf is empty
         if not ins.m_data.shelf.good then
             if ins:WhetherValidShelfOp(value1) == true then
                 Event.Brocast("m_ReqProcessShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
@@ -132,20 +132,20 @@ function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
                 noMatch[#noMatch + 1] = value1.itemId
             end
         else
-            --如果架子上不是空的，先检查架子上有没有这个商品
+            --If the shelf is not empty, first check if the product is on the shelf
             if ins:ShelfWhetherHave(ins.m_data.shelf.good,value1) == true then
-                --如果有这个东西，需要发送两个协议，修改和上架
+                --If you have this thing, you need to send two agreements, modify and put on the shelf
                 if ins:WhetherValidShelfOp(value1) == true then
-                    --修改协议
+                    --Modify the agreement
                     Event.Brocast("m_ReqProcessModifyShelf",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
-                    --上架协议
+                    --Listing Agreement
                     Event.Brocast("m_ReqProcessShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
                 else
                     noMatch[#noMatch + 1] = value1.itemId
                 end
             else
                 if ins:WhetherValidShelfOp(value1) == true then
-                    --发送上架协议
+                    --Send listing agreement
                     Event.Brocast("m_ReqProcessShelfAdd",ins.buildingId,value1.itemId,value1.inputNumber.text,GetServerPriceNumber(value1.inputPrice.text),value1.goodsDataInfo.key.producerId,value1.goodsDataInfo.key.qty)
                 else
                     noMatch[#noMatch + 1] = value1.itemId
@@ -153,9 +153,9 @@ function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
             end
         end
     end
-    --后边要改成如果上架的商品中有一个不匹配的，则全部都不能上架
+    --The back side should be changed to one if there is a mismatch in the products on the shelves, then all of them cannot be listed
     if next(noMatch) ~= nil then
-        --打印上架不成功的itemId
+        --Print unsuccessful itemId
         local noMatchStr = GetLanguage(noMatch[1])
         for i = 2, #noMatch do
             noMatchStr = noMatchStr..","..GetLanguage(noMatch[i])
@@ -163,7 +163,7 @@ function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(ins)
         Event.Brocast("SmallPop",noMatchStr.."类型不符",400)
     end
 end
---运输确认
+--Shipping confirmation
 function ProcessWarehouseCtrl:OnClick_transportConfirmBtn(ins)
     PlayMusEff(1002)
     local targetBuildingCapacity = ChooseWarehouseCtrl:GetCapacity()
@@ -194,7 +194,7 @@ function ProcessWarehouseCtrl:OnClick_transportConfirmBtn(ins)
     end
     ct.OpenCtrl("TransportBoxCtrl",transportDatasInfo)
 end
---退出仓库
+--Exit the warehouse
 function ProcessWarehouseCtrl:OnClick_returnBtn(ins)
     PlayMusEff(1002)
     if switchIsShow ~= nil then
@@ -203,8 +203,8 @@ function ProcessWarehouseCtrl:OnClick_returnBtn(ins)
     ins:CloseDestroy(ins.warehouseDatas)
     UIPanel.ClosePage()
 end
-----------------------------------------------------------------------回调函数--------------------------------------------------------------------------------------------
---上架或运输刷新仓库数据
+----------------------------------------------------------------------Callback function--------------------------------------------------------------------------------------------
+--Refresh warehouse data on shelves or transport
 function ProcessWarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
     for key,value in pairs(self.warehouseDatas) do
         if value.itemId == dataInfo.item.key.id then
@@ -215,7 +215,7 @@ function ProcessWarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
                 value.goodsDataInfo.n = tonumber(value.numberText.text)
                 value.n = tonumber(value.numberText.text)
                 local stateBool = true
-                self:GoodsItemState(self.warehouseDatas,stateBool)--数量减少后刷新商品的状态为可以勾选
+                self:GoodsItemState(self.warehouseDatas,stateBool)--After the quantity is reduced, the status of refreshing the product is selectable
             end
             self:CloseGoodsDetails(self.tempItemList,self.recordIdList)
             self:RefreshCapacity(dataInfo,whether)
@@ -227,7 +227,7 @@ function ProcessWarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
         Event.Brocast("SmallPop",GetLanguage(26040010),300)
     else
         Event.Brocast("SmallPop",GetLanguage(27020002),300)
-        --如果上架成功，模拟服务器数据放到货架
+        --If the shelf is successful, the simulated server data is placed on the shelf
         if not self.m_data.store.locked or next(self.m_data.store.locked) == nil then
             local locked = {}
             local goodData = {}
@@ -253,7 +253,7 @@ function ProcessWarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
             --end
             self:SetShelfGood(dataInfo)
         end
-        --上架成功后模拟服务器数据改变m_data
+        --After successful listing, the simulated server data changes m_data
         for key,value in pairs(self.m_data.store.inHand) do
             if value.key.id == dataInfo.item.key.id then
                 if value.n == dataInfo.item.n then
@@ -262,12 +262,12 @@ function ProcessWarehouseCtrl:RefreshWarehouseData(dataInfo,whether)
             end
         end
     end
-    --如果货架上没有东西改变货架m_data
+    --If nothing on the shelf changes the shelf m_data
     if self.m_data.isShelf == true then
         self:SetShelfData(dataInfo)
     end
 end
---销毁仓库原料或商品刷新
+--Destruction of warehouse materials or commodities refresh
 function ProcessWarehouseCtrl:DestroyAfterRefresh(dataInfo)
     for key,value in pairs(self.warehouseDatas) do
         if value.itemId == dataInfo.item.id then
@@ -285,8 +285,8 @@ function ProcessWarehouseCtrl:DestroyAfterRefresh(dataInfo)
     itemNumber = nil
     Event.Brocast("SmallPop",GetLanguage(26030003),300)
 end
-----------------------------------------------------------------------事件函数--------------------------------------------------------------------------------------------
---勾选商品
+----------------------------------------------------------------------Event function--------------------------------------------------------------------------------------------
+--Check products
 function ProcessWarehouseCtrl:SelectedGoodsItem(ins)
     if self.recordIdList[ins.id] == nil then
         self.recordIdList[ins.id] = ins.id
@@ -302,7 +302,7 @@ function ProcessWarehouseCtrl:SelectedGoodsItem(ins)
     end
     self:RefreshConfirmButton()
 end
---销毁仓库原料或商品
+--Destroy warehouse raw materials or commodities
 function ProcessWarehouseCtrl:DestroyWarehouseItem(ins)
     itemNumber = ins.n
     local data = {}
@@ -314,9 +314,9 @@ function ProcessWarehouseCtrl:DestroyWarehouseItem(ins)
     end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
 end
---生产中刷新仓库的数据
+--Refresh warehouse data in production
 function ProcessWarehouseCtrl:UpdateLatestData(dataInfo)
-    --容量刷新时，会有跳的情况，正常(原料会减少)
+    --When the capacity is refreshed, there may be a jump, normal (the raw material will be reduced)
     self:InitializeCapacity()
     if self.warehouseDatas then
         for key,value in pairs(self.warehouseDatas) do
@@ -338,7 +338,7 @@ function ProcessWarehouseCtrl:UpdateLatestData(dataInfo)
     self:RefreshCreateItem(inHand,ProcessWarehousePanel.warehouseItem,ProcessWarehousePanel.Content,WarehouseItem,self.luabehaviour,self.warehouseDatas)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---打开上架或运输Panel
+--Open shelf or transport Panel
 function ProcessWarehouseCtrl:OpenRightPanel(isShow,switchShow)
     if isShow then
         itemStateBool = true
@@ -372,7 +372,7 @@ function ProcessWarehouseCtrl:OpenRightPanel(isShow,switchShow)
     end
     switchRightPanel = isShow
 end
---刷新确认上架或确认运输的按钮
+--Refresh and refresh button to confirm shelf or transportation confirmation
 function ProcessWarehouseCtrl:RefreshConfirmButton()
     if switchIsShow == false then
         if next(self.tempItemList) == nil then
@@ -392,9 +392,9 @@ function ProcessWarehouseCtrl:RefreshConfirmButton()
         end
     end
 end
---检查上架商品是否匹配，是否输入数量和价格  --原料厂，加工厂，零售店判断mId不同
+--Check whether the listed products match, enter the quantity and price - raw material factory, processing factory, retail store judge that the mId is different
 function ProcessWarehouseCtrl:WhetherValidShelfOp(ins)
-    local goodsKey = 22              --可以上架的商品类型
+    local goodsKey = 22              --Available product types
     if GetServerPriceNumber(ins.inputPrice.text) == 0 then
         Event.Brocast("SmallPop","价格不能为0"--[[GetLanguage(26020004)]],300)
         return false
@@ -409,7 +409,7 @@ function ProcessWarehouseCtrl:WhetherValidShelfOp(ins)
 
     return true
 end
---检查架子上是否有这个商品
+--Check if this product is on the shelf
 function ProcessWarehouseCtrl:ShelfWhetherHave(table,value1)
     for key,value in pairs(table) do
         if value.k.id == value1.itemId then
@@ -418,7 +418,7 @@ function ProcessWarehouseCtrl:ShelfWhetherHave(table,value1)
     end
     return false
 end
---刷新仓库容量  --true 运输   --false 上架
+--Refresh warehouse capacity --true transportation --false list
 function ProcessWarehouseCtrl:RefreshCapacity(dataInfo,whether)
     if whether == true then
         ProcessWarehousePanel.Warehouse_Slider.value = ProcessWarehousePanel.Warehouse_Slider.value - dataInfo.item.n
@@ -446,7 +446,7 @@ function ProcessWarehouseCtrl:RefreshCapacity(dataInfo,whether)
         ProcessWarehousePanel.numberText.text = getColorString(numTab)
     end
 end
---如果是从货架上架要改变self.m_data数据返回
+--If you want to change the self.m_data data from the shelf to return
 function ProcessWarehouseCtrl:SetShelfData(dataInfo)
     local good = {}
     local goodData = {}
@@ -507,22 +507,22 @@ end
 
 --[[
 ProcessWarehouseCtrl = class('ProcessWarehouseCtrl',BuildingBaseCtrl);
-UIPanel:ResgisterOpen(ProcessWarehouseCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(ProcessWarehouseCtrl) -
 
---物品上架还是运输
+--Is the item on the shelf or shipping?
 ct.goodsState =
 {
-    shelf  = 0,  --上架
-    transport = 1,  --运输
+    shelf  = 0,  
+    transport = 1,  
 }
 ct.sortingItemType = {
-    Name = 1,      --名字
-    Quantity = 2,  --数量
-    Level = 3,     --评分
-    Score = 4,     --等级
-    Price = 5      --价格
+    Name = 1,      
+    Quantity = 2,  
+    Level = 3,     
+    Score = 4,     
+    Price = 5      
 }
---存放选中的物品,临时表
+--Store selected items, temporary table
 ProcessWarehouseCtrl.temporaryItems = {}
 local isShowList;
 local switchIsShow;
@@ -554,7 +554,7 @@ function ProcessWarehouseCtrl:Awake(go)
     --warehouse:AddClick(ProcessWarehousePanel.searchBtn.gameObject,self.OnClick_searchBtn,self)
     warehouse:AddClick(ProcessWarehousePanel.shelfConfirmBtn.gameObject,self.OnClick_shelfConfirmBtn,self);
 
-    --暂时放到Awake
+    - temporarily put Awake
     Event.AddListener("c_temporaryifNotGoods",self.c_temporaryifNotGoods, self)
 
     --ProcessWarehousePanel.nameText.text = GetLanguage(26040002)
@@ -562,7 +562,7 @@ function ProcessWarehouseCtrl:Awake(go)
     self.gameObject = go
     isShowList = false;
     switchIsShow = false;
-    --初始化物品上架还是运输
+    --Initialize items on shelf or transport
     self.operation = nil;
 end
 function ProcessWarehouseCtrl:Active()
@@ -626,11 +626,11 @@ function ProcessWarehouseCtrl:Hide()
     UIPanel.Hide(self)
     return {insId = self.m_data.info.id,self.m_data}
 end
-----搜索
+
 --function ProcessWarehouseCtrl:OnClick_searchBtn(ins)
 --
 --end
---选中物品
+
 function ProcessWarehouseCtrl:_selectedGoods(insData)
     if self.temporaryItems[insData.id] == nil then
         self.temporaryItems[insData.id] = insData.id
@@ -652,7 +652,7 @@ function ProcessWarehouseCtrl:_selectedGoods(insData)
         end
     end
 end
---临时表里是否有这个物品
+--Whether there is this item in the temporary table
 function ProcessWarehouseCtrl:c_temporaryifNotGoods(id)
     self.temporaryItems[id] = nil
     self.GoodsUnifyMgr.warehouseLuaTab[id].circleTickImg.transform.localScale = Vector3.zero
@@ -663,10 +663,10 @@ function ProcessWarehouseCtrl:c_temporaryifNotGoods(id)
         self:isShowDetermineBtn()
     end
 end
---获取仓库总数量
+--Get the total number of warehouses
 function ProcessWarehouseCtrl:getWarehouseCapacity(table)
-    local warehouseCapacity = 0  --仓库总容量
-    local locked = 0             --仓库里锁着的
+    local warehouseCapacity = 0  
+    local locked = 0             
     if not table.inHand then
         warehouseCapacity = warehouseCapacity + locked
         return warehouseCapacity;
@@ -685,7 +685,7 @@ function ProcessWarehouseCtrl:getWarehouseCapacity(table)
         return warehouseCapacity
     end
 end
---获取仓库数量
+--Get the number of warehouses
 function ProcessWarehouseCtrl:getWarehouseNum(table)
     local warehouseNum = 0
     if not table.inHand then
@@ -697,7 +697,7 @@ function ProcessWarehouseCtrl:getWarehouseNum(table)
         return warehouseNum
     end
 end
---获取锁着的数量
+- Get the number of locks
 function ProcessWarehouseCtrl:getLockedNum(table)
     local lockedNum = 0
     if not table.inHand then
@@ -730,7 +730,7 @@ function ProcessWarehouseCtrl:OnClick_transportBtn(go)
         Event.Brocast("SmallPop",GetLanguage(35040013),300)
     end
 end
---名字排序
+--Name sort
 function ProcessWarehouseCtrl:OnClick_OnName(ins)
     PlayMusEff(1002)
     ProcessWarehousePanel.nowText.text = "By name";
@@ -738,7 +738,7 @@ function ProcessWarehouseCtrl:OnClick_OnName(ins)
     local nameType = ct.sortingItemType.Name
     ProcessWarehouseCtrl:_getSortItems(nameType,ins.GoodsUnifyMgr.WarehouseItems)
 end
---数量排序
+--Quantity sorting
 function ProcessWarehouseCtrl:OnClick_OnNumber(ins)
     PlayMusEff(1002)
     ProcessWarehousePanel.nowText.text = "By quantity";
@@ -746,7 +746,7 @@ function ProcessWarehouseCtrl:OnClick_OnNumber(ins)
     local quantityType = ct.sortingItemType.Quantity
     ProcessWarehouseCtrl:_getSortItems(quantityType,ins.GoodsUnifyMgr.WarehouseItems)
 end
---跳转选择仓库界面
+--Jump to select warehouse interface
 function ProcessWarehouseCtrl:OnClick_transportopenBtn(go)
     --go:deleteObjInfo()
     PlayMusEff(1002)
@@ -758,10 +758,10 @@ function ProcessWarehouseCtrl:OnClick_transportopenBtn(go)
     data.buildingId = go.m_data.info.id
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
---确定上架
+--Confirm on shelves
 function ProcessWarehouseCtrl.isValidShelfOp(go, v)
-    local materialKey,goodsKey = 21,22 --道具类型
-    local material,processing,retailStores = 11,12,13--建筑类型
+    local materialKey,goodsKey = 21,22 
+    local material,processing,retailStores = 11,12,13
     if GetServerPriceNumber(v.inputPrice.text) == 0 then
         return false
     end
@@ -791,17 +791,16 @@ function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(go)
     if not go.GoodsUnifyMgr.shelfPanelItem then
         return;
     else
-        --shelfPanelItem 将要上架的道具列表
+        --shelfPanelItem List of items to be put on the shelves
         for i,v in pairs(go.GoodsUnifyMgr.shelfPanelItem) do
             --local isvalidOp = true
-            if not go.m_data.shelf.good then --未上架
+            if not go.m_data.shelf.good then 
                 if ProcessWarehouseCtrl.isValidShelfOp(go,v) == true then
                     Event.Brocast("m_ReqShelfAdd",go.m_data.info.id,v.itemId,v.inputNumber.text,GetServerPriceNumber(v.inputPrice.text),v.goodsDataInfo.key.producerId,v.goodsDataInfo.key.qty)
                 else
                     noMatch[#noMatch+1] = v
                 end
             else
-                --已上架
                 for k,t in pairs(go.m_data.shelf.good) do
                     if v.itemId == t.k.id then
                         if ProcessWarehouseCtrl.isValidShelfOp(go,v) == true then
@@ -829,7 +828,7 @@ function ProcessWarehouseCtrl:OnClick_shelfConfirmBtn(go)
         Event.Brocast("SmallPop",GetLanguage(itemId)..GetLanguage(26020004),300)
     end
 end
---上架回调执行
+--Callback execution
 function ProcessWarehouseCtrl:n_shelfAdd(msg)
     if not msg then
         return;
@@ -914,7 +913,7 @@ function ProcessWarehouseCtrl:n_shelfAdd(msg)
         end
     end
 end
---确定运输
+--Confirm transportation
 function ProcessWarehouseCtrl:OnClick_transportConfirmBtn(go)
     PlayMusEff(1002)
     if not GoodsUnifyMgr.transportPanelItem then
@@ -952,7 +951,7 @@ function ProcessWarehouseCtrl:OnClick_transportConfirmBtn(go)
     end
     ct.OpenCtrl("TransportBoxCtrl",btransportListing);
 end
---运输回调执行
+--Transport callback execution
 function ProcessWarehouseCtrl:n_transports(Data)
     local table = self.GoodsUnifyMgr.warehouseLuaTab
     for i,v in pairs(table) do
@@ -983,7 +982,7 @@ function ProcessWarehouseCtrl:n_transports(Data)
         end
     end
 end
---点击删除物品
+--Click to delete the item
 function ProcessWarehouseCtrl:deleteWarehouseItem(ins)
     local data = {}
     data.titleInfo = GetLanguage(30030001)
@@ -997,7 +996,7 @@ function ProcessWarehouseCtrl:deleteWarehouseItem(ins)
     end
     ct.OpenCtrl('ErrorBtnDialogPageCtrl',data)
 end
---删除仓库物品回调
+--Delete warehouse item callback
 function ProcessWarehouseCtrl:deleteObjeCallback(msg)
     if not msg then
         return
@@ -1026,7 +1025,7 @@ function ProcessWarehouseCtrl:deleteObjeCallback(msg)
         i = i + 1
     end
 end
---刷新运输确定按钮
+--Refresh shipping confirmation button
 function ProcessWarehouseCtrl:isShowDetermineBtn()
     if not self.GoodsUnifyMgr then
         return
@@ -1050,7 +1049,6 @@ function ProcessWarehouseCtrl:OnClick_OnSorting(ins)
     PlayMusEff(1002)
     ProcessWarehouseCtrl:OnClick_OpenList(not isShowList);
 end
---打开排序
 function ProcessWarehouseCtrl:OnClick_OpenList(isShow)
     if isShow then
         ProcessWarehousePanel.list:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
@@ -1061,7 +1059,7 @@ function ProcessWarehouseCtrl:OnClick_OpenList(isShow)
     end
     isShowList = isShow;
 end
---判断右侧是货架还是运输
+--Determine whether the right side is a shelf or transport
 function ProcessWarehouseCtrl:OnClick_rightInfo(isShow,number)
     if isShow then
         ProcessWarehousePanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
@@ -1106,7 +1104,7 @@ function ProcessWarehouseCtrl:OnClick_rightInfo(isShow,number)
     end
     switchIsShow = isShow;
 end
---排序
+--sort
 function ProcessWarehouseCtrl:_getSortItems(type,sortingTable)
     if type == ct.sortingItemType.Name then
         table.sort(sortingTable, function (m, n) return m.name < n.name end )
@@ -1127,7 +1125,7 @@ function ProcessWarehouseCtrl:_getSortItems(type,sortingTable)
         end
     end
 end
---关闭面板时清空UI信息，以备其他模块调用
+--Clear UI information when closing the panel in case other modules call
 function ProcessWarehouseCtrl:deleteObjInfo()
     if not self.GoodsUnifyMgr.warehouseLuaTab then
         return;

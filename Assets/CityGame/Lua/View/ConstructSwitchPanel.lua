@@ -5,7 +5,7 @@ ConstructSwitchPanel = {};
 local this = ConstructSwitchPanel;
 
 
---启动事件--
+--Start event--
 function ConstructSwitchPanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
@@ -13,7 +13,7 @@ function ConstructSwitchPanel.Awake(obj)
     this.InitPanel();
 end
 
---初始化面板--
+--Initialization panel---
 function ConstructSwitchPanel.InitPanel()
     this.BtnNode=  transform:Find("BtnNode"):GetComponent("RectTransform");
     this.btn_confirm = transform:Find("BtnNode/confirmBtn");

@@ -9,7 +9,7 @@ function PlayerController:Start(gameObject )
 end
 
 function PlayerController:Update(gameObject)
-    --TODO:响应点击拖动，点击物体
+    --TODO:Click objects in response to click and drag
 
 end
 

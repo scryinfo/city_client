@@ -15,8 +15,8 @@
     using MessageLength = System.UInt16;
 
     /// <summary>
-    /// 网络模块
-    /// 处理连接、收发数据
+    /// Network module
+    /// Handle connections, send and receive data
     /// </summary>
     ///    
     public class NetworkInterface
@@ -42,7 +42,7 @@
         private float _connectionTimeOut = 8000;            
 #endif
 
-        //系统事件, 10000 服务器断开连接 
+        //System event, 10000 server disconnected
         public SYSEVENT _sysEvent = 0;
 
         public class ConnectState
@@ -156,7 +156,7 @@
         }
 
         /// <summary>
-        /// 在非主线程执行：连接服务器
+        /// Execute in non-main thread: connect to the server
         /// </summary>
         private void _asyncConnect(ConnectState state)
         {
@@ -173,7 +173,7 @@
         }
 
         /// <summary>
-        /// 在非主线程执行：连接服务器结果回调
+        /// Execution on non-main thread: connection server result callback
         /// </summary>
         private void _asyncConnectCB(IAsyncResult ar)
         {
@@ -201,7 +201,7 @@
             }
             if (_ConnectState.error != "Connect server succeed")
             {
-                //超时处理
+                //Timeout handling
                 close();
                 _ConnectState.error = "Connection TimeOut";
                 Event.fireIn("_onConnectionState", new object[] { _ConnectState });
@@ -252,7 +252,7 @@
             Dbg.DEBUG_MSG("connect to " + ip + ":" + port + " ...");
             connected = false;
 
-            // 先注册一个事件回调，该事件在当前线程触发
+            // First register an event callback, the event is triggered in the current thread
             Event.registerIn("_onConnectionState", this, "_onConnectionState");
 
             _connectDelegate = new AsyncConnectMethod(this._asyncConnect);

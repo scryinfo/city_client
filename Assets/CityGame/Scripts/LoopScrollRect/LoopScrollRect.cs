@@ -71,11 +71,11 @@ namespace UnityEngine.UI
         public float rubberScale = 1;
 
         /// <summary>
-        /// 首位item index
+        /// The first item index
         /// </summary>
         protected int itemTypeStart = 0;
         /// <summary>
-        /// 尾部Item index
+        /// Tail Item index
         /// </summary>
         protected int itemTypeEnd = 0;
 

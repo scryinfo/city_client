@@ -49,7 +49,7 @@ end
 function ResearchOpenBoxCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_OnReceiveOpenScienceBox",self.c_OnReceiveOpenScienceBox,self)
-    -- 监听生产线变化推送
+    -- Monitor production line change push
     Event.AddListener("c_OnReceiveGetFtyLineChangeInform",self.c_OnReceiveGetFtyLineChangeInform,self)
 
     ResearchOpenBoxPanel.leftTitleText.text = GetLanguage(28050026)
@@ -63,7 +63,7 @@ end
 function ResearchOpenBoxCtrl:Hide()
     UIPanel.Hide(self)
     Event.RemoveListener("c_OnReceiveOpenScienceBox",self.c_OnReceiveOpenScienceBox,self)
-    -- 移除监听生产线变化推送
+    -- Remove monitoring production line change push
     Event.RemoveListener("c_OnReceiveGetFtyLineChangeInform", self.c_OnReceiveGetFtyLineChangeInform, self)
     if self.researchEvaBoxItems then
         for _, v in ipairs(self.researchEvaBoxItems) do
@@ -73,18 +73,18 @@ function ResearchOpenBoxCtrl:Hide()
     end
     self.nowItem = nil
 end
--- 显示总数
+-- Show total
 function ResearchOpenBoxCtrl:_showTotalNum()
     ResearchOpenBoxPanel.totalNumText.text = "x" .. self.totalNum
 end
 
--- 初始化基本数据
+-- Initialize basic data
 function ResearchOpenBoxCtrl:_updateData()
     ResearchOpenBoxPanel.closeBtn.localScale = Vector3.zero
     ResearchOpenBoxPanel.researchMaterialItem.localScale = Vector3.zero
     ResearchOpenBoxPanel.middleRoot.localScale = Vector3.one
     
-    -- 根据useType生成不用的效果
+    -- Generate unused effects based on useType
     self.totalNum = 0
     self.openBoxsData = ct.deepCopy(self.m_data.boxs)
     if not self.researchEvaBoxItems then
@@ -121,7 +121,7 @@ function ResearchOpenBoxCtrl:_updateData()
 
     self:_showTotalNum()
 end
--------------------------------------按钮点击事件-------------------------------------
+-------------------------------------Button click event-------------------------------------
 function ResearchOpenBoxCtrl:OnBack(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()
@@ -129,7 +129,7 @@ end
 
 function ResearchOpenBoxCtrl:OnOpen(go)
     PlayMusEff(1002)
-    -- 调用ResearchInstituteModel，向服务器发送使用宝箱消息
+    -- Call ResearchInstituteModel to send a treasure chest message to the server
     local inputValue = ResearchOpenBoxPanel.inputField.text
     DataManager.DetailModelRpcNoRet(go.m_data.insId, 'm_ReqOpenScienceBox', go.nowItem.data.key.id, tonumber(inputValue))
     --UIPanel.ClosePage()
@@ -137,7 +137,7 @@ end
 
 function ResearchOpenBoxCtrl:OnSubtract(go)
     PlayMusEff(1002)
-    -- 调用ResearchInstituteModel，向服务器发送使用宝箱消息
+    -- Call ResearchInstituteModel to send a treasure chest message to the server
     local inputValue = tonumber(ResearchOpenBoxPanel.inputField.text)
     if inputValue <= 1 then
         return
@@ -148,7 +148,7 @@ end
 
 function ResearchOpenBoxCtrl:OnAdd(go)
     PlayMusEff(1002)
-    -- 调用ResearchInstituteModel，向服务器发送使用宝箱消息
+    -- Call ResearchInstituteModel to send a treasure chest message to the server
     local inputValue = tonumber(ResearchOpenBoxPanel.inputField.text)
     if inputValue >= go.nowItem.data.n then
         return
@@ -174,7 +174,7 @@ function ResearchOpenBoxCtrl:OnClose(go)
         end
     end
 end
--------------------------------------网络回调-------------------------------------
+-------------------------------------Network callback-------------------------------------
 function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)
     ResearchOpenBoxPanel.closeBtn.localScale = Vector3.one
     ResearchOpenBoxPanel.researchMaterialItem.localScale = Vector3.one
@@ -202,7 +202,7 @@ function ResearchOpenBoxCtrl:c_OnReceiveOpenScienceBox(scienceBoxACK)
     end
 end
 
--- 生产线变化推送
+-- Production line change push
 function ResearchOpenBoxCtrl:c_OnReceiveGetFtyLineChangeInform(data)
     self.totalNum = self.totalNum + data.produceNum
     self:_showTotalNum()

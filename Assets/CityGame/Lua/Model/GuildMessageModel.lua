@@ -12,7 +12,7 @@ function GuildMessageModel:initialize(insId)
 end
 
 function GuildMessageModel:OnCreate()
-    -- 网络回调注册
+    -- Network callback registration
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","noticeAdd","gs.SocietyNotice", self.n_MessageAdd, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","exitSociety","gs.ByteBool", self.n_ExitSociety, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delJoinReq","gs.JoinReq", self.n_DelJoinReq, self)

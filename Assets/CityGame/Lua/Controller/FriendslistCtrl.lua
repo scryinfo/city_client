@@ -20,18 +20,18 @@ end
 function FriendslistCtrl:Awake(go)
     FriendslistCtrl.static.friendsListItemTab = {}
     ct.log("tina_w7_friends", "FriendslistCtrl:Awake")
-    self.friendsSource = UnityEngine.UI.LoopScrollDataSource.New()  --好友
+    self.friendsSource = UnityEngine.UI.LoopScrollDataSource.New()  
     self.friendsSource.mProvideData = FriendslistCtrl.static.FriendsProvideData
     self.friendsSource.mClearData = FriendslistCtrl.static.FriendsClearData
 end
 
 function FriendslistCtrl:OnCreate(go)
     ct.log("tina_w7_friends", "FriendslistCtrl:OnCreate")
-    --调用基类方法处理实例的数据
+    --Call the base class method to process the instance data
     UIPanel.OnCreate(self, go)
     FriendslistCtrl.static.isAddfriends = false
 
-    --添加UI事件点击监听
+    --Add UI event click listener
     FriendslistCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
     FriendslistCtrl.luaBehaviour:AddClick(FriendslistPanel.backBtn, function ()
         PlayMusEff(1002)
@@ -41,20 +41,20 @@ function FriendslistCtrl:OnCreate(go)
     FriendslistCtrl.luaBehaviour:AddClick(FriendslistPanel.searchBtn, self.OnSearch, self)
 end
 
--- 注册监听事件
+-- Register to listen to events
 function FriendslistCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
 end
 
--- 刷新
+-- Refresh
 function FriendslistCtrl:Refresh()
     --self:_addListener()
     self:_initState()
 end
 
 function FriendslistCtrl:_addListener()
-    -- 监听Model层网络回调
+    --Listen to the model layer network callback
     Event.AddListener("c_OnReceiveSearchPlayerInfo", self.c_OnReceiveSearchPlayerInfo, self)
     Event.AddListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
     Event.AddListener("c_DeleteBlacklist", self.c_DeleteBlacklist, self)
@@ -71,18 +71,18 @@ function FriendslistCtrl:Hide()
 end
 
 function FriendslistCtrl:_removeListener()
-    -- 监听Model层网络回调
+    -- Listen to the model layer network callback
     Event.RemoveListener("c_OnReceiveSearchPlayerInfo", self.c_OnReceiveSearchPlayerInfo, self)
     Event.RemoveListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
     Event.RemoveListener("c_DeleteBlacklist", self.c_DeleteBlacklist, self)
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
 end
 
---初始首次进入所需数据
+--Required data for initial first entry
 function FriendslistCtrl:_initState()
     local type = self.m_data.type
     FriendslistCtrl.type = self.m_data.type
-    --好友界面数据刷新
+    --Friend interface data refresh
     FriendslistCtrl.friendInfo = {}
 
     if type == 2 then
@@ -126,7 +126,7 @@ function FriendslistCtrl:_initState()
             FriendslistPanel.panelNameText.text = GetLanguage(13040001) --"ADD NEW FRIENDS"
             FriendslistPanel.blacklistNumberImage:SetActive(false)
             FriendslistPanel.blacklistNumberText.text = ""
-            --显示和清空搜索框
+            --Display and clear the search box
             FriendslistPanel.searchInputField:SetActive(true)
             FriendslistPanel.searchInputField:GetComponent("InputField").text = ""
             FriendslistPanel.listScrollView.offsetMax = Vector2.New(0,-120)
@@ -157,12 +157,12 @@ function FriendslistCtrl:OnSearch(go)
     Event.Brocast("m_SearchPlayer", text)
 end
 
--- 设置空白的显示
+-- Set up a blank display
 function FriendslistCtrl:_showNullImage(isShow)
     FriendslistPanel.nullImage.localScale = isShow and Vector3.one or Vector3.zero
 end
 
--- 根据数据显示空白
+-- Show blank according to data
 function FriendslistCtrl:_showNullImageByData()
     if #FriendslistCtrl.friendInfo == 0 then
         self:_showNullImage(true)
@@ -193,7 +193,7 @@ function FriendslistCtrl:_showBlacklistNum()
     FriendslistPanel.blacklistNumberText.text = #blacklistNum > 0 and #blacklistNum or "0"
 end
 
--- 网络回调
+-- Network callback
 function FriendslistCtrl:c_OnReceiveSearchPlayerInfo(friendsData)
     if friendsData and friendsData.info then
         FriendslistCtrl.friendInfo = friendsData.info
@@ -209,7 +209,7 @@ function FriendslistCtrl:c_OnReceiveSearchPlayerInfo(friendsData)
 end
 
 function FriendslistCtrl:c_OnReceiveDeleteFriend(friendsId)
-    -- 删除数据
+    -- delete data
     for i, v in ipairs(FriendslistCtrl.friendInfo) do
         if v.id == friendsId.fId then
             table.remove(FriendslistCtrl.friendInfo, i)
@@ -217,11 +217,11 @@ function FriendslistCtrl:c_OnReceiveDeleteFriend(friendsId)
         end
     end
 
-    -- 刷新界面
+    --Refresh the interface
     self:_showNullImageByData()
     FriendslistPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendslistCtrl.friendInfo)
 
-    -- 删除好友的多语言提示
+    -- Multilingual prompt to delete friend
     if friendsId.id == DataManager.GetMyOwnerID() then
         Event.Brocast("SmallPop",GetLanguage(13020004),60)
     end

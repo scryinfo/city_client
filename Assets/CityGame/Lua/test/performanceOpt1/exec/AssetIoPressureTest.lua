@@ -5,30 +5,30 @@
 ---
 UnitTest.TestBlockStart()-------------------------------------------------------
 local typeof = tolua.typeof
---基本测试数据准备{
---目前的测试是1000个160*160贴图的资源IO测试
-local testcount = 1000  --资源加载数量
-local ResPathList = {}  --资源路径
+--Basic test data preparation{
+--The current test is a resource IO test of 1,000 160*160 stickers
+local testcount = 1000 -- number of resources loaded
+local ResPathList = {} -- resource path
 for i = 1, testcount do
-    ResPathList[i] = 'TempIcon/A'..i
+     ResPathList[i] ='TempIcon/A'..i
 end
 
-local ResPathListS = {}  --资源路径
+local ResPathListS = {} -- resource path
 for i = 1, testcount do
-    ResPathListS[i] = 'TempIcon/A'..i
+     ResPathListS[i] ='TempIcon/A'..i
 end
---基本测试数据准备}
+--Basic test data preparation}
 
---异步方式加载、卸载的内存测试,
+--Memory testing for asynchronous loading and unloading,
 --[[
-    测试说明：
-    1、 运行时只会使用这种方式加载
-    2、 由于是异步的需要使用timer来延迟卸载
-    3、 由于是异步的，所以只能用于测试资源加载的内存销毁情况，而不能测试资源加载的IO时延，
-        IO时延测试放在后续同步加载的测试分组 abel_w17_load_unload_s160_time 中
+     Test instruction:
+     1. It will only be loaded this way at runtime
+     2. Because it is asynchronous, you need to use the timer to delay uninstallation
+     3. Because it is asynchronous, it can only be used to test the memory destruction of resource loading, but not the IO delay of resource loading.
+         The IO latency test is placed in the synchronous loading test group abel_w17_load_unload_s160_time
 --]]
 
---异步加载测试
+-- Asynchronous loading test
 local testLoadFun = function(inBundlelist, inAssertlist,type)
     for i = 1, testcount do
         panelMgr:LoadPrefab_A(ResPathList[i], type, nil,function(self, obj ,ab)
@@ -39,7 +39,7 @@ local testLoadFun = function(inBundlelist, inAssertlist,type)
 end
 
 UnitTest.Exec("abel_w17_load_A_sprite_s160_mem", "abel_w17_load_A_sprite_s160_mem",  function ()
-    local bundlelist ={}        --存放bundle的表
+    local bundlelist ={}        --Table for storing bundles
     local assetlist ={}
 
     local timer0 = FrameTimer.New(function()
@@ -52,7 +52,7 @@ UnitTest.Exec("abel_w17_load_A_sprite_s160_mem", "abel_w17_load_A_sprite_s160_me
 end)
 
 UnitTest.Exec("abel_w17_load_A_texture_s160_mem", "abel_w17_load_A_texture_s160_mem",  function ()
-    local bundlelist ={}        --存放bundle的表
+    local bundlelist ={}        --Table for storing bundles
     local assetlist ={}
 
     local timer0 = FrameTimer.New(function()
@@ -64,16 +64,16 @@ UnitTest.Exec("abel_w17_load_A_texture_s160_mem", "abel_w17_load_A_texture_s160_
 end)
 
 UnitTest.Exec("abel_w17_load_A_unload_force_s160_mem", "abel_w17_load_A_unload_force_s160_mem",  function ()
-    local bundlelist ={}        --存放bundle的表
+    local bundlelist ={}        --Table for storing bundles
     local assetlist ={}
-    -- unloadAllLoadedObjects 方式卸载测试
+    -- unloadAllLoadedObjects Way to uninstall test
     local TestUnLoadFun_force = function(reslist )
         ct.log('abel_w17_load_A_unload_force_s160_mem','[testUnLoadFun] #reslist = '..#reslist)
         for k,v in pairs(reslist ) do
             UnityEngine.AssetBundle.Unload(v,true)
             v = nil
         end
-        --如果 unloadAllLoadedObjects 为true，那么 bundle 和 asset 都可以卸载掉
+        --If unloadAllLoadedObjects is true, then both bundle and asset can be unloaded
     end
 
     local timer0 = FrameTimer.New(function()
@@ -92,9 +92,9 @@ UnitTest.Exec("abel_w17_load_A_unload_force_s160_mem", "abel_w17_load_A_unload_f
 end)
 
 UnitTest.Exec("abel_w17_load_AS_unload_No_force_s160_mem", "abel_w17_load_AS_unload_No_force_s160_mem",  function ()
-    local bundlelist ={}        --存放bundle的表
-    local assetlist ={}     --存放asset的表
-    -- 非unloadAllLoadedObjects 方式卸载测试
+    local bundlelist ={}        --Table for storing bundles
+    local assetlist ={}     --Table for storing assets
+    -- Non-unloadAllLoadedObjects unload test
     local TestUnLoadFun_No_Force = function(reslist )
         ct.log('abel_w17_load_AS_unload_No_force_s160_mem','[TestUnLoadFun_No_Force] #reslist = '..#reslist)
         for k,v in pairs(reslist ) do
@@ -123,157 +123,157 @@ UnitTest.Exec("abel_w17_load_AS_unload_No_force_s160_mem", "abel_w17_load_AS_unl
     end, 10, 0)
     timer0:Start()
 
-    --测试结果
-    --如果 unloadAllLoadedObjects 为true，那么 bundle 和 asset 都可以卸载掉
-    --如果 unloadAllLoadedObjects 为false，那么 bundle 可以卸载，但是加载到内存的 asset 不能被清理掉
-    --那么究竟是哪儿还在引用这些 asset ？
+    --Test Results
+    --If unloadAllLoadedObjects is true, then both bundle and asset can be unloaded
+    --If unloadAllLoadedObjects is false, then the bundle can be unloaded, but the asset loaded into memory cannot be cleared
+    --So where are these assets still being referenced?
     --[[
-    原因找到：
-        原来是因为 panelMgr:LoadPrefab_A(ResPathList[i], ptype, nil,function(self, obj ,ab)
-        ptype 为 Sprite ,传入这个类型，实际上相当于先 load 了 asset ，然后创建了引用该资源的 Sprite
-        也就是说，  GameObject.DestroyImmediate(v, true) 实际上只销毁了 Sprite ，并没有销毁 asset
+    Reason found:
+        It turned out to be because panelMgr:LoadPrefab_A(ResPathList[i], ptype, nil,function(self, obj ,ab)
+        ptype is Sprite, passing in this type is actually equivalent to loading the asset first, and then creating a Sprite that references the resource
+        In other words, GameObject.DestroyImmediate(v, true) actually only destroyed the Sprite, and did not destroy the asset
     --]]
 end)
 
---同步方式加载、卸载的内存测试, 运行时不会使用这种方式加载，但是，这个测试可以用来明确加载不同尺寸的贴图的速度
+--Synchronous loading and unloading memory test, this method will not be used to load at runtime, but this test can be used to specify the speed of loading different size textures
 --[[
-    需要提供自定义的加载接口，要满足：
-    1、 符合我们项目资源和包的命名约定
-            1、 bundle名字为：
-                1、 相对路径（相对 view 目录，开头没有'/'）中'/'转为'_'
-                2、 扩展名为' .unity3d'
-            2、 资源名文件名，不带路径和扩展名
-    2、 加载bundle
-    3、加载对应资源
-    * 注意
-        * 2、3步需要扩展一个单独的接口， 类似 panelMgr:LoadPrefab_S
-        * 这个测试需要比对尺寸128和160的加载时间
+    Need to provide a custom loading interface, to meet:
+    1. Conform to the naming convention of our project resources and packages
+            1. The bundle name is:
+                1. In the relative path (relative to the view directory, there is no'/' at the beginning), the'/' is changed to'_'
+                2. The extension is'.unity3d'
+            2. Resource name and file name without path and extension
+    2. Load the bundle
+    3. Load the corresponding resources
+    * Note
+        * A separate interface needs to be extended in steps 2 and 3, similar to panelMgr:LoadPrefab_S
+        * This test requires comparison of loading times of sizes 128 and 160
 --]]
-UnitTest.Exec("abel_w17_load_S_s160_n1000_time", "abel_w17_load_S_s160_n1000_time",  function ()
-    local assetlist ={}     --存放asset的表
-    --异步加载测试
+UnitTest.Exec("abel_w17_load_S_s160_n1000_time", "abel_w17_load_S_s160_n1000_time", function ()
+    local assetlist ={}--table for storing assets
+    -- Asynchronous loading test
     local testLoadFun_S = function(reslist,type)
         ct.log('abel_w17_load_S_s160_n1000_time','[testLoadFun_S] #reslist = '..#reslist)
         for i = 1, testcount do
-            --注意这里返回的值包括两个数据： asset, bundle
+            --Note that the value returned here includes two data: asset, bundle
             reslist[#reslist+1] = resMgr:LoadRes_S(ResPathListS[i], type)
         end
     end
 
-    --尺寸128的测试
+    --Size 128 test
 
-    --尺寸160的测试
-    --加载 sprite
-    collectgarbage("collect")
-    local t1 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n1000_time","[Sprite同步加载的时间测试]", function()
-        testLoadFun_S(assetlist,ct.getType(UnityEngine.Sprite))
-    end)
-    ct.log('abel_w17_load_S_s160_n1000_time','1000个160大小的Sprite同步加载的时间 = '..t1)
+     -- Test of size 160
+     --Load sprite
+     collectgarbage("collect")
+     local t1 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n1000_time","[Sprite synchronous load time test]", function()
+         testLoadFun_S(assetlist,ct.getType(UnityEngine.Sprite))
+     end)
+     ct.log('abel_w17_load_S_s160_n1000_time','Time for the simultaneous loading of 1000 160-sized Sprites ='..t1)
 
-    --卸载
-    for k,v in pairs(assetlist ) do
-        UnityEngine.AssetBundle.Unload(v._bunldle,true)
-        v = nil
-    end
-    assetlist = {}
-    collectgarbage("collect")
+     --Uninstall
+     for k,v in pairs(assetlist) do
+         UnityEngine.AssetBundle.Unload(v._bunldle,true)
+         v = nil
+     end
+     assetlist = {}
+     collectgarbage("collect")
 
-    --加载 texture
-    local t2 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n1000_time","[Texture同步加载的时间测试]", function()
-        testLoadFun_S(assetlist, nil)
-    end)
-    ct.log('abel_w17_load_S_s160_n1000_time','1000个160大小的Texture同步加载的时间 = '..t2)
-    collectgarbage("collect")
+     --Load texture
+     local t2 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n1000_time","[Texture synchronous load time test]", function()
+         testLoadFun_S(assetlist, nil)
+     end)
+     ct.log('abel_w17_load_S_s160_n1000_time','Time to load synchronously 1000 textures of 160 size ='..t2)
+     collectgarbage("collect")
 
-    --[[
-    测试结果
+     --[[
+     Test Results
     pc
         [abel_w17_load_S_s160_n1000_time]1000个160大小的Sprite同步加载的时间 = 20.255
         [abel_w17_load_S_s160_n1000_time]1000个160大小的Texture同步加载的时间 = 19.454
-        *  性能差别可以忽略不计
-        *  pc 上每帧加载 33.33 / 20.255 = 1.65
-    设备
-        [abel_w17_load_S_s160_n1000_time]1000个160大小的Sprite同步加载的时间 = 4.293647
-        [abel_w17_load_S_s160_n1000_time]1000个160大小的Texture同步加载的时间 = 2.265139
-        *  性能差别比较明显，近1倍， 不过一般情况下，滑动滚动条时，加载3屏，一屏10个算，那么一次加载10个，那么加载时间为
-        *  设备上每帧加载  33.33 / 4.293647 = 7.76
+        *  The performance difference is negligible
+        * Loading 33.33 / 20.255 = 1.65 per frame on pc
+    equipment
+        [abel_w17_load_S_s160_n1000_time] The time for 1000 160 Sprites to load simultaneously = 4.293647
+        [abel_w17_load_S_s160_n1000_time] The time for 1000 textures of 160 size to load synchronously = 2.265139
+        * The performance difference is obvious, nearly 1 times, but under normal circumstances, when sliding the scroll bar, load 3 screens, 10 screens per screen, then load 10 at a time, then the loading time is
+        * 33.33 / 4.293647 = 7.76 loaded every frame on the device
     --]]
 end)
 
---同步下周30张Icon
-UnitTest.Exec("abel_w17_load_S_s160_n30_time", "abel_w17_load_S_s160_n30_time",  function ()
+-- Sync 30 icons next week
+UnitTest.Exec("abel_w17_load_S_s160_n30_time", "abel_w17_load_S_s160_n30_time", function ()
     local testcount = 30
-    local assetlist ={}     --存放asset的表
-    --异步加载测试
+    local assetlist ={}--table for storing assets
+    -- Asynchronous loading test
     local testLoadFun_S = function(reslist,type)
         ct.log('abel_w17_load_S_s160_n30_time','[testLoadFun_S] #reslist = '..#reslist)
         for i = 1, testcount do
-            --注意这里返回的值包括两个数据： asset, bundle
+            --Note that the value returned here includes two data: asset, bundle
             reslist[#reslist+1] = resMgr:LoadRes_S(ResPathListS[i], type)
         end
     end
 
-    --尺寸128的测试
+    --Test of size 128
 
-    --尺寸160的测试
-    --加载 sprite
+    -- Test of size 160
+    --Load sprite
     collectgarbage("collect")
     local t1 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n30_time","[Sprite同步加载的时间测试]", function()
         testLoadFun_S(assetlist,ct.getType(UnityEngine.Sprite))
     end)
     ct.log('abel_w17_load_S_s160_n30_time','30个160大小的Sprite同步加载的时间 = '..t1)
 
-    --卸载
-    for k,v in pairs(assetlist ) do
+    --Uninstall
+     for k,v in pairs(assetlist) do
         UnityEngine.AssetBundle.Unload(v._bunldle,true)
         v = nil
     end
     assetlist = {}
     collectgarbage("collect")
 
-    --加载 texture
-    local t2 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n30_time","[Texture同步加载的时间测试]", function()
+    --Load texture
+    local t2 = UnitTest.PerformanceTest("abel_w17_load_S_s160_n30_time","[Texture synchronous loading time test]", function()
         testLoadFun_S(assetlist, nil)
     end)
-    ct.log('abel_w17_load_S_s160_n30_time','30个160大小的Texture同步加载的时间 = '..t2)
+    ct.log('abel_w17_load_S_s160_n30_time','Time to load synchronously 30 Textures of 160 size ='..t2)
     collectgarbage("collect")
 
     --[[
-    测试结果
+    Test Results
     pc
-        ......
-    设备
-        [abel_w17_load_S_s160_n30_time]30个160大小的Sprite同步加载的时间 = 0.227158
-        [abel_w17_load_S_s160_n30_time]30个160大小的Texture同步加载的时间 = 0.119937
-        *  性能差别比较明显，1倍
-        *  按一帧 0.03333 秒算， 同步加载 30 个 Sprite 要  0.227158/0.03333 = 6.8 , 将近7帧
-        *  异步会比这个快得多
+        ...
+    equipment
+        [abel_w17_load_S_s160_n30_time] The time for 30 160 sprites to load simultaneously = 0.227158
+        [abel_w17_load_S_s160_n30_time] The time for 30 160 Textures to load synchronously = 0.119937
+        * The performance difference is obvious, 1 times
+        * Based on one frame of 0.03333 seconds, it takes 0.227158/0.03333 = 6.8 to load 30 sprites synchronously, nearly 7 frames
+        * Asynchronous will be much faster than this
     --]]
 end)
 
---异步加载1000个160 icon 时间测试
+-- Asynchronously load 1000 160 icon time test
 UnitTest.Exec("abel_w17_load_A_s160_n1000_time", "abel_w17_load_A_s160_n1000_time",  function ()
-    --尺寸160的测试
-    local aTester = AsyncSequenceTester:new()
+    --Size 160 test
+     local aTester = AsyncSequenceTester:new()
 
-    --初始化测试数据
-    aTester.testcount = 1000
-    aTester.loadCount = 0
-    aTester.bundlelist = {}
-    aTester.assertlist = {}
-    aTester.startTime = 0
-    aTester.ResPathList = ResPathList
-    aTester.curPos = 1
-    aTester.testSquence = {}
+     -- Initialize test data
+     aTester.testcount = 1000
+     aTester.loadCount = 0
+     aTester.bundlelist = {}
+     aTester.assertlist = {}
+     aTester.startTime = 0
+     aTester.ResPathList = ResPathList
+     aTester.curPos = 1
+     aTester.testSquence = {}
 
-    --异步加载测试,带回调
-    local testLoadFunA = function(type, testData, cb)
-        for i = 1, testData.testcount do
-            panelMgr:LoadPrefab_A(testData.ResPathList[i], type, testData,cb)
-        end
-    end
+     -- Asynchronous load test with callback
+     local testLoadFunA = function(type, testData, cb)
+         for i = 1, testData.testcount do
+             panelMgr:LoadPrefab_A(testData.ResPathList[i], type, testData,cb)
+         end
+     end
 
-    --加载成功后的回调
+     --Callback after successful loading
     local callback = function (testData, obj , ab)
         testData.bundlelist[#testData.bundlelist +1] = ab
         testData.assertlist[#testData.assertlist] = obj
@@ -282,7 +282,7 @@ UnitTest.Exec("abel_w17_load_A_s160_n1000_time", "abel_w17_load_A_s160_n1000_tim
             local costTime = os.clock() - testData.startTime
             ct.log('abel_w17_load_A_s160_n1000_time',testData:getCurSeq().msg ..costTime)
 
-            --卸载
+            --Uninstall
 
             local pos = #testData.bundlelist
             while pos > 0 do
@@ -310,31 +310,31 @@ UnitTest.Exec("abel_w17_load_A_s160_n1000_time", "abel_w17_load_A_s160_n1000_tim
     aTester.testSquence[1] = { fun = testLoadFunA, type = nil, cb = callback, msg = '1000个160大小的 Texture 异步加载的时间 ='}
     aTester.testSquence[2] = { fun = testLoadFunA, type = ct.getType(UnityEngine.Sprite), cb = callback, msg = '1000个160大小的 Sprite 异步加载的时间 = '}
 
-    --开始执行异步测试序列
+    --Start executing asynchronous test sequence
     collectgarbage("collect")
     aTester:excute()
-    --尺寸128的测试
+    --Test of size 128
     --[[
-    测试结果
+    Test Results
     pc
-        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Texture 异步加载的时间 =2.2260000000001
-        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Sprite 异步加载的时间 = 2.3319999999999
-        *  性能差别比不大, 平均每帧可以加载 33.33/2.332 = 14.29 个
-    设备
-        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Texture 异步加载的时间 =6.757779
-        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Sprite 异步加载的时间 = 6.006067
-        *  设备上 Sprite 比 Texture 加载的时间还短
-            * 这个结论与同步加载的结论一致？
-        * 平均每帧可以加载 33.33/6.006067 = 5.555 个（texture 33.33/6.757779 = 4.932 个 ）
-        * 比对同步加载
-            [abel_w17_load_S_s160_n1000_time]1000个160大小的Texture同步加载的时间 = 2.265139
-            [abel_w17_load_S_s160_n1000_time]1000个160大小的Sprite同步加载的时间 = 4.293647
-            * Sprite异步加载总的耗时与同步加载差不多；texture 同步加载时间会少不少
-            * 同步加载期间会导致程序卡顿
+        [abel_w17_load_A_s160_n1000_time] Asynchronous loading time of 1000 textures of 160 size = 2.2260000000001
+        [abel_w17_load_A_s160_n1000_time] The time for asynchronous loading of 1000 Sprites of 160 size = 2.3319999999999
+        * The performance difference ratio is not large, the average can load 33.33/2.332 = 14.29 per frame
+    equipment
+        [abel_w17_load_A_s160_n1000_time] Asynchronous loading time of 1000 textures of 160 size = 6.757779
+        [abel_w17_load_A_s160_n1000_time] The time for asynchronous loading of 1000 160-sized Sprites = 6.006067
+        * Sprite on the device takes less time to load than Texture
+            * This conclusion is consistent with the conclusion of synchronous loading?
+        * On average, 33.33/6.006067 = 5.555 can be loaded per frame (texture 33.33/6.757779 = 4.932)
+        * Compare synchronous loading
+            [abel_w17_load_S_s160_n1000_time] The time for 1000 textures of 160 size to load synchronously = 2.265139
+            [abel_w17_load_S_s160_n1000_time] The time for 1000 160 Sprites to load simultaneously = 4.293647
+            * Sprite asynchronous loading takes about the same time as synchronous loading; texture synchronous loading time will be much less
+            * The program will freeze during synchronous loading
     --]]
 end)
 
---测试 Instantiate 及对应 destory 的性能开销
+--Test the performance overhead of Instantiate and the corresponding destory
 UnitTest.Exec("abel_w17_Instantiate_destory_s160_n1000", "abel_w17_Instantiate_destory_s160_n1000",  function ()
     --local resTexture = resMgr:LoadRes_S(ResPathListS[1], LuaHelper.GetType("UnityEngine.Texture2D"))
     --local resTexture = resMgr:LoadRes_S(ResPathListS[1], LuaHelper.GetType("UnityEngine_Texture2DWrap"))
@@ -343,24 +343,24 @@ UnitTest.Exec("abel_w17_Instantiate_destory_s160_n1000", "abel_w17_Instantiate_d
 
     local resTexture = resMgr:LoadRes_S(ResPathListS[1], ct.getType(UnityEngine.Texture2D))
     --[[
-    --这里设置贴图资源为 Readable ,否则 Instantiate 会失败，提示为 Instantiating a non-readable texture is not allowed!
-    --参考 https://www.cnblogs.com/weigx/p/7300586.html
-    --]]
-    --resTexture._asset:Apply(true,true)
-    local resSprite = resMgr:LoadRes_S(ResPathListS[1], ct.getType(UnityEngine.Sprite))
-    local insList_texture = {}
-    local insList_sprite = {}
+    --Set the texture resource to Readable here, otherwise Instantiate will fail, and the prompt is Instantiating a non-readable texture is not allowed!
+     --Reference https://www.cnblogs.com/weigx/p/7300586.html
+     --]]
+     --resTexture._asset:Apply(true,true)
+     local resSprite = resMgr:LoadRes_S(ResPathListS[1], ct.getType(UnityEngine.Sprite))
+     local insList_texture = {}
+     local insList_sprite = {}
 
     ct.log('abel_w17_Instantiate_destory_s160_n1000','testcount = '..testcount)
 
-    --实例化1000张Sprite
-    local textureIns = UnitTest.PerformanceTest("abel_w17_Instantiate_destory_s160_n1000","[1000 张 Sprite Instantiate 的时间]", function()
-        for i = 1, testcount do
-            insList_sprite[#insList_sprite+1] = UnityEngine.GameObject.Instantiate(resSprite._asset);
-        end
-    end)
+     -- Instantiate 1000 Sprites
+     local textureIns = UnitTest.PerformanceTest("abel_w17_Instantiate_destory_s160_n1000","[Time of 1000 Sprite Instantiate]", function()
+         for i = 1, testcount do
+             insList_sprite[#insList_sprite+1] = UnityEngine.GameObject.Instantiate(resSprite._asset);
+         end
+     end)
 
-    --销毁1000张Sprete的实例
+     --Destroy 1,000 instances of Sprete
     local textureIns = UnitTest.PerformanceTest("abel_w17_Instantiate_destory_s160_n1000","[1000 张 Sprite 销毁 的时间]", function()
         for i, v in pairs(insList_sprite) do
             GameObject.DestroyImmediate(v, true)
@@ -369,27 +369,27 @@ UnitTest.Exec("abel_w17_Instantiate_destory_s160_n1000", "abel_w17_Instantiate_d
     end)
 
     --[[
-    测试结果
-    [abel_w17_Instantiate_destory_s160_n1000][1000 张 Sprite Instantiate 的时间]        执行时间:     0.014999999999873  一帧 Instantiate 2.22 个
-        * 这个数据还只是简单数据的实例化，复杂数据可能会更耗时，所以 Instantiate 一定要慎用
-    [abel_w17_Instantiate_destory_s160_n1000][1000 张 Sprite 销毁 的时间]               执行时间:     0.0029999999997017 一帧销毁 11.11 个
+    Test Results
+    [abel_w17_Instantiate_destory_s160_n1000][Time of 1000 sheets of Sprite Instantiate] Execution time: 0.014999999999873 One frame of Instantiate 2.22
+        * This data is only the instantiation of simple data, complex data may be more time-consuming, so Instantiate must be used with caution
+    [abel_w17_Instantiate_destory_s160_n1000] [Time for destruction of 1000 Sprites] Execution time: 0.0029999999997017 11.11 destroyed in one frame
     --]]
 end)
 
---滚动条同步加载prefab资源对比测试
-UnitTest.Exec("abel_w17_load_s128_n400_Sync", "abel_w17_load_s128_n400_Sync",  function ()
-    --测试数据准备{
+--Comparative test of synchronous loading of prefab resources with scroll bars
+UnitTest.Exec("abel_w17_load_s128_n400_Sync", "abel_w17_load_s128_n400_Sync", function ()
+    --Test data preparation{
     local testcount = 10
     local ResPathList = {}
     for i = 1, testcount do
-        ResPathList[i] = 'View/TempIcon/A'..i
+        ResPathList[i] ='View/TempIcon/A'..i
     end
-    --测试数据准备}
-    local exectime1 = UnitTest.PerformanceTest("abel_w17_load_s128_n400_Sync","[同步加载400个尺寸为128的 Icon: Resource.Load]", function()
-        local prefab = UnityEngine.Resources.Load( 'View/TempIcon/Image');
+    --Test data preparation}
+    local exectime1 = UnitTest.PerformanceTest("abel_w17_load_s128_n400_Sync","[Synchronously load 400 icons of size 128: Resource.Load]", function()
+        local prefab = UnityEngine.Resources.Load('View/TempIcon/Image');
 
         for i = 1, testcount do
-            --加载 prefab 资源
+            --Load prefab resources
             local resLoad = UnityEngine.Resources.Load(ResPathList[i])
             local go = UnityEngine.GameObject.Instantiate(resLoad)
             --go.transform:GetComponent("Image").sprite = resLoad
@@ -404,11 +404,11 @@ UnitTest.Exec("abel_w17_load_s128_n400_Sync", "abel_w17_load_s128_n400_Sync",  f
     ct.OpenCtrl('TestSliderCtrl',ResPathList)
 end)
 
----AOI测试---------------------------------------------------------------------------------------------------------------------------
---AOI异步加载时间测试
-UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_ASync",  function ()
+---AOI test------------------------------------------------ -------------------------------------------------- -------------------------
+--AOI asynchronous load time test
+UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_ASync", function ()
     local aTester = AsyncSequenceTester:new()
-    --初始化测试数据
+    -- Initialize test data
     aTester.testcount = 1
     aTester.loadCount = 0
     aTester.bundlelist = {}
@@ -423,7 +423,7 @@ UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_AS
         self.startTime = 0
     end
 
-    --异步加载测试,带回调
+    --Asynchronous load test with callback
     local testLoadFunA = function(tester, curSeq)
         for i = 1, tester.testcount do
             panelMgr:LoadPrefab_A(curSeq.path, curSeq.type, tester,curSeq.cb)
@@ -440,7 +440,7 @@ UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_AS
         ct.log('abel_w17_Aoi_load_building_ASync',testData:getCurSeq().msg ..costTime)
     end
 
-    --加载成功后的回调
+    --Callback after successful loading
     local callback = function (testData, obj , ab)
         testData.testSquence[testData.curPos].bundle = ab
         testData.testSquence[testData.curPos].asset = obj
@@ -449,7 +449,7 @@ UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_AS
             local costTime = os.clock() - testData.startTime
             ct.log('abel_w17_Aoi_load_building_ASync',testData:getCurSeq().msg ..costTime)
 
-            --卸载
+            --Uninstall
             --local pos = #testData.bundlelist
             --while pos > 0 do
             --    if testData.bundlelist[pos] ~= nil then
@@ -484,59 +484,59 @@ UnitTest.Exec("abel_w17_Aoi_load_building_ASync", "abel_w17_Aoi_load_building_AS
     --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/University',msg = 'University 异步加载的时间 ='}
     --aTester.testSquence[#aTester.testSquence+1] = { fun = testLoadFunA, type = ct.getType(UnityEngine.GameObject), cb = callback, path = 'Build/Airport',msg = 'Airport 异步加载的时间 ='}
     
-    --开始执行异步测试序列
-    collectgarbage("collect")
-    aTester:excute()
-    --[[
-    测试结果
-    --加载时间
+    --Start executing asynchronous test sequence
+     collectgarbage("collect")
+     aTester:excute()
+     --[[
+     Test Results
+     --Loading time
         PC
-            [abel_w17_Aoi_load_building_ASync]Factory_3x3_Build 异步加载的时间 =0.372      --第一个的时间貌似都偏长
-            [abel_w17_Aoi_load_building_ASync]CentralBuilding_Build 异步加载的时间 =0.065000000000001
-            [abel_w17_Aoi_load_building_ASync]MaterialBuilding_3x3_Build 异步加载的时间 =0.096999999999753
-            [abel_w17_Aoi_load_building_ASync]Park_3x3_Build 异步加载的时间 =0.065999999999804
-            [abel_w17_Aoi_load_building_ASync]SuperMarket_3x3_Build 异步加载的时间 =0.095999999999549
-            [abel_w17_Aoi_load_building_ASync]Techo_3x3_Build 异步加载的时间 =0.097999999999956
-            [abel_w17_Aoi_load_building_ASync]WareHouse_3x3_Build 异步加载的时间 =0.096999999999753
-        设备
-            [abel_w17_Aoi_load_building_ASync]Factory_3x3_Build 异步加载的时间 =0.515782   --第一个的时间貌似都偏长
-            [abel_w17_Aoi_load_building_ASync]CentralBuilding_Build 异步加载的时间 =0.330709
-            [abel_w17_Aoi_load_building_ASync]MaterialBuilding_3x3_Build 异步加载的时间 =0.308198
-            [abel_w17_Aoi_load_building_ASync]Park_3x3_Build 异步加载的时间 =0.232529
-            [abel_w17_Aoi_load_building_ASync]SuperMarket_3x3_Build 异步加载的时间 =0.307951
-            [abel_w17_Aoi_load_building_ASync]Techo_3x3_Build 异步加载的时间 =0.293312
-            [abel_w17_Aoi_load_building_ASync]WareHouse_3x3_Build 异步加载的时间 =0.341899
-            加载一个建筑大概 0.330709/0.0333333333333333 = 9.92127000000001 左右， 假设建筑类型10个，加载所有建筑要要   0.33*10 = 3.3秒
-     --内存占用
+            [abel_w17_Aoi_load_building_ASync] Factory_3x3_Build asynchronous loading time = 0.372 - the first one seems to be too long
+            [abel_w17_Aoi_load_building_ASync] CentralBuilding_Build asynchronous loading time =0.065000000000001
+            [abel_w17_Aoi_load_building_ASync] MaterialBuilding_3x3_Build Asynchronous loading time = 0.096999999999753
+            [abel_w17_Aoi_load_building_ASync]Park_3x3_Build asynchronous loading time =0.065999999999804
+            [abel_w17_Aoi_load_building_ASync] SuperMarket_3x3_Build asynchronous loading time =0.095999999999549
+            [abel_w17_Aoi_load_building_ASync] Time for Techo_3x3_Build to load asynchronously = 0.097999999999956
+            [abel_w17_Aoi_load_building_ASync] WareHouse_3x3_Build Asynchronous loading time = 0.096999999999753
+        equipment
+            [abel_w17_Aoi_load_building_ASync] Factory_3x3_Build asynchronous loading time = 0.515782 - the first time seems to be too long
+            [abel_w17_Aoi_load_building_ASync] CentralBuilding_Build asynchronous loading time = 0.330709
+            [abel_w17_Aoi_load_building_ASync]MaterialBuilding_3x3_Build Asynchronous loading time=0.308198
+            [abel_w17_Aoi_load_building_ASync] Park_3x3_Build asynchronous loading time = 0.232529
+            [abel_w17_Aoi_load_building_ASync] SuperMarket_3x3_Build asynchronous loading time = 0.307951
+            [abel_w17_Aoi_load_building_ASync] Time for Techo_3x3_Build to load asynchronously = 0.293312
+            [abel_w17_Aoi_load_building_ASync] WareHouse_3x3_Build Asynchronous loading time = 0.341899
+            It takes about 0.330709/0.0333333333333333 = 9.92127000000001 to load a building. Assuming 10 building types, it takes 0.33*10 = 3.3 seconds to load all buildings
+     --Memory usage
         PC
             texture momory 32M
             Total Allocated
-                打开测试分组 249帧 138.5 M
-                关闭测试分组 249帧 123.8 M
-                测试分配的内存 138.5 - 123.8 = 14.7 M
-        设备
-            texture memory 	7.7M
-                * 7个建筑平均每个1.1M
+                Open test group 249 frames 138.5 M
+                Close test group 249 frames 123.8 M
+                Test allocated memory 138.5-123.8 = 14.7 M
+        equipment
+            texture memory 7.7M
+                * 7 buildings average 1.1M each
             Total Allocated
-                打开测试分组 122 帧 36.7 M
-                关闭测试分组 122 帧 27.7 M
-                测试分配的内存 36.7 - 27.7 = 9 M
-    --卸载
+                Open test group 122 frames 36.7 M
+                Close test packet 122 frames 27.7 M
+                Test allocated memory 36.7-27.7 = 9 M
+    --Uninstall
         PC
-            [abel_w17_Aoi_load_building_ASync]unloadFun 卸载所有建筑的耗时 =0.020000000000437
-       设备
-            [abel_w17_Aoi_load_building_ASync]unloadFun 卸载所有建筑的耗时 =0.066083000000001
-            * 0.0333333333333333秒一帧，那么2帧可以完全卸载
-    --结论
-        在设备上所有建筑加载到内存也就 8、9M，内存负担不大；而建筑加载的时间成本很高，单个平均在 0.3 秒左右，可以肯定地说是不能在运行时加载的。
-        所以建筑的加载策略应该是根据城市来预加载，并常驻内存； 卸载压力很小，可以不用考虑
+            [abel_w17_Aoi_load_building_ASync]unloadFun time to unload all buildings =0.020000000000437
+       equipment
+            [abel_w17_Aoi_load_building_ASync]unloadFun time to unload all buildings =0.066083000000001
+            * 0.0333333333333333 seconds per frame, then 2 frames can be completely unloaded
+    --in conclusion
+        All buildings on the device are loaded into memory at 8 or 9M, and the memory burden is not large; while the time cost of building loading is high, the average of a single is about 0.3 seconds, it can be said that it cannot be loaded at runtime.
+        Therefore, the loading strategy of the building should be pre-loaded according to the city and resident in memory; the unloading pressure is very small, you don’t need to consider
     --]]
 end)
 
---AOI 9屏建筑实例化时间及内存测试
-UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid",  function ()
+--AOI 9-screen building instantiation time and memory test
+UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid", function ()
     local aTester = AsyncSequenceTester:new()
-    --初始化测试数据
+    -- Initialize test data
     aTester.testcount = 1
     aTester.loadCount = 0
     aTester.startTime = 0
@@ -549,7 +549,7 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     aTester.resetData = function(self)
         self.startTime = 0
     end
-    --数据准备
+    --data preparation
     local ResPathListS = {}
     ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Root'
     ResPathListS[#ResPathListS+1] = 'Build/Factory_3x3_Root'
@@ -562,7 +562,7 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     --ResPathListS[#ResPathListS+1] = 'Build/WareHouse_3x3_Build'
 
     aTester.ResPathList = ResPathListS
-    --数据准备
+    --data preparation
 
     local LoadTestRes = function(tester)
         for i = 1, #tester.ResPathList do
@@ -573,7 +573,7 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
         tester:getCurSeq().postfun(tester)
     end
 
-    --实例化方法
+    --Instantiation method
     local InstantiateFun = function(tester)
         --ct.log('abel_w17_Aoi_Instantiate_9Grid','[InstantiateFun]')
         local curSeq = tester:getCurSeq()
@@ -612,7 +612,7 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
         tester:getCurSeq().postfun(tester)
     end
 
-    --加载成功后的回调
+    --Callback after successful loading
     local callback = function (tester)
         local costTime = os.clock() - tester.startTime
         ct.log('abel_w17_Aoi_Instantiate_9Grid',tester:getCurSeq().msg ..costTime)
@@ -631,54 +631,54 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
     aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, prefun = aTester.resetData, postfun = callback, msg = '9屏1980实例的销毁耗时 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 0, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
 
-    --开始执行异步测试序列
+    --Start executing asynchronous test sequence
     collectgarbage("collect")
     aTester:excute()
     --[[
-    测试结果
-    --实例化时间
+    Test Results
+    - instantiation time
         PC
-            [abel_w17_Aoi_Instantiate_9Grid]1屏220个实例，9屏1980实例的实例化耗时 =4.391
-            [abel_w17_Aoi_Instantiate_9Grid]9屏1980实例的销毁耗时 =0.026999999999987
-            [abel_w17_Aoi_Instantiate_9Grid]1屏450个实例，9屏4050实例的实例化耗时 =4.269
-            [abel_w17_Aoi_Instantiate_9Grid]9屏4050实例的销毁耗时 =0.057999999999993
-            [abel_w17_Aoi_Instantiate_9Grid]所有(一共7个)建筑卸载的时间 =0.0010000000000048
-        设备
-            [abel_w17_Aoi_Instantiate_9Grid]加载所有建筑资源耗时 =0.698422
-            [abel_w17_Aoi_Instantiate_9Grid]1屏220个实例，9屏1980实例的实例化耗时 =13.512051
-            [abel_w17_Aoi_Instantiate_9Grid]9屏1980实例的销毁耗时 =0.33568
-            [abel_w17_Aoi_Instantiate_9Grid]1屏450个实例，9屏4050实例的实例化耗时 =24.404046
-            [abel_w17_Aoi_Instantiate_9Grid]9屏4050实例的销毁耗时 =0.57482
-            [abel_w17_Aoi_Instantiate_9Grid]所有(一共6个)建筑卸载的时间 =0.054358000000001
-     --内存占用
+            [abel_w17_Aoi_Instantiate_9Grid] 220 instances on 1 screen, time to instantiate instances on 1980 on 9 screens = 4.391
+            [abel_w17_Aoi_Instantiate_9Grid] Time to destroy 9-screen 1980 instance = 0.026999999999987
+            [abel_w17_Aoi_Instantiate_9Grid] 450 instances on 1 screen, time to instantiate 4050 instances on 9 screens = 4.269
+            [abel_w17_Aoi_Instantiate_9Grid]Destroy time of 9 screen 4050 instance =0.057999999999993
+            [abel_w17_Aoi_Instantiate_9Grid] Time for all (a total of 7) buildings to be unloaded = 0.0010000000000048
+        equipment
+            [abel_w17_Aoi_Instantiate_9Grid] Time to load all building resources = 0.698422
+            [abel_w17_Aoi_Instantiate_9Grid] 220 instances per screen, time to instantiate 1980 instances on 9 screens = 13.512051
+            [abel_w17_Aoi_Instantiate_9Grid] 9 screen 1980 instance destruction time = 0.33568
+            [abel_w17_Aoi_Instantiate_9Grid] 450 instances on 1 screen, time to instantiate 4050 instances on 9 screens = 24.404046
+            [abel_w17_Aoi_Instantiate_9Grid]Destroy time of 9 screen 4050 instance =0.57482
+            [abel_w17_Aoi_Instantiate_9Grid] Time for all (a total of 6) buildings to unload = 0.054358000000001
+     --Memory usage
         PC
             texture memory
-                打开测试分组
-                    第1帧     21.1 M
-                    第4帧     32.9 M
+                Open test group
+                    Frame 1 21.1 M
+                    Frame 4 32.9 M
             Total Allocated
-                打开测试分组
-                    第1帧     123.6 M
-                    第12帧    294.0 M
-                    第26帧    274.6 M
-                    第43帧    418.2 M
-                    第47帧之后    370.2 M
-                关闭测试分组 249帧 123.8 M
-                测试分配的内存 138.5 - 123.8 = 14.7 M
-        设备
+                Open test group
+                    Frame 1 123.6 M
+                    Frame 12 294.0 M
+                    Frame 26 274.6 M
+                    Frame 43 418.2 M
+                    370.2 M after frame 47
+                Close test group 249 frames 123.8 M
+                Test allocated memory 138.5-123.8 = 14.7 M
+        equipment
            texture memory
-                打开测试分组
-                    第1帧     21.1 M
-                    第4帧     32.9 M
+                Open test group
+                    Frame 1 21.1 M
+                    Frame 4 32.9 M
             Total Allocated
-                打开测试分组
-                    LoadTestRes 结束    30.9 M
-                    InstantiateFun 330 结束    55,1 M
-                    destroyInstances 结束  41.4 M
-                    InstantiateFun 670 结束 82.3 M
-                    destroyInstances 结束 52.5 M
-                    unloadFun 结束    43.5 M
-                    * 剩余 43.5 M
+                Open test group
+                    LoadTestRes end 30.9 M
+                    InstantiateFun 330 over 55,1 M
+                    destroyInstances end 41.4 M
+                    InstantiateFun 670 over 82.3 M
+                    destroyInstances end 52.5 M
+                    unloadFun end 43.5 M
+                    * 43.5 M remaining
                         Not Saved
                             RenderTexture 26.7
                                 TempBuffer 1 1080*2160 17.8 M
@@ -686,44 +686,44 @@ UnitTest.Exec("abel_w17_Aoi_Instantiate_9Grid", "abel_w17_Aoi_Instantiate_9Grid"
                         Other
                             GfxDevice
                                 GfxDeviceClient 8 M
-                关闭测试分组 122 帧 27.7 M
-                测试分配的内存 36.7 - 27.7 = 9 M
-    --卸载
+                Close test packet 122 frames 27.7 M
+                Test allocated memory 36.7-27.7 = 9 M
+    --Uninstall
         PC
-            [abel_w17_Aoi_load_building_ASync]unloadFun 卸载所有建筑的耗时 =0.020000000000437
-       设备
-            [abel_w17_Aoi_load_building_ASync]unloadFun 卸载所有建筑的耗时 =0.066083000000001
-            * 0.0333333333333333秒一帧，那么2帧可以完全卸载
-    --结论
-        在设备上所有建筑加载到内存也就 8、9M，内存负担不大；而建筑加载的时间成本很高，单个平均在 0.3 秒左右，可以肯定地说是不能在运行时加载的。
-        所以建筑的加载策略应该是根据城市来预加载，并常驻内存； 卸载压力很小，可以不用考虑
+            [abel_w17_Aoi_load_building_ASync]unloadFun time to unload all buildings =0.020000000000437
+       equipment
+            [abel_w17_Aoi_load_building_ASync]unloadFun time to unload all buildings =0.066083000000001
+            * 0.0333333333333333 seconds per frame, then 2 frames can be completely unloaded
+    --in conclusion
+        All buildings on the device are loaded into memory at 8 or 9M, and the memory burden is not large; while the time cost of building loading is high, the average of a single is about 0.3 seconds, it can be said that it cannot be loaded at runtime.
+        Therefore, the loading strategy of the building should be pre-loaded according to the city and resident in memory; the unloading pressure is very small, you don’t need to consider
 
-        1秒可以实例化 4050/24.404046 = 165.9560877733143
-        1帧实例化 165.9560877733143/30 = 5.53186959244381
-        1个实例化需要时间 24.404046/4050 = 0.0060256903703704 秒
-        1屏实例化需要时间 450 * 0.0060256903703704 = 2.71156066666668
+        1 second can be instantiated 4050/24.404046 = 165.9560877733143
+        1 frame instantiation 165.9560877733143/30 = 5.53186959244381
+        1 instantiation takes 24.404046/4050 = 0.0060256903703704 seconds
+        1 screen instantiation takes time 450 * 0.0060256903703704 = 2.71156066666668
     --]]
 end)
 
---AOI 9屏4050个对象实例化并放到对象池帧速测试
+--AOI 9 screen 4050 objects instantiated and put into the object pool frame rate test
 --[[
-1屏实例化需要时间 450 * 0.0060256903703704 = 2.71156066666668秒， 那么就按一屏算
-8 种建筑每个实例化 450/8 = 56.25 个 aTester.testcount = 57
-    1帧实例化1个
-    1帧实例化2个
-    1帧实例化3个
-    1帧实例化4个
-    1帧实例化5个
-    1帧实例化6个
-    1帧实例化7个
-    1帧实例化8个
-    1帧实例化9个
-    1帧实例化10个
+It takes time to instantiate 1 screen 450 * 0.0060256903703704 = 2.71156066666668 seconds, then just count on one screen
+8 buildings per instance 450/8 = 56.25 aTester.testcount = 57
+    1 instance per frame
+    Instantiate 2 per frame
+    3 instantiations per frame
+    4 instantiations per frame
+    5 instantiations per frame
+    6 instantiations per frame
+    7 instantiations per frame
+    8 instantiations per frame
+    9 instantiations per frame
+    10 instantiations per frame
 -]]
-UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_frameRate",  function ()
+UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_frameRate", function ()
     local aTester = AsyncSequenceTester:new()
     AsyncSequenceTester.recordTester(aTester)
-    --初始化测试数据
+    -- Initialize test data
     --aTester.testcount = 600
     --aTester.testcount = 2
     aTester.instancedCount = 1
@@ -744,7 +744,7 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
         tester.startTime = 0
         tester.instancedCount = 1
     end
-    --数据准备
+    --data preparation
     local ResPathListS = {}
     ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Root'
     ResPathListS[#ResPathListS+1] = 'Build/Factory_3x3_Root'
@@ -756,7 +756,7 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     ResPathListS[#ResPathListS+1] = 'Build/WareHouse_3x3_Root'
 
     aTester.ResPathList = ResPathListS
-    --数据准备
+    --data preparation
 
     local LoadedCb = function(tester, as, ab)
         tester.loadedBundles[#tester.loadedBundles+1] = ab
@@ -766,19 +766,19 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
             tester:getCurSeq().postfun(tester)
         end
     end
-    --异步加载测试,带回调
-    local LoadTestRes = function(tester)
+    --Asynchronous load test with callback
+     local LoadTestRes = function(tester)
         for i = 1, #tester.ResPathList do
             panelMgr:LoadPrefab_A(tester.ResPathList[i], nil, tester,LoadedCb)
         end
     end
 
-    --实例化方法
+    --Instance method
     local InstantiateFun = function()
         local tester = AsyncSequenceTester.Tester()
         local curSeq = tester:getCurSeq()
-        --超过
-        if tester.instancedCount >   tester.testcount then
+        --exceed
+        if tester.instancedCount> tester.testcount then
             tester._timer:Stop()
             return curSeq.postfun(tester)
         end
@@ -787,7 +787,7 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
             tester.instances[#tester.instances+1] = UnityEngine.GameObject.Instantiate(aTester.loadedAssets[aTester.loadedAssetsNextIdx])
             aTester.loadedAssetsNextIdx = aTester.loadedAssetsNextIdx +1
             tester.instancedCount = tester.instancedCount + 1
-            --循环从资源列表中抽取要实例化的资源
+            --Cycle to extract resources to be instantiated from the resource list
             if aTester.loadedAssetsNextIdx > #aTester.loadedAssets then
                 aTester.loadedAssetsNextIdx = 1
             end
@@ -831,7 +831,7 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     local finishedfun = function(tester)
         ct.log('abel_w17_Aoi_Inst_9Grid_frameRate',tester._msgs)
     end
-    --加载成功后的回调
+    --Callback after successful loading
     local callback = function (tester)
         local nextDelay = tester:getCurSeq()._nextTestDelay
         local costTime = os.clock() - tester.startTime
@@ -845,94 +845,94 @@ UnitTest.Exec("abel_w17_Aoi_Inst_9Grid_frameRate", "abel_w17_Aoi_Inst_9Grid_fram
     end
 
     aTester.testcount = 4050
-    aTester.testSquence[#aTester.testSquence+1] = { fun = LoadTestRes, _inscount = 1, _nextTestDelay = 60, prefun = nil, postfun = callback, msg = '加载所有建筑资源耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 1, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 1 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 2, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 2 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 3, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 3 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 4, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 4 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 5, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 5 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 6, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 6 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 7, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 7 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 8, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 8 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 9, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 9 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 10, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 10 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 15, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 15 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 20, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 20 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 30, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 30 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 40, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 40 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 80, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 80 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = Insfun_Loop, _inscount = 160, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 160 次实例化, '..aTester.testcount..'个实例耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = destroyInstances, _inscount = 0, _nextTestDelay = 30, prefun = aTester.resetData, postfun = callback, msg = aTester.testcount.'个实例的销毁耗时 ='}
-    --aTester.testSquence[#aTester.testSquence+1] = { fun = unloadFun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = '所有(一共'..#aTester.ResPathList..'个)建筑卸载的时间 ='}
-    aTester.testSquence[#aTester.testSquence+1] = { fun = finishedfun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = ''}
+    aTester.testSquence[#aTester.testSquence+1] = {fun = LoadTestRes, _inscount = 1, _nextTestDelay = 60, prefun = nil, postfun = callback, msg ='Time to load all building resources ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 1, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='Execute 1 instantiation per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 2, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='Execute 2 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 3, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='Perform 3 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 4, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='Perform 4 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 5, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='Perform 5 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 6, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='Execute 6 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 7, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='Execute 7 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 8, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='Execute 8 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 9, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='Perform 9 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 10, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg ='Perform 10 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 15, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg ='Perform 15 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 20, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg ='Perform 20 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 30, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg ='Perform 30 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 40, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg ='Perform 40 instantiations per frame,'..aTester .testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 80, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg ='Perform 80 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = Insfun_Loop, _inscount = 160, _nextTestDelay = 150, prefun = aTester.resetData, postfun = callback, msg ='Execute 160 instantiations per frame,'. .aTester.testcount..' instances time-consuming ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = destroyInstances, _inscount = 0, _nextTestDelay = 30, prefun = aTester.resetData, postfun = callback, msg = aTester.testcount. ='}
+    --aTester.testSquence[#aTester.testSquence+1] = {fun = unloadFun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg ='all (total'..#aTester.ResPathList ..'Times) building unloading time ='}
+    aTester.testSquence[#aTester.testSquence+1] = {fun = finishedfun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg =''}
 
-    --开始执行异步测试序列
+    --Start executing asynchronous test sequence
     collectgarbage("collect")
     aTester:excute()
     --[[
     cpu
-        DirectorUpdateAnimationBegin    39.6%
-        DirectorUpdateAnimationEnd      30.2%
-        * 去掉所有建筑的 Animator ，没有固定的GC掉帧了
-            500个实例
-                稳定在 30 帧，没有帧速波动 每帧执行 40 次实例化, 500个实例
-            1500个实例
-                稳定在 30 帧，没有帧速波动 每帧执行 40 次实例化, 1500个实例耗时 =1.464776
-            4050个实例
-                一开始稳定在 30 帧， 一段时间之后持续 22~30之间波动，没有帧速波动  每帧执行 40 次实例化, 4050个实例耗时 =5.059065
-                                                                                   每帧执行 40 次实例化, 4050个实例耗时 =5.251131
-                                     * unity profile 更新时，会在 22~30之间波动 ,否则稳定在 30 帧
-                * 也就是说 4050 个实例实际上是可以支撑下来的，只不过要限制实例中 Animator 中的数量（带Animator组件的实例超过500就会出现高频度的GC，导致帧数波动剧烈）
-                * 最新测试
-                    --稳定在 30 帧 每帧执行 40 次实例化, 4050个实例耗时 =2.799826
-         * 上述测试是在 荣耀9
-         * 小米5X 即便打开 unity profile 采集数据的情况下， 稳定在 29-30 帧
-         * Vivo X20A  稳定在 29-30 帧
+        DirectorUpdateAnimationBegin 39.6%
+        DirectorUpdateAnimationEnd 30.2%
+        * Removed Animator from all buildings, no fixed GC dropped frames
+            500 instances
+                Stable at 30 frames, no frame rate fluctuations 40 instantiations per frame, 500 instances
+            1500 examples
+                Stable at 30 frames, no frame rate fluctuations Perform 40 instantiations per frame, 1500 instances take time = 1.464776
+            4050 instances
+                At the beginning, it stabilized at 30 frames. After a period of time, it continued to fluctuate between 22 and 30. There was no frame rate fluctuation. 40 instantiations were performed per frame, and 4050 instances took time = 5.059065
+                                                                                   Perform 40 instantiations per frame, 4050 instances time-consuming = 5.251131
+                                     * When the unity profile is updated, it will fluctuate between 22~30, otherwise it will be stable at 30 frames
+                * In other words, 4050 instances can actually be supported, but only to limit the number of Animator in the instance (instances with Animator components exceeding 500 will cause high-frequency GC, resulting in sharp fluctuations in the number of frames)
+                * Latest test
+                    - Stable at 30 frames 40 instantiations per frame, 4050 instances time-consuming = 2.799826
+         * The above test is on Honor 9
+         * Mi 5X is stable at 29-30 frames even when the unity profile is opened to collect data
+         * Vivo X20A is stable at 29-30 frames
          * Oppo R11t
-    内存
-       4050个实例 设备上内存 66.3M
-       * 可以常驻内存
-    测试结果
-        500个实例
-            设备上 30 帧    每帧执行 40 次实例化, 500个实例耗时 =0.922895
-        600个实例
-            设备上 30 帧 每帧执行 2 次实例化, 600个实例耗时 =14.984493
-            设备上 30 帧 每帧执行 2 次实例化, 600个实例耗时 =15.828577
-            设备上 30 帧 每帧执行 3 次实例化, 600个实例耗时 =9.766479
-            设备上 30 帧 每帧执行 4 次实例化, 600个实例耗时 =7.621891
-            设备上 30 帧 每帧执行 5 次实例化, 600个实例耗时 =5.989155
-            设备上 30 帧 每帧执行 6 次实例化, 600个实例耗时 =5.25467
-            设备上 30 帧 每帧执行 10 次实例化, 600个实例耗时 =3.38418
-                * 期间帧速会偶尔掉到 20多帧
-            设备上 30 帧 每帧执行 15 次实例化, 600个实例耗时 =2.309575
-            设备上 30 帧 每帧执行 20 次实例化, 600个实例耗时 =1.870934
-                * 期间帧速有抖动
-            设备上 30 帧    每帧执行 40 次实例化, 600个实例耗时 =1.157611
-                            每帧执行 40 次实例化, 600个实例耗时 =1.179974
-                            每帧执行 40 次实例化, 600个实例耗时 =1.188734
-                * 帧速有波动 15~20~30 ， 卡顿不明显
-                * 如果是release版应该就更加不明显了
-                            每帧执行 40 次实例化, 600个实例耗时 =0.931607
-                            波动 18~30 帧 卡顿不明显
-        1000个实例
-            设备上 22-30帧浮动（一直，GC导致） 每帧执行 40 次实例化, 1000个实例耗时 =1.768171
-        设备上 30 帧 每帧执行 80 次实例化, 600个实例耗时 =0.906708
-            * 期间帧速有抖动明显 12~15~30 区间浮动
-        设备上 22-30 帧 每帧执行 2 次实例化, 800个实例耗时 =27.511312
-            GC导致帧速波动
-        设备上 26 帧 每帧执行 3 次实例化, 1000个实例耗时 =14.984493
+    RAM
+       4050 instances 66.3M of memory on the device
+       * Can be resident in memory
+    Test Results
+        500 instances
+            30 frames on the device, 40 instantiations per frame, 500 instances = 0.922895
+        600 instances
+            30 frames on the device, 2 instantiations per frame, 600 instances time = 14.984493
+            30 frames on the device, 2 instantiations per frame, 600 instances time = 15.828577
+            30 frames on the device, 3 instantiations per frame, 600 instances time-consuming =9.766479
+            30 frames on the device, 4 instantiations per frame, 600 instances time = 7.621891
+            30 frames on the device, 5 instantiations per frame, 600 instances =5.989155
+            30 frames on the device, 6 instantiations per frame, 600 instances = 5.25467
+            30 frames on the device, 10 instantiations per frame, 600 instances time = 3.38418
+                * During the period, the frame rate will occasionally drop to more than 20 frames
+            30 frames on the device, 15 instantiations per frame, 600 instances time = 2.309575
+            30 frames on the device, 20 instantiations per frame, 600 instances = 1.870934
+                * During the frame rate jitter
+            30 frames on the device, 40 instantiations per frame, 600 instances = 1.157611
+                            Perform 40 instantiations per frame, 600 instances take time = 1.179974
+                            Perform 40 instantiations per frame, 600 instances = 1.188734
+                * The frame rate fluctuates 15~20~30, and the lag is not obvious
+                * If it is the release version, it should be even less obvious
+                            Perform 40 instantiations per frame, 600 instances time-consuming = 0.931607
+                            Fluctuation 18~30 frames are not obvious
+        1000 instances
+            22-30 frames float on the device (always, caused by GC) 40 instantiations are performed per frame, 1000 instances take time = 1.768171
+        30 frames on the device, 80 instantiations are performed per frame, 600 instances take time = 0.906708
+            * During the period, the frame rate has obvious jitter, and the range is 12~15~30.
+        22-30 frames on the device, 2 instantiations per frame, 800 instances time-consuming = 27.511312
+            GC causes frame rate fluctuations
+        26 frames on the device, 3 instantiations per frame, 1000 instances = 14.984493
     --]]
 end)
 
---建筑Aoi更新测试
+--Building Aoi update test
 --[[
-测试条件
-    1屏450个，最多一次更新3屏
+Test Conditions
+    450 per screen, up to 3 screens at a time
 --]]
-UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3Grid_frameRate",  function ()
+UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3Grid_frameRate", function ()
     local aTester = AsyncSequenceTester:new()
     AsyncSequenceTester.recordTester(aTester)
-    --初始化测试数据
+    -- Initialize test data
     --aTester.testcount = 600
     --aTester.testcount = 2
     aTester.instancedCount = 1
@@ -946,16 +946,16 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     aTester.loadedBundles = {}
     aTester.loadedAssets = {}
     aTester.loadedAssetsNextIdx = 1
-    aTester.instances = {}      --使用中的实例
-    aTester.defaultInstancePools = {}   --对象池，闲置的实例
+    aTester.instances = {}      --Examples in use
+    aTester.defaultInstancePools = {} -- object pool, idle instances
     aTester._timer = nil
-    aTester._msgs = ''
+    aTester._msgs =''
     aTester.resetData = function()
         local tester = AsyncSequenceTester.Tester()
         tester.startTime = 0
         tester.instancedCount = 1
     end
-    --数据准备
+    --data preparation
     local ResPathListS = {}
     --ResPathListS[#ResPathListS+1] = 'Build/SuperMarket_1x1_Root'
     --ResPathListS[#ResPathListS+1] = 'Build/CentralBuilding_Root'
@@ -967,39 +967,39 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     --ResPathListS[#ResPathListS+1] = 'Build/WareHouse_1x1_Root'
 
     --aTester.testcount = 4050
-    aTester.testcount = 4050 --450 1屏
-    --aTester.testcount = 2700 --300  1屏
-    --aTester.testcount = 360 --40  1屏
+    aTester.testcount = 4050 --450 1 screen
+    --aTester.testcount = 2700 --300 1 screen
+    --aTester.testcount = 360 --40 1 screen
     aTester.CountEachType = math.ceil(aTester.testcount / #ResPathListS)
     aTester.ResPathList = ResPathListS
-    aTester.gridsOneBlock = 21 --1屏的横纵坐标跨度
-    aTester.data_25Screen = (aTester.gridsOneBlock * 5)^2  --11025
+    aTester.gridsOneBlock = 21 --1 screen horizontal and vertical coordinate span
+    aTester.data_25Screen = (aTester.gridsOneBlock * 5)^2 --11025
     aTester._buildingdata = {}
-    local gridsFiveBlocks = aTester.gridsOneBlock * 5 --全局地图宽度
-    --9屏Aoi
+    local gridsFiveBlocks = aTester.gridsOneBlock * 5 -- global map width
+    --9 screen Aoi
     aTester.relocateStartPos = 1
-    aTester.relocateTestExcuteCount = 600 --总的执行 relocate 的批次
-    --aTester.relocateTestExcuteCount = 2 --总的执行 relocate 的批次
-    aTester.relocateTestExcutePos = 1 --当前执行的批次
-    aTester.ScreenBlockSizeWorld = {x = 5, y = 5}   --整个地图aoi分块数， 一个单位相当于 1 屏， 目前是横竖各5屏，每屏21*21个建筑单位
-    aTester.AoiScreenBlockSize = {x = 3, y = 3}         --真正要实例化的屏幕数据, 形成的矩形区域
-    aTester.AoiScreenBlocks = {}    --实际Aoi的分块
-    aTester.BuildingsInAoi = {}    --分块中的建筑
-    aTester.AoiScreenBlocksNewIn = {}    --新增的分块
-    aTester.AoiScreenBlocksOut = {}    --超出9屏的分块
-    aTester.BuildingsOutAoi = {}    --超出9屏的分块，放入临时回收池 AoiGridsOut
-    --注： 新增块中的建筑从超出反馈的块中获取，如果没有，就实例化
-    --aTester.interval = 10 --每次测试的间隔帧
-    aTester.interval = 60 --每次测试的间隔帧
-    aTester.instancCount = 0 --每次测试的间隔帧
-    aTester._AoiUpdateTimer = nil --每次新增Aoi数据分屏更新的timer
-    aTester._AoiUpdateTimerInterval = 1 --每次Aoi的间隔帧
-    aTester._AoiUpdateBlockCountEachTime = 1 --每次Aoi更新的屏幕数量
-    aTester.updatedBlockCount = 1       --每次Aoi已经更新的屏幕数量
+    aTester.relocateTestExcuteCount = 600 -- the total batch of relocate
+    --aTester.relocateTestExcuteCount = 2 --Total batch of relocate
+    aTester.relocateTestExcutePos = 1 -- the currently executed batch
+    aTester.ScreenBlockSizeWorld = {x = 5, y = 5}--the number of aoi blocks in the entire map, one unit is equivalent to 1 screen, currently 5 screens each horizontally and vertically, 21*21 building units per screen
+    aTester.AoiScreenBlockSize = {x = 3, y = 3} -- the actual screen data to be instantiated, forming a rectangular area
+    aTester.AoiScreenBlocks = {} -- actual Aoi blocks
+    aTester.BuildingsInAoi = {} --Buildings in blocks
+    aTester.AoiScreenBlocksNewIn = {} -- New block
+    aTester.AoiScreenBlocksOut = {} --Blocks beyond 9 screens
+    aTester.BuildingsOutAoi = {} --The blocks exceeding 9 screens are put into the temporary recycling pool AoiGridsOut
+    --Note: The building in the new block is obtained from the block that exceeds the feedback, if not, it is instantiated
+    --aTester.interval = 10 - Interval frame for each test
+    aTester.interval = 60 -- Interval frame for each test
+    aTester.instancCount = 0 -- Interval frame for each test
+    aTester._AoiUpdateTimer = nil -- every time a new timer for Aoi data split-screen update is added
+    aTester._AoiUpdateTimerInterval = 1 -- every Aoi interval frame
+    aTester._AoiUpdateBlockCountEachTime = 1 -- the number of screens updated each time by Aoi
+    aTester.updatedBlockCount = 1 -- The number of screens that Aoi has updated each time
     aTester.outRange_Pos = {x = -10000, y = 0, z = -10000}
     aTester.temp_Pos = {x = -10000, y = 0, z = -10000}
 
-    --数据准备
+    --data preparation
 
     local LoadedCb = function(tester, as, ab)
         tester.loadedBundles[ab.name] = ab
@@ -1009,14 +1009,14 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
             tester:getCurSeq().postfun(tester)
         end
     end
-    --异步加载测试,带回调
-    local LoadTestRes = function(tester)
+    --Asynchronous load test with callback
+     local LoadTestRes = function(tester)
         for i = 1, #tester.ResPathList do
             panelMgr:LoadPrefab_A(tester.ResPathList[i], nil, tester,LoadedCb)
         end
     end
 
-    --往默认对象池中添加指定类型和数量的对象
+    --Add the specified type and number of objects to the default object pool
     local extendInstancePool = function(pools, typeid, count)
         local tester = AsyncSequenceTester.Tester()
 
@@ -1026,10 +1026,10 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
 
         for i = 1, count do
             pools[typeid][#pools[typeid]+1] = UnityEngine.GameObject.Instantiate(tester.loadedAssets[typeid])
-            tester.instancCount = tester.instancCount +  1
+            tester.instancCount = tester.instancCount + 1
             pools[typeid][#pools[typeid]].name = typeid
             pools[typeid][#pools[typeid]].transform.position = tester.outRange_Pos
-            --暂时把实例的名字命名为资源路径，这样在后续的实例迁移到不同的对象池时，能够辨识
+            --Temporarily name the instance as the resource path, so that when the subsequent instance is migrated to a different object pool, it can be identified
             --[[
                 local instanceToPools = function(pools, instance)
                     local typeid = instance.name
@@ -1045,7 +1045,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         end
     end
 
-    --从默认对象池中获取特定类型实例，没有的话并且 allocate == true ，一次性实例化 40 个
+    --Get specific types of instances from the default object pool, if not and allocate == true, instantiate 40 at a time
     local getInstance = function(pools, typeid, allocate)
         local validInstance = nil
         local outPool = pools[typeid]
@@ -1054,43 +1054,43 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         end
         validInstance = outPool[#outPool]
         if allocate ~= nil and allocate == true then
-            --实例化
+            -- instantiation
             if validInstance == nil then
-                extendInstancePool(pools, typeid, 40 ) --一帧实例化40个不会影响性能
+                extendInstancePool(pools, typeid, 40) -- instantiating 40 in one frame will not affect performance
             end
         end
-        --从对象池中移除该实例(否则会有多个对象池同时使用一个实例，是不对的)
+        --Remove the instance from the object pool (otherwise there will be multiple object pools using an instance at the same time, which is wrong)
         validInstance = outPool[#outPool]
         if outPool[#outPool] ~= nil then
             outPool[#outPool] = nil
         end
         return validInstance
     end
-    --把实例放回对象池
+    -- Put the instance back into the object pool
     local instanceToPools = function(pools, instance)
         local typeid = instance.name
         if pools[typeid] == nil then
             pools[typeid] = {}
         end
-        pools[typeid][#pools[typeid]+1] = instance --注意这里没有进行类型检查，使用的时候需要用户自己保证类型正确
+        pools[typeid][#pools[typeid]+1] = instance -- note that there is no type check here, you need to ensure that the type is correct when using it
     end
 
-    --创建默认对象池
+    --Create a default object pool
     local DefaultInsPoolsSetup = function()
         local tester = AsyncSequenceTester.Tester()
         local curSeq = tester:getCurSeq()
 
 
         local pollsize = getPoolSize(tester.defaultInstancePools, tester.ResPathList[tester.loadedAssetsNextIdx])
-        if pollsize >= tester.CountEachType then --当每种类型的资源实例数量大于限定的数量后，开始另一种资源类型的实例化
+        if pollsize >= tester.CountEachType then --When the number of resource instances of each type is greater than the limited number, start the instantiation of another resource type
             tester.loadedAssetsNextIdx = tester.loadedAssetsNextIdx + 1
-            --超过
-            if tester.loadedAssetsNextIdx > #tester.ResPathList then --loadedAssetsNextIdx 大于ResPathList资源类型数量，说明 所有资源类型的对象池都建立好了
+            --exceed
+            if tester.loadedAssetsNextIdx> #tester.ResPathList then --loadedAssetsNextIdx is greater than the number of ResPathList resource types, indicating that the object pools of all resource types are established
                 tester._timer:Stop()
                 return curSeq.postfun(tester)
             end
         end
-        --对象池创建，按资源路径分别建立对象池； 一次只创建 curSeq._inscount 个实例(每帧40个可以保证不卡)
+        --Create an object pool and create object pools according to resource paths; only create curSeq._inscount instances at a time (40 per frame can be guaranteed)
         extendInstancePool(tester.defaultInstancePools,tester.ResPathList[tester.loadedAssetsNextIdx],curSeq._inscount)
     end
 
@@ -1103,16 +1103,16 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         tester._timer:Start()
     end
 
-    local builddata = { uuid = 'xxxxxxxx-xxxx- xxxx-xxxxxxxxxxxxxxxx',typeid = '',position={x=0,y=0 }}
-    --建筑重定位测试-----------------------------------------------------------
-    --目前使用25屏作为整个游戏地图来测试------------------------------------{
+    local builddata = {uuid ='xxxxxxxx-xxxx- xxxx-xxxxxxxxxxxxxxxx', typeid ='',position={x=0,y=0 }}
+    --Building relocation test -------------------------------------------- ---------------
+    -- Currently using 25 screens as the entire game map to test ------------------------------------{
     --[[
-        一屏450相当于 21*21=441个格子
-        25屏相当于 (21*5)^2 = 11025 格单位， 长宽为 105单位
+        One screen 450 is equivalent to 21*21=441 grids
+        25 screens is equivalent to (21*5)^2 = 11025 grid units, length and width are 105 units
     --]]
 
 
-    --这里相当于约定 _buildingdata 使用的是 gridid 作为索引
+    --This is equivalent to the convention _buildingdata uses gridid ​​as the index
     for i = 1, gridsFiveBlocks do
         for j = 1, gridsFiveBlocks do
             local gridId = i + (j-1) * gridsFiveBlocks
@@ -1127,8 +1127,8 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
             }
         end
     end
-    local buildingCount = #aTester._buildingdata --看看是否是预期的数量 11025
-    --25屏数据------------------------------------}
+    local buildingCount = #aTester._buildingdata --See if it is the expected quantity 11025
+    --25 screen data ------------------------------------}
 
 
 
@@ -1139,31 +1139,31 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
 
 
 
-    --根据aoi中心，获取九屏索引数据
+    --According to aoi center, get nine-screen index data
     local aoi_get9ScreenBlock = function(tester, aoiCenterScreenPos)
-        local aoiRect = { --aoiRect取值范围在是(1,1)-(5,5)之间
-        lu = {x = aoiCenterScreenPos.x -1, y = aoiCenterScreenPos.y -1}, --左上角
-        rb = {x = aoiCenterScreenPos.x +1, y = aoiCenterScreenPos.y +1}  --右下角
+        local aoiRect = {--aoiRect ranges from (1,1)-(5,5)
+        lu = {x = aoiCenterScreenPos.x -1, y = aoiCenterScreenPos.y -1}, -- upper left corner
+        rb = {x = aoiCenterScreenPos.x +1, y = aoiCenterScreenPos.y +1} -- lower right corner
         }
         local newAoiScreenBlockArea = {}
-        --取出所有块的id（所有9屏id）
+        --Remove all block ids (all 9 screen ids)
         for x = aoiRect.lu.x, aoiRect.rb.x do
             for y = aoiRect.lu.y, aoiRect.rb.y do
-                local id_1D = x + (y-1)*tester.ScreenBlockSizeWorld.x --因为lua中数组第一个元素的索引为1，所以这里要保证id从1开始, x 不需要 -1 就可以保证
-                newAoiScreenBlockArea[id_1D] = id_1D --暂时key和value都是分块id
+                local id_1D = x + (y-1)*tester.ScreenBlockSizeWorld.x -- because the index of the first element of the array in lua is 1, so here we must ensure that the id starts from 1, x can be guaranteed without -1
+                newAoiScreenBlockArea[id_1D] = id_1D -- temporarily the key and value are both block ids
             end
         end
         return newAoiScreenBlockArea
     end
 
-    --比对新旧Aoi区域，超出范围的，放到 AoiScreenBlocksOut ，作为新进入范围的区块放入 AoiScreenBlocksNewIn
+    --Compare the old and new Aoi areas, if they are out of range, put them in AoiScreenBlocksOut, and put them in AoiScreenBlocksNewIn as new blocks
     local filterAoiBlocks = function(tester)
         for k,v in pairs(tester.AoiScreenBlocks) do
             if v ~= nil then
-                if tester.AoiScreenBlocksNewIn[v] == nil then --原Aoi范围内有，新aoi区域中没有的块，放入 AoiScreenBlocksOut ，后边单独处理
+                if tester.AoiScreenBlocksNewIn[v] == nil then--there are blocks in the original Aoi range that are not in the new aoi area, put them in AoiScreenBlocksOut and deal with them separately later
                     tester.AoiScreenBlocksOut[#tester.AoiScreenBlocksOut+1] = v
                     tester.AoiScreenBlocks[k] = nil
-                else --都有的，从新的区域中剔除掉，newAoiScreenBlockArea剩下的就是新进入范围的块
+                else--all of them, removed from the new area, and the rest of newAoiScreenBlockArea is the newly entered block
                     tester.AoiScreenBlocksNewIn[v] = nil
                 end
             end
@@ -1171,40 +1171,40 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     end
 
     --[[
-        此时，  tester.AoiScreenBlocks 中只有新旧aoi数据中的交集， 超出范围的都回收到了 AoiScreenBlocksOut ， newAoiScreenBlockArea 仅有新进入范围的部分
-        后续操作只需要从 AoiScreenBlocksOut（作为对象池 ）提取 newAoiScreenBlockArea 需要的建筑类型并更新位置即可，如果 newAoiScreenBlockArea 没有，
-        那么再实例化（这样要实例化的就不多了）
+        At this time, only the intersection of old and new aoi data in tester.AoiScreenBlocks, all out of range are recovered to AoiScreenBlocksOut, and newAoiScreenBlockArea only has new entry into the range
+        Subsequent operations only need to extract the building type required by newAoiScreenBlockArea from AoiScreenBlocksOut (as an object pool) and update the location. If newAoiScreenBlockArea does not,
+        Then re-instantiate (so there are not many to be instantiated)
     --]]
     local BlockID2Pos = function(tester, blockid)
         return {
-            x=math.fmod( blockid, tester.ScreenBlockSizeWorld.x ),  --x 取余得x坐标
-            y=math.modf( blockid / tester.ScreenBlockSizeWorld.x )+1   --y 取整得y坐标, 加1表示从 1开始计算
+            x=math.fmod( blockid, tester.ScreenBlockSizeWorld.x ), --x takes the remaining x coordinate
+            y=math.modf( blockid / tester.ScreenBlockSizeWorld.x )+1 --y rounds the y coordinate, plus 1 means to start counting from 1
         }
     end
 
     local BlockPos2GridPos = function(tester, blockPos)
-        return { --这里是从(0,0)开始的
+        return {-- here is from (0,0)
             x = (blockPos.x -1) * tester.gridsOneBlock + 1,
             y = (blockPos.y -1) * tester.gridsOneBlock + 1
         }
     end
 
     local BlockID2GridPos = function(tester,blockid)
-        --1维数组升2维，注意：这里仅仅是针对 block 分块而言，目前每个block对应 1 屏
+        --1D arrays are upgraded to 2D. Note: This is only for block division, currently each block corresponds to 1 screen
         local blockPos = BlockID2Pos(tester, blockid)
         return BlockPos2GridPos(tester, blockPos)
     end
     local gridsOutProcessing = function(tester)
         for k, v in pairs(tester.AoiScreenBlocksOut) do
             local gridStartPos = BlockID2GridPos(tester, v)
-            --根据block位置计算其中所有grid的索引
+            --Calculate the indexes of all grids according to the block position
             for i = 1, tester.gridsOneBlock do
                 for j = 1, tester.gridsOneBlock do
-                    local gridId = (gridStartPos.x + j ) + ((gridStartPos.y + i -1) * tester.gridsOneBlock * 5) --gridsFiveBlocks全局地图宽度
+                    local gridId = (gridStartPos.x + j) + ((gridStartPos.y + i -1) * tester.gridsOneBlock * 5) --gridsFiveBlocks global map width
                     local outinstance = tester.BuildingsInAoi[gridId]
                     tester.BuildingsInAoi[gridId] = nil
                     if outinstance ~= nil then
-                        instanceToPools(tester.BuildingsOutAoi, outinstance) --放入激活的实例表中
+                        instanceToPools(tester.BuildingsOutAoi, outinstance) -- put in the activated instance table
                     end
                 end
             end
@@ -1212,41 +1212,41 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         end
     end
 
-    --第一次aoi计算， AoiScreenBlocks 为空, 从 aTester._buildingdata 中取出范围内的建筑数据
-    --注意， 一个ScreenBlocks 跨度为横纵坐标为: gridsOneBlock = 21 --1屏的横纵坐标跨度
-    --初步的算法是 把 newAoiScreenBlockArea block id 升维转成 grid 位置， 然后再取block中所有grid对应的 builddata ,
-    --根据 builddata.typeid 从 defaultInstancePools 取出对象，并使用 builddata.position 设置该对象位置
-    --后边看看有没有不需要升维的算法
+    --The first aoi calculation, AoiScreenBlocks is empty, take the building data in the range from aTester._buildingdata
+    --Note that the span of a ScreenBlocks is the horizontal and vertical coordinates: gridsOneBlock = 21 --The horizontal and vertical coordinates of the screen
+    --The preliminary algorithm is to convert the newAoiScreenBlockArea block id ascending dimension to the grid position, and then take the builddata corresponding to all grids in the block,
+    -- Take the object from defaultInstancePools according to builddata.typeid and use builddata.position to set the object position
+    --Look behind to see if there is an algorithm that does not require dimensionality increase
     local aoi_newBlockProcess = function(tester, newAoiBlocks)
         local updatedBlockCount = 0
         local updatedInstanceCount = 0
         local temp_Pos = {}
         for k,v in pairs(newAoiBlocks) do
-            if tester.updatedBlockCount > tester._AoiUpdateBlockCountEachTime then
+            if tester.updatedBlockCount> tester._AoiUpdateBlockCountEachTime then
                 tester.updatedBlockCount = 1
                 return
             end
             tester.updatedBlockCount = tester.updatedBlockCount +1
             local gridStartPos = BlockID2GridPos(tester, v)
-            --根据block位置计算其中所有grid的索引
+            --Calculate the indexes of all grids according to the block position
             for i = 1, tester.gridsOneBlock do
                 for j = 1, tester.gridsOneBlock do
-                    local gridIndex = (gridStartPos.x + j ) + ((gridStartPos.y + i -1) * tester.gridsOneBlock * 5) --gridsFiveBlocks全局地图宽度
-                    local buildingdata = tester._buildingdata[gridIndex] --这里相当于约定 _buildingdata 使用的是 gridid 作为索引
+                    local gridIndex = (gridStartPos.x + j) + ((gridStartPos.y + i -1) * tester.gridsOneBlock * 5) --gridsFiveBlocks global map width
+                    local buildingdata = tester._buildingdata[gridIndex] --This is equivalent to the convention _buildingdata uses gridid ​​as the index
                     if buildingdata ~= nil then
-                        --先从 BuildingsOutAoi 中提取指定类型的对象， 没有再检查  defaultInstancePools ， 没有再 实例化
+                        --First extract objects of the specified type from BuildingsOutAoi, without checking defaultInstancePools, without instantiating
                         --BuildingsOutAoi
-                        local validInstance = getInstance(tester.BuildingsOutAoi, buildingdata.typeid) --这里不允许分配新的实例
+                        local validInstance = getInstance(tester.BuildingsOutAoi, buildingdata.typeid) -- new instances are not allowed here
                         --defaultInstancePools
-                        if validInstance == nil then
-                            validInstance = getInstance(tester.defaultInstancePools, buildingdata.typeid, true) --只有默认对象池才允许分配新实例
+                         if validInstance == nil then
+                            validInstance = getInstance(tester.defaultInstancePools, buildingdata.typeid, true) -- Only the default object pool is allowed to allocate new instances
                         end
                         if validInstance then
                             temp_Pos.y = validInstance.transform.position.y
                             temp_Pos.x = buildingdata.position.x
                             temp_Pos.z = buildingdata.position.y
                             validInstance.transform.position = temp_Pos
-                            tester.BuildingsInAoi[gridIndex] = validInstance --BuildingsInAoi表使用gridid作为key
+                            tester.BuildingsInAoi[gridIndex] = validInstance --BuildingsInAoi table uses gridid as key
                             updatedInstanceCount = updatedInstanceCount +1
                         end
                     end
@@ -1255,34 +1255,34 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
             tester.AoiScreenBlocks[k] = v
             newAoiBlocks[k] = nil
         end
-        --updatedInstanceCount 为零说明更新完了，这时最好停止更新的timer
+        --updatedInstanceCount is zero, indicating that the update is complete, then it is best to stop the updated timer
         if updatedInstanceCount == 0 then
             tester._AoiUpdateTimer:Stop()
         end
-        newAoiBlocks = {}  --清空新增表
+        newAoiBlocks = {} --Clear the newly added table
         --ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[aoi_newBlockProcess] count of instance updated ='..updatedInstanceCount)
     end
 
     local RelocateFun = function(tester)
         local tester = AsyncSequenceTester.Tester()
         local curSeq = tester:getCurSeq()
-        tester.AoiScreenBlocksNewIn = {}    --新增的分块
-        tester.AoiScreenBlocksOut = {}   --原来有的，现在超出范围了
-        --中心屏幕坐标,这里随机取非边缘的分块位置, 中心坐标x,y在(2-4)之间随机，边缘在1-5之间，也就是(1,1)-(5,5)之间，
-        --注意不是(0,0)-(4,4)
+        tester.AoiScreenBlocksNewIn = {} -- New block
+        tester.AoiScreenBlocksOut = {} --Original, now out of range
+        -- The center screen coordinates, where the non-edge block positions are randomly selected, the center coordinates x, y are randomly between (2-4), and the edges are between 1-5, which is (1,1)-(5, 5) Between,
+        -- Note that it is not (0,0)-(4,4)
         local aoiCenterScreenPos = {
         x = math.random(2,tester.ScreenBlockSizeWorld.x-1),
         y = math.random(2,tester.ScreenBlockSizeWorld.y-1)
         }
-        --根据新的中心点确定新的aoi 9 屏 block
+        -- Determine the new aoi 9 screen block according to the new center point
         tester.AoiScreenBlocksNewIn = aoi_get9ScreenBlock(tester,aoiCenterScreenPos)
         --ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[RelocateFun] aoiCenterScreenPos x='..aoiCenterScreenPos.x..' y='..aoiCenterScreenPos.y)
-        --ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[RelocateFun] instancCount total = '..tester.instancCount)
-        --分拣block， 新旧aoi中都有的，保留； 新增的block放到 AoiScreenBlocksNewIn ； 超出范围的放入 AoiScreenBlocksOut
+        --ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate','[RelocateFun] instancCount total ='..tester.instancCount)
+        -- Sorting blocks, both in old and new aoi, keep; add new blocks to AoiScreenBlocksNewIn; out of range put in AoiScreenBlocksOut
         filterAoiBlocks(tester)
 
         local buidingcount = table.getn(tester.BuildingsInAoi)
-        --aoi 建筑实例处理
+        --aoi architectural example processing
         gridsOutProcessing(tester)
 
         tester.updatedBlockCount = 1
@@ -1292,7 +1292,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
         tester._AoiUpdateTimer:Start()
         buidingcount = table.getn(tester.BuildingsInAoi)
 
-        --检查执行次数
+        --Check execution times
         if tester.relocateTestExcutePos > tester.relocateTestExcuteCount then
             tester._timerRelocate:Stop()
             return curSeq.postfun(tester)
@@ -1312,7 +1312,7 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     ct.log('abel_w17_Aoi_Relocate_3Grid_frameRate',tester._msgs)
     end
 
-    --加载成功后的回调
+    --Callback after successful loading
     local callback = function (tester)
         local nextDelay = tester:getCurSeq()._nextTestDelay
         local costTime = os.clock() - tester.startTime
@@ -1330,21 +1330,21 @@ UnitTest.Exec("abel_w17_Aoi_Relocate_3Grid_frameRate", "abel_w17_Aoi_Relocate_3G
     aTester.testSquence[#aTester.testSquence+1] = { fun = Relocatefun_Loop, _inscount = 40, _nextTestDelay = 90, prefun = aTester.resetData, postfun = callback, msg = '每帧执行 40 次实例化, '..aTester.testcount..'个实例耗时 ='}
     aTester.testSquence[#aTester.testSquence+1] = { fun = finishedfun, _inscount = 0, _nextTestDelay = 5, prefun = aTester.resetData, postfun = callback, msg = ''}
 
-    --开始执行异步测试序列
-    collectgarbage("collect")
-    aTester:excute()
-    --[[
-    cpu
-        * 4050个 1*1建筑实例，每帧执行 40 次实例化, 4050个实例耗时 =3.995006
-        * 设备上稳定在 30 帧
-         * 上述测试是在 荣耀9
-         * 小米5X 即便打开 unity profile 采集数据的情况下
-         * Vivo X20A
-         * Oppo R11t
-    内存
-        * 4050个 1*1建筑实例 内存为
+    --Start executing asynchronous test sequence
+     collectgarbage("collect")
+     aTester:excute()
+     --[[
+     cpu
+         * 4050 1*1 building instances, 40 instantiations per frame, 4050 instances time-consuming = 3.995006
+         * Stable at 30 frames on the device
+          * The above test is on Honor 9
+          * Xiaomi 5X even when the unity profile is opened to collect data
+          * Vivo X20A
+          * Oppo R11t
+     RAM
+         * 4050 1*1 building example memory is
 
-    测试结果
+     Test Results
         *
     --]]
 end)

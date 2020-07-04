@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace LuaFramework {
     /// <summary>
-    /// 对象池管理器，分普通类对象池+资源游戏对象池
+    /// Object pool manager, divided into common class object pool + resource game object pool
     /// </summary>
     public class ObjectPoolManager : Manager {
         private Transform m_PoolRootObject = null;

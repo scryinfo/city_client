@@ -1,12 +1,6 @@
 ﻿using UnityEngine;
 using Battle;
 
-/// <summary>
-/// 说明：场景战争迷雾
-/// 
-/// @by wsh 2017-05-20
-/// </summary>
-
 public class MapFOWRender
 {
     public MapFOWRender(Transform mapParent)
@@ -14,8 +8,8 @@ public class MapFOWRender
         FOWRender render = FOWLogic.instance.CreateRender(mapParent);
         if (render != null)
         {
-            // TODO：实际项目中，自己根据场景地图设置中心点位置
-            // 这里为了简单，直接居中
+            // TODO: In the actual project, set the center point position according to the scene map
+            // For simplicity, just center it here
             float fCenterX = 50.5f;
             float fCenterZ = 50.5f;
             float scale = FOWSystem.instance.worldSize / 128f * 2.56f;

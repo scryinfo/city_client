@@ -1,19 +1,19 @@
 HomeOtherPlayerLineItem = class('HomeOtherPlayerShelfItem')
-HomeOtherPlayerLineItem.static.TOTAL_H = 455  --整个Item的高度
-HomeOtherPlayerLineItem.static.CONTENT_H = 412  --显示内容的高度
-HomeOtherPlayerLineItem.static.TOP_H = 100  --top条的高度
+HomeOtherPlayerLineItem.static.TOTAL_H = 455  --The height of the entire Item
+HomeOtherPlayerLineItem.static.CONTENT_H = 412  --Display height
+HomeOtherPlayerLineItem.static.TOP_H = 100  --the height of the top bar
 
---初始化方法  数据需要接受服务器发送的数据
+--Initialization method The data needs to accept the data sent by the server
 function HomeOtherPlayerLineItem:initialize(OtherPlayerShelfData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect;
     self.productionData = OtherPlayerShelfData;
-    self.toggleData = toggleData;    --位于toggle的第一个   右边
+    self.toggleData = toggleData;    --On the first right of toggle
 
-    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
-    self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
-    self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
-    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
-    self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");  --跳转页面
+    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --Content Rect
+    self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --Open state
+    self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --Disabled
+    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --Open button
+    self.toDoBtns = self.viewRect.transform:Find("topRoot/open/toDoBtns");  --Jump to page
     self.content = self.viewRect.transform:Find("contentRoot/ScrollView/Viewport/Content");
 
     mainPanelLuaBehaviour:AddClick(self.openBtns.gameObject,function()
@@ -27,12 +27,12 @@ function HomeOtherPlayerLineItem:initialize(OtherPlayerShelfData, clickOpenFunc,
     end);
 end
 
---获取是第几次点击了
+--Get is the first click
 function HomeOtherPlayerLineItem:getToggleIndex()
     return self.toggleData.index;
 end
 
---打开
+--turn on
 function HomeOtherPlayerLineItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open;
 
@@ -42,12 +42,12 @@ function HomeOtherPlayerLineItem:openToggleItem(targetMovePos)
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, HomeOtherPlayerLineItem.static.CONTENT_H), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic);
 
-    --self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H) --打开显示内容
-    --self.viewRect.anchoredPosition = targetMovePos  --移动到目标位置
+    --self.contentRoot.sizeDelta = Vector2.New(self.contentRoot.sizeDelta.x, OccupancyRateItem.static.CONTENT_H) --Open display
+    --self.viewRect.anchoredPosition = targetMovePos  --Move to target location
     return Vector2.New(targetMovePos.x, targetMovePos.y - HomeOtherPlayerLineItem.static.TOTAL_H);
 end
 
---关闭
+--shut down
 function HomeOtherPlayerLineItem:closeToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Close;
 

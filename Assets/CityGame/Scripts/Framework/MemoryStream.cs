@@ -10,8 +10,8 @@
 	using System.Runtime.InteropServices;
 
     /*
-		二进制数据流模块
-		能够将一些基本类型序列化(writeXXX)成二进制流同时也提供了反序列化(readXXX)等操作
+		Binary data flow module
+        Can serialize some basic types (writeXXX) into a binary stream and also provide operations such as deserialization (readXXX)
 	*/
     public class MemoryStream
     {

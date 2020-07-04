@@ -14,12 +14,12 @@ namespace UnityEngine
         //private Thread qrThread;
         private float time = 2.5f;
         private WebCamTexture webCamTexture;
-        //二维码读取内容
+        //QR code reading content
         private BarcodeReader barcodeReader;
-        //二维码写入内容
+        //QR code content
         private BarcodeWriter barcodeWriter;
         private string QRTexturePath ;
-        //扫描二维码界面
+        //Scan QR code interface
         public RectTransform codePanel;
         public void StartScanQRCode()
         {
@@ -51,7 +51,7 @@ namespace UnityEngine
             barcodeReader = new BarcodeReader();
             InvokeRepeating("ScanQRCode", 2.5f, time);
         }
-        //扫描二维码
+        //Scan QR code
         public void ScanQRCode()
         {
             Color32[] data = webCamTexture.GetPixels32();
@@ -70,29 +70,29 @@ namespace UnityEngine
                 }
             }
         }
-        //创建二维码
+        //Scan QR code
         public void CreateQRCode(string str, RawImage RQCodeImg)
         {
-            //定义texture2d并填充
+            //Define texture2d and fill
             Texture2D tTexture = new Texture2D(256, 256);
             tTexture.SetPixels32(GetnQRCode(str, 256, 256));
             tTexture.Apply();
             RQCodeImg.texture = tTexture;
         }
-        //返回Color32图片颜色的方法
+        //Method to return Color32 image color
         Color32[] GetnQRCode(string formatStr, int width, int height)
         {
             ZXing.QrCode.QrCodeEncodingOptions options = new ZXing.QrCode.QrCodeEncodingOptions();
             //options.CharacterSet = "UTF-8";
             options.Width = width;
             options.Height = height;
-            options.Margin = 1;//二维码距离边缘的空白
+            options.Margin = 1;//The margin of the QR code from the edge
 
-            //重置写二维码变量类   （参数:码格式，编码格式）
+            //Reset to write the QR code variable class (parameter: code format, encoding format)
             barcodeWriter = new BarcodeWriter { Format = ZXing.BarcodeFormat.QR_CODE, Options = options };
             return barcodeWriter.Write(formatStr);
         }
-        //线程解码不会卡顿
+        //Thread decoding will not freeze
         //private void Start()
         //{
         //    barcodeReader = new BarcodeReader();
@@ -117,14 +117,14 @@ namespace UnityEngine
         //        }
         //    }
         //}
-        ////解码
+        ////decoding
         //private void DecodeQrCode()
         //{
         //    while (true)
         //    {
         //        try
         //        {
-        //            //当前帧解码
+        //            //Current frame decoding
         //            var result = barcodeReader.Decode(data, webCamTexture.width, webCamTexture.height);
         //            if (result != null)
         //            {
@@ -132,7 +132,7 @@ namespace UnityEngine
         //                cameraTexture.texture = null;
         //                webCamTexture.Stop();
         //                data = null;
-        //                //关闭线程
+        //                //Close thread
         //                qrThread.Abort();
         //            }
         //        }

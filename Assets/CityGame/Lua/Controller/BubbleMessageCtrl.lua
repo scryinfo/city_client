@@ -5,7 +5,7 @@
 --- DateTime: 2019/1/16 21:12
 ---
 BubbleMessageCtrl = class('BubbleMessageCtrl',UIPanel)
-UIPanel:ResgisterOpen(BubbleMessageCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(BubbleMessageCtrl) --How to open
 
 local path="Assets/CityGame/Resources/Atlas/UIBubble/"
 local pool={}
@@ -36,7 +36,7 @@ BubbleMessageCtrl.configPath={
 
 local m_EmojiIconSpriteList = {}
 
---添加EmojiIcon的sprite列表
+--Add EmojiIcon's sprite list
 local function AddEmojiIcon(name,sprite)
     if m_EmojiIconSpriteList == nil or type(m_EmojiIconSpriteList) ~= 'table' then
         m_EmojiIconSpriteList = {}
@@ -81,7 +81,7 @@ local function LoadEmojiIcon(name,iIcon)
     end)
 end
 
---设置ICon的Sprite
+--Set up Sprite of ICon
 function BubbleMessageCtrl.SetEmojiIconSpite(name , tempImage)
     if JudgeHasEmojiIcon() == true then
         tempImage.sprite = GetEmojiIcon(name)
@@ -92,30 +92,30 @@ end
 
 
 
----==========================================================================================私有函数============================================================================================
---临时对象池是做法
+---==========================================================================================Private function============================================================================================
+--Temporary object pool is the practice
 local  function InsAndObjectPool(config,class,prefabPath,parent,this)
     if not pool[class] then
         pool[class]={}
     end
-    --对象池创建物体
+    --Object pool to create objects
     local tempList={}
     for i, value in ipairs(config) do
         local ins =pool[class][1]
-        if ins then  --有实例
+        if ins then  --There are examples
             value.id = i
             ins:updateData(value)
             ins.prefab:SetActive(true)
             table.insert(tempList,ins)
             table.remove(pool[class],1)
-        else--无实例
+        else--No instance
             local prefab=creatGoods(prefabPath,parent)
             value.id = i
             local ins=class:new(prefab,LuaBehaviour,value,this)
             table.insert(tempList,ins)
         end
     end
-    --多余实例隐藏
+    --Hidden instances are hidden
     if #pool[class]>0 then
         for key, ins in ipairs(pool[class]) do
             ins.prefab:SetActive(false)
@@ -123,19 +123,19 @@ local  function InsAndObjectPool(config,class,prefabPath,parent,this)
             pool[class][key]=nil
         end
     end
-    --所有实例归还对象池
+    --All instances return object pool
     for i, ins in ipairs(tempList) do
         table.insert(pool[class],ins)
     end
 end
 
----==========================================================================================框架函数============================================================================================
+---==========================================================================================Frame function============================================================================================
 function  BubbleMessageCtrl:bundleName()
     return "Assets/CityGame/Resources/View/BubbleMessagePanel.prefab"
 end
 
 function BubbleMessageCtrl:initialize()
-    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.None)--You can go back and hide other panels after the UI opens
 end
 
 function BubbleMessageCtrl:Refresh()
@@ -162,7 +162,7 @@ function  BubbleMessageCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.confirmBtn.gameObject,self.c_OnClick_confirm,self);
     LuaBehaviour:AddClick(panel.hideBtn.gameObject,self.c_OnClick_hide,self);
     panel.inputFrame.onValueChanged:AddListener(function ()
-        --空输入
+        --Empty input
         if string.gsub(panel.inputFrame.text, "^%s*(.-)%s*$", "%1") == "" then
             self:ChangeSureBtn(false)
         else
@@ -172,7 +172,7 @@ function  BubbleMessageCtrl:Awake(go)
     --ct.LimitInputLength(panel.inputFrame , 30)
 end
 
----==========================================================================================业务代码===================================================================================================
+---==========================================================================================Business code===================================================================================================
 
 function BubbleMessageCtrl:begin()
 
@@ -186,13 +186,13 @@ function BubbleMessageCtrl:ChangeSureBtn(isShow)
     end
 end
 
----==========================================================================================点击函数===================================================================================================
---返回
+---==========================================================================================Click function===================================================================================================
+--return
 function BubbleMessageCtrl:c_OnClick_backBtn(ins)
     UIPanel.ClosePage()
 end
 
---确定
+--determine
 function BubbleMessageCtrl:c_OnClick_confirm(ins)
     local des = panel.inputFrame.text
     if panel.inputFrame.text == "" then
@@ -203,7 +203,7 @@ function BubbleMessageCtrl:c_OnClick_confirm(ins)
     UIPanel.ClosePage()
 end
 
---隐藏
+--hide
 function BubbleMessageCtrl:c_OnClick_hide(ins)
     local des = " "
     Event.Brocast("m_setBuildingInfo",ins.m_data.id,des,ins.bubbleId,false)

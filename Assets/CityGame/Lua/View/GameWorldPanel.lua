@@ -4,7 +4,7 @@ local gameObject;
 GameWorldPanel = {};
 local this = GameWorldPanel;
 
---启动事件--
+--Start event -
 function GameWorldPanel.Awake(obj)
 
 	gameObject = obj;
@@ -14,7 +14,7 @@ function GameWorldPanel.Awake(obj)
 	logWarn("Awake lua--->>"..gameObject.name);
 end
 
---初始化面板--
+--Initialization panel--
 function GameWorldPanel.InitPanel()
 	this.btnSend = transform:Find("Button_send").gameObject;
 	this.PanelDie = transform:Find("Panel_die").gameObject;
@@ -31,7 +31,7 @@ function GameWorldPanel.InitPanel()
 	
 end
 
---单击事件--
+--Click event--
 function GameWorldPanel.OnDestroy()
 	logWarn("OnDestroy---->>>");
 end

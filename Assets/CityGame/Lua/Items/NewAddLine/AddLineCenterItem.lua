@@ -1,9 +1,9 @@
 ---
----中间合成的Item
+---Item synthesized in the middle
 ---
 AddLineCenterItem = class('AddLineCenterItem')
-AddLineCenterItem.static.ChooseColor = Vector3.New(78, 111, 189)  --选中时显示的颜色
-AddLineCenterItem.static.NomalColor = Vector3.New(230, 226, 205)  --未选中时显示的颜色
+AddLineCenterItem.static.ChooseColor = Vector3.New(78, 111, 189)  --The color displayed when selected
+AddLineCenterItem.static.NomalColor = Vector3.New(230, 226, 205)  --Color displayed when not selected
 --
 function AddLineCenterItem:initialize(viewRect)
     self.viewRect = viewRect
@@ -13,7 +13,7 @@ function AddLineCenterItem:initialize(viewRect)
     self.countText = viewRect:Find("Image/countText"):GetComponent("Text")
 end
 
---初始化
+--initialization
 function AddLineCenterItem:initData(data)
     local type = ct.getType(UnityEngine.Sprite)
     if Material[data.itemId] then
@@ -26,7 +26,7 @@ function AddLineCenterItem:initData(data)
     self.countText.text = data.num
     --self:setObjState(true)
 end
---隐藏显示场景中的obj
+--Hide obj in the display scene
 function AddLineCenterItem:setObjState(show)
     if show then
         self.viewRect.localScale = Vector3.one

@@ -12,9 +12,9 @@ function LoginModel:initialize(insId)
     self:OnCreate()
 end
 
---启动事件--
+--Start event--
 function LoginModel:OnCreate()
-    --注册本地UI事件
+    --Register local ui events
     --CityEngineLua.login_loginapp(true);
     Event.AddListener("m_OnAsLogin", self.m_OnAsLogin);
     Event.AddListener("m_OnRegister", self.m_OnRegister,self);
@@ -37,9 +37,9 @@ function LoginModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","modifyPwdVerify","as.VerifyStatus",self.n_ModifyPwdVerify,self)  --修改密码验证
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","modifyPwd","as.String",self.n_ChangePassword,self)  --确认修改密码
 end
---关闭事件--
+--Close event--
 function LoginModel:Close()
-    --清空本地UI事件
+    --Clear local UI events
     Event.RemoveListener("m_OnAsLogin", self.m_OnAsLogin);
     Event.RemoveListener("m_onConnectionState", self.m_onConnectionState);
     Event.RemoveListener("m_onDisconnect", self.m_onDisconnect);
@@ -99,7 +99,7 @@ function LoginModel:m_CanCleModeFyPwd()
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil);
 end
 
------------------------------------------------------------------网络回调--------------------------------------------------------------------------
+-----------------------------------------------------------------Online registration--------------------------------------------------------------------------
 
 --验证邀请码回调
 function LoginModel:n_InvitationCodeStatus(info)
@@ -111,7 +111,7 @@ function LoginModel:n_GetCode(info,msgId)
     Event.Brocast("c_GetCode",info,msgId)
 end
 
---注册回调
+--Register callback
 function LoginModel:n_CreateResult(info)
     Event.Brocast("c_OnResult",info)
 end
@@ -249,7 +249,7 @@ end--]]
     --清理as的网络回调
     CityEngineLua.Message:clear()
     CityEngineLua.Message:bindFixedMessage()
-    --gs网络回调注册
+    --gsNetwork callback registration
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","login"),LoginModel.n_GsLoginSuccessfully);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","createRole"),LoginModel.n_CreateNewRole);
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),LoginModel.n_OnRoleLogin);

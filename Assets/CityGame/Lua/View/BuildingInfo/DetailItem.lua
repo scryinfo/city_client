@@ -6,7 +6,7 @@
 
 DetailItem = class('DetailItem')
 
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function DetailItem:initialize(prefab)
      self.prefab=prefab
     self.topicText=prefab.transform:Find("detailItem/top/topic/Text"):GetComponent("Text");
@@ -14,7 +14,7 @@ function DetailItem:initialize(prefab)
     self.ima=prefab.transform:Find("detailItem/body/Image"):GetComponent("Image");
 
 end
----添加
+---Add to
 function DetailItem:updateData(topic,content,ima)
     self.topicText.text="   "..GetLanguage(tonumber(topic))
     self.contentText.text=GetLanguage(tonumber(content))

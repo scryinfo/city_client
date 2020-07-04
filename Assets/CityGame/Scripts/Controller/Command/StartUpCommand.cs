@@ -12,7 +12,7 @@ public class StartUpCommand : ControllerCommand {
             AppView appView = gameMgr.AddComponent<AppView>();
         }
 
-        //-----------------初始化管理器-----------------------
+        //-----------------Initialization manager-----------------------
         AppFacade.Instance.AddManager<LuaManager>(ManagerName.Lua);
         AppFacade.Instance.AddManager<PanelManager>(ManagerName.Panel);
         AppFacade.Instance.AddManager<SoundManager>(ManagerName.Sound);

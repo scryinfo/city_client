@@ -1,5 +1,5 @@
 SystemSettingCtrl = class('SystemSettingCtrl',UIPanel)
-UIPanel:ResgisterOpen(SystemSettingCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(SystemSettingCtrl) --How to open the registration
 
 local panel
 local LuaBehaviour;
@@ -10,7 +10,7 @@ function  SystemSettingCtrl:bundleName()
 end
 
 function SystemSettingCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--You can go back and hide other panels after the UI opens
 end
 
 function SystemSettingCtrl:OnCreate(obj)
@@ -18,7 +18,7 @@ function SystemSettingCtrl:OnCreate(obj)
 end
 
 function SystemSettingCtrl:Refresh()
-    --打开英文的
+    
     local Languagenum = UnityEngine.PlayerPrefs.GetInt("Language")
     if Languagenum == 1 then
         panel:InitDate(GetLanguage(14010005))
@@ -55,20 +55,20 @@ function  SystemSettingCtrl:Awake(go)
     LuaBehaviour:AddClick(panel.outBtn.gameObject,self.c_OnClickout,self);
     LuaBehaviour:AddClick(panel.backBtn1.gameObject,self.c_OnClick_backBtn1,self);
     LuaBehaviour:AddClick(panel.closeLan.gameObject,self.c_OnClick_backBtn2,self);
-    --气泡
+    --bubble
     LuaBehaviour:AddClick(panel.bubbleShowBtn.gameObject,self.c_OnClick_BubbleClose,self);
     LuaBehaviour:AddClick(panel.bubbleCloseBtn.gameObject,self.c_OnClick_BubbleShow,self);
 
 end
----========================================================点击==============================================================================================
---气泡全开
+---========================================================click==============================================================================================
+--Bubble fully open
 function SystemSettingCtrl:c_OnClick_BubbleShow(ins)
     PlayMusEff(1002)
     panel.bubbleCloseBtn.gameObject:SetActive(false)
     Event.Brocast("c_BuildingBubbleShow")
     SaveBuildingBubbleSettings(BuildingBubbleType.show)
 end
---气泡全关
+--Bubbles off
 function SystemSettingCtrl:c_OnClick_BubbleClose(ins)
     PlayMusEff(1002)
     panel.bubbleCloseBtn.gameObject:SetActive(true)
@@ -76,14 +76,14 @@ function SystemSettingCtrl:c_OnClick_BubbleClose(ins)
     SaveBuildingBubbleSettings(BuildingBubbleType.close)
 end
 
---退出
+--drop out
 function SystemSettingCtrl:c_OnClickout(ins)
     PlayMusEff(1002)
-    --退出游戏后音效切换
+    --Sound effects switch after exiting the game
     PlayMus(1000)
     CityEngineLua.LoginOut()
 end
---开音乐
+--Open music
 function SystemSettingCtrl:c_OnClickMusic(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicBtnyellosw.localScale=Vector3.one
@@ -91,14 +91,14 @@ function SystemSettingCtrl:c_OnClickMusic(ins)
     PlayMusEff(1002)
     PlayMus(1001)
 end
---开音效
+--Open sound effect
 function SystemSettingCtrl:c_OnClickMusicEffect(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicEffectBtnyellow.localScale=Vector3.one
     UnityEngine.PlayerPrefs.SetInt("MusicEffect",0)
     PlayMusEff(1002)
 end
---音乐
+--music
 function SystemSettingCtrl:c_OnClick_Music(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicBtngrey.localScale=Vector3.one
@@ -106,19 +106,19 @@ function SystemSettingCtrl:c_OnClick_Music(ins)
     PlayMusEff(1002)
     PlayMus(1001)
 end
---音效
+--Sound effects
 function SystemSettingCtrl:c_OnClick_MusicEffect(ins)
     self.transform.localScale=Vector3.zero
     panel.MusicEffectBtngrey.localScale=Vector3.one
     UnityEngine.PlayerPrefs.SetInt("MusicEffect",1)
     PlayMusEff(1002)
 end
---返回
+--return
 function SystemSettingCtrl:c_OnClick_backBtn(ins)
     UIPanel.ClosePage()
     PlayMusEff(1002)
 end
---返回
+--return
 function SystemSettingCtrl:c_OnClick_backBtn1(ins)
     if panel.LanguagePanel.localScale.x == 1  then
         panel.LanguagePanel.localScale=Vector3.zero
@@ -127,52 +127,52 @@ function SystemSettingCtrl:c_OnClick_backBtn1(ins)
     UIPanel.ClosePage()
     PlayMusEff(1002)
 end
---返回
+--return
 function SystemSettingCtrl:c_OnClick_backBtn2()
     panel.LanguagePanel.localScale=Vector3.zero
     panel.closeLan.localScale=Vector3.zero
 end
---改变语言
+--Change language
 function SystemSettingCtrl:c_OnClick_changeLanguage()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale = Vector3.one
     panel.closeLan.localScale = Vector3.one
 end
---中文
+--Chinese
 function SystemSettingCtrl:c_OnClick_chinese()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.Chinese)
     panel:InitDate(GetLanguage(14010004))
     panel.closeLan.localScale=Vector3.zero
-    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
+    Event.Brocast("c_ChangeLanguage")  --Broadcast switching language status
 end
---英文
+--English
 function SystemSettingCtrl:c_OnClick_english()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.English)
     panel:InitDate(GetLanguage(14010005))
     panel.closeLan.localScale=Vector3.zero
-    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
+    Event.Brocast("c_ChangeLanguage")  ---Broadcast switching language status
 end
---韩语
+--Korean
 function SystemSettingCtrl:c_OnClick_Korean()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.Korean)
     panel:InitDate(GetLanguage(14010006))
     panel.closeLan.localScale = Vector3.zero
-    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
+    Event.Brocast("c_ChangeLanguage")  ---Broadcast switching language status
 end
---日语
+--Japanese
 function SystemSettingCtrl:c_OnClick_Japanese()
     PlayMusEff(1002)
     panel.LanguagePanel.localScale=Vector3.zero
     SaveLanguageSettings(LanguageType.Japanese)
     panel:InitDate(GetLanguage(14010007))
     panel.closeLan.localScale = Vector3.zero
-    Event.Brocast("c_ChangeLanguage")  --广播切换语言状态
+    Event.Brocast("c_ChangeLanguage")  ---Broadcast switching language status
 end
 
 

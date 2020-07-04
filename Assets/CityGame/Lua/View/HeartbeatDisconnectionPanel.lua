@@ -5,7 +5,7 @@ HeartbeatDisconnectionPanel = {};
 local this = HeartbeatDisconnectionPanel;
 
 
---启动事件--
+--Start event--
 function HeartbeatDisconnectionPanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
@@ -13,7 +13,7 @@ function HeartbeatDisconnectionPanel.Awake(obj)
     this.InitPanel();
 end
 
---初始化面板--
+--Initialize the panel--
 function HeartbeatDisconnectionPanel.InitPanel()
     this.moveIcon = transform:Find("signal/moveIcon")
     this.Tipstext = transform:Find("Text"):GetComponent("Text")

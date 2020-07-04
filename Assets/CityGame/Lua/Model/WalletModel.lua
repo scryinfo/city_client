@@ -12,7 +12,7 @@ function WalletModel:initialize(insId)
 end
 
 function WalletModel:OnCreate()
-    --本地事件
+    --Local events
     Event.AddListener("ReqCreateWallet",self.ReqCreateWallet,self)
     Event.AddListener("ReqCreateOrder",self.ReqCreateOrder,self)
     Event.AddListener("ReqDisChargeOrder",self.ReqDisChargeOrder,self)
@@ -20,7 +20,7 @@ function WalletModel:OnCreate()
     Event.AddListener("ReqValidationPhoneCode",self.ReqValidationPhoneCode,self)
     Event.AddListener("ReqDetails",self.ReqDetails,self)
 
-    --网络事件
+    --Network incident
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.ct_RechargeRequestRes",self.ReqTopUpSucceed,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_DisPaySmVefifyReq","ccapi.ct_DisPaySmVefifyReq",self.ReqValidationPhoneCodeSuccees,self)
@@ -28,7 +28,7 @@ function WalletModel:OnCreate()
 end
 
 function WalletModel:Close()
-    --本地事件
+    --Local events
     Event.RemoveListener("ReqCreateWallet",self.ReqCreateWallet,self)
     Event.RemoveListener("ReqCreateOrder",self.ReqCreateOrder,self)
     Event.RemoveListener("ReqDisChargeOrder",self.ReqDisChargeOrder,self)
@@ -36,15 +36,15 @@ function WalletModel:Close()
     Event.RemoveListener("ReqValidationPhoneCode",self.ReqValidationPhoneCode,self)
     Event.RemoveListener("ReqDetails",self.ReqDetails,self)
 
-    --网络事件
+    --Network incident
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_createUser","ccapi.ct_createUser",self.ReceiveCreateWallet,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_RechargeRequestReq","ccapi.ct_RechargeRequestRes",self.ReqTopUpSucceed,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_DisPaySmVefifyReq","ccapi.ct_DisPaySmVefifyReq",self.ReqValidationPhoneCodeSuccees,self)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GetTradingRecords","ccapi.ct_GetTradingRecords",self.GetTradingRecords,self)
 end
 
----客户端请求----
---创建钱包
+---Client request----
+--Create a wallet
 function WalletModel:ReqCreateWallet(userId,userName,pubKey)
     local msgId = pbl.enum("gscode.OpCode","ct_createUser")
     local lMsg ={PlayerId = userId,CreateUserReq={ReqHeader={Version = 1,ReqId = tostring(msgId),},CityUserId = userId,CityUserName = userName,PubKey=City.signer_ct.ToHexString(pubKey),PayPassword=''}}
@@ -52,7 +52,7 @@ function WalletModel:ReqCreateWallet(userId,userName,pubKey)
     local msgRet = assert(pbl.decode("ccapi.ct_createUser",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
---生成充值订单
+--Generate recharge orders
 function WalletModel:ReqCreateOrder(userId,Amount,passWard)
     self.passWard = passWard
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
@@ -63,7 +63,7 @@ function WalletModel:ReqCreateOrder(userId,Amount,passWard)
     --local msgRet = assert(pbl.decode("ccapi.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
---生成提币订单
+--Generate withdrawal order
 function WalletModel:ReqDisChargeOrder(userId,passWard)
     self.passWard = passWard
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveDisChargeOrder,self)
@@ -73,7 +73,7 @@ function WalletModel:ReqDisChargeOrder(userId,passWard)
     local msgRet = assert(pbl.decode("ccapi.ct_GenerateOrderReq",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
---充值
+--Recharge
 function WalletModel:ReqTopUp(userId,PurchaseId,PubKey,Amount,Ts,Signature)
     local msgId = pbl.enum("gscode.OpCode","ct_RechargeRequestReq")
     local lMsg ={PlayerId = userId,RechargeRequestReq={ReqHeader={Version = 1,ReqId = tostring(msgId),},PurchaseId = PurchaseId,PubKey=PubKey,Amount=Amount,ExpireTime=9,Ts=Ts,Signature = Signature}}
@@ -81,7 +81,7 @@ function WalletModel:ReqTopUp(userId,PurchaseId,PubKey,Amount,Ts,Signature)
     --local msgRet = assert(pbl.decode("ccapi.ct_RechargeRequestReq",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
---提币
+--Withdraw
 function WalletModel:ReqDisCharge(userId,PurchaseId,PubKey,EthAddr,Amount,Ts,Signature)
     local msgId = pbl.enum("gscode.OpCode","ct_DisChargeReq")
     local lMsg ={PlayerId = userId,DisChargeReq = {ReqHeader = {Version = 1,ReqId = tostring(msgId),},PurchaseId = PurchaseId,PubKey = PubKey,EthAddr = EthAddr,Amount = Amount,ExpireTime = 9,Ts = Ts,Signature = Signature}}
@@ -89,7 +89,7 @@ function WalletModel:ReqDisCharge(userId,PurchaseId,PubKey,EthAddr,Amount,Ts,Sig
     local msgRet = assert(pbl.decode("ccapi.ct_DisChargeReq",pMsg), "pbl.decode decode failed")
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
---验证手机验证码
+--Verify phone verification code
 function WalletModel:ReqValidationPhoneCode(userId,authCode)
     local msgId = pbl.enum("gscode.OpCode","ct_DisPaySmVefifyReq")
     local lMsg ={PlayerId = userId,authCode = authCode}
@@ -98,10 +98,10 @@ function WalletModel:ReqValidationPhoneCode(userId,authCode)
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 
---订单详情
+--order details
 function WalletModel:ReqDetails(userId)
-    local currentTime = TimeSynchronized.GetTheCurrentServerTime()  --毫秒
-    local endTime = TimeSynchronized.GetTheCurrentServerTime()  --毫秒
+    local currentTime = TimeSynchronized.GetTheCurrentServerTime()  --ms
+    local endTime = TimeSynchronized.GetTheCurrentServerTime()  --ms
     local ts = getFormatUnixTime(currentTime/1000)
     if tonumber(ts.second) ~= 0 then
         currentTime = currentTime - tonumber(ts.second)*1000
@@ -123,14 +123,14 @@ function WalletModel:ReqDetails(userId)
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
 
----服务器回调---
---创建钱包
+---Server callback---
+--Create a wallet
 function WalletModel:ReceiveCreateWallet(data)
     if data ~= nil then
         Event.Brocast("createWalletSucceed",data)
     end
 end
---生成充值订单
+--Generate recharge orders
 function WalletModel:ReceiveCreateOrder(data)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveCreateOrder,self)
     if data ~= nil then
@@ -141,40 +141,40 @@ function WalletModel:ReceiveCreateOrder(data)
         local pubkeyStr = sm.ToHexString(pubkey)
         sm:pushSting(data.PurchaseId)
         sm:pushSting(self.Amount)
-        --暂时发秒
+        --Sent temporarily
         local second = math.ceil(serverNowTime)
         sm:pushLong(second)
-        --生成签名(用于验证关键数据是否被篡改)
+        --Generate a signature (used to verify whether key data has been tampered with)
         local sig = sm:sign(privateKeyStr);
         self:ReqTopUp(data.PlayerId,data.PurchaseId,pubkeyStr,self.Amount,second,sm.ToHexString(sig))
     end
 end
---生成提币订单
+--Generate withdrawal order
 function WalletModel:ReceiveDisChargeOrder(data)
     DataManager.ModelRemoveNetMsg(nil,"gscode.OpCode","ct_GenerateOrderReq","ccapi.ct_GenerateOrderReq",self.ReceiveDisChargeOrder,self)
     if data ~= nil then
         Event.Brocast("reqDisChargeOrderSucceed",data,self.passWard)
     end
 end
---充值成功
+--Recharge successful
 function WalletModel:ReqTopUpSucceed(data)
     if data ~= nil then
         Event.Brocast("reqTopUpSucceed",data)
     end
 end
---验证手机验证码并通过
+--Verify phone verification code and pass
 function WalletModel:ReqValidationPhoneCodeSuccees(data)
     if data ~= nil then
         Event.Brocast("ValidationPhoneCode",data)
     end
 end
 
---交易详情
+--Transaction Details
 function WalletModel:GetTradingRecords(info)
     Event.Brocast("TradingRecords",info)
 end
-------------------------------------------------------------------------解析-----------------------------------------------------------------------------
---解析支付密码和私钥
+------------------------------------------------------------------------Analysis-----------------------------------------------------------------------------
+--Analyze payment password and private key
 function WalletModel:parsing()
     local passWordPath = CityLuaUtil.getAssetsPath().."/Lua/pb/passWard.data"
     local passWordStr = ct.file_readString(passWordPath)

@@ -44,7 +44,7 @@ function GroundTransSelfCheckInfoCtrl:Close()
     UIPanel.Close(self)
 end
 
----初始化
+---initialization
 function GroundTransSelfCheckInfoCtrl:_initPanelData()
     if self.m_data and self.m_data.groundInfo.rent then
         self:_setShowState(self.m_data.groundInfo.rent)
@@ -69,14 +69,14 @@ function GroundTransSelfCheckInfoCtrl:_setShowState(rent)
     GroundTransSelfCheckInfoPanel.remainDayText.text = showStr
 end
 
----按钮方法
---点其他地方则关闭整个堆栈，打开主界面
+---Button method
+--Click elsewhere to close the entire stack and open the main interface
 function GroundTransSelfCheckInfoCtrl:_closeBtnFunc()
     PlayMusEff(1002)
-    --关闭所有界面
+    --Close all interfaces
     GroundTransSetPriceCtrl._closeBackToMain()
 end
---返回按钮
+--Back button
 function GroundTransSelfCheckInfoCtrl:_backBtnFunc()
     PlayMusEff(1002)
     UIPanel:ClosePage()

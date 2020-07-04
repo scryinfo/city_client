@@ -25,7 +25,7 @@ function AdvertisementPopPanel.InitPanel()
     this.testTxt=transform:Find("root/Text"):GetComponent("Text");
 end
 
---数据初始化
+--Data initialization
 function AdvertisementPopPanel.InitDate(AdvertisementPosData)
     this.materialData = AdvertisementPosData;
 end

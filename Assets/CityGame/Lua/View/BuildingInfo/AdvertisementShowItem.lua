@@ -6,28 +6,28 @@
 local class = require 'Framework/class'
 
 AdvertisementShowItem = class('AdvertisementShowItem')
-AdvertisementShowItem.static.TOTAL_H = 781 --整个Item的高度
-AdvertisementShowItem.static.CONTENT_H = 700  --显示内容的高度
-AdvertisementShowItem.static.TOP_H = 100  --top条的高度
+AdvertisementShowItem.static.TOTAL_H = 781 --The height of the entire Item
+AdvertisementShowItem.static.CONTENT_H = 700  --Display height
+AdvertisementShowItem.static.TOP_H = 100  --the height of the top bar
 
 
 function AdvertisementShowItem:initialize(itemlData, clickOpenFunc, itemRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = itemRect
     self.rentalData = itemlData
-    self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
+    self.toggleData = toggleData  --Located in the first few of toggle, left or right
 
-    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --内容Rect
-    self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --打开状态
-    self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --关闭状态
-    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --打开按钮
-    self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn");  --打开之后的执行按钮
+    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform");  --Content Rect
+    self.openStateTran = self.viewRect.transform:Find("topRoot/open");  --Open state
+    self.closeStateTran = self.viewRect.transform:Find("topRoot/close");  --Disabled
+    self.openBtns = self.viewRect.transform:Find("topRoot/close/openBtns");  --Open button
+    self.toDoBtn = self.viewRect.transform:Find("topRoot/open/doSthBtn");  --Execute button after opening
 
-    --todo:文本赋值
+    --todo:Text assignment
     self.price = itemRect:Find("contentRoot/head/Text/numText"):GetComponent("Text")
     self.acount = itemRect:Find("contentRoot/head/Text (1)/numText"):GetComponent("Text")
     self.day = itemRect:Find("contentRoot/head/Text (2)/numText"):GetComponent("Text")
 
-    --todo:多语言赋值
+    --todo:Multilingual assignment
     self.topicText = itemRect:Find("contentRoot/head/toptic/Text"):GetComponent("Text")
     self.priceText = itemRect:Find("contentRoot/head/Text"):GetComponent("Text")
     self.acountText = itemRect:Find("contentRoot/head/Text (1)"):GetComponent("Text")
@@ -44,13 +44,13 @@ function AdvertisementShowItem:initialize(itemlData, clickOpenFunc, itemRect, ma
 
 end
 
---文本赋值
+--Text assignment
 function AdvertisementShowItem:c_ShowItemValueChange(price,acount,day)
     self.price.text = price
     self.acount .text= acount
     self.day.text = day.."(day)"
 end
---多语言赋值
+--Multilingual assignment
 function AdvertisementShowItem:c_ShowItemTextChange()
     --self.topicText = itemRect:Find("contentRoot/head/toptic/Text"):GetComponent("Text")
     --self.priceText = itemRect:Find("contentRoot/head/Text"):GetComponent("Text")
@@ -58,12 +58,12 @@ function AdvertisementShowItem:c_ShowItemTextChange()
     --self.dayText = itemRect:Find("contentRoot/head/Text (2)"):GetComponent("Text")
 end
 
---获取是第几个点击了
+--Get the number of clicks
 function AdvertisementShowItem:getToggleIndex()
     return self.toggleData.index
 end
 
---打开
+--open
 function AdvertisementShowItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open;
 
@@ -76,7 +76,7 @@ function AdvertisementShowItem:openToggleItem(targetMovePos)
     return Vector2.New(targetMovePos.x,targetMovePos.y - AdvertisementShowItem.static.TOTAL_H);
 end
 
---关闭
+--shut down
 function AdvertisementShowItem:closeToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Close;
 
@@ -89,13 +89,13 @@ function AdvertisementShowItem:closeToggleItem(targetMovePos)
     return Vector2.New(targetMovePos.x,targetMovePos.y - AdvertisementShowItem.static.TOP_H);
 end
 
---刷新数据
+--Refresh data
 function AdvertisementShowItem:updateInfo(data)
 
 end
 
 function AdvertisementShowItem:OntodoBtn(ins)
-    ---测试
+    ---test
     local data={}
     data.Buildingowner=Buildingowner.other
     ct.OpenCtrl('AdvertisementPosCtrl',Buildingowner.other)

@@ -2,13 +2,13 @@
 using LuaInterface;
 using System.Collections.Generic;
 
-//Lua组件 
+//Lua components
 public class LuaComponent : MonoBehaviour
 {
-    //lua环境，需要在使用前给其赋值
+    //Lua environment, you need to assign it before use
     public static LuaState s_luaState;
 
-//函数名字定义
+//Function name definition
 protected static class FuncName
 {
     public static readonly string Awake = "Awake";
@@ -20,7 +20,7 @@ protected static class FuncName
     public static readonly string OnDestroy = "OnDestroy";
 };
 
-//lua路径，不用填缀名，可以是bundle
+//Lua path, no need to fill in the name, it can be a bundle
 [Tooltip("script path")]
 public string LuaPath;
 
@@ -31,13 +31,13 @@ public string LuaPath;
             CallLuaFunction(FuncName.Awake, mSelfTable, gameObject);
     }
 
-    //预存函数提高效率
+    //Pre-stored functions improve efficiency
     protected Dictionary<string, LuaFunction> mDictFunc = new Dictionary<string, LuaFunction>();
 
-//lua表，当gameObject销毁时要释放
+//Lua table, to be released when the gameObject is destroyed
 private LuaTable mSelfTable = null;
 
-//初始化函数，可以被重写，已添加其他
+//Initialization function, can be rewritten, other has been added
 protected virtual bool Init()
 {
     if (s_luaState == null)
@@ -82,7 +82,7 @@ protected virtual bool Init()
     return true;
 }
 
-//保存函数
+//Save function
 protected bool AddFunc(string name)
 {
     var func = mSelfTable.GetLuaFunction(name);
@@ -94,7 +94,7 @@ protected bool AddFunc(string name)
     return true;
 }
 
-//调用函数
+//Call functions
 protected void CallLuaFunction(string name, params object[] args)
 {
     LuaFunction func = null;
@@ -152,7 +152,7 @@ void OnDestroy()
 
     CallLuaFunction(FuncName.OnDestroy, mSelfTable, gameObject);
 
-    //记得释放资源
+    //Remember to release resources
     foreach (var pair in mDictFunc)
     {
         pair.Value.Dispose();

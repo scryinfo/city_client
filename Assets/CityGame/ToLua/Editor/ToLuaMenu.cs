@@ -19,7 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-//打开开关没有写入导出列表的纯虚类自动跳过
+//Open the switch, and the pure virtual class that is not written to the export list is automatically skipped
 //#define JUMP_NODEFINED_ABSTRACT         
 
 using UnityEngine;
@@ -41,22 +41,22 @@ using System.Threading;
 [InitializeOnLoad]
 public static class ToLuaMenu
 {
-    //不需要导出或者无法导出的类型
+    //Types that do not need to be exported or cannot be exported
     public static List<Type> dropType = new List<Type>
     {
-        typeof(ValueType),                                  //不需要
+        typeof(ValueType),                                  //No need
 #if !UNITY_5 && !UNITY_2017 && !UNITY_2018
-        typeof(Motion),                                     //很多平台只是空类
+        typeof(Motion),                                     //Many platforms are just empty classes
 #endif
 
 #if UNITY_5_3_OR_NEWER
         typeof(UnityEngine.CustomYieldInstruction),
 #endif
-        typeof(UnityEngine.YieldInstruction),               //无需导出的类      
-        typeof(UnityEngine.WaitForEndOfFrame),              //内部支持
+        typeof(UnityEngine.YieldInstruction),               //not need to be exported    
+        typeof(UnityEngine.WaitForEndOfFrame),              //Internal support
         typeof(UnityEngine.WaitForFixedUpdate),
         typeof(UnityEngine.WaitForSeconds),        
-        typeof(UnityEngine.Mathf),                          //lua层支持                
+        typeof(UnityEngine.Mathf),                          //Lua layer support              
         typeof(Plane),                                      
         typeof(LayerMask),                                  
         typeof(Vector3),
@@ -69,7 +69,7 @@ public static class ToLuaMenu
         typeof(Touch),
         typeof(RaycastHit),                                 
         typeof(TouchPhase),     
-        //typeof(LuaInterface.LuaOutMetatable),               //手写支持
+        //typeof(LuaInterface.LuaOutMetatable),               //Handwriting support
         typeof(LuaInterface.NullObject),             
         typeof(System.Array),                        
         typeof(System.Reflection.MemberInfo),    
@@ -78,11 +78,11 @@ public static class ToLuaMenu
         typeof(LuaInterface.LuaFunction),
         typeof(LuaInterface.LuaTable),
         typeof(LuaInterface.LuaThread),
-        typeof(LuaInterface.LuaByteBuffer),                 //只是类型标识符
-        typeof(DelegateFactory),                            //无需导出，导出类支持lua函数转换为委托。如UIEventListener.OnClick(luafunc)
+        typeof(LuaInterface.LuaByteBuffer),                 //Just type identifier
+        typeof(DelegateFactory),                            //No export is required, the export class supports conversion of lua functions to delegates. Such as UIEventListener.OnClick(luafunc)
     };
 
-    //可以导出的内部支持类型
+    //Types of internal support that can be exported
     public static List<Type> baseType = new List<Type>
     {
         typeof(System.Object),
@@ -136,13 +136,13 @@ public static class ToLuaMenu
 
     public class BindType
     {
-        public string name;                 //类名称
+        public string name;                 //Class name
         public Type type;
         public bool IsStatic;        
-        public string wrapName = "";        //产生的wrap文件名字
-        public string libName = "";         //注册到lua的名字
+        public string wrapName = "";        //The name of the generated wrap file
+        public string libName = "";         //Register to lua's name
         public Type baseType = null;
-        public string nameSpace = null;     //注册到lua的table层级
+        public string nameSpace = null;     //Register to the lua table level
 
         public List<Type> extendList = new List<Type>();
 

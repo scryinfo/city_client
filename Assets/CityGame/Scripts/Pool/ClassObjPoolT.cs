@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class ClassObjPool<T> : ClassObjPoolBase where T : PooledClassObject, new()
 {
-    // 优化说明：使用Queue或者BetterList都比使用List效率高
-    // 经验规则：不要使用List去模拟队列
+    // Optimization description: using Queue or BetterList is more efficient than using List
+    // Rule of thumb: Don't use List to simulate queues
     private static ClassObjPool<T> instance;
     protected uint reqSeq = 0;
     protected Queue<T> pool = new Queue<T>(32);

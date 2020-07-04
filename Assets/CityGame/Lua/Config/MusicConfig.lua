@@ -5,12 +5,12 @@
 ---
 
 MusicConfig={
-    [1000] = "startBGM",                    --登录背景音乐
-    [1001] = "gameBGM",                     --背景音乐
-    [1002] = "touchEffect",                 --点击音效
-    [1003] = "notification",                --通知
-    [1004] = "technologySuccess",           --科技研发成功
-    [1005] = "technologyFail",              --科技研发失败
+    [1000] = "startBGM",                    --Sign in to background music
+    [1001] = "gameBGM",                     --Background music
+    [1002] = "touchEffect",                 --Click sound effects
+    [1003] = "notification",                --Notice
+    [1004] = "technologySuccess",           --Technology R&D Successful
+    [1005] = "technologyFail",              --Technology R&D failure
 }
 
 

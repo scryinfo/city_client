@@ -1,6 +1,6 @@
 
 
---研究所掷点界面ctrl
+--Institute for Throwing Point Interface
 local pool={}
 local LuaBehaviour
 local odds
@@ -11,24 +11,24 @@ local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,thi
     if not pool[class] then
         pool[class]={}
     end
-    --对象池创建物体
+    --Object pool to create objects
     local tempList={}
     for i, value in ipairs(config) do
         local ins =pool[class][1]
-        if ins then  --有实例
+        if ins then  --There are examples
             ins:updateData(value)
             value.id=i
             ins.prefab:SetActive(true)
             table.insert(tempList,ins)
             table.remove(pool[class],1)
-        else--无实例
+        else--No instance
             local prefab=creatGoods(prefabPath,parent)
             value.id=i
             local ins=class:new(prefab,LuaBehaviour,value,this)
             table.insert(tempList,ins)
         end
     end
-    --多余实例隐藏
+    --Extra instances hidden
     if #pool[class]>0 then
         for key, ins in ipairs(pool[class]) do
             ins.prefab:SetActive(false)
@@ -36,7 +36,7 @@ local  function InsAndObjectPool(config,class,prefabPath,parent,LuaBehaviour,thi
             pool[class][key]=nil
         end
     end
-    --所有实例归还对象池
+    --All instances return object pool
     for i, ins in ipairs(tempList) do
         table.insert(pool[class],ins)
     end
@@ -45,8 +45,8 @@ end
 local prefabPath ="View/Laboratory/rollItem"
 
 RollCtrl = class('RollCtrl',UIPanel)
-UIPanel:ResgisterOpen(RollCtrl) --注册打开的方法
----====================================================================================框架函数==============================================================================================
+UIPanel:ResgisterOpen(RollCtrl) 
+---====================================================================================Framework function==============================================================================================
 local panel
 
 function RollCtrl:initialize()
@@ -95,7 +95,7 @@ function RollCtrl:Refresh()
 end
 
 --function RollCtrl:UpData()
---    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+--    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()  -- Current server time (milliseconds)
 --    if self.currentTime >= data.beginProcessTs and self.currentTime <= data.beginProcessTs + data.times*3600000  then
 --            if not isUpdata then
 --                return
@@ -106,7 +106,7 @@ end
 --            --倒计时
 --            self.waiting = self.waiting -1
 --            if self.waiting <= 0 then
---                self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+--                self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    -- Current server time (milliseconds)
 --                local ts =getTimeBySec( (self.currentTime - self.data.beginProcessTs)/1000)
 --                panel.Remainingtime.text = "00".. ":" .. ts.minute .. ":" .. ts.second .. "/" .. math.floor(self.data.times).. "h"
 --                self.waiting = 1
@@ -118,7 +118,7 @@ end
 function RollCtrl:Awake(go)
     panel = RollPanel
     isUpdata = true
-    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    --服务器当前时间(毫秒)
+    self.currentTime = TimeSynchronized.GetTheCurrentServerTime()    -- Current server time (milliseconds)
     LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour')
     self.LuaBehaviour=LuaBehaviour
     self.popCompent = PopCommpent:new(go,LuaBehaviour,self)
@@ -135,8 +135,8 @@ function RollCtrl:Awake(go)
     self:language()
 
 end
----====================================================================================点击函数==============================================================================================
---关闭失败
+---====================================================================================click function==============================================================================================
+--Close failed
 function RollCtrl:_closeFail(ins)
     ins:closeAllRoot()
 end
@@ -148,14 +148,14 @@ end
 
 
 function RollCtrl:_closeAll(ins)
-    --及时销毁产生的item
+    --Destroy the generated item in time
     local count = panel.Evaresult.transform.childCount
     for i = 0, count - 1 do
         destroy(panel.Evaresult:GetChild(i).gameObject)
     end
     panel.resultRoot.localScale =  Vector3.one
     panel.result.localScale =  Vector3.one
-    --eva开箱结果界面文本更新（0为失败+1 1为成功+10）
+    --eva unpacking result interface text update (0 for failure + 1 for success +10)
     for i = 1, #ins.data do
         if ins.data[i] == 0 then
             sums = sums + 1
@@ -190,8 +190,8 @@ end
 --end
 
 
----====================================================================================业务逻辑==============================================================================================
---多语言
+---====================================================================================Business logic ==============================================================================================
+--multi-language
 function RollCtrl:language()
     panel.count1.text = GetLanguage(28040024)
     panel.count2.text = GetLanguage(28040024)
@@ -208,7 +208,7 @@ function RollCtrl:language()
 
 end
 
---通过服务器回调数据生成item
+--Generate item from server callback data
 function RollCtrl:c_creatRollItem( data )
     if self.lineId ~= data.id then
         return
@@ -240,7 +240,7 @@ function RollCtrl:c_creatRollItem( data )
     panel.totalText.text = data.availableRoll
 end
 
---设置item名称（区分商品 服饰 以及 eva）
+--Set the item name (different products, clothing and eva)
 function RollCtrl:updateText(data)
     if data.goodCategory == 52 then
         panel.evanametexts.text = GetLanguage(28040053)
@@ -265,7 +265,7 @@ function RollCtrl:updateText(data)
     --panel.evacounts.text = DataManager.GetEvaPoint()
 end
 
---点击一次item开启五个宝箱
+--Click one item to open five treasure chests
 function RollCtrl:handleEvaResult(data)
     self.Rollpoint = {}
     self.data = data
@@ -294,7 +294,7 @@ function RollCtrl:handleEvaResult(data)
     panel.evacount.text = DataManager.GetEvaPoint()
 end
 
---设置食物以及服饰研究成功时界面
+--Set the interface when the food and clothing research is successful
 function RollCtrl:handleGoodsResult(data)
     if data then
         panel.resultRoot.localScale = Vector3.one
@@ -337,7 +337,7 @@ function RollCtrl:handleGoodsResult(data)
     end
 end
 
---研究失败
+--Research failed
 function RollCtrl:fail()
     panel.resultRoot.localScale = Vector3.one
     panel.FailRoot.localScale = Vector3.one
@@ -345,7 +345,7 @@ function RollCtrl:fail()
     panel.Evaresultbg.localScale = Vector3.zero
 end
 
---关闭所有节点
+--Shut down all nodes
 function RollCtrl:closeAllRoot()
     panel.EvaRoots.localScale = Vector3.zero
     panel.FailRoot.localScale = Vector3.zero
@@ -361,7 +361,7 @@ function RollCtrl:changeLan()
 
 end
 
---关闭界面后关闭更新
+--Close the update after closing the interface
 function RollCtrl:CloseUpdata()
     isUpdata = false
 end

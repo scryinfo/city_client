@@ -11,7 +11,7 @@ public class LineChartGraph : MonoBehaviour {
     {
         XAixs.SetActive(true);
         YXixs.SetActive(true);        
-        //显示单位
+        //Display unit
         LineChart.ShowUnit();
     }
 }

@@ -1,5 +1,5 @@
 ﻿/* 
-    LuaFramework Code By Jarjin lee
+    LuaFramework Code
 */
 
 using System;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 事件命令
+/// Event command
 /// </summary>
 public class ControllerCommand : ICommand {
     public virtual void Execute(IMessage message) {
@@ -67,7 +67,7 @@ public class Facade {
     }
 
     /// <summary>
-    /// 添加管理器
+    /// Add manager
     /// </summary>
     public void AddManager(string typeName, object obj) {
         if (!m_Managers.ContainsKey(typeName)) {
@@ -76,7 +76,7 @@ public class Facade {
     }
 
     /// <summary>
-    /// 添加Unity对象
+    /// Add Unity object
     /// </summary>
     public T AddManager<T>(string typeName) where T : Component {
         object result = null;
@@ -90,7 +90,7 @@ public class Facade {
     }
 
     /// <summary>
-    /// 获取系统管理器
+    /// Get System Manager
     /// </summary>
     public T GetManager<T>(string typeName) where T : class {
         if (!m_Managers.ContainsKey(typeName)) {
@@ -102,7 +102,7 @@ public class Facade {
     }
 
     /// <summary>
-    /// 删除管理器
+    /// Delete manager
     /// </summary>
     public void RemoveManager(string typeName) {
         if (!m_Managers.ContainsKey(typeName)) {

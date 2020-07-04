@@ -5,7 +5,7 @@
 ---
 FlightSelectPlaceItem = class('FlightSelectPlaceItem')
 
---初始化方法
+--Initialization method
 function FlightSelectPlaceItem:initialize(viewRect, data)
     self.viewRect = viewRect.transform
 
@@ -19,7 +19,7 @@ function FlightSelectPlaceItem:initialize(viewRect, data)
 
     self:initData(data)
 end
---刷新数据
+--Refresh data
 function FlightSelectPlaceItem:initData(data)
     self.Text.text = string.format("%s<size=%d>(%s)</size>", data.value, 30, data.flightCode)
 end

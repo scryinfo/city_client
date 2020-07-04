@@ -85,11 +85,11 @@ function AddLineChooseItemCtrl:_initData()
         end)
     end
 
-    --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
+    --Create all the left and right toggle information at the beginning, and then only need to set the default value each time you initialize
     AddLineChooseItemPanel.leftToggleMgr:initData()
     AddLineChooseItemPanel.rightToggleMgr:initData()
 end
---根据itemId获得当前应该显示的状态
+--Get the status that should be displayed according to itemId
 function AddLineChooseItemCtrl.GetItemState(itemId)
     local data = {}
     data.enableShow = true
@@ -118,7 +118,7 @@ function AddLineChooseItemCtrl.GetItemState(itemId)
     return data
 end
 
---左边的detail被点击，需要改变中心线
+--The detail on the left is clicked and the centerline needs to be changed
 function AddLineChooseItemCtrl:_leftSetCenter(itemId, rectPosition, enableShow)
     AddLineChooseItemPanel.leftBtnParentTran.transform.position = rectPosition
     AddLineChooseItemPanel.leftBtnParentTran.anchoredPosition = AddLineChooseItemPanel.leftBtnParentTran.anchoredPosition + Vector2.New(174, 0)
@@ -126,7 +126,7 @@ function AddLineChooseItemCtrl:_leftSetCenter(itemId, rectPosition, enableShow)
     --tempData = Material[itemId]
     self.selectItemId = itemId
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
-    local lineDatas = {}  --获取线的数据
+    local lineDatas = {}  --Get line data
     for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
         lineDatas[#lineDatas + 1] = matData
     end
@@ -141,7 +141,7 @@ function AddLineChooseItemCtrl:_leftSetCenter(itemId, rectPosition, enableShow)
         AddLineChooseItemPanel.leftDisableImg.localScale = Vector3.one
     end
 end
---右侧的detail被点击，改变中心线
+--The detail on the right is clicked to change the centerline
 function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
     AddLineChooseItemPanel.rightBtnParentTran.transform.position = rectPosition
     AddLineChooseItemPanel.rightBtnParentTran.anchoredPosition = AddLineChooseItemPanel.rightBtnParentTran.anchoredPosition - Vector2.New(174, 0)
@@ -165,7 +165,7 @@ function AddLineChooseItemCtrl:_rightSetCenter(itemId, rectPosition, enableShow)
     end
 end
 
---设置原料线的信息  根据个数显示位置
+--Set the information of the raw material line to display the position according to the number
 function AddLineChooseItemCtrl:_setLineDetailInfo(datas, index)
     local lineCount = #datas
     if lineCount == 1 then
@@ -204,7 +204,7 @@ function AddLineChooseItemCtrl:_changeLineByItemId(itemId, index)
         if index > #self.selectItemMatToGoodIds then
             index = 1
         end
-        local lineDatas = {}  --获取线的数据
+        local lineDatas = {}  --Get line data
         local data = {}
         local config = CompoundDetailConfig[self.selectItemMatToGoodIds[index]].goodsNeedMatData
         for j, matData in ipairs(config) do
@@ -214,7 +214,7 @@ function AddLineChooseItemCtrl:_changeLineByItemId(itemId, index)
                 data = matData
             end
         end
-        table.insert(lineDatas, 1, data)  --将item放在第一个位置
+        table.insert(lineDatas, 1, data)  --Put item in the first position
         self:_setLineDetailInfo(lineDatas, index)
         AddLineChooseItemPanel.productionItem:initData(Good[self.selectItemMatToGoodIds[index]])
         AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(self.selectItemMatToGoodIds[index])
@@ -222,7 +222,7 @@ function AddLineChooseItemCtrl:_changeLineByItemId(itemId, index)
         self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
         for i, goodsId in ipairs(self.selectItemMatToGoodIds) do
             if goodsId ~= self.selectGoodId then
-                local lineDatas = {}  --获取线的数据
+                local lineDatas = {}  --Get line data
                 local data = {}
                 for j, matData in ipairs(CompoundDetailConfig[goodsId].goodsNeedMatData) do
                     if matData.itemId ~= itemId then
@@ -231,7 +231,7 @@ function AddLineChooseItemCtrl:_changeLineByItemId(itemId, index)
                         data = matData
                     end
                 end
-                table.insert(lineDatas, 1, data)  --将item放在第一个位置
+                table.insert(lineDatas, 1, data)  --Put item in the first position
                 self:_setLineDetailInfo(lineDatas, i)
                 AddLineChooseItemPanel.productionItem:initData(Good[goodsId])
                 AddLineChooseItemPanel.rightToggleMgr:setToggleIsOnByType(goodsId)

@@ -29,7 +29,7 @@ function StaffCtrl.OnAjust(go)
         ctrl:Awake();
     end
 end
---暂时用来初始化Staff数据
+--Temporarily used to initialize Staff data
 function StaffCtrl.Initialize()
     satisfaction_text = 50;
     PerStaff_money = 20000;

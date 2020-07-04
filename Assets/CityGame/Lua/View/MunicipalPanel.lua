@@ -35,7 +35,7 @@ function MunicipalPanel.InitPanel()
 
 
 end
---数据初始化
+--Data initialization
 function MunicipalPanel.InitDate(MunicipalData)
     this.materialData = MunicipalData;
 end

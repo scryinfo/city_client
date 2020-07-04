@@ -90,16 +90,16 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     againtypeList={}
     if creatData.lMsg then
         if creatData.lMsg.ad.ad then
-            ---对广告进行筛选
+            ---Filter ads
             for i, v in pairs(creatData.lMsg.ad.ad) do
-                ---已有类型
+                ---Existing type
                 for k, va in pairs(idList) do
                     if va==v.metaId then
                         typelist[v.metaId][v.id]=v
                         break
                     end
                 end
-                ---类型不同
+                ---Different types
                 if v.metaId~=metald then
                     idList[v.metaId]=v.metaId
                     metald=v.metaId
@@ -109,19 +109,19 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
                     typelist[v.metaId][v.id]=v
                 end
             end
-            ---再分类
+            ---Reclassify
             for i, metaIdAd in pairs(typelist) do
                 if not againtypeList[i] then
                     againtypeList[i]={}
                 end
                 for k, Ad in pairs(metaIdAd) do
-                    if not Ad.slot then--建筑主人广告
+                    if not Ad.slot then--Building Master Advertisement
                         if not againtypeList[i][creatData.model.buildingOwnerId] then
                             againtypeList[i][creatData.model.buildingOwnerId]={}
                         end
                         table.insert(againtypeList[i][creatData.model.buildingOwnerId],Ad)
                         metaIdAd[k]=nil
-                    else--别人广告
+                    else--Others advertising
                         if not againtypeList[i][ Ad.slot.renterId] then
                             againtypeList[i][Ad.slot.renterId]={}
                         end
@@ -135,7 +135,7 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
 
 
 
-    if creatData.buildingType == BuildingType.Municipal then---创建广告
+    if creatData.buildingType == BuildingType.Municipal then---Create ad
     for metaId, persons in pairs(againtypeList) do
         for personId, ads in pairs(persons) do
             if personId==DataManager.GetMyOwnerID() then
@@ -163,8 +163,8 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
     end
     elseif creatData.buildingType == BuildingType.MunicipalManage then
 
-        ---创建自已打的广告
-        --if DataManager.GetMyOwnerID()==MunicipalModel.buildingOwnerId then--自已进入
+        ---Create your own ad
+        --if DataManager.GetMyOwnerID()==MunicipalModel.buildingOwnerId then--Enter yourself
         for metaId, persons in pairs(againtypeList) do
             for personId, ads in pairs(persons) do
                 if personId==DataManager.GetMyOwnerID() then
@@ -191,7 +191,7 @@ function ItemCreatDeleteMgr:creat(luabehaviour,creatData)
             self:_creatserverMapAdvertisementItem(ads[1])
         end
 
-    else---创建外部广告
+    else---Create external ads
     for metaId, persons in pairs(againtypeList) do
         for personId, ads in pairs(persons) do
             if PlayerBuildingBaseData[ads[1].metaId] then
@@ -213,21 +213,21 @@ end
 
 
 
----创建服务器映射广告
+---Create server mapped ads
 local ServerMapAdvertisementItemID=0
 function ItemCreatDeleteMgr:_creatserverMapAdvertisementItem(prefabData)
 
 
     local item=self:c_creatGoods(self.AddedItem_Path,self.transform)
     self.serverMapAdvertisementItemList[prefabData.metaId]=item
-    ---给映射广告赋值数据
+    ---Assign data to mapped ads
     local ins =serverMapAdvertisementItem:new(prefabData,item,self.behaviour,self,ServerMapAdvertisementItemID)
     self.serverMapAdvertisementINSList[prefabData.metaId]=ins
     ServerMapAdvertisementItemID=ServerMapAdvertisementItemID+1
 
 end
 
----创建映射广告
+---Create mapping ads
 local MapAdvertisementItemID=0
 function ItemCreatDeleteMgr:_creatMapAdvertisementItem(prefabData)
     if(not self.MapAdvertisementItemList ) then
@@ -236,22 +236,22 @@ function ItemCreatDeleteMgr:_creatMapAdvertisementItem(prefabData)
 
     local item=self:c_creatGoods(self.AddedItem_Path,self.transform)
     self.MapAdvertisementItemList[MapAdvertisementItemID]=item
-    ---给映射广告赋值数据
+    ---Assign data to mapped ads
     MapAdvertisementItem:new(prefabData,item,self.behaviour,self,MapAdvertisementItemID)
     MapAdvertisementItemID=MapAdvertisementItemID+1
 end
 
----创建外部广告
+---Create external ads
 local outAdvertisementItemID=1;
 function ItemCreatDeleteMgr:_creatoutItem(prefabData)
     if(not self.outAdvertisementINSList ) then
         self.outAdvertisementINSList={}
     end
-    ------创建预制
+    ------Create prefab
     local itemclone=self:c_creatGoods(self.outadvertisementItemPreb_Path,MunicipalPanel.scrollCon)
 
     self.outAdvertisementItemList[outAdvertisementItemID]=itemclone
-    -----给预制赋值数据
+    -----Assign data to prefabs
     local Ins = outAdvertisementItem:new(prefabData,itemclone,self.behaviour,self,outAdvertisementItemID)
     if prefabData.personId==DataManager.GetMyOwnerID() then
         self.outAdvertisementINSList[prefabData.metaId]=Ins
@@ -260,16 +260,16 @@ function ItemCreatDeleteMgr:_creatoutItem(prefabData)
 end
 
 
----创建广告
+---Create ad
 local AdvertisementItemID=1;
 function ItemCreatDeleteMgr:_creatAdvertisementItem(prefabData)
     if(not self.AdvertisementINSList ) then
         self.AdvertisementINSList={}
     end
-    ---创建预制
+    ---Create prefab
     local itemclone=self:c_creatGoods(self.advertisementItemPreb_Path,AdvertisementPosPanel.scrollcon)
 
-    ---给预制赋值数据
+    ---Assign data to prefabs
     local ins =AdvertisementItem:new(prefabData,itemclone,self.behaviour,self,AdvertisementItemID)
     if prefabData.personId==DataManager.GetMyOwnerID() then
         self.AdvertisementINSList[prefabData.metaId]=ins
@@ -280,47 +280,47 @@ function ItemCreatDeleteMgr:_creatAdvertisementItem(prefabData)
     end
     AdvertisementItemID=AdvertisementItemID+1;
 end
----创建添加按钮
+---Create add button
 
 function ItemCreatDeleteMgr:_creataddItem(prefabData)
 
-    ---创建预制
+    ---Create prefab
     local itemclone=self:c_creatGoods(self.addItemPreb_Path,ManageAdvertisementPosPanel.addCon)
     self.addItemList[self.AddItemID]=itemclone
-    ---给预制赋值数据
+    ---Assign data to prefabs
     local ins =AddItem:new(prefabData,itemclone,self.behaviour,self,AddItemID)
     self.addItemInSList[self.AddItemID]=ins
     self.AddItemID=self.AddItemID+1;
     ----------------------------------------------------------------------------------------------------------
 end
 
----创建商品广告
+---Create product ad
 local goodsItemID=0
 function ItemCreatDeleteMgr:_creatgoodsItem(goodsPrebData)
 
-    ---创建预制
+    ---Create prefab
     local goods=self:c_creatGoods(self.goodsPreb_Path,ManageAdvertisementPosPanel.goodsCon)
     self.goodsItemList[goodsItemID]=goods
-    --- ---给预制赋值数据
+    --- ---Assign data to prefabs
     local ins =GoodsItem:new(goodsPrebData,goods,self.behaviour,self,goodsItemID)
     self.insList[goodsPrebData.metaId]=ins
     goodsItemID=goodsItemID+1
 end
----创建建筑广告
+---Create a building ad
 local buildItemID=0
 function ItemCreatDeleteMgr:_creatbuildingItem(buildingPrebData)
 
-    ---创建预制
+    ---Create prefab
     local buildings=self:c_creatGoods(self.buildingPreb_Path,ManageAdvertisementPosPanel.buildingCon)
     self.buildItemList[buildItemID]=buildings
-    --- ---给预制赋值数据
+    --- ---Assign data to prefabs
     local ins =BuildingItem:new(buildingPrebData,buildings,self.behaviour,self,buildItemID)
     self.insList[buildingPrebData.mId]=ins
     buildItemID=buildItemID+1
 end
 
 
----生成预制
+---Generate prefab
 function ItemCreatDeleteMgr:c_creatGoods(path,parent)
     local prefab = UnityEngine.Resources.Load(path);
     local go = UnityEngine.GameObject.Instantiate(prefab);
@@ -332,7 +332,7 @@ function ItemCreatDeleteMgr:c_creatGoods(path,parent)
 end
 
 
----删除物品
+---Delete item
 function ItemCreatDeleteMgr:_deleteGoods(ins)
     destroy(ins.ItemList[ins.id])
 end

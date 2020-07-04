@@ -1,12 +1,12 @@
 ChooseWarehouseCtrl = class('ChooseWarehouseCtrl',UIPanel);
-UIPanel:ResgisterOpen(ChooseWarehouseCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(ChooseWarehouseCtrl) --How to open the registration
 
---排序type
+--Sort type
 ChooseWarehouseSortItemType = {
-    Name = 1,      --名字
-    Quantity = 2,  --数量
-    Price = 3,     --价格
-    Score = 4      --等级
+    Name = 1,      --name
+    Quantity = 2,  --quantity
+    Price = 3,     --price
+    Score = 4      --score
 }
 
 local isShowList;
@@ -42,10 +42,10 @@ function ChooseWarehouseCtrl:Awake(go)
     self.WareHouseGoodsMgr = WareHouseGoodsMgr:new()
 
     self.gameObject = go;
-    --self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
+    --self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- Get building details
     isShowList = false;
 
-    --初始化
+    --initialization
     local name = DataManager:GetName()
     ChooseWarehousePanel.nameText.text = name
     local faceId = DataManager.GetFaceId()
@@ -92,9 +92,9 @@ function ChooseWarehouseCtrl:Hide()
     WareHouseGoodsMgr:_clear()
 end
 
-function ChooseWarehouseCtrl:CreateLinePanel()   --生成自己的建筑详情
-    self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- 获取建筑详情
-    WareHouseGoodsMgr:_creatLinePanel(self.buysBuildings,self.m_data.pos,self.m_data.buildingId,self.m_data.number)  --创建运输线
+function ChooseWarehouseCtrl:CreateLinePanel()   --Generate your own building details
+    self.buysBuildings = DataManager.GetMyAllBuildingDetail()  -- Get building details
+    WareHouseGoodsMgr:_creatLinePanel(self.buysBuildings,self.m_data.pos,self.m_data.buildingId,self.m_data.number)  --创建运输线Create a transportation line
     --if not self.WareHouseGoodsMgr.ipaItems or next(self.WareHouseGoodsMgr.ipaItems) == nil then
     --    ChooseWarehousePanel.tipImg.transform.localScale = Vector3.one
     --else
@@ -102,14 +102,14 @@ function ChooseWarehouseCtrl:CreateLinePanel()   --生成自己的建筑详情
     --end
 end
 
--- 监听Model层网络回调
+-- Listen to the model layer network callback
 function ChooseWarehouseCtrl:_addListener()
-    Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --玩家信息网络回调
+    Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self) --Player Information Network Callback
 end
 
---注销model层网络回调
+--Cancel the model layer network callback
 function ChooseWarehouseCtrl:_removeListener()
-    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--玩家信息网络回调
+    Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)--Player Information Network Callback
 end
 
 function ChooseWarehouseCtrl:c_OnReceivePlayerInfo(playerData)
@@ -119,9 +119,9 @@ function ChooseWarehouseCtrl:c_OnReceivePlayerInfo(playerData)
     end
 end
 
---获取玩家好友列表
+--Get player friend list
 function ChooseWarehouseCtrl:GetMyFriends()
-    local ids = DataManager.GetMyFriends()  --获取好友id--
+    local ids = DataManager.GetMyFriends()  --Get friend id--
     if ids == nil then
         return
     end
@@ -134,34 +134,34 @@ function ChooseWarehouseCtrl:GetMyFriends()
     self:GetMyFriendsInfo(friendsId)
 end
 
---获取好友信息
+--Get friend information
 function ChooseWarehouseCtrl:GetMyFriendsInfo(friendsIds)
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_GetMyFriendsInfo',friendsIds)--获取好友信息
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_GetMyFriendsInfo',friendsIds)--Get friend information
 end
 
---生成好友列表
+--Generate friend list
 function ChooseWarehouseCtrl:_creatAddressList()
     local WareHouseGoodsMgr = WareHouseGoodsMgr:new()
-    WareHouseGoodsMgr:_creatAddressList(self.data) --创建好友列表
+    WareHouseGoodsMgr:_creatAddressList(self.data) --Create friend list
 end
 
 function ChooseWarehouseCtrl:initInsData()
     DataManager.OpenDetailModel(ChooseWarehouseModel,self.insId )
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqAllBuildingDetail')      --获取自己的建筑详情
-    DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqRentBuildingDetail')     --获取自己租建筑详情
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqAllBuildingDetail')      --Get your own building details
+    DataManager.DetailModelRpcNoRet(self.insId , 'm_ReqRentBuildingDetail')     --Get details on renting your own building
 end
 
 
---返回
+--return
 function ChooseWarehouseCtrl:OnClick_returnBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage();
 end
---搜索
+--search
 function ChooseWarehouseCtrl:OnClick_searchBtn()
     PlayMusEff(1002)
 end
---点击ming BG
+--Click ming BG
 function ChooseWarehouseCtrl:OnClick_bgBtn(go)
     PlayMusEff(1002)
     if go.onClick then
@@ -172,41 +172,41 @@ function ChooseWarehouseCtrl:OnClick_bgBtn(go)
             item.box:SetActive(false)
             item.onClick = true
         end
-        WareHouseGoodsMgr:_creatLinePanel(go.buysBuildings,go.m_data.pos,go.m_data.buildingId,go.m_data.number)  --创建运输线
+        WareHouseGoodsMgr:_creatLinePanel(go.buysBuildings,go.m_data.pos,go.m_data.buildingId,go.m_data.number)  --Create a transportation line
     end
     go.onClick = false
 end
 
---点击通讯录BG
+--Click on Address Book BG
 function ChooseWarehouseCtrl:c_OnAddressListBG(go)
     self.onClick = true
     if go.onClick then
         WareHouseGoodsMgr:_deleteLinePanel()
-        DataManager.DetailModelRpcNoRet(go.insId , 'm_QueryPlayerBuildings',go.id)--查询玩家建筑详情
+        DataManager.DetailModelRpcNoRet(go.insId , 'm_QueryPlayerBuildings',go.id)--Check player building details
         ChooseWarehousePanel.boxImg:SetActive(false)
         go.manager:SelectBox(go)
     end
-    go.onClick = false  --第一次点击
+    go.onClick = false  --First click
 
 end
 
---好友建筑详情回调
+--Friends building details callback
 function ChooseWarehouseCtrl:c_OnQueryPlayerBuildings(info)
     ChooseWarehouseCtrl:c_OnCreatFriendsLinePanel(info)
 end
 
---创建好友运输线
+--Create Buddy Transport Line
 function ChooseWarehouseCtrl:c_OnCreatFriendsLinePanel(buysBuildings)
     WareHouseGoodsMgr:_creatFriendsLinePanel(buysBuildings,self.m_data.pos)
 end
 
---点击所运输的地方
+--Click on the transported place
 function ChooseWarehouseCtrl:c_OnLinePanelBG(info)
     buildingInfo = info
     self:SelectWarehouseName(info.name)
 end
 
---所选仓库名字
+--Selected warehouse name
 function ChooseWarehouseCtrl:SelectWarehouseName(name)
     if self.m_data.nameText == nil then
         return
@@ -214,40 +214,40 @@ function ChooseWarehouseCtrl:SelectWarehouseName(name)
     self.m_data.nameText.text = name
 end
 
---运输
+--transport
 function ChooseWarehouseCtrl:c_Transport(src, itemId, n,producerId,qty)
 
     Event.Brocast("m_ReqTransport",src,buildingInfo.buildingId,itemId,n,producerId,qty)
 end
 
---计算距离
+--Calculate distance
 function ChooseWarehouseCtrl:GetDistance(pos)
     local distance
     distance = math.sqrt(math.pow((pos.x-buildingInfo.posX),2)+math.pow((pos.y-buildingInfo.posY),2))
     return distance
 end
---获取建筑ID
+--Get building ID
 function ChooseWarehouseCtrl:GetBuildingId()
     if buildingInfo == nil then
         return nil
     end
     return buildingInfo.buildingId
 end
---获取建筑的名字
+--Get the name of the building
 function ChooseWarehouseCtrl:GetName()
     local name
     name = buildingInfo.name
     return name
 end
 
---获取建筑容量
+--Get building capacity
 function ChooseWarehouseCtrl:GetCapacity()
     local Capacity
     Capacity = buildingInfo.spareCapacity
     return Capacity
 end
 
---获取运输单价
+--Get shipping unit price
 function ChooseWarehouseCtrl:GetPrice()
     if buildingInfo == nil then
         return 0
@@ -255,7 +255,7 @@ function ChooseWarehouseCtrl:GetPrice()
     return buildingInfo.price
 end
 
---根据名字排序
+--Sort by name
 function ChooseWarehouseCtrl:OnClick_nameBtn()
     PlayMusEff(1002)
     ChooseWarehousePanel.nowText.text = "By name";
@@ -263,7 +263,7 @@ function ChooseWarehouseCtrl:OnClick_nameBtn()
     local type = ChooseWarehouseSortItemType.Name
     --ChooseWarehouseCtrl:_getSortItems(type)
 end
---根据数量排序
+--Sort by quantity
 function ChooseWarehouseCtrl:OnClick_quantityBtn()
     PlayMusEff(1002)
     ChooseWarehousePanel.nowText.text = "By quantity";
@@ -271,7 +271,7 @@ function ChooseWarehouseCtrl:OnClick_quantityBtn()
     local type = ChooseWarehouseSortItemType.Quantity
     --ChooseWarehouseCtrl:_getSortItems(type)
 end
---根据价格排序
+--Sort by price
 function ChooseWarehouseCtrl:OnClick_priceBtn()
     PlayMusEff(1002)
     ChooseWarehousePanel.nowText.text = "By price";
@@ -279,7 +279,7 @@ function ChooseWarehouseCtrl:OnClick_priceBtn()
     local type = ChooseWarehouseSortItemType.Price
     --ChooseWarehouseCtrl:_getSortItems(type)
 end
---根据时间排序
+--Sort by time
 function ChooseWarehouseCtrl:OnClick_timeBtn()
     PlayMusEff(1002)
     ChooseWarehousePanel.nowText.text = "By time";
@@ -302,7 +302,7 @@ function ChooseWarehouseCtrl:OnClick_OpenList(isShow)
     isShowList = isShow;
 end
 
---排序
+--Sort
 function ChooseWarehouseCtrl:_getSortItems(type)
     if WareHouseGoodsMgr.ipaItems == nil then
         return

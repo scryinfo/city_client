@@ -15,17 +15,17 @@ function AvtarModel:initialize(insId)
 end
 
 function AvtarModel:OnCreate()
-    Event.AddListener("m_setRoleFaceId", self.m_setRoleFaceId,self)--设置FaceId
-    --网络回调
-    --DataManager.ModelRegisterNetMsg(insID,"gscode.OpCode","setRoleFaceId","gs.Mail",self.n_GsGetMails,self)--新版model网络注册
+    Event.AddListener("m_setRoleFaceId", self.m_setRoleFaceId,self)--Set FaceId
+    --Network callback
+    --DataManager.ModelRegisterNetMsg(insID,"gscode.OpCode","setRoleFaceId","gs.Mail",self.n_GsGetMails,self)--New model network registration
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","setRoleFaceId","gs.Bool",self.m_registerRoleFaceId,self)
 end
----================================================================================发包===========================================================================
+---================================================================================Outsourcing===========================================================================
 function AvtarModel:m_setRoleFaceId(faceId)
     DataManager.ModelSendNetMes("gscode.OpCode", "setRoleFaceId","gs.Str",{ str =faceId })
 end
 
----================================================================================收包===========================================================================
+---================================================================================Receive package===========================================================================
 
 function AvtarModel:m_registerRoleFaceId(isSuccess)
     if isSuccess.b ~= nil and isSuccess.b == true then

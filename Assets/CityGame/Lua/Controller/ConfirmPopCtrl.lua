@@ -10,7 +10,7 @@ require('Framework/UI/UIPage')
 local class = require 'Framework/class'
 
 ConfirmPopCtrl = class('ConfirmPopCtrl',UIPage)
-UIPage:ResgisterOpen(ConfirmPopCtrl) --注册打开的方法
+UIPage:ResgisterOpen(ConfirmPopCtrl) --How to open the registration
 
 function ConfirmPopCtrl:initialize()
     UIPage.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal);
@@ -30,7 +30,7 @@ function ConfirmPopCtrl:Awake(go)
     WagesAdjustBox:AddClick(ConfirmPopPanel.confirmBtn.gameObject,self.OnClick_confirm,self);
     WagesAdjustBox:AddClick(ConfirmPopPanel.closeBtn.gameObject,self.OnClick_close,self);
 end
---确定
+--determine
 function ConfirmPopCtrl:OnClick_confirm(obj)
     if(obj.m_data) then
         obj.m_data:callback()
@@ -38,11 +38,11 @@ function ConfirmPopCtrl:OnClick_confirm(obj)
     obj:Hide();
     Event.Brocast("SmallPop","Successful adjustment",57)
 end
---关闭
+--close
 function ConfirmPopCtrl:OnClick_close(obj)
     obj:Hide();
 end
---刷新
+--Refreshs
 function ConfirmPopCtrl:Refresh()
 
 end

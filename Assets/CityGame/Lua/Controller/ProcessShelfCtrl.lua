@@ -1,5 +1,5 @@
 ProcessShelfCtrl = class('ProcessShelfCtrl',BuildingBaseCtrl)
-UIPanel:ResgisterOpen(ProcessShelfCtrl)--注册打开的方法
+UIPanel:ResgisterOpen(ProcessShelfCtrl)--How to open the registration
 
 local shelf
 local itemStateBool
@@ -24,9 +24,9 @@ function ProcessShelfCtrl:Awake(go)
 
     itemStateBool = nil
     switchRightPanel = false
-    self.tempItemList = {}  --选中的数据
-    self.recordIdList = {}  --记录选中的id
-    self.shelfDatas = {}  --货架上的数据
+    self.tempItemList = {}  --Selected data
+    self.recordIdList = {}  --Record the selected id
+    self.shelfDatas = {}  --Data on the shelf
 end
 function ProcessShelfCtrl:Active()
     UIPanel.Active(self)
@@ -59,8 +59,8 @@ function ProcessShelfCtrl:Hide()
     self:_removeListener()
     return {insId = self.m_data.info.id,self.m_data}
 end
-----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
---自己
+----------------------------------------------------------------------Initialization function------------------------------------------------------------------------------------------
+--Self
 function ProcessShelfCtrl:MeInitializeData()
     ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.zero;
     ProcessShelfPanel.shelfAddItem.gameObject:SetActive(true)
@@ -69,7 +69,7 @@ function ProcessShelfCtrl:MeInitializeData()
     end
     self.ShelfImgSetActive(self.shelfDatas,5,0)
 end
---别人
+--others
 function ProcessShelfCtrl:OthersInitializeData()
     ProcessShelfPanel.buy_Btn.transform.localScale = Vector3.one;
     ProcessShelfPanel.shelfAddItem.gameObject:SetActive(false)
@@ -78,7 +78,7 @@ function ProcessShelfCtrl:OthersInitializeData()
     end
     self.ShelfImgSetActive(self.shelfDatas,5,1)
 end
-----------------------------------------------------------------------点击函数------------------------------------------------------------------------------------------
+----------------------------------------------------------------------Click function------------------------------------------------------------------------------------------
 function ProcessShelfCtrl:OnClick_return_Btn(ins)
     PlayMusEff(1002)
     if switchRightPanel == true then
@@ -87,7 +87,7 @@ function ProcessShelfCtrl:OnClick_return_Btn(ins)
     ins:CloseDestroy(ins.shelfDatas)
     UIPanel.ClosePage()
 end
---点击打开购买Panel
+--Click to buy Panel
 function ProcessShelfCtrl:OnClick_playerBuy(ins)
     PlayMusEff(1002)
     if ins.m_data.info.state == "OPERATE" then
@@ -97,7 +97,7 @@ function ProcessShelfCtrl:OnClick_playerBuy(ins)
         return
     end
 end
---跳转选择仓库
+--Jump to select warehouse
 function ProcessShelfCtrl:OnClick_openBtn(ins)
     PlayMusEff(1002)
     local data = {}
@@ -108,7 +108,7 @@ function ProcessShelfCtrl:OnClick_openBtn(ins)
     data.nameText = ProcessShelfPanel.nameText
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
---购买确认
+--Purchase confirmation
 function ProcessShelfCtrl:OnClcik_buyConfirmBtn(ins)
     PlayMusEff(1002)
     local targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
@@ -136,19 +136,19 @@ function ProcessShelfCtrl:OnClcik_buyConfirmBtn(ins)
     end
     ct.OpenCtrl("TransportBoxCtrl",buyDataInfo)
 end
---打开仓库
+--Open warehouse
 function ProcessShelfCtrl:OnClick_addBtn(go)
     PlayMusEff(1002)
     go:CloseDestroy(go.shelfDatas)
     go.m_data.isShelf = true
     ct.OpenCtrl("ProcessWarehouseCtrl",go.m_data)
 end
-----------------------------------------------------------------------回调函数-------------------------------------------------------------------------------------------
---刷新货架数据
+----------------------------------------------------------------------Callback function----------------------------------------------------------------------------------------
+--Refresh shelf data
 function ProcessShelfCtrl:RefreshShelfData(dataInfo)
-    --如果货架调整框
+    --If the shelf adjustment box
     if not dataInfo.wareHouseId then
-        --如果是调整价格
+        --If it is price adjustment
         if dataInfo.price then
             for key,value in pairs(self.shelfDatas) do
                 if value.itemId == dataInfo.item.key.id then
@@ -159,13 +159,13 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
             Event.Brocast("SmallPop",GetLanguage(27010005),300)
             return
         end
-        --如果是调整数量
+        --If it is an adjustment quantity
         for key,value in pairs(self.shelfDatas) do
             if value.itemId == dataInfo.item.key.id then
                 if value.num == dataInfo.item.n then
                     self:deleteGoodsItem(self.shelfDatas,key)
 
-                    --下架后要把下架的商品数量添加到仓库
+                    --After the shelf is removed, the quantity of the shelf product should be added to the warehouse
                     if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
                         local inHand = {}
                         local goodsData = {}
@@ -199,7 +199,7 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
                     value.numberText.text = value.num - dataInfo.item.n
                     value.goodsDataInfo.n = tonumber(value.numberText.text)
                     value.num = tonumber(value.numberText.text)
-                    --下架数量改变后同时改变模拟服务器数据
+                    --Simultaneously change the simulation server data after the number of off shelves
                     if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
                         local goodsData = {}
                         local key = {}
@@ -243,7 +243,7 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
         end
         Event.Brocast("SmallPop",GetLanguage(27010003),300)
     else
-        --如果是购买
+        --If it is a purchase
         for key,value in pairs(self.shelfDatas) do
             if value.itemId == dataInfo.item.key.id then
                 if value.num == dataInfo.item.n then
@@ -264,8 +264,8 @@ function ProcessShelfCtrl:RefreshShelfData(dataInfo)
         Event.Brocast("SmallPop","购买成功"--[[GetLanguage(27010003)]],300)
     end
 end
-----------------------------------------------------------------------事件函数-------------------------------------------------------------------------------------------
---勾选商品
+----------------------------------------------------------------------Event function-------------------------------------------------------------------------------------------
+--Check products
 function ProcessShelfCtrl:SelectedGoodsItem(ins)
     if self.recordIdList[ins.id] == nil then
         self.recordIdList[ins.id] = ins.id
@@ -278,7 +278,7 @@ function ProcessShelfCtrl:SelectedGoodsItem(ins)
     self:RefreshBuyButton()
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---打开购买Panel
+--Open Purchase Panel
 function ProcessShelfCtrl:openPlayerBuy(isShow)
     if isShow then
         itemStateBool = true
@@ -298,7 +298,7 @@ function ProcessShelfCtrl:openPlayerBuy(isShow)
     end
     switchRightPanel = isShow
 end
---刷新确认购买按钮
+--Refresh purchase confirmation button
 function ProcessShelfCtrl:RefreshBuyButton()
     if next(self.tempItemList) == nil or ProcessShelfPanel.nameText.text == "" then
         ProcessShelfPanel.uncheckBtn.transform.localScale = Vector3.one
@@ -308,7 +308,7 @@ function ProcessShelfCtrl:RefreshBuyButton()
         ProcessShelfPanel.confirmBtn.transform.localScale = Vector3.one
     end
 end
---获取购买商品总价格
+--Get the total price of the purchased goods
 function ProcessShelfCtrl:GetTotalPrice()
     local price = 0
     for key,value in pairs(self.tempItemList) do
@@ -316,7 +316,7 @@ function ProcessShelfCtrl:GetTotalPrice()
     end
     return GetClientPriceString(price)
 end
---货架点击Item详情弹框
+--Click on the item details box on the shelf
 function ProcessShelfCtrl:OpenDetailsBox(ins)
     ins.buildingType = self.m_data.buildingType
     ins.isOther = self.m_data.isOther
@@ -328,14 +328,14 @@ end
 
 
 --ProcessShelfCtrl = class('ProcessShelfCtrl',UIPanel)
---UIPanel:ResgisterOpen(ProcessShelfCtrl) --注册打开的方法
+--UIPanel:ResgisterOpen(ProcessShelfCtrl)
 --
 --local isShowList;
 --local switchIsShow;
 --local shelf;
 --local listTrue = Vector3.New(0,0,180);
 --local listFalse = Vector3.New(0,0,0);
-----存放选中的物品，临时表
+----Store selected items, temporary table
 --ProcessShelfCtrl.temporaryItems = {}
 --function ProcessShelfCtrl:initialize()
 --    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
@@ -405,7 +405,7 @@ end
 --    end
 --
 --end
-----选中物品
+----Selected items
 --function ProcessShelfCtrl:_selectedBuyGoods(ins)
 --    if self.temporaryItems[ins.id] == nil then
 --        self.temporaryItems[ins.id] = ins.id
@@ -418,7 +418,7 @@ end
 --    end
 --    self:isShowDetermineBtn()
 --end
-----临时表里是否有这个物品
+----Is this item in the temporary table
 --function ProcessShelfCtrl:c_tempTabNotGoods(id)
 --    self.temporaryItems[id] = nil
 --    self.GoodsUnifyMgr.shelfLuaTab[id].circleTickImg.transform.localScale = Vector3.zero
@@ -495,7 +495,7 @@ end
 --    UIPanel.Hide(self)
 --    return {insId = self.m_data.info.id,self.m_data}
 --end
-----根据名字排序
+----Sort by name
 --function ProcessShelfCtrl:OnClick_OnName(ins)
 --    PlayMusEff(1002)
 --    ProcessShelfPanel.nowText.text = "By name";
@@ -503,7 +503,7 @@ end
 --    local nameType = ct.sortingItemType.Name
 --    ProcessShelfCtrl:_getSortItems(nameType,ins.GoodsUnifyMgr.shelfLuaTab)
 --end
-----根据数量排序
+----Sort by quantity
 --function ProcessShelfCtrl:OnClick_OnNumber(ins)
 --    PlayMusEff(1002)
 --    ProcessShelfPanel.nowText.text = "By quantity";
@@ -511,7 +511,7 @@ end
 --    local quantityType = ct.sortingItemType.Quantity
 --    ProcessShelfCtrl:_getSortItems(quantityType,ins.GoodsUnifyMgr.shelfLuaTab)
 --end
-----根据价格排序
+----Sort by price
 --function ProcessShelfCtrl:OnClick_OnpriceBtn(ins)
 --    PlayMusEff(1002)
 --    ProcessShelfPanel.nowText.text = "By price";
@@ -535,7 +535,7 @@ end
 --    end
 --    isShowList = isShow;
 --end
-----其他玩家购买窗口
+----Purchase window for other players
 --function ProcessShelfCtrl:OnClick_playerBuy(go)
 --    PlayMusEff(1002)
 --    go:openPlayerBuy(not switchIsShow)
@@ -566,7 +566,7 @@ end
 --    end
 --    switchIsShow = isShow
 --end
-----购买成功后回调
+----Callback after successful purchase
 --function ProcessShelfCtrl:receiveBuyRefreshInfo(Data)
 --    if not Data then
 --        return;
@@ -595,7 +595,7 @@ end
 --        end
 --    end
 --end
-------修改价格后刷新回调
+------Refresh the callback after modifying the price
 --function ProcessShelfCtrl:refreshUiInfo(msg)
 --    if not msg then
 --        return
@@ -620,7 +620,7 @@ end
 --        Event.Brocast("SmallPop",GetLanguage(35040013),300)
 --    end
 --end
-----刷新购买确定按钮
+----Refresh purchase confirmation button
 --function ProcessShelfCtrl:isShowDetermineBtn()
 --    if not self.GoodsUnifyMgr then
 --        return
@@ -640,7 +640,7 @@ end
 --        ProcessShelfPanel.uncheckBtn.localScale = Vector3.one
 --    end
 --end
-----架子隐藏和显示
+----Hidden and displayed shelves
 --function ProcessShelfCtrl:shelfImgSetActive(table,num)
 --    if not table then
 --        return
@@ -653,7 +653,7 @@ end
 --        end
 --    end
 --end
-----排序
+----sort
 --function ProcessShelfCtrl:_getSortItems(type,sortingTable)
 --    if type == ct.sortingItemType.Name then
 --        table.sort(sortingTable, function (m, n) return m.name < n.name end )
@@ -683,7 +683,7 @@ end
 --        end
 --    end
 --end
-------生成预制
+------Generate prefab
 ----function ProcessShelfCtrl:_creatGoods(path,parent)
 ----    local prefab = UnityEngine.Resources.Load(path);
 ----    local go = UnityEngine.GameObject.Instantiate(prefab);
@@ -692,7 +692,7 @@ end
 ----    rect.transform.localScale = Vector3.one;
 ----    return go
 ----end
-----关闭面板时清空UI信息，以备其他模块调用
+----Clear the UI information when closing the panel in case other modules call
 --function ProcessShelfCtrl:deleteObjInfo()
 --    if not self.GoodsUnifyMgr.shelfLuaTab then
 --        return;

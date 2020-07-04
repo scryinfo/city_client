@@ -77,7 +77,7 @@ FlightSearchDicCnConfig = {
     },
 }
 
---搜索详情
+--Search details
 FlightSearchDetailCnConfig = {
     [1] = {
         ["value"] = "阿姆斯特丹史基浦",

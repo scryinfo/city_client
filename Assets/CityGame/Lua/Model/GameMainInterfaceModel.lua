@@ -19,7 +19,7 @@ function GameMainInterfaceModel:OnCreate()
     Event.AddListener("m_QueryOffLineInformation", self.m_QueryOffLineInformation,self) --获取离线通知
 
     DataManager.RegisterErrorNetMsg()
-    --网络回调
+    --Online registration
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllMails","gs.Mails",self.n_OnGetAllMails,self)
     --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","queryWeatherInfo","gs.Weather",self.n_OnWeatherInfo,self)  --天气信息
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","moneyChange","gs.MoneyChange",self.n_GsExtendBag,self)--新版model网络注册
@@ -28,7 +28,7 @@ function GameMainInterfaceModel:OnCreate()
     --DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cityBroadcast","gs.CityBroadcast",self.n_GsCityBroadcast,self)--城市广播
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryExchangeAmount","ss.ExchangeAmount",self.n_OnAllExchangeAmount,self) --所有交易量
     --DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryCityBroadcast","ss.CityBroadcasts",self.n_OnCityBroadcasts,self) --查询城市广播
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","eachTypeNpcNum","gs.EachTypeNpcNum",self.n_OnGetNpcNum,self) --npc类型数量
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","eachTypeNpcNum","gs.EachTypeNpcNum",self.n_OnGetNpcNum,self) --Number of npc types
     --
     DataManager.ModelRegisterNetMsg( nil ,"sscode.OpCode","queryPlayerExchangeAmount","ss.PlayExchangeAmount",self.n_OnPlayExchangeAmount,self)
     DataManager.ModelRegisterNetMsg( nil,"sscode.OpCode","queryPlayerGoodsCurve","ss.PlayerGoodsCurve",self.n_OnCityPlayerGoodsCurve,self)
@@ -43,7 +43,7 @@ function GameMainInterfaceModel:OnCreate()
 end
 
 function GameMainInterfaceModel:Close()
-    --清空本地UI事件
+    --Clear local UI events
     --Event.RemoveListener("m_QueryPlayerInfoChat", self.m_QueryPlayerInfoChat,self)
     Event.RemoveListener("m_ReqHouseSetSalary1",self.m_ReqHouseSetSalary,self)
     Event.RemoveListener("m_stopListenBuildingDetailInform", self.m_stopListenBuildingDetailInform,self)--停止接收建筑详情推送消息
@@ -51,7 +51,7 @@ function GameMainInterfaceModel:Close()
     Event.RemoveListener("m_QueryOffLineInformation", self.m_QueryOffLineInformation,self) --获取离线通知
     incomeNotify = {}
 end
---客户端请求--
+--Client request--
 
 --获取每种类型npc数量
 function GameMainInterfaceModel:m_GetNpcNum()
@@ -122,7 +122,7 @@ function GameMainInterfaceModel:m_queryCityBroadcast()
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
 end
 
---服务器回调--
+--Server callback--
 --获取所有邮件
 function GameMainInterfaceModel:n_OnGetAllMails(lMsg)
     Event.Brocast("c_AllMails",lMsg.mail)

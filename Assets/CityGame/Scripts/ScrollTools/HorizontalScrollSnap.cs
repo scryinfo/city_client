@@ -1,4 +1,4 @@
-﻿//滑动snap
+﻿//Sliding snap
 
 using System;
 using System.Collections.Generic;
@@ -87,7 +87,7 @@ public class HorizontalScrollSnap : MonoBehaviour, IBeginDragHandler, IEndDragHa
         }
     }
 
-    //下一页
+    //Next page
     public void NextScreen()
     {
         if (CurrentScreen() < mTotalPage - 1)
@@ -100,7 +100,7 @@ public class HorizontalScrollSnap : MonoBehaviour, IBeginDragHandler, IEndDragHa
         }
     }
 
-    //上一页
+    //Previous
     public void PreviousScreen()
     {
         if (CurrentScreen() > 0)
@@ -137,7 +137,7 @@ public class HorizontalScrollSnap : MonoBehaviour, IBeginDragHandler, IEndDragHa
         }
     }
 
-    //获取回到指定位置的坐标
+    //Get the coordinates back to the specified position
     private Vector2 FindClosestFrom(Vector2 start, List<Vector2> positions)
     {
         Vector2 closest = Vector2.zero;
@@ -155,19 +155,19 @@ public class HorizontalScrollSnap : MonoBehaviour, IBeginDragHandler, IEndDragHa
         return closest;
     }
 
-    //返回当前屏幕的标识索引
+    //Returns the logo index of the current screen
     public int CurrentScreen()
     {
         int index = mTempPage.GetCurrentPageId();
         return index;
     }
-    //改变底部标识
+    //Change the bottom logo
     private void ChangeBulletsInfo(int currentScreen)
     {
 
     }
 
-    //基于品目分辨率改变——screensContainer子物体的坐标和位置
+    //Change based on item resolution-coordinates and position of screensContainer sub-object
     private void DistributePages()
     {
 

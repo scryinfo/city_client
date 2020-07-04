@@ -139,7 +139,7 @@ namespace LuaFramework {
             if (abName.Contains("/")) {
                 return abName;
             }
-            //string[] paths = m_AssetBundleManifest.GetAllAssetBundles();  产生GC，需要缓存结果
+            //string[] paths = m_AssetBundleManifest.GetAllAssetBundles();  Generate GC, need to cache results
 
             if (m_AllManifest == null) {
                 return null;
@@ -147,7 +147,7 @@ namespace LuaFramework {
 
             for (int i = 0; i < m_AllManifest.Length; i++) {
                 int index = m_AllManifest[i].LastIndexOf('/');  
-                string path = m_AllManifest[i].Remove(0, index + 1);    //字符串操作函数都会产生GC
+                string path = m_AllManifest[i].Remove(0, index + 1);    //String manipulation functions will produce GC
                 if (path.Equals(abName)) {
                     return m_AllManifest[i];
                 }
@@ -178,7 +178,7 @@ namespace LuaFramework {
             }
         }
         /// <summary>
-        /// 载入素材
+        /// Loading material
         /// </summary>
         void LoadAsset<T>(string abName, string[] assetNames, Action<UObject[], AssetBundle> action = null, LuaFunction func = null, System.Type type = null) where T : UObject {
 
@@ -210,12 +210,12 @@ namespace LuaFramework {
             for (int i = 0; i < assetNames.Length; i++)
             {
                 string realpath = assetNames[i];
-                //同步加载
+                //Synchronous loading
                 /*GameObject prefab = UnityEngine.Resources.Load<GameObject>(realpath) ;
                 if (prefab != null) {                
                     result.Add(prefab);
                 }*/
-                //异步加载
+                //Asynchronous loading
                 StartCoroutine(NoneBundleLoadRes(realpath, action, type));
             }            
 #endif
@@ -278,7 +278,7 @@ namespace LuaFramework {
         }
 
         public Sync_LoadData LoadRes_S(string releativePath, System.Type type = null) {
-            //1、 根据项目资源bundle命名规则，把传入的资源相对路径转为对应的bundle名字，同步加载bundle
+            //1. According to the project resource bundle naming rules, convert the incoming resource relative path to the corresponding bundle name, and load the bundle synchronously
             Sync_LoadData retObj;
             retObj._asset = null;
             retObj._bunldle = null;
@@ -292,7 +292,7 @@ namespace LuaFramework {
             assetName = GetAssetName(ref releativePath);
             string abName = GetBundleName(ref releativePath);
             abName = City.CityLuaUtil.getLuaBundelPath() + "/" + abName;
-            //同步加载bundle
+            //Load bundles synchronously
             AssetBundleInfo bundleInfo = GetLoadedAssetBundle(abName);
 
             if (bundleInfo == null)
@@ -325,7 +325,7 @@ namespace LuaFramework {
                 
             if (retObj._bunldle != null)
             {
-                //2、 从传入的资源相对路径取出资源名字，从bundle同步加载该资源
+                //2. Take the resource name from the relative path of the incoming resource and load the resource synchronously from the bundle
                 AssetBundleRequest abre = retObj._bunldle.LoadAssetAsync(assetName, type);
                 if (abre != null)
                 {
@@ -501,7 +501,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 此函数交给外部卸载专用，自己调整是否需要彻底清除AB
+        /// This function is handed to the external unloading dedicated, adjust whether you need to completely remove AB
         /// </summary>
         /// <param name="abName"></param>
         /// <param name="isThorough"></param>
@@ -531,7 +531,7 @@ namespace LuaFramework {
 
             if (--bundle.m_ReferencedCount <= 0) {
                 if (m_LoadRequests.ContainsKey(abName)) {
-                    return;     //如果当前AB处于Async Loading过程中，卸载会崩溃，只减去引用计数即可
+                    return;     //If the current AB is in the process of Async Loading, the uninstall will crash, just subtract the reference count
                 }
                 bundle.m_AssetBundle.Unload(isThorough);
                 m_LoadedAssetBundles.Remove(abName);
@@ -561,7 +561,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 初始化
+        /// initialization
         /// </summary>
         public void Initialize() {
             byte[] stream = null;
@@ -575,7 +575,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 载入素材
+        /// Loading material
         /// </summary>
         public T LoadAsset<T>(string abname, string assetname) where T : UnityEngine.Object {
             abname = abname.ToLower();
@@ -594,7 +594,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 载入AssetBundle
+        /// Load AssetBundle
         /// </summary>
         /// <param name="abname"></param>
         /// <returns></returns>
@@ -610,7 +610,7 @@ namespace LuaFramework {
                 LoadDependencies(abname);
 
                 stream = File.ReadAllBytes(uri);
-                bundle = AssetBundle.LoadFromMemory(stream); //关联数据的素材绑定
+                bundle = AssetBundle.LoadFromMemory(stream); //Material binding for linked data
                 bundles.Add(abname, bundle);
             } else {
                 bundles.TryGetValue(abname, out bundle);
@@ -619,7 +619,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 载入依赖
+        /// Load dependency
         /// </summary>
         /// <param name="name"></param>
         void LoadDependencies(string name) {
@@ -671,7 +671,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 销毁资源
+        /// Destroy resources
         /// </summary>
         void OnDestroy() {
             if (shared != null) shared.Unload(true);

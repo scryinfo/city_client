@@ -42,7 +42,7 @@ function FlightMainCtrl:Awake(go)
         self:recordFunc()
     end , self)
 
-    self.pageEvent = ScrollPageEventData.New()  --滑动翻页事件
+    self.pageEvent = ScrollPageEventData.New()  --Sliding page turning event
     self.pageEvent.mProvideData = FlightMainCtrl.static.ProvideFunc
     self.pageEvent.mClearData = FlightMainCtrl.static.ClearFunc
     self.pageEvent.mLeftEndFunc = FlightMainCtrl.static.LeftEndFunc
@@ -88,7 +88,7 @@ function FlightMainCtrl:_getAllFlight(value)
             if count > 12 then
                 count = 12
             end
-            FlightMainPanel.scrollPage:InitData(self.pageEvent, count)  --策划改成最多只显示12个
+            FlightMainPanel.scrollPage:InitData(self.pageEvent, count)  --Changed the plan to display up to 12
         else
             FlightMainPanel.noneTip.localScale = Vector3.one
         end
@@ -107,16 +107,16 @@ end
 --
 FlightMainCtrl.static.ClearFunc = function(transform) end
 
---正常状态
+--normal status
 FlightMainCtrl.static.BtnNormalFunc = function()
     FlightMainPanel.rightBtn.localScale = Vector3.one
     FlightMainPanel.leftBtn.localScale = Vector3.one
 end
---到达最左边
+--Reach the far left
 FlightMainCtrl.static.LeftEndFunc = function()
     FlightMainPanel.leftBtn.localScale = Vector3.zero
 end
---到达最右边
+--Reach the far right
 FlightMainCtrl.static.RightEndFunc = function()
     FlightMainPanel.rightBtn.localScale = Vector3.zero
 end
@@ -153,27 +153,27 @@ function FlightMainCtrl:backFunc()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
---点击搜索
+--Click to search
 function FlightMainCtrl:searchFunc()
     PlayMusEff(1002)
     ct.OpenCtrl("FlightSearchCtrl")
 end
---点击充值
+--Click recharge
 function FlightMainCtrl:clickMoneyFunc()
     PlayMusEff(1002)
     --ct.OpenCtrl()
 end
---翻页左按钮
+--Turn left button
 function FlightMainCtrl:leftPageFunc()
     PlayMusEff(1002)
     FlightMainPanel.scrollPage:PrevPage()
 end
---右翻页
+--Page right
 function FlightMainCtrl:rightPageFunc()
     PlayMusEff(1002)
     FlightMainPanel.scrollPage:NextPage()
 end
---预测记录界面
+--Forecast record interface
 function FlightMainCtrl:recordFunc()
     PlayMusEff(1002)
     ct.OpenCtrl("FlightRecordCtrl")

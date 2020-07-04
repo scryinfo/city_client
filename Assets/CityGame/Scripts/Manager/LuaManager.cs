@@ -45,15 +45,15 @@ namespace LuaFramework {
 
             luaMgr.InitStart();
 
-            luaMgr.DoFile("Require_Editor");         //加载 Require_Editor
+            luaMgr.DoFile("Require_Editor");         //load Require_Editor
             LuaFunction Genfun = luaMgr.lua.GetFunction("Genfun");
             Genfun.Call();
             Genfun.Dispose();
             Genfun = null;
             luaMgr = null;
-            AppFacade.Instance.RemoveManager(ManagerName.Lua); //不能执行这个，否则会出问题            
+            AppFacade.Instance.RemoveManager(ManagerName.Lua); //Can't execute this, otherwise there will be problems          
             return true;
-            // return  Util.CallMethod("Require_Editor", "Genfun");     //执行 Require_RunTime 生成            
+            // return  Util.CallMethod("Require_Editor", "Genfun");     //Perform Require_RunTime generation        
         }
         public void CustomBind(LuaState L) {
             L.BeginModule(null);
@@ -111,7 +111,7 @@ namespace LuaFramework {
         public void InitStart() {
             InitLuaPath();
             InitLuaBundle();
-            this.lua.Start();    //启动LUAVM
+            this.lua.Start();    //Start LUAVM
             this.StartMain();
             this.StartLooper();
         }
@@ -121,7 +121,7 @@ namespace LuaFramework {
             loop.luaState = lua;
         }
 
-        //cjson 比较特殊，只new了一个table，没有注册库，这里注册一下
+        //cjson is special, only a new table, no registration library, register here
         protected void OpenCJson() {
             lua.LuaGetField(LuaIndexes.LUA_REGISTRYINDEX, "_LOADED");
             lua.OpenLibs(LuaDLL.luaopen_cjson);
@@ -141,7 +141,7 @@ namespace LuaFramework {
         }
       
         /// <summary>
-        /// 初始化加载第三方库
+        /// Initially load third-party libraries
         /// </summary>
         void OpenLibs()
         {
@@ -173,7 +173,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 初始化Lua代码加载路径
+        /// Initialize Lua code loading path
         /// </summary>
         void InitLuaPath() {
             Debug.Log("LuaManager:InitLuaPath Invoked !!!");
@@ -192,11 +192,11 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 初始化LuaBundle
+        /// Initialize LuaBundle
         /// </summary>
         void InitLuaBundle() {
             if (loader.beZip) {
-                //自动加载
+                //Autoload
                 string assertDir = CityLuaUtil.getLuaBundelPath();
                 Debug.Log("InitLuaBundle: "+ assertDir);
                 string srcDir = assertDir + "/lua";
@@ -209,7 +209,7 @@ namespace LuaFramework {
                     Debug.Log("loader.AddBundle " + file);
                     loader.AddBundle(file);
                 }
-                //手动添加 client\Assets\StreamingAssets\lua 中所有.unity3d文件
+                //add manully all .unity3d files in client\Assets\StreamingAssets\lua 
                 /*loader.AddBundle("lua/lua.unity3d");
                 loader.AddBundle("lua/lua_math.unity3d");
                 loader.AddBundle("lua/lua_system.unity3d");

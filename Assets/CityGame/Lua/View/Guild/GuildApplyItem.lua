@@ -34,26 +34,26 @@ function GuildApplyItem:initialize(prefab, data)
     end)
 end
 
--- 同意入会申请
+-- Agree to apply for membership
 function GuildApplyItem:_agreeGuildApplay()
     PlayMusEff(1002)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildApplyCtrl, 'm_JoinHandle', { societyId = self.data.societyId, playerId = self.data.playerId, isAgree = true })
 end
 
--- 拒绝入会申请
+-- Decline membership application
 function GuildApplyItem:_refuseGuildApplay()
     PlayMusEff(1002)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildApplyCtrl, 'm_JoinHandle', { societyId = self.data.societyId, playerId = self.data.playerId, isAgree = false })
 end
 
--- 显示成员头像名字公司等基本信息
+-- Display basic information such as member avatar name company
 function GuildApplyItem:_showNameHead(playerData)
     self.nameText.text = playerData[1].name
     self.companyText.text = playerData[1].companyName
     self.avatarData = AvatarManger.GetSmallAvatar(playerData[1].faceId, self.headImage,0.2)
 end
 
--- 删除头像
+-- Delete avatar
 function GuildApplyItem:CloseAvatar()
     if self.avatarData then
         AvatarManger.CollectAvatar(self.avatarData)

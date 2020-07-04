@@ -14,24 +14,24 @@ function DETAILSBoxPanel.InitPanel()
     this.XBtn = transform:Find("bg/XBtn");
     this.confirmBtn = transform:Find("bg/confirmBtn");
     this.name = transform:Find("bg/name"):GetComponent("Text");
-    --商品
+    --commodity
     this.playerGoodInfo = transform:Find("playerGoodInfo");
     this.goodsIcon = transform:Find("playerGoodInfo/goodsIcon"):GetComponent("Image");
     this.playerName = transform:Find("playerGoodInfo/playerName"):GetComponent("Text");
     this.GoodNameText = transform:Find("playerGoodInfo/goodsNameText"):GetComponent("Text");
     --this.companyNameText = transform:Find("playerGoodInfo/companyNamebg/companyNameText"):GetComponent("Text");
     --this.headImg = transform:Find("playerGoodInfo/headImg"):GetComponent("Image")
-    --原料
+    --raw material
     this.playerMaterialInfo = transform:Find("playerMaterialInfo");
     this.materialNameText = transform:Find("playerMaterialInfo/infoBg/materialNameText"):GetComponent("Text");
     this.materialIcon = transform:Find("playerMaterialInfo/infoBg/materialIcon"):GetComponent("Image");
-    --通用
+    --General
     this.numberInput = transform:Find("goodsInfo/numberInput"):GetComponent("InputField");
     this.priceInput = transform:Find("goodsInfo/priceInput"):GetComponent("InputField");
     this.priceText = transform:Find("goodsInfo/priceText"):GetComponent("Text");
     this.numberSlider = transform:Find("goodsInfo/numberSlider"):GetComponent("Slider");
 
-    --总分提示
+    --Total score reminder
     this.scoreText = transform:Find("playerGoodInfo/totalScore/scoreText"):GetComponent("Text")
     this.infoBtn = transform:Find("playerGoodInfo/infoBtn")
     this.infoRootBtn = transform:Find("infoRootBtn")

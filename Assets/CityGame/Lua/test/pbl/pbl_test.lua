@@ -1,4 +1,4 @@
---单元测试
+--unit test
 local lu = require "Framework/pbl/luaunit"
 local assert_not = lu.assertEvalToFalse
 local eq       = lu.assertEquals

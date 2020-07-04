@@ -1,10 +1,10 @@
----心跳检测断开
+---Heartbeat detection disconnected
 -----
 
 HeartbeatDisconnectionCtrl = class('HeartbeatDisconnectionCtrl',UIPanel)
 UIPanel:ResgisterOpen(HeartbeatDisconnectionCtrl)
 
---常量
+--constant
 local iconMaxLv = 4
 local LvScale = Vector3.one / iconMaxLv
 local timeInterval = 0.5

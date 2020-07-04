@@ -5,10 +5,10 @@
 ---
 
 EvaTitleItemThere = class("EvaTitleItemThere", BaseEvaTitleItem)
-EvaTitleItemThere.static.NomalNameColor = Vector3.New(136, 170, 253) -- 默认的名字颜色
-EvaTitleItemThere.static.SelectNameColor = Vector3.New(74, 97, 189) -- 被选中的名字颜色
+EvaTitleItemThere.static.NomalNameColor = Vector3.New(136, 170, 253) -- Default name color
+EvaTitleItemThere.static.SelectNameColor = Vector3.New(74, 97, 189) -- Selected name color
 
--- 子类继承实现自己的方法用以显示具体的内容
+-- Subclasses inherit their own methods to display specific content
 function EvaTitleItemThere:_showContent()
     local recordData = EvaCtrl.static.evaCtrl:GetEvaRecordData()
     self.nameText.text = GetLanguage(EvaCtrl.static.evaCtrl.allUIData[recordData[1]].option[recordData[2]].option[self.index].name)

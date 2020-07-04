@@ -10,14 +10,14 @@ local transform;
 ReminderPanel = {};
 local this = ReminderPanel;
 
---å¯åŠ¨äº‹ä»¶
+--Start event
 function ReminderPanel.Awake(obj)
 
     transform = obj.transform;
     this.InitPanle();
 
 end
---åˆå§‹åŒ–ç•Œé¢
+--³õÊ¼»¯½çÃæ
 function ReminderPanel.InitPanle()
 
     this.mainText=transform:Find("PopCommpent/mainContentText"):GetComponent("Text");

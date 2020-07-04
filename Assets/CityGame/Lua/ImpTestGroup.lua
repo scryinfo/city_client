@@ -6,10 +6,10 @@
 TestGroup={}
 local this = TestGroup
 
---固定分组是不需手动激活的，任何地方都可以直接使用的
+--The fixed group does not need to be activated manually, and can be used directly from anywhere
 TestGroup.TestGroupId ={
-    system="system",            --用于系统打印的固定分组
-    performance="performance",  --用于性能测试的固定分组
+    system="system",            --Fixed grouping for system printing
+    performance="performance",  --Fixed grouping for performance testing
     --abl_w5 ="abl_w5",
     --cyl_w5 ="cyl_w5",
     --fhr_w5 ="fhr_w5",
@@ -38,18 +38,18 @@ function TestGroup.get_ActiveTestGroupId(id)
     return TestGroup.ActiveTestGroupId[id]
 end
 
---添加log分组
+--Add log grouping
 function TestGroup.add_TestGroupId(...)
     TestGroup.TestGroupId[...] = ...
 end
---移除log分组(一般情况下用不着，不执行active_TestGroup就不会注册相应的测试组)
+--Remove the log group (generally not needed, the corresponding test group will not be registered without executing active_TestGroup)
 function TestGroup.remove_TestGroupId(...)
     TestGroup.TestGroupId[...] = nil
     TestGroup.ActiveTestGroupId[...] = nil
 end
 
 
---激活log分组, 在调用该方法之前，需要已经 require 过 Framework/pbl/luaunit
+--Activate the log group, before calling this method, you need to have already required Framework/pbl/luaunit
 function TestGroup.active_TestGroup(...)
     TestGroup.ActiveTestGroupId[...] = ...
     TestGroup.TestGroupId[...] = ...

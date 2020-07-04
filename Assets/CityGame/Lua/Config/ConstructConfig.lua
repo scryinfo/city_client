@@ -1,4 +1,4 @@
---建造表
+--Build watch
 ConstructConfig ={
     [1] = {
         buildName = 23010001,

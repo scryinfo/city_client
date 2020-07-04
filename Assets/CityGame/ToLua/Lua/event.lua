@@ -65,7 +65,7 @@ end
 local _event = {}
 _event.__index = _event
 
---废弃
+--Abandoned
 function _event:Add(func, obj)
 	assert(func)		
 
@@ -84,7 +84,7 @@ function _event:Add(func, obj)
 	end	
 end
 
---废弃
+--Abandoned
 function _event:Remove(func, obj)	
 	for i, v in ilist(self.list) do							
 		if v.func == func and v.obj == obj then
@@ -189,7 +189,7 @@ end
 UpdateBeat 		= event("Update", true)
 LateUpdateBeat	= event("LateUpdate", true)
 FixedUpdateBeat	= event("FixedUpdate", true)
-CoUpdateBeat	= event("CoUpdate")				--只在协同使用
+CoUpdateBeat	= event("CoUpdate")				--Only used in conjunction
 
 local Time = Time
 local UpdateBeat = UpdateBeat
@@ -197,7 +197,7 @@ local LateUpdateBeat = LateUpdateBeat
 local FixedUpdateBeat = FixedUpdateBeat
 local CoUpdateBeat = CoUpdateBeat
 
---逻辑update
+--Logical update
 function Update(deltaTime, unscaledDeltaTime)
 	Time:SetDeltaTime(deltaTime, unscaledDeltaTime)				
 	UpdateBeat()	
@@ -209,7 +209,7 @@ function LateUpdate()
 	Time:SetFrameCount()		
 end
 
---物理update
+--Physical update
 function FixedUpdate(fixedDeltaTime)
 	Time:SetFixedDelta(fixedDeltaTime)
 	FixedUpdateBeat()

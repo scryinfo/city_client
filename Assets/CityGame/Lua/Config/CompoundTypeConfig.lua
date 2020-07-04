@@ -1,4 +1,4 @@
---合成分类配表  --选择生产线左右两边的配表
+--Synthetic classification and distribution table - select the distribution table on the left and right sides of the production line
 CompoundTypeConfig={
 	[2101] = {
 		

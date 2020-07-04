@@ -12,15 +12,15 @@ function ProcessShelfPanel.Awake(obj)
 end
 function ProcessShelfPanel.InitPanel()
     --Button --Text
-    this.search_Btn = transform:Find("search_Btn").gameObject;  --搜索按钮
-    this.return_Btn = transform:Find("return_Btn").gameObject;  --返回按钮
-    this.refresh_Btn = transform:Find("refresh_Btn").gameObject;--刷新按钮
-    this.buy_Btn = transform:Find("buy_Btn").gameObject;        --购买按钮
-    this.arrowBtn = transform:Find("Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
+    this.search_Btn = transform:Find("search_Btn").gameObject; --search button
+    this.return_Btn = transform:Find("return_Btn").gameObject; --back button
+    this.refresh_Btn = transform:Find("refresh_Btn").gameObject;--Refresh button
+    this.buy_Btn = transform:Find("buy_Btn").gameObject; --buy button
+    this.arrowBtn = transform:Find("Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open drop-down list
     this.shelfImg = transform:Find("shelf");
-    this.nameBtn = transform:Find("ListTable/List/nameBtn");  --名字排序
-    this.quantityBtn = transform:Find("ListTable/List/quantityBtn");  --数量排序
-    this.priceBtn = transform:Find("ListTable/List/priceBtn");  --价格排序
+    this.nameBtn = transform:Find("ListTable/List/nameBtn"); --Name sort
+    this.quantityBtn = transform:Find("ListTable/List/quantityBtn"); --Quantity sort
+    this.priceBtn = transform:Find("ListTable/List/priceBtn"); --Price sorting
     this.nowText = transform:Find("Sorting/bg/nowText"):GetComponent("Text");
     this.list = transform:Find("ListTable/List"):GetComponent("RectTransform");
     this.tipText = transform:Find("RightInformation/bg/buy/tipText"):GetComponent("Text");
@@ -38,7 +38,7 @@ function ProcessShelfPanel.InitPanel()
     this.nameText = transform:Find("RightInformation/bg/buy/warehouseName/nameText"):GetComponent("Text");
     this.openBtn = transform:Find("RightInformation/bg/buy/warehouseName/openBtn").gameObject;
     this.buyContent = transform:Find("RightInformation/bg/buy/ScrollView/Viewport/Content");
-    --预制
+    --Prefab
     this.ShelfGoodsItem = transform:Find("Scroll View/Viewport/Content/ShelfGoodsItem").gameObject
     this.BuyDetailsItem = transform:Find("RightInformation/bg/buy/ScrollView/Viewport/Content/BuyDetailsItem").gameObject
 end

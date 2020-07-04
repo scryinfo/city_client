@@ -2,128 +2,128 @@
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
-/// x,y坐标轴数据
+/// x,y coordinate axis data
 /// </summary>
 public class FunctionalGraphBase:MonoBehaviour
 {
     /// 
-    /// 是否显示刻度
+    /// Whether to display the scale
     ///
     public bool ShowScale = false;
     /// 
-    /// 是否显示X轴单位
+    /// Whether to display X-axis units
     /// 
     public bool ShowXAxisUnit = false;
     /// 
-    /// 是否显示Y轴单位
+    /// Whether to display Y-axis units
     ///
     public bool ShowYAxisUnit = false;  
     /// 
-    /// 是否绘制Y轴
+    /// Whether to draw the Y axis
     ///
     public bool ShowYScale = false;
     /// 
-    /// X轴单位
+    /// X axis unit
     /// 
     public string XAxisUnit = "XUnit";
     ///
-    /// Y轴单位
+    /// Y-axis unit
     /// 
     public string YAxisUnit = "YUnit";
     ///
-    /// 单位字体大小
+    /// Unit font size
     /// 
     [Range(12, 30)] public int FontSize = 16;
     ///
-    /// X.Y轴刻度字体大小
+    /// X.Y axis scale font size
     /// 
     [Range(20, 50)] public int XYFontSize = 24;
     ///
-    /// X.Y轴刻度字体颜色
+    /// X.Y axis scale font color
     /// 
     public Color XYFontColor = Color.black;
     /// 
-    /// 字体颜色
+    /// font color
     /// 
     public Color FontColor = Color.black;
     /// 
-    /// X轴刻度
+    /// X axis scale
     /// 
     [Range(20f, 250)] public float XScaleValue = 100f;
     /// 
-    /// Y轴刻度
+    /// Y axis scale
     /// s
     [Range(20f, 150)] public float YScaleValue = 100f;
     /// 
-    /// 刻度的长度
+    /// The length of the scale
     /// 
     [Range(2, 10)] public float ScaleLenght = 5.0f;
     /// 
-    /// XY轴宽度
+    /// XY axis width
     ///
     [Range(2f, 20f)] public float XYAxisWidth = 2.0f;
     /// 
-    /// XY轴颜色
+    /// XY axis color
     /// 
     public Color XYAxisColor = Color.gray;
     ///
-    /// 网格Enum
+    /// Mesh Enum
     /// 
     public enum E_MeshType
     {
-        None,          //没有网格
-        FullLine,      //实线网格
-        //ImaglinaryLine //虚线网格
+        None,          //No grid
+        FullLine,      //Solid grid
+        //ImaglinaryLine //Dotted grid
     } 
     /// 
-    /// 网格类型
+    /// Grid type
     /// 
     public E_MeshType MeshType = E_MeshType.None;
     ///
-    /// 网格线段宽度
+    /// Grid line width
     /// 
     [Range(1.0f, 10f)] public float MeshLineWidth = 2.0f;
     /// 
-    /// 网格颜色
+    /// Grid color
     /// 
     public Color MeshColor = Color.gray;
     ///
-    /// 虚线的长度
+    /// The length of the dotted line
     ///
     [Range(0.5f, 20)] public float ImaglinaryLineWidth = 8.0f;
     ///
-    /// 虚线空格长度
+    /// Dotted space length
     ///
     [Range(0.5f, 10f)] public float SpaceingWidth = 5.0f;
     ///
-    /// 线的宽度
+    /// Line width
     ///
     [Range(2f, 20f)] public float LineWidth = 2.0f;
-    ///分隔线的颜色
+    ///Divider color
     ///
     public Color BoundaryColor = Color.gray;
     ///
-    ///最多生成线的数量
+    ///Maximum number of generated lines
     ///
     public int MaxNum = 2;
     ///
-    ///滑动最小的位置
+    ///Minimum sliding position
     ///
     public Vector2 MinPos = Vector2.one;
     ///
-    ///滑动最大的位置
+    ///Sliding position
     ///
     public Vector2 MaxPos = Vector2.one;
     ///
-    ///最小的宽高
+    ///Minimum width and height
     ///
     public Vector2 MinWidth = Vector2.one;
     ///
-    ///最大的宽高
+    ///Maximum width and height
     ///
     public Vector2 MaxWidth = Vector2.one;
     ///
-    ///柱状图宽度
+    ///Histogram width
     ///
     [Range(2f, 100f)] public float ChartWidth = 10f;
 }

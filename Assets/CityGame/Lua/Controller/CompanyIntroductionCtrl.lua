@@ -5,8 +5,7 @@
 ---
 
 CompanyIntroductionCtrl = class('CompanyIntroductionCtrl',UIPanel)
-UIPanel:ResgisterOpen(CompanyIntroductionCtrl) --注册打开的方法
-
+UIPanel:ResgisterOpen(CompanyIntroductionCtrl) --How to open the registration
 function CompanyIntroductionCtrl:initialize()
     UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
 end
@@ -26,7 +25,7 @@ function CompanyIntroductionCtrl:Awake(go)
     self.luaBehaviour:AddClick(self.closeBtn, self.OnClickClose, self)
 end
 
---点击关闭按钮
+--Click the close button
 function CompanyIntroductionCtrl:OnClickClose(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()

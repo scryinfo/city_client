@@ -18,11 +18,11 @@ end
 function GuildListPanel.InitPanel()
     this.backBtn = transform:Find("TopRoot/BackBtn").gameObject
 
-    -- 联盟列表
+    -- Alliance list
     this.guildListScroll = transform:Find("MiddleRoot/Scroll View"):GetComponent("ActiveLoopScrollRect")
     this.guildListView = transform:Find("MiddleRoot/Scroll View"):GetComponent("RectTransform")
 
-    -- 创建联盟
+    -- Create an alliance
     this.createBtn = transform:Find("MiddleRoot/CreateBtn").gameObject
     this.createRoot = transform:Find("CreateRoot")
     this.createBackBtn = transform:Find("CreateRoot/MiddleRoot/BackBtn").gameObject
@@ -31,7 +31,7 @@ function GuildListPanel.InitPanel()
     this.costText = transform:Find("CreateRoot/MiddleRoot/Bg/CostText"):GetComponent("Text")
     this.sureBtn = transform:Find("CreateRoot/MiddleRoot/SureBtn").gameObject
 
-    -- 排序
+    -- Sort
     this.listTitleRoot = transform:Find("MiddleRoot/ListTitleRoot")
     this.memberNumberBtn = transform:Find("MiddleRoot/ListTitleRoot/MemberNumberBtn").gameObject
     this.memberNumberBtnOpen = transform:Find("MiddleRoot/ListTitleRoot/MemberNumberBtn/Open")
@@ -45,7 +45,7 @@ function GuildListPanel.InitPanel()
     this.timeBtnDefault1 = transform:Find("MiddleRoot/ListTitleRoot/TimeBtn/Default1")
     this.timeBtnDefault2 = transform:Find("MiddleRoot/ListTitleRoot/TimeBtn/Default2")
 
-    -- 多语言
+    -- multi-language
     this.titleText = transform:Find("TopRoot/TitleText"):GetComponent("Text")
     this.guildNameTitleText = transform:Find("MiddleRoot/ListTitleRoot/GuildNameTitleText"):GetComponent("Text")
     this.jobTitleText = transform:Find("MiddleRoot/ListTitleRoot/JobTitleText"):GetComponent("Text")

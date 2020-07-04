@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 说明：角色视野
-/// 
-/// @by wsh 2017-05-20
+/// Description: Character Vision
 /// </summary>
 
 public class FOWCharactorRevealer : FOWRevealer
@@ -76,8 +74,8 @@ public class FOWCharactorRevealer : FOWRevealer
 
     static public bool CheckIsValid(int charaID, out Vector3 position, out float radius)
     {
-        // TODO：实际项目中，根据角色管理系统和相关游戏逻辑，校验角色合法性
-        // 这里为了简单，直接获取demo场景唯一的角色
+        // TODO: In the actual project, according to the character management system and related game logic, verify the legality of the character
+        // For the sake of simplicity, directly get the only character in the demo scene
         position = myPosition;
         radius = myRadius;
         return true;

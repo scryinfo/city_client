@@ -4,7 +4,7 @@ local gameObject;
 NoticePanel = {};
 local this = NoticePanel;
 
---启动事件--
+--Start event--
 function NoticePanel.Awake(obj)
 	gameObject = obj;
 	transform = obj.transform;
@@ -13,12 +13,12 @@ function NoticePanel.Awake(obj)
 	logWarn("Awake lua--->>"..gameObject.name);
 end
 
---初始化面板--
+--Initialize the panel--
 function NoticePanel.InitPanel()
 	this.btn_confim = transform:Find("content/btn_confim").gameObject;
 end
 
---单击事件--
+--Click event--
 function NoticePanel.OnDestroy()
 	logWarn("OnDestroy---->>>");
 end

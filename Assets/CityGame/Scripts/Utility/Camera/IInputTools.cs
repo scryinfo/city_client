@@ -1,4 +1,4 @@
-﻿//监测输入工具
+﻿//Monitor input tools
 
 
 using System;
@@ -24,10 +24,10 @@ public interface IInputTools
 
 public class WindowsInput : IInputTools
 {
-    private Vector2 m_moveV2 = Vector2.zero;  //移动
-    private float m_zoomValue = 0.0f;  //缩放
-    private Vector3 m_oldMousePos;  //鼠标记录的位置
-    private Vector3 m_startMousePos;  //鼠标记录的位置
+    private Vector2 m_moveV2 = Vector2.zero;  //mobile
+    private float m_zoomValue = 0.0f;  //Zoom
+    private Vector3 m_oldMousePos;  //Mouse recorded position
+    private Vector3 m_startMousePos;  //Mouse recorded position
 
     #region 属性
 
@@ -105,10 +105,10 @@ public class WindowsInput : IInputTools
 public class MobileInput : IInputTools
 {
     private bool m_Zoomed = false;
-    private float m_zoomValue = 0.0f;  //缩放
-    private Vector3 m_zoomCenter;  //缩放的中心点
+    private float m_zoomValue = 0.0f;  //Zoom
+    private Vector3 m_zoomCenter;  //Center point of zoom
     private Vector3 m_oldTouch0Pos;
-    private Vector3 m_oldTouch1Pos;  //双指缩放记录的手指位置
+    private Vector3 m_oldTouch1Pos;  //Two finger zoom to record finger position
 
 
     public bool GetIsDragging
@@ -184,7 +184,7 @@ public class MobileInput : IInputTools
             Vector3 currentPosition1 = Input.GetTouch(1).position;
             if (!m_Zoomed)
             {
-                //这里实际上是开始缩放
+                //Here is actually starting to zoom
                 m_oldTouch0Pos = currentPosition0;
                 m_oldTouch1Pos = currentPosition1;
                 m_Zoomed = true;

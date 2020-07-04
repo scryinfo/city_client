@@ -38,7 +38,7 @@ function  AvatarManger.Awake()
         headPool[2][i]= LuaGameObjectPool:new("Avatar"..(i+10),creatGoods(HeadConfig.woMan[i].path),0,Vector3.New(0,0,0) )
     end
 
-    --初始化空白图片
+    --Initialize blank picture
     local SpriteType = ct.getType(UnityEngine.Sprite)
     panelMgr:LoadPrefab_A("Assets/CityGame/Resources/Atlas/Avtar/10x10-white.png", SpriteType, nil, function(Icon, obj ,ab)
         if Icon == nil then
@@ -54,13 +54,13 @@ end
 
 local imaRect_setSize , pImaRect_setSize , trans_setSize , rect_setSize
  function AvatarManger.setSize(go,size,isHide)
-     --归位
+     --reset
      go.transform.localScale = Vector3.one
      go.transform.localPosition=Vector3.zero
 
      rect_setSize = go.transform:GetComponent("RectTransform")
      rect_setSize.sizeDelta =  rect_setSize.sizeDelta * size
-     ----归位
+     ----reset
      for i, sizeData in ipairs(HeadSizeType) do
          trans_setSize = go.transform:Find(sizeData.type)
          if trans_setSize then
@@ -118,7 +118,7 @@ local function changAparance(kind)
     type = arr[2]
 
     nums=num
-    --特殊处理头和帽子
+    --Special treatment head and hat
     if type == "head" then
         local config
         if sex==1 then
@@ -156,16 +156,16 @@ local function changAparance(kind)
     end
 end
 
---获取Avatar的gameObject
+--Get Avatar's gameObject
 local function GetAvatar(faceId,isSmall)
     local arr,config = split(faceId,"-")
 
     sex = tonumber(arr[1])
-    --加载小人头像*
+    --Load villain avatar*
     currHead = headPool[sex][1]:GetAvailableGameObject()
     headTypeId = 1
     FindOrgan(currHead.transform)
-    --配置表
+    --Configuration table
     if isSmall then
         if sex == 1 then
             config = SmallAvtarConfig.man
@@ -179,9 +179,9 @@ local function GetAvatar(faceId,isSmall)
             config = AvtarConfig.woMan
         end
     end
-    --换装
+    --Dress up
     local temp = split(arr[2],",")
-    --优先加载脸
+    --Load face first
     for i = 1, #temp ,2 do
         if temp[i]~="" and temp[i] == "1" then
             local type = tonumber(temp[i])
@@ -193,7 +193,7 @@ local function GetAvatar(faceId,isSmall)
             end
         end
     end
-    --之后加载除脸之外的其他部件
+    --After loading other parts than the face
     for i = 1, #temp ,2 do
         if temp[i]~="" and temp[i] ~= "1" then
             local type = tonumber(temp[i])
@@ -206,18 +206,18 @@ local function GetAvatar(faceId,isSmall)
         end
     end
 
-    --便于回收对象池
+    --Easy to recycle object pool
     local temp = {}
     temp.sex = sex
     temp.headTypeId = headTypeId
     temp.go = currHead
-    --便于回收内存
+    --Easy to reclaim memory
     table.insert(record,temp)
 
     return temp
 end
 
---获取小资源的avatar
+--Get avatar of small resources
 function AvatarManger.GetSmallAvatar(faceId , parent , size)
     local AvatarData = GetAvatar(faceId,true)
     AvatarData.size = 1 / size
@@ -226,7 +226,7 @@ function AvatarManger.GetSmallAvatar(faceId , parent , size)
     return AvatarData
 end
 
---获取大资源的avatar
+--Get avatar of big resources
 function AvatarManger.GetBigAvatar(faceId,parent,size)
     local AvatarData = GetAvatar(faceId,false)
     AvatarData.size = 1 / size
@@ -235,12 +235,12 @@ function AvatarManger.GetBigAvatar(faceId,parent,size)
     return AvatarData
 end
 
---回收指定avatar
+--Recycle specified avatar
 local trans_CollectAvatar
 function AvatarManger.CollectAvatar(AvatarData)
     if AvatarData then
         if AvatarData.go ~= nil and AvatarData.size ~= nil then
-            --用空白图片资源替换
+            --Replace with blank image resources
             for i, config in ipairs(HeadSizeType) do
                 trans_CollectAvatar = AvatarData.go.transform:Find(config.type)
                 if trans_CollectAvatar then

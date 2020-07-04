@@ -15,7 +15,7 @@ GAucModel.WillAucPath = "View/Building/AuctionWillPlanes"
 local GroundNowPoolName = "GroundNowObj"
 local GroundSoonPoolName = "GroundSoonObj"
 
---构建函数--
+--Constructor--
 function GAucModel.New()
     return this
 end
@@ -26,7 +26,7 @@ function GAucModel.Awake()
     --UpdateBeat:Add(this._update, this)
 end
 
---启动事件--
+--Start event--
 function GAucModel.OnCreate()
     --本地的回调注册
     Event.AddListener("m_PlayerBidGround", this.m_BidGround)
@@ -36,7 +36,7 @@ function GAucModel.OnCreate()
     Event.AddListener("c_UIBubbleLateUpdate", this.c_bubbleLateUpdate)  --temp
 end
 
---网络回调注册
+--Network callback registration
 function GAucModel.registerNetMsg()
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","queryGroundAuction"), GAucModel.n_OnReceiveQueryGroundAuctionInfo)
     --CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","bidGround"), GAucModel.n_OnReceiveBindGround)
@@ -64,7 +64,7 @@ function GAucModel.c_bubbleLateUpdate()
     UIBubbleManager._cameraLateUpdate()
 end
 
---关闭事件--
+--Close event--
 function GAucModel.Close()
     Event.RemoveListener("m_PlayerBidGround", this.m_BidGround)
     Event.RemoveListener("m_RegistGroundBidInfor", this.m_RegistGroundBidInfor)
@@ -225,7 +225,7 @@ function GAucModel._returnNowToPool(table)
     end
 end
 
---- 客户端请求 ---
+--- Client request ---
 --请求拍卖中的土地信息
 function GAucModel.m_ReqQueryGroundAuction()
     local msgId = pbl.enum("gscode.OpCode","queryGroundAuction")

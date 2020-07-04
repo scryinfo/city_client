@@ -2,10 +2,10 @@ require('Controller/RoleManagerCtrl')
 require('Controller/ServerListCtrl')
 
 LoginCtrl = class('LoginCtrl',UIPanel)
-UIPanel:ResgisterOpen(LoginCtrl) --这个是注册打开的类方法
+UIPanel:ResgisterOpen(LoginCtrl) --This is the registered open class method
 
-require'View/BuildingInfo/SmallPopItem'--小弹窗脚本
---构建函数--
+require'View/BuildingInfo/SmallPopItem'--Small popup script
+--Constructor--
 function LoginCtrl:initialize()
 	UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)
 
@@ -25,23 +25,23 @@ function LoginCtrl:Awake(go)
 	UnityEngine.GameObject.AddComponent(go, ct.getType(UnityEngine.Input_BanChinse))
 	self.insId = OpenModelInsID.LoginCtrl
 
-	--注册点击事件
+	--Register click event
 	local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
 	self.input =  self.gameObject:GetComponent('Input_BanChinse');
 	LuaBehaviour:AddClick(LoginPanel.btnLogin, self.OnLogin,self);
 	LuaBehaviour:AddClick(LoginPanel.btnRegister, self.OnRegister,self);
 	LuaBehaviour:AddClick(LoginPanel.forget, self.OnForget,self);
-	LuaBehaviour:AddClick(LoginPanel.eye, self.OnEye,self);  --是否显示密码
-	LuaBehaviour:AddClick(LoginPanel.choose, self.OnChoose,self);  --打开多语言
-	LuaBehaviour:AddClick(LoginPanel.closeBg, self.OnCloseBg,self);  --关闭多语言
-	--LuaBehaviour:AddClick(LoginPanel.normText, self.OnNormText,self);  --用户准则
+	LuaBehaviour:AddClick(LoginPanel.eye, self.OnEye,self);  --Whether to show the password
+	LuaBehaviour:AddClick(LoginPanel.choose, self.OnChoose,self);  --Open multilingual
+	LuaBehaviour:AddClick(LoginPanel.closeBg, self.OnCloseBg,self);  --Turn off multilingual
+	--LuaBehaviour:AddClick(LoginPanel.normText, self.OnNormText,self);  --User Guidelines
 	--LuaBehaviour:AddClick(LoginPanel.btnChooseGameServer, self.onClickChooseGameServer,self);
 
 
 	self.showPassword = false
 
 
-	--多语言
+	--multi-language
 	local languageId = UnityEngine.PlayerPrefs.GetInt("Language")
 	if languageId == 0 then
 		LoginPanel.languageText.text = GetLanguage(10020010)
@@ -67,23 +67,23 @@ function LoginCtrl:Awake(go)
            v:Set(v)
 		end
 	end
-	--是否记住密码
+	--Do you remember the password
 	LoginPanel.remember.onValueChanged:AddListener(function(isOn)
 		self:_OnToggle(isOn)
 	end)
 
-    --密码不能输入中文
+    --Password cannot be entered in Chinese
 	LoginPanel.inputPassword:GetComponent('InputField').onValueChanged:AddListener(function()
 		self:_OnPassword(self)
 	end)
 
-	--同意用户准则
+	--Agree user guidelines
 	--LoginPanel.norm.isOn = true
 end
 
 function LoginCtrl:Active()
 	UIPanel.Active(self)
-	--普通消息注册
+	--General message registration
 	Event.AddListener("c_onLoginFailed", self.c_onLoginFailed, self);
 	Event.AddListener("c_LoginSuccessfully", self.c_LoginSuccessfully, self);
 	Event.AddListener("c_GsConnected", self.c_GsConnected, self);
@@ -92,7 +92,7 @@ function LoginCtrl:Active()
 	Event.AddListener("c_Aslogin", self.c_Aslogin, self);
 	Event.AddListener("c_ChangeLanguage", self.c_ChangeLanguage, self);
 
-	--多语言
+	--multi-language
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
 	LoginPanel.account.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
@@ -106,7 +106,7 @@ function LoginCtrl:Active()
 end
 
 function LoginCtrl:c_ChangeLanguage()
-	--多语言
+	--multi-language
 	LoginPanel.inputUsernameTest.text = GetLanguage(10020001)
 	LoginPanel.account.text = GetLanguage(10020001)
 	LoginPanel.inputPasswordTest.text = GetLanguage(10020002)
@@ -143,7 +143,7 @@ end
 function LoginCtrl:_initData()
 	LoginPanel.textStatus.transform.localScale = Vector3.zero
 	DataManager.OpenDetailModel(LoginModel,self.insId)
-	--连接as
+	--Connect as
 	--CityEngineLua.login_loginapp(true)
 	if UnityEngine.PlayerPrefs.GetString("username") ~= "" then
 		LoginPanel.inputUsername:GetComponent('InputField').text = UnityEngine.PlayerPrefs.GetString("username")
@@ -157,7 +157,7 @@ function LoginCtrl:_initData()
 		LoginPanel.inputPassword:GetComponent('InputField').text = UnityEngine.PlayerPrefs.GetString("password")
 	end
 end
---启动事件--
+--Start event--
 function LoginCtrl:OnCreate(go)
 	UIPanel.OnCreate(self,go)
 
@@ -171,7 +171,7 @@ function LoginCtrl:OnCreate(go)
 	--UnitTest.Exec_now("wk24_abel_mutiConnect", "c_wk24_abel_mutiConnect",self)
 end
 
---关闭事件--
+--Close event--
 function LoginCtrl:Close()
 	UIPanel.Close(self)
 	Event.Brocast("c_RemoveListener")
@@ -181,7 +181,7 @@ function LoginCtrl:onClickChooseGameServer(serverId)
 	Event.Brocast("m_chooseGameServer", serverId);
 end
 
---是否记住密码
+--Do you remember the password
 function LoginCtrl:_OnToggle(isOn)
 	PlayMusEff(1002)
 	if isOn then
@@ -192,26 +192,26 @@ function LoginCtrl:_OnToggle(isOn)
 	end
 end
 
---密码不能输入中文
+--Password cannot be entered in Chinese
 function LoginCtrl:_OnPassword()
 	local a = LoginPanel.inputPassword:GetComponent('InputField')
 	self.input:BanChinese(a)
 end
 
---是否显示密码
+--Whether to show the password
 function LoginCtrl:OnEye(go)
 	PlayMusEff(1002)
 	go:ShowPassword( not go.showPassword)
 end
 
---显影密码
+--Developer password
 function LoginCtrl:ShowPassword(isOn)
-	if isOn then  --打开
+	if isOn then  --open
 		LoginPanel.openEye.localScale = Vector3.one
 		LoginPanel.closeEye.localScale = Vector3.zero
 		LoginPanel.inputPassword:GetComponent('InputField').contentType = LoginPanel.InputField_show.contentType
 		LoginPanel.inputPassword:GetComponent('InputField'):Select();
-	else  --关闭
+	else  --close
 		LoginPanel.openEye.localScale = Vector3.zero
 		LoginPanel.closeEye.localScale = Vector3.one
 		LoginPanel.inputPassword:GetComponent('InputField').contentType = LoginPanel.InputField_hide.contentType
@@ -220,25 +220,25 @@ function LoginCtrl:ShowPassword(isOn)
 	self.showPassword = isOn
 end
 
---打开多语言
+--Open multilingual
 function LoginCtrl:OnChoose(go)
 	PlayMusEff(1002)
     go:SwitchLanguage(true)
 end
 
---关闭多语言
+--Turn off multilingual
 function LoginCtrl:OnCloseBg(go)
 	PlayMusEff(1002)
 	go:SwitchLanguage(false)
 end
 
---打开用户准则
+--Open user guidelines
 function LoginCtrl:OnNormText()
 	PlayMusEff(1002)
 	--ct.OpenCtrl("UserNanualCtrl")
 end
 
---打开关闭多语言
+--Open and close multiple languages
 function LoginCtrl:SwitchLanguage(isOn)
 	if isOn then
 		LoginPanel.languageBg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
@@ -248,8 +248,7 @@ function LoginCtrl:SwitchLanguage(isOn)
 		LoginPanel.closeBg.transform.localScale = Vector3.zero
 	end
 end
-
---登录--
+ --log in
 function LoginCtrl:OnLogin(go)
 	PlayMusEff(1002)
 	LoginPanel.textStatus.transform.localScale = Vector3.zero
@@ -268,7 +267,7 @@ function LoginCtrl:OnLogin(go)
 	end
 end
 
---登录回调
+--Login callback
 function LoginCtrl:c_Aslogin(info,msgId)
 	LoginPanel.textStatus.transform.localScale = Vector3.zero
 	LoginPanel.textStatus:GetComponent('Text').text = ""
@@ -287,7 +286,7 @@ function LoginCtrl:c_Aslogin(info,msgId)
 		end
 	end
 end
---注册--
+--registered--
 function LoginCtrl:OnRegister(go)
 	PlayMusEff(1002)
 	CityEngineLua.currstate = "register"
@@ -295,16 +294,16 @@ function LoginCtrl:OnRegister(go)
 	ct.OpenCtrl("InviteCodeCtrl")
 end
 
---找回密码
+--Recover password
 function LoginCtrl:OnForget()
 	PlayMusEff(1002)
 	CityEngineLua.currstate = "forget"
 	CityEngineLua.login_loginapp(true)
 	ct.OpenCtrl("RetrievePasswordCtrl")
 end
-------------------回调--------------
+------------------callback--------------
 function LoginCtrl:onReqAvatarList( avatarList )
-	-- 关闭登录界面
+	-- Close the login interface
     --self.Close();
     --local ctrl = CtrlManager.GetCtrl(CtrlNames.SelectAvatar);
     --if ctrl ~= nil then
@@ -315,10 +314,10 @@ function LoginCtrl:onReqAvatarList( avatarList )
 end
 
 function LoginCtrl:c_Disconnect( errorCode )
-	--这里打印会失败, LoginPanel 已经不能访Destroy问了
-	--LoginPanel.textStatus:GetComponent('Text').text = "服务器断开连接， 错误码： "..errorCode;
-	--logDebug("cz login 登录失败,error code: ", errorCode)
-end
+	-- Printing will fail here, LoginPanel can no longer visit Destroy and asked
+	--LoginPanel.textStatus:GetComponent('Text').text = "Server disconnected, error code: "..errorCode;
+	--logDebug("cz login login failed, error code: ", errorCode)
+	end
 
 
 function  LoginCtrl:c_onCreateAccountResult( errorCode, data )
@@ -350,9 +349,9 @@ end
 
 function LoginCtrl:c_GsConnected( success )
 	if success then
-		--LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接成功!";
+		--LoginPanel.textStatus:GetComponent('Text').text = "Game server connection succeeded!";
 	else
-		--LoginPanel.textStatus:GetComponent('Text').text = "Game server 连接失败";
+		--LoginPanel.textStatus:GetComponent('Text').text = "Game server Connection failed";
 	end
 end
 

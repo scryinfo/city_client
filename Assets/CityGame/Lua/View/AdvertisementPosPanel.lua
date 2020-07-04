@@ -28,7 +28,7 @@ function AdvertisementPosPanel.InitPanel()
     this.scrollcon=transform:Find("leftRoot/manage/Scroll View/Viewport/Content")
     this.manageBtn=transform:Find("leftRoot/manage/head")
 
-    --自已进入
+    --Enter yourself
     this.resizeGO=transform:Find("rightRoot/resize")
     this.confirmBtn=transform:Find("rightRoot/resize/okBtn");
     this.grey=transform:Find("rightRoot/resize/grey");
@@ -39,7 +39,7 @@ function AdvertisementPosPanel.InitPanel()
     this.deposit=transform:Find("rightRoot/resize/bg/body/dot/NUMBER"):GetComponent("Text")
     this.adAllday="0"
 
-    --他人进入
+    --Others enter
     this.manageText=transform:Find("leftRoot/manage/head/Text"):GetComponent("Text")
     this.buyGo=transform:Find("rightRoot/Buy")
     this.confirmBtn1=transform:Find("rightRoot/Buy/okBtn");
@@ -56,7 +56,7 @@ function AdvertisementPosPanel.InitPanel()
     local temp=Vector2.New(this.hasPos.x,this.hasPos.y+145)
     this.noPos=temp
 end
---数据初始化
+--Data initialization
 function AdvertisementPosPanel.InitDate(AdvertisementPosData)
     this.materialData = AdvertisementPosData;
 end

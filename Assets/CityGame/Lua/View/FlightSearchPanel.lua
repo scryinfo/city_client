@@ -22,8 +22,8 @@ function FlightSearchPanel.InitPanel()
     this.endBtn = transform:Find("centerRoot/end/endBtn")
     this.timeText = transform:Find("centerRoot/time/timeText"):GetComponent("Text")
     this.timeBtn = transform:Find("centerRoot/time/timeBtn")
-    this.exchangeBtn = transform:Find("centerRoot/exchangeBtn")  --交换起飞地与目的地
-    this.checkBtn = transform:Find("centerRoot/checkBtn")  --确认搜索
+    this.exchangeBtn = transform:Find("centerRoot/exchangeBtn")  --Exchange the place of departure and destination
+    this.checkBtn = transform:Find("centerRoot/checkBtn")  --Confirm search
 
     this.titleText01 = transform:Find("topRoot/Text"):GetComponent("Text")
     this.titleText02 = transform:Find("centerRoot/Text01"):GetComponent("Text")

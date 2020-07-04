@@ -6,7 +6,7 @@
 
 MusicManger={}
 
----生成预制
+---Generate prefab
 local function creatGood(path)
      local prefab = UnityEngine.Resources.Load(path);
      local go = UnityEngine.GameObject.Instantiate(prefab);

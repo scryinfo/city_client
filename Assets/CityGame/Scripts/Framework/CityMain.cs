@@ -4,12 +4,12 @@ using System.Collections;
 using City;
 
 /*
-	可以理解为插件的入口模块
+	Can be understood as the entry module of the plugin
 */
 	
 public class CityMain : MonoBehaviour 
 {	
-	// 在unity3d界面中可见选项
+	// Options visible in unity3d interface
 	public DEBUGLEVEL debugLevel = DEBUGLEVEL.DEBUG;
     static public bool isStartEngine = false;
 
@@ -52,7 +52,7 @@ public class CityMain : MonoBehaviour
 	
 	void FixedUpdate () 
 	{
-        // 处理外层抛入的事件
+        // Handle events thrown in the outer layer
         City.Event.processInEvents();
         City.Event.processOutEvents();
 	}

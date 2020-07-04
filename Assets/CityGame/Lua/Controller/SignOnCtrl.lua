@@ -5,7 +5,7 @@
 ---
 
 SignOnCtrl = class('SignOnCtrl',UIPanel)
-UIPanel:ResgisterOpen(SignOnCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(SignOnCtrl) --How to open the registration
 
 local LuaBehaviour;
 
@@ -15,10 +15,10 @@ function  SignOnCtrl:bundleName()
 end
 
 function SignOnCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--You can go back and hide other panels after the UI opens
 end
 local panel
---启动事件--
+--Start event -
 function SignOnCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
@@ -45,7 +45,7 @@ function SignOnCtrl:Refresh()
 
 end
 
---返回
+--return
 function SignOnCtrl:OnClick_backBtn(ins)
     ins:Hide()
     Event.RemoveListener("OnClick_backBtn",self.OnClick_backBtn,self)

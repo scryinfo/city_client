@@ -6,7 +6,7 @@
 
 ResearchMaterialItem = class("ResearchMaterialItem")
 
--- 初始化
+-- initialization
 function ResearchMaterialItem:initialize(prefab, data, index,  buildingId, isOwn)
     self.prefab = prefab
     data.index = index
@@ -29,15 +29,15 @@ function ResearchMaterialItem:initialize(prefab, data, index,  buildingId, isOwn
 end
 
 function ResearchMaterialItem:ShowView()
-    if self.data.index == 1 then   -- 货架选择界面
+    if self.data.index == 1 then   -- Shelf selection interface
         self.nameText.text = GetLanguage(ResearchConfig[self.data.itemKey.id].name)
         LoadSprite(ResearchConfig[self.data.itemKey.id].iconPath, self.iconImage , true)
         self.numText.text = "X" .. tostring(self.data.storeNum)
-    elseif self.data.index == 2 then   -- 仓库显示界面
+    elseif self.data.index == 2 then   -- Warehouse display interface
         self.nameText.text = GetLanguage(ResearchConfig[self.data.itemKey.id].name)
         LoadSprite(ResearchConfig[self.data.itemKey.id].iconPath, self.iconImage , true)
         self.numText.text = "X" .. tostring(self.data.storeNum + self.data.lockedNum)
-    elseif self.data.index == 3 or self.data.index == 4 then   -- 货架显示界面
+    elseif self.data.index == 3 or self.data.index == 4 then   -- Shelf display interface
         self.nameText.text = GetLanguage(ResearchConfig[self.data.k.id].name)
         LoadSprite(ResearchConfig[self.data.k.id].iconPath, self.iconImage , true)
         self.numText.text = "X" .. tostring(self.data.n)
@@ -46,7 +46,7 @@ function ResearchMaterialItem:ShowView()
         self.autoImage = self.transform:Find("AutoImage"):GetComponent("Image")
         self.autoImageText = self.transform:Find("AutoImage/Text"):GetComponent("Text")
 
-        if self.data.autoReplenish then -- 打开了自动补货
+        if self.data.autoReplenish then -- Automatic replenishment is turned on
             if self.isOwn then
                 self.autoImageTF.localScale = Vector3.one
                 if self.data.lockedNum == 0 then
@@ -68,11 +68,11 @@ function ResearchMaterialItem:ShowView()
     end
 end
 
--- 点击item，打开使用界面，使用研究资料以后即可获得eva点数
+-- Click item to open the user interface and use the research materials to get eva points
 function ResearchMaterialItem:_clickPrefab()
-    if self.data.index == 1 then   -- 货架选择界面
+    if self.data.index == 1 then   -- Shelf selection interface
         ct.OpenCtrl("ResearchSaleCtrl",{buildingId = self.buildingId , data = self.data})
-    elseif self.data.index == 2 then   -- 仓库显示界面
+    elseif self.data.index == 2 then   -- Warehouse display interface
         local temp = {}
         temp.wareHouse = self.data.storeNum
         temp.sale = self.data.lockedNum
@@ -82,9 +82,9 @@ function ResearchMaterialItem:_clickPrefab()
             DataManager.DetailModelRpcNoRet(self.buildingId, 'm_userData',self.buildingId, self.data.itemKey.id,num)
         end
         ct.OpenCtrl("UserDataCtrl",temp)
-    elseif self.data.index == 3 then   -- 货架选择界面
+    elseif self.data.index == 3 then   -- Shelf selection interface
         ct.OpenCtrl("ResearchSaleCtrl",{buildingId = self.buildingId , data = self.data})
-    elseif self.data.index == 4 then   -- 别人上货架购买使用界面
+    elseif self.data.index == 4 then   -- Others purchase the user interface on the shelf
         local temp = {}
         temp.sale = self.data.n
         temp.itemId = self.data.k.id

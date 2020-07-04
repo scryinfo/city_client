@@ -29,9 +29,9 @@ TestGroup.active_TestGroup("abel_wk27_hartbeat")
 
 --TestGroup.active_TestGroup("wk24_abel_mutiConnect")
 --TestGroup.active_TestGroup("wk24_abel_mutiConnect_revMsg")
---TestGroup.active_TestGroup("abel_w17_load_A_unload_force_s160_mem")     --强制卸载bundle中所有资源
---TestGroup.active_TestGroup("abel_w17_load_A_unload_force_s160_mem")     --强制卸载bundle中所有资源
---TestGroup.active_TestGroup("abel_w17_load_AS_unload_No_force_s160_mem") --卸载bundle，手动卸载其中有资源
+--TestGroup.active_TestGroup("abel_w17_load_A_unload_force_s160_mem")     --Force to uninstall all resources in the bundle
+--TestGroup.active_TestGroup("abel_w17_load_A_unload_force_s160_mem") --force to unload all resources in the bundle
+--TestGroup.active_TestGroup("abel_w17_load_AS_unload_No_force_s160_mem") --Uninstall the bundle, manually uninstall the resources
 --TestGroup.active_TestGroup("abel_w17_load_A_texture_s160_mem")
 --TestGroup.active_TestGroup("abel_w17_load_s128_n1000_S_IoTime")
 --TestGroup.active_TestGroup("abel_w17_load_A_sprite_s160_mem")
@@ -76,9 +76,9 @@ TestGroup.active_TestGroup("abel_0430_rpcRet")
 --TestGroup.active_TestGroup("Allen_wk13")
 TestGroup.active_TestGroup("Allen_wk14_MyGround")
 --TestGroup.active_TestGroup("cycle_w12_hosueServer")
---TestGroup.active_TestGroup("Allen_w9_SendPosToServer") --激活测试组
---TestGroup.active_TestGroup("Allen_w9") --激活测试组
---TestGroup.active_TestGroup("abel_w13_SceneOpt") --激活测试组
+--TestGroup.active_TestGroup("Allen_w9_SendPosToServer") --Activate test group
+--TestGroup.active_TestGroup("Allen_w9") --Activate test group
+--TestGroup.active_TestGroup("abel_w13_SceneOpt") --Activate test group
 --TestGroup.active_TestGroup("abel_w4_proto_Role")
 --TestGroup.active_TestGroup("fisher_w11_MunicipalCtrl")
 TestGroup.active_TestGroup("cycle_w11_exchangeModel")
@@ -111,16 +111,16 @@ TestGroup.active_TestGroup("tina_w30_guild")
 --TestGroup.active_TestGroup("abel_w10_MemRef_all")
 --TestGroup.active_TestGroup("abel_w10_MemRef_table")
 --TestGroup.active_TestGroup("abel_w9_memory_usage")
---TestGroup.active_TestGroup("cycle_w10_exchange02")  --交易所界面
+--TestGroup.active_TestGroup("cycle_w10_exchange02")  --Exchange interface
 --TestGroup.active_TestGroup("abel_w9_mem_Load_Instantiate")
 --TestGroup.active_TestGroup("abel_w10_MemRef_all")
 --TestGroup.active_TestGroup("abel_w10_MemRef_table")
 --TestGroup.active_TestGroup("abel_w9_memory_usage")
 --TestGroup.active_TestGroup("abel_w10_pbl_nest")
 
---TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
---TestGroup.active_TestGroup("abel_w7_AddClick") --激活测试组
---TestGroup.active_TestGroup("abel_w7_RemoveClick") --激活测试组
+--TestGroup.active_TestGroup("abel_w7_AddClick") --Activate test group
+--TestGroup.active_TestGroup("abel_w7_AddClick") --Activate test group
+--TestGroup.active_TestGroup("abel_w7_RemoveClick") --Activate test group
 
 --TestGroup.active_TestGroup("abel_w10_MemRef_table")abel_w7_AddClick
 --TestGroup.active_TestGroup("abel_w10_MemRef_all")
@@ -128,14 +128,14 @@ TestGroup.active_TestGroup("tina_w30_guild")
 TestGroup.active_TestGroup("fisher_w31_time")
 --TestGroup.active_TestGroup("abel_w10_OpenCtrl")
 --TestGroup.active_TestGroup("abel_w9_tableOrder")
---TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
+--TestGroup.active_TestGroup("fisher_w8_RemoveClick") --Activate test group
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_1")
---TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --住宅
---TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --交易所滑动复用
---TestGroup.active_TestGroup("cycle_w9_exchange01")  --交易所界面
+--TestGroup.active_TestGroup("cycle_w6_houseAndGround")  --Exchange interface
+--TestGroup.active_TestGroup("cycle_w8_exchange01_loopScroll")  --Exchange sliding reuse
+--TestGroup.active_TestGroup("cycle_w9_exchange01")  --Exchange interface
 
---TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --拍卖
+--TestGroup.active_TestGroup("cycle_w6_GroundAuc")  --auction
 --TestGroup.active_TestGroup("abel_w7_LineChart")
 --TestGroup.active_TestGroup("abel_w6_UIFrame")
 --TestGroup.active_TestGroup("abel_w4_class_performance")
@@ -145,4 +145,4 @@ TestGroup.active_TestGroup("fisher_w31_time")
 --TestGroup.active_TestGroup("abel_w6_performance")
 --TestGroup.active_TestGroup("abel_w6_UIFrame_performance")
 --TestGroup.active_TestGroup("rodger_w8_GameMainInterface")
---TestGroup.active_TestGroup("fisher_w8_RemoveClick") --激活测试组
+--TestGroup.active_TestGroup("fisher_w8_RemoveClick") --Activate test group

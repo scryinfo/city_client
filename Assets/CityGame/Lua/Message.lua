@@ -1,6 +1,6 @@
 local log = log
 
---消息
+--news
 CityEngineLua.messages = {};
 CityEngineLua.messages[SERVER_TYPE.SERVER_TYPE_AS] = {};
 CityEngineLua.messages[SERVER_TYPE.SERVER_TYPE_GS] = {};
@@ -12,12 +12,12 @@ CityEngineLua.clientMessagesErrorHandlers = {};
 CityEngineLua.Message = {}
 --[[
 registerNetMsg:
-	1、 msgId：
-		协议id， pbl.enum("ascode.OpCode","login")
-			1、 proto25\asCode.proto 中定义了协议类型及ID， OpCode 这个枚举中的每一个标识符都对应一个协议类型，其枚举值代码协议的id
-			2、 proto25\as.proto 定义具体的协议数据结构， 每个协议数据对应 asCode.proto 中 OpCode 的一个标识符
-	2、 handler：
-		要注册的回调函数，网络消息回来之后，会调用到这个注册的函数，并传入一个 存放Protobuf数据的 steam 字节流， 客户端需要在回调函数中调用 protobuf 对应协议的反序列化方法
+1. msgId:
+Protocol id, pbl.enum("ascode.OpCode","login")
+1. The protocol type and ID are defined in proto25\asCode.proto. Each identifier in the OpCode enumeration corresponds to a protocol type, and its enumeration value codes the protocol id.
+2. proto25\as.proto defines the specific protocol data structure, each protocol data corresponds to an identifier of OpCode in asCode.proto
+2. handler:
+To register the callback function, after the network message comes back, it will call this registered function and pass in a steam byte stream that stores Protobuf data. The client needs to call the protobuf protocol deserialization method in the callback function
 ]]--
 function CityEngineLua.Message:registerNetMsg(msgId, handler, errorHandler)
 	CityEngineLua.clientMessages[msgId] = CityEngineLua.Message:new(msgId, tostring(msgId), 0, 0, {}, handler);
@@ -42,7 +42,7 @@ function CityEngineLua.Message:new( id, name, length, argstype, argtypes, handle
 	me.msglen = length;
 	me.argsType = argstype;
 
-	-- 绑定执行Message
+	-- Binding to execute Message
 	me.args = {};
 	for i = 1, #argtypes, 1 do
 		table.insert( me.args, CityEngineLua.datatypes[argtypes[i]] );
@@ -107,8 +107,8 @@ function CityEngineLua.Message.n_errorProcess(stream)
 end
 
 function CityEngineLua.Message.bindFixedMessage()
-	-- 提前约定一些固定的协议
-	-- 这样可以在没有从服务端导入协议之前就能与服务端进行握手等交互。
+	-- A few fixed agreements agreed in advance
+	-- This allows handshake and other interactions with the server before importing the protocol from the server.
 	--CityEngineLua.messages["Loginapp_hello"] = CityEngineLua.Message:new(pb.asCode_pb.login, "hello", -1, -1, {}, nil);
 	--CityEngineLua.messages["Loginapp_importClientMessages"] = CityEngineLua.Message:new(5, "importClientMessages", 0, 0, {}, nil);
 	--CityEngineLua.messages["Loginapp_hello"] = CityEngineLua.Message:new(4, "hello", -1, -1, {}, nil);
@@ -117,7 +117,7 @@ function CityEngineLua.Message.bindFixedMessage()
 	--CityEngineLua.messages["Baseapp_hello"] = CityEngineLua.Message:new(200, "hello", -1, -1, {}, nil);
 	--
 	--------client--------------
-	--服务器返回错误的处理
+	--The server returns error handling
 	CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),CityEngineLua.Message.n_errorProcess);
 	--CityEngineLua.clientMessages[pb.common.error] = CityEngineLua.Message:new(pb.common.error, "error", 0, 0, {}, CityEngineLua.Message.n_errorProcess);
 	--CityEngineLua.messages["Client_onHelloCB"] = CityEngineLua.Message:new(521, "Client_onHelloCB", -1, -1, {},
@@ -138,16 +138,16 @@ function CityEngineLua.Message.bindFixedMessage()
 
 end
 
--- 消息的长度 4字节
+-- Message length 4 bytes
 CityEngineLua.READ_STATE_MSGLEN = 0;
--- 消息id
+-- Message id
 CityEngineLua.READ_STATE_MSGID = 1;
--- 当上面的消息长度都无法到达要求时使用扩展长度
+-- Use extended length when none of the above message lengths can reach the requirement
 -- uint32
 CityEngineLua.READ_STATE_MSGLEN_EX = 2;
--- 消息的内容
+-- Content of the message
 CityEngineLua.READ_STATE_BODY = 3;
---成功的答复
+--Successful reply
 CityEngineLua.READ_STATE_ACK = 4;
 
 CityEngineLua.MessageReader = {
@@ -164,22 +164,22 @@ CityEngineLua.MessageReader = {
 local reader = CityEngineLua.MessageReader;
 function CityEngineLua.MessageReader.onConnectError(errorCode)
 	if(errorCode == SYSEVENT.SYSEVENT_DISCONNECT ) then
-		--目前连接处理错误统一处理为 m_onDisconnect ，因为暂时还不清楚有哪些别的连接错误
+		-- At present, the connection processing error is uniformly handled as m_onDisconnect, because it is not yet clear what other connection errors are
 		Event.Brocast("m_onDisconnect", errorCode);
 	end
 end
 
 function CityEngineLua.MessageReader.process(datas, offset, size)
  	local toReadDatalength = reader.stream.wpos
-	--接收网络缓冲数据
+	--Receive network buffered data
 	if size > 0 then
-		--计算 reader 中待读取数据长度
+		--Calculate the length of data to be read in reader
 		local testNewLength = reader.stream.wpos + size
-		--如果 reader.stream 缓冲右侧空余空间没满，直接拷贝新数据到右侧空间，如果满了，则从左侧0位开始拷贝
+		--If the free space on the right side of the reader.stream buffer is not full, copy the new data directly to the right space. If it is full, copy from the left 0 bits
 		if reader.stream.wpos + size <= City.MemoryStream.BUFFER_MAX then
-			--注意，这里不会出现真正 reader.stream.wpos + size > City.MemoryStream.BUFFER_MAX 的情况，
-			--因为C#中已经把这种情况下的数据分成了两段，传到lua中的第一段数据必定是能正好放放满，不会超出
-			--参考 public void process() else if (t_wpos < _rpos)
+			--Note that there will not be a real reader.stream.wpos + size> City.MemoryStream.BUFFER_MAX,
+			--Because the data in this case has been divided into two sections in C#, the first section of data passed to lua must be able to be fully filled and will not exceed
+			--Reference public void process() else if (t_wpos <_rpos)
 			CityLuaUtil.ArrayCopy(datas, offset, reader.stream:data(), reader.stream.wpos, size)
 			reader.stream.wpos = reader.stream.wpos + size
 			toReadDatalength = reader.stream.wpos - reader.stream.rpos
@@ -193,17 +193,17 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 	while(toReadDatalength > 0 and reader.expectSize > 0) do
 		if(reader.state == CityEngineLua.READ_STATE_MSGLEN) then
 			if(toReadDatalength >= reader.expectSize) then
-				--更新reader.stream写入终止点位置
-				--reader.stream.rpos = reader.stream.rpos + reader.expectSize
-				--更新剩余未读数据长度
+			--Update reader.stream write end point location
+			--reader.stream.rpos = reader.stream.rpos + reader.expectSize
+			--Update the length of remaining unread data
 				toReadDatalength = toReadDatalength - reader.expectSize
-				--读取pb数据段长度
+				--Read pb data segment length
 				reader.msglen = reader.stream:readUint32();
-				--切换读取状态
+				--Switch the reading status
 				reader.state = CityEngineLua.READ_STATE_MSGID;
 				reader.expectSize = reader.expectMsgIdSize;
 			else
-				--如果网络传入的数据长度小于4字节，终止循环，等待后续数据的到来
+				--If the length of incoming data on the network is less than 4 bytes, terminate the loop and wait for the arrival of subsequent data
 				break;
 			end
 		elseif(reader.state == CityEngineLua.READ_STATE_MSGID) then
@@ -213,9 +213,9 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 				reader.msgid = reader.stream:readUint16();
 				reader.expectSize = reader.msglen
 				reader.state = CityEngineLua.READ_STATE_BODY
-				--如果不带pb数据段的，这里就要处理
+				--If there is no pb data segment, it will be processed here
 				if(reader.msglen == 0) then
-					-- 如果是0个参数的消息，那么没有后续内容可读了，处理本条消息并且直接跳到下一条消息
+					-- If it is a message with 0 parameters, then there is no subsequent content to read, process this message and jump directly to the next message
 					local msg = CityEngineLua.clientMessages[reader.msgid]
 					if msg ~= nil then
 						msg:handleMessage(CityLuaUtilExt.bufferToString(reader.stream, 0),reader.msgid)
@@ -224,7 +224,7 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 					reader.expectSize = 4;
 				end
 			else
-				break;--等待后续数据的到来
+				break;--Waiting for the arrival of subsequent data
 			end
 		elseif(reader.state == CityEngineLua.READ_STATE_BODY) then
 			if(toReadDatalength >= reader.expectSize) then
@@ -239,10 +239,10 @@ function CityEngineLua.MessageReader.process(datas, offset, size)
 				reader.state = CityEngineLua.READ_STATE_MSGLEN;
 				reader.expectSize = 4;
 			else
-				break--等待后续数据的到来
+				break--Waiting for the arrival of subsequent data
 			end
 		elseif(reader.state == CityEngineLua.READ_STATE_MSGLEN_EX) then
-			--现在暂时没有这种情况
+			--This is not the case for now
 			break
 		end
 	end

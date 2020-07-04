@@ -1,4 +1,4 @@
-----City项目的全局数据
+----Global data of the City project
 local uTime = UnityEngine.Time
 local gettime = tolua.gettime
 
@@ -7,10 +7,10 @@ local getIdHead = function(id)
 	return "["..id.."]";
 end
 ct ={
-	G_LOG = true, --是否输出日志， 为false的话，不输出任何日志
-	G_DEBUGLOG = true, --是否打开调试日志
-	G_UNITTEST = true,	--是否打开单元测试
-	G_PERFORMANCETEST = false,	--是否打开性能测试
+	G_LOG = true, --Whether to output logs, if false, no logs are output
+	G_DEBUGLOG = true, --Whether to open the debug log
+	G_UNITTEST = true,	--Whether to open unit tests
+	G_PERFORMANCETEST = false,	--Whether to open the performance test
 	G_TIMEOUT_NET = 12,
 	G_LAST_HARTBEAT = uTime.time,
 	G_Last_SendHARTBEATTime = uTime.time,
@@ -41,29 +41,29 @@ CtrlNames = {
 	Shelf = "ShelfCtrl",
 	TransportOrder = "TransportOrderCtrl",
 	AddTransport = "AddTransportCtrl",
-	GroundAuction = "GroundAuctionCtrl",  --拍卖
-	House = "HouseCtrl",  --住宅
-	GameMainInterface = "GameMainInterfaceCtrl",--游戏主界面
-	RoleManager = "RoleManagerCtrl",--角色管理界面
-	ServerList = "ServerListCtrl",--选服页面
-	CreateRole = "CreateRoleCtrl",--创角页面
+	GroundAuction = "GroundAuctionCtrl",  --auction
+	House = "HouseCtrl",  --Residential
+	GameMainInterface = "GameMainInterfaceCtrl",--Game main interface
+	RoleManager = "RoleManagerCtrl",--Role management interface
+	ServerList = "ServerListCtrl",--Service page
+	CreateRole = "CreateRoleCtrl",--Corner page
 
-	Material = "MaterialCtrl", --原料厂
-	Processing = "ProcessingCtrl",  --加工厂
-	RetailStores = "RetailStoresCtrl",  --零售店
-	BtnDialogPage = "BtnDialogPageCtrl",  --单个按钮的弹窗
-	InputDialogPage = "InputDialogPageCtrl",  --单个输入框的弹窗
-	Exchange = "ExchangeCtrl",  --交易所
+	Material = "MaterialCtrl", --Raw material factory
+	Processing = "ProcessingCtrl",  --Processing plant
+	RetailStores = "RetailStoresCtrl",  --Retail store
+	BtnDialogPage = "BtnDialogPageCtrl",  --Single button popup
+	InputDialogPage = "InputDialogPageCtrl",  --Pop-up window for a single input box
+	Exchange = "ExchangeCtrl",  --Exchange
 
-	TestExchangeCtrl = "TestExchangeCtrl",  --测试啊测试
-	TestLoopScoreCtrl = "TestLoopScoreCtrl",  --测试啊测试
-	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  --测试啊测试
-	CenterWareHouse = "CenterWareHouseCtrl", --中心仓库
-	MessageTooltip = "MessageTooltipCtrl",--玩家信息提示框
-	MunicipalCtrl="MunicipalCtrl",--市镇设施
-	AdvertisementPosCtrl="AdvertisementPosCtrl",--广告位
-	GameNoitce = "GameNoticeCtrl", --通知
-	NoMessage = "NoMessageCtrl" --没有信息
+	TestExchangeCtrl = "TestExchangeCtrl",  --Test test
+	TestLoopScoreCtrl = "TestLoopScoreCtrl", 
+	TestExchangeScrollItemCtrl = "TestExchangeScrollItemCtrl",  
+	CenterWareHouse = "CenterWareHouseCtrl", --Central warehouse
+	MessageTooltip = "MessageTooltipCtrl",--Player information prompt box
+	MunicipalCtrl="MunicipalCtrl",--Town facilities
+	AdvertisementPosCtrl="AdvertisementPosCtrl",--Ad slot
+	GameNoitce = "GameNoticeCtrl", --Notice
+	NoMessage = "NoMessageCtrl" --No message
 }
 
 ModelNames = {
@@ -73,32 +73,32 @@ ModelNames = {
 	GameWorld = "GameWorldModel",
 	PlayerHead = "PlayerHeadModel",
 	TargetHead = "TargetHeadModel",
-	PieChart = "PieChart",  --饼图测试
-	GroundAuction = "GroundAuctionModel",  --拍卖
-	GameBubbleManager = "GameBubbleManager",  --游戏中的气泡
-	BuildingInfo = "BuildingInfoModel",  --建筑信息
-	House = "HouseModel",  --住宅
-	GameMainInterface = "GameMainInterfaceModel",--游戏主界面
-	RoleManager = "RoleManagerModel",--游戏管理界面
-	ServerList = "ServerListModel",--选服页面
-	CreateRole = "CreateRoleModel",--创角页面
-	Material = "MaterialModel",  --原料厂
-	RetailStores = "RetailStoresModel",  --零售店
-	Processing = "ProcessingModel",  --加工厂
-	tempTransport = "tempTransportModel",   --临时运输
-	Exchange = "ExchangeModel",  --交易所
-	ExchangeTransaction = "ExchangeTransactionModel",  --交易界面
-	ExchangeDetail = "ExchangeDetailModel",  --交易物品详情界面
-	PlayerTemp = "PlayerTempModel",  --玩家数据，临时创建
-	CenterWareHouse = "CenterWareHouseModel",--中心仓库
-	Municipal="MunicipalModel",--市镇设施
+	PieChart = "PieChart",  --Pie chart test
+	GroundAuction = "GroundAuctionModel",  --auction
+	GameBubbleManager = "GameBubbleManager",  --Bubbles in the game
+	BuildingInfo = "BuildingInfoModel",  --Building information
+	House = "HouseModel",  --Residential
+	GameMainInterface = "GameMainInterfaceModel",--Game main interface
+	RoleManager = "RoleManagerModel",--Game management interface
+	ServerList = "ServerListModel",--Service page
+	CreateRole = "CreateRoleModel",--Corner page
+	Material = "MaterialModel",  --Raw material factory
+	RetailStores = "RetailStoresModel",  --Retail store
+	Processing = "ProcessingModel",  --Processing plant
+	tempTransport = "tempTransportModel",   --Temporary transportation
+	Exchange = "ExchangeModel",  --Exchange
+	ExchangeTransaction = "ExchangeTransactionModel",  --Trading interface
+	ExchangeDetail = "ExchangeDetailModel",  --Trading item details interface
+	PlayerTemp = "PlayerTempModel",  --Player data, temporarily created
+	CenterWareHouse = "CenterWareHouseModel",--Central warehouse
+	Municipal="MunicipalModel",--Town facilities
 	AdvertisementPos="AdvertisementPos",
 	ManageAdvertisementPos="ManageAdvertisementPos",
-	ScienceSellHall="ScienceSellHallModel",--科技交易所
-	friends = "FriendsModel", -- 好友
-	Laboratory = "LaboratoryModel",  --研究所
-	Chat = "ChatModel", -- 聊天
-	GroundTrans = "GroundTransModel",  --土地交易
+	ScienceSellHall="ScienceSellHallModel",--Technology Exchange
+	friends = "FriendsModel", -- Buddy
+	Laboratory = "LaboratoryModel",  --graduate School
+	Chat = "ChatModel", -- to chat with
+	GroundTrans = "GroundTransModel",  --Land transaction
 }
 
 SYSEVENT =
@@ -164,22 +164,22 @@ SocketError =
 	NoData = 11004
 }
 
---建筑气泡类型
+--Building bubble type
 BubblleType =
 {
 	Default = 0,
-	GroundAuction = 1,  --土地拍卖
-	BuildingTransfer = 2,  --建筑转让
+	GroundAuction = 1,  --Land auction
+	BuildingTransfer = 2,  --Building transfer
 }
 
---建筑首页左右侧信息小组件的状态
+--Status of information widgets on the left and right sides of the building home
 BuildingInfoToggleState =
 {
 	Close = 0,
 	Open = 1.
 }
 
---建筑首页对应toggle组件在左还是右
+--Does the homepage of the building correspond to the toggle component on the left or right
 BuildingInfoTogglePos =
 {
 	Left = 0,
@@ -187,16 +187,16 @@ BuildingInfoTogglePos =
 	Middle=2,
 }
 
---建筑类型
+--Building Type
 BuildingType =
 {
-	House = 0,  --住宅
-	MaterialFactory = 1,  --原料厂
-	Municipal = 2,--推广
-	ProcessingFactory = 4,  --加工厂
-	Laboratory = 5,  --研究所
-	RetailShop = 6,  --零售店
-	WareHouse = 7,--集散中心
+	House = 0,  --Residential
+	MaterialFactory = 1,  --Raw material factory
+	Municipal = 2,--Promote
+	ProcessingFactory = 4,  --Processing plant
+	Laboratory = 5,  --graduate School
+	RetailShop = 6,  --Retail store
+	WareHouse = 7,--Distribution center
 }
 
 LanguageType={
@@ -212,50 +212,50 @@ BuildingBubbleType={
     close = 3,
 }
 
---单输入框会响应的服务器协议类型
+--The type of server protocol that the single input box will respond to
 InputDialogPageServerType =
 {
-	UpdateBuildingName = 0,  --修改建筑名称
+	UpdateBuildingName = 0,  --Modify building name
 }
---商品Item状态类型
+--Item Item Status Type
 GoodsItemStateType =
 {
-	addShelf = 1,   --上架
-	transport = 2,  --运输
-	buy = 3,		--购买
+	addShelf = 1,   --Put on shelf
+	transport = 2,  --transport
+	buy = 3,		--buy
 }
---仓库分类
+--Warehouse classification
 ItemScreening =
 {
-	all = 1,   		--全部
-	material = 2,   --原料
-	goods = 3,		--商品
+	all = 1,   		--All
+	material = 2,   --raw material
+	goods = 3,		--commodity
 }
 
---相机移动状态类型
+--Camera movement status type
 TouchStateType =
 {
-	NormalState = 0, 	--正常状态（可点击，可拖拽）
-	ConstructState = 1, --修建建筑状态（不可点击，可拖拽）
-	UIState = 2, 		--UI查看状态(不可点击，不可拖拽）
+	NormalState = 0, 	--Normal state (clickable, draggable)
+	ConstructState = 1, --Construction status (not clickable, draggable)
+	UIState = 2, 		--UI view status (not clickable or draggable)
 }
 
---提示框类型
+--Tip box type
 ReminderType =
 {
-	Common = 0,    --普通提示框（蓝色或白色）
-	Warning = 1,    --警告提示框（红色）
-	Succeed = 2,    --成功提示框（黄色）
+	Common = 0,    --Common prompt box (blue or white)
+	Warning = 1,    --Warning prompt box (red)
+	Succeed = 2,    --Success prompt box (yellow)
 }
 
---提示是否具有选择性 （是否有取消按钮）
+--Prompt whether it is selective (whether there is a cancel button)
 ReminderSelectType =
 {
 	Select = 0,
 	NotChoose = 1,
 }
 
---移动角色类型
+--Mobile character type
 MobileRolesType ={
 	pedestrians = 0,
 	cars = 1

@@ -3,43 +3,43 @@
 --- Created by cyz_scry.
 --- DateTime: 2018/9/19 13:02
 --[[
-一、分组的作用
-    1、 测试用例分组，避免无关测试用例占用运行时间
-    2、 日志/log也采用相同分组策略，避免无关日志干扰开发
-二、使用方法
-1、 激活分组
-	示例:
+1. The role of grouping
+    1. Group test cases to avoid running time irrelevant test cases
+    2. The log/log also uses the same grouping strategy to avoid the development of irrelevant logs.
+2. How to use
+1. Activate the group
+Example:
     TestGroup.active_TestGroup("abel_w3")
-	* 激活 id 为 "abel_w3" 的分组，激活之后，所有使用该分组id的所有测试和日志都能正常运行
-2、 在具体的单元测试定义中注册分组
-	1、 require：
-		UnitTest = require ('test/testFrameWork/UnitTest')
-	2、 定义测试用例
-		示例:
-		UnitTest.Exec("abel_w4", "test_pb11111",  function ()
-			ct.log("abel_w4","[test_pb11111]  测试完毕")
-		end)
-		* 这里的"abel_w4"就是测试分组的Id，如果该测试分组没有被激活，那么该单元测试是不会执行到的
-		* test_pb11111 是测试用例函数的名字
-		* function 后面是测试用例的函数体
-3、 在非单元测试的代码中使用测试分组
-    1、 在普通的代码中使用测试分组只有一种情况，那就是日志分组，避免无关日志的干扰
-	2、 我们项目的日志统一使用 ct.log(...) 这个接口，要注意： lua自带的 print 方法现在是用不了的。
-		示例：
-			ct.log("abel_w4","[test_pb11111]  测试完毕")
-			* 这里的 "abel_w4" 是分组id， 如果该id对应的分组没有被激活，这个 log 将会无效；
-三、 说明：
-	1、 测试用例的定义实际调用的是这个方法：
-		function UnitTest.Exec(unitGroupId, funcName, func)
-		参数中的 unitGroupId 就是测试分组的Id
-	2、 方法参数说明
-		1、 unitGroupId 测试组Id
-			1、 命名格式： 英文名_工作周_额外信息，  比如： allen_w6_temp
-			2、 作用： 测试分组的唯一ID，一个分组ID可以被多个测试用例和log命令共享，该ID的分组一旦通过 active_TestGroup激活之后，所用共享该ID的测试用例和Log命令都会被执行
-		2、 funcName 测试用例的函数名
-			1、 函数名必须以 test_ 开头，比如： test_login ，否则是不会被执行到的
-			2、 要求全局唯一
-		3、 func 测试用例的方法实现
+* Activate the group with id "abel_w3". After activation, all tests and logs using this group id will work normally
+2. Register the group in the specific unit test definition
+1. require:
+UnitTest = require ('test/testFrameWork/UnitTest')
+2. Define test cases
+Example:
+UnitTest.Exec("abel_w4", "test_pb11111", function ()
+ct.log("abel_w4","[test_pb11111] Test completed")
+end)
+* "Abel_w4" here is the Id of the test group. If the test group is not activated, the unit test will not be executed
+* test_pb11111 is the name of the test case function
+* behind function is the body of the test case
+3. Use test grouping in non-unit tested code
+    1. There is only one case of using test grouping in ordinary code, that is, log grouping, to avoid the interference of irrelevant logs
+2. The log of our project uniformly uses the interface ct.log(...). It should be noted that the print method that comes with lua is not available now.
+Examples:
+ct.log("abel_w4","[test_pb11111] Test completed")
+* "Abel_w4" here is the group id. If the group corresponding to the id is not activated, this log will be invalid;
+3. Description:
+1. The definition of the test case actually calls this method:
+function UnitTest.Exec(unitGroupId, funcName, func)
+The unitGroupId in the parameter is the Id of the test group
+2. Description of method parameters
+1. unitGroupId test group Id
+1. Naming format: English name_work week_extra information, for example: allen_w6_temp
+2. Function: The unique ID of the test group. A group ID can be shared by multiple test cases and log commands. Once the ID group is activated by active_TestGroup, all test cases and log commands that share the ID will be executed.
+2, funcName test case function name
+1. The function name must start with test_, for example: test_login, otherwise it will not be executed
+2. Require global uniqueness
+3. Method implementation of func test cases
 ]]--
 local ProFi = require ('test/testFrameWork/memory/ProFi')
 local mri = MemoryRefInfo
@@ -50,16 +50,16 @@ UnitTest.startGroup = {}
 UnitTest.endGroup = {}
 
 function UnitTest.TestBlockStart()
-    --local info = debug.getinfo(1) --当前栈区
-    local info = debug.getinfo(2) --方法被调用的地方所在的栈区
-    assert(UnitTest.startGroup[info.short_src] == nil, "注意：一个文件中只能有一对 ExecStart 和 ExecEnd")
+    --local info = debug.getinfo(1) --Current stack area
+    local info = debug.getinfo(2) -- the stack area where the method is called
+    assert(UnitTest.startGroup[info.short_src] == nil, "Note: Only one pair of ExecStart and ExecEnd in a file")
     UnitTest.startGroup[info.short_src]=1
 end
 
 function UnitTest.TestBlockEnd()
     local info = debug.getinfo(2)
-    assert(UnitTest.startGroup[info.short_src] == 1, "注意：未发现对应的 ExecStart")
-    assert(UnitTest.endGroup[info.short_src] ~= 1, "注意：一个文件中只能有一对 ExecStart 和 ExecEnd")
+    assert(UnitTest.startGroup[info.short_src] == 1, "Note: No corresponding ExecStart found")
+    assert(UnitTest.endGroup[info.short_src] ~= 1, "Note: There can only be one pair of ExecStart and ExecEnd in a file")
     UnitTest.endGroup[info.short_src]=1
 end
 
@@ -69,15 +69,15 @@ function UnitTest.CheckValidExec()
 end
 
 function UnitTest.Exec(unitGroupId, funcName, func)
-    assert(UnitTest.CheckValidExec(), "测试用例必须位于测试区中，即: TestBlockStart之后，TestBlockEnd之前 ")
+    assert(UnitTest.CheckValidExec(), "The test case must be located in the test area, ie: after TestBlockStart and before TestBlockEnd ")
     if TestGroup.get_TestGroupId(unitGroupId) == nil then
     return
     end
-    addToTestGropu(funcName,unitGroupId)
+    addToTestGropu(funcName, unitGroupId)
     _G[funcName] = func
     end
 
---CPU使用分析， 只能在 UnitTest.Exec 内部使用
+--CPU usage analysis, can only be used inside UnitTest.Exec
 function UnitTest.PerformanceTest(groupid, info,func)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     --ct.log(groupid,info)
@@ -85,31 +85,31 @@ function UnitTest.PerformanceTest(groupid, info,func)
     func(groupid)
     local endTime = os.clock()
     local outtime = endTime - startTime
-    ct.log(groupid, info, "执行时间: ", outtime)
-    return outtime
+    ct.log(groupid, info, "execution time: ", outtime)
+     return outtime
 end
 
---内存用量分析, 生成 func 执行前后的内存用量到文件夹 MemoryProfile 中
-function UnitTest.MemoryConsumptionTest(groupid, funcName,func)
-    if TestGroup.get_TestGroupId(groupid) == nil  then return end
-    ct.log(groupid, funcName)
-    ProFi:reset()
-    collectgarbage("collect")
-    ProFi:checkMemory( 0, funcName..'-------------' )
-    ProFi:writeReport( funcName..'_0_before.txt' )
-    collectgarbage("collect")
-    ProFi:start()
-    func(groupid)
-    ProFi:stop()
-    ProFi:checkMemory( 0, funcName..'-------------' )
-    ProFi:writeReport( funcName..'_1_after.txt' )
-    ProFi:reset()
-    collectgarbage("collect")
-    ProFi:checkMemory( 0, funcName..'-------------' )
-    ProFi:writeReport( funcName..'_2_finished.txt' )
+--Memory usage analysis, generate memory usage before and after execution of func to the folder MemoryProfile
+function UnitTest.MemoryConsumptionTest(groupid, funcName, func)
+     if TestGroup.get_TestGroupId(groupid) == nil then return end
+     ct.log(groupid, funcName)
+     ProFi:reset()
+     collectgarbage("collect")
+     ProFi:checkMemory( 0, funcName..'-------------')
+     ProFi:writeReport( funcName..'_0_before.txt')
+     collectgarbage("collect")
+     ProFi:start()
+     func(groupid)
+     ProFi:stop()
+     ProFi:checkMemory( 0, funcName..'-------------')
+     ProFi:writeReport( funcName..'_1_after.txt')
+     ProFi:reset()
+     collectgarbage("collect")
+     ProFi:checkMemory( 0, funcName..'-------------')
+     ProFi:writeReport( funcName..'_2_finished.txt')
 end
 
---文件命名约定
+--File naming convention
 function UnitTest.GetDumpAllFileName(groupid, filename)
     return "["..groupid.."]".."_DumpAll_"..filename
 end
@@ -122,7 +122,7 @@ function UnitTest.GetValidPath(groupid, filename)
     return UnitTest.GetDumpAllFileName(groupid, filename)..".txt"
 end
 
---全局内存引用分析
+--Global memory reference analysis
 function UnitTest.MemoryReferenceAll(groupid, fileName, rootObj)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     local root = nil
@@ -133,26 +133,26 @@ function UnitTest.MemoryReferenceAll(groupid, fileName, rootObj)
     mri.m_cMethods.DumpMemorySnapshot(ct.getMemoryProfile().."/", UnitTest.GetDumpAllFileName(groupid,fileName), -1, tostring(root), root)
 end
 
---指定物体内存引用分析， 只能在 UnitTest.Exec 内部使用
+--Designated object memory reference analysis, can only be used inside UnitTest.Exec
 function UnitTest.MemoryReferenceOne(groupid, markid,object)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     collectgarbage("collect")
     mri.m_cMethods.DumpMemorySnapshotSingleObject(ct.getMemoryProfile().."/", UnitTest.GetDumpOneFileName(groupid,markid), -1, objectName, object)
 end
 
---比较两个文件的引用信息差异
+--Compare the difference in citation information between two files
 function UnitTest.MemoryRefResaultCompared(groupid, firstfile, secondfile)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     mri.m_cMethods.DumpMemorySnapshotComparedFile(ct.getMemoryProfile().."/", "Compared_"..UnitTest.GetDumpAllFileName(groupid, firstfile).."-"..secondfile, -1,  UnitTest.GetValidPath(groupid, firstfile), UnitTest.GetValidPath(groupid, secondfile))
 end
 
---在指定文件中过滤特定对象的引用统计信息
+--Filter reference statistics of specific objects in the specified file
 function UnitTest.MemoryRefResaultFiltered(groupid, strFilePath, strFilter, bIncludeFilter)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     mri.m_cBases.OutputFilteredResult(UnitTest.GetDumpAllFileName(groupid,strFilePath), strFilter, bIncludeFilter, true)
 end
 
---使用下面这个接口可以在特定的时间和条件下执行对应的单元测试，采用消息机制，需要在对应的单元测试中注册相应的 event 消息
+--Use the following interface to execute the corresponding unit test at a specific time and condition. Using the message mechanism, you need to register the corresponding event message in the corresponding unit test
 function UnitTest.Exec_now(groupid, event,...)
     if TestGroup.get_TestGroupId(groupid) == nil  then return end
     Event.Brocast(event,...);

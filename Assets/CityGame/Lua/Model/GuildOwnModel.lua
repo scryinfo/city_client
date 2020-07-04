@@ -12,7 +12,7 @@ function GuildOwnModel:initialize(insId)
 end
 
 function GuildOwnModel:OnCreate()
-    -- 网络回调注册
+    -- Network callback registration
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifySocietyName","gs.BytesStrings", self.n_ModifySocietyName, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyIntroduction","gs.BytesStrings", self.n_ModifyIntroduction, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modifyDeclaration","gs.BytesStrings", self.n_ModifyDeclaration, self)

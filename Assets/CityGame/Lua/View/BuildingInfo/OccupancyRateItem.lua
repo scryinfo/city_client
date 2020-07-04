@@ -4,18 +4,18 @@
 --- DateTime: 2018/9/19 17:03
 ---
 OccupancyRateItem = class('OccupancyRateItem')
-OccupancyRateItem.static.TOTAL_H = 345  --整个Item的高度
-OccupancyRateItem.static.CONTENT_H = 276  --显示内容的高度
-OccupancyRateItem.static.TOP_H = 100  --top条的高度
+OccupancyRateItem.static.TOTAL_H = 345  --The height of the entire Item
+OccupancyRateItem.static.CONTENT_H = 276  --Display height
+OccupancyRateItem.static.TOP_H = 100  --the height of the top bar
 OccupancyRateItem.static.OccupancyTextColor = "#FFFFFF"
 
---初始化方法
+--Initialization method
 function OccupancyRateItem:initialize(occupancyData, clickOpenFunc, viewRect, mainPanelLuaBehaviour, toggleData, mgrTable)
     self.viewRect = viewRect
     self.occupancyData = occupancyData
-    self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
+    self.toggleData = toggleData  --Located in the first few of toggle, left or right
 
-    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform")  --内容Rect
+    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform")  --Content Rect
     self.rentalValueText = self.viewRect.transform:Find("contentRoot/rentalValueText"):GetComponent("Text")
     self.occupancySlider = self.viewRect.transform:Find("contentRoot/occupancySlider"):GetComponent("Slider")  -- slider
     self.occupancyText = self.viewRect.transform:Find("contentRoot/occupancyText"):GetComponent("Text")
@@ -47,12 +47,12 @@ function OccupancyRateItem:_lanuage()
     self.oneRoomText03.text = GetLanguage(37040011)
 end
 
---获取是第几个点击了
+--Get the number of clicks
 function OccupancyRateItem:getToggleIndex()
     return self.toggleData.index
 end
 
---打开
+--turn on
 function OccupancyRateItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open
 
@@ -65,7 +65,7 @@ function OccupancyRateItem:openToggleItem(targetMovePos)
     return Vector2.New(targetMovePos.x, targetMovePos.y - OccupancyRateItem.static.TOTAL_H)
 end
 
---关闭
+--shut down
 function OccupancyRateItem:closeToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Close
 
@@ -75,7 +75,7 @@ function OccupancyRateItem:closeToggleItem(targetMovePos)
     return Vector2.New(targetMovePos.x, targetMovePos.y - OccupancyRateItem.static.TOP_H)
 end
 
---刷新数据
+--Refresh data
 function OccupancyRateItem:updateInfo(data)
     if not self.viewRect.gameObject.activeSelf then
         return
@@ -86,7 +86,7 @@ function OccupancyRateItem:updateInfo(data)
     self.rentalValueText.text = getPriceString(GetClientPriceString(self.occupancyData.rent), 30, 24).."/D"
     self:_lanuage()
 end
---房租改变
+--Rent change
 function OccupancyRateItem:_rentPriceChange(data)
     if self.occupancyData.buildingId ~= data.buildingId then
         return

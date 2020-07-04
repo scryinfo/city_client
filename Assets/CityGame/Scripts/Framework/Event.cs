@@ -7,8 +7,8 @@
 	using System.Threading;
 	
 	/*
-		事件模块
-		City插件层与Unity3D表现层通过事件来交互
+		Event module
+        The City plugin layer interacts with the Unity3D presentation layer through events
 	*/
     public class Event
     {
@@ -116,20 +116,15 @@
 			
 			return has;
 		}
-		
-		/*
-			注册监听由city插件抛出的事件。(out = city->render)
-			通常由渲染表现层来注册, 例如：监听角色血量属性的变化， 如果UI层注册这个事件，
-			事件触发后就可以根据事件所附带的当前血量值来改变角色头顶的血条值。
-		*/
+	
 		public static bool registerOut(string eventname, object obj, string funcname)
 		{
 			return register(events_out, eventname, obj, funcname);
 		}
 
 		/*
-			注册监听由渲染表现层抛出的事件(in = render->city)
-			通常由city插件层来注册， 例如：UI层点击登录， 此时需要触发一个事件给city插件层进行与服务端交互的处理。
+			Register to listen to events thrown by the rendering presentation layer (in = render->city)
+            It is usually registered by the city plug-in layer, for example: the UI layer clicks to log in. At this time, an event needs to be triggered for the city plug-in layer to process the interaction with the server.
 		*/
 		public static bool registerIn(string eventname, object obj, string funcname)
 		{
@@ -222,7 +217,7 @@
 			while (iter.MoveNext())
 			{
 				List<Pair> lst = iter.Current.Value;
-				// 从后往前遍历，以避免中途删除的问题
+				// Iterate from back to front to avoid the problem of deleting midway
 				for (int i = lst.Count - 1; i >= 0; i--)
 				{
 					if (obj == lst[i].obj)
@@ -238,9 +233,7 @@
 		}
 
 		/*
-			city插件触发事件(out = city->render)
-			通常由渲染表现层来注册, 例如：监听角色血量属性的变化， 如果UI层注册这个事件，
-			事件触发后就可以根据事件所附带的当前血量值来改变角色头顶的血条值。
+			City plugin trigger event (out = city->render)
 		*/
 		public static void fireOut(string eventname, params object[] args)
 		{
@@ -248,8 +241,8 @@
 		}
 
 		/*
-			渲染表现层抛出事件(in = render->city)
-			通常由city插件层来注册， 例如：UI层点击登录， 此时需要触发一个事件给city插件层进行与服务端交互的处理。
+			Rendering presentation layer throws events (in = render->city)
+            It is usually registered by the city plug-in layer, for example: the UI layer clicks to log in. At this time, an event needs to be triggered for the city plug-in layer to process the interaction with the server.
 		*/
 		public static void fireIn(string eventname, params object[] args)
 		{
@@ -257,7 +250,7 @@
 		}
 
 		/*
-			触发city插件和渲染表现层都能够收到的事件
+			Trigger events that both the city plugin and the rendering presentation layer can receive
 		*/
 		public static void fireAll(string eventname, params object[] args)
 		{

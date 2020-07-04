@@ -6,7 +6,7 @@
 UnitTest.TestBlockStart()-------------------------------------------------------
 
 local testcount = 2
-local ResPathList = {}  --资源路径
+local ResPathList = {}  --Resource path
 
 for i = 1, testcount do
     ResPathList[i] = 'Assets/CityGame/Resources/testPng/C'..i..'.png'
@@ -23,17 +23,17 @@ UnitTest.Exec("abel_w19_New_AB_load", "abel_w19_New_AB_load",  function ()
         local bundle = bundleinfo.bundle
         local xx = 0
     end
-    panelMgr:LoadPrefab_A(listpath[3], ct.getType(UnityEngine.Sprite), nil,cb) --Sprite方式加载图标
-    panelMgr:LoadPrefab_A(listpath[2], ct.getType(UnityEngine.Texture), nil,cb) --Texture方式加载图标
-    panelMgr:LoadPrefab_A(listpath[1], nil, nil,cb) --加载 prefab
+    panelMgr:LoadPrefab_A(listpath[3], ct.getType(UnityEngine.Sprite), nil,cb) --Sprite loading icon
+    panelMgr:LoadPrefab_A(listpath[2], ct.getType(UnityEngine.Texture), nil,cb) --Texture loading icon
+    panelMgr:LoadPrefab_A(listpath[1], nil, nil,cb) --Load prefab
 end)
 
---异步加载1000个256 icon 时间测试
-UnitTest.Exec("abel_w19_New_AB_Solution", "abel_w19_New_AB_Solution",  function ()
-    --尺寸160的测试
+-- Asynchronously load 1000 256 icons time test
+UnitTest.Exec("abel_w19_New_AB_Solution", "abel_w19_New_AB_Solution", function ()
+    -- Test of size 160
     local aTester = AsyncSequenceTester:new()
     AsyncSequenceTester.recordTester(aTester)
-    --初始化测试数据
+    -- Initialize test data
     aTester.testcount = 1000
     aTester.loadCount = 0
     aTester.bundlelist = {}
@@ -47,7 +47,7 @@ UnitTest.Exec("abel_w19_New_AB_Solution", "abel_w19_New_AB_Solution",  function 
         tester.startTime = 0
         tester.loadCount = 1
     end
-    --异步加载测试,带回调
+    -- Asynchronous load test with callback
     local testLoadFunA = function(tester)
         local testData = AsyncSequenceTester.Tester()
         local curSeq = testData:getCurSeq()
@@ -61,7 +61,7 @@ UnitTest.Exec("abel_w19_New_AB_Solution", "abel_w19_New_AB_Solution",  function 
         end
     end
 
-    --加载成功后的回调
+    --Callback after successful loading
     local callback = function (testData, obj , ab)
         local testData = AsyncSequenceTester.Tester()
         local curSeq = testData:getCurSeq()
@@ -73,7 +73,7 @@ UnitTest.Exec("abel_w19_New_AB_Solution", "abel_w19_New_AB_Solution",  function 
             local costTime = os.clock() - testData.startTime
             curSeq.excutetime = costTime
             local nextDelay = testData:getCurSeq()._nextTestDelay
-            --卸载
+            --Uninstall
             --local pos = #testData.bundlelist
             --while pos > 0 do
             --    if testData.bundlelist[pos] ~= nil then
@@ -99,27 +99,27 @@ UnitTest.Exec("abel_w19_New_AB_Solution", "abel_w19_New_AB_Solution",  function 
     --aTester.testSquence[2] = { fun = testLoadFunA, type = ct.getType(UnityEngine.Sprite), _nextTestDelay = 30, prefun = aTester.resetData, cb = callback, msg = '1000个256大小的 Sprite 异步加载的时间 = ',excutetime = 0}
     aTester.testSquence[3] = { fun = logfun, type = nil, _nextTestDelay = 30, msg = '统计时间 = ',excutetime = 0}
 
-    --开始执行异步测试序列
+    --Start executing asynchronous test sequence
     collectgarbage("collect")
     aTester:excute()
-    --尺寸128的测试
+    --Test of size 128
     --[[
-    测试结果
+    Test Results
     pc
-        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Texture 异步加载的时间 =2.2260000000001
-        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Sprite 异步加载的时间 = 2.3319999999999
-        *  性能差别比不大, 平均每帧可以加载 33.33/2.332 = 14.29 个
-    设备
-        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Texture 异步加载的时间 =6.757779
-        [abel_w17_load_A_s160_n1000_time]1000个160大小的 Sprite 异步加载的时间 = 6.006067
-        *  设备上 Sprite 比 Texture 加载的时间还短
-            * 这个结论与同步加载的结论一致？
-        * 平均每帧可以加载 33.33/6.006067 = 5.555 个（texture 33.33/6.757779 = 4.932 个 ）
-        * 比对同步加载
-            [abel_w17_load_S_s160_n1000_time]1000个160大小的Texture同步加载的时间 = 2.265139
-            [abel_w17_load_S_s160_n1000_time]1000个160大小的Sprite同步加载的时间 = 4.293647
-            * Sprite异步加载总的耗时与同步加载差不多；texture 同步加载时间会少不少
-            * 同步加载期间会导致程序卡顿
+        [abel_w17_load_A_s160_n1000_time] Asynchronous loading time of 1000 textures of 160 size = 2.2260000000001
+        [abel_w17_load_A_s160_n1000_time] The time for asynchronous loading of 1000 Sprites of 160 size = 2.3319999999999
+        * The performance difference ratio is not large, the average can load 33.33/2.332 = 14.29 per frame
+    equipment
+        [abel_w17_load_A_s160_n1000_time] Asynchronous loading time of 1000 textures of 160 size = 6.757779
+        [abel_w17_load_A_s160_n1000_time] The time for asynchronous loading of 1000 160-sized Sprites = 6.006067
+        * Sprite on the device takes less time to load than Texture
+            * This conclusion is consistent with the conclusion of synchronous loading?
+        * On average, 33.33/6.006067 = 5.555 can be loaded per frame (texture 33.33/6.757779 = 4.932)
+        * Compare synchronous loading
+            [abel_w17_load_S_s160_n1000_time] The time for 1000 textures of 160 size to load synchronously = 2.265139
+            [abel_w17_load_S_s160_n1000_time] The time for 1000 160 Sprites to load simultaneously = 4.293647
+            * Sprite asynchronous loading takes about the same time as synchronous loading; texture synchronous loading time will be much less
+            * The program will freeze during synchronous loading
     --]]
 end)
 

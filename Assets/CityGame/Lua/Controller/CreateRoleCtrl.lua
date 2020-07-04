@@ -12,8 +12,8 @@ function  CreateRoleCtrl:bundleName()
 end
 
 function CreateRoleCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--You can go back and hide other panels after the UI opens
+    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--Can go back, after the UI is opened, other UI is not hidden
 end
 
 function CreateRoleCtrl:Refresh()
@@ -60,7 +60,7 @@ function CreateRoleCtrl:OnBack()
     UIPanel.ClosePage()
 end
 
---创建角色
+--Creating a Role
 function CreateRoleCtrl:OnCreateRole(go)
     PlayMusEff(1002)
     local nickname = CreateRolePanel.nickname:GetComponent('InputField').text;
@@ -78,7 +78,7 @@ function CreateRoleCtrl:OnCreateRole(go)
     end
 end
 
---重名
+--Duplicate names
 function CreateRoleCtrl:c_SameName(reason)
     if reason == "roleNameDuplicated" then
         CreateRolePanel.companynameDuplicateText.transform.localScale = Vector3.zero

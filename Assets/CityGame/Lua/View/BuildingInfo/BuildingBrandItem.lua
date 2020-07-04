@@ -4,9 +4,9 @@
 --- DateTime: 2019/1/11 14:58
 ---
 BuildingBrandItem = class('BuildingBrandItem')
-BuildingBrandItem.static.ContentHeight = 344  --content的高度
+BuildingBrandItem.static.ContentHeight = 344  --content height
 
---初始化方法 --数据需要当前租金 & 生效日期（当前天 + 配置表读出来的时间：08:00:00）
+--Initialization method --The data requires the current rent & effective date (current day + time read from the configuration table: 08:00:00)
 function BuildingBrandItem:initialize(data, viewRect)
     self.viewRect = viewRect
     self.data = data
@@ -28,7 +28,7 @@ function BuildingBrandItem:initialize(data, viewRect)
     self.topBrandText01 = viewRect.transform:Find("topRoot/Text01"):GetComponent("Text")
     self.topQtyText01 = viewRect.transform:Find("topRoot/Text02"):GetComponent("Text")
 
-    self.buildingInfoToggleState = BuildingInfoToggleState.Open  --默认打开
+    self.buildingInfoToggleState = BuildingInfoToggleState.Open  --Open by default
     self:_initTopInfo()
 end
 
@@ -40,8 +40,8 @@ end
 function BuildingBrandItem:_initContentInfo()
     self.contentBrandText.text = self.data.brand or 100
     self.contentQualityText.text = self.data.qty or 100
-    --差浏览量
-    --最高浏览量最高品质的玩家头像
+    --Poor pageviews
+    --The most viewed and highest quality player avatar
 end
 
 function BuildingBrandItem:_lanuage()
@@ -49,19 +49,19 @@ function BuildingBrandItem:_lanuage()
     self.topQtyText01.text = GetLanguage(37040009)
 end
 
---打开
+--turn on
 function BuildingBrandItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, BuildingBrandItem.static.ContentHeight), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 end
 
---关闭
+--shut down
 function BuildingBrandItem:closeToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Close
     self.contentRoot:DOSizeDelta(Vector2.New(self.contentRoot.sizeDelta.x, 0), BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
 end
 
---刷新数据
+--Refresh data
 function BuildingBrandItem:updateInfo(data)
     self.data = data
     self:_initTopInfo()

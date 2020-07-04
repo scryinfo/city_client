@@ -7,7 +7,7 @@
 AboutItem = class('AboutItem')
 
 local fontPath="Assets/CityGame/Resources/Atlas/GuidBook/main/button-"
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function AboutItem:initialize(prefab,luabehaviour,name)
     self.name = name;
     self.Image=prefab.transform:GetComponent("Image")
@@ -19,7 +19,7 @@ function AboutItem:initialize(prefab,luabehaviour,name)
     --self.nameText.text=name
     luabehaviour:AddClick(prefab, self.OnClick_Add, self);
 end
----添加
+---Add to
 function AboutItem:OnClick_Add(ins)
     ct.OpenCtrl("DetailGuidCtrl",ins)
     PlayMusEff(1002)

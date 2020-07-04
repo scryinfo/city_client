@@ -96,28 +96,28 @@ namespace City
             subRoot.name = "BubbleRoot";
             m_Instance.bubbleRoot = subRoot.transform;
             m_Instance.bubbleRoot.transform.localScale = Vector3.one;
-            //添加Bubble画布
+            //Add Bubble Canvas
             CreateCanvans(subRoot, cam);
 
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "NormalRoot";
             m_Instance.normalRoot = subRoot.transform;
             m_Instance.normalRoot.transform.localScale = Vector3.one;
-            //添加NormalRoot画布
+            //Add NormalRoot canvas
             CreateCanvans(subRoot, cam);
 
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "PopupRoot";
             m_Instance.popupRoot = subRoot.transform;
             m_Instance.popupRoot.transform.localScale = Vector3.one;
-            //添加PopupRoot画布
+            //Add PopupRoot canvas
             CreateCanvans(subRoot, cam);
 
             subRoot = CreateSubCanvasForRoot(go.transform, 0);
             subRoot.name = "FixedRoot";
             m_Instance.fixedRoot = subRoot.transform;
             m_Instance.fixedRoot.transform.localScale = Vector3.one;
-            //添加FixedRoot画布
+            //Add FixedRoot canvas
             CreateCanvans(subRoot, cam);
 
             //add Event System

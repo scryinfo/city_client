@@ -8,7 +8,7 @@ namespace LuaFramework
 {
     public class BuildManager : Manager
     {
-        //创建建筑
+        //Create a building
         public void CreateBuild(string name, LuaFunction func = null, object luaObj = null)
         {
             string assetName = "Assets/CityGame/Resources/View/" + name + ".prefab"; ;

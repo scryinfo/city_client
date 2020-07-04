@@ -54,7 +54,7 @@ function StopAndBuildPanel.InitPanel()
     this.rentNameText=transform:Find("landInfoRoot/body/leasePersonInfo/rent/nameText"):GetComponent("Text")
     this.rentText=transform:Find("landInfoRoot/body/leasePersonInfo/rent/Text"):GetComponent("Text")
 
-    --续租按钮预制上有   代码上没找过
+    --There is a pre-made button on the renewal button
     this.owenerPersonInfoRoot=transform:Find("landInfoRoot/body/owenerPersonInfo")
 
     this.buyTimeNameText=transform:Find("landInfoRoot/body/owenerPersonInfo/lease/nameText"):GetComponent("Text")

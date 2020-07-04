@@ -45,7 +45,7 @@ function NewTransportBoxCtrl:Hide()
     Event.RemoveListener("deleteItemPrefab",self.deleteItemPrefab,self)
 end
 
--------------------------------------------------------------获取组件-------------------------------------------------------------------------------
+-------------------------------------------------------------Get components-------------------------------------------------------------------------------
 function NewTransportBoxCtrl:_getComponent(go)
     self.closeBtn = go.transform:Find("contentRoot/top/closeBtn")
     self.topNameText = go.transform:Find("contentRoot/top/topNameText"):GetComponent("Text")
@@ -64,7 +64,7 @@ function NewTransportBoxCtrl:_getComponent(go)
     self.priceText = go.transform:Find("contentRoot/buttonRoot/totalPrice/priceText"):GetComponent("Text")
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
---初始化UI数据
+--Initialize UI data
 function NewTransportBoxCtrl:initializeUiInfoData()
     if next(self.m_data.itemPrefabTab) == nil then
         self.tipContentText.transform.localScale = Vector3.one
@@ -81,9 +81,9 @@ function NewTransportBoxCtrl:initializeUiInfoData()
     end
     self.priceText.text = self:calculateTotalPrice()
 end
---设置多语言
+--Set up multiple languages
 function NewTransportBoxCtrl:_language()
-    --购物车还是运输列表
+    --Shopping cart or shipping list
     if self.m_data.stateType == GoodsItemStateType.transport then
         self.topNameText.text = GetLanguage(25020013)
         self.startText.text = GetLanguage(25020036)
@@ -96,13 +96,13 @@ function NewTransportBoxCtrl:_language()
     self.placeholderText.text = GetLanguage(25020015)
     self.priceText.text = "0.0000"
 end
------------------------------------------------------------------点击函数----------------------------------------------------------------------------
---关闭
+-----------------------------------------------------------------Click Function----------------------------------------------------------------------------
+--close
 function NewTransportBoxCtrl:_clickCloseBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
---跳转选择仓库
+--Jump to select warehouse
 function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
     PlayMusEff(1002)
     if not ins.itemTable or next(ins.itemTable) == nil then
@@ -122,7 +122,7 @@ function NewTransportBoxCtrl:_clickChooseWarehouseBtn(ins)
     data.nameText = ins.targetWarehouse
     ct.OpenCtrl("ChooseWarehouseCtrl",data)
 end
---点击运输
+--Click shipping
 function NewTransportBoxCtrl:_clickStartBtn(ins)
     ins.targetBuildingId = ChooseWarehouseCtrl:GetBuildingId()
     if not ins.itemTable or next(ins.itemTable) == nil then
@@ -144,9 +144,9 @@ function NewTransportBoxCtrl:_clickStartBtn(ins)
     end
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
---删除某个商品
+--Delete a product
 function NewTransportBoxCtrl:deleteItemPrefab(id)
-    --运输或购买列表是否为空
+    --Is the shipping or purchase list empty
     if next(self.itemTable) == nil then
         return
     else
@@ -157,7 +157,7 @@ function NewTransportBoxCtrl:deleteItemPrefab(id)
         end
         destroy(self.itemTable[id].prefab.gameObject)
         table.remove(self.itemTable,id)
-        --删除一个之后当前是否为空，不为空重新排序
+        --Whether it is currently empty after deleting one, reorder if it is not empty
         if next(self.itemTable) == nil then
             self.tipContentText.transform.localScale = Vector3.one
             return
@@ -171,7 +171,7 @@ function NewTransportBoxCtrl:deleteItemPrefab(id)
         self.priceText.text = self:calculateTotalPrice()
     end
 end
---计算总费用
+--Calculate the total cost
 function NewTransportBoxCtrl:calculateTotalPrice()
     local totalPrice = 0
     if not self.itemTable or next(self.itemTable) == nil then
@@ -183,7 +183,7 @@ function NewTransportBoxCtrl:calculateTotalPrice()
     return GetClientPriceString(totalPrice)
 end
 ----------------------------------------------------------------------------------------------------------------------------------------------------
---生成itemPrefab
+--Generate itemPrefab
 function NewTransportBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,className,behaviour,goodsType,unitPrice)
     if not dataInfo then
         return
@@ -194,7 +194,7 @@ function NewTransportBoxCtrl:CreateGoodsItems(dataInfo,itemPrefab,itemRoot,class
         table.insert(self.itemTable,itemGoodsIns)
     end
 end
---加载实例化Prefab
+--Load instantiated Prefab
 function NewTransportBoxCtrl:loadingItemPrefab(itemPrefab,itemRoot)
     local obj = UnityEngine.GameObject.Instantiate(itemPrefab)
     local objRect = obj.transform:GetComponent("RectTransform");
@@ -204,7 +204,7 @@ function NewTransportBoxCtrl:loadingItemPrefab(itemPrefab,itemRoot)
     obj:SetActive(true)
     return obj
 end
---退出时清空Item数据
+--Clear Item data on exit
 function NewTransportBoxCtrl:CloseDestroy()
     if not self.itemTable or next(self.itemTable) == nil then
         return

@@ -4,7 +4,7 @@ local gameObject;
 BattlePanel = {};
 local this = BattlePanel;
 
---启动事件--
+--Start event--
 function BattlePanel.Awake(obj)
 	gameObject = obj;
 	transform = obj.transform;
@@ -13,13 +13,13 @@ function BattlePanel.Awake(obj)
 	logWarn("Awake lua--->>"..gameObject.name);
 end
 
---初始化面板--
+--Initialize the panel--
 function BattlePanel.InitPanel()
 	this.btn_skill = transform:Find("content/btn_skill").gameObject;
 	this.btn_battle = transform:Find("content/btn_battle").gameObject;
 end
 
---单击事件--
+--Click event--
 function BattlePanel.OnDestroy()
 	logWarn("OnDestroy---->>>");
 end

@@ -33,7 +33,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 添加单击事件
+        /// Add click event
         /// </summary>
         public void AddClick(GameObject go, LuaFunction luafunc, object obj = null) {
             if (go == null || luafunc == null) return;
@@ -51,7 +51,7 @@ namespace LuaFramework {
                 luafunc.Call(go, obj);
             };
 
-            //重复注册直接返回
+            //Repeat registration and return directly
             if (buttons.ContainsKey(eventName)) {
                 return;                    
             }
@@ -80,7 +80,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 清除单击事件
+        /// Clear click event
         /// </summary>
         public void ClearClick() {
             foreach (var de in buttons) {

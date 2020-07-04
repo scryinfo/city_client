@@ -10,14 +10,14 @@ local transform;
 ConfirmPopPanel = {};
 local this = ConfirmPopPanel;
 
---启动事件
+--Start event
 function ConfirmPopPanel.Awake(obj)
   --  gameObject = obj;
     transform = obj.transform;
 
     this.InitPanle();
 end
---初始化界面
+--Initialize the interface
 function ConfirmPopPanel.InitPanle()
     this.confirmBtn = transform:Find("root/confimBtn")
     this.closeBtn = transform:Find("root/closeBtn")

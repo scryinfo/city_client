@@ -8,33 +8,33 @@ function CreateRoleModel:initialize(insId)
     self:OnCreate()
 end
 
---启动事件--
+--Start event--
 function CreateRoleModel:OnCreate()
-    --注册本地事件
+    --Register local events
     Event.AddListener("m_createNewRole",self.m_createNewRole,self)
     --注册gs的网络回调
     CreateRoleModel:registerGsNetMsg()
 end
---关闭事件--
+--Close event--
 function CreateRoleModel.Close()
-    --清空本地UI事件
+    --Clear local UI events
 end
 
 function CreateRoleModel:registerGsNetMsg()
     DataManager.RegisterErrorNetMsg()
-    --gs网络回调注册
+    --gs Network callback registration
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","createRole","gs.RoleInfo",self.n_CreateNewRole,self)--新版model网络注册
 end
 
---创角发包
+--Chuangjiao Hair Pack
 function CreateRoleModel:m_createNewRole(data)
     DataManager.ModelSendNetMes("gscode.OpCode", "createRole","gs.CreateRole",
             { male = data.gender ,name =data.nickname ,companyName =data.companyname ,faceId = data.faceId })
 end
 
---创角回调
+--Angle callback
 function CreateRoleModel:n_CreateNewRole(pMsg, msgId)
-    --异常处理
+    --Exception handling
     if msgId == 0 then
         Event.Brocast("c_SameName",pMsg.reason)
         return
@@ -42,7 +42,7 @@ function CreateRoleModel:n_CreateNewRole(pMsg, msgId)
 
     logDebug(pMsg.id)
     logDebug(pMsg.name)
-    --登录
+    --log in
     Event.Brocast("m_loginRole",pMsg)
 end
 

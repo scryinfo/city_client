@@ -18,7 +18,7 @@ function AutoRequire:getInstance()
 end
 
 function AutoRequire:initialize()
-    self.requirePaths = {} --这个用以Android打包时，导出到 AndroidRequire.lua
+    self.requirePaths = {} --This is exported to AndroidRequire.lua when packaged with Android
     self.requirePaths[#self.requirePaths+1] = "require '__require_first__'"
 end
 

@@ -4,7 +4,7 @@ local gameObject;
 SelectAvatarPanel = {};
 local this = SelectAvatarPanel;
 
---启动事件--
+--Start event--
 function SelectAvatarPanel.Awake(obj)
 	gameObject = obj;
 	transform = obj.transform;
@@ -13,7 +13,7 @@ function SelectAvatarPanel.Awake(obj)
 	logWarn("Awake lua--->>"..gameObject.name);
 end
 
---初始化面板--
+--Initial panel--
 function SelectAvatarPanel.InitPanel()
 	this.btnCreateAvatar = transform:Find("Button_CreateAvatar").gameObject;
 	this.btnRemoveAvatar = transform:Find('Button_RemoveAvatar').gameObject;
@@ -25,7 +25,7 @@ function SelectAvatarPanel.InitPanel()
     
 end
 
---单击事件--
+--Click event--
 function SelectAvatarPanel.OnDestroy()
 	logWarn("OnDestroy---->>>");
 end

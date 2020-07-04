@@ -14,30 +14,30 @@ function PlayerInfoManger.Awake()
     playerIDs={}
 end
 
--- 向服务器查询好友信息
+-- Query friend information from the server
 function PlayerInfoManger.m_QueryPlayerInfoChat(friendsIds)
     DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
 end
 
----==========================================================================================外部===================================================================================================
+---==========================================================================================external===================================================================================================
 
 local recardNums = 0
 local curr = 0
 
 function PlayerInfoManger.GetInfos(playerIds,func,class)
-    --记录玩家们信息返回的回调
+    --Record the callback of player information return
     recardNums = recardNums + 1
     playerIDs[recardNums] = playerIds
     _funcs[recardNums] = func
     _classes[recardNums] = class
-    --向服务器查询玩家们的信息
+    --Query the player's information from the server
     PlayerInfoManger.m_QueryPlayerInfoChat(playerIds)
     return
 end
 
----==========================================================================================回调===================================================================================================
+---==========================================================================================Callback===================================================================================================
 
---查询玩家信息返回
+--Query player information
 function PlayerInfoManger.n_OnReceivePlayerInfo(stream)
     if #playerIDs <= 0 then
         return

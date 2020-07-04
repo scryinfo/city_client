@@ -1,8 +1,7 @@
 AddDetailItem = class('AddDetailItem')
-AddDetailItem.static.ChooseColor = Vector3.New(78, 111, 189)  --选中时显示的颜色
-AddDetailItem.static.NomalColor = Vector3.New(230, 226, 205)  --未选中时显示的颜色
-
---中间合成的Item
+AddDetailItem.static.ChooseColor = Vector3.New(78, 111, 189)  --The color displayed when selected
+AddDetailItem.static.NomalColor = Vector3.New(230, 226, 205)  --Color displayed when not selected
+--Item synthesized in the middle
 function AddDetailItem:initialize(viewRect)
     self.viewRect = viewRect
     self.btn = viewRect:Find("btn"):GetComponent("Button")
@@ -22,7 +21,7 @@ function AddDetailItem:initialize(viewRect)
     end)
 end
 
---初始化
+--initialization
 function AddDetailItem:initData(data)
     local type = ct.getType(UnityEngine.Sprite)
     if Material[data.itemId] then
@@ -49,18 +48,18 @@ function AddDetailItem:initData(data)
     self:showSelectState(false)
 end
 
---点击按钮
+--Click button
 function AddDetailItem:_clickBtn()
-    --如果是已经选中了自己，再点击，则是切换路线
+    --If you have selected yourself, and then click, it is to switch routes
     if self.selectSelf then
 
     else
-        --如果是由其他item点击切换到自己，则显示默认
+        --If you switch to yourself by clicking on another item, the default is displayed
 
         self.selectSelf = true
     end
 end
---显示选中/未选中状态
+--Show selected/unselected status
 function AddDetailItem:showSelectState(select)
     if select then
         self.borderImg.color = getColorByVector3(AddDetailItem.static.ChooseColor)
@@ -68,7 +67,7 @@ function AddDetailItem:showSelectState(select)
         self.borderImg.color = getColorByVector3(AddDetailItem.static.NomalColor)
     end
 end
---隐藏显示场景中的obj
+--Hide obj in the display scene
 function AddDetailItem:setObjState(show)
     if show then
         self.viewRect.localScale = Vector3.one

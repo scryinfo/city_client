@@ -4,14 +4,14 @@ local gameObject;
 AdjustProductionLinePanel = {};
 local this = AdjustProductionLinePanel;
 
---启动事件
+--Start event
 function AdjustProductionLinePanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
 
     this.InitPanel();
 end
---初始化面板
+--Initialize the panel
 function AdjustProductionLinePanel.InitPanel()
     --Button
     this.returnBtn = transform:Find("Button/returnBtn");

@@ -4,10 +4,10 @@
 --- DateTime: 2018/11/19 15:18
 ---
 LabResearchLineItem = class('LabResearchLineItem')
-LabResearchLineItem.static.NoRollColor = Vector3.New(22, 38, 94)  --没有成果时候的颜色
-LabResearchLineItem.static.FinishBulbHight = 176  --进度完成时灯泡背景的最高高度
+LabResearchLineItem.static.NoRollColor = Vector3.New(22, 38, 94)  --Color when there is no fruit
+LabResearchLineItem.static.FinishBulbHight = 176  --The highest height of the bulb background when the progress is complete
 
---初始化方法
+--Initialization method
 function LabResearchLineItem:initialize(data, viewRect)
     self.viewRect = viewRect
 
@@ -74,12 +74,12 @@ function LabResearchLineItem:_initData(data)
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
---刷新数据
+--Refresh data
 function LabResearchLineItem:_updateInfo(data)
     if data.itemId ~= self.data.itemId then
         return
     end
-    --成果展示
+    --Achievement display
     self.data.id = data.id
     self.data.roll = data.roll
     self.data.leftSec = data.leftSec
@@ -99,7 +99,7 @@ function LabResearchLineItem:_updateInfo(data)
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
---员工数量改变
+--Number of employees changed
 function LabResearchLineItem:_workerNumChange(lineId, totalTime, finishTime, workerNum)
     if lineId == self.data.id then
         self.currentTime = os.time()
@@ -110,7 +110,7 @@ function LabResearchLineItem:_workerNumChange(lineId, totalTime, finishTime, wor
     end
 end
 
---点击删除按钮
+--Click the delete button
 function LabResearchLineItem:_clickDeleteBtn()
     local info = {}
     info.titleInfo = "WARNING"
@@ -121,7 +121,7 @@ function LabResearchLineItem:_clickDeleteBtn()
     end
     ct.OpenCtrl("BtnDialogPageCtrl", info)
 end
---倒计时
+--Countdown
 function LabResearchLineItem:_update()
     if self.startTimeDown and self.data.run then
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime

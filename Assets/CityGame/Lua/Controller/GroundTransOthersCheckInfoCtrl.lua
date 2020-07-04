@@ -64,7 +64,7 @@ function GroundTransOthersCheckInfoCtrl:_initPanelData()
         self:_setShowState(self.m_data.groundInfo)
     end
 end
---根据状态显示界面
+--Display interface according to status
 function GroundTransOthersCheckInfoCtrl:_setShowState(groundInfo)
     GroundTransOthersCheckInfoPanel.closeAllState()
     if groundInfo.ownerId == nil then
@@ -77,7 +77,7 @@ function GroundTransOthersCheckInfoCtrl:_setShowState(groundInfo)
     end
 end
 
---显示头像+名字信息
+--Show avatar + name information
 function GroundTransOthersCheckInfoCtrl:_showPersonalInfo(tempInfo)
     local roleInfo = tempInfo
     if roleInfo ~= nil then
@@ -106,27 +106,27 @@ function GroundTransOthersCheckInfoCtrl:_showPersonalInfo(tempInfo)
     end
 end
 
----按钮方法
---点其他地方则关闭整个堆栈，打开主界面
+---Button method
+-- Click elsewhere to close the entire stack and open the main interface
 function GroundTransOthersCheckInfoCtrl:_closeBtnFunc()
     PlayMusEff(1002)
-    --关闭所有界面
+    --Close all interfaces
     GroundTransSetPriceCtrl._closeBackToMain()
 end
---返回按钮
+--Back button
 function GroundTransOthersCheckInfoCtrl:_backBtnFunc()
     PlayMusEff(1002)
     UIPanel:ClosePage()
 end
 
---点击土地所有者头像
+--Click on the landowner avatar
 function GroundTransOthersCheckInfoCtrl:_ownerBtnFunc(ins)
     PlayMusEff(1002)
     if ins.ownerInfo then
         ct.OpenCtrl("PersonalHomeDialogPageCtrl", ins.ownerInfo)
     end
 end
---点击土地租赁者头像
+--Click on the land leaser avatar
 function GroundTransOthersCheckInfoCtrl:_renterBtnFunc(ins)
     PlayMusEff(1002)
     if ins.renterInfo then

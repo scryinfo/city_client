@@ -11,9 +11,9 @@ function LaboratoryModel:initialize(insId)
     self:_addListener()
 end
 
---启动事件--
+--Start event--
 function LaboratoryModel:_addListener()
-    --网络回调注册
+    --Network callback registration
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailLaboratory","gs.Laboratory",self.n_OnReceiveLaboratoryDetailInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labExclusive","gs.LabExclusive",self.n_OnReceiveLabExclusive)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","labAddLine","gs.LabAddLineACK",self.n_OnReceiveLabLineAdd)
@@ -31,7 +31,7 @@ function LaboratoryModel:_addListener()
 
 end
 
----===================================================================================客户端请求===============================================================================
+---===================================================================================Client request===============================================================================
 --获取建筑详情
 function LaboratoryModel:m_ReqLaboratoryDetailInfo()
     DataManager.ModelSendNetMes("gscode.OpCode", "detailLaboratory","gs.Id",{ id = self.insId})

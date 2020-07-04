@@ -5,9 +5,9 @@
 ---
 
 GuildMenu = class("GuildMenu")
-GuildMenu.static.NomalColor = Vector3.New(19, 27, 56) -- 默认的背景色
-GuildMenu.static.SelectColor = Vector3.New(46, 58, 100) -- 被选中的背景色
-GuildMenu.static.IdentityTable = -- 不同职位的匹配
+GuildMenu.static.NomalColor = Vector3.New(19, 27, 56) -- Default background color
+GuildMenu.static.SelectColor = Vector3.New(46, 58, 100) -- Selected background color
+GuildMenu.static.IdentityTable = -- Matching of different positions
 {
     ["MEMBER"] = {index = 1},
     ["ADMINISTRATOR"] = {index = 2},
@@ -70,7 +70,7 @@ function GuildMenu:initialize(prefab)
     end)
 end
 
--- 设置任命面板是否显示
+-- Set whether the appointment panel is displayed
 function GuildMenu:SetAppointRoot(isShow)
     if isShow then
         self.appointRoot.localScale = Vector3.one
@@ -79,12 +79,12 @@ function GuildMenu:SetAppointRoot(isShow)
     end
 end
 
--- 设置操作菜单是否显示
+-- Set whether the operation menu is displayed
 function GuildMenu:SetPrefabShow(isShow)
     self.prefab:SetActive(isShow)
 end
 
--- 设置任命的按钮的颜色
+-- Set the color of the appointed button
 function GuildMenu:SetAppointImageColor(isShow)
     if isShow then
         self.appointImage.color = getColorByVector3(GuildMenu.static.NomalColor, 230)
@@ -93,13 +93,13 @@ function GuildMenu:SetAppointImageColor(isShow)
     end
 end
 
--- 点击踢出按钮
+-- Click the kick button
 function GuildMenu:_onOut()
     PlayMusEff(1002)
     --self:SetPrefabShow(false)
     GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
-    --打开弹框
+    --Open box
     local showData = {}
     showData.titleInfo = GetLanguage(12010014)
     showData.contentInfo = GetLanguage(12060034)
@@ -110,14 +110,14 @@ function GuildMenu:_onOut()
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
--- 点击任命按钮
+-- Click the appointment button
 function GuildMenu:_onAppoint()
     PlayMusEff(1002)
     self:SetAppointRoot(true)
     self:SetAppointImageColor(false)
 end
 
--- 点击加好友按钮
+-- Click the add friend button
 function GuildMenu:_onAddFriends()
     PlayMusEff(1002)
     --self:SetPrefabShow(false)
@@ -135,7 +135,7 @@ function GuildMenu:_onAddFriends()
     ct.OpenCtrl("CommonDialogCtrl", data)
 end
 
--- 显示个人信息
+-- Show personal information
 function GuildMenu:_onPersonalData()
     PlayMusEff(1002)
     --self:SetPrefabShow(false)
@@ -145,13 +145,13 @@ function GuildMenu:_onPersonalData()
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", playerInfo)
 end
 
--- 任命某职位
+-- Appoint a position
 function GuildMenu:_onAppointerPost(index)
     PlayMusEff(1002)
     --self:SetPrefabShow(false)
     GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
-    --打开弹框
+    --Open box
     local tips
     if index == 0 then
         tips = GetLanguage(12060033)
@@ -172,7 +172,7 @@ function GuildMenu:_onAppointerPost(index)
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
--- 设置可任命的具体职位
+-- Set up specific positions that can be appointed
 function GuildMenu:_SetIdentity()
     local playerDataIndex = GuildMenu.static.IdentityTable[GuildOwnCtrl.static.guildMgr:GetPlayerData().identity].index
     local ownIdentityIndex = GuildMenu.static.IdentityTable[GuildOwnCtrl.static.guildMgr:GetOwnGuildIdentity()].index
@@ -181,13 +181,13 @@ function GuildMenu:_SetIdentity()
             self.outBtn.localScale  = Vector3.one
             self.appointBtn.localScale  = Vector3.zero
 
-            -- 判断是否是自己的好友
+            -- Determine if you are your own friend
             local friendsBasicData = DataManager.GetMyFriends()
             if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
                 self.addFriendsBtnRt.localScale = Vector3.one
                 self.addFriendsBtnRt.anchoredPosition = Vector2.New(0, 152)
                 self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 254)
-            else  -- 是好友
+            else  
                 self.addFriendsBtnRt.localScale = Vector3.zero
                 self.personalDataButtonRt.anchoredPosition = Vector2.New(0, 152)
             end
@@ -195,7 +195,7 @@ function GuildMenu:_SetIdentity()
             self.outBtn.localScale  = Vector3.one
             self.appointBtn.localScale  = Vector3.one
 
-            -- 判断是否是自己的好友
+            -- Determine if you are your own friend
             local friendsBasicData = DataManager.GetMyFriends()
             if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
                 self.addFriendsBtnRt.localScale = Vector3.one
@@ -208,7 +208,7 @@ function GuildMenu:_SetIdentity()
                 self.appointRootRt.anchoredPosition = Vector2.New(212, 304)
             end
 
-            if ownIdentityIndex == 4 then  -- 自己是主席
+            if ownIdentityIndex == 4 then 
                 self.identity4Btn:SetActive(true)
                 self.identity3Btn:SetActive(true)
                 self.identity2Btn:SetActive(true)
@@ -230,7 +230,7 @@ function GuildMenu:_SetIdentity()
         self.outBtn.localScale  = Vector3.zero
         self.appointBtn.localScale  = Vector3.zero
 
-        -- 判断是否是自己的好友
+        --Determine if you are your own friend
         local friendsBasicData = DataManager.GetMyFriends()
         if friendsBasicData[GuildOwnCtrl.static.guildMgr:GetPlayerId()] == nil then
             self.addFriendsBtnRt.localScale = Vector3.one
@@ -244,7 +244,7 @@ function GuildMenu:_SetIdentity()
     end
 end
 
--- 设置多语言
+-- Set up multiple languages
 function GuildMenu:_SetLanguage()
     self.outBtnText.text = GetLanguage(12060008)
     self.appointBtnText.text = GetLanguage(12060007)

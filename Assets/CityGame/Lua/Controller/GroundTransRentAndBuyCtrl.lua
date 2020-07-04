@@ -76,14 +76,14 @@ function GroundTransRentAndBuyCtrl:Close()
     UIPanel.Close(self)
 end
 
----初始化
+---initialization
 function GroundTransRentAndBuyCtrl:_initPanelData()
     if self.m_data and self.m_data.groundInfo then
         PlayerInfoManger.GetInfos({[1] = self.m_data.groundInfo.ownerId}, self._showPersonalInfo, self)
         self:_setShowState(self.m_data.groundInfo, self.m_data.groundState)
     end
 end
---根据状态显示界面
+--Display interface according to status
 function GroundTransRentAndBuyCtrl:_setShowState(groundInfo, groundState)
     GroundTransRentAndBuyPanel.sellRoot.localScale = Vector3.zero
     GroundTransRentAndBuyPanel.rentRoot.localScale = Vector3.zero
@@ -105,41 +105,41 @@ function GroundTransRentAndBuyCtrl:_setShowState(groundInfo, groundState)
     end
 end
 
---显示头像+名字信息
+--Show avatar + name information
 function GroundTransRentAndBuyCtrl:_showPersonalInfo(roleInfo)
     self.roleInfo = roleInfo[1]
     GroundTransRentAndBuyPanel.nameText.text = self.roleInfo.name
     self.ownerAvatar = AvatarManger.GetSmallAvatar(self.roleInfo.faceId, GroundTransRentAndBuyPanel.portraitImg.transform,0.2)
 end
 
----按钮方法
---点其他地方则关闭整个堆栈，打开主界面
+---Button method
+--Click elsewhere to close the entire stack and open the main interface
 function GroundTransRentAndBuyCtrl:_closeBtnFunc()
     PlayMusEff(1002)
-    --关闭所有界面
+    --Close all interfaces
     GroundTransSetPriceCtrl._closeBackToMain()
 end
---返回按钮
+--Back button
 function GroundTransRentAndBuyCtrl:_backBtnFunc()
     PlayMusEff(1002)
     UIPanel:ClosePage()
 end
 
---点击购买按钮
+--Click the buy button
 function GroundTransRentAndBuyCtrl:_buyBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.sell.price then
         ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo,prosperity = ins.m_data.prosperity})
     end
 end
---点击租房按钮
+--Click the rent button
 --function GroundTransRentAndBuyCtrl:_rentBtnFunc(ins)
 --    PlayMusEff(1002)
 --    if ins.m_data.groundInfo.rent then
 --        ct.OpenCtrl("GroundTransContractCtrl", {ownerInfo = ins.roleInfo, groundInfo = ins.m_data.groundInfo, rentDay = tonumber(GroundTransRentAndBuyPanel.tenancySlider.value)})
 --    end
 --end
---点击头像
+--Click on the avatar
 function GroundTransRentAndBuyCtrl:_portraitBtnFunc(ins)
     PlayMusEff(1002)
     if ins.roleInfo then

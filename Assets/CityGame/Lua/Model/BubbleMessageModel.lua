@@ -15,14 +15,14 @@ function BubbleMessageModel:initialize(insId)
 end
 
 function BubbleMessageModel:OnCreate()
-    Event.AddListener("m_setBuildingInfo", self.m_setBuildingInfo,self)--设置FaceId
+    Event.AddListener("m_setBuildingInfo", self.m_setBuildingInfo,self)--set FaceId
 end
----================================================================================发包===========================================================================
+---================================================================================Outsourcing===========================================================================
 function BubbleMessageModel:m_setBuildingInfo(buildingId,des,emoticon,isShowBubble)
     DataManager.ModelSendNetMes("gscode.OpCode", "setBuildingInfo","gs.SetBuildingInfo",{ id =buildingId,des=des ,emoticon=emoticon,showBubble=isShowBubble})
 end
 
----================================================================================收包===========================================================================
+---================================================================================Receive package===========================================================================
 
 
 

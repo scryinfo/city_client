@@ -15,7 +15,7 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     self.chooseImgTran = viewRect:Find("chooseImg")
 
     local stateData = AddProductionLineCtrl.GetItemState(data.itemId)
-    --如果是可展示状态
+    --If it is displayable
     if stateData.enableShow then
         self.disableImg.transform.localScale = Vector3.zero
     else
@@ -34,22 +34,22 @@ function AddGoodDetailItem:initialize(viewRect, data, toggleGroup)
     self.toggle.onValueChanged:AddListener(function(isOn)
         self:showState(isOn)
         if isOn == true then
-            self.data.backFunc(self.data.itemId, self.viewRect.transform.position,stateData.enableShow)  --显示中间的线路
+            self.data.backFunc(self.data.itemId, self.viewRect.transform.position,stateData.enableShow)  --Show the middle line
         end
     end)
     self:_language()
 end
---根据itemId去查状态
+--Check status based on itemId
 function AddGoodDetailItem:_showState(itemId)
 
 end
 
---外部设置toggle状态
+--Externally set toggle status
 function AddGoodDetailItem:setToggleIsOn(isOn)
     self.toggle.isOn = isOn
     self:showState(isOn)
 end
---显示
+--display
 function AddGoodDetailItem:showState(select)
     if select == true then
         self.chooseImgTran.localScale = Vector3.one
@@ -57,7 +57,7 @@ function AddGoodDetailItem:showState(select)
         self.chooseImgTran.localScale = Vector3.zero
     end
 end
---清除选中状态
+--Clear selected state
 function AddGoodDetailItem:cleanState()
     if self.toggle.isOn == true then
         self:setToggleIsOn(false)

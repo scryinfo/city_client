@@ -4,21 +4,21 @@
 --- DateTime: 2018/11/28 16:55
 ---
 LabBuildingLineItem = class('LabBuildingLineItem')
-LabBuildingLineItem.static.TOTAL_H = 815  --整个Item的高度
-LabBuildingLineItem.static.CONTENT_H = 740  --显示内容的高度
-LabBuildingLineItem.static.TOP_H = 100  --top条的高度
+LabBuildingLineItem.static.TOTAL_H = 815  --The height of the entire Item
+LabBuildingLineItem.static.CONTENT_H = 740  --Display height
+LabBuildingLineItem.static.TOP_H = 100  --the height of the top bar
 
-LabBuildingLineItem.static.LabBuildingInventionItemPath = "View/Items/LaboratoryItems/LabBuildingInventionItem"  --发明
-LabBuildingLineItem.static.LabBuildingResearchItemPath = "View/Items/LaboratoryItems/LabBuildingResearchItem"  --研究
+LabBuildingLineItem.static.LabBuildingInventionItemPath = "View/Items/LaboratoryItems/LabBuildingInventionItem"  --invention
+LabBuildingLineItem.static.LabBuildingResearchItemPath = "View/Items/LaboratoryItems/LabBuildingResearchItem"  --the study
 
 function LabBuildingLineItem:initialize(data, viewRect, mainPanelLuaBehaviour, toggleData)
     self.viewRect = viewRect
     self.mainPanelLuaBehaviour = mainPanelLuaBehaviour
     self.data = data
-    self.toggleData = toggleData  --位于toggle的第几个，左边还是右边
+    self.toggleData = toggleData  --Located in the first few of toggle, left or right
 
-    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform")  --内容Rect
-    self.loopScroll = self.viewRect.transform:Find("contentRoot/scroll"):GetComponent("ActiveLoopScrollRect")  --滑动复用组件
+    self.contentRoot = self.viewRect.transform:Find("contentRoot"):GetComponent("RectTransform")  --Content Rect
+    self.loopScroll = self.viewRect.transform:Find("contentRoot/scroll"):GetComponent("ActiveLoopScrollRect")  --Sliding multiplexing component
     self.openStateTran = self.viewRect.transform:Find("topRoot/open")
     self.openBtn = self.viewRect.transform:Find("topRoot/open/openBtn"):GetComponent("Button")
     self.doSthImg = self.viewRect.transform:Find("topRoot/open/openBtn/doSthImg")
@@ -30,13 +30,13 @@ function LabBuildingLineItem:initialize(data, viewRect, mainPanelLuaBehaviour, t
         self.openBtn.transform.localScale = Vector3.one
     end
 
-    --滑动复用部分
-    self.itemSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
+    --Sliding multiplexing section
+    self.itemSource = UnityEngine.UI.LoopScrollDataSource.New()  --the study
     self.itemSource.mProvideData = LabBuildingLineItem.static.provideData
     self.itemSource.mClearData = LabBuildingLineItem.static.clearData
     self:_initData()
 end
---初始化数据
+--Initialization data
 function LabBuildingLineItem:_initData()
     LabBuildingLineItem.static.items = {}
     local prefabList = {}
@@ -48,7 +48,7 @@ function LabBuildingLineItem:_initData()
         end
     end
     LabBuildingLineItem.static.lineInfoData = self.data.lines
-    self.loopScroll:ActiveDiffItemLoop(self.itemSource, prefabList)  --滑动部分
+    self.loopScroll:ActiveDiffItemLoop(self.itemSource, prefabList)  --Sliding part
 
     if self.data.isOther then
         self.doSthImg.localScale = Vector3.zero
@@ -58,11 +58,11 @@ function LabBuildingLineItem:_initData()
         self.otherOpenImg.localScale = Vector3.zero
     end
     self.mainPanelLuaBehaviour:AddClick(self.openBtn.gameObject, function()
-        ct.OpenCtrl("LabScientificLineCtrl", {insId = self.data.insId})  --打开科技线界面，传入实例id
+        ct.OpenCtrl("LabScientificLineCtrl", {insId = self.data.insId})  --Open the technology line interface and pass in the instance id
     end, self)
 end
 
----静态方法
+---Static method
 LabBuildingLineItem.static.provideData = function(transform, idx)
     idx = idx + 1
     local data = LabBuildingLineItem.static.lineInfoData[idx]
@@ -76,12 +76,12 @@ LabBuildingLineItem.static.clearData = function(transform)
 end
 ---
 
---获取是第几个点击了
+--Get the number of clicks
 function LabBuildingLineItem:getToggleIndex()
     return self.toggleData.index
 end
 
---打开
+--turn on
 function LabBuildingLineItem:openToggleItem(targetMovePos)
     self.buildingInfoToggleState = BuildingInfoToggleState.Open
     self.viewRect:DOAnchorPos(targetMovePos, BuildingInfoToggleGroupMgr.static.ITEM_MOVE_TIME):SetEase(DG.Tweening.Ease.OutCubic)
@@ -90,7 +90,7 @@ function LabBuildingLineItem:openToggleItem(targetMovePos)
     return Vector2.New(targetMovePos.x, targetMovePos.y - LabBuildingLineItem.static.TOTAL_H)
 end
 
---关闭
+--shut down
 function LabBuildingLineItem:closeToggleItem(targetMovePos)
 
     self.buildingInfoToggleState = BuildingInfoToggleState.Close
@@ -100,7 +100,7 @@ function LabBuildingLineItem:closeToggleItem(targetMovePos)
     return Vector2.New(targetMovePos.x, targetMovePos.y - LabBuildingLineItem.static.TOP_H)
 end
 
---刷新数据
+--Refresh data
 function LabBuildingLineItem:updateInfo(data)
     self.data.lines = data.lines
     self:_initData()

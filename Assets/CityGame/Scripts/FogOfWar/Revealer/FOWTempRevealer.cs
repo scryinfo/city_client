@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// 说明：临时视野
-/// 
-/// @by wsh 2017-05-20
+/// Description: Temporary Vision
 /// </summary>
 
 public class FOWTempRevealer : FOWRevealer

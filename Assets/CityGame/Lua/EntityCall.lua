@@ -30,7 +30,7 @@ function CityEngineLua.EntityCall:isCell( )
 end
 
 
-	----创建新的EntityCall
+	----Create a new EntityCall
 
 function CityEngineLua.EntityCall:newCall()
 
@@ -50,7 +50,7 @@ function CityEngineLua.EntityCall:newCall()
 end
 
 
-	---向服务端发送这个EntityCall
+	---Send this EntityCall to the server
 
 function CityEngineLua.EntityCall:sendCall(inbundle)
 

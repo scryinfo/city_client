@@ -128,9 +128,9 @@ function FlightBetCtrl:_confirmBtnFunc()
     end
 
     local temp = string.sub(self.m_data.date, 1, 10)
-    --发送协议后，等待回调再关闭界面
+    --After sending the protocol, wait for the callback before closing the interface
     FlightMainModel.m_ReqBetFlight(self.m_data.id, self.timeValue, self.betValue, temp)
-    FlightMainModel.OpenFlightLoading()  --开始loading
+    FlightMainModel.OpenFlightLoading()  --Start loading
 end
 --
 function FlightBetCtrl:_timeReduceFunc()

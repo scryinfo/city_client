@@ -40,12 +40,12 @@ function MyShutDownCtrl:Hide()
 end
 
 ---------------------------------------------------------------------------------------------
---取消关闭页面
+--Cancel close page
 function MyShutDownCtrl:_clickCloseBtn()
     UIPanel.ClosePage()
 end
 
---设置后关闭页面
+--Close page after setting
 function MyShutDownCtrl:_clickStartBtn(go)
     local data = {}
     data.buildingId = go.m_data.m_data.insId

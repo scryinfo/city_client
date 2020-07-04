@@ -5,12 +5,12 @@ else
 end
 
 local lu = luaunit
-----单元测试
+----unit test
 --require('test/test')
-----性能测试
+----Performance Testing
 --require('test/performance/luaPerformance')
 
---管理器--
+--Manager--
 Game = {};
 local this = Game;
 
@@ -19,7 +19,7 @@ local transform;
 local gameObject;
 local WWW = UnityEngine.WWW;
 
---屏幕坐标缩放尺寸
+--Screen coordinate scaling
 Game.ScreenRatio = 1
 
 local function InitScreenRatio()
@@ -32,40 +32,40 @@ local function InitScreenRatio()
     end
 end
 
---初始化完成，发送链接服务器信息--
+--Initialization is complete, send link server information--
 function Game.OnInitOK()
-    --初始化多语言--
+    --Initialize multiple languages--
     ReadConfigLanguage()
-    --初始化音乐--
+    --Initial music--
     MusicManger:Awake()
-    --初始化气泡--
+    --Initial Bubble--
     UIBubbleManager.Awake()
-    --初始化屏幕适配比例--
+    --Initial screen adaptation ratio--
     InitScreenRatio()
 
-    --单元测试入口
+   --Unit test entrance
     lu.LuaUnit.run()
 
     ct.OpenCtrl('LoadingCtrl')--StopAndBuildCtrl--LoadingCtrl
-    --ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) --注意传入的是类名
+    --ct.OpenCtrl('LoginCtrl',Vector2.New(0, 0)) - Note that the class name is passed in
 
 end
 
 function Game.OnPostInitOK()
     BuilldingBubbleInsManger.Init()
-    --开业停业
+    --Opening and closing
     --[[
     StopAndBuildModel:Awake()
     --PlayerInfoManager.Init()
     PlayerInfoManger.Awake()
-    --单元测试入口
+    --Unit test entrance
     lu.LuaUnit.run()
     DataManager.Init()
     TerrainManager.Init()
-    --Avatar管理器
+    --Avatar manager
     AvatarManger.Awake()
 
     PathFindManager.Init()
-    --营收详情
+    --Revenue details
     RevenueDetailsMsg.Awake()--]]
 end

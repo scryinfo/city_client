@@ -4,9 +4,9 @@
 --- DateTime: 2019/4/10 17:31
 ---
 
--- 公司、Eva、可加点属性item
+-- Company, Eva, can add some attributes item
 PropertyTrueItem = class("PropertyTrueItem")
-PropertyTrueItem.static.NumberColor = "#5460AC" -- 数量特殊颜色
+PropertyTrueItem.static.NumberColor = "#5460AC" -- Number of special colors
 PropertyTrueItem.static.PercentColor = "#10C4FE" -- 加成特殊颜色
 PropertyTrueItem.static.ExperienceColor = "#10C4FE" -- 经验特殊颜色
 PropertyTrueItem.static.BTypeIcon = -- b类型显示配置

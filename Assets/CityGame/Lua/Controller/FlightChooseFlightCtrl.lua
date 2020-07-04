@@ -77,7 +77,7 @@ function FlightChooseFlightCtrl:_updateText()
     local str3 = FlightChooseFlightPanel.startPlaceText.text
     FlightChooseFlightPanel.startPlaceText.text = ct.getFlightSubString(str3, 42, 24)
 end
---获得2019-05-01格式的时间
+--Get the time in 2019-05-01 format
 function FlightChooseFlightCtrl:_getDayStr(str)
     if str == nil or str == "" then
         return "--"

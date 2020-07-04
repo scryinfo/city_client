@@ -2,9 +2,7 @@
 using UnityEngine;
 
 /// <summary>
-/// 说明：小地图战争迷雾
-/// 
-/// @by wsh 2017-05-20
+/// Description: small map
 /// </summary>
 
 public class MiniMapFOWRender

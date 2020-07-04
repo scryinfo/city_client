@@ -12,7 +12,7 @@ namespace City
 
         public enum LineChartType
         {
-            //折线
+            //Polyline
             LineChart
         }
         [Header("线图表类型设置")]
@@ -23,7 +23,7 @@ namespace City
         {
             get
             {
-                //根据类型实例化对应的工厂绘制
+                //Instance corresponding factory drawing according to type
                 switch (lineChartType)
                 {
                     case LineChartType.LineChart:
@@ -42,14 +42,14 @@ namespace City
             vh.Clear();
             if (LineChartBasis.Lines.Count.Equals(0))
                 return;
-            var rect = base.GetPixelAdjustedRect();//!!!!!!!!!!!!!!!!!!!!!获取了屏幕的宽高!!!!!!!!!!!!!!!!!!!!!!!!!
+            var rect = base.GetPixelAdjustedRect();//!!!!!!!!!!!!!!!!!!!!!Get the width and height of the screen!!!!!!!!!!!!!!!!!!!!!!!!!
             if (LineChartBasis.Lines.Count == 11)
             {
                 rect.width = 500;
             }
-            //调用工厂绘制
+            //Call factory drawing
             LineChartCreator.DrawLineChart(vh, rect, LineChartBasis);
-            //Debug.Log("!!!!!!!!!!!长度是" + LineChartBasis.Lines.Count);
+            //Debug.Log("!!!!!!!!!!!The length is" + LineChartBasis.Lines.Count);
             //Debug.Log("!!!!!!!!!!!rect" + rect);
         }
         public void Refresh()
@@ -75,7 +75,7 @@ namespace City
             ClearUnit();
             Vector2 size = GetPixelAdjustedRect().size;
             Vector2 origin = new Vector2(-size.x / 2.0f, -size.y / 2.0f);
-            //Y轴文本位置
+            //Y-axis text position
             if (LineChartBasis.XUnitTemplate != null)
             {
                 for (float y = 0, count = 0; y < size.y; y += LineChartBasis.MeshCellYSize, count++)
@@ -85,7 +85,7 @@ namespace City
                             origin + new Vector2(0, count * LineChartBasis.MeshCellYSize) + new Vector2(-35, 0)).text = value.ToString();
                 }
             }
-            //X轴文本位置
+            //X-axis text position
             if (LineChartBasis.YUnitTemplate != null)
             {
                 for (float x = 0, count = 0; x < size.x; x += LineChartBasis.MeshCellXSize, count++)
@@ -97,7 +97,7 @@ namespace City
             }
         }
         /// <summary>
-        /// 创建文字
+        /// Create text
         /// </summary>
         /// <param name="prefab"></param>
         /// <param name="position"></param>
@@ -122,7 +122,7 @@ namespace City
             m_units.Add(go.gameObject);
             return go;
         }
-        //X轴文本
+        //X-axis text
         string GetWeek(int day)
         {
             string week = null;
@@ -169,7 +169,7 @@ namespace City
         }
 
         /// <summary>
-        /// 替换折线数据
+        /// Replace polyline data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -179,7 +179,7 @@ namespace City
         //    Replace(new int[] { id }, new IList<T>[] { vertexs });
         //}
         /// <summary>
-        /// 替换折线数据
+        /// Replace polyline data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="ids"></param>
@@ -190,7 +190,7 @@ namespace City
         //    OnEnable();
         //}
         /// <summary>
-        /// 流式顶点数据
+        /// Streaming vertex data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="id"></param>
@@ -224,7 +224,7 @@ namespace City
         //                newVertexs.RemoveAt(0);
         //                LineChartBasis.ReplaceLines(new int[] { id },new IList<Vector2>[] { newVertexs});
         //            }
-        //            Debug.Log("流式顶点数据");
+        //            Debug.Log("Streaming vertex data");
         //            yield return new WaitForSeconds(0.05f);
         //        }
         //    }

@@ -48,7 +48,7 @@ function BuidingWareHouseCtrl:Active()
 end
 
 
---集散中心通用部件
+--General parts of distribution center
 function BuidingWareHouseCtrl:_initData(houseDetailInfo)
     BuidingWareHouseCtrl.static.insId = houseDetailInfo.insId
     if BuidingWareHousePanel.topItem ~= nil then
@@ -62,7 +62,7 @@ function BuidingWareHouseCtrl:_initData(houseDetailInfo)
     self.m_data.insId = insId  --temp
     self.m_data.buildingType = BuildingType.WareHouse
 
-    BuidingWareHousePanel.openBusinessItem:initData(houseDetailInfo.info, BuildingType.WareHouse)  --初始化
+    BuidingWareHousePanel.openBusinessItem:initData(houseDetailInfo.info, BuildingType.WareHouse)  --initialization
     if houseDetailInfo.rentCapacity ~= 0 then
         BuidingWareHousePanel.spaceText.text = houseDetailInfo.rentCapacity - houseDetailInfo.rentUsedCapacity
         BuidingWareHousePanel.timeText.text  = houseDetailInfo.maxHourToRent
@@ -73,9 +73,9 @@ function BuidingWareHouseCtrl:_initData(houseDetailInfo)
         BuidingWareHousePanel.timeText.text  = houseDetailInfo.maxHourToRent
     end
 
-    if houseDetailInfo.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
+    if houseDetailInfo.info.ownerId ~= DataManager.GetMyOwnerID() then  --Determine if you or someone else has opened the interface
         self.m_data.isOther = true
-        if self.groupMgr == nil then                                    --非本人打开
+        if self.groupMgr == nil then                                    --Not opened by me
             self.groupMgr = BuildingInfoMainGroupMgr:new(BuidingWareHousePanel.groupTrans, self.houseBehaviour)
             self.groupMgr:AddParts(BuildingSalaryPart,0)
             self.groupMgr:AddParts(BuildingShelfPart, 0.33)
@@ -88,7 +88,7 @@ function BuidingWareHouseCtrl:_initData(houseDetailInfo)
             self.groupMgr:RefreshData(self.m_data)
         end
     else
-        self.m_data.isOther = false                                      --本人打开
+        self.m_data.isOther = false                                      
             self.groupMgr = BuildingInfoMainGroupMgr:new(BuidingWareHousePanel.groupTrans, self.houseBehaviour)
             self.groupMgr:AddParts(BuildingShelfPart, 0.25)
             self.groupMgr:AddParts(TurnoverPart, 0.25)
@@ -112,12 +112,12 @@ function BuidingWareHouseCtrl:Hide()
     end
 end
 
---关闭界面
+--Close the interface
 function BuidingWareHouseCtrl:_backFunc()
     UIPanel.ClosePage()
 end
 
---更改基础建筑信息
+--Change basic building information
 function BuidingWareHouseCtrl:_changeItemData(data)
     if data ~= nil and BuidingWareHousePanel.topItem ~= nil then
         BuidingWareHousePanel.topItem:changeItemData(data)
@@ -125,7 +125,7 @@ function BuidingWareHouseCtrl:_changeItemData(data)
 end
 
 
---点击开业按钮方法
+--Click the Open button method
 function HouseCtrl:_openBuildingBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data then
@@ -157,7 +157,7 @@ function BuidingWareHouseCtrl:_openFunc(data)
 
 end
 
---更新UI显示数据
+--Update UI display data
 function BuidingWareHouseCtrl:_refreshRentInfo (rentWareHouseInfo)
     BuidingWareHousePanel.spaceText.text = self.m_data.rentCapacity - self.m_data.rentUsedCapacity
     BuidingWareHousePanel.priceText.text = self.m_data.rent

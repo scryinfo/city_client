@@ -51,7 +51,7 @@ function GuildListCtrl:Active()
     self:_addListener()
     GuildListPanel.createRoot.localScale =Vector3.zero
 
-    -- 多语言适配
+    -- Multilingual adaptation
     GuildListPanel.titleText.text = GetLanguage(12010001)
     GuildListPanel.guildNameTitleText.text = GetLanguage(12010004)
     GuildListPanel.jobTitleText.text = GetLanguage(12010005)
@@ -65,7 +65,7 @@ function GuildListCtrl:Active()
     GuildListPanel.nullImageText.text = GetLanguage(12010015)
 end
 
--- 监听Model层网络回调
+-- Listen to the model layer network callback
 function GuildListCtrl:_addListener()
     Event.AddListener("c_OnSocietyList", self.c_OnSocietyList, self)
     Event.AddListener("c_OnSocietyInfo", self.c_OnSocietyInfo, self)
@@ -73,7 +73,7 @@ function GuildListCtrl:_addListener()
     Event.AddListener("c_OnJoinSociety", self.c_OnJoinSociety, self)
 end
 
---注销model层网络回调
+--Cancel the model layer network callback
 function GuildListCtrl:_removeListener()
     Event.RemoveListener("c_OnSocietyList", self.c_OnSocietyList, self)
     Event.RemoveListener("c_OnSocietyInfo", self.c_OnSocietyInfo, self)
@@ -87,7 +87,7 @@ function GuildListCtrl:Refresh()
     self:_showView()
 end
 
--- 打开model
+-- Open model
 function GuildListCtrl:initInsData()
     DataManager.OpenDetailModel(GuildListModel, OpenModelInsID.GuildListCtrl)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_GetSocietyList')
@@ -101,7 +101,7 @@ function GuildListCtrl:Hide()
     UIPanel.Hide(self)
 end
 
--- 根据自己有无公会判断进入的公会列表界面是否需要显示创建公会的按钮
+-- According to whether you have a guild, determine whether the entered guild list interface needs to display the button to create a guild
 function GuildListCtrl:_showView()
     local societyId = DataManager.GetGuildID()
     if societyId then
@@ -113,7 +113,7 @@ function GuildListCtrl:_showView()
     end
 end
 
--- 按照公会的人员数量排序
+-- Sort by the number of guilds
 function GuildListCtrl:OnMemberNumber(go)
     PlayMusEff(1002)
     if GuildListCtrl.rankId == 1 then
@@ -142,7 +142,7 @@ function GuildListCtrl:OnMemberNumber(go)
     go:_sort(GuildListCtrl.rankId)
 end
 
--- 按照公会建立的时间排序
+-- Sort by the time the guild was established
 function GuildListCtrl:OnTime(go)
     PlayMusEff(1002)
     if GuildListCtrl.rankId == 3 then
@@ -171,7 +171,7 @@ function GuildListCtrl:OnTime(go)
     go:_sort(GuildListCtrl.rankId)
 end
 
--- 给数据排序
+-- Sort data
 function GuildListCtrl:_sort(rankId)
     if GuildListCtrl.societyList == nil then
         return
@@ -190,19 +190,19 @@ function GuildListCtrl:_sort(rankId)
     GuildListPanel.guildListScroll:RefillCells()
 end
 
--- 显示创建公会界面
+-- Display the create guild interface
 function GuildListCtrl:OnClickCreate(go)
     GuildListPanel.createRoot.localScale =Vector3.one
 end
 
--- 返回公会列表界面，关闭创建公会界面
+-- Return to the guild list interface and close the create guild interface
 function GuildListCtrl:OnClickCreateBack(go)
     GuildListPanel.createRoot.localScale =Vector3.zero
     GuildListPanel.guildNameInput.text = ""
     GuildListPanel.describeInput.text = ""
 end
 
--- 点击创建公会按钮
+-- Click the Create Guild button
 function GuildListCtrl:OnSure(go)
     local guildNameInputText = GuildListPanel.guildNameInput.text
     local describeInputText = GuildListPanel.describeInput.text
@@ -224,7 +224,7 @@ function GuildListCtrl:OnSure(go)
     GuildListPanel.guildNameInput.text = ""
     GuildListPanel.describeInput.text = ""
 
-    --打开弹框
+    --Open box
     local showData = {}
     showData.titleInfo = GetLanguage(12050005)
     showData.contentInfo = GetLanguage(12050006)
@@ -235,7 +235,7 @@ function GuildListCtrl:OnSure(go)
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
--- 滑动复用
+-- Sliding multiplexing
 GuildListCtrl.static.GuildProvideData = function(transform, idx)
     idx = idx + 1
     local transformId = transform:GetInstanceID()
@@ -249,7 +249,7 @@ GuildListCtrl.static.GuildClearData = function(transform)
 
 end
 
--- 网络回调
+-- Network callback
 function GuildListCtrl:c_OnSocietyList(societyList)
     if societyList.listInfo then
         GuildListPanel.nullImage.localScale = Vector3.zero
@@ -276,7 +276,7 @@ function GuildListCtrl:c_OnSocietyList(societyList)
     end
 end
 
--- 创建公会成功，关闭公会列表界面，打开公会界面
+-- Create a guild successfully, close the guild list interface, open the guild interface
 function GuildListCtrl:c_OnSocietyInfo(societyInfo)
     GuildListPanel.guildNameInput.text = ""
     GuildListPanel.describeInput.text = ""
@@ -287,20 +287,20 @@ function GuildListCtrl:c_OnSocietyInfo(societyInfo)
     ct.OpenCtrl("GuildOwnCtrl")
 end
 
--- 申请加入公会通过
+-- Application to join the guild passed
 function GuildListCtrl:c_JoinHandle(societyInfo)
     UIPanel.ClosePage()
     ct.OpenCtrl("GuildOwnCtrl")
 
-    --打开弹框
+    --Open box
     local showData = {}
     showData.titleInfo = "提示"
-    showData.contentInfo = GetLanguage( 12010013, societyInfo.name)  -- "申请商业联盟通过"
+    showData.contentInfo = GetLanguage( 12010013, societyInfo.name)  -- "Apply for Business Alliance Pass"
     showData.tipInfo = ""
     ct.OpenCtrl("BtnDialogPageCtrl", showData)
 end
 
--- 申请加入公会失败
+-- Application to join the guild failed
 function GuildListCtrl:c_OnJoinSociety()
     Event.Brocast("SmallPop", "申请失败，该联盟已解散！",80)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildListCtrl, 'm_GetSocietyList')

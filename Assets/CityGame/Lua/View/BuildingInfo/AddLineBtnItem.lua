@@ -16,12 +16,12 @@ function AddLineBtnItem:initialize(viewRect, data, toggleGroup)
         end
     end)
 end
---外部设置toggle状态
+--Externally set toggle status
 function AddLineBtnItem:setToggleIsOn(isOn)
     self.toggle.isOn = isOn
     self:showState(isOn)
 end
---显示状态，选中或者未选中
+--Display status, selected or unselected
 function AddLineBtnItem:showState(select)
     if select then
         self.chooseTran.localScale = Vector3.one
@@ -29,7 +29,7 @@ function AddLineBtnItem:showState(select)
         self.chooseTran.localScale = Vector3.zero
     end
 end
---外部获取typeId
+--Get typeId externally
 function AddLineBtnItem:getTypeId()
     return self.data.typeId
 end

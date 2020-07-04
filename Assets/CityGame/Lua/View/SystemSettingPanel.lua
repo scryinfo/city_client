@@ -54,7 +54,7 @@ function SystemSettingPanel.InitPanel()
     this.KoreanBtnText = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/Korean/Text"):GetComponent("Text")
     this.KoreanBtn = transform:Find("Panel/bodyRoot/bg/languange/bg/Scroll View/Viewport/Content/Korean")
 
-    ---气泡
+    ---bubble
     this.bubbleShowBtn = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/showBubble")
     this.bubbleCloseBtn = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/closeBubble")
     this.bubbleText = transform:Find("Panel/bodyRoot/bg/body/bubbleBtn/Text"):GetComponent("Text")
@@ -63,7 +63,7 @@ function SystemSettingPanel.InitPanel()
 
 
 end
---数据初始化
+--Data initialization
 function SystemSettingPanel:InitDate(string)
     this.titleText.text=GetLanguage(14010011)
     this.outText.text=GetLanguage(14010012)
@@ -78,7 +78,7 @@ function SystemSettingPanel:InitDate(string)
     this.bubbleText.text = GetLanguage(14010008)
     this.bubbleShowText.text = GetLanguage(14010009)
     this.bubbleCloseText.text = GetLanguage(14010010)
-    --TODO:设置气泡多语言
+    --TODO: set bubble multi-language
     local music = UnityEngine.PlayerPrefs.GetInt("Music")
     local musicEffect = UnityEngine.PlayerPrefs.GetInt("MusicEffect")
     local bubble  = UnityEngine.PlayerPrefs.GetInt("BuildingBubble")
@@ -100,7 +100,7 @@ function SystemSettingPanel:InitDate(string)
         this.MusicEffectBtngrey.localScale=Vector3.one
         this.MusicEffect:Stop()
     end
-    --关闭气泡
+    --Turn off bubbles
     if bubble == 3 then
         this.bubbleCloseBtn.gameObject:SetActive(true)
     else

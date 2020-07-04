@@ -22,49 +22,49 @@ function CompanyModel:OnCreate()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","modyfyMyBrandName","gs.ModyfyMyBrandName",self.n_OnModyfyMyBrandName,self)
 end
 
--- 查询玩家的土地消息
+-- Check player's land news
 function CompanyModel:m_GetGroundInfo()
     --local msgId = pbl.enum("gscode.OpCode","getGroundInfo")
     --CityEngineLua.Bundle:newAndSendMsg(msgId, nil)
     DataManager.ModelSendNetMes("gscode.OpCode", "getGroundInfo","gs.Id",{id = CompanyCtrl.static.companyMgr:GetId()})
 end
 
--- 服务器返回的土地消息
+-- Land message returned by server
 function CompanyModel:n_OnGetGroundInfo(groundInfos)
     Event.Brocast("c_OnGetGroundInfo", groundInfos)
 end
 
--- 查询玩家的建筑信息
+-- Query player's building information
 function CompanyModel.m_QueryMyBuildings()
     DataManager.ModelSendNetMes("gscode.OpCode", "queryMyBuildings","gs.QueryMyBuildings",{id = CompanyCtrl.static.companyMgr:GetId()})
 end
 
--- 服务器返回的建筑信息
+-- Building information returned by the server
 function CompanyModel:n_OnQueryMyBuildings(buildingInfos)
     Event.Brocast("c_OnQueryMyBuildings", buildingInfos)
 end
 
--- 查询玩家的Eva信息
+-- Query player's Eva information
 --function CompanyModel.m_QueryMyEva()
 --    DataManager.ModelSendNetMes("gscode.OpCode", "queryMyEva","gs.Id",{id = DataManager.GetMyOwnerID()})
 --end
 
--- 服务器返回的Eva信息
+-- Eva information returned by the server
 --function CompanyModel:n_OnQueryMyEva(evas)
 --    Event.Brocast("c_OnQueryMyEva", evas)
 --end
 
--- Eva加点
+-- Eva plus
 --function CompanyModel:m_UpdateMyEva(eva)
 --    DataManager.ModelSendNetMes("gscode.OpCode", "updateMyEva","gs.Eva",eva)
 --end
 
--- 服务器返回的Eva加点
+-- Dot the Eva returned by the server
 --function CompanyModel:n_OnUpdateMyEva(eva)
 --    Event.Brocast("c_OnUpdateMyEva", eva)
 --end
 
--- 查询玩家的收支信息
+-- Query player's income and expenditure information
 function CompanyModel.m_QueryPlayerIncomePayCurve()
     local msgId = pbl.enum("sscode.OpCode","queryPlayerIncomePayCurve")
     local lMsg = { id = CompanyCtrl.static.companyMgr:GetId() }
@@ -72,19 +72,19 @@ function CompanyModel.m_QueryPlayerIncomePayCurve()
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, pMsg, CityEngineLua._tradeNetworkInterface1)
 end
 
--- 服务器返回的曲线图信息
+-- Graph information returned by the server
 function CompanyModel:n_OnQueryPlayerIncomePayCurve(curveInfo)
     Event.Brocast("c_OnQueryPlayerIncomePayCurve", curveInfo)
 end
 
--- 给公司改名
+-- Rename the company
 function CompanyModel:m_ModifyCompanyName(companyName)
     DataManager.ModelSendNetMes("gscode.OpCode", "modifyCompanyName","gs.ModifyCompanyName",companyName)
 end
 
--- 公司改名返回
+-- Change of company name
 function CompanyModel:n_OnModifyCompanyName(roleInfo, msgId)
-    --异常处理
+    --Exception handling
     if msgId == 0 then
         if roleInfo.reason == "roleNameDuplicated"then
             Event.Brocast("SmallPop",GetLanguage(18010011),80)
@@ -96,24 +96,24 @@ function CompanyModel:n_OnModifyCompanyName(roleInfo, msgId)
     Event.Brocast("c_OnModifyCompanyName", roleInfo)
 end
 
--- 查询品牌
+-- Query brand
 function CompanyModel:m_QueryMyBrands()
     DataManager.ModelSendNetMes("gscode.OpCode", "queryMyBrands","gs.QueryMyBrands", {pId = CompanyCtrl.static.companyMgr:GetId()})
 end
 
--- 查询品牌返回
+-- Query brand returns
 function CompanyModel:n_OnQueryMyBrands(MyAllBrands)
     Event.Brocast("c_OnMQueryMyBrands", MyAllBrands)
 end
 
--- 给品牌改名
+-- Rebranding
 function CompanyModel:m_ModyfyMyBrandName(brandLeague)
     DataManager.ModelSendNetMes("gscode.OpCode", "modyfyMyBrandName","gs.ModyfyMyBrandName", brandLeague)
 end
 
--- 品牌改名返回
+-- Change the name of the brand
 function CompanyModel:n_OnModyfyMyBrandName(modyfyMyBrandName, msgId)
-    --异常处理
+    --Exception handling
     if msgId == 0 then
         if modyfyMyBrandName.reason == "roleNameDuplicated"then
             Event.Brocast("SmallPop","品牌名字重复！",80)
@@ -123,7 +123,7 @@ function CompanyModel:n_OnModyfyMyBrandName(modyfyMyBrandName, msgId)
     if modyfyMyBrandName.lastChangeTime then
         local timeTable = getFormatUnixTime(modyfyMyBrandName.lastChangeTime/1000)
         local time = timeTable.year .. "-" .. timeTable.month .. "-" ..timeTable.day
-        -- 打开提示
+        -- Open prompt
         local info = {}
         info.titleInfo = "PROMPT"
         info.contentInfo = string.format("Last modified:<color=%s>%s</color>", "#3CF7FE",time)

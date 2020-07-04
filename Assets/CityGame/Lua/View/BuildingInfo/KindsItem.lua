@@ -1,6 +1,6 @@
 KindsItem = class('KindsItem')
 local ctrl = nil
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function KindsItem:initialize(prefab,luaBehaviour,data,ctr)
     self.prefab = prefab
     self.ima = prefab.transform:Find("Image"):GetComponent("Image")

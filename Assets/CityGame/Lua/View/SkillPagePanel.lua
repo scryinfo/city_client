@@ -4,7 +4,7 @@ local gameObject;
 SkillPagePanel = {};
 local this = SkillPagePanel;
 
---启动事件--
+--Start event--
 function SkillPagePanel.Awake(obj)
 	gameObject = obj;
 	transform = obj.transform;
@@ -20,12 +20,12 @@ function SkillPagePanel.Awake(obj)
 	this.skillItem:SetActive(false);
 end
 
---初始化面板--
+--Initial panel--
 function SkillPagePanel.InitPanel()
 	--this.btn_confim = transform:Find("content/btn_confim").gameObject;
 end
 
---单击事件--
+--Click event--
 function SkillPagePanel.OnDestroy()
 	logWarn("OnDestroy---->>>");
 end

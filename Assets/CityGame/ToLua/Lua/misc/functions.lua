@@ -48,7 +48,7 @@ function import(moduleName, currentModuleName)
     return require(moduleFullName)
 end
 
---重新require一个lua文件，替代系统文件。
+--Re-require a lua file to replace the system file.
 function reimport(name)
     local package = package
     package.loaded[name] = nil

@@ -20,17 +20,17 @@ end
 function FriendsCtrl:Awake(go)
     FriendsCtrl.static.friendsItemTab = {}
     ct.log("tina_w7_friends", "FriendsCtrl:Awake")
-    self.friendsSource = UnityEngine.UI.LoopScrollDataSource.New()  --好友
+    self.friendsSource = UnityEngine.UI.LoopScrollDataSource.New() 
     self.friendsSource.mProvideData = FriendsCtrl.static.FriendsProvideData
     self.friendsSource.mClearData = FriendsCtrl.static.FriendsClearData
 end
 
 function FriendsCtrl:OnCreate(go)
     ct.log("tina_w7_friends", "FriendsCtrl:OnCreate")
-    --调用基类方法处理实例的数据
+    --Call the base class method to process the instance data
     UIPanel.OnCreate(self, go)
 
-    --添加UI事件点击监听
+    --Add UI event click listener
     FriendsCtrl.luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
     FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.backBtn, function ()
         PlayMusEff(1002)
@@ -42,7 +42,7 @@ function FriendsCtrl:OnCreate(go)
     FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.addFriendsBtn, self.OnAddFriends, self)
     FriendsCtrl.luaBehaviour:AddClick(FriendsPanel.applicationlistBtn, self.OnApplicationlist, self)
 
-    -- Lua代码挂载C#滑动服用组件LoopVerticalScrollRect、ActiveLoopScrollRect，现在是在预制上，以后可修改为代码添加
+    -- Lua code mounted C# slide taking components LoopVerticalScrollRect, ActiveLoopScrollRect, now in prefabricated, can be modified to add code later
     --UnityEngine.GameObject.AddComponent(FriendsPanel.friendsView, LuaHelper.GetType("UnityEngine.UI.LoopVerticalScrollRect"))
     --UnityEngine.GameObject.AddComponent(FriendsPanel.friendsView, LuaHelper.GetType("ActiveLoopScrollRect"))
     --UnityEngine.GameObject.AddComponent(FriendsPanel.groupView, LuaHelper.GetType("UnityEngine.UI.LoopVerticalScrollRect"))
@@ -61,7 +61,7 @@ end
 FriendsCtrl.static.FriendsClearData = function(transform)
 end
 
--- 注册监听事件
+-- Register to listen to events
 function FriendsCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
@@ -69,7 +69,7 @@ function FriendsCtrl:Active()
     FriendsPanel.NoContentText.text = GetLanguage(13010002)
 end
 
--- 刷新
+--Refresh
 function FriendsCtrl:Refresh()
     self:initInsData()
     --self:_addListener()
@@ -81,7 +81,7 @@ function FriendsCtrl:initInsData()
 end
 
 function FriendsCtrl:_addListener()
-    -- 监听Model层网络回调
+    -- Listen to the model layer network callback
     --Event.AddListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.AddListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.AddListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
@@ -96,14 +96,14 @@ function FriendsCtrl:Hide()
 end
 
 function FriendsCtrl:_removeListener()
-    -- 监听Model层网络回调
+    -- Listen to the model layer network callback
     --Event.RemoveListener("c_OnReceivePlayerInfo", self.c_OnReceivePlayerInfo, self)
     Event.RemoveListener("c_OnReceiveAddFriendSucess", self.c_OnReceiveAddFriendSucess, self)
     Event.RemoveListener("c_OnReceiveAddFriendReq", self.c_OnReceiveAddFriendReq, self)
     Event.RemoveListener("c_OnReceiveDeleteFriend", self.c_OnReceiveDeleteFriend, self)
 end
 
--- 获取界面数据
+-- Get interface data
 function FriendsCtrl:_refreshData()
     FriendsCtrl.friendInfo = {}
     local friendsBasicData = DataManager.GetMyFriends()
@@ -129,12 +129,12 @@ function FriendsCtrl:_refreshData()
     self:_refreshState()
 end
 
---显示好友信息
+--Show friend information
 function FriendsCtrl:_showFriends()
     FriendsPanel.friendsView:ActiveLoopScroll(self.friendsSource, #FriendsCtrl.friendInfo)
 end
 
--- 刷新界面的状态
+-- Refresh the state of the interface
 function FriendsCtrl:_refreshState()
     self:_showFriendsApplyNotice()
     --if not FriendsCtrl.type or FriendsCtrl.type == 1 then
@@ -149,13 +149,13 @@ function FriendsCtrl:_refreshState()
     --FriendsPanel.groupView:ActiveLoopScroll(self.groupSource, #FriendsCtrl.data[2])
 end
 
--- 收到好友申请
+-- Receive friend application
 function FriendsCtrl:c_OnReceiveAddFriendReq()
     self:_showFriendsApplyNotice()
 end
 
 function FriendsCtrl:c_OnReceiveDeleteFriend(friendsId)
-    -- 删除数据
+    -- delete data
     for i, v in ipairs(FriendsCtrl.friendInfo) do
         if v.id == friendsId.fId then
             table.remove(FriendsCtrl.friendInfo, i)
@@ -163,7 +163,7 @@ function FriendsCtrl:c_OnReceiveDeleteFriend(friendsId)
         end
     end
 
-    -- 刷新界面
+    -- Refresh the interface
     if #FriendsCtrl.friendInfo <= 0 then
         FriendsPanel.friendsNoContentRoot:SetActive(true)
     end
@@ -171,14 +171,14 @@ function FriendsCtrl:c_OnReceiveDeleteFriend(friendsId)
     self:_showFriends()
 end
 
--- 申请列表红点控制
+-- Application List Red Dot Control
 function FriendsCtrl:_showFriendsApplyNotice()
     local friendsApply = DataManager.GetMyFriendsApply()
     FriendsPanel.applicationlistNotice:SetActive(#friendsApply > 0)
     FriendsPanel.applicationlistNoticeText.text = #friendsApply > 0 and tostring(#friendsApply) or "0"
 end
 
--- 控制好友分页
+-- Control friend paging
 --function FriendsCtrl:_friendsToggleValueChange(isOn)
 --    --FriendsCtrl.type = 1
 --    FriendsPanel.friendsRoot:SetActive(isOn)
@@ -189,7 +189,7 @@ end
 --    FriendsPanel.groupClose:SetActive(isOn)
 --end
 
--- 控制群组分页
+-- Control group paging
 --function FriendsCtrl:_groupToggleValueChange(isOn)
 --    --FriendsCtrl.type = 2
 --    FriendsPanel.friendsRoot:SetActive(not isOn)
@@ -200,7 +200,7 @@ end
 --    FriendsPanel.groupClose:SetActive(not isOn)
 --end
 
--- 管理好友
+-- Manage friends
 function FriendsCtrl:OnFriendsManage(go)
     PlayMusEff(1002)
     go:_removeListener()
@@ -212,7 +212,7 @@ function FriendsCtrl:OnFriendsManage(go)
     ct.OpenCtrl("FriendslistCtrl", data)
 end
 
---打开黑名单
+--Open blacklist
 function FriendsCtrl:OnBlacklist(go)
     PlayMusEff(1002)
     go:_removeListener()
@@ -224,7 +224,7 @@ function FriendsCtrl:OnBlacklist(go)
     ct.OpenCtrl("FriendslistCtrl", data)
 end
 
---添加好友
+--add friend
 function FriendsCtrl:OnAddFriends(go)
     PlayMusEff(1002)
     go:_removeListener()
@@ -236,7 +236,7 @@ function FriendsCtrl:OnAddFriends(go)
     ct.OpenCtrl("FriendslistCtrl", data)
 end
 
---打开申请列表
+--Open the application list
 function FriendsCtrl:OnApplicationlist(go)
     PlayMusEff(1002)
     go:_removeListener()
@@ -248,7 +248,7 @@ function FriendsCtrl:OnApplicationlist(go)
     ct.OpenCtrl("FriendslistCtrl", data)
 end
 
---管理群组
+--Manage Group
 function FriendsCtrl:OnGroupManage(go)
     go:_removeListener()
     FriendsCtrl.type = 2
@@ -260,13 +260,13 @@ function FriendsCtrl:OnGroupManage(go)
     ct.OpenCtrl("FriendsGrouplistCtrl", data)
 end
 
---发起群聊
+--Start a group chat
 function FriendsCtrl:OnStartGaroup(go)
     go:_removeListener()
     ct.log("tina_w8_friends", "发起群聊")
 end
 
--- 网络回调
+-- Network callback
 function FriendsCtrl:c_OnReceivePlayerInfo(friendsData)
     for _, v in ipairs(friendsData) do
         table.insert(FriendsCtrl.friendInfo, v)

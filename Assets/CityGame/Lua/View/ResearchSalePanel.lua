@@ -51,7 +51,7 @@ function ResearchSalePanel.InitPanel()
 
     this.closeTipsBtn = transform:Find("CloseTipsBtn")
 
-    -- 多语言
+    -- multi-language
     this.titleText = transform:Find("MiddleRoot/TitleText"):GetComponent("Text")
     this.priceRootTitleText = transform:Find("MiddleRoot/PriceRoot/TitleText"):GetComponent("Text")
     this.quantityRootTitleText = transform:Find("MiddleRoot/QuantityRoot/TitleText"):GetComponent("Text")

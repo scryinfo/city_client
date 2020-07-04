@@ -5,8 +5,7 @@
 ---
 
 GuidBookCtrl = class('GuidBookCtrl',UIPanel)
-UIPanel:ResgisterOpen(GuidBookCtrl) --注册打开的方法
-
+UIPanel:ResgisterOpen(GuidBookCtrl) --How to open the registration
 local luaBehaviour;
 
 GuidBookCtrl.aboutItem_Path="View/GoodsItem/about"
@@ -16,7 +15,7 @@ function  GuidBookCtrl:bundleName()
 end
 
 function GuidBookCtrl:initialize()
-    UIPanel:initialize(UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel:initialize(UIType.Normal,UIMode.HideOther,UICollider.None)--You can go back and hide other panels after the UI opens
 end
 
 function GuidBookCtrl:OnCreate(obj)

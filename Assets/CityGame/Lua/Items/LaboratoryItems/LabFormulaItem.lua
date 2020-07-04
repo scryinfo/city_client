@@ -4,7 +4,7 @@
 --- DateTime: 2018/11/29 18:02
 ---
 LabFormulaItem = class('LabFormulaItem')
-LabFormulaItem.static.Red_Color = "#D81F1F"  --红色
+LabFormulaItem.static.Red_Color = "#D81F1F"  --red
 
 function LabFormulaItem:initialize(transform)
     self.transform = transform
@@ -19,7 +19,7 @@ function LabFormulaItem:initialize(transform)
         self.itemRects[i] = itemData
     end
 end
----显示
+---display
 function LabFormulaItem:showState(datas)
     if #datas ~= #self.itemRects then
         ct.log("cycle_w15_laboratory03", "场景中的item个数与期望显示的个数不一致，或者传入的不是顺序表")

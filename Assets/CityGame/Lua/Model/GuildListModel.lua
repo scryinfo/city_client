@@ -12,7 +12,7 @@ function GuildListModel:initialize(insId)
 end
 
 function GuildListModel:OnCreate()
-    -- 网络回调注册
+    -- Network callback registration
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getSocietyList","gs.SocietyList", self.n_OnSocietyList, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","createSociety","gs.SocietyInfo", self.n_OnSocietyInfo, self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","joinSociety","gs.ByteStr", self.n_OnJoinSociety, self)

@@ -1,7 +1,6 @@
-﻿//滑动复用，使用bar的下拉刷新
-//未完善，当一只手指滑到限定位置之后，未离开滑动相应区域，另一只手接着滑动
-//这种情况在该版本未限制
-//xuyafang
+﻿//Slide multiplexing, use bar to pull down to refresh
+//Not perfect, when one finger slides to a limited position, it does not leave the corresponding area of the slide, the other hand then slides
+//This situation is not restricted in this version
 
 
 using System.Collections;
@@ -13,12 +12,12 @@ public class LoopDropfreshBar : MonoBehaviour
     public delegate void DlgOnLoopDropRefresh();
     public DlgOnLoopDropRefresh mOnDropfresh = null;
 
-    public float dropfreshPercent = 0.75f;  //下拉多少百分比算是刷新
+    public float dropfreshPercent = 0.75f;  //What percentage of the drop down is considered refresh
 
     private float mMaxBarSizeValue = -1;
 
     /// <summary>
-    /// 设置bar的size最大值
+    /// Set the maximum size of bar
     /// </summary>
     /// <param name="barSizeValue"></param>
     public void SetBarMaxSizeValue(float barSizeValue)
@@ -31,7 +30,7 @@ public class LoopDropfreshBar : MonoBehaviour
     }
 
     /// <summary>
-    /// 在scrollrect 结束drag时判断size是否达到预期
+    /// Determine whether the size reaches the expected value when the scrollrect ends the drag
     /// </summary>
     public void JudgeDropfreshOnEndDrag(float barValue, float barSize)
     {
@@ -44,12 +43,12 @@ public class LoopDropfreshBar : MonoBehaviour
         }
     }
 
-    //初始化
+    //initialization
     public void InitDropFresh(float dropPercent)
     {
         dropfreshPercent = dropPercent;
 
-        //测试
+        //test
         if (mOnDropfresh != null)
         {
             mOnDropfresh();

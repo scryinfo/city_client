@@ -31,7 +31,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 面板管理器
+        /// Panel Manager
         /// </summary>
         public static PanelManager GetPanelManager()
         {
@@ -39,7 +39,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 资源管理器
+        /// Resource manager
         /// </summary>
         public static ResourceManager GetResManager()
         {
@@ -47,7 +47,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 音乐管理器
+        /// Music manager
         /// </summary>
         public static SoundManager GetSoundManager()
         {
@@ -55,7 +55,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 建筑管理器
+        /// Building manager
         /// </summary>
         public static BuildManager GetBuildManager()
         {
@@ -63,7 +63,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 射线管理器
+        /// Ray Manager
         /// </summary>
         public static RayManager GetRayManager()
         {
@@ -71,7 +71,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// pbc/pblua函数回调
+        /// pbc/pblua function callback
         /// </summary>
         /// <param name="func"></param>
         public static void OnCallLuaFunc(LuaByteBuffer data, LuaFunction func)
@@ -81,7 +81,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// cjson函数回调
+        /// cjson function callback
         /// </summary>
         /// <param name="data"></param>
         /// <param name="func"></param>

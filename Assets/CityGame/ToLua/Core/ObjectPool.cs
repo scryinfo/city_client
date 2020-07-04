@@ -40,7 +40,7 @@ namespace LuaInterface
         }
 
         private List<PoolNode> list;
-        //同lua_ref策略，0作为一个回收链表头，不使用这个位置
+        //Same as lua_ref strategy, 0 is used as a recycling list head, this position is not used
         private PoolNode head = null;   
         private int count = 0;
 

@@ -33,7 +33,7 @@ function FlightRecordCtrl:Awake(go)
         self:rightPageFunc()
     end , self)
 
-    self.pageEvent = ScrollPageEventData.New()  --滑动翻页事件
+    self.pageEvent = ScrollPageEventData.New()  --Sliding page turning event
     self.pageEvent.mProvideData = FlightRecordCtrl.static.ProvideFunc
     self.pageEvent.mClearData = FlightRecordCtrl.static.ClearFunc
     self.pageEvent.mLeftEndFunc = FlightRecordCtrl.static.LeftEndFunc
@@ -97,16 +97,16 @@ end
 --
 FlightRecordCtrl.static.ClearFunc = function(transform) end
 
---正常状态
+--normal status
 FlightRecordCtrl.static.BtnNormalFunc = function()
     FlightRecordPanel.rightBtn.localScale = Vector3.one
     FlightRecordPanel.leftBtn.localScale = Vector3.one
 end
---到达最左边
+--Reach the far left
 FlightRecordCtrl.static.LeftEndFunc = function()
     FlightRecordPanel.leftBtn.localScale = Vector3.zero
 end
---到达最右边
+--Reach the far right
 FlightRecordCtrl.static.RightEndFunc = function()
     FlightRecordPanel.rightBtn.localScale = Vector3.zero
 end
@@ -140,12 +140,12 @@ function FlightRecordCtrl:backFunc()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
---翻页左按钮
+--Turn left button
 function FlightRecordCtrl:leftPageFunc()
     PlayMusEff(1002)
     FlightRecordPanel.scrollPage:PrevPage()
 end
---右翻页
+--Page right
 function FlightRecordCtrl:rightPageFunc()
     PlayMusEff(1002)
     FlightRecordPanel.scrollPage:NextPage()

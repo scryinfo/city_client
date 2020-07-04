@@ -32,7 +32,7 @@ function LabInventionBulbItem:initialize(viewRect, data)
     self:updateData()
     UpdateBeat:Add(self._update, self)
 end
---更新显示数据
+--Update display data
 function LabInventionBulbItem:updateData(data)
     self.bulbState = data.bulbState
     self.leftSec = data.leftSec
@@ -41,12 +41,12 @@ function LabInventionBulbItem:updateData(data)
 
     self:_setBulbState(self.bulbState)
 end
---清除数据
+--clear data
 function LabInventionBulbItem:cleanData()
     self.bubleObj = nil
     self.bulbState = LabInventionBulbItemState.Empty
 end
---设置
+--Set up
 function LabInventionBulbItem:_setBulbState(state)
     if state == LabInventionBulbItemState.Locked then
         self.lockIconImgTran.localScale = Vector3.one
@@ -70,7 +70,7 @@ function LabInventionBulbItem:_update()
         else
             self.remainTime = self.remainTime - UnityEngine.Time.unscaledDeltaTime
         end
-        self.ingImg.fillAmount = self.remainTime / self.phaseSec  --设置图片进度
+        self.ingImg.fillAmount = self.remainTime / self.phaseSec  --Set picture progress
 
         if self.remainTime < 0 then
             self.startTimeDown = false

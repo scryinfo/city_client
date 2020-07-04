@@ -40,23 +40,23 @@ function ResearchInstituteCtrl:Hide()
     RevenueDetailsMsg.close()
 end
 
----------------------------------------网络回调---------------------------------------
---进入查询研究所建筑信息
+---------------------------------------Network callback---------------------------------------
+--Enter to search for building information
 function ResearchInstituteCtrl:initializeData()
     if self.m_data then
-        --向服务器请求建筑详情
+        --Request building details from the server
         DataManager.OpenDetailModel(ResearchInstituteModel,self.m_data.insId)
         RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenTechnology',self.m_data.insId)
     end
 end
 
--- 收到回调， 刷新研究所信息
+-- Receiving the callback, refreshing the research information
 function ResearchInstituteCtrl:_receiveDetailTechnology(researchDataInfo)
-    -- 开业
+    -- Open
     ResearchInstitutePanel.openBusinessItem:initData(researchDataInfo.info, BuildingType.Laboratory)
     researchDataInfo.insId = self.m_data.insId
-    -- 建筑顶部组件
+    -- Building top components
     researchDataInfo.info.buildingType = BuildingType.Laboratory
     if ResearchInstitutePanel.topItem ~= nil then
         ResearchInstitutePanel.topItem:refreshData(researchDataInfo.info, function ()
@@ -64,10 +64,10 @@ function ResearchInstituteCtrl:_receiveDetailTechnology(researchDataInfo)
         end)
     end
 
-    -- 判断是否是开业状态，是不是自己打开对应显示不同的界面，以及气泡按钮的状态
+    -- Determine whether it is the opening state, whether you open the corresponding display different interface, and the status of the bubble button
     if researchDataInfo.info.state == "OPERATE" then
         ResearchInstitutePanel.groupTrans.localScale = Vector3.one
-        if researchDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then -- 别人
+        if researchDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then -- others
             ResearchInstitutePanel.bubbleMessageBtn.localScale = Vector3.one
             if self.groupMgr == nil then
                 self.groupMgr = BuildingInfoMainGroupMgr:new(ResearchInstitutePanel.groupTrans, self.researchluaBehaviour)
@@ -79,7 +79,7 @@ function ResearchInstituteCtrl:_receiveDetailTechnology(researchDataInfo)
                 self.groupMgr:RefreshData(researchDataInfo)
                 self.groupMgr:TurnOffAllOptions()
             end
-        else -- 自己
+        else -- self
             ResearchInstitutePanel.bubbleMessageBtn.localScale = Vector3.zero
             if self.groupMgr == nil then
                 self.groupMgr = BuildingInfoMainGroupMgr:new(ResearchInstitutePanel.groupTrans, self.researchluaBehaviour)
@@ -100,7 +100,7 @@ function ResearchInstituteCtrl:_receiveDetailTechnology(researchDataInfo)
     end
 end
 
--------------------------------------按钮点击事件-------------------------------------
+-------------------------------------Button click event-------------------------------------
 function ResearchInstituteCtrl:OpenBubbleMessage(go)
     PlayMusEff(1002)
     if go.m_data.info.id then
@@ -120,7 +120,7 @@ function ResearchInstituteCtrl:_clickCloseBtn()
     UIPanel.ClosePage()
 end
 
---今日营业额
+--Today's turnover
 function ResearchInstituteCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)

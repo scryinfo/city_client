@@ -11,7 +11,7 @@ require "City"
 AdvertisementPosModel = {};
 local this = AdvertisementPosModel;
 
---构建函数
+--Constructor
 function AdvertisementPosModel.New()
     return this;
 end

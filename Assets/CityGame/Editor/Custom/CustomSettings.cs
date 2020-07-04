@@ -18,8 +18,8 @@ public static class CustomSettings
     public static string toluaBaseType = FrameworkPath + "/ToLua/BaseType/";
 	public static string toluaLuaDir = FrameworkPath + "/ToLua/Lua";
 
-    //导出时强制做为静态类的类型(注意customTypeList 还要添加这个类型才能导出)
-    //unity 有些类作为sealed class, 其实完全等价于静态类
+    //Forced to be a static class type when exporting (note that customTypeList also needs to add this type to export)
+    //Unity some classes as sealed class, in fact completely equivalent to static class
     public static List<Type> staticClassTypes = new List<Type>
     {        
         typeof(UnityEngine.Application),
@@ -35,7 +35,7 @@ public static class CustomSettings
         typeof(UnityEngine.Graphics),
     };
 
-    //附加导出委托类型(在导出委托时, customTypeList 中牵扯的委托类型都会导出， 无需写在这里)
+    //Additional export delegate types (when exporting delegates, the delegate types involved in customTypeList will be exported, no need to write here)
     public static DelegateType[] customDelegateList = 
     {        
         _DT(typeof(Action)),                
@@ -47,10 +47,10 @@ public static class CustomSettings
         _DT(typeof(DG.Tweening.TweenCallback)),
     };
 
-    //在这里添加你要导出注册到lua的类型列表
+    //Add here a list of types you want to export and register to lua
     public static BindType[] customTypeList =
     {                
-        //------------------------为例子导出--------------------------------
+        //------------------------Export for example--------------------------------
         //_GT(typeof(TestEventListener)),
         //_GT(typeof(TestProtol)),
         //_GT(typeof(TestAccount)),
@@ -226,15 +226,15 @@ public static class CustomSettings
         _GT(typeof(FOWSystem)),
         _GT(typeof(Slide)),
         _GT(typeof(FunctionalGraph)),
-        _GT(typeof(ScrollPageOptimize)),  //滑动翻页组件
-        _GT(typeof(ScrollPageEventData)),  //滑动翻页事件
-        _GT(typeof(FlightScrollTool)),  //滑动复用
+        _GT(typeof(ScrollPageOptimize)),  //Sliding page turning component
+        _GT(typeof(ScrollPageEventData)),  //Sliding page turning event
+        _GT(typeof(FlightScrollTool)),  //Sliding multiplexing
         _GT(typeof(Dictionary<string, string[]>)),  //
-        _GT(typeof(VScrollLoopTool)),  //滑动复用
-        _GT(typeof(VScrollEventData)),  //滑动复用事件
-        _GT(typeof(QRCodeTest)),  //二维码
-        _GT(typeof(CheckAvailability)),  //二维码
-        _GT(typeof(EventTriggerMgr)),  //eventTrigger监听
+        _GT(typeof(VScrollLoopTool)),  //Sliding multiplexing
+        _GT(typeof(VScrollEventData)),  //Sliding multiplexing event
+        _GT(typeof(QRCodeTest)),  //QR code
+        _GT(typeof(CheckAvailability)),  //QR code
+        _GT(typeof(EventTriggerMgr)),  //eventTrigger monitoring
     };
 
     public static List<Type> dynamicList = new List<Type>()
@@ -261,14 +261,14 @@ public static class CustomSettings
         typeof(Rigidbody),
     };
 
-    //重载函数，相同参数个数，相同位置out参数匹配出问题时, 需要强制匹配解决
-    //使用方法参见例子14
+    //Overload function, the same parameter number, the same position out parameter matching problem, you need to force the solution
+    //How to use see example 14
     public static List<Type> outList = new List<Type>()
     {
         
     };
         
-    //ngui优化，下面的类没有派生类，可以作为sealed class
+    //ngui optimization, the following class has no derived class and can be used as a sealed class
     public static List<Type> sealedList = new List<Type>()
     {
         /*typeof(Transform),

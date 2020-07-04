@@ -73,7 +73,7 @@ function FlightChooseDateCtrl:_getComponent(go)
     self.yearPage = trans:Find("root/pageRoot/year")
     self:_yearItemsInit(self.yearPage)
 
-    --年月日
+    --date
     self.yearToggleText01 = trans:Find("root/toggleRoot/year/Text"):GetComponent("Text")
     self.monthToggleText02 = trans:Find("root/toggleRoot/month/Text"):GetComponent("Text")
     self.dayToggleText03 = trans:Find("root/toggleRoot/day/Text"):GetComponent("Text")
@@ -111,7 +111,7 @@ function FlightChooseDateCtrl:_toggleShowDate(str)
         self.dayPage.localScale = Vector3.one
     end
 end
---day item初始化
+--day item initialization
 function FlightChooseDateCtrl:_dayItemsInit(trans)
     local count = trans.childCount
     self.dayList = {}
@@ -168,7 +168,7 @@ function FlightChooseDateCtrl:updateDay()
     self:updateDateShow(year, month, 1)
     self:_showDay(year, month, 1)
 end
---更新顶部显示
+--Update the top display
 function FlightChooseDateCtrl:updateDateShow(year, month, day)
     local monthStr
     if month == 1 then
@@ -207,7 +207,7 @@ function FlightChooseDateCtrl:_weekInit(trans)
         self.weekList[i] = temp
     end
 end
---初始化年  --界面打开时初始化一次
+--Initialization year - initialize once when the interface opens
 function FlightChooseDateCtrl:_initYear(currentYear)
     local current = tonumber(currentYear)
     local before = current - 1
@@ -222,7 +222,7 @@ function FlightChooseDateCtrl:_initYear(currentYear)
     self.yearList[3]:setState(false)
     self.yearValue = self.yearList[2]
 end
---初始化年  --界面打开时初始化一次
+--Initialization year - initialize once when the interface opens
 function FlightChooseDateCtrl:_initMonth(currentMonth)
     for i, monthItem in ipairs(self.monthList) do
         if i == currentMonth then

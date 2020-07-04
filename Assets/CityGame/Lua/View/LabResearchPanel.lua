@@ -15,11 +15,11 @@ end
 function LabResearchPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.levelText = transform:Find("bottomRoot/left/levelRoot/levelText"):GetComponent("Text")
-    this.progressSuccessBtn = transform:Find("bottomRoot/left/progressRoot/successImg")  --完成时显示的按钮
+    this.progressSuccessBtn = transform:Find("bottomRoot/left/progressRoot/successImg")  --Button displayed when finished
     this.workingImgRootTran = transform:Find("bottomRoot/left/progressRoot/workingImg")
-    this.progressWorkingImg = transform:Find("bottomRoot/left/progressRoot/workingImg/progressImg"):GetComponent("Image")  --正在发明中，设置fill amount
-    this.timeDownText = transform:Find("bottomRoot/left/progressRoot/workingImg/timeDownText"):GetComponent("Text")  --倒计时
-    this.emptyTextTran = transform:Find("bottomRoot/left/progressRoot/emptyText")  --还未点击研究时的显示
+    this.progressWorkingImg = transform:Find("bottomRoot/left/progressRoot/workingImg/progressImg"):GetComponent("Image")  --Inventing, setting fill amount
+    this.timeDownText = transform:Find("bottomRoot/left/progressRoot/workingImg/timeDownText"):GetComponent("Text")  --Countdown
+    this.emptyTextTran = transform:Find("bottomRoot/left/progressRoot/emptyText")  --Display when the study has not been clicked
 
     this.itemNameText = transform:Find("bottomRoot/right/titleBg/itemNameText"):GetComponent("Text")
     this.iconImg = transform:Find("bottomRoot/right/iconImg"):GetComponent("Image")
@@ -35,7 +35,7 @@ function LabResearchPanel.InitPanel()
     this.workingImgTran = transform:Find("bottomRoot/right/researchBtnParent/workingImg")
     this.notEnoughImgTran = transform:Find("bottomRoot/right/researchBtnParent/notEnoughImg")
 end
---设置
+--Setup
 function LabResearchPanel.setBulbState(state)
     if state == LabInventionBulbItemState.Empty then
         this.emptyTextTran.localScale = Vector3.one
@@ -59,7 +59,7 @@ function LabResearchPanel.setBulbState(state)
         this.progressSuccessBtn.localScale = Vector3.one
     end
 end
---显示填充线的信息
+--Display information about filled lines
 function LabResearchPanel.showLine(datas)
     local count = #datas
     if count == 1 then

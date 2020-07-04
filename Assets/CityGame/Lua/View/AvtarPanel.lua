@@ -38,13 +38,13 @@ function AvtarPanel.InitPanel()
     this.luckyRoot = transform:Find("topRoot/Lucky")
     this.luckInfoBtn = transform:Find("topRoot/Lucky/ExplainBtn")
     this.luckText01 = transform:Find("infoRoot/Text"):GetComponent("Text")  --
-    this.luckValueText = transform:Find("infoRoot/Text/valueText"):GetComponent("Text")  --花费的幸运券
-    this.luckTipRoot = transform:Find("luckyTip")  --幸运券提示
+    this.luckValueText = transform:Find("infoRoot/Text/valueText"):GetComponent("Text")  --Lucky coupons spent
+    this.luckTipRoot = transform:Find("luckyTip")  --Lucky coupon tips
     this.luckTipBtn = transform:Find("luckyTip/btn")
     this.luckTipText02 = transform:Find("luckyTip/competitivenessRoot/tooltip/title"):GetComponent("Text")
     this.luckTipText03 = transform:Find("luckyTip/competitivenessRoot/tooltip/content"):GetComponent("Text")
 end
---数据初始化
+--Lucky coupon tips
 function AvtarPanel.InitLanguage()
     this.topticText.text = GetLanguage(10060011)
     this.luckyText.text = GetLanguage(17030001)

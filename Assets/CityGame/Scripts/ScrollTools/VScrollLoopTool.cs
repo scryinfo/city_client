@@ -1,4 +1,4 @@
-﻿//滑动复用
+﻿//Sliding multiplexing
 
 using System.Collections;
 using System.Collections.Generic;
@@ -8,23 +8,23 @@ using UnityEngine.UI;
 
 public class VScrollLoopTool : MonoBehaviour
 {
-    public GameObject mPrefab;  //预制
+    public GameObject mPrefab;  //Prefab
     public ScrollRect mScrollRect;
-    public float mSpaceH = 6;  //间隔
-    public Vector2 mItemStartPos = new Vector2(-130, -45);  //开始的位置
+    public float mSpaceH = 6;  //interval
+    public Vector2 mItemStartPos = new Vector2(-130, -45);  //Starting position
     
-    private float mDetailHeight;  //预制的实际高度
+    private float mDetailHeight;  //Prefabricated actual height
     private Camera mUICamera;
     private RectTransform mContentRect;
-    private Vector2 mScrollTopBottomV2 = Vector2.zero;  //scroll顶部底部的屏幕坐标y
-    private float mContentHeight;  //content的高度
+    private Vector2 mScrollTopBottomV2 = Vector2.zero;  //Screen coordinates y at the top and bottom of scroll
+    private float mContentHeight;  //content height
     private int mTotalCount;
 
-    ////private List<Vector2> mContentPosList = new List<Vector2>();  //定位需要用到
-    private Dictionary<int, RectTransform> mShowItemList = new Dictionary<int, RectTransform>();  //在屏幕显示的item
+    ////private List<Vector2> mContentPosList = new List<Vector2>();  //Positioning needs to be used
+    private Dictionary<int, RectTransform> mShowItemList = new Dictionary<int, RectTransform>();  //Item displayed on the screen
     private VScrollEventData mEvent = new VScrollEventData();
 
-    //初始化设置
+    //Initialize settings
     public void InitComponent(VScrollEventData func)
     {
         if (mUICamera == null)
@@ -41,14 +41,14 @@ public class VScrollLoopTool : MonoBehaviour
         mDetailHeight = mPrefab.GetComponent<RectTransform>().rect.size.y;
     }
 
-    //拿到具体数据开始生成
+    //Get specific data and start generating
     public void InitData(int totalCount)
     {
         mTotalCount = totalCount;
         float height = 0;
         height += mTotalCount * (mDetailHeight + mSpaceH);
         mContentRect.sizeDelta = new Vector2(mContentRect.sizeDelta.x, height);
-        mScrollRect.content.anchoredPosition = Vector2.zero;  //计算content高度以及初始化content位置
+        mScrollRect.content.anchoredPosition = Vector2.zero;  //Calculate content height and initialize content position
         mContentHeight = height;
 
         CalculateShowIds();  //
@@ -68,7 +68,7 @@ public class VScrollLoopTool : MonoBehaviour
         CalculateShowIds();
     }
 
-    //获取Scroll的顶部底部屏幕坐标
+    //Get the top and bottom screen coordinates of Scroll
     private void GetContentTopBottonScreenPos()
     {
         Vector2 pos = WorldToScreenPoint(mScrollRect.transform.position);
@@ -88,8 +88,8 @@ public class VScrollLoopTool : MonoBehaviour
     //
     private void CalculateShowIds()
     {
-        List<int> ids = GetValuableIds();  //屏幕内需要显示的ids
-        Dictionary<int, float> idPosy = new Dictionary<int, float>();  //id对应的高度
+        List<int> ids = GetValuableIds();  //Ids to be displayed on the screen
+        Dictionary<int, float> idPosy = new Dictionary<int, float>();  //id height
 
         float startPosY = GetHeightById(ids[0]);
         idPosy.Add(ids[0], startPosY);
@@ -105,7 +105,7 @@ public class VScrollLoopTool : MonoBehaviour
             {
                 if (!mShowItemList.ContainsKey(item.Key))
                 {
-                    CreateItem(item.Key, new Vector2(mItemStartPos.x, item.Value));  //需要增加的
+                    CreateItem(item.Key, new Vector2(mItemStartPos.x, item.Value));  //Need to increase
                 }
             }
             List<int> needRemove = new List<int>();
@@ -131,7 +131,7 @@ public class VScrollLoopTool : MonoBehaviour
         }
     }
 
-    //新增item
+    //Add item
     private void CreateItem(int index, Vector2 currentPos)
     {
         RectTransform rect = ScrollPool.GetInstance().GetValuableItem(mPrefab.name).GetComponent<RectTransform>();
@@ -157,10 +157,10 @@ public class VScrollLoopTool : MonoBehaviour
     private List<int> GetValuableIds()
     {
         Vector2 contentPos = WorldToScreenPoint(mScrollRect.content.position);
-        float spacingTop = contentPos.y - mScrollTopBottomV2.x;  //屏幕顶部到当前content顶部的间距
+        float spacingTop = contentPos.y - mScrollTopBottomV2.x;  //The distance from the top of the screen to the top of the current content
         float spacingBottom = contentPos.y - mScrollTopBottomV2.y;
         int firstId = GetRangeId(spacingTop);
-        int lastId = GetRangeId(spacingBottom) + 2;  //2是为了防止穿帮
+        int lastId = GetRangeId(spacingBottom) + 2;  //2 is to prevent wearing
 
         if (lastId > mTotalCount - 1)
         {
@@ -173,7 +173,7 @@ public class VScrollLoopTool : MonoBehaviour
         }
         return list;
     }
-    //获取位置对应的id
+    //Get the id corresponding to the location
     private int GetRangeId(float height)
     {
         height -= Mathf.Abs(mItemStartPos.y);
@@ -185,10 +185,10 @@ public class VScrollLoopTool : MonoBehaviour
 
     #endregion
 
-    #region 坐标转换
+    #region Coordinate conversion
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    private float mScreenRatio = 1;  //屏幕坐标缩放尺寸
-    //计算屏幕缩放
+    private float mScreenRatio = 1;  //Screen coordinate scaling
+    //Calculate screen zoom
     private void InitScreenRatio()
     {
         float screenRatio = (float)Screen.width / (float)Screen.height;
@@ -202,7 +202,7 @@ public class VScrollLoopTool : MonoBehaviour
             mScreenRatio = (float)1080 / (float)Screen.height;
         }
     }
-    //世界坐标转屏幕坐标
+    //World coordinates to screen coordinates
     public Vector3 WorldToScreenPoint(Vector3 wprldPos)
     {
         float offset = mScreenRatio;

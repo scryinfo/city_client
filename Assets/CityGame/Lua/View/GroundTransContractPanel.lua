@@ -3,7 +3,7 @@
 --- Created by xuyafang.
 --- DateTime: 2018/12/27 20:16
 ---GroundTransContractPanel
----土地购买合约
+---Land purchase contract
 local transform
 GroundTransContractPanel = {}
 local this = GroundTransContractPanel
@@ -47,7 +47,7 @@ function GroundTransContractPanel.InitPanel()
     this.rentDailyText07 = transform:Find("centerRoot/rent/Text (3)"):GetComponent("Text")
     this.totalText08 = transform:Find("centerRoot/total/Text"):GetComponent("Text")
 
-    --新增土地繁荣度，价格，矿工费,公司名称
+    --New land prosperity, price, miner's fee, company name
     this.prosperityText = transform:Find("centerRoot/buy/prosperity/prosperityText"):GetComponent("Text")
     this.prosperityValue = transform:Find("centerRoot/buy/prosperity/prosperityValue"):GetComponent("Text")
     this.priceText = transform:Find("centerRoot/buy/price/priceText"):GetComponent("Text")

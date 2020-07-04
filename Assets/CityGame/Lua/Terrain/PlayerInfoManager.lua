@@ -1,10 +1,10 @@
 PlayerInfoManager={}
---参数
-local PlayerInfoDatas                       --本地PlayerInfo数据
-local PlayerInfoWriteDatas                  --向服务器申请PlayerInfo数据表
+--parameter
+local PlayerInfoDatas                       --local playerinfo data
+local PlayerInfoWriteDatas                  --Apply playerinfo to the server for the data form
 
--------------------------------------------------外部无法调用信息----------------------------------------------
--- 向服务器查询好友信息
+-------------------------------------------------external Unable to call information----------------------------------------------
+-- Query friend information from the server
 local function m_QueryPlayerInfoMessage(friendsIds)
     DataManager.ModelSendNetMes("gscode.OpCode", "queryPlayerInfo","gs.Bytes",{ ids = friendsIds })
 end
@@ -42,13 +42,13 @@ function PlayerInfoManager.GetPalayerInfos(playerIds,funcs,classes)
     end
 end
 
---获取某个PlayInfo数据
+--Get some PlayerInfo data
 function PlayerInfoManager.GetPalayerInfo(playerId,func,class)
     if playerId ~= nil or  PlayerInfoWriteDatas == {} then
         return
     end
-    if PlayerInfoDatas[playerId] ~= nil then    --检测本地PlayerInfo数据是否缓存
-        --直接返回数据
+    if PlayerInfoDatas[playerId] ~= nil then    --Check whether localPlayerInfo data is cached
+        --Return data directly
         class.func(class,PlayerInfoDatas[playerId])
     else
         local tempTabel ={}
@@ -58,22 +58,22 @@ function PlayerInfoManager.GetPalayerInfo(playerId,func,class)
 
         local isFirst = false
         if PlayerInfoWriteDatas[playerId] == nil then
-            --注册某个ID的申请
+            --Register for an application
             PlayerInfoWriteDatas[playerId] = {}
             isFirst = true
         end
 
-        --加入回调方法组
+        --Join callback method group
         table.insert(PlayerInfoWriteDatas[playerId],tempTabel)
 
-        ----判断该实例类是否已请求过相同数据--TODO：//考虑是否删除判定
+        ----Determine whether the instance class has requested the same data--TODO：//Consider whether to delete the judgment
         --for i, item in ipairs(PlayerInfoWriteDatas[playerId]) do
         --    if  item.id == playerId then
         --        return
         --    end
         --end
 
-        --只有第一次才向服务器请求
+        --Only request the server for the first time
         if isFirst == true then
             m_QueryPlayerInfoMessage(playerId)
         end

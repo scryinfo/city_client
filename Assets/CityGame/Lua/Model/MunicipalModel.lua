@@ -13,21 +13,21 @@ function MunicipalModel:initialize(insId)
 end
 
 function MunicipalModel:OnCreate()
-    ----注册 AccountServer消息
-DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailPublicFacility","gs.PublicFacility",self.n_getdetailPublicFacility)--广告细节
-DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adAddSlot","gs.AddSlotACK",self.n_getaddSlot)--添加槽位
-DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adDelSlot","gs.AdDelSlot",self.n_deleteSlot)--删除槽位
-DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adPutAdToSlot","gs.AddAdACK",self.n_adPutAdToSlot)--打广告
-DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adSetSlot","gs.AdSetSlot",self.n_getSetSlot)--设置槽位
-DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adSlotTimeoutInform","gs.AdSlotTimeoutInform",self.n_getadSlotTimeoutInform)--槽位过期
-DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adDelAdFromSlot","gs.AdDelAdFromSlot",self.n_getdeletAd)--删广告
-DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adBuySlot","gs.AdBuySlot",self.n_getBuySlot)--买槽位
+    ----Register AccountServer Message
+DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailPublicFacility","gs.PublicFacility",self.n_getdetailPublicFacility)--Advertising details
+DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adAddSlot","gs.AddSlotACK",self.n_getaddSlot)--Add slot
+DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adDelSlot","gs.AdDelSlot",self.n_deleteSlot)--Delete the slot
+DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adPutAdToSlot","gs.AddAdACK",self.n_adPutAdToSlot)--Advertisement
+DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adSetSlot","gs.AdSetSlot",self.n_getSetSlot)--Set the slot
+DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adSlotTimeoutInform","gs.AdSlotTimeoutInform",self.n_getadSlotTimeoutInform)--Slot expired
+DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adDelAdFromSlot","gs.AdDelAdFromSlot",self.n_getdeletAd)--Delete advertisement
+DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","adBuySlot","gs.AdBuySlot",self.n_getBuySlot)--Buy slot
 end
----广告细节发包
+---Advertisement details
 function MunicipalModel:m_detailPublicFacility(buildingID)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailPublicFacility","gs.Id",{ id = buildingID})
 end
----广告细节收包
+---Advertisement details package
 function MunicipalModel:n_getdetailPublicFacility(lMsg)
 
     MunicipalPanel.buildingId=lMsg.info.id
@@ -61,68 +61,68 @@ function MunicipalModel:n_getdetailPublicFacility(lMsg)
     DataManager.ControllerRpcNoRet(self.insId,"MunicipalCtrl", 'c_receiveParkData',lMsg)
     Event.Brocast("OnClick_backBtn")
 end
----添加槽位发包
+---Add slots to send packets
 function MunicipalModel:m_addSlot(buildingID,minDayToRent,maxDayToRent,rentPreDay)
     DataManager.ModelSendNetMes("gscode.OpCode", "adAddSlot","gs.AddSlot",
     { buildingId=buildingID,minDayToRent=minDayToRent,maxDayToRent=maxDayToRent,rentPreDay=rentPreDay})
 end
----添加槽位收包
+---Add slot to receive package
 function MunicipalModel:n_getaddSlot(stream)
     DataManager.DetailModelRpcNoRet(self.insId, 'm_detailPublicFacility',self.insId)
 end
----删除槽位发包
+---Remove the slot to send packets
 function MunicipalModel:m_deleteSlot(buildingId,slotId)
     DataManager.ModelSendNetMes("gscode.OpCode", "adDelSlot","gs.AdDelSlot",{ buildingId=buildingId,slotId=slotId})
 end
----删除槽位收包
+---Delete slots to receive packages
 function MunicipalModel:n_deleteSlot(stream)
     DataManager.DetailModelRpcNoRet(self.insId, 'm_detailPublicFacility',self.insId)
 end
----打广告发包
+---Advertisement
 function MunicipalModel:m_adPutAdToSlot(Slotid,metaId,type,buildingId)
 DataManager.ModelSendNetMes("gscode.OpCode", "adPutAdToSlot","gs.AddAd",
 {id=Slotid ,metaId=metaId,type=type,buildingId=buildingId})
 end
----打广告收包
+---Advertisement package
 function MunicipalModel:n_adPutAdToSlot(lMsg)
     if not self.manger.adList[lMsg.a.metaId] then
         self.manger.adList[lMsg.a.metaId]={}
     end
     table.insert(self.manger.adList[lMsg.a.metaId],lMsg.a)
 end
----设置门票发包
+---Set up ticket issuance
 function MunicipalModel:m_Setticket(buildingId,price)
 DataManager.ModelSendNetMes("gscode.OpCode", "adSetTicket","gs.AdSetTicket", { buildingId=buildingId,price=price})
 end
----设置槽位发包
+----Set the slot to send packets
 function MunicipalModel:m_SetSlot(buildingId,slotId,rent,minDayToRent,maxDayToRent)
     DataManager.ModelSendNetMes("gscode.OpCode", "adSetSlot","gs.AdSetSlot",
             { buildingId=buildingId,slotId=slotId,rentPreDay=rent,minDayToRent=minDayToRent,maxDayToRent=maxDayToRent})
 end
----设置槽位收包
+---Set the slot to receive the package
 function MunicipalModel:n_getSetSlot(stream)
     DataManager.DetailModelRpcNoRet(self.insId, 'm_detailPublicFacility',self.insId)
 end
----槽位过期收包
+---Slots expired to receive packages
 function MunicipalModel:n_getadSlotTimeoutInform(lMsg)
      --self.manger
 
 end
----删广告发包
+---Delete advertising package
 function MunicipalModel:m_DelAdFromSlot(buildingID,adid)
  DataManager.ModelSendNetMes("gscode.OpCode", "adDelAdFromSlot","gs.AdDelAdFromSlot",{ buildingId=buildingID,adId=adid})
 end
----删广告收包
+---Delete advertising package
 function MunicipalModel:n_getdeletAd(stream)
 
 end
----购买槽位发包
+---Buy slot to send package
 function MunicipalModel:m_buySlot(buildingId,slotId,day)
 DataManager.ModelSendNetMes("gscode.OpCode", "adBuySlot","gs.AdBuySlot",{ buildingId=buildingId,slotId=slotId,day=day})
 end
----购买槽位收包
+---Buy slot to receive package
 function MunicipalModel:n_getBuySlot(stream)
-    ---购买槽位成功
+    ---Successful purchase slot
     Event.Brocast("SmallPop","Successful adjustment",57)
 
 end

@@ -7,9 +7,9 @@
 EvaCtrl = class("EvaCtrl", UIPanel)
 UIPanel:ResgisterOpen(EvaCtrl)
 
-EvaCtrl.static.PropertyTrueItemPath = "View/Eva/PropertyTrueItem"  -- 可升级属性预制路径
-EvaCtrl.static.PropertyFalseItemPath = "View/Eva/PropertyFalseItem"  -- 不可升级属性预制路径
-EvaCtrl.static.brandIcon = -- icon显示配置
+EvaCtrl.static.PropertyTrueItemPath = "View/Eva/PropertyTrueItem"  -- Upgradeable attribute prefabricated path
+EvaCtrl.static.PropertyFalseItemPath = "View/Eva/PropertyFalseItem"  -- Non-upgradable attribute prefabricated path
+EvaCtrl.static.brandIcon = -- icon display configuration
 {
     [13] = "Assets/CityGame/Resources/Atlas/Company/SuperMarket_3x3.png",
     [14] = "Assets/CityGame/Resources/Atlas/Company/HomeHouse_3X3.png",
@@ -42,22 +42,22 @@ function EvaCtrl:Awake()
     luaBehaviour:AddClick(EvaPanel.technologyBtn.gameObject, self.OnTechnology, self)
     luaBehaviour:AddClick(EvaPanel.marketBtn.gameObject, self.OnMarket, self)
 
-    -- Eva节点2
+    -- Eva node 2
     self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.evaOptionTwoSource.mProvideData = EvaCtrl.static.evaOptionTwoData
     self.evaOptionTwoSource.mClearData = EvaCtrl.static.evaOptionTwoClearData
 
-    -- Eva节点3
+    -- Eva node3
     self.evaOptionThereSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.evaOptionThereSource.mProvideData = EvaCtrl.static.evaOptionThereData
     self.evaOptionThereSource.mClearData = EvaCtrl.static.evaOptionThereClearData
 
-    -- 属性节点
+    -- Attribute node
     self.propertySource = UnityEngine.UI.LoopScrollDataSource.New()
     self.propertySource.mProvideData = EvaCtrl.static.propertyData
     self.propertySource.mClearData = EvaCtrl.static.propertyClearData
 
-    -- 保存实例
+    -- Save the instance
     EvaCtrl.static.evaCtrl = self
     self.resultTab = {EvaPanel.ResultRootO, EvaPanel.ResultRootTwo, EvaPanel.ResultRootThere}
 end
@@ -66,7 +66,7 @@ function EvaCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
 
-    -- 多语言适配
+    -- Multilingual adaptation
     EvaPanel.titleText.text = GetLanguage(31010043)
     EvaPanel.addBtnText.text = GetLanguage(31010013)
     EvaPanel.technologyTitleText.text = GetLanguage(31010062)
@@ -80,19 +80,19 @@ end
 
 function EvaCtrl:Hide()
     self:_removeListener()
-    -- Eva选择记录的个数
+    -- Eva chooses the number of records
     self.evaRecordData = nil
-    -- eva界面上总的eva数据
+    -- Total eva data on the eva interface
     self.allEvaData = nil
-    -- eva界面上结构数据
+    -- Structural data on the eva interface
     self.allUIData = nil
-    -- 当前点数数据
+    -- Current point data
     self.buildingPoint = nil
-    -- 加点的点数数据，用于界面上显示
+    -- Added point data for displaying on the interface
     self.addData = nil
-    -- 加点的eva数据，用于给服务器发加点的消息结构
+    -- Dotted eva data, used to send dotted message structure to the server
     self.addEvaData = nil
-    -- 加点的eva的等级和当前经验数据，用于界面上显示
+    -- Dotted eva level and current experience data, used for display on the interface
     self.addEvaLvData = nil
     UIPanel.Hide(self)
 end
@@ -102,34 +102,34 @@ function EvaCtrl:Close()
     UIPanel.Close(self)
 end
 
--- 初始化基本数据
+-- Initialize basic data
 function EvaCtrl:updateData()
-    -- Eva选择记录的个数
+    -- Eva chooses the number of records
     self.evaRecordData = {}
-    -- eva界面上总的eva数据
+    -- Total eva data on the eva interface
     self.allEvaData = {}
-    -- eva界面上结构数据
+    --Structural data on the eva interface
     self.allUIData = {}
-    -- 当前点数数据
+    -- Current point data
     self.buildingPoint = {}
     -- eva界面上总的加点的点数值
     --self.allEvaAddPoint = {}
-    -- 加点的点数数据，用于界面上显示
+    -- Added point data for displaying on the interface
     self.addData = {}
-    -- 加点的eva数据，用于给服务器发加点的消息结构
+    -- Dotted eva data, used to send dotted message structure to the server
     self.addEvaData = {}
-    -- 加点的eva的等级和当前经验数据，用于界面上显示
+    -- Dotted eva level and current experience data, used for display on the interface
     self.addEvaLvData = {}
-    -- 刷新加点按钮显示
+    -- Refresh the dotted button display
     self:SetAddBtnState(false)
-    -- 刷新提示小窗口显示
+    -- Refresh prompt small window display
     self:_showIntroduction( false )
 
-    -- 生成标题item
+    -- Generate title item
     if self.evaTitleItem then
         DataManager.DetailModelRpcNoRet(OpenModelInsID.EvaCtrl, 'm_QueryMyEva', 11)
     else
-        -- 生成大标题
+        -- Generate headlines
         self.evaTitleItem = {}
         for i, v in ipairs(EvaConfig) do
             local go = ct.InstantiatePrefab(EvaPanel.evaTitleItem)
@@ -147,13 +147,13 @@ function EvaCtrl:updateData()
     end
 end
 
--- eva小提示是否显示
+-- Whether eva tips are displayed
 function EvaCtrl:_showIntroduction(isShow)
     EvaPanel.introductionImage.localScale = isShow and Vector3.one or Vector3.zero
     EvaPanel.closeIntroductionBtn.localScale = isShow and Vector3.one or Vector3.zero
 end
 
--- 显示建筑的科技点数、市场点数
+-- Display the technology points and market points of the building
 function EvaCtrl:_showTechnologyAndMarketPoint(index)
     local point = self.buildingPoint[index]
     EvaPanel.technologyText.text = tostring(point.sciencePoint.pointNum)
@@ -167,15 +167,15 @@ function EvaCtrl:_showTechnologyAndMarketPoint(index)
     end
 end
 
--- 清理Eva数据以及界面显示
+-- Clear Eva data and interface display
 function EvaCtrl:_clearEvaDataAndView()
-    -- 数据
+    -- data
     self.addData = {}
     self.addEvaData = {}
     self.addEvaLvData = {}
     --self.allEvaAddPoint = {}
 
-    -- 界面上显示的加点多少
+    -- How many plus points are displayed on the interface
     for _, v in ipairs(self.evaTitleItem) do
         v:_setAddNumber()
         v:_setMarketAddNumber()
@@ -189,16 +189,16 @@ function EvaCtrl:_clearEvaDataAndView()
         j:_setMarketAddNumber()
     end
 
-    -- 关闭加点，并清理加点的界面数据
+    -- Turn off Dotted, and clear the interface data of Dotted
     for _, i in pairs(EvaCtrl.propertyScript) do
         i:_setAddExNumInputField("0")
     end
 end
--------------------------------------------------------------- 按钮点击事件 --------------------------------------------------------
--- 关闭Eva界面
+-------------------------------------------------------------- Button click event --------------------------------------------------------
+-- Close Eva interface
 function EvaCtrl:OnBack(go)
     PlayMusEff(1002)
-    -- 判断有没有加点数据，如果有，则提示，没有则退出
+    -- Determine if there is any additional data, if there is, then prompt, if not, exit
     if go.addEvaData then
         local isHaveEvaAddData
         for _, v in pairs(go.addEvaData) do
@@ -208,7 +208,7 @@ function EvaCtrl:OnBack(go)
         if isHaveEvaAddData then
             local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
                         content = GetLanguage(31010023),func = function()
-                    -- 清理eva数据
+                    -- Clean eva data
                     go:_clearEvaDataAndView()
                     UIPanel.ClosePage()
                 end  }
@@ -221,7 +221,7 @@ function EvaCtrl:OnBack(go)
     end
 end
 
--- 加点，向服务器发起加点消息
+-- Add point, initiate a point message to the server
 function EvaCtrl:OnAdd(go)
     PlayMusEff(1002)
     local evas = {}
@@ -236,7 +236,7 @@ function EvaCtrl:OnAdd(go)
     go:_clearEvaDataAndView()
 end
 
---显示eva介绍
+--Show eva introduction
 function EvaCtrl:OnTechnology(go)
     PlayMusEff(1002)
     go:_showIntroduction( true )
@@ -245,7 +245,7 @@ function EvaCtrl:OnTechnology(go)
     EvaPanel.introductionText.text = "科技点数提示！"
 end
 
---显示eva介绍
+--Show eva introduction
 function EvaCtrl:OnMarket(go)
     PlayMusEff(1002)
     go:_showIntroduction( true )
@@ -254,39 +254,39 @@ function EvaCtrl:OnMarket(go)
     EvaPanel.introductionText.text = "市场点数提示！"
 end
 
---关闭eva小提示
+--Turn off eva tips
 function EvaCtrl:OnCloseTips(go)
     PlayMusEff(1002)
-    -- 关闭eva小提示
+    -- Turn off eva tips
     go:_showIntroduction( false )
 end
--------------------------------------------------------------- 网络消息相关 --------------------------------------------------------
--- 打开model
+-------------------------------------------------------------- Network news --------------------------------------------------------
+-- Open model
 function EvaCtrl:initInsData()
     DataManager.OpenDetailModel(EvaModel, OpenModelInsID.EvaCtrl)
 end
 
--- 监听Model层网络回调
+-- Listen to the model layer network callback
 function EvaCtrl:_addListener()
     Event.AddListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
     Event.AddListener("c_OnUpdateMyEvas", self.c_OnUpdateMyEvas, self)
 end
 
--- 注销model层网络回调
+-- Cancel the model layer network callback
 function EvaCtrl:_removeListener()
     Event.RemoveListener("c_OnQueryMyEva", self.c_OnQueryMyEva, self)
     Event.RemoveListener("c_OnUpdateMyEvas", self.c_OnUpdateMyEvas, self)
 end
 
--- 服务器查询Eva，并把Eva信息保存下來，并默认显示第一项
+-- The server queries Eva, saves the Eva information, and displays the first item by default
 function EvaCtrl:c_OnQueryMyEva(buildingEva)
-    -- 当前点数的Id
+    -- Id of current point
     local buildingIndex = buildingEva.buildingType - 10
 
-    -- 当前点数
+    -- Current points
     self.buildingPoint[buildingIndex] = buildingEva.buildingPoint
 
-    -- eva数据
+    -- eva data
     self.allEvaData[buildingIndex] = {}
     for _, v in ipairs(buildingEva.eva) do
         if self.allEvaData[buildingIndex][v.at] == nil then
@@ -295,7 +295,7 @@ function EvaCtrl:c_OnQueryMyEva(buildingEva)
         self.allEvaData[buildingIndex][v.at][v.bt] = v
     end
 
-    -- 实际要显示的数据
+    -- The actual data to be displayed
     self.allUIData[buildingIndex] = ct.deepCopy(EvaConfig[buildingIndex])
     if buildingIndex == 1 then
         for i = #self.allUIData[buildingIndex].option, 1, -1 do
@@ -313,20 +313,20 @@ function EvaCtrl:c_OnQueryMyEva(buildingEva)
         end
     end
 
-    -- 默认打开第一个选项
+    -- The first option is opened by default
     self.evaTitleItem[buildingIndex]:_onClickBtn()
 end
 
--- 服务器返回的Eva加点
+-- Dot the Eva returned by the server
 function EvaCtrl:c_OnUpdateMyEvas(buildingEvas)
     Event.Brocast("SmallPop", GetLanguage(31010041),80)
 
-    -- 刷新eva的数据
+    -- Refresh eva's data
     for i, v in ipairs(buildingEvas.buildingEvas) do
-        -- 当前点数的Id
+        -- Id of current point
         local buildingIndex = v.buildingType - 10
 
-        -- 当前点数
+        -- Current points
         self.buildingPoint[buildingIndex] = v.buildingPoint
 
         for a, b in ipairs(v.eva) do
@@ -334,7 +334,7 @@ function EvaCtrl:c_OnUpdateMyEvas(buildingEvas)
         end
     end
 
-    -- 刷新加点的数据
+    -- Refresh the dotted data
     for _, n in pairs(EvaCtrl.propertyScript) do
         n.data = self.allEvaData[self.evaRecordData[1]][n.data.at][n.data.bt]
     end
@@ -343,8 +343,8 @@ function EvaCtrl:c_OnUpdateMyEvas(buildingEvas)
     self:SetAddBtnState(false)
 end
 
--------------------------------------------------------------- 滑动复用相关 --------------------------------------------------------
--- Eva选项2信息显示
+-------------------------------------------------------------- Sliding multiplexing --------------------------------------------------------
+-- Eva option 2 information display
 EvaCtrl.static.evaOptionTwoData = function(transform, idx)
     idx = idx + 1
     EvaCtrl.optionTwoScript[idx] = EvaTitleItemTwo:new(transform, 2, idx)
@@ -353,7 +353,7 @@ end
 EvaCtrl.static.evaOptionTwoClearData = function(transform)
 end
 
--- Eva选项3信息显示
+-- Eva option 3 information display
 EvaCtrl.static.evaOptionThereData = function(transform, idx)
     idx = idx + 1
     EvaCtrl.optionThereScript[idx] = EvaTitleItemThere:new(transform, 3, idx)
@@ -362,7 +362,7 @@ end
 EvaCtrl.static.evaOptionThereClearData = function(transform)
 end
 
--- 属性信息显示
+-- Property information display
 EvaCtrl.static.propertyData = function(transform, idx)
     idx = idx + 1
     EvaCtrl.propertyScript[idx] = PropertyTrueItem:new(transform, EvaCtrl.propertyAllData[1][idx], EvaCtrl.propertyAllData[2][idx])
@@ -371,35 +371,35 @@ end
 EvaCtrl.static.propertyClearData = function(transform)
 end
 
--- 刷新Eva滑动选项2的信息
+-- Refresh Eva sliding option 2 information
 function EvaCtrl:ShowOptionTwo(itemNumber)
     EvaCtrl.optionTwoScript = {}
     EvaPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Eva/EvaBtnTwoItem")
     --EvaPanel.optionTwoScroll:RefillCells()
 end
 
--- 刷新Eva滑动选项3的信息
+-- Refresh Eva sliding option 3 information
 function EvaCtrl:ShowOptionThere(itemNumber)
     EvaCtrl.optionThereScript = {}
     EvaPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Eva/EvaBtnThereItem")
     --EvaPanel.optionThereScroll:RefillCells()
 end
 
--------------------------------------------------------------- 界面显示 --------------------------------------------------------
--- 生成Eva属性item
+-------------------------------------------------------------- Interface display --------------------------------------------------------
+-- Generate Eva attribute item
 function EvaCtrl:CreatePropertyItem(propertyTab)
     if not propertyTab then
         return
     end
     EvaCtrl.propertyAllData = {{}, {}}
 
-    -- 获得显示数据
+    -- Get display data
     for _, b in ipairs(propertyTab) do
-        table.insert(EvaCtrl.propertyAllData[1], self.allEvaData[self.evaRecordData[1]][b.Atype][b.Btype]) -- 保存实际数据
-        table.insert(EvaCtrl.propertyAllData[2], b) -- 保存本地配置
+        table.insert(EvaCtrl.propertyAllData[1], self.allEvaData[self.evaRecordData[1]][b.Atype][b.Btype]) -- Save actual data
+        table.insert(EvaCtrl.propertyAllData[2], b) -- Save local configuration
     end
 
-    -- 刷新界面上的数据显示
+    -- Refresh the data display on the interface
     EvaPanel.iconImageTF.localScale = Vector3.New(0, 0, 0)
     local imgPath
     if self.evaRecordData[1] == 1 then
@@ -442,18 +442,18 @@ function EvaCtrl:CreatePropertyItem(propertyTab)
     end
 
     if isShowFrist then
-        if isShowSecond then  -- 都有
+        if isShowSecond then  -- All
             self.resultTab[1]:_isShow(true)
             self.resultTab[2]:_isShow(true)
             self.resultTab[2]:SetPosition(Vector3.New(212, 0, 0))
             self.resultTab[3]:_isShow(true)
             self.resultTab[3]:SetPosition(Vector3.New(602, 0, 0))
-        else -- 只有第一项
+        else -- Only the first item
             self.resultTab[1]:_isShow(true)
             self.resultTab[2]:_isShow(false)
             self.resultTab[3]:_isShow(false)
         end
-    else -- 没有第一项
+    else -- No first item
         self.resultTab[1]:_isShow(false)
         self.resultTab[2]:_isShow(true)
         self.resultTab[2]:SetPosition(Vector3.New(-402, 0, 0))
@@ -461,12 +461,12 @@ function EvaCtrl:CreatePropertyItem(propertyTab)
         self.resultTab[3]:SetPosition(Vector3.New(-12, 0, 0))
     end
 
-    -- 生成新的属性显示
+    -- Generate new attribute display
     EvaCtrl.propertyScript = {}
     EvaPanel.propertyScroll:ActiveLoopScroll(self.propertySource, #EvaCtrl.propertyAllData[2], EvaCtrl.static.PropertyTrueItemPath)
 end
 
--- 设置Eva选择记录
+-- Set Eva selection record
 function EvaCtrl:SetEvaRecord(index, data)
     if index == 1 then
         self.evaRecordData = {data}
@@ -479,12 +479,12 @@ function EvaCtrl:SetEvaRecord(index, data)
 
 end
 
--- 获取Eva选项item的记录
+-- Get the record of Eva option item
 function EvaCtrl:GetEvaRecordData()
     return self.evaRecordData
 end
 
--- 重置按钮的状态
+-- Reset button state
 function EvaCtrl:SetBtnState(index)
     if index == 1 then
         for _, v in ipairs(self.evaTitleItem) do
@@ -502,7 +502,7 @@ function EvaCtrl:SetBtnState(index)
     end
 end
 
--- 加点按钮控制
+-- Dot button control
 function EvaCtrl:SetAddBtnState(isInteractable)
     EvaPanel.addButton.interactable = isInteractable
 end

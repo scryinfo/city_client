@@ -9,7 +9,7 @@ local class = require 'Framework/class'
 
 MapAdvertisementItem = class('MapAdvertisementItem')
 
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,index)
 
     self.prefabData = prefabData;
@@ -44,15 +44,15 @@ function MapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,in
     self.itemId=prefabData.metaId
 end
 
----添加
+---Add to
 function MapAdvertisementItem:OnClick_cut(go)
-    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--自已进入
+    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--Enter yourself
         if go.numtext.text-1==0 then
-            ---消除自身
+            ---Eliminate itself
             destroy(self.transform.parent.parent.parent.gameObject)
-            ---选中广告还原
+            ---Selected ads restore
             go.manager.selectItemList[go.index]:GetComponent("Image").raycastTarget=true;
-            ---表数据清除
+            ---Table data clear
             go.manager.addedItemList[go.index]=nil
             go.manager.selectItemList[go.index]=nil
 
@@ -63,25 +63,25 @@ function MapAdvertisementItem:OnClick_cut(go)
         go.manager.AdvertisementDataList[go.index]={count=go.numtext.text,type=go.type,name=go.name,metaId=go.itemId,personName=go.personName,path=go.path}
 
 
-    else--他人进入
+    else--Others enter
         if go.numtext.text-1==0 then
-            ---消除自身
+            ---Eliminate itself
             destroy(self.transform.parent.parent.parent.gameObject)
-            ---选中广告还原
+            ---Selected ads restore
             go.manager.selectItemList[go.index]:GetComponent("Image").raycastTarget=true;
-            ---表数据清除
+            ---Table data clear
             go.manager.addedItemList[go.index]=nil
             go.manager.selectItemList[go.index]=nil
 
             go.manager.AdvertisementDataList[go.index]=nil
-            ---处理添加文本显示
+            ---Handling added text display
             go.manager.current.numText.text=go.manager.current.numText.text+1
             return
         end
         go.numtext.text=go.numtext.text-1
         go.manager.AdvertisementDataList[go.index]={count=go.numtext.text,type=go.type,name=go.name,metaId=go.itemId,slots=go.manager.current.slots
         ,personName=go.personName,path=go.path}
-        ---处理添加文本显示
+        ---Handling added text display
         go.manager.current.numText.text=go.manager.current.numText.text+1
         go.manager.current.prefab:SetActive(true)
     end
@@ -89,18 +89,18 @@ end
 
 function MapAdvertisementItem:OnClick_Plus(ins)
 
-    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--自已进入
+    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--Others enter
         ins.numtext.text=ins.numtext.text+1
         ins.manager.AdvertisementDataList[ins.index]={count=ins.numtext.text,type=ins.type,name=ins.name,metaId=ins.itemId,personName=ins.personName,path=ins.path}
 
-    else--他人进入
+    else--Others enter
         if tonumber(ins.numtext.text)>=ins.manager.current.selfAcount then
               return
         end
         ins.numtext.text=ins.numtext.text+1
         ins.manager.AdvertisementDataList[ins.index]={count=ins.numtext.text,type=ins.type,name=ins.name,metaId=ins.itemId,slots=ins.manager.current.slots
         ,personName=ins.personName,path=ins.path}
-        ---处理添加文本显示
+        ---Handling added text display
         ins.manager.current.numText.text=ins.manager.current.numText.text-1
         if ins.manager.current.numText.text=="0" then
             ins.manager.current.prefab:SetActive(false)

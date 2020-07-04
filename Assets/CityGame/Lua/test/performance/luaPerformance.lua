@@ -9,8 +9,8 @@ UnitTest.TestBlockStart()-------------------------------------------------------
 testtime = require 'test/performance/testTime'
 
 --[[
- 如果我们明确table中的数据全部存放在线性数组中, ipairs 比 ,pairs 快一倍； 但是 ipairs时中间不能出现nil值,
- 否则会导致遍历中断), 如果我们明确遍历hash表中的值, 则使用pairs
+ If we are clear that all the data in the table is stored in a linear array, ipairs is twice as fast as ,pairs; but nil value cannot appear in the middle of ipairs,
+  Otherwise it will cause the traversal to be interrupted), if we traverse the values in the hash table explicitly, then use pairs
 ]]--
 local tb = {[1] ='oh', [2] = 'god', [3]='my', [5] = 'hello', [4] = 'world'}
 UnitTest.Exec("abel_w4_performance", "test_ipairs_pairs",  function ()
@@ -62,9 +62,9 @@ local func1 = function(a,b,func)
 end
 
 --[[
-    在使用 local 缓存函数，性能有巨大提升， 提升 21.70 倍！
-    执行时间:     0.49900000000002
-    执行时间:     0.0029999999999291
+    When using the local cache function, the performance has been greatly improved by 21.70 times!
+     Execution time: 0.49900000000002
+     Execution time: 0.0029999999999291
 ]]--
 UnitTest.Exec("abel_w4_performance", "test_funcAsParam",  function ()
     UnitTest.PerformanceTest("abel_w4_performance","[函数直接作为参数传递]", function()
@@ -88,10 +88,10 @@ local a = {}
 local table_insert = table.insert
 local testcount = 1000000
 --[[
-table_insert 的效率非常之低，慎用！
-[使用 table insert 扩充数组]    执行时间:     1.5029999999988
-[使用 loop counter 扩充数组]    执行时间:     0.0059999999994034
-[使用 table size 扩充数组]    执行时间:     0.10900000000038
+The efficiency of table_insert is very low, use with caution!
+[Expand array with table insert] Execution time: 1.5029999999988
+[Expand array with loop counter] Execution time: 0.0059999999994034
+[Expand array with table size] Execution time: 0.10900000000038
 ]]--
 UnitTest.Exec("abel_w4_performance", "test_use_table_insert",  function ()
     UnitTest.PerformanceTest("abel_w4_performance","[使用 table insert 扩充数组]", function()
@@ -252,8 +252,8 @@ UnitTest.Exec("abel_w11_loadstring_log", "test_w11_loadstring_log",  function ()
     addlog("count = 100000")
     addlog("addct.log(msgname)")
 
-    --合并log
-    local timeMg = UnitTest.PerformanceTest("abel_w11_loadstring_log","[test_w11_loadstring_log] 合并log", function()
+    --Merge log
+     local timeMg = UnitTest.PerformanceTest("abel_w11_loadstring_log","[test_w11_loadstring_log] merge log", function()
         local fun = loadstring(code)
         if fun then
             for i = 1, count do
@@ -261,8 +261,8 @@ UnitTest.Exec("abel_w11_loadstring_log", "test_w11_loadstring_log",  function ()
             end
         end
     end)
-    --独立打印
-    local timeSp = UnitTest.PerformanceTest("abel_w11_loadstring_log","[test_w11_loadstring_log] 单独log", function()
+    -- Independent printing
+    local timeSp = UnitTest.PerformanceTest("abel_w11_loadstring_log","[test_w11_loadstring_log] separate log", function()
         for i = 1, count do
             ct.log("abel_w11_loadstring_log","E_C2S_GET_SERVER_LIST")
             ct.log("abel_w11_loadstring_log","E_C2S_GET_GAME_ANN")
@@ -270,8 +270,8 @@ UnitTest.Exec("abel_w11_loadstring_log", "test_w11_loadstring_log",  function ()
             ct.log("abel_w11_loadstring_log","addct.log(msgname)")
         end
     end)
-    ct.log("abel_w11_loadstring_log","[test_w11_loadstring_log]  合并log打印时间：",timeMg, "独立打印时间：",timeSp)
-    --结论： 没有什么区别，执行效率非常接近
+    ct.log("abel_w11_loadstring_log","[test_w11_loadstring_log] combined log printing time:",timeMg, "independent printing time:",timeSp)
+    --Conclusion: There is no difference, the execution efficiency is very close
 end)
 
 UnitTest.Exec("abel_w13_abel_sort", "test_w13_abel_sort",  function ()
@@ -300,28 +300,28 @@ UnitTest.Exec("abel_w13_abel_sort", "test_w13_abel_sort",  function ()
     end
 
     --[[--
--   partition: 获得快排中介值位置
--   @param: list, low, high - 参数描述
--   @return: pivotKeyIndex - 中介值索引
+-   partition: Get fast-track mediation position
+-	@param: list, low, high-parameter description
+-	@return: pivotKeyIndex-mediate index
 ]]
     function partition(list, low, high)
         local low = low
         local high = high
-        local pivotKey = list[low] -- 定义一个中介值
+        local pivotKey = list[low] -- define an intermediate value
 
-        -- 下面将中介值移动到列表的中间
-        -- 当左索引与右索引相邻时停止循环
-        while low < high do
-            -- 假如当前右值大于等于中介值则右索引左移
-            -- 否则交换中介值和右值位置
-            while low < high and list[high] >= pivotKey do
-                high = high - 1
+        -- Now move the intermediary value to the middle of the list
+        -- Stop the loop when the left index is adjacent to the right index
+        while low <high ​​do
+            -- If the current rvalue is greater than or equal to the intermediary value, the right index moves to the left
+            -- Otherwise swap the intermediary and rvalue positions
+            while low <high ​​and list[high] >= pivotKey do
+                high = high-1
             end
             swap(list, low, high)
 
-            -- 假如当前左值小于等于中介值则左索引右移
-            -- 否则交换中介值和左值位置
-            while low < high and list[low] <= pivotKey do
+            -- If the current left value is less than or equal to the intermediary value, the left index moves to the right
+            -- Otherwise swap the intermediary and lvalue positions
+            while low <high ​​and list[low] <= pivotKey do
                 low = low + 1
             end
             swap(list, low, high)
@@ -330,15 +330,15 @@ UnitTest.Exec("abel_w13_abel_sort", "test_w13_abel_sort",  function ()
     end
 
     --[[--
-    -   orderByQuick: 快速排序
-    -   @param: list, low, high - 参数描述
-    -    @return: list - table
+    -orderByQuick: quick sort
+    -@param: list, low, high-parameter description
+    -@return: list-table
     ]]
     function QuickSort(list, low, high)
-        if low < high then
-            -- 返回列表中中介值所在的位置，该位置左边的值都小于等于中介值，右边的值都大于等于中介值
+        if low <high ​​then
+            -- Returns the position of the intermediary value in the list, the values ​​on the left of the position are less than or equal to the intermediary value, and the values ​​on the right are greater than or equal to the intermediary value
             local pivotKeyIndex = partition(list, low, high)
-            -- 分别将中介值左右两边的列表递归快排
+            -- Recursively sort the lists on the left and right of the intermediary value
             QuickSort(list, low, pivotKeyIndex - 1)
             QuickSort(list, pivotKeyIndex + 1, high)
         end
@@ -375,8 +375,8 @@ UnitTest.Exec("abel_w13_abel_sort", "test_w13_abel_sort",  function ()
         table.sort(tb)
     end)
     --[[
-    测试结果
-        调用 table.sort (封装的 c 中的 native 快排方法) 排序的速度远高于在 lua 中的排序, 5万个元素排序 table.sort 比 lua 中的快排快 26倍， 比冒泡 448 倍
+    Test Results
+         Call table.sort (the native fast sort method in encapsulated c) sorting speed is much higher than sorting in Lua, 50,000 elements sorting table.sort is 26 times faster than the fast sorting in Lua, 448 times faster than bubbling
     --]]
 
 end)
@@ -401,7 +401,7 @@ UnitTest.Exec("abel_w13_abel_sort_tb", "test_abel_sort_tb",  function ()
 
     resetfun()
 
-    --降序
+    --Descending order
     local tb = ct.deepCopy(tb1)
     UnitTest.PerformanceTest("abel_w13_abel_sort_tb","[test_w13_O_abel_sort] lua table.sort > ", function()
         table.sort(tb, function (element1, element2)
@@ -410,7 +410,7 @@ UnitTest.Exec("abel_w13_abel_sort_tb", "test_abel_sort_tb",  function ()
     end)
     printT("abel_w13_abel_sort_tb","",tb)
 
-    --升序
+    --Ascending order
     tb = ct.deepCopy(tb1)
     UnitTest.PerformanceTest("abel_w13_abel_sort_tb","[test_w13_O_abel_sort] lua table.sort < ", function()
         table.sort(tb, function (element1, element2)
@@ -435,32 +435,32 @@ UnitTest.Exec("abel_w13_abel_sort_tb_eq", "test_abel_sort_tb_eq",  function ()
     end
     resetfun()
 
-    --有等于, 测试也是成功的
-    local tb = ct.deepCopy(tb1)
+    --There is equal, the test is also successful
+     local tb = ct.deepCopy(tb1)
 
-    --排序出错
-    UnitTest.PerformanceTest("abel_w13_abel_sort_tb_eq","[test_w13_O_abel_sort_tb_eq] lua table.sort <= ", function()
-        table.sort(tb, function (element1, element2)
-            return element1.v <=  element2.v
-        end)
-    end)
-    printT("abel_w13_abel_sort_tb_eq"," <= ",tb)
+     --Sort error
+     UnitTest.PerformanceTest("abel_w13_abel_sort_tb_eq","[test_w13_O_abel_sort_tb_eq] lua table.sort <= ", function()
+         table.sort(tb, function (element1, element2)
+             return element1.v <= element2.v
+         end)
+     end)
+     printT("abel_w13_abel_sort_tb_eq"," <= ",tb)
 
-    --排序出错
-    tb = ct.deepCopy(tb1)
-    UnitTest.PerformanceTest("abel_w13_abel_sort_tb_eq","[test_w13_O_abel_sort_tb_eq] lua table.sort >= ", function()
-        table.sort(tb, function (element1, element2)
-            return element1.v >=  element2.v
-        end)
-    end)
-    printT("abel_w13_abel_sort_tb_eq",">=",tb)
+     --Sort error
+     tb = ct.deepCopy(tb1)
+     UnitTest.PerformanceTest("abel_w13_abel_sort_tb_eq","[test_w13_O_abel_sort_tb_eq] lua table.sort >= ", function()
+         table.sort(tb, function (element1, element2)
+             return element1.v >= element2.v
+         end)
+     end)
+     printT("abel_w13_abel_sort_tb_eq",">=",tb)
 
-    --注意： <= 和 >= 的测试会失败， 排序的条件不能有等于的情况，要么大于，要么小于
+     --Note: The tests for <= and >= will fail, and the sorting conditions cannot be equal, either greater or less than
 end)
 
-UnitTest.Exec("abel_w18_tableDestroy", "abel_w18_tableDestroy",  function ()
-    local testcount = 100000  --资源加载数量
-    local ResPathList = {}  --资源路径
+UnitTest.Exec("abel_w18_tableDestroy", "abel_w18_tableDestroy", function ()
+     local testcount = 100000 -- number of resources loaded
+     local ResPathList = {} -- resource path
     local resLoad  = resMgr:LoadRes_S('TempIcon/A'..1, ct.getType(UnityEngine.Sprite))
     local objIns = {}
 
@@ -482,18 +482,18 @@ UnitTest.Exec("abel_w18_tableDestroy", "abel_w18_tableDestroy",  function ()
 
     initialData()
     UnitTest.PerformanceTest("abel_w18_tableDestroy","[倒序destroy]", function()
-        --table销毁不要使用 pairs 遍历，虽然不会出错，但是效率是不高的，所以直接从最后一个元素开始删除
-        while #objIns > 0 do
+        --Do not use pairs traversal for table destruction, although there will be no errors, but the efficiency is not high, so delete directly from the last element
+         while #objIns> 0 do
             GameObject.DestroyImmediate(objIns[#objIns], true)
-            objIns[#objIns] = nil --这里必须赋值nil，否则就是死循环
+            objIns[#objIns] = nil--here must be assigned nil, otherwise it is an infinite loop
         end
     end)
 
     --[[
-    测试结果
-        [abel_w18_tableDestroy][使用 pairs 遍历table并destroy]    执行时间:     0.039999999999964
-        [abel_w18_tableDestroy][倒序destroy]                      执行时间:     0.39799999999991
-        * 迭代器遍历效率的确高很多
+    Test Results
+        [abel_w18_tableDestroy][Use pairs to traverse table and destroy] Execution time: 0.039999999999964
+        [abel_w18_tableDestroy][Reverse order destroy] Execution time: 0.39799999999991
+        * Iterator traversal efficiency is indeed much higher
     --]]
 
 end)

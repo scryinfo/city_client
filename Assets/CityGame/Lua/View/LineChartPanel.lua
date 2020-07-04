@@ -10,7 +10,7 @@ local gameObject;
 LineChartPanel = {};
 local this = LineChartPanel;
 
---启动事件--
+--Start event--
 function LineChartPanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
@@ -19,11 +19,11 @@ function LineChartPanel.Awake(obj)
     ct.log("abel_w6_UIFrame","LineChartPanel.Awake"..gameObject.name);
 end
 
---初始化面板--
+--Initial panel--
 function LineChartPanel.InitPanel()
-    --获取 LineChart 组件的父物体
+    --Get the parent object of the LineChart component
     this.LineChartParent = transform:Find("Image/Scroll View/Viewport/Content/GameObject").gameObject;
-    --Layer要设置为“UI”，否则显示不出来
+    --Layer should be set to "UI", otherwise it will not be displayed
     gameObject.layer = LayerMask.NameToLayer("UI");
     --this.btnRegister = transform:Find("Button_register").gameObject;
     --this.inputUsername = transform:Find("InputField_username").gameObject;
@@ -35,7 +35,7 @@ function LineChartPanel.Start()
 
 end
 
---单击事件--
+--Click event--
 function LineChartPanel.OnDestroy()
     logWarn("OnDestroy---->>>");
 end

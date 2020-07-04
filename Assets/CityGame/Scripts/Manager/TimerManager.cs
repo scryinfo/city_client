@@ -32,25 +32,16 @@ namespace LuaFramework {
             StartTimer(AppConst.TimerInterval);
         }
 
-        /// <summary>
-        /// 启动计时器
-        /// </summary>
         /// <param name="interval"></param>
         public void StartTimer(float value) {
             interval = value;
             InvokeRepeating("Run", 0, interval);
         }
 
-        /// <summary>
-        /// 停止计时器
-        /// </summary>
         public void StopTimer() {
             CancelInvoke("Run");
         }
 
-        /// <summary>
-        /// 添加计时器事件
-        /// </summary>
         /// <param name="name"></param>
         /// <param name="o"></param>
         public void AddTimerEvent(TimerInfo info) {
@@ -59,9 +50,6 @@ namespace LuaFramework {
             }
         }
 
-        /// <summary>
-        /// 删除计时器事件
-        /// </summary>
         /// <param name="name"></param>
         public void RemoveTimerEvent(TimerInfo info) {
             if (objects.Contains(info) && info != null) {
@@ -69,9 +57,6 @@ namespace LuaFramework {
             }
         }
 
-        /// <summary>
-        /// 停止计时器事件
-        /// </summary>
         /// <param name="info"></param>
         public void StopTimerEvent(TimerInfo info) {
             if (objects.Contains(info) && info != null) {
@@ -79,9 +64,6 @@ namespace LuaFramework {
             }
         }
 
-        /// <summary>
-        /// 继续计时器事件
-        /// </summary>
         /// <param name="info"></param>
         public void ResumeTimerEvent(TimerInfo info) {
             if (objects.Contains(info) && info != null) {
@@ -89,9 +71,6 @@ namespace LuaFramework {
             }
         }
 
-        /// <summary>
-        /// 计时器运行
-        /// </summary>
         void Run() {
             if (objects.Count == 0) return;
             for (int i = 0; i < objects.Count; i++) {
@@ -101,7 +80,7 @@ namespace LuaFramework {
                 timer.TimerUpdate();
                 o.tick++;
             }
-            /////////////////////////清除标记为删除的事件///////////////////////////
+          
             for (int i = objects.Count - 1; i >= 0; i--) {
                 if (objects[i].delete) { objects.Remove(objects[i]); }
             }

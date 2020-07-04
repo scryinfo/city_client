@@ -17,32 +17,32 @@ public class VScrollEventData
 
 public class FlightScrollTool : MonoBehaviour
 {
-    public GameObject mLeftPrefab;  //左侧预制
-    public GameObject mLeftTitlePrefab;  //左侧标题预制
+    public GameObject mLeftPrefab;  //Prefabricated on the left
+    public GameObject mLeftTitlePrefab;  //Prefab on the left
     public ScrollRect mScrollRect;
     public ScrollForecast mScrollForecast;
 
     public float mTitleHeight = 60;
     public float mDetailHeight = 80;
-    public float mDetailSpaceH = 6;  //间隔
+    public float mDetailSpaceH = 6;  //interval
     public Vector2 mItemStartPos = new Vector2(-130, -45);
 
     private Camera mUICamera;
     private RectTransform mContentRect;
-    private Vector2 mScrollTopBottomV2 = Vector2.zero;  //scroll顶部底部的屏幕坐标y
-    private float mContentHeight;  //content的高度
+    private Vector2 mScrollTopBottomV2 = Vector2.zero;  //Screen coordinates y at the top and bottom of scroll
+    private float mContentHeight;  //content height
 
-    private string[] mTempTitleConfig;  //索引字符list
-    private Dictionary<string, string[]> mTempDetailConfig = new Dictionary<string, string[]>();  //key 为字母索引，list为具体字符
-    private List<string> mDetailConfig = new List<string>();  //包含所有字符的集合，按顺序排列
-    private List<int> mDetailChangeIdList = new List<int>();  //需要切换位置的id
-    private List<Vector2> mContentPosList = new List<Vector2>();  //定位需要用到
+    private string[] mTempTitleConfig;  //Index character list
+    private Dictionary<string, string[]> mTempDetailConfig = new Dictionary<string, string[]>();  //key is the letter index, list is the specific character
+    private List<string> mDetailConfig = new List<string>();  //A collection of all characters, in order
+    private List<int> mDetailChangeIdList = new List<int>();  //Need to switch position id
+    private List<Vector2> mContentPosList = new List<Vector2>();  //Positioning needs to be used
 
-    private Dictionary<int, RectTransform> mShowItemList = new Dictionary<int, RectTransform>();  //在屏幕显示的item
+    private Dictionary<int, RectTransform> mShowItemList = new Dictionary<int, RectTransform>();  //Item displayed on the screen
     private List<GameObject> mTitleObjs = new List<GameObject>();  //title obj
     private VScrollEventData mEvent = new VScrollEventData();
 
-    //初始化设置
+    //Initialize settings
     public void InitComponent(VScrollEventData func)
     {
         if (mUICamera == null)
@@ -58,7 +58,7 @@ public class FlightScrollTool : MonoBehaviour
         mEvent = func;
     }
 
-    //拿到具体数据开始生成
+    //Get specific data and start generating
     public void InitData(Dictionary<string, string[]> detailDic, string[] titleStr)
     {
         if (titleStr != mTempTitleConfig)
@@ -74,7 +74,7 @@ public class FlightScrollTool : MonoBehaviour
             }
             mScrollForecast.InitData(mScreenRatio, titleStr);
 
-            CreateTitleItems();  //创建左侧items
+            CreateTitleItems();  //Create items on the left
             CalculateShowIds();  //
         }
     }
@@ -101,7 +101,7 @@ public class FlightScrollTool : MonoBehaviour
         CalculateShowIds();
     }
 
-    //获取Scroll的顶部底部屏幕坐标
+    //Get the top and bottom screen coordinates of Scroll
     private void GetContentTopBottonScreenPos()
     {
         Vector2 pos = WorldToScreenPoint(mScrollRect.transform.position);
@@ -118,7 +118,7 @@ public class FlightScrollTool : MonoBehaviour
             height += mTempDetailConfig[mTempTitleConfig[i]].Length * (mDetailHeight + mDetailSpaceH) + mTitleHeight;
         }
         mContentRect.sizeDelta = new Vector2(mContentRect.sizeDelta.x, height);
-        mScrollRect.content.anchoredPosition = Vector2.zero;  //计算content高度以及初始化content位置
+        mScrollRect.content.anchoredPosition = Vector2.zero;  //Calculate content height and initialize content position
         mContentHeight = height;
 
         Vector2 currentPos = mItemStartPos;
@@ -140,18 +140,18 @@ public class FlightScrollTool : MonoBehaviour
         mScrollRect.content.anchoredPosition = new Vector2(0, -(mContentPosList[targetIndex].y - mItemStartPos.y));
     }
 
-    #region 每帧判断区域内所需items
+    #region Each frame determines the required items in the area
     //
     private void CalculateShowIds()
     {
-        List<int> ids = GetValuableIds();  //屏幕内需要显示的ids
-        Dictionary<int, float> idPosy = new Dictionary<int, float>();  //id对应的高度
+        List<int> ids = GetValuableIds();  //Ids to be displayed on the screen
+        Dictionary<int, float> idPosy = new Dictionary<int, float>();  //id height
 
         float startPosY = GetHeightById(ids[0]);
         idPosy.Add(ids[0], startPosY);
         for (int i = ids[0] + 1; i < ids[ids.Count - 1] + 1; i++)
         {
-            if (!mDetailChangeIdList.Contains(i))  //如果首字母不一样，则需要加上title的高度
+            if (!mDetailChangeIdList.Contains(i))  //If the first letter is different, you need to add the height of the title
             {
                 startPosY -= mDetailHeight + mDetailSpaceH;
             }
@@ -168,7 +168,7 @@ public class FlightScrollTool : MonoBehaviour
             {
                 if (!mShowItemList.ContainsKey(item.Key))
                 {
-                    CreateItem(item.Key, new Vector2(mItemStartPos.x, item.Value));  //需要增加的
+                    CreateItem(item.Key, new Vector2(mItemStartPos.x, item.Value));  //Need to increase
                 }
             }
             List<int> needRemove = new List<int>();
@@ -194,7 +194,7 @@ public class FlightScrollTool : MonoBehaviour
         }
     }
 
-    //新增item
+    //Add item
     private void CreateItem(int index, Vector2 currentPos)
     {
         RectTransform rect = ScrollPool.GetInstance().GetValuableItem(mLeftPrefab.name).GetComponent<RectTransform>();
@@ -217,7 +217,7 @@ public class FlightScrollTool : MonoBehaviour
         {
             height -= mTitleHeight;
             int detailCount = mTempDetailConfig[mTempTitleConfig[i]].Length;
-            if (id <= detailCount - 1)  //如果id <= detailCount，则满足需求
+            if (id <= detailCount - 1)  //If id <= detailCount, meet the demand
             {
                 height -= id * (mDetailHeight + mDetailSpaceH);
                 return height;
@@ -232,10 +232,10 @@ public class FlightScrollTool : MonoBehaviour
     private List<int> GetValuableIds()
     {
         Vector2 contentPos = WorldToScreenPoint(mScrollRect.content.position);
-        float spacingTop = contentPos.y - mScrollTopBottomV2.x;  //屏幕顶部到当前content顶部的间距
+        float spacingTop = contentPos.y - mScrollTopBottomV2.x;  //The distance from the top of the screen to the top of the current content
         float spacingBottom = contentPos.y - mScrollTopBottomV2.y;
         int firstId = GetRangeId(spacingTop);
-        int lastId = GetRangeId(spacingBottom) + 2;  //2是为了防止穿帮
+        int lastId = GetRangeId(spacingBottom) + 2;  //2 is to prevent wearing
         if (lastId > mDetailConfig.Count - 1)
         {
             lastId = mDetailConfig.Count - 1;
@@ -247,7 +247,7 @@ public class FlightScrollTool : MonoBehaviour
         }
         return list;
     }
-    //获取位置对应的id
+    //Get the id corresponding to the location
     private int GetRangeId(float height)
     {
         int id = 0;
@@ -258,7 +258,7 @@ public class FlightScrollTool : MonoBehaviour
             height -= mTitleHeight;
             float index = height / (mDetailHeight + mDetailSpaceH);
             int indexInt = Mathf.CeilToInt(index);
-            if (indexInt < detailCount)  //如果id < detailCount，则满足需求
+            if (indexInt < detailCount)  //If id <detailCount, meet the demand
             {
                 if (id + indexInt - 1 < 0)
                     return 0;
@@ -273,10 +273,10 @@ public class FlightScrollTool : MonoBehaviour
 
     #endregion
 
-    #region 坐标转换
+    #region Coordinate conversion
     /////////////////////////////////////////////////////////////////////////////////////////////////
-    private float mScreenRatio = 1;  //屏幕坐标缩放尺寸
-    //计算屏幕缩放
+    private float mScreenRatio = 1;  //Screen coordinate scaling
+    //Calculate screen zoom
     private void InitScreenRatio()
     {
         float screenRatio = (float)Screen.width / (float)Screen.height;
@@ -290,7 +290,7 @@ public class FlightScrollTool : MonoBehaviour
             mScreenRatio = (float)1080 / (float)Screen.height;
         }
     }
-    //世界坐标转屏幕坐标
+    //World coordinates to screen coordinates
     public Vector3 WorldToScreenPoint(Vector3 wprldPos)
     {
         float offset = mScreenRatio;

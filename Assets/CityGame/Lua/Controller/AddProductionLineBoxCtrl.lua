@@ -8,7 +8,7 @@ UIPanel:ResgisterOpen(AddProductionLineBoxCtrl)
 
 local ToNumber = tonumber
 local addLineBox
---奢侈等级
+--Luxury class
 local oneLevel = Vector3.New(105,174,238)
 local twoLevel = Vector3.New(156,136,228)
 local threeLevel = Vector3.New(243,185,45)
@@ -53,7 +53,7 @@ function AddProductionLineBoxCtrl:Hide()
     UIPanel.Hide(self)
     AddProductionLineBoxPanel.numberSlider.onValueChanged:RemoveAllListeners()
 end
-------------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
+------------------------------------------------------------------------Initialization function------------------------------------------------------------------------------------------
 function AddProductionLineBoxCtrl:InitializeData()
     if not self.m_data then
         return
@@ -68,7 +68,7 @@ function AddProductionLineBoxCtrl:InitializeData()
     AddProductionLineBoxPanel.iconImg.sprite = SpriteManager.GetSpriteByPool(self.m_data.itemId)
     self.workerNum = PlayerBuildingBaseData[self.m_data.mId].maxWorkerNum
     if self.m_data.buildingType == BuildingType.MaterialFactory then
-        --如果是原料关闭商品属性展示
+        --If it is raw material, close the product attribute display
         AddProductionLineBoxPanel.popularity.transform.localScale = Vector3.zero
         AddProductionLineBoxPanel.quality.transform.localScale = Vector3.zero
         AddProductionLineBoxPanel.levelBg.transform.localScale = Vector3.zero
@@ -78,7 +78,7 @@ function AddProductionLineBoxCtrl:InitializeData()
         local speed = 1 / self.m_data.numOneSec
         AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed)
     elseif self.m_data.buildingType == BuildingType.ProcessingFactory then
-        --如果是商品打开商品属性展示
+        --If it is a product, open the product attribute display
         AddProductionLineBoxPanel.tipText.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.popularity.transform.localScale = Vector3.one
         AddProductionLineBoxPanel.quality.transform.localScale = Vector3.one
@@ -88,7 +88,7 @@ function AddProductionLineBoxCtrl:InitializeData()
         --local speed = 1 / (Good[self.m_data.itemId].numOneSec * self.workerNum)
         local speed = 1 / self.m_data.info.numOneSec
         AddProductionLineBoxPanel.speedText.text = self:GetOneSecNum(speed)
-        --如果是商品，判断原料等级
+        --If it is a commodity, determine the raw material grade
         if Good[self.m_data.itemId].luxury == 1 then
             AddProductionLineBoxPanel.levelImg.color = getColorByVector3(oneLevel)
             AddProductionLineBoxPanel.levelValue.text = GetLanguage(25020028)
@@ -104,47 +104,47 @@ function AddProductionLineBoxCtrl:InitializeData()
         AddProductionLineBoxPanel.qualityValue.text = self.m_data.info.qtyScore
     end
 end
---多语言
+--multi-language
 function AddProductionLineBoxCtrl:_language()
     AddProductionLineBoxPanel.tipText.text = GetLanguage(25030030)
     AddProductionLineBoxPanel.brandName.text = GetLanguage(25020040)
 end
-------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------
---关闭Button
+------------------------------------------------------------------------Click function--------------------------------------------------------------------------------------------
+--Close Button
 function AddProductionLineBoxCtrl:clickCloseBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
---确定Button
+--Define Button
 function AddProductionLineBoxCtrl:clickConfirmBtn(go)
     PlayMusEff(1002)
     local number = AddProductionLineBoxPanel.numberSlider.value
     if go:NumberWhetherZero(number) == true then
         if go.m_data.buildingType == BuildingType.MaterialFactory then
-            --原料厂
+            --Raw material factory
             Event.Brocast("m_ReqMaterialAddLine",go.m_data.insId,number,go.workerNum,go.m_data.itemId)
         elseif go.m_data.buildingType == BuildingType.ProcessingFactory then
-            --加工厂
+            --Processing plant
             Event.Brocast("m_ReqprocessingAddLine",go.m_data.insId,number,go.workerNum,go.m_data.itemId)
         end
     else
         Event.Brocast("SmallPop",GetLanguage(25030025),ReminderType.Common)
     end
 end
---------------------------------------------------------------------------回调函数--------------------------------------------------------------------------------------------
---添加成功后
+--------------------------------------------------------------------------Callback--------------------------------------------------------------------------------------------
+--After successful addition
 function AddProductionLineBoxCtrl:SucceedUpdatePanel(dataInfo)
     if dataInfo ~= nil then
         TimeSynchronized.SynchronizationServerTime(dataInfo.ts)
         UIPanel.ClosePage()
-        ----查询当前生产线
+        ----Query current production line
         --Event.Brocast("m_GetLineData",self.m_data.insId)
         Event.Brocast("SmallPop",GetLanguage(25030010),ReminderType.Common)
         UIPanel.ClosePage()
     end
 end
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---保留小数点后两位
+--Keep two decimal places
 function AddProductionLineBoxCtrl:GetOneSecNum(str)
     local index = string.find(str, '%.')
     if not index then
@@ -154,12 +154,12 @@ function AddProductionLineBoxCtrl:GetOneSecNum(str)
     return secStr
 end
 
---滑动条刷新输入框值
+--Slide bar to refresh input box value
 function AddProductionLineBoxCtrl:SlidingUpdateText()
     AddProductionLineBoxPanel.numberInput.text = AddProductionLineBoxPanel.numberSlider.value
     AddProductionLineBoxPanel.timeText.text = self:GetTime(AddProductionLineBoxPanel.numberSlider.value,self.workerNum)
 end
---输入框结束事件
+--Input box end event
 function AddProductionLineBoxCtrl:inputEndText()
     if AddProductionLineBoxPanel.numberInput.text == "" or ToNumber(AddProductionLineBoxPanel.numberInput.text) <= 0 then
         AddProductionLineBoxPanel.numberInput.text = 1
@@ -169,14 +169,14 @@ function AddProductionLineBoxCtrl:inputEndText()
     end
     AddProductionLineBoxPanel.numberSlider.value = ToNumber(AddProductionLineBoxPanel.numberInput.text)
 end
---检查要生产的数量是否为零
+--Check if the quantity to be produced is zero
 function AddProductionLineBoxCtrl:NumberWhetherZero(number)
     if number == 0 then
         return false
     end
     return true
 end
---计算时间
+--calculating time
 function AddProductionLineBoxCtrl:GetTime(targetCount,workerNum)
     if targetCount == 0 or workerNum == 0 then
         return "00:00:00"

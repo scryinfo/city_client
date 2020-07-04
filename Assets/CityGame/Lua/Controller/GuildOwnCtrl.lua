@@ -34,9 +34,9 @@ function GuildOwnCtrl:OnCreate(go)
 end
 
 function GuildOwnCtrl:Awake()
-    -- 初始化管理器
+    -- Initialization manager
     GuildOwnCtrl.static.guildMgr = GuildMgr:new()
-    -- 初始化item tab
+    -- Initialize the item tab
     GuildOwnCtrl.static.guildMemberTab = {}
 
     self.guildMemberSource = UnityEngine.UI.LoopScrollDataSource.New()
@@ -48,7 +48,7 @@ function GuildOwnCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
 
-    -- 多语言
+    -- multi-language
     GuildOwnPanel.memberTitleText.text = GetLanguage(12020001)
     GuildOwnPanel.jobTitleText.text = GetLanguage(12020002)
     GuildOwnPanel.staffNumberBtnText.text = GetLanguage(12020003)
@@ -57,7 +57,7 @@ function GuildOwnCtrl:Active()
     GuildOwnCtrl.static.guildMgr:SetLanguage()
 end
 
--- 监听Model层网络回调
+-- Listen to the model layer network callback
 function GuildOwnCtrl:_addListener()
     Event.AddListener("c_GetSocietyInfo", self.c_GetSocietyInfo, self)
     Event.AddListener("c_ModifySocietyName", self.c_ModifySocietyName, self)
@@ -71,7 +71,7 @@ function GuildOwnCtrl:_addListener()
     Event.AddListener("c_MemberChanges", self.c_MemberChanges, self)
 end
 
---注销model层网络回调h
+--Cancel the model layer network callback
 function GuildOwnCtrl:_removeListener()
     Event.RemoveListener("c_GetSocietyInfo", self.c_GetSocietyInfo, self)
     Event.RemoveListener("c_ModifySocietyName", self.c_ModifySocietyName, self)
@@ -95,7 +95,7 @@ function GuildOwnCtrl:Refresh()
     --self:_clickHomepage()
 end
 
--- 打开model
+-- Open model
 function GuildOwnCtrl:initInsData()
     DataManager.OpenDetailModel(GuildOwnModel, OpenModelInsID.GuildOwnCtrl)
 end
@@ -105,7 +105,7 @@ function GuildOwnCtrl:Hide()
     UIPanel.Hide(self)
 end
 
--- 是否显示红点提示
+-- Whether to display the red dot prompt
 function GuildOwnCtrl:_showNotice()
     local societyInfo = DataManager.GetGuildInfo()
     if societyInfo then
@@ -117,7 +117,7 @@ function GuildOwnCtrl:_showNotice()
     end
 end
 
--- 判断是否显示修改按钮
+--Determine whether to display the modify button
 function GuildOwnCtrl:_showModifyBtn(ownIdentity)
     if ownIdentity == "MEMBER" then
         GuildOwnPanel.modifyNameBtn.localScale = Vector3.zero
@@ -130,7 +130,7 @@ function GuildOwnCtrl:_showModifyBtn(ownIdentity)
     end
 end
 
--- 改公会名字
+--Change the name of the guild
 function GuildOwnCtrl:OnModifyName(go)
     PlayMusEff(1002)
     local data = {}
@@ -164,7 +164,7 @@ function GuildOwnCtrl:OnModifyName(go)
     --end})
 end
 
--- 改公会介绍
+-- Reform Guild Introduction
 function GuildOwnCtrl:OnModifyIntroduction(go)
     PlayMusEff(1002)
     local data = {}
@@ -197,7 +197,7 @@ function GuildOwnCtrl:OnModifyIntroduction(go)
     --end})
 end
 
--- 改公会宣言
+--Reform Association Declaration
 function GuildOwnCtrl:OnModifyDeclaration(go)
     PlayMusEff(1002)
     local data = {}
@@ -229,13 +229,13 @@ function GuildOwnCtrl:OnModifyDeclaration(go)
     --end})
 end
 
--- 打开公会信息面板
+-- Open the Guild Information Panel
 function GuildOwnCtrl:OnMoreAction(go)
     PlayMusEff(1002)
     ct.OpenCtrl("GuildMessageCtrl")
 end
 
--- 点击员工个数排序按钮
+-- Click the number of employees sort button
 function GuildOwnCtrl:OnStaffNumber(go)
     PlayMusEff(1002)
     if GuildOwnCtrl.rankId == 1 then
@@ -264,7 +264,7 @@ function GuildOwnCtrl:OnStaffNumber(go)
     go:_sort(GuildOwnCtrl.rankId)
 end
 
--- 点击加入时间排序按钮
+-- Click the Join Time Sort button
 function GuildOwnCtrl:OnJoinTime(go)
     PlayMusEff(1002)
     if GuildOwnCtrl.rankId == 3 then
@@ -293,14 +293,14 @@ function GuildOwnCtrl:OnJoinTime(go)
     go:_sort(GuildOwnCtrl.rankId)
 end
 
--- 关闭菜单
+-- Close menu
 function GuildOwnCtrl:OnClickMenu(go)
     GuildOwnCtrl.static.guildMgr:SetClickInteractable()
     GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(false)
 
 end
 
--- 数据排序及显示公会成员
+--Data sorting and displaying guild members
 function GuildOwnCtrl:_sort(rankId)
     if GuildOwnCtrl.societyMembers == nil then
         return
@@ -319,7 +319,7 @@ function GuildOwnCtrl:_sort(rankId)
     GuildOwnPanel.guildMemberScroll:RefillCells()
 end
 
--- 滑动复用
+-- Sliding multiplexing
 GuildOwnCtrl.static.GuildProvideData = function(transform, idx)
     idx = idx + 1
     local transformId = transform:GetInstanceID()
@@ -333,8 +333,8 @@ GuildOwnCtrl.static.GuildClearData = function(transform)
 
 end
 
--- 网络回调
--- 显示基本信息
+-- Network callback
+-- Display basic information
 function GuildOwnCtrl:c_GetSocietyInfo(societyInfo)
     GuildOwnPanel.guildNameText.text = societyInfo.name
     if societyInfo.declaration == "" then
@@ -370,7 +370,7 @@ function GuildOwnCtrl:c_GetSocietyInfo(societyInfo)
     GuildOwnCtrl.static.guildMgr:SetOwnGuildIdentity(ownIdentity)
 end
 
--- 改名字
+-- change name
 function GuildOwnCtrl:c_ModifySocietyName(bytesStrings)
     GuildOwnPanel.guildNameText.text = bytesStrings.str
     if bytesStrings.createId and bytesStrings.createId == DataManager.GetMyOwnerID() then
@@ -378,7 +378,7 @@ function GuildOwnCtrl:c_ModifySocietyName(bytesStrings)
     end
 end
 
--- 改介绍
+-- Change introduction
 function GuildOwnCtrl:c_ModifyIntroduction(bytesStrings)
     GuildOwnPanel.introduceText.text = bytesStrings.str
     if bytesStrings.createId and bytesStrings.createId == DataManager.GetMyOwnerID() then
@@ -386,7 +386,7 @@ function GuildOwnCtrl:c_ModifyIntroduction(bytesStrings)
     end
 end
 
--- 改宣言
+-- Change declaration
 function GuildOwnCtrl:c_ModifyDeclaration(bytesStrings)
     GuildOwnPanel.declarationText.text = bytesStrings.str
     if bytesStrings.createId and bytesStrings.createId == DataManager.GetMyOwnerID() then
@@ -394,12 +394,12 @@ function GuildOwnCtrl:c_ModifyDeclaration(bytesStrings)
     end
 end
 
--- 踢人返回
+-- Kick back
 function GuildOwnCtrl:c_KickMember(ids)
     Event.Brocast("SmallPop",GetLanguage(12060010),80)
 end
 
--- 职位任命返回
+--Return of appointment
 function GuildOwnCtrl:c_AppointerPost(appointerReq)
     if appointerReq.identity == "CHAIRMAN" then
         Event.Brocast("SmallPop",GetLanguage(12060030),80)
@@ -408,23 +408,23 @@ function GuildOwnCtrl:c_AppointerPost(appointerReq)
     end
 end
 
--- 删除已处理的入会请求
+-- Delete processed membership requests
 function GuildOwnCtrl:c_OwnDelJoinReq(joinReq)
     self:_showNotice()
 end
 
--- 新增入会请求
+-- New membership request
 function GuildOwnCtrl:c_OwnNewJoinReq(joinReq)
     self:_showNotice()
 end
 
--- 退出公会返回
+-- Return from the Guild
 function GuildOwnCtrl:c_OwnSociety(byteBool)
     UIPanel.ClosePage()
-    if byteBool.b then -- 自己主动退出
+    if byteBool.b then -- Quit yourself
         Event.Brocast("SmallPop",GetLanguage(12060031),80)
-    else -- 被踢
-        --打开弹框
+    else --Kicked
+        --Open the bullet box
         local showData = {}
         showData.titleInfo = GetLanguage(12010014)
         showData.contentInfo = GetLanguage(12060032)
@@ -433,7 +433,7 @@ function GuildOwnCtrl:c_OwnSociety(byteBool)
     end
 end
 
--- 成员变更
+-- Member change
 function GuildOwnCtrl:c_MemberChanges(memberChanges)
     for i, v in ipairs(memberChanges.changeLists) do
         if v.type == "IDENTITY" then

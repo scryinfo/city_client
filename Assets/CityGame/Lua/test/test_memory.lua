@@ -40,10 +40,10 @@ UnitTest.Exec("abel_w9_mem_Load_Instantiate", "test_w9_mem_Load_Instantiate",  f
         end
     end)
     --[[
-    测试结果：
-    1、 UnityEngine.Resources.Load 只要内存中有加载过的资源，Load方法不会重复加载该资源，而是把内存中的实例返回
-    2、 UnityEngine.GameObject.Instantiate 实例化prefab资源，从原prefab资源拷贝一份数据到内存
-    3、 unity 本身应该是有针对 prefab 资源的内存池机制，加载单独的资源，内存没有变化（没有超过预分配的内存）
+    Test Results:
+     1. UnityEngine.Resources.Load As long as there is a loaded resource in memory, the Load method will not repeatedly load the resource, but return the instance in memory
+     2. UnityEngine.GameObject.Instantiate instantiates the prefab resource and copies a copy of the data from the original prefab resource to memory
+     3. Unity itself should have a memory pool mechanism for prefab resources, load separate resources, and the memory has not changed (no more than the pre-allocated memory)
     ]]--
 end)
 

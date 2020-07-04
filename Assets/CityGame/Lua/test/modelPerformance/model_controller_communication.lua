@@ -4,7 +4,7 @@
 --- DateTime: 2018/12/1 10:21
 ---
 UnitTest.TestBlockStart()---------------------------------------------------------
---定义一个model基类
+--Define a model base class
 local ModelBase = class('ModelBase')
 local ControllerBase = class('ControllerBase')
 
@@ -21,7 +21,7 @@ function ControllerBase:initialize(name, newInsId)
     self.insId = newInsId
 end
 
---model类{
+--model class{
 Model_1 = class('Model_1',ModelBase)
 function Model_1:testfun(arg_int1, arg_int2)
     --ct.log("wk16_abel_controller_model", "[Model_1:testfun] invoked!")
@@ -43,9 +43,9 @@ function Model_2:testfunNoRet(arg_str)
     --ct.log("wk16_abel_controller_model", "[Model_2:testfun] invoked!")
     local len = #self.instanceName+#arg_str
 end
---model类}
+--model class}
 
---model管理器类{
+--model manager class{
 ModelManager = class('ModelManager')
 local modelList = {}
 local tempMd = nil
@@ -65,26 +65,26 @@ end
 function ModelManager:getModel(pos)
     return modelList[pos]
 end
---出于性能上的考量，把有返回值和没有返回值的rpc分开
---modelRpc是有返回值的
+--For performance reasons, separate rpc with and without return value
+--modelRpc has a return value
 function ModelManager.modelRpc(insId, modelMethord, ...)
     local arg = {...}
     local md = modelList[insId]
     arg[#arg](md[modelMethord](md,...))
 end
---modelRpcNoRet是没有返回值的
+--modelRpcNoRet has no return value
 function ModelManager.modelRpcNoRet(insId, modelMethord, ...)
     local md = modelList[insId]
     md[modelMethord](md,...)
 end
 
---最后一个参数必须是函数或者nil
+--The last parameter must be a function or nil
 function ModelManager.modelRpc1(insId, modelMethord, ...)
     local arg = {...}
-    --优化版本
+    --Optimized version
     arg[#arg](modelList[insId][modelMethord](modelList[insId],...))
 
-    --严格版本
+    --Strict version
     --local md = modelList[insId]
     --if md ~= nil then
     --    assert(md, 'model not exist which instance id = ',insId)
@@ -107,14 +107,14 @@ end
 
 function ModelManager.modelRpc2(insId, modelMethord, ...)
     tempArgs = {...}
-    --优化版本
-    tempMd = modelList[insId]
-    tempArgs[#tempArgs](tempMd[modelMethord](tempMd,...))
-    tempMd = nil
-    tempArgs = {}
+    --Optimized version
+     tempMd = modelList[insId]
+     tempArgs[#tempArgs](tempMd[modelMethord](tempMd,...))
+     tempMd = nil
+     tempArgs = {}
 end
 
---全局方法
+--Global method
 --function ct.model_rpc(insId, modelMethord, callback, ...)
 function ct.model_rpc(insId, modelMethord, ...)
     ModelManager.modelRpc(insId, modelMethord, ...)
@@ -147,9 +147,9 @@ end
 function ct.model_rpc2(insId, modelMethord, ...)
     ModelManager.modelRpc2(insId, modelMethord, ...)
 end
---model管理器类}
+--model manager class}
 
---controller类{
+--controller class{
 Ctrl_1 = class('Crtl_1',ControllerBase)
 function Ctrl_1:initialize(name, newInsId)
     ControllerBase.initialize(self, name,newInsId)
@@ -173,64 +173,64 @@ function Ctrl_2:reqDatafun(arg_str)
         --ct.log('wk16_abel_controller_model', '[Crtl_2:reqDatafun] return: '..retvalue)
     end)
 end
---controller类}
+--controller class)
 
 local ModelManager = ModelManager
 ModelManager.initialize()
 
---数据准备{
-UnitTest.Exec("wk16_abel_ctrl_model_initTestData", "test_wk16_abel_ctrl_model_initTestData",  function ()
-    ct.log("wk16_abel_ctrl_model_initTestData", '\n[test_wk16_abel_ctrl_model_initTestData] 数据准备, 创建'..test_count..'个Model及对应Ctrl')
+--data preparation{
+UnitTest.Exec("wk16_abel_ctrl_model_initTestData", "test_wk16_abel_ctrl_model_initTestData", function ()
+    ct.log("wk16_abel_ctrl_model_initTestData",'\n[test_wk16_abel_ctrl_model_initTestData] data preparation, create'..test_count..' models and corresponding Ctrl')
     for i = 1, test_count do
-        --使用相同的实例id实例化对应的 Model 和 Ctrl, 这里的 i 就是实例id: insId
-        --Model类型要和Crtl的类型匹配，就像加工厂的Model和Ctrl类型是对应的，Ctrl要调用对应的Model的Rpc方法，
-        --前提是Ctrl知道对应Model的实例id，这里就简单处理，让新创建的Model和Ctrl的实例id都等于i，那么我们
-        --在后边的测试中，就可以通过Ctrl中的实例id找打对应的Model实例
+        --Use the same instance id to instantiate the corresponding Model and Ctrl, where i is the instance id: insId
+        --Model type should match the Crtl type, just like the Model and Ctrl types of the processing plant, Ctrl should call the Rpc method of the corresponding Model,
+        --The premise is that Ctrl knows the instance id of the corresponding Model, here is a simple process, let the newly created Model and Ctrl instance id are equal to i, then we
+        -- In the following test, you can find the corresponding Model instance by the instance id in Ctrl
         local newModel = ModelManager.addModel(nil,Model_1:new('Model_1'..i,i))
-        tempCtrlList[newModel.insId] = ModelManager:OpenCtrl(newModel,Ctrl_1) --OpenCtrl实际上就是把 newModel 的 insId 传递给新创建的 Ctrl_1
+        tempCtrlList[newModel.insId] = ModelManager:OpenCtrl(newModel,Ctrl_1) --OpenCtrl is actually passing the insId of newModel to the newly created Ctrl_1
     end
     for i = test_count+1, test_count *2 do
         local newModel =ModelManager.addModel(nil,Model_2:new('Model_2'..i,i))
-        tempCtrlList[newModel.insId] = ModelManager:OpenCtrl(newModel,Ctrl_2) --OpenCtrl实际上就是把 newModel 的 insId 传递给新创建的 Ctrl_1
+        tempCtrlList[newModel.insId] = ModelManager:OpenCtrl(newModel,Ctrl_2) --OpenCtrl actually passes the insId of newModel to the newly created Ctrl_1
     end
 end)
---数据准备}
+--data preparation}
 
---基础功能测试-------------------------------------------{
-UnitTest.Exec("wk16_abel_model_rpc_errfun", "test_wk16_abel_model_rpc_errfun",  function ()
+--Basic functional test -------------------------------------------{
+UnitTest.Exec("wk16_abel_model_rpc_errfun", "test_wk16_abel_model_rpc_errfun", function ()
     local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
-    --测试{
-    --不存在的方法,会有 Error 日志输出
-    ct.model_rpc(pCrtl_2.insId, 'testfun1', 'hello',function (retvalue)
+    --test{
+    -- If there is no method, there will be Error log output
+    ct.model_rpc(pCrtl_2.insId,'testfun1','hello',function (retvalue)
         ct.log('wk16_abel_model_rpc_errfun', '[Crtl_2:reqDatafun] return: '..retvalue)
     end)
-    --测试}
+    --test}
 end)
 
 UnitTest.Exec("wk16_abel_model_rpc_noCb", "test_wk16_abel_model_rpc_noCb",  function ()
     local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
-    --测试{
-    --需要返回值的情况下，如果不传递回调,会有 Error 日志输出
-    ct.model_rpc(pCrtl_2.insId, 'testfun1', 'hello')
-    --测试}
+    --test{
+     --If the return value is required, if no callback is passed, there will be Error log output
+     ct.model_rpc(pCrtl_2.insId,'testfun1','hello')
+     --test}
 end)
 
-UnitTest.Exec("wk16_abel_model_rpcNoRet", "wk16_abel_model_rpcNoRet",  function ()
-    local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
-    --测试{
-    --不需要返回值的情况下,调用 model_rpcNoRet
-    ct.model_rpcNoRet(pCrtl_2.insId, 'testfun1', 'hello')
-    --测试}
+UnitTest.Exec("wk16_abel_model_rpcNoRet", "wk16_abel_model_rpcNoRet", function ()
+     local pCrtl_2 = Ctrl_2:new('Crtl_1_ins',ct.getIntPart(test_count*1.5))
+     --test{
+     -- If no return value is required, call model_rpcNoRet
+     ct.model_rpcNoRet(pCrtl_2.insId,'testfun1','hello')
+     --test}
 end)
---基础功能测试-------------------------------------------}
+--Basic functional test -------------------------------------------}
 
 
---性能测试-------------------------------------------{
---有返回值的rpc测试
+--Performance Testing-------------------------------------------{
+--Rpc test with return value
 UnitTest.Exec("wk16_abel_ctrl_model", "test_wk16_abel_ctrl_model_Performance",  function ()
     collectgarbage("collect")
-    ct.log('wk16_abel_ctrl_model', "model_rpc 性能测试"..test_count.."次调用,测试开始------------------------------------------")
-    UnitTest.PerformanceTest("wk16_abel_ctrl_model","model_rpc 性能测试1：直接调用 model 方法", function()
+    ct.log('wk16_abel_ctrl_model', "model_rpc 性能测试"..test_count.."Calls, the test begins -------------------------------------------")
+    UnitTest.PerformanceTest("wk16_abel_ctrl_model","model_rpc performance test 1: directly call the model method", function()
         local retvalue = nil
         for i = 1, test_count do
             retvalue = ModelManager.getModel(nil,i):testfun(1,2)
@@ -282,47 +282,47 @@ UnitTest.Exec("wk16_abel_ctrl_model", "test_wk16_abel_ctrl_model_Performance",  
             end)
         end
     end)
-    ct.log('wk16_abel_ctrl_model', "model_rpc 性能测试"..test_count.."次调用,测试结束------------------------------------------")
+    ct.log('wk16_abel_ctrl_model', "model_rpc Performance test "..test_count.." times, the test is over------------------------------------ ------")
     --[[
-    100万次调用
-        model_rpc 性能测试1：直接调用 model 方法    执行时间:      4.1279999999999
-        model_rpc 性能测试2：model_rpc 调用    执行时间:           4.454
-        model_rpc 性能测试3：model_rpc1 调用    执行时间:          4.62
-        model_rpc 性能测试3：model_rpc2 调用    执行时间:          5.1899999999999
-    50万次调用
-        model_rpc 性能测试1：直接调用 model 方法    执行时间:      1.9750000000001
-        model_rpc 性能测试2：model_rpc 调用    执行时间:           2.2450000000001
-        model_rpc 性能测试3：model_rpc1 调用    执行时间:          2.2750000000001
-        model_rpc 性能测试3：model_rpc2 调用    执行时间:          2.519
-    10万次调用
-        model_rpc 性能测试1：直接调用 model 方法    执行时间:      0.43599999999992
-        model_rpc 性能测试2：model_rpc 调用    执行时间:           0.42499999999995
-        model_rpc 性能测试3：model_rpc1 调用    执行时间:          0.43000000000006
-        model_rpc 性能测试3：model_rpc2 调用    执行时间:          0.49099999999999
-    1万次调用
-        model_rpc 性能测试1：直接调用 model 方法    执行时间:      0.044000000000096
-        model_rpc 性能测试2：model_rpc 调用    执行时间:           0.045999999999822
-        model_rpc 性能测试3：model_rpc1 调用    执行时间:          0.048000000000002
-        model_rpc 性能测试3：model_rpc2 调用    执行时间:          0.070999999999913
-    性能比较接近
+    1 million calls
+        model_rpc performance test 1: directly call the model method execution time: 4.1279999999999
+        model_rpc performance test 2: model_rpc call Execution time: 4.454
+        model_rpc performance test 3: call model_rpc1 execution time: 4.62
+        model_rpc performance test 3: call model_rpc2 execution time: 5.1899999999999
+    500,000 calls
+        model_rpc performance test 1: directly call the model method execution time: 1.9750000000001
+        model_rpc performance test 2: model_rpc call execution time: 2.2450000000001
+        model_rpc performance test 3: model_rpc1 call execution time: 2.2750000000001
+        model_rpc performance test 3: call model_rpc2 execution time: 2.519
+    100,000 calls
+        model_rpc performance test 1: directly call the model method execution time: 0.43599999999992
+        model_rpc performance test 2: model_rpc call execution time: 0.42499999999995
+        model_rpc performance test 3: model_rpc1 call execution time: 0.43000000000006
+        model_rpc performance test 3: call model_rpc2 execution time: 0.49099999999999
+    10,000 calls
+        model_rpc performance test 1: directly call the model method execution time: 0.044000000000096
+        model_rpc performance test 2: model_rpc call execution time: 0.045999999999822
+        model_rpc performance test 3: call model_rpc1 execution time: 0.048000000000002
+        model_rpc performance test 3: call model_rpc2 execution time: 0.070999999999913
+    Performance is close
     --]]
 end)
 
---没有返回值的rpc测试
+--Rpc test with no return value
 UnitTest.Exec("wk16_abel_ctrl_model_noRetPerformance", "test_wk16_abel_ctrl_model_noRetPerformance",  function ()
     collectgarbage("collect")
-    ct.log('wk16_abel_ctrl_model_noRetPerformance', "model_rpc 性能测试"..test_count.."次调用,测试开始------------------------------------------")
-    UnitTest.PerformanceTest("wk16_abel_ctrl_model_noRetPerformance","model_rpc 性能测试1：直接调用 model 方法", function()
+    ct.log('wk16_abel_ctrl_model_noRetPerformance', "model_rpc 性能测试"..test_count.."Calls, the test begins -------------------------------------------")
+    UnitTest.PerformanceTest("wk16_abel_ctrl_model_noRetPerformance","model_rpc performance test 1: directly call the model method", function()
         local retvalue = nil
         for i = 1, test_count do
-            retvalue = ModelManager.getModel(nil,i):testfunNoRet(1,2)
+            retvalue = ModelManager.getModel(nil,i): testfunNoRet(1,2)
         end
         for i = test_count+1, test_count*2 do
-            retvalue = ModelManager.getModel(nil,i):testfunNoRet('hello_'..i)
+            retvalue = ModelManager.getModel(nil,i): testfunNoRet('hello_'..i)
         end
     end)
     collectgarbage("collect")
-    UnitTest.PerformanceTest("wk16_abel_ctrl_model_noRetPerformance","model_rpc 性能测试2：model_rpcNoRet 调用", function()
+    UnitTest.PerformanceTest("wk16_abel_ctrl_model_noRetPerformance","model_rpc performance test 2: model_rpcNoRet call", function()
         local pRetvalue = nil
         for i = 1, test_count do
             ct.model_rpcNoRet(tempCtrlList[i].insId, 'testfun', 1,2,function (retvalue)
@@ -337,21 +337,21 @@ UnitTest.Exec("wk16_abel_ctrl_model_noRetPerformance", "test_wk16_abel_ctrl_mode
     end)
     collectgarbage("collect")
     --[[
-    100万次调用
-        model_rpc 性能测试1：直接调用 model 方法    执行时间:      3.5659999999998
-        model_rpc 性能测试2：model_rpcNoRet 调用    执行时间:      3.1400000000003
-    50万次调用
-      model_rpc 性能测试1：直接调用 model 方法    执行时间:        1.7050000000004
-      model_rpc 性能测试2：model_rpcNoRet 调用    执行时间:        1.5460000000003
-    10万次调用
-      model_rpc 性能测试1：直接调用 model 方法    执行时间:        0.32999999999993
-      model_rpc 性能测试2：model_rpcNoRet 调用    执行时间:        0.29899999999998
-    1万次调用
-      model_rpc 性能测试1：直接调用 model 方法    执行时间:        0.030999999999949
-      model_rpc 性能测试2：model_rpcNoRet 调用    执行时间:        0.0300000000002
-  性能比较接近
-  --]]
+    1 million calls
+         model_rpc performance test 1: directly call the model method execution time: 3.5659999999998
+         model_rpc performance test 2: model_rpcNoRet call execution time: 3.1400000000003
+     500,000 calls
+       model_rpc performance test 1: directly call the model method execution time: 1.7050000000004
+       model_rpc performance test 2: model_rpcNoRet call execution time: 1.5460000000003
+     100,000 calls
+       model_rpc performance test 1: directly call the model method execution time: 0.32999999999993
+       model_rpc performance test 2: model_rpcNoRet call execution time: 0.29899999999998
+     10,000 calls
+       model_rpc performance test 1: directly call the model method execution time: 0.030999999999949
+       model_rpc performance test 2: model_rpcNoRet call execution time: 0.0300000000002
+   Performance is close
+   --]]
 end)
---性能测试-------------------------------------------}
+--Performance Testing-------------------------------------------}
 
 UnitTest.TestBlockEnd()-----------------------------------------------------------

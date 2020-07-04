@@ -36,18 +36,18 @@ function GuildApplyCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
 
-    -- 多语言
+    -- multi-language
     GuildApplyPanel.panelNameText.text = GetLanguage(12060015)
     GuildApplyPanel.noContentText.text = GetLanguage(12060016)
 end
 
--- 监听Model层网络回调
+-- Listen to the model layer network callback
 function GuildApplyCtrl:_addListener()
     Event.AddListener("c_DelJoinReq", self.c_DelJoinReq, self)
     Event.AddListener("c_NewJoinReq", self.c_NewJoinReq, self)
 end
 
---注销model层网络回调
+--Cancel the model layer network callback
 function GuildApplyCtrl:_removeListener()
     Event.RemoveListener("c_DelJoinReq", self.c_DelJoinReq, self)
     Event.RemoveListener("c_NewJoinReq", self.c_NewJoinReq, self)
@@ -58,7 +58,7 @@ function GuildApplyCtrl:Refresh()
     self:_showView()
 end
 
--- 打开model
+-- Open model
 function GuildApplyCtrl:initInsData()
     DataManager.OpenDetailModel(GuildApplyModel, OpenModelInsID.GuildApplyCtrl)
     --DataManager.DetailModelRpcNoRet(OpenModelInsID.GuildApplyCtrl, "m_GetSocietyInfo", {id = self.m_data})
@@ -69,7 +69,7 @@ function GuildApplyCtrl:Hide()
     UIPanel.Hide(self)
 end
 
--- 显示申请列表
+-- Show application list
 function GuildApplyCtrl:_showView()
     local societyInfo = DataManager.GetGuildInfo()
     if societyInfo and societyInfo.reqs then
@@ -85,7 +85,7 @@ function GuildApplyCtrl:_showView()
     end
 end
 
--- 滑动复用
+-- Sliding multiplexing
 GuildApplyCtrl.static.GuildApplyProvideData = function(transform, idx)
     idx = idx + 1
     local transformId = transform:GetInstanceID()
@@ -99,15 +99,15 @@ GuildApplyCtrl.static.GuildApplyClearData = function(transform)
 
 end
 
--- 网络回调
--- 刷新申请列表
+--Network callback
+-- Refresh the application list
 function GuildApplyCtrl:c_DelJoinReq(joinReq)
     if joinReq.handleId == DataManager.GetMyOwnerID() then
         if joinReq.serverFlag then
             if joinReq.handleFlag then
-                Event.Brocast("SmallPop", GetLanguage(12060039), 80) -- "已同意申请"
+                Event.Brocast("SmallPop", GetLanguage(12060039), 80) -- "Agree to apply"
             else
-                Event.Brocast("SmallPop", GetLanguage(12060040), 80) --  .. joinReq.playerId  "已拒绝申请"
+                Event.Brocast("SmallPop", GetLanguage(12060040), 80) --  .. joinReq.playerId  "Application rejected"
             end
         else
             Event.Brocast("SmallPop", GetLanguage(12060038), 80)
@@ -121,7 +121,7 @@ function GuildApplyCtrl:c_DelJoinReq(joinReq)
     end
 end
 
--- 新增入会请求
+-- New membership request
 function GuildApplyCtrl:c_NewJoinReq(joinReq)
     --GuildApplyPanel.guildInfoScroll:ActiveLoopScroll(self.guildApplySource, #GuildApplyCtrl.societyApplyInfo, "View/Guild/GuildApplyItem")
     self:_showView()

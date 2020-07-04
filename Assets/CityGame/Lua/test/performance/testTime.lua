@@ -1,6 +1,6 @@
---scale 为0，那么只执行一次
---return function(scale,title, f) --前面加个 return ，能够让这个方法得到执行，而不仅仅是定义
---  assert(scale >= 0 ,"time require scale >= 0")
+--scale is 0, then only execute once
+--return function(scale,title, f) --Add a return in front, this method can be executed, not just the definition
+-- assert(scale >= 0 ,"time require scale >= 0")
 --
 --  collectgarbage()
 --

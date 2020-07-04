@@ -22,7 +22,7 @@ function MyGround.Init()
     usedGroundObj = {}
 end
 
---创建我的地块
+--Create my plot
 function MyGround.CreateMyGrounds()
     local myPersonData = DataManager.GetMyPersonData()
     if myPersonData.m_groundInfos then
@@ -48,7 +48,7 @@ end
 
 function MyGround.AddMyGround(tempPos)
     local tempBlockID = TerrainManager.PositionTurnBlockID(tempPos)
-    --判断是否有了这个Obj了
+    --Determine if you have this Obj
     if myGroundObj ~= nil and myGroundObj[tempBlockID] ~= nil then
         return
     end
@@ -65,7 +65,7 @@ function MyGround.AddMyGround(tempPos)
     myGroundObj[tempBlockID] = tempObj
 end
 
---移除我的地块
+--Remove my plot
 function MyGround.RemoveMyGround(tempPos)
     local tempBlockID = TerrainManager.PositionTurnBlockID(tempPos)
     if myGroundObj[tempBlockID] ~= nil then
@@ -75,7 +75,7 @@ function MyGround.RemoveMyGround(tempPos)
     myGroundObj[tempBlockID] = nil
 end
 
---删除我的地块
+--Delete my plot
 function MyGround.ClearMyGrounds()
     if myGroundObj ~= nil then
         for key, value in pairs(myGroundObj) do

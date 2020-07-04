@@ -14,10 +14,10 @@ end
 
 function LabInventionPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
-    this.progressSuccessBtn = transform:Find("bottomRoot/left/progressRoot/successImg")  --完成时显示的按钮
+    this.progressSuccessBtn = transform:Find("bottomRoot/left/progressRoot/successImg")  --Button displayed when finished
     this.workingImgRootTran = transform:Find("bottomRoot/left/progressRoot/workingImg")
-    this.progressWorkingImg = transform:Find("bottomRoot/left/progressRoot/workingImg/progressImg"):GetComponent("Image")  --正在发明中，设置fill amount
-    this.timeDownText = transform:Find("bottomRoot/left/progressRoot/workingImg/timeDownText"):GetComponent("Text")  --倒计时
+    this.progressWorkingImg = transform:Find("bottomRoot/left/progressRoot/workingImg/progressImg"):GetComponent("Image")  --Inventing, setting fill amount
+    this.timeDownText = transform:Find("bottomRoot/left/progressRoot/workingImg/timeDownText"):GetComponent("Text")  --Countdown
     this.emptyTextTran = transform:Find("bottomRoot/left/progressRoot/emptyText")
 
     this.phaseItems = LabInventionItemPhaseItems:new(transform:Find("bottomRoot/left/rollRoot/successItems"), true)
@@ -39,7 +39,7 @@ function LabInventionPanel.InitPanel()
     this.threeLineTran = transform:Find("bottomRoot/right/goods/threeLine")
     this.threeLineItem = LabFormulaItem:new(this.threeLineTran)
 end
---设置
+--Setup
 function LabInventionPanel.setBulbState(state)
     if state == LabInventionBulbItemState.Empty then
         this.emptyTextTran.localScale = Vector3.one
@@ -62,7 +62,7 @@ function LabInventionPanel.setBulbState(state)
         this.progressSuccessBtn.localScale = Vector3.one
     end
 end
---显示填充线的信息
+--Display information about filled lines
 function LabInventionPanel.showLine(datas)
     local count = #datas
     if count == 0 then

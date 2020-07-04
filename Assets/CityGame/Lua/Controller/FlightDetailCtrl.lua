@@ -54,19 +54,19 @@ function FlightDetailCtrl:_initData()
         FlightDetailPanel.infoRoot.localScale = Vector3.zero
         FlightDetailPanel.betBtn.localScale = Vector3.zero
         FlightDetailPanel.resultRoot.localScale = Vector3.zero
-        if self.m_data.dataType == 0 then  --热门预测界面
+        if self.m_data.dataType == 0 then  --Popular prediction interface
             flightData = self.m_data.detail.data
             self:_hot(self.m_data.detail)
-        elseif self.m_data.dataType == 1 then  --历史界面
+        elseif self.m_data.dataType == 1 then  --History interface
             flightData = self.m_data.detail.data
             self:_history(self.m_data.detail)
-        elseif self.m_data.dataType == 2 then  --从搜索过来的详情
+        elseif self.m_data.dataType == 2 then  --Details from search
             flightData = self.m_data.detail
             self:_search(self.m_data.detail)
         end
         self.id = flightData.FlightNo
-        self.date = flightData.FlightDeptimePlanDate  --bet界面所需数据
-        FlightDetailPanel.timeText.text = self:_getDayStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 --精确到天
+        self.date = flightData.FlightDeptimePlanDate  --Data required by bet interface
+        FlightDetailPanel.timeText.text = self:_getDayStr(flightData.FlightDeptimePlanDate)  --Planned departure time - accurate to days
         FlightDetailPanel.flightText.text = ct.GetFlightCompanyName(flightData.FlightNo)
         FlightDetailPanel.numText.text = flightData.FlightNo  --CA4506
         FlightDetailPanel.endCodeText.text = flightData.FlightArrcode
@@ -83,7 +83,7 @@ end
 function FlightDetailCtrl:_updateText()
     local str1 = FlightDetailPanel.flightText.text
     if str1 == "" then
-        str1 = GetLanguage(32030035)  --暂无数据
+        str1 = GetLanguage(32030035)  --No data
     end
     FlightDetailPanel.flightText.text = ct.getFlightSubString(str1, 60, 34)
     local str2 = FlightDetailPanel.endPlaceText.text
@@ -91,7 +91,7 @@ function FlightDetailCtrl:_updateText()
     local str3 = FlightDetailPanel.startPlaceText.text
     FlightDetailPanel.startPlaceText.text = ct.getFlightSubString(str3, 36, 20)
 end
---获得xx分xx秒格式的时间
+--Get time in xx minutes xx seconds format
 function FlightDetailCtrl:_getSecondStr(str)
     if str == nil or str == "" then
         return "--"
@@ -99,7 +99,7 @@ function FlightDetailCtrl:_getSecondStr(str)
     local temp = string.sub(str, 12, 16)
     return temp
 end
---获得2019-05-01格式的时间
+--Get the time in 2019-05-01 format
 function FlightDetailCtrl:_getDayStr(str)
     if str == nil or str == "" then
         return "--"
@@ -114,7 +114,7 @@ function FlightDetailCtrl:_hot(value)
     FlightDetailPanel.historyTran.localScale = Vector3.zero
     flightData = value.data
     FlightDetailPanel.hotMoneyText.text = value.sumBetAmount
-    FlightDetailPanel.hotPlanTimeText.text = self:_getSecondStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 精确到秒
+    FlightDetailPanel.hotPlanTimeText.text = self:_getSecondStr(flightData.FlightDeptimePlanDate)  --Planned takeoff time to the nearest second
     if flightData.FlightDeptimeDate == "" then
         FlightDetailPanel.hotTrueTimeText.text = "--"
     else
@@ -124,12 +124,12 @@ function FlightDetailCtrl:_hot(value)
     local trueWidth02 = FlightDetailPanel.hotMoneyText.preferredWidth
     FlightDetailPanel.hotMoneyText.rectTransform.sizeDelta = Vector2.New(trueWidth02, FlightDetailPanel.hotMoneyText.rectTransform.sizeDelta.y)
 
-    --可押注
+    --Can bet
     if value.myBet == nil and flightData.FlightState == "计划" then
         FlightDetailPanel.betBtn.localScale = Vector3.one
         return
     end
-    --提示已参加预测  --判定需要看具体数据是否为""
+    --Prompt has participated in the forecast-determine whether you need to see whether the specific data is ""
     if value.myBet ~= nil and flightData.FlightDeptimeDate == "" then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
         local tempDelay = string.format("<color=#68AFFF>%d</color>", value.myBet.delay)
@@ -137,7 +137,7 @@ function FlightDetailCtrl:_hot(value)
         FlightDetailPanel.infoText.text = GetLanguage(32030019, tempDelay, tempAmount)
         return
     end
-    --提示航班已过投注时间
+    --Prompt flight has passed betting time
     if value.myBet == nil and flightData.FlightDeptimeDate ~= "计划" then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
         FlightDetailPanel.infoText.text = GetLanguage(32030023)
@@ -149,7 +149,7 @@ function FlightDetailCtrl:_history(value)
     local flightData = value.data
     FlightDetailPanel.historyTran.localScale = Vector3.one
     FlightDetailPanel.hotTran.localScale = Vector3.zero
-    FlightDetailPanel.historyPlanTimeText.text = self:_getSecondStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 精确到秒
+    FlightDetailPanel.historyPlanTimeText.text = self:_getSecondStr(flightData.FlightDeptimePlanDate)  ---Planned departure time to the nearest second
     if flightData.FlightDeptimeDate == "" then
         FlightDetailPanel.historyTrueTimeText.text = "--"
     else
@@ -164,32 +164,32 @@ function FlightDetailCtrl:_history(value)
         return
     end
 
-    --已经有结果
+    --Already have results
     FlightDetailPanel.resultRoot.localScale = Vector3.one
     if value.win == true then
-        FlightDetailPanel.value03Text.text = ""..value.amount  --净赚积分
+        FlightDetailPanel.value03Text.text = ""..value.amount  --Net earning points
     else
         FlightDetailPanel.value03Text.text = "-"..value.amount
     end
     local plan = getTimeUnixByFormat(flightData.FlightDeptimePlanDate)
     local ture = getTimeUnixByFormat(flightData.FlightDeptimeDate)
-    local delay = (ture - plan) / 60  --只判断分钟
+    local delay = (ture - plan) / 60  --Only judge minutes
 
-    FlightDetailPanel.value01Text.text = value.delay..GetLanguage(20160005)  --预测延误时间
-    FlightDetailPanel.value02Text.text = delay..GetLanguage(20160005)  --实际延误时间
+    FlightDetailPanel.value01Text.text = value.delay..GetLanguage(20160005)  --Predict delay time
+    FlightDetailPanel.value02Text.text = delay..GetLanguage(20160005)  --Actual delay time
 end
 --
 function FlightDetailCtrl:_search(value)
     local flightData = value
     FlightDetailPanel.historyTran.localScale = Vector3.one
     FlightDetailPanel.hotTran.localScale = Vector3.zero
-    FlightDetailPanel.historyPlanTimeText.text = self:_getSecondStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 精确到秒
+    FlightDetailPanel.historyPlanTimeText.text = self:_getSecondStr(flightData.FlightDeptimePlanDate)  --Planned takeoff time to the nearest second
     if flightData.FlightDeptimeDate == "" then
         FlightDetailPanel.historyTrueTimeText.text = "--"
     else
         FlightDetailPanel.historyTrueTimeText.text = self:_getSecondStr(flightData.FlightDeptimeDate)
     end
-    --如果没有对应数据，则没下过注
+    --If there is no corresponding data, no bet
     local tempBet = FlightMainModel.getFlightBetById(flightData.FlightNo)
     if tempBet == nil then
         tempBet = FlightMainModel.getSearchFlightBetById(flightData.FlightNo)
@@ -201,9 +201,9 @@ function FlightDetailCtrl:_search(value)
     else
         local plan = getTimeUnixByFormat(flightData.FlightDeptimePlanDate)
         if self:_checkZoneTime(plan, flightData.orgTimeZoneHours) == false then
-            --flightData.FlightState == "计划"
+            --flightData.FlightState == "plan"
             --self:_checkZoneTime(plan, flightData.orgTimeZoneHours) == false
-            FlightDetailPanel.betBtn.localScale = Vector3.one  --可以下注
+            FlightDetailPanel.betBtn.localScale = Vector3.one  --Can bet
         else
             FlightDetailPanel.infoRoot.localScale = Vector3.one
             FlightDetailPanel.infoText.text = GetLanguage(32030023)
@@ -211,31 +211,31 @@ function FlightDetailCtrl:_search(value)
         return
     end
 
-    --还没起飞
+    --Haven't taken off yet
     if value.win == nil then
         FlightDetailPanel.infoRoot.localScale = Vector3.one
         local tempDelay = string.format("<color=#68AFFF>%d</color>", value.delay)
         local tempAmount = string.format("<color=#FFC000>%d</color>", value.amount)
         FlightDetailPanel.infoText.text = GetLanguage(32030019, tempDelay, tempAmount)
     else
-        --已经有结果
+        --Already have results
         if value.win == true then
-            FlightDetailPanel.value03Text.text = ""..value.amount  --净赚积分
+            FlightDetailPanel.value03Text.text = ""..value.amount  --Net earning points
         else
             FlightDetailPanel.value03Text.text = "-"..value.amount
         end
         local plan = getTimeUnixByFormat(flightData.FlightDeptimePlanDate)
         local ture = getTimeUnixByFormat(flightData.FlightDeptimeDate)
-        local delay = (ture - plan) / 60  --只判断分钟
+        local delay = (ture - plan) / 60  --Only judge minutes
 
-        FlightDetailPanel.value01Text.text = value.delay..GetLanguage(20160005)  --预测延误时间
-        FlightDetailPanel.value02Text.text = delay..GetLanguage(20160005)  --实际延误时间
+        FlightDetailPanel.value01Text.text = value.delay..GetLanguage(20160005)  --Predict delay time
+        FlightDetailPanel.value02Text.text = delay..GetLanguage(20160005)  --Actual delay time
     end
 end
---判断是否已过某时区时间
+--Determine if a time has passed
 function FlightDetailCtrl:_checkZoneTime(startTime, zone)
-    local serverTime = TimeSynchronized.GetTheCurrentTime()  --服务器当前时间
-    local turnTime = startTime + (FlightConfig.ChenDuZone - zone) * 3600  --对应时区在服务器的时间  --默认服务器是UTF+8
+    local serverTime = TimeSynchronized.GetTheCurrentTime()  --Current server time
+    local turnTime = startTime + (FlightConfig.ChenDuZone - zone) * 3600  --The time corresponding to the time zone in the server - the default server is UTF+8
     if serverTime >= turnTime then
         return true
     end
@@ -261,7 +261,7 @@ function FlightDetailCtrl:backFunc()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
---下注，判断自己的钱
+--Bet to judge your money
 function FlightDetailCtrl:betFunc()
     PlayMusEff(1002)
     ct.OpenCtrl("FlightBetCtrl", {id = self.id, date = self.date})
@@ -271,7 +271,7 @@ function FlightDetailCtrl:ruleFunc()
     PlayMusEff(1002)
     ct.OpenCtrl("FlightRuleDialogPageCtrl")
 end
---下注回调
+--Betting callback
 function FlightDetailCtrl:_getBetResult(value)
     if value.id == self.id and value.date == self.date then
         FlightDetailPanel.infoRoot.localScale = Vector3.one

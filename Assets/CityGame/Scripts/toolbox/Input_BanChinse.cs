@@ -8,7 +8,7 @@ namespace UnityEngine
     public class Input_BanChinse:MonoBehaviour
     {
         /// <summary>
-        /// 输入框禁止输入中文
+        /// The input box prohibits the input of Chinese
         /// </summary>
         /// <param name="input"></param>
         public void BanChinese(InputField input)

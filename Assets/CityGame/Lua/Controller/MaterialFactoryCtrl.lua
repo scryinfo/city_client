@@ -6,10 +6,10 @@
 -----
 
 MaterialFactoryCtrl = class('MaterialFactoryCtrl',UIPanel)
-UIPanel:ResgisterOpen(MaterialFactoryCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(MaterialFactoryCtrl) --Open registration method
 
 local this
---构建函数
+--Constructor
 function MaterialFactoryCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -42,17 +42,17 @@ end
 
 function MaterialFactoryCtrl:initializeData()
     if self.m_data then
-        --向服务器请求建筑详情
+        --Request building details from the server
         DataManager.OpenDetailModel(MaterialFactoryModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenMaterial',self.m_data.insId)
     end
 end
 
---刷新原料厂信息
+--Refresh the raw material factory information
 function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
     --初始化
     --MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)
-    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)  --初始化
+    MaterialFactoryPanel.openBusinessItem:initData(materialDataInfo.info, BuildingType.MaterialFactory)  --initialization
     local insId = self.m_data.insId
     self.m_data = materialDataInfo
     self.m_data.insId = insId
@@ -65,7 +65,7 @@ function MaterialFactoryCtrl:refreshMaterialDataInfo(materialDataInfo)
         end)
     end
 
-    --判断是自己还是别人打开了界面
+    --Determine if you or someone else has opened the interface
     if materialDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
     else
@@ -164,9 +164,9 @@ function MaterialFactoryCtrl:_clickCloseBtn()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
-    --关闭原料厂推送
+    --Close raw material factory push
     Event.Brocast("m_ReqCloseMaterial",self.m_data.insId)
-    --关闭当前建筑Model
+    --Close the current building
     DataManager.CloseDetailModel(self.m_data.insId)
     self.m_data = nil
     RevenueDetailsMsg.close()

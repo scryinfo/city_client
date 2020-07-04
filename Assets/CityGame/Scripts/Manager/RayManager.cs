@@ -19,22 +19,22 @@ namespace LuaFramework
                 TerrainTrans = GameObject.Find("Terrain").transform;
             }
             
-            //从鼠标位置发射一条射线
+            //Emit a ray from the mouse position
             ray = Camera.main.ScreenPointToRay(RayPos);
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
                 Debug.Log(TerrainTrans.name);
-                //通过大小来判断行数和列数是奇数还是偶数
+                //Determine whether the number of rows and columns is odd or even by size
                 float remainderX = GetWorldScale(TerrainTrans).x * 10 / _gridSize % 2;
                 float remainderZ = GetWorldScale(TerrainTrans).z * 10 / _gridSize % 2;
-                //获取射线碰撞点到ground的一个旋转量
+                //Get a rotation of the ray collision point to the ground
                 Quaternion rot = Quaternion.LookRotation(hit.point - TerrainTrans.position);
-                //碰撞点到ground的距离
+                //Distance from collision point to ground
                 float dist = Vector3.Distance(hit.point, TerrainTrans.position);
-                //以ground为坐标原点为坐标系，通过三角函数计算出碰撞点在坐标系中的坐标
+                //Taking ground as the coordinate origin and using the trigonometric function to calculate the coordinates of the collision point in the coordinate system
                 float distX = Mathf.Sin((rot.eulerAngles.y - TerrainTrans.rotation.eulerAngles.y) * Mathf.Deg2Rad) * dist;
                 float distZ = Mathf.Cos((rot.eulerAngles.y - TerrainTrans.rotation.eulerAngles.y) * Mathf.Deg2Rad) * dist;
-                //判断碰撞点在ground为原点的坐标系中的哪一象限
+                //Determine which quadrant of the collision point in the coordinate system where ground is the origin
                 float signX = 1;
                 float signZ = 1;
                 if (distX != 0)
@@ -45,13 +45,13 @@ namespace LuaFramework
                 {
                     signZ = distZ / Mathf.Abs(distZ);
                 }
-                //获取在ground为原点的坐标系中的单位坐标
+                //Get the unit coordinates in the coordinate system where ground is the origin
                 float numX = Mathf.Round((distX + (remainderX - 1) * (signX * _gridSize / 2)) / _gridSize);
                 float numZ = Mathf.Round((distZ + (remainderZ - 1) * (signZ * _gridSize / 2)) / _gridSize);
-                //计算出在坐标轴中的偏移量
+                //Calculate the offset in the coordinate axis
                 float offsetX = -(remainderX - 1) * signX * _gridSize;
                 float offsetZ = -(remainderZ - 1) * signZ * _gridSize;
-                //调整坐标系，
+                //Adjust the coordinate system
                 Vector3 p = TerrainTrans.TransformDirection(new Vector3(numX, 0, numZ) * _gridSize);
                 p += TerrainTrans.TransformDirection(new Vector3(offsetX, 0, offsetZ));
                 return p + TerrainTrans.position;

@@ -11,9 +11,9 @@ require('Framework/UI/UIPage')
 
 local class = require 'Framework/class'
 AdvertisementPopCtrl = class('AdvertisementPopCtrl',UIPage)
-UIPage:ResgisterOpen(AdvertisementPopCtrl) --注册打开的方法
+UIPage:ResgisterOpen(AdvertisementPopCtrl) --How to open
 
----构建函数
+---Constructor
 function AdvertisementPopCtrl:initialize()
     UIPage.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.None);
 end
@@ -35,7 +35,7 @@ end
 
 
 
----关闭弹窗
+---Close popup
 function AdvertisementPopCtrl:OnClick_backBtn(obj)
     obj:Hide();
 end

@@ -448,12 +448,12 @@ CityEngineLua.DATATYPE_BLOB =
 	end
 }
 
----当做类来使用
+---Use as a class
 CityEngineLua.DATATYPE_ARRAY = { _type = nil };
 CityEngineLua.DATATYPE_ARRAY.__index = CityEngineLua.DATATYPE_ARRAY;
 CityEngineLua.DATATYPE_ARRAY.New = function(self)
-	local me = {};    --初始化self，如果没有这句，那么类所建立的对象改变，其他对象都会改变
-    setmetatable(me, CityEngineLua.DATATYPE_ARRAY);  --将self的元表设定为Class
+	local me = {};   -- Initialize self, if there is no sentence, then the object created by the class changes, other objects will change
+    setmetatable(me, CityEngineLua.DATATYPE_ARRAY);  --Set self's metatable to Class
 	me._type = nil;
     return me;
 end

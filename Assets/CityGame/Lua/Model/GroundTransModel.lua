@@ -6,7 +6,7 @@
 GroundTransModel = {}
 local this = GroundTransModel
 
---构建函数--
+--Constructor--
 function GroundTransModel.New()
     return this
 end
@@ -17,7 +17,7 @@ function GroundTransModel.SetGroundBlockId(blockId)
     GroundTransModel.blockPos = {x = pos.x, y = pos.z}  --存一个位置信息
 end
 
---网络回调注册
+--Network callback registration
 function GroundTransModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","rentOutGround","gs.GroundRent",GroundTransModel.n_OnReceiveRentOut)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","rentGround","gs.RentGround",GroundTransModel.n_OnReceiveRentOut)
@@ -26,7 +26,7 @@ function GroundTransModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cancelRentGround","gs.GroundChange",GroundTransModel.n_OnReceiveRentOut)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","cancelSellGround","gs.GroundChange",GroundTransModel.n_OnReceiveRentOut)
 end
---服务器回调
+--Server callback
 function GroundTransModel.n_OnReceiveRentOut(stream, msgId)
     if msgId == 0 then
         --local info = {}
@@ -43,7 +43,7 @@ function GroundTransModel.n_OnReceiveRentOut(stream, msgId)
 end
 
 
---- 客户端请求 ---
+--- Client request ---
 --出租
 function GroundTransModel.m_ReqRentOutGround(rentDaysMin, rentDaysMax, rentPreDay)
     local data = {}

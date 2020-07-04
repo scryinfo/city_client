@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// 说明：战争迷雾表现逻辑，实现所有FOW逻辑表现接口以及与FOWSystem的对接
-/// 
-/// @by wsh 2017-05-19
+/// Description: Presentation logic, realize all FOW logic presentation interfaces and interfacing with FOWSystem
 /// </summary>
 
 namespace Battle
@@ -13,9 +11,9 @@ namespace Battle
     {
         private MapFOWRender m_mapFOWRender;
         
-        // 视野体
+        // Field of view
         private List<IFOWRevealer> m_revealers = new List<IFOWRevealer>();
-        // 渲染器
+        // Renderer
         private List<FOWRender> m_renders = new List<FOWRender>();
 
         public override void Init()
@@ -83,8 +81,8 @@ namespace Battle
             }
 
             FOWRender render = null;
-            // TODO：实际项目中，从这里的资源管理类加载预设
-            // 为了简单，这里直接从Resource加载
+            // TODO: In the actual project, load the preset from the resource management class here
+            // For simplicity, here is loaded directly from Resource
             Object prefabs = Resources.Load("Prefab/FOWRender");
             if (prefabs != null)
             {
@@ -113,7 +111,7 @@ namespace Battle
 
         public void Update(int deltaMS)
         {
-            // 说明：每个游戏帧更新，这里不做时间限制，实测对游戏帧率优化微乎其微
+            // Note: Each game frame is updated, there is no time limit here, and the actual game frame rate optimization is minimal
             UpdateRenders();
             UpdateRevealers(deltaMS);
         }

@@ -6,7 +6,7 @@
 
 
 AvtarCtrl = class('AvtarCtrl',UIPanel)
-UIPanel:ResgisterOpen(AvtarCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(AvtarCtrl) --How to open
 
 local panel             --AvtarPanel
 local LuaBehaviour      --LuaBehaviour
@@ -16,15 +16,15 @@ local this              --self
 local fiveItemPath="View/AvtarItems/fiveItem"
 local kindItemPath="View/AvtarItems/kindItem"
 
-local pastApperanceID = {}        --之前选择的组件
+local pastApperanceID = {}        --Previously selected components
 local pool = {}
 
-local mySex                       --我选择的性别
-local myCurrentHeadNum            --我选择的headNum
+local mySex                       --My chosen gender
+local myCurrentHeadNum            --My choice of headNum
 
-local headPrefab = {}             --Avatar的HeadList
-local AvatarOrganImageList = {}   --Avatar部件的Image存储
-local my_appearance ={}           --我选择的外观
+local headPrefab = {}             --Avatar's HeadList
+local AvatarOrganImageList = {}   --Image storage of Avatar parts
+local my_appearance ={}           --My chosen appearance
 
 local currentHead = nil
 FiveType = {
@@ -39,14 +39,14 @@ FiveType = {
   goatee=9,
   decal=10,
 }
----==========================================================================================框架函数============================================================================================
+---==========================================================================================Frame function============================================================================================
 --【over】
 function  AvtarCtrl:bundleName()
     return "Assets/CityGame/Resources/View/AvtarPanel.prefab"
 end
 
 function AvtarCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--You can go back and hide other panels after the UI opens
 end
 
 --【over】
@@ -106,9 +106,9 @@ function AvtarCtrl:Awake(go)
     end ,self)
 end
 
----==========================================================================================业务代码===================================================================================================
+---==========================================================================================Business code===================================================================================================
 
---清空缓存数据
+--Clear cached data
 function AvtarCtrl:ClearCasch()
     ct.log("system","清空Avatar缓存数据")
     if headPrefab~= nil then
@@ -132,28 +132,28 @@ function AvtarCtrl:ClearCasch()
 end
 
 
---临时对象池                 --【over】
+--Temporary object pool                 --【over】
 local function InsAndObjectPool(config,class,prefabPath,parent,this)
     if nil == pool[class] then
         pool[class] = {}
     end
     local tempList = pool[class]
     local prefab
-    --开始遍历
+    --Start traversing
     for i, value in ipairs(config) do
-        --对象池中当前个数还有
+        --The current number of objects in the pool
         if tempList[i] ~= nil then
             value.id = i
             tempList[i]:updateData(value)
             tempList[i].prefab:SetActive(true)
         else
-            --需要新生成pool
+            --Need to generate new pool
             prefab = creatGoods(prefabPath,parent)
             value.id = i
             tempList[i] = class:new(prefab,LuaBehaviour,value,this)
         end
     end
-    --多于的隐藏
+    --More than hidden
     if #config < #tempList then
         for i = #config + 1 , #tempList do
             tempList[i].prefab:SetActive(false)
@@ -162,7 +162,7 @@ local function InsAndObjectPool(config,class,prefabPath,parent,this)
 end
 
 
---遍历目标avatar的Image      --【over】
+--Traversing the image of the target avatar      --【over】
 local function FindOrgan(transform)
     local AvatarImages = {}
     AvatarImages["body"] = transform:Find("body/body"):GetComponent("Image")
@@ -182,7 +182,7 @@ local function FindOrgan(transform)
     return AvatarImages
 end
 
---初始化
+--initialization
 function AvtarCtrl:begin()
     --
     AvtarPanel.luckValueText.text = 10
@@ -190,67 +190,67 @@ function AvtarCtrl:begin()
     --
 
     local faceId = DataManager.GetFaceId()
-    --初始化
+    --initialization
     AvatarOrganImageList = {}
     AvatarOrganImageList[1] = {}
     AvatarOrganImageList[2] = {}
     headPrefab = {}
     headPrefab[1] = {}
     headPrefab[2] = {}
-    --加载中间实例
-    if faceId then --有ID为二次修改，隐藏性别选项
+    --Load intermediate instance
+    if faceId then --Have ID for the second modification, hide gender options
         local arr = split(faceId,"-")
         if arr[1] == "1" then
             self:switchKinds(AvtarConfig.man[1].kinds)
-            --加载左侧五官选择按钮
+            --Load the facial features selection button on the left
             InsAndObjectPool(AvtarConfig.man,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
         else
             self:switchKinds(AvtarConfig.woMan[1].kinds)
-            --加载左侧五官选择按钮
+            --Load the facial features selection button on the left
             InsAndObjectPool(AvtarConfig.woMan,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
         end
-        --左侧选到第一个
+        --Select the first one on the left
         this.select.localScale = Vector3.zero
         this.select = pool[FiveFaceItem][1].select
         this.select.localScale = Vector3.one
         --
         GetAvtar(faceId)
-        --隐藏性别选项
+        --Hide gender options
         panel.maleBtn.gameObject:SetActive(false)
         panel.feMaleBtn.gameObject:SetActive(false)
-        --打开幸运值展示
+        --Open lucky value display
         panel.luckyRoot.localScale = Vector3.one
         panel.luckyValue.text = DataManager.GetMyFlightScore()
-        --判断是否需要有按钮 this.cofirmBtn
+        --Determine if there is a button this.cofirmBtn
         if DataManager.GetMyFlightScore() < 10 then
             panel.cofirmBtn.localScale = Vector3.zero
         else
             panel.cofirmBtn.localScale = Vector3.one
         end
-    else--无ID，为初始建号
-        --性别默认为男
+    else--No ID, the initial build number
+        --Gender defaults to male
         mySex = 1
         myCurrentHeadNum = 1
-        --加载左侧五官选择按钮
+        --Load the facial features selection button on the left
         InsAndObjectPool(AvtarConfig.man,FiveFaceItem,fiveItemPath,panel.fiveContent,self)
-        --随机一个装扮
+        --Random dress up
         self:randomChange()
-        --默认选择男性的第一个部件
+        --The first part of the male is selected by default
         self:switchKinds(AvtarConfig.man[1].kinds)
-        --显示性别选项
+        --Show gender options
         panel.maleBtn.gameObject:SetActive(true)
         panel.feMaleBtn.gameObject:SetActive(true)
-        --隐藏幸运值展示
+        --Hide lucky value display
         panel.luckyRoot.localScale = Vector3.zero
     end
 end
 
---加载右侧实例
+--Load the instance on the right
 function AvtarCtrl:switchKinds(config)
     InsAndObjectPool(config,KindsItem,kindItemPath,panel.kindsContent,self)
 end
 
---随机选择
+--random selection
 function AvtarCtrl:randomChange()
     local config
     if mySex == 1 then
@@ -264,30 +264,30 @@ function AvtarCtrl:randomChange()
     end
 end
 
---改变人物某个部件选择
+--Change a part selection of a character
 function AvtarCtrl:changAparance(data,rank)
     local path,type
     local arr = split(data.path,",")
-    path = arr[1]           --更换路径
-    type = arr[2]           --更换的类型
-    --换头需要单独处理
+    path = arr[1]           --Change path
+    type = arr[2]           --Type of replacement
+    --Head change needs to be handled separately
     if type == "head" then
-        --1.切换prefab
-        --2.拷贝旧sprite
+        --1.Switch prefab
+        --2.Copy oldsprite
         local config
         if mySex == 1 then
             config = HeadConfig.man
         else
             config = HeadConfig.woMan
         end
-        --已有的隐藏
+        --Existing hide
         if currentHead ~= nil then
             currentHead:SetActive(false)
         end
-        --标记切换为新的，并记录之前的Num
+        --Switch the marker to the new one and record the previous Num
         local oldNum = myCurrentHeadNum
         myCurrentHeadNum  = data.id or rank
-        --新的显示
+        --New display
         if headPrefab[mySex][myCurrentHeadNum] == nil then
             headPrefab[mySex][myCurrentHeadNum] = creatGoods( config[myCurrentHeadNum].path , panel.showContent )
             AvatarOrganImageList[mySex][myCurrentHeadNum] =  FindOrgan(headPrefab[mySex][myCurrentHeadNum].transform)
@@ -300,12 +300,12 @@ function AvtarCtrl:changAparance(data,rank)
         pastApperanceID[type].path = path
         pastApperanceID[type].rank = myCurrentHeadNum
         pastApperanceID[type].type = type
-        --加载原来服饰
+        --Load original costume
         local tempList = AvatarOrganImageList[mySex][myCurrentHeadNum]
         local tempOldList = AvatarOrganImageList[mySex][oldNum]
         for key, value in pairs(tempList) do
             if key ~= "head" then
-                --如果之前有sprite，直接拷贝，否则的话load/
+                --If there is a sprite before, copy directly, otherwise load/
                 if tempOldList ~= nil and tempOldList[key] ~= nil and tempOldList[key].sprite ~= nil and pastApperanceID[key] ~= nil and pastApperanceID[key] ~= {} and pastApperanceID[key].path ~= nil then
                     value.sprite = tempOldList[key].sprite
                     value.transform.localScale = Vector3.one
@@ -319,14 +319,14 @@ function AvtarCtrl:changAparance(data,rank)
                         tempList["backHat"].gameObject:SetActive(true)
                         tempList["backHat"].sprite = tempOldList["backHat"].sprite
                         tempList["backHat"].transform.localScale = Vector3.one
-                    else--部件不要的处理
+                    else--Unwanted parts
                         tempList["backHat"].gameObject:SetActive(false)
                     end
                 end
             end
         end
-    --换头发需要额外处理
-    --TODO://y验证
+    --Hair replacement requires additional treatment
+    --TODO://y verification
     elseif type == "frontHat" then
         local tempList = AvatarOrganImageList[mySex][myCurrentHeadNum]
         pastApperanceID[type] = {}
@@ -349,7 +349,7 @@ function AvtarCtrl:changAparance(data,rank)
             pastApperanceID["backHat"].rank = arr[4]
             pastApperanceID["backHat"].type = "backHat"
         end
-    else  --其余普通的
+    else  --Ordinary
         local tempList = AvatarOrganImageList[mySex][myCurrentHeadNum]
         pastApperanceID[type] = {}
         if path =="" then
@@ -364,10 +364,10 @@ function AvtarCtrl:changAparance(data,rank)
     end
 end
 
---获取中间的Avatar
+--Get the middle Avatar
 function GetAvtar(faceId)
     local arr = split(faceId,"-")
-    if arr[1] == "1" then--男人
+    if arr[1] == "1" then--man
         mySex = 1
         myCurrentHeadNum = 1
         local temp = split(arr[2],",")
@@ -376,7 +376,7 @@ function GetAvtar(faceId)
                 myCurrentHeadNum = tonumber(temp[i+1])
             end
         end
-        --todo：加载小人头像
+        --todo：Load villain avatar
         headPrefab[mySex][myCurrentHeadNum] = creatGoods(HeadConfig.man[myCurrentHeadNum].path,panel.showContent)
         AvatarOrganImageList[mySex][myCurrentHeadNum] =  FindOrgan(headPrefab[mySex][myCurrentHeadNum].transform)
         local arr = split(AvtarConfig.man[1].kinds[myCurrentHeadNum].path,",")
@@ -395,7 +395,7 @@ function GetAvtar(faceId)
             end
         end
 
-    else--女人
+    else--woman
         mySex = 2
         myCurrentHeadNum = 1
         local temp = split(arr[2],",")
@@ -404,7 +404,7 @@ function GetAvtar(faceId)
                 myCurrentHeadNum = tonumber(temp[i+1])
             end
         end
-        --todo：加载小人头像
+        --todo：Load villain avatar
         headPrefab[mySex][myCurrentHeadNum] = creatGoods(HeadConfig.woMan[myCurrentHeadNum].path,panel.showContent)
         AvatarOrganImageList[mySex][myCurrentHeadNum] =  FindOrgan(headPrefab[mySex][myCurrentHeadNum].transform)
         local arr = split(AvtarConfig.woMan[1].kinds[myCurrentHeadNum].path,",")
@@ -426,8 +426,8 @@ function GetAvtar(faceId)
     return headPrefab[mySex][myCurrentHeadNum]
 end
 
----==========================================================================================点击函数===================================================================================================
---返回
+---========================================================================================== Click function ===================================================================================================
+--return
 function AvtarCtrl:c_OnClick_backBtn(ins)
     PlayMusEff(1002)
     if DataManager.GetFaceId() then
@@ -438,7 +438,7 @@ function AvtarCtrl:c_OnClick_backBtn(ins)
     end
 end
 
---确定 TODO://
+--determine TODO://
 function AvtarCtrl:c_OnClick_confirm()
 
     PlayMusEff(1002)
@@ -472,7 +472,7 @@ function AvtarCtrl:c_OnClick_confirm()
 
     if DataManager.GetFaceId() then
         if faceId ~= DataManager.GetFaceId() then
-            --打开提示弹窗
+            --Open prompt popup
             local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
                         content = GetLanguage(17030004,10),func = function()
                     Event.Brocast("m_setRoleFaceId",faceId)
@@ -493,13 +493,13 @@ function AvtarCtrl:c_OnClick_confirm()
     end
 end
 
---随机
+--random
 function AvtarCtrl:c_OnClick_randomChange(ins)
     PlayMusEff(1002)
     ins:randomChange()
 end
 
---切换为男性
+--Switch to male
 function AvtarCtrl:c_OnClick_male(ins)
     PlayMusEff(1002)
     pastApperanceID = {}
@@ -516,7 +516,7 @@ function AvtarCtrl:c_OnClick_male(ins)
     end
 end
 
---切换为女性
+--Switch to female
 function AvtarCtrl:c_OnClick_faMale(ins)
     PlayMusEff(1002)
     pastApperanceID = {}

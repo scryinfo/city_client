@@ -36,16 +36,16 @@ function OfflineNotificationCtrl:Active()
 end
 
 function OfflineNotificationCtrl:Refresh()
-    -- 显示界面节点
+    -- Display interface node-
     self:_setDetailsTitleBgAndText(false, true ,false, false, true, false, false)
 
-    -- 显示数据
+    -- Display Data-
     self.homePageItems = {}
 
-    -- 总收入
+    -- Total revenue--
     self.totalBuildingIncome = 0
     for k, v in pairs(self.m_data) do
-        if k ~= "forecast" and v.totalIncome ~= 0 then  -- 排除没有盈利的建筑大类
+        if k ~= "forecast" and v.totalIncome ~= 0 then  -- Exclude non-profit building categories
             self.totalBuildingIncome = self.totalBuildingIncome + v.totalIncome
             local go = ct.InstantiatePrefab(OfflineNotificationPanel.offlineNotificationHomepageItem)
             local rect = go.transform:GetComponent("RectTransform")
@@ -80,7 +80,7 @@ function OfflineNotificationCtrl:Hide()
     UIPanel.Hide(self)
 end
 
----------------------------------------------------按钮点击事件---------------------------------------------------------------------
+---------------------------------------------------Button click event---------------------------------------------------------------------
 function OfflineNotificationCtrl:OnBack()
     PlayMusEff(1002)
     UIPanel.ClosePage()
@@ -95,7 +95,7 @@ function OfflineNotificationCtrl:OnLuckyReturn(go)
     go:_setDetailsTitleBgAndText(false, true, false, false, true, false, false)
     OfflineNotificationPanel.incomeText.text = GetClientPriceString(go.totalBuildingIncome)
 end
------------------------------------------------------滑动复用-----------------------------------------------------------------------
+-----------------------------------------------------Sliding multiplexing-----------------------------------------------------------------------
 OfflineNotificationCtrl.static.offlineNotificationData = function(transform, idx)
     idx = idx + 1
     if OfflineNotificationCtrl.detailsScrollIndex == 1 then
@@ -131,7 +131,7 @@ function OfflineNotificationCtrl:ShowItems(detailsScrollIndex, data)
     end
 end
 
------------------------------------------------------界面显示-----------------------------------------------------------------------
+-----------------------------------------------------Interface display-----------------------------------------------------------------------
 function OfflineNotificationCtrl:_setDetailsTitleBgAndText(isShow1, isShow2, isShow3, isShow4, isShow5, isShow6, isShow7)
     OfflineNotificationPanel.buildingInfoTitleBg.localScale = isShow1 and Vector3.one or Vector3.zero
     OfflineNotificationPanel.incomeTitleTextTF.localScale = isShow2 and Vector3.one or Vector3.zero

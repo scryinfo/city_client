@@ -28,7 +28,7 @@ public class ToLuaNode<T>
     public List<ToLuaNode<T>> childs = new List<ToLuaNode<T>>();
     public ToLuaNode<T> parent = null;
     public T value;
-    //添加命名空间节点所在位置，解决A.B.C/A.C存在相同名称却在不同命名空间所造成的Wrap问题
+    //Add the location of the namespace node to solve the Wrap problem caused by A.B.C/A.C with the same name but in different namespaces
     public int layer;
 }
 
@@ -43,7 +43,7 @@ public class ToLuaTree<T>
         _list = new List<ToLuaNode<T>>();
     }
 
-    //加入pos跟root里的pos比较，只有位置相同才是统一命名空间节点
+    //Add pos to compare with pos in root, only the same position is the unified namespace node
     void FindParent(List<ToLuaNode<T>> list, List<ToLuaNode<T>> root, Predicate<T> match, int layer)
     {
         if (list == null || root == null)
@@ -53,7 +53,7 @@ public class ToLuaTree<T>
 
         for (int i = 0; i < root.Count; i++)
         {
-            // 加入layer跟root里的pos比较，只有位置相同才是统一命名空间节点
+            // Join layer to compare with pos in root, only the same position is the unified namespace node
             if (match(root[i].value) && root[i].layer == layer)
             {
                 list.Add(root[i]);
@@ -100,7 +100,7 @@ public class ToLuaTree<T>
         end(node);
     }
 
-    //只有位置相同才是统一命名空间节点
+    //Only the same location is a unified namespace node
     public List<ToLuaNode<T>> Find(Predicate<T> match, int layer)
     {
         _list.Clear();

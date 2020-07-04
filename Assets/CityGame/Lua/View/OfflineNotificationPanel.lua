@@ -20,7 +20,7 @@ end
 function OfflineNotificationPanel.InitPanel()
     this.sureBtn = transform:Find("MiddleRoot/SureBtn").gameObject
 
-    -- 离线界面
+    -- Offline interface
     this.offlineNotificationHomepageItem = transform:Find("MiddleRoot/AllListScroll/Viewport/Content/OfflineNotificationHomepageItem").gameObject
     this.allListScroll = transform:Find("MiddleRoot/AllListScroll/Viewport/Content")
     this.detailsScroll = transform:Find("MiddleRoot/DetailsScroll"):GetComponent("ActiveLoopScrollRect")
@@ -28,14 +28,14 @@ function OfflineNotificationPanel.InitPanel()
     this.detailsTransform = transform:Find("MiddleRoot/DetailsScroll")
     this.scrollBg = transform:Find("MiddleRoot/ScrollBg")
 
-    -- 建筑详情
+    -- Construction details
     this.buildingInfoTitleBg = transform:Find("MiddleRoot/BuildingInfoTitleBg")
     this.incomeTitleTextTF = transform:Find("MiddleRoot/IncomeTitleText")
     this.incomeTitleText = transform:Find("MiddleRoot/IncomeTitleText"):GetComponent("Text")
     this.incomeText = transform:Find("MiddleRoot/IncomeTitleText/IncomeText"):GetComponent("Text")
     this.buildingReturnBtn = transform:Find("MiddleRoot/BuildingInfoTitleBg/ReturnBtn").gameObject
 
-    -- 幸运值详情
+    -- Lucky value details
     this.luckyValueTitleBg = transform:Find("MiddleRoot/LuckyValueTitleBg")
     this.luckyTitleTextTF = transform:Find("MiddleRoot/LuckyTitleText")
     this.luckyText = transform:Find("MiddleRoot/LuckyTitleText/LuckyText"):GetComponent("Text")

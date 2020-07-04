@@ -12,14 +12,14 @@ end
 
 function HistoryCurveModel:OnCreate()
     DataManager.RegisterErrorNetMsg()
-    --网络回调
+    --Online registration
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryGoodsNpcNumCurve","ss.GoodsNpcNumCurve",self.n_OnGoodsNpcNumCurve,self) --供应曲线
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryApartmentNpcNumCurve","ss.ApartmentNpcNumCurve",self.n_OnHouseNpcNumCurve,self) --供应曲线住宅
     DataManager.ModelRegisterNetMsg(nil,"sscode.OpCode","queryNpcTypeNum","ss.NpcHourTypeNum",self.n_OnGoodsNpcTypeNum,self) --需求曲线
 end
 
 function HistoryCurveModel:Close()
-    --清空本地UI事件
+    --Clear local UI events
 
 end
 
@@ -44,7 +44,7 @@ function HistoryCurveModel:m_GoodsNpcTypeNum()
     CityEngineLua.Bundle:newAndSendMsgExt(msgId, nil, CityEngineLua._tradeNetworkInterface1)
 end
 
--------------------服务器回调---------------------
+-------------------Server callback---------------------
 
 --商品供应
 function HistoryCurveModel:n_OnGoodsNpcNumCurve(lMsg)

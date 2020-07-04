@@ -1,11 +1,10 @@
 AddProductionLineMgr = class('AddProductionLineMgr')
---AddProductionLineMgr.static.ChooseColor = Vector3.New(78, 111, 189)  --选中时显示的颜色
---AddProductionLineMgr.static.NomalColor = Vector3.New(230, 226, 205)  --未选中时显示的颜色
+--AddProductionLineMgr.static.ChooseColor = Vector3.New(78, 111, 189)  --The color displayed when selected
+--AddProductionLineMgr.static.NomalColor = Vector3.New(230, 226, 205)  --Color displayed when not selected
 
-AddProductionLineMgr.static.ButtonItemPath = "View/GoodsItem/AddLineBtnItem"  --左侧需要加载的预制
-AddProductionLineMgr.static.GoodDetailItemPath = "View/GoodsItem/AddGoodDetailItem"  --右侧滑动需要加载的预制
-
---位于哪边，左右两边具有不同意义
+AddProductionLineMgr.static.ButtonItemPath = "View/GoodsItem/AddLineBtnItem"  --Prefabs to be loaded on the left
+AddProductionLineMgr.static.GoodDetailItemPath = "View/GoodsItem/AddGoodDetailItem"  --Prefabricated on the right side to be loaded
+--Which side is located, the left and right sides have different meanings
 AddLineButtonPosValue =
 {
     Left = 0,
@@ -38,7 +37,7 @@ function AddProductionLineMgr:initialize(viewRect, sideValue)
             end}
             local item = AddLineBtnItem:new(go.transform, tempData, self.typeToggleGroup)
             self.toggleItems[#self.toggleItems + 1] = item
-            self.keyToggleItems[i] = item  --创建以typeId为key的表
+            self.keyToggleItems[i] = item  --Create a table with typeId as the key
         end
     end
     --UpdateBeat:Add(self._update, self)
@@ -57,17 +56,17 @@ function AddProductionLineMgr:_language()
         end
     end
 end
---初始化
+--initialization
 function AddProductionLineMgr:initData(chooseTypeId)
     self:_language()
     self.detailContent.anchoredPosition = Vector2.zero
 
-    --设置默认打开的类别
+    --Set the default open category
     for i, item in pairs(self.toggleItems) do
         self.toggleItems[i]:setToggleIsOn(false)
     end
 
-    --根据特定值去设置toggle
+    --Set toggle according to specific value
     if chooseTypeId ~= nil then
         for i, item in pairs(self.toggleItems) do
             if self.toggleItems[i]:getTypeId() == chooseTypeId then
@@ -81,12 +80,12 @@ function AddProductionLineMgr:initData(chooseTypeId)
     self.toggleItems[1]:setToggleIsOn(true)
     self.tempTypeId = self.toggleItems[1]:getTypeId()
 end
---获取当前选择的typeId
+--Get the currently selected typeId
 function AddProductionLineMgr:getCurrentTypeId()
     return self.tempTypeId
 end
 
---根据typeId 和 itemId 获取对应的item，并显示选中状态
+--Get the corresponding item according to typeId and itemId and display the selected state
 function AddProductionLineMgr:setToggleIsOnByType(itemId)
     local typeId = tonumber(string.sub(itemId, 1, 4))
     if self.tempDetailItemId ~= nil and itemId == self.tempDetailItemId then
@@ -113,14 +112,14 @@ function AddProductionLineMgr:_showDetails(typeId)
     self:_resetDetails()
     self.contentItems = {}
 
-    --暂时是直接使用content下的子物体，多了的就移出content
+    --For the time being, directly use the sub-objects under the content, and move out the content if there are more
     local data = CompoundTypeConfig[typeId]
     local count = #self.detailPrefabList - #data
     if count > 0 then
         for i = 1, count do
             self:_releaseObj(self.detailPrefabList[i - 1])
         end
-    end  --将多余的预制回收隐藏
+    end  --Hide excess prefabricated recycling
 
     for i, itemData in ipairs(data) do
         local go
@@ -138,7 +137,7 @@ function AddProductionLineMgr:_showDetails(typeId)
         end}
         local item = AddGoodDetailItem:new(go.transform, tempData, self.detailToggleGroup)
         self.contentItems[#self.contentItems + 1] = item
-        self.keyContentItems[itemData.itemId] = item  --创建以itemId为key的详情表
+        self.keyContentItems[itemData.itemId] = item  --Create detail table with itemId as key
     end
 
     for i, item in ipairs(self.contentItems) do
@@ -147,7 +146,7 @@ function AddProductionLineMgr:_showDetails(typeId)
     self.contentItems[1]:setToggleIsOn(true)
     self.tempDetailItemId = self.contentItems[1]:getItemId()
 end
---选择了某个item，显示线路
+--An item is selected and the line is displayed
 function AddProductionLineMgr:_setLineShow(itemId, rectPosition, enableShow)
     self.tempDetailItemId = itemId
 
@@ -157,13 +156,13 @@ function AddProductionLineMgr:_setLineShow(itemId, rectPosition, enableShow)
         Event.Brocast("rightSetCenter", itemId, rectPosition, enableShow)
     end
 end
---回收预制
+--Recycling prefabrication
 function AddProductionLineMgr:_releaseObj(obj)
     obj.transform:SetParent(self.detailToggleGroup.transform)
     obj.transform.localScale = Vector3.zero
     obj.transform.localPosition = Vector3.zero
 end
---清空选中状态
+--Clear the selected state
 function AddProductionLineMgr:_resetDetails()
     if self.contentItems then
         for i, item in ipairs(self.contentItems) do
@@ -193,7 +192,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------------
 local m_MatGoodIconSpriteList = {}
 
---添加BuildingIcon的sprite列表
+--Add BuildingIcon's sprite list
 local function AddBuildingIcon(name,sprite)
     if m_MatGoodIconSpriteList == nil or type(m_MatGoodIconSpriteList) ~= 'table' then
         m_MatGoodIconSpriteList = {}
@@ -239,7 +238,7 @@ local function LoadBuildingIcon(name,iIcon)
     end)
 end
 
---设置ICon的Sprite
+--Set up ICon Sprite
 function AddProductionLineMgr.SetBuildingIconSpite(name , tempImage)
     if JudgeHasBuildingIcon() == true then
         tempImage.sprite = GetBuildingIcon(name)

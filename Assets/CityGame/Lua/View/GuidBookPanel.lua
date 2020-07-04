@@ -18,7 +18,7 @@ function GuidBookPanel.InitPanel()
     this.showCon= transform:Find("bg/bg/topRoot/Scroll View/Viewport/Content");
     this.buttonCon=transform:Find("bg/bg/bottonRoot/Scroll View/Viewport/Content");
 end
---数据初始化
+--Data initialization
 function GuidBookPanel.InitDate(MunicipalData)
     this.materialData = MunicipalData;
 end

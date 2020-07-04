@@ -7,7 +7,7 @@ local PlayerHead;
 local transform;
 local gameObject;
 
---构建函数--
+--Build function--
 function PlayerHeadCtrl.New()
 	logWarn("PlayerHeadCtrl.New--->>");
 	return this;
@@ -20,7 +20,7 @@ function PlayerHeadCtrl.Awake()
 	--Event.AddListener("onPlayerHeadResult", this.onPlayerHeadResult);
 end
 
---启动事件--
+--Start event--
 function PlayerHeadCtrl.OnCreate(obj)
 	gameObject = ct.InstantiatePrefab(obj);
 	gameObject.transform.position = Vector3.New(87.5, 385, 0);
@@ -64,7 +64,7 @@ function PlayerHeadCtrl.UpdateTargetUI()
     this.SetName(this.target.name);
 end
 
---关闭事件--
+--Close event--
 function PlayerHeadCtrl.Close()
 	--panelMgr:ClosePanel(CtrlNames.CreateAvatar);
 	destroy(gameObject);

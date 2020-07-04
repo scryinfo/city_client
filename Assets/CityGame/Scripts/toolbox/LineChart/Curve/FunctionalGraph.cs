@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 /// <summary>
-/// 根据基础框架的数据信息绘制坐标轴和网格
+/// Draw coordinate axis and grid according to the data information of the basic frame
 /// </summary>
 public class FunctionalGraph : MaskableGraphic
 {
@@ -12,9 +12,9 @@ public class FunctionalGraph : MaskableGraphic
     private RectTransform _myRect;
     private Vector2 _xPoint;
     private Vector2 _yPoint;
-    private float[] boundary ;  //分界线
-    private Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>> dicLine = new Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>>();//曲线
-    private Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>> dicChart = new Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>>();//柱状图
+    private float[] boundary ;  //Dividing line
+    private Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>> dicLine = new Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>>();//curve
+    private Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>> dicChart = new Dictionary<int, Dictionary<List<Vector2[]>, List<Color>>>();//Histogram
     private Slide slide;
     private void OnGUI()
     {
@@ -43,7 +43,7 @@ public class FunctionalGraph : MaskableGraphic
     }
 
     /// 
-    /// 初始化函数信息
+    /// Initialization function information
     /// 
     private void Init()
     {
@@ -52,7 +52,7 @@ public class FunctionalGraph : MaskableGraphic
         slide = transform.GetComponent<Slide>();
     }
     /// 
-    /// 重写这个类以绘制UI
+    /// Override this class to draw UI
     ///
     /// 
     protected override void OnPopulateMesh(VertexHelper vh)
@@ -60,26 +60,26 @@ public class FunctionalGraph : MaskableGraphic
         Init();
         vh.Clear();
         #region 基础框架的绘制
-        // 绘制X轴
+        // Plot the X axis
         float lenght = _myRect.sizeDelta.x;
         Vector2 leftPoint = new Vector2(0, 0);
         Vector2 rightPoint = new Vector2(lenght / 2.0f, 0);
         vh.AddUIVertexQuad(GetQuad(leftPoint, rightPoint, GraphBase.XYAxisColor, GraphBase.XYAxisWidth));
-        // 绘制X轴的箭头
+        // Draw an arrow on the X axis
         float arrowUnit = GraphBase.XYAxisWidth * 3;
         Vector2 firstPointX = rightPoint + new Vector2(0, arrowUnit);
         Vector2 secondPointX = rightPoint;
         Vector2 thirdPointX = rightPoint + new Vector2(0, -arrowUnit);
         Vector2 fourPointX = rightPoint + new Vector2(Mathf.Sqrt(3) * arrowUnit, 0);
         //vh.AddUIVertexQuad(GetQuad(firstPointX, secondPointX, thirdPointX, fourPointX, GraphBase.XYAxisColor));
-        // 绘制Y轴
+        // Plot Y axis
         if (GraphBase.ShowYScale)
         {
             float height = _myRect.sizeDelta.y;
             Vector2 downPoint = new Vector2(0, 0);
             Vector2 upPoint = new Vector2(0, height / 2.0f);
             vh.AddUIVertexQuad(GetQuad(downPoint, upPoint, GraphBase.XYAxisColor, GraphBase.XYAxisWidth));
-            // 绘制Y轴的箭头
+            // Draw Y-axis arrow
             Vector2 firstPointY = upPoint + new Vector2(arrowUnit, 0);
             Vector2 secondPointY = upPoint;
             Vector2 thirdPointY = upPoint + new Vector2(-arrowUnit, 0);
@@ -116,7 +116,7 @@ public class FunctionalGraph : MaskableGraphic
             }
         }
 
-        //绘制柱状图
+        //Draw a histogram
         if(dicChart.Count >= 1)
         {
             foreach (var item in dicChart.Values)
@@ -146,28 +146,28 @@ public class FunctionalGraph : MaskableGraphic
         #region 刻度的绘制
         if (GraphBase.ShowScale)
         {
-            // X 轴的正方向
+            // Positive direction of X axis
             for (int i = 1; i * GraphBase.XScaleValue < _myRect.sizeDelta.x; i++)
             {
                 Vector2 firstPoint = Vector2.zero + new Vector2(GraphBase.XScaleValue * i, 0);
                 Vector2 secongPoint = firstPoint + new Vector2(0, GraphBase.ScaleLenght);
                 vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
             }
-            //// X 轴的负方向
+            //// X axis negative direction
             //for (int i = 1; i * -GraphBase.XScaleValue > -_myRect.sizeDelta.x; i++ )
             //{
             //    Vector2 firstPoint = Vector2.zero + new Vector2(-GraphBase.XScaleValue * i, 0);
             //    Vector2 secongPoint = firstPoint + new Vector2(0, GraphBase.ScaleLenght);
             //    //vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
             //}
-            //// Y 轴正方向
+            //// Positive direction of Y axis
             //for (int y = 1; y * GraphBase.YScaleValue < _myRect.sizeDelta.y; y++ )
             //{
             //    Vector2 firstPoint = Vector2.zero + new Vector2(0, y * GraphBase.YScaleValue);
             //    Vector2 secongPoint = firstPoint + new Vector2(GraphBase.ScaleLenght, 0);
             //    vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.XYAxisColor));
             //}
-            //// Y 轴负方向
+            //// Y axis negative direction
             //for (int y = 1; y * -GraphBase.YScaleValue > -_myRect.sizeDelta.y; y++ )
             //{
             //    Vector2 firstPoint = Vector2.zero + new Vector2(0, y * -GraphBase.YScaleValue);
@@ -182,28 +182,28 @@ public class FunctionalGraph : MaskableGraphic
             case FunctionalGraphBase.E_MeshType.None:
                 break;
             case FunctionalGraphBase.E_MeshType.FullLine:
-                //// X 轴的正方向
+                //// Positive direction of X axis
                 //for (int i = 1; i * GraphBase.XScaleValue < _myRect.sizeDelta.x ; i++ )
                 //{
                 //    Vector2 firstPoint = Vector2.zero + new Vector2(GraphBase.XScaleValue * i, 0);
                 //    Vector2 secongPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
                 //    //vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
                 //}
-                //// X 轴的负方向
+                //// X axis negative direction
                 //for (int i = 1; i * -GraphBase.XScaleValue> -_myRect.sizeDelta.x ; i++ )
                 //{
                 //    Vector2 firstPoint = Vector2.zero + new Vector2(-GraphBase.XScaleValue * i, -_myRect.sizeDelta.y);
                 //    Vector2 secongPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
                 //    //vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
                 //}
-                // Y 轴正方向
+                // Positive direction of Y axis
                 for (int y = 1; y * GraphBase.YScaleValue < _myRect.sizeDelta.y ; y++ )
                 {
                     Vector2 firstPoint = Vector2.zero + new Vector2(0, y * GraphBase.YScaleValue);
                     Vector2 secongPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
                     vh.AddUIVertexQuad(GetQuad(firstPoint, secongPoint, GraphBase.MeshColor, GraphBase.MeshLineWidth));
                 }
-                //// Y 轴负方向
+                //// Y axis negative direction
                 //for (int y = 1; y * -GraphBase.YScaleValue > -_myRect.sizeDelta.y ; y++ )
                 //{
                 //    Vector2 firstPoint = Vector2.zero + new Vector2(-_myRect.sizeDelta.x , -y * GraphBase.YScaleValue);
@@ -212,28 +212,28 @@ public class FunctionalGraph : MaskableGraphic
                 //}
                 break;
             //case FunctionalGraphBase.E_MeshType.ImaglinaryLine:
-            //    // X 轴的正方向
+            //    // Positive direction of X axis
             //    for (int i = 1; i * GraphBase.XScaleValue< _myRect.sizeDelta.x; i++ )
             //    {
             //        Vector2 firstPoint = Vector2.zero + new Vector2(GraphBase.XScaleValue * i, 0);
             //        Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
             //        //GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
             //    }
-            //    // X 轴的负方向
+            //    // X axis negative direction
             //    for (int i = 1; i * -GraphBase.XScaleValue > -_myRect.sizeDelta.x ; i++ )
             //    {
             //        Vector2 firstPoint = Vector2.zero + new Vector2(-GraphBase.XScaleValue * i, -_myRect.sizeDelta.y);
             //        Vector2 secondPoint = firstPoint + new Vector2(0, _myRect.sizeDelta.y);
             //       // GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
             //    }
-            //    // Y 轴正方向
+            //    // Positive direction of Y axis
             //    for (int y = 1; y * GraphBase.YScaleValue < _myRect.sizeDelta.y ; y++ )
             //    {
             //        Vector2 firstPoint = Vector2.zero + new Vector2(0, y * GraphBase.YScaleValue);
             //        Vector2 secondPoint = firstPoint + new Vector2(_myRect.sizeDelta.x, 0);
             //        GetImaglinaryLine(ref vh, firstPoint, secondPoint, GraphBase.MeshColor, GraphBase.ImaglinaryLineWidth, GraphBase.SpaceingWidth);
             //    }
-            //    // Y 轴负方向
+            //    // Y axis negative direction
             //    for (int y = 1; y * -GraphBase.YScaleValue > -_myRect.sizeDelta.y ; y++ )
             //    {
             //        Vector2 firstPoint = Vector2.zero + new Vector2(-_myRect.sizeDelta.x , -y * GraphBase.YScaleValue);
@@ -242,7 +242,7 @@ public class FunctionalGraph : MaskableGraphic
             //    }
             //    break;
         }
-        // 分界线
+        // Dividing line
         if (boundary != null)
         {
             for (int i = 1; i < boundary.Length; i++)
@@ -256,7 +256,7 @@ public class FunctionalGraph : MaskableGraphic
         #endregion
         #endregion
     }
-    //通过两个端点绘制矩形
+    //Draw a rectangle through two endpoints
     private UIVertex[] GetQuad(Vector2 startPos, Vector2 endPos, Color color0, float lineWidth = 2.0f)
     {
         float dis = Vector2.Distance(startPos, endPos);
@@ -272,7 +272,7 @@ public class FunctionalGraph : MaskableGraphic
         for (int i = 0; i < vertex.Length ; i++ ) vertex[i].color = color0;
         return vertex;
     }
-    //通过四个顶点绘制矩形
+    //Draw a rectangle through four vertices
     private UIVertex[] GetQuad(Vector2 first, Vector2 second, Vector2 third, Vector2 four, Color color0)
     {
         UIVertex[] vertexs = new UIVertex[4];
@@ -282,7 +282,7 @@ public class FunctionalGraph : MaskableGraphic
         vertexs[3] = GetUIVertex(four, color0);
         return vertexs;
     }
-    //构造UIVertex
+    //Construct UIVertex
     private UIVertex GetUIVertex(Vector2 point, Color color0)
     {
         UIVertex vertex = new UIVertex
@@ -293,10 +293,10 @@ public class FunctionalGraph : MaskableGraphic
         };
         return vertex;
     }
-    //绘制虚线
+    //Draw a dotted line
     private void GetImaglinaryLine(ref VertexHelper vh, Vector2 first, Vector2 second, Color color0, float imaginaryLenght, float spaceingWidth, float lineWidth = 2.0f)
     {
-        if (first.y.Equals(second.y)) //  X轴
+        if (first.y.Equals(second.y)) //  X axis
         {
             Vector2 indexSecond = first + new Vector2(imaginaryLenght, 0);
             while (indexSecond.x< second.x)
@@ -311,7 +311,7 @@ public class FunctionalGraph : MaskableGraphic
                 }
             }
         }
-        if (first.x.Equals(second.x)) //  Y轴
+        if (first.x.Equals(second.x)) //  y axis
         {
             Vector2 indexSecond = first + new Vector2(0, imaginaryLenght);
             while (indexSecond.y< second.y)
@@ -327,7 +327,7 @@ public class FunctionalGraph : MaskableGraphic
             }
         }
     }
-    //本地坐标转化屏幕坐标绘制GUI文字
+    //Convert local coordinates to screen coordinates to draw GUI text
     private Vector2 local2Screen(Vector2 parentPos, Vector2 localPosition)
     {
         Vector2 pos = localPosition + parentPos;
@@ -342,7 +342,7 @@ public class FunctionalGraph : MaskableGraphic
             yValue = Screen.height / 2.0f + Mathf.Abs(pos.y);
         return new Vector2(xValue, yValue);
     }
-    //递归计算位置
+    //Recursively calculate position
     private Vector2 getScreenPosition(Transform trans, ref Vector3 result)
     {
         if (null != trans.parent && null != trans.parent.parent )
@@ -354,7 +354,7 @@ public class FunctionalGraph : MaskableGraphic
             return result;
         return result;
     }
-    //画折线
+    //Draw polyline
     public void DrawLine(Vector2[] lines,Color color,int id)
     {
         List<Vector2[]> line = new List<Vector2[]>();
@@ -380,18 +380,18 @@ public class FunctionalGraph : MaskableGraphic
             dicLine.Remove(id);
         }
     }
-    //分界线
+    //Dividing line
     public void BoundaryLine(float[] f)
     {
         boundary = f;
     }
-    //清空数据
+    //Clear data
     public void Close()
     {
         dicLine.Clear();
         dicChart.Clear();
     }
-    //柱状图
+    //Histogram
     public void DrawHistogram(Vector2[] lines, Color color, int id)
     {
         List<Vector2[]> chart = new List<Vector2[]>();

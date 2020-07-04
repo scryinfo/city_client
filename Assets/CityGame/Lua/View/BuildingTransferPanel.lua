@@ -17,20 +17,20 @@ function BuildingTransferPanel.Awake(obj)
 end
 
 function BuildingTransferPanel.InitPanel()
-    this.confirmBtn = transform:Find("root/confirmBtn").gameObject:GetComponent("Button");  --确定
+    this.confirmBtn = transform:Find("root/confirmBtn").gameObject:GetComponent("Button");  --determine
     this.transferInput = transform:Find("root/transferInput").gameObject:GetComponent("InputField");
 
     local groundAuctionBehaviour = transform:GetComponent('LuaBehaviour');
     groundAuctionBehaviour:AddClick(this.confirmBtn.gameObject, this.ConfirmFunc);
 end
 
---- 确认转让 ---
+--- Confirm transfer ---
 function BuildingTransferPanel.ConfirmFunc()
     local price = this.transferInput.text
     BuildingInfoModel.SendTransferInfoToServer(price)
 end
 
---关闭
+--close
 function BuildingTransferPanel.Close()
 
 end

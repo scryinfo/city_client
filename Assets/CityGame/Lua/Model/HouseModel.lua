@@ -12,9 +12,9 @@ function HouseModel:initialize(insId)
 end
 
 
---启动事件--
+--Start event--
 function HouseModel:OnCreate()
-    --网络回调注册
+    --Network callback registration
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","detailApartment","gs.Apartment",self.n_OnReceiveHouseDetailInfo)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setRent","gs.SetRent",self.n_OnReceiveHouseRentChange)
     DataManager.ModelRegisterNetMsg(self.insId,"gscode.OpCode","setSalary","gs.SetSalary",self.n_OnReceiveHouseSalaryChange)
@@ -33,7 +33,7 @@ function HouseModel:OnCreate()
 end
 
 
---- 客户端请求 ---
+--- Client request ---
 --获取建筑详情
 function HouseModel:m_ReqHouseDetailInfo(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode", "detailApartment","gs.Id",{ id = buildingId})

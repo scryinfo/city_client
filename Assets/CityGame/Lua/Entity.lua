@@ -5,8 +5,8 @@
 
 CityEngineLua.Entity =
 {
-	-- 当前玩家最后一次同步到服务端的位置与朝向
-	-- 这两个属性是给引擎CityEngine.cs用的，别的地方不要修改
+	-- The position and orientation of the current player's last synchronization to the server
+	-- These two properties are for the engine CityEngine.cs, do not modify it elsewhere
 	_entityLastLocalPos = Vector3.New(0.0, 0.0, 0.0),
 	_entityLastLocalDir = Vector3.New(0.0, 0.0, 0.0),
 
@@ -21,15 +21,15 @@ CityEngineLua.Entity =
 	baseEntityCall = nil,
 	cellEntityCall = nil,
 	
-	-- enterworld之后设置为true
+	-- set to true after enterworld
 	inWorld = false,
 
 
-	-- 对于玩家自身来说，它表示是否自己被其它玩家控制了；
-	-- 对于其它entity来说，表示我本机是否控制了这个entity
+	-- For players themselves, it indicates whether they are controlled by other players;
+	-- For other entities, it indicates whether I control this entity
 	isControlled = false;
 	
-	-- __init__调用之后设置为true
+	-- Set to true after __init__ is called
 	inited = false,		
 	renderObj = nil,
 	
@@ -57,7 +57,7 @@ CityEngineLua.Entity.callPropertysSetMethods = function(self)
 		local oldval = self[name];
 		
 		if(setmethod ~= nil) then
-			-- base类属性或者进入世界后cell类属性会触发set_*方法
+			-- The base class attribute or the cell class attribute will trigger the set_* method after entering the world
 			if(flags == 0x00000020 or flags == 0x00000040) then
 				if(self.inited and not self.inWorld) then
 					setmethod(self, oldval);
@@ -190,7 +190,7 @@ CityEngineLua.Entity.onUpdateVolatileData = function(self)
 end
 
 
--- 对于玩家自身来说，它表示是否自己被其它玩家控制了；
--- 对于其它entity来说，表示我本机是否控制了这个entity
+-- For players themselves, it indicates whether they are controlled by other players;
+-- For other entities, it indicates whether I control this entity
 CityEngineLua.Entity.onControlled = function(self, isControlled_)
 end

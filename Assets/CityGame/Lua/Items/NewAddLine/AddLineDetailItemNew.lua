@@ -1,5 +1,5 @@
 ---
----详情item
+---Details item
 ---
 AddLineDetailItemNew = class('AddLineDetailItemNew')
 function AddLineDetailItemNew:initialize(viewRect, data, toggleGroup)
@@ -14,7 +14,7 @@ function AddLineDetailItemNew:initialize(viewRect, data, toggleGroup)
     self.chooseImgTran = viewRect:Find("chooseImg")
 
     local stateData = AddProductionLineCtrl.GetItemState(data.itemId)
-    --如果是可展示状态
+    --If it is displayable
     if stateData.enableShow then
         self.disableImg.transform.localScale = Vector3.zero
     else
@@ -37,7 +37,7 @@ function AddLineDetailItemNew:initialize(viewRect, data, toggleGroup)
     self:setToggleIsOn(false)
 end
 
---外部设置toggle状态
+--Externally set toggle status
 function AddLineDetailItemNew:setToggleIsOn(isOn)
     if isOn ~= true or isOn ~= false then
         ct.log("")
@@ -49,9 +49,9 @@ end
 function AddLineDetailItemNew:_selectDetail()
     self.select = true
     self:showState(true)
-    self.data.backFunc(self)  --显示中间的线路
+    self.data.backFunc(self)  --Show the middle line
 end
---显示
+--display
 function AddLineDetailItemNew:showState(select)
     if select == true then
         self.chooseImgTran.localScale = Vector3.one
@@ -59,7 +59,7 @@ function AddLineDetailItemNew:showState(select)
         self.chooseImgTran.localScale = Vector3.zero
     end
 end
---清除选中状态
+--Clear selected state
 function AddLineDetailItemNew:cleanState()
     self:setToggleIsOn(false)
 end

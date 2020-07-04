@@ -1,7 +1,7 @@
 
 InventSetPopCtrl = class('InventSetPopCtrl',UIPanel)
-UIPanel:ResgisterOpen(InventSetPopCtrl) --注册打开的方法
----====================================================================================框架函数==============================================================================================
+UIPanel:ResgisterOpen(InventSetPopCtrl) --How to open the registration
+---====================================================================================Frame function==============================================================================================
 local panel
 
 function InventSetPopCtrl:initialize()
@@ -52,9 +52,9 @@ function InventSetPopCtrl:Hide()
     UIPanel.Hide(self)
 end
 
----====================================================================================点击函数==============================================================================================
+---====================================================================================Click function==============================================================================================
 
---设置
+--set
 function InventSetPopCtrl:OnConfirm(ins)
 
     local isopen =  panel.open.isOn
@@ -91,7 +91,7 @@ function InventSetPopCtrl:OnInfo(go)
     end
 end
 
----====================================================================================业务逻辑==============================================================================================
+---====================================================================================Business logic==============================================================================================
 
 
 function InventSetPopCtrl:updateText(data)
@@ -130,7 +130,7 @@ function InventSetPopCtrl:UpDateUI(data)
     end
 end
 
---开启对外开放
+--Open to the outside world
 function InventSetPopCtrl:OnOpen(isOn)
     if isOn then
         InventSetPopPanel.conpetitivebess.localScale = Vector3.one
@@ -148,7 +148,7 @@ function InventSetPopCtrl:OnOpen(isOn)
     end
 end
 
---输入价格
+--Enter price
 function InventSetPopCtrl:OnPrice()
     if InventSetPopPanel.price.text == "" then
         InventSetPopPanel.price.text = 0

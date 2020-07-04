@@ -1,7 +1,7 @@
 DetailsItem = class('DetailsItem')
 
 local Math_Floor = math.floor
---初始化方法
+--Initialization method
 function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.prefab = prefab
     self.goodsDataInfo = goodsDataInfo
@@ -17,7 +17,7 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.closeBtn = self.prefab.transform:Find("closeBtn")
     self.ToggleBtn = self.prefab.transform:Find("ToggleBtn"):GetComponent("Toggle")
 
-    --总分
+    --Total score
     self.scoreRootTrans = self.prefab.transform:Find("buttombg/scoreRoot")
     self.scoreText = self.prefab.transform:Find("buttombg/scoreRoot/totalScore/scoreText"):GetComponent("Text")
     self.infoBtn = self.prefab.transform:Find("buttombg/scoreRoot/infoBtn")
@@ -62,18 +62,18 @@ function DetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
         ct.OpenCtrl("FixedTotalScoreCtrl", {pos = self.infoBtn.transform.position, type = "Goods"})
     end ,self)
 end
---删除
+--delete
 function DetailsItem:OnClick_closeBtn(ins)
     PlayMusEff(1002)
     Event.Brocast("SelectedGoodsItem", ins)
 end
---刷新滑动条
+--Refresh slider
 function DetailsItem:scrollbarInfo()
-    --当前数量
+    --Current quantity
     local number = self.numberScrollbar.value
     self.inputNumber.text = number
 end
---刷新输入框
+--Refresh the input box
 function DetailsItem:inputInfo()
     local number = self.inputNumber.text
     if number ~= "" then
@@ -99,13 +99,13 @@ function DetailsItem:_getValuableScore(rentPrice, buildingType)
         return "100"
     end
 end
---是否开启自动补货
+--Whether to enable automatic replenishment
 function DetailsItem:SendMessage()
     --if isOn == true then
-    --    ct.log("fisher_w31_time","当前isOn = "..tostring(isOn).."，发送消息:开启自动补货")
+    --    ct.log("fisher_w31_time","当前isOn = "..tostring(isOn).."，Send message: Turn on automatic replenishment")
     --    Event.Brocast("SetAutoReplenish",self)
     --else
-    --    ct.log("fisher_w31_time","当前isOn = "..tostring(isOn).."，发送消息:关闭自动补货")
+    --    ct.log("fisher_w31_time","当前isOn = "..tostring(isOn).."，Send message: Turn off automatic replenishment")
     --    Event.Brocast("SetAutoReplenish",self)
     --end
 

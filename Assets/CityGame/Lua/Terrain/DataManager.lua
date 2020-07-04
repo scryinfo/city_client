@@ -1,7 +1,7 @@
 DataManager = {}
---数据管理器
---1.BuildDataStack 建筑信息（根据相机位置刷新）
---  a.TerrainDatas 地形数据（key = BlockID , value = typeID） 与服务器做地形版本校验
+--Data Manager
+--1.BuildDataStack building information (refresh according to camera position)
+--  a. TerrainDatas terrain data (key = BlockID, value = typeID) and the server to do terrain version verification
 --          ==>> 本地存储为分地块集合的Table数据文件，登录时与服务器校验版本（分包更新）
 --  b.BlockDatas 原子地块的基本信息（key = BlockID ，value = nodeID）没有建筑覆盖为 -1  有建筑覆盖则记录节点ID
 --          ==>> 与c的地块一致，当新BlockCollectionDatas创建时被创建，当新BlockCollectionDatas刷新时改写内部数据，当BlockCollectionDatas消亡时数据清除
@@ -1023,7 +1023,7 @@ function DataManager.ModelNoneInsIdRemoveNetMsg(protoNameStr,protoNumStr,fun)
     end
 end
 
----------------------------------------------------------------------------------- 用户信息---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------- User Info---------------------------------------------------------------------------------
 local updataTimer = 0
 
 local currentTime_CalculateTheExpirationDateOfMyRentGroundInfo
@@ -1842,7 +1842,7 @@ function DataManager.IsInTheRange(startBlockID,rangeSize,tempID)
 end
 
 ---------------------------------------------------------------------------------- 临时数据---------------------------------------------------------------------------------
---客户端请求
+--Client request
 --取消出租
 function DataManager.m_ReqCancelRentGround(coord)
     local msgId = pbl.enum("gscode.OpCode","cancelRentGround")

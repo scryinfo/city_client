@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class MiniMapDrag : MonoBehaviour , IDragHandler
 {
     public RectTransform mParentRect;
-    //自身mRect
+    //MRect itself
     private RectTransform mRect;
     private float mMapPixelSize;
     private float mMapHight;
@@ -35,7 +35,7 @@ public class MiniMapDrag : MonoBehaviour , IDragHandler
     {
         mMapScale = mRect.localScale.x;
         targetPos = mRect.anchoredPosition + eventData.delta;
-        //此处做边界计算
+        //Do the boundary calculation here
         NowRangeSize = (mMapScale - 1) * mMapPixelSize / 2;
         NowRangeSizeY = (mMapScale - 1) * mMapPixelSize / 2 + (mMapPixelSize - mMapHight) / 2;
         if (targetPos.x > NowRangeSize)

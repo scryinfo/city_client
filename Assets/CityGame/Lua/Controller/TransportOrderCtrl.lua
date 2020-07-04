@@ -25,7 +25,7 @@ end
 function TransportOrderCtrl.OnConfirmBtn(go)
 
 end
---暂时初始化数据
+--Temporarily initialize data
 function TransportOrderCtrl.Initialize()
     local time = os.date("%X");
     local distance = 50;

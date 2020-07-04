@@ -1,4 +1,4 @@
---压力测试脚本
+--Stress test script
 --
 RobotIns={}
 
@@ -9,7 +9,7 @@ local this
 
 local co
 local tuoken
---todo:是否激活脚本
+--todo:Whether to activate the script
 function RobotTest:initialize()
     self.isActive=false
     this=self
@@ -31,7 +31,7 @@ function RobotTest:Start()
     co= coroutine.create(function ()
 
         for i, Robot in ipairs(RobotConfig) do
-            --todo：创建连接并连接账号服
+             --todo：Create connection and connect account service
             acount=Robot.acount
             builds=Robot.buildings
             grounds=Robot.ground
@@ -59,33 +59,33 @@ function RobotTest:CreateRobot()
 end
 
 --2《《《《《《《《《《《《《《《《《《《《
----连接账号服的回调
---todo:username需要全局
+---Callback for connecting to account service
+--todo:username Need global
 function RobotTest:login_callback()
-    --清空所有网络注册
+    --Clear all network registrations
     DataManager.UnAllModelRegisterNetMsg()
-    --动态注册所有as协议
-    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",this.n_AsLogin,this)--新版model网络注册
+    --Register all as protocols dynamically
+    DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","login","as.Login",this.n_AsLogin,this)--New version of online registration
 
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","chooseGameServer","as.ChoseCameServerACK",this.n_ChooseGameServer,this)
 
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","getServerList","as.AllGameServerInfo",this.n_AllGameServerInfo,this)
 
-    ----1、 获取协议id
+    ----1、 Acquisition Agreement id
     local msgId = pbl.enum("ascode.OpCode","login")
-    ----2、 填充 protobuf 内部协议数据
+    ----2、 Fill in protobuf internal agreement data 
     local msglogion = {
         account = acount
     }
-    -- 序列化成二进制数据
+    -- Serialized into binary data
     local pb_login = assert(pbl.encode("as.Login", msglogion))
-    --发包
+    --Outsourcing
   CityEngineLua.Bundle:newAndSendMsg(msgId,pb_login);
 end
 
 
---todo:网络回调注册  只需要注册一次
----TODO：暂时用回调累加法 来 判定携程的释放
+--todo:Network callback registration only needs to be registered once
+---TODO：Temporarily use the callback accumulation method to determine 
 function RobotTest:OnRegisNet()
 
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","addBuilding"), this.n_OnReceiveAddBuilding)
@@ -98,39 +98,39 @@ function RobotTest:OnRegisNets()
 
     CityEngineLua.Message:registerNetMsg(pbl.enum("gscode.OpCode","roleLogin"),this.n_OnRoleLogin);
 
-    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","createRole","gs.RoleInfo",this.n_CreateNewRole,this)--新版model网络注册
+    DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","createRole","gs.RoleInfo",this.n_CreateNewRole,this)--New version of online registration
 
 end
 
 
---todo:网络回调------------------------------------------------------------------------------------------------------------
+--todo:Network callback------------------------------------------------------------------------------------------------------------
 --2.5《《《《《《《《《《《《《《《《《《《《
----登录as回调 发送获取服务器列表协议
+---Login callback Send protocol to get server list
 function RobotTest.n_AsLogin()
-    --1、 获取协议id
+    --1、 Acquisition Agreement id
     local msgId = pbl.enum("ascode.OpCode","getServerList")
-    ----2、 填充 protobuf 内部协议数据
+    ----2、 Fill protobuf internal protocol data
     --local msglogion = pb.as.Login()
     --msglogion.account = this.username
     --local pb_login = msglogion:SerializeToString()  -- Parse Example
-    ----3、 获取 protobuf 数据大小
+    ----3、 Get protobuf data size
     --local pb_size = #pb_login
-    ----4、 创建包，填入数据并发包
+    ----4、Create a package and fill in data concurrently
     CityEngineLua.Bundle:newAndSendMsg(msgId,nil)
 
 end
 
 --3《《《《《《《《《《《《《《《《《《《《
----服务器列表回调
+---Server list callback
 function RobotTest:n_AllGameServerInfo(msg)
-    --todo：选择服务器
+    --todo： Select server
     DataManager.ModelSendNetMes("ascode.OpCode", "chooseGameServer",
             "as.ChoseGameServer",{ serverId =msg.infos[1].serverId})
 end
 --4《《《《《《《《《《《《《《《《《《《《
------选择游戏服务器后回调, 发送登录游戏服务器的请求
+-----Callback after selecting a game server and sending a request to log in
 function RobotTest:n_ChooseGameServer(token)
-   --todo:连接gs
+   --todo:Connect gs
     tuoken=token.code
     this._networkInterface:reset()
     this._networkInterface = City.NetworkInterface.New();
@@ -139,53 +139,54 @@ function RobotTest:n_ChooseGameServer(token)
 
 end
 --5《《《《《《《《《《《《《《《《《《《《
----连接gs成功的回调  发送gs登录
+---Callback for successful gs connection Send gs login
 function RobotTest:onConnectTo_baseapp_callback()
-    --清空所有网络注册
+    --Clear all network registrations
     DataManager.UnAllModelRegisterNetMsg()
-    --gs 登录
+    --gs log in
     this:OnRegisNet()
     this:OnRegisNets()
 
-    ----1、 获取协议id
+    ----1、 Acquisition Agreement id
     local msgId = pbl.enum("gscode.OpCode","login")
-    ----2、 填充 protobuf 内部协议数据
+    ----2、 Fill in protobuf internal agreement data  
     local lMsg = { account = acount, token =tuoken}
     local pMsg = assert(pbl.encode("gs.Login", lMsg))
-    ----3、 创建包，填入数据并发包
+    ----3、 Create a package and fill in data concurrently
     CityEngineLua.Bundle:newAndSendMsg(msgId,pMsg);
 
 end
 --6《《《《《《《《《《《《《《《《《《《《
----gs登录成功回调
+---gs Login success callback
 function RobotTest:n_GsLoginSuccessfully()
-    --todo：创角
+    --todo：Creating angle
     DataManager.ModelSendNetMes("gscode.OpCode", "createRole","gs.CreateRole",
             { male =male ,name =name ,companyName =cNmae ,faceId = headIma })
 
 end
 --7《《《《《《《《《《《《《《《《《《《《
----创角回调后 角色登录
+---After the corner is called back, role login
 function RobotTest:n_CreateNewRole(pMsg)
     DataManager.ModelSendNetMes("gscode.OpCode", "roleLogin","gs.Id",{ id = pMsg.id })
 end
 
 --8《《《《《《《《《《《《《《《《《《《《
 function RobotTest.n_OnRoleLogin( stream )
-    --todo:发送创建建筑协议
+    --todo:Send to create building agreement
+
     local t=stream
-    --买地
+    --Land purchase
     for i, ground in ipairs(grounds) do
         PlayerTempModel.tempTestAddGroung(ground.x1,ground.y1, ground.x2,ground.y2)
     end
-    --造建筑
+    --Building
     for i, build in ipairs(builds) do
         PlayerTempModel.m_ReqAddBuilding(build.id, math.floor(build.x) ,  math.floor(build.y))
     end
 
 end
 
---携程是否继续
+--Whether Ctrip continues
 function  RobotTest:isContinue()
     startNum= startNum+1
     if startNum >=endNum then
@@ -193,12 +194,12 @@ function  RobotTest:isContinue()
     end
 end
 
---造建筑回调
+--Building callback
 function  RobotTest.n_OnReceiveAddBuilding(stream)
     this:isContinue()
 end
 
---买地回调
+--Land purchase callback
 function  RobotTest.n_OnReceiveGroundChange(stream)
     this:isContinue()
 end

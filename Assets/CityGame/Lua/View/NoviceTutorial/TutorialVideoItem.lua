@@ -6,7 +6,7 @@
 
 TutorialVideoItem = class("TutorialVideoItem")
 
--- 初始化
+-- initialization
 function TutorialVideoItem:initialize(prefab, data)
     self.prefab = prefab
     self.data = data
@@ -23,7 +23,7 @@ function TutorialVideoItem:initialize(prefab, data)
     end)
 end
 
--- 按钮的点击事件
+-- Button click event
 function TutorialVideoItem:_onClickBtn()
     UnityEngine.Application.OpenURL(self.data.url)
 end

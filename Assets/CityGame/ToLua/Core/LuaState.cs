@@ -204,7 +204,7 @@ namespace LuaInterface
 
         void OpenBaseLuaLibs()
         {
-            DoFile("tolua.lua");            //tolua table名字已经存在了,不能用require
+            DoFile("tolua.lua");            //tolua table name already exists, you cannot use require
             LuaUnityLibs.OpenLuaLibs(L);
         }
 
@@ -259,7 +259,7 @@ namespace LuaInterface
             }            
         }
 
-        //慎用，需要自己保证不会重复Add相同的name,并且上面函数没有使用过这个name
+        //Use with caution, you need to ensure that you will not repeat Add the same name, and the above function has not used this name
         public void AddPreLoad(string name, LuaCSFunction func)
         {
             LuaDLL.tolua_pushcfunction(L, func);
@@ -1673,7 +1673,7 @@ namespace LuaInterface
             }
         }
 
-        //在委托调用中减掉一个LuaFunction, 此lua函数在委托中还会执行一次, 所以必须延迟删除，委托值类型表现之一
+        //A LuaFunction is subtracted from the delegate call, this lua function will also be executed once in the delegate, so it must be delayed to delete, one of the delegate value type performance
         public void DelayDispose(LuaBaseRef br)
         {
             if (br != null)

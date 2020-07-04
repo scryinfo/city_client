@@ -24,7 +24,7 @@ end
 
 function CompanyCtrl:Awake()
     ct.log("tina_w22_friends", "CompanyCtrl:Awake()")
-    --初始化管理器
+    --Initialization manager
     CompanyCtrl.static.companyMgr = CompanyMgr:new(self)
 
     local luaBehaviour = self.gameObject:GetComponent("LuaBehaviour")
@@ -41,45 +41,44 @@ function CompanyCtrl:Awake()
     luaBehaviour:AddClick(CompanyPanel.sizeBtn.gameObject, self.OnSize, self)
     luaBehaviour:AddClick(CompanyPanel.choiceOBtn.gameObject, self.OnChoiceO, self)
     luaBehaviour:AddClick(CompanyPanel.choiceTBtn.gameObject, self.OnChoiceT, self)
-    luaBehaviour:AddClick(CompanyPanel.detaiks, self.OnDetaiks, self)   --营收详情
-
-    -- 土地节点
+    luaBehaviour:AddClick(CompanyPanel.detaiks, self.OnDetaiks, self)   --Revenue details
+    -- Land node
     self.landSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.landSource.mProvideData = CompanyCtrl.static.landData
     self.landSource.mClearData = CompanyCtrl.static.landClearData
 
-    -- 建筑节点
+    -- Building node
     self.buildingSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.buildingSource.mProvideData = CompanyCtrl.static.buildingData
     self.buildingSource.mClearData = CompanyCtrl.static.buildingClearData
 
-    -- Eva节点2
+    -- Eva node 2
     --self.evaOptionTwoSource = UnityEngine.UI.LoopScrollDataSource.New()
     --self.evaOptionTwoSource.mProvideData = CompanyCtrl.static.evaOptionTwoData
     --self.evaOptionTwoSource.mClearData = CompanyCtrl.static.evaOptionTwoClearData
 
-    -- Eva节点3
+    -- Eva node 3
     --self.evaOptionThereSource = UnityEngine.UI.LoopScrollDataSource.New()
     --self.evaOptionThereSource.mProvideData = CompanyCtrl.static.evaOptionThereData
     --self.evaOptionThereSource.mClearData = CompanyCtrl.static.evaOptionThereClearData
 
-    -- 品牌节点
+    -- Brand node
     self.brandSource = UnityEngine.UI.LoopScrollDataSource.New()
     self.brandSource.mProvideData = CompanyCtrl.static.brandData
     self.brandSource.mClearData = CompanyCtrl.static.brandClearData
 
-    -- 初始化数据
+    -- Initialization data
     self:_initData()
 end
 
--- 注册监听事件
+-- Register to listen to events
 function CompanyCtrl:Active()
     UIPanel.Active(self)
     --CompanyPanel.curve.anchoredPosition = Vector3.New(-2903, 47,0)
     --CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)
     self:_addListener()
 
-    -- 多语言适配
+    -- Multilingual adaptation
     CompanyPanel.infoBtnText.text = GetLanguage(18010002)
     CompanyPanel.incomeTitleText.text = GetLanguage(18010003)
     CompanyPanel.expenditureTitleText.text = GetLanguage(18010004)
@@ -103,7 +102,7 @@ function CompanyCtrl:Hide()
     --CompanyPanel.curve.sizeDelta = Vector2.New(4335, 535)
 end
 
--- 监听Model层网络回调
+-- Listen to the model layer network callback
 function CompanyCtrl:_addListener()
     Event.AddListener("c_OnGetGroundInfo", self.c_OnGetGroundInfo, self)
     Event.AddListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
@@ -115,7 +114,7 @@ function CompanyCtrl:_addListener()
     Event.AddListener("c_OnModyfyMyBrandName", self.c_OnModyfyMyBrandName, self)
 end
 
--- 注销model层网络回调
+-- Cancel the model layer network callback
 function CompanyCtrl:_removeListener()
     Event.RemoveListener("c_OnGetGroundInfo", self.c_OnGetGroundInfo, self)
     Event.RemoveListener("c_OnQueryMyBuildings", self.c_OnQueryMyBuildings, self)
@@ -127,22 +126,22 @@ function CompanyCtrl:_removeListener()
     Event.RemoveListener("c_OnModyfyMyBrandName", self.c_OnModyfyMyBrandName, self)
 end
 
--- 打开model
+-- Open model
 function CompanyCtrl:initInsData()
     DataManager.OpenDetailModel(CompanyModel, OpenModelInsID.CompanyCtrl)
 end
 
--- 各按钮
+-- Buttons
 function CompanyCtrl:OnBack(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 
--- 收支曲线图
+-- Revenue and Expenditure Curve
 function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     CompanyPanel.curveFunctionalGraph:Close()
     CompanyPanel.curveSlide:Close()
-    local currentTimes = TimeSynchronized.GetTheCurrentTime()    --服务器当前时间(秒)
+    local currentTimes = TimeSynchronized.GetTheCurrentTime()    --Current server time (seconds)
     local currentTime = currentTimes
     local ts = getFormatUnixTime(currentTime)
     local second = tonumber(ts.second)
@@ -158,8 +157,8 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
         currentTime = currentTime - hour * 3600
     end
     local taday = currentTimes - currentTime
-    currentTime = math.floor(currentTime)               --当前小时数-整数
-    local monthAgo = currentTime - 2592000 + 86400     --30天前
+    currentTime = math.floor(currentTime)               --Current hours-integer
+    local monthAgo = currentTime - 2592000 + 86400     --30 days ago
     local updataTime = monthAgo
     local time = {}
     local boundaryLine = {}
@@ -187,10 +186,10 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
             if updataTime <= currentTime then
                 incomeTab[i] = {}
                 incomeTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 140
-                incomeTab[i].flow = 0  --看具体字段
+                incomeTab[i].flow = 0  --See specific fields
                 payTab[i] = {}
                 payTab[i].coordinate = (updataTime - buildingTs + 86400) / 86400 * 140
-                payTab[i].flow = 0  --看具体字段
+                payTab[i].flow = 0  --See specific fields
                 if info ~= nil then
                     for k, v in pairs(info) do
                         if updataTime == v.time / 1000 then
@@ -216,10 +215,10 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
             end
             incomeTab[i] = {}
             incomeTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-            incomeTab[i].flow = 0  --看具体字段
+            incomeTab[i].flow = 0  --See specific fields
             payTab[i] = {}
             payTab[i].coordinate = (updataTime - monthAgo + 86400) / 86400 * 140
-            payTab[i].flow = 0  --看具体字段
+            payTab[i].flow = 0  --See specific fields
             if info ~= nil then
                 for k, v in pairs(info) do
                     if updataTime == v.time / 1000 then
@@ -318,7 +317,7 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     --    payVet[#payVet].x = payVet[#payVet].x + (taday * (140 / 86400))
     --end
 
-    local difference = (currentTime - buildingTs) / 86400  --距离开业的天数
+    local difference = (currentTime - buildingTs) / 86400  --Days to open
     if difference < 10 then
         CompanyPanel.curve.anchoredPosition = Vector3.New(-40, 47,0)
         CompanyPanel.curve.sizeDelta = Vector2.New(1528, 423)
@@ -335,10 +334,10 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
     CompanyPanel.curveSlide:SetXScaleValue(time,140)
     CompanyPanel.curveFunctionalGraph:BoundaryLine(boundaryLine)
 
-    CompanyPanel.curveFunctionalGraph:DrawLine(incomeVet, getColorByInt(125, 197, 222),1) --收入
+    CompanyPanel.curveFunctionalGraph:DrawLine(incomeVet, getColorByInt(125, 197, 222),1) --income
     CompanyPanel.curveSlide:SetCoordinate(incomeVet, income, getColorByInt(125, 197, 222),1)
 
-    CompanyPanel.curveFunctionalGraph:DrawLine(payVet, getColorByInt(213, 34, 76),2) --支出
+    CompanyPanel.curveFunctionalGraph:DrawLine(payVet, getColorByInt(213, 34, 76),2) --expenditure
     CompanyPanel.curveSlide:SetCoordinate(payVet, pay, getColorByInt(213, 34, 76),2)
 
     CompanyPanel.curve.localPosition = CompanyPanel.curve.localPosition + Vector3.New(0.01, 0,0)
@@ -346,7 +345,7 @@ function CompanyCtrl:c_PromoteSignCurve(info,todayIncome,todayPay)
 end
 
 
--- 显示基本信息
+-- Display basic information
 function CompanyCtrl:OnInfo(go)
     PlayMusEff(1002)
 
@@ -355,12 +354,12 @@ function CompanyCtrl:OnInfo(go)
     DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryPlayerIncomePayCurve')
 end
 
--- 显示土地信息
+-- Show land information
 function CompanyCtrl:OnLand(go)
     PlayMusEff(1002)
     go:_showMainRoot(2)
-    -- 土地选项生成
-    CompanyCtrl.static.companyMgr.landTypeNum = 0 -- 0 全部 1 租用中 2 已出租 3 出租中 4 出售中 5 可使用
+    -- Land option generation
+    CompanyCtrl.static.companyMgr.landTypeNum = 0 -- 0 All 1 Renting 2 Rented 3 Renting 4 Selling 5 Available
     if CompanyCtrl.static.companyMgr:GetLandTitleItem() then
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_GetGroundInfo')
     else
@@ -368,12 +367,12 @@ function CompanyCtrl:OnLand(go)
     end
 end
 
--- 显示建筑信息
+-- Display building information
 function CompanyCtrl:OnBuilding(go)
     PlayMusEff(1002)
     go:_showMainRoot(3)
-    -- 建筑选项生成
-    CompanyCtrl.static.companyMgr.buildingTypeNum = 0 -- 0 全部 1 原料厂 2 加工厂 3 零售店 4 推广公司 5 研究所 6 住宅 7 仓库
+    -- Building option generation
+    CompanyCtrl.static.companyMgr.buildingTypeNum = 0 -- 0 All 1 Raw material plant 2 Processing plant 3 Retail store 4 Promotion company 5 Research institute 6 Residential 7 Warehouse
     if CompanyCtrl.static.companyMgr:GetBuildingTitleItem() then
         DataManager.DetailModelRpcNoRet(OpenModelInsID.CompanyCtrl, 'm_QueryMyBuildings')
         CompanyPanel.buildingTitleRt.anchoredPosition = Vector2.New(0,0)
@@ -382,11 +381,11 @@ function CompanyCtrl:OnBuilding(go)
     end
 end
 
--- 打开品牌
+-- Open brand
 function CompanyCtrl:OnBrand(go)
     PlayMusEff(1002)
     go:_showMainRoot(5)
-    -- 品牌选项生成
+    -- Brand option generation
     CompanyCtrl.static.companyMgr:SetBrandSizeNum(1)
     --CompanyCtrl.static.companyMgr.brandTypeNum = 0
     if CompanyCtrl.static.companyMgr:GetBrandTitleItem() then
@@ -396,7 +395,7 @@ function CompanyCtrl:OnBrand(go)
     end
 end
 
--- 给公司改名
+-- Rename the company
 function CompanyCtrl:OnCompanyRename(go)
     PlayMusEff(1002)
     local data = {}
@@ -413,13 +412,13 @@ function CompanyCtrl:OnCompanyRename(go)
     ct.OpenCtrl("CompanyInputCtrl", data)
 end
 
--- 品牌主菜单
+-- Brand main menu
 function CompanyCtrl:OnSize(go)
     CompanyPanel.sizeBg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic)
     CompanyPanel.sizeBtnImage:DORotate(Vector3.New(0,0,0),0.1):SetEase(DG.Tweening.Ease.OutCubic)
 end
 
--- 品牌菜单1
+-- Brand Menu 1
 function CompanyCtrl:OnChoiceO(go)
     PlayMusEff(1002)
     if CompanyCtrl.static.companyMgr.brandSizeNum == 1 then
@@ -434,7 +433,7 @@ function CompanyCtrl:OnChoiceO(go)
     end
 end
 
--- 品牌菜单2
+-- Brand Menu 2
 function CompanyCtrl:OnChoiceT(go)
     PlayMusEff(1002)
     if CompanyCtrl.static.companyMgr.brandSizeNum == 1 then
@@ -454,9 +453,9 @@ function CompanyCtrl:OnDetaiks()
     ct.OpenCtrl("CompanyWaterCtrl")
 end
 
--- 初始数据
+-- Initial data
 function CompanyCtrl:_initData()
-    -- 整合各大分页的切换(每添加一个，则需要把相应的节点传进来，即可实现不同节点的交替)
+    -- Integrate the switching of major pages (each time you add one, you need to pass in the corresponding node to realize the alternation of different nodes)
     self.mainSwitchTab =
     {
         {btn = CompanyPanel.infoBtn, root = CompanyPanel.infoRoot, transform = CompanyPanel.infoBtn.transform},
@@ -467,7 +466,7 @@ function CompanyCtrl:_initData()
     }
 end
 
--- 切换各节点
+-- Switch between nodes
 function CompanyCtrl:_showMainRoot(index)
     CompanyPanel.noContentRoot.localScale = Vector3.zero
     for i, v in ipairs(self.mainSwitchTab) do
@@ -486,7 +485,7 @@ function CompanyCtrl:_showMainRoot(index)
         end
     end
 
-    -- 控制Eva标题的显示，解决设置content位置不成功的bug
+    -- Control the display of Eva title and solve the bug of unsuccessful setting of content location
     --if index == 4 then
     --    CompanyPanel.optionOneObj:SetActive(true)
     --else
@@ -494,7 +493,7 @@ function CompanyCtrl:_showMainRoot(index)
     --end
 end
 
--- 初始化基本数据
+-- Initialize basic data
 function CompanyCtrl:_updateData()
     if self.m_data.id == DataManager.GetMyOwnerID() then
         --CompanyPanel.evaBtn.transform.localScale = Vector3.one
@@ -526,8 +525,8 @@ function CompanyCtrl:_updateData()
     self:OnInfo(self)
 end
 
--- 滑动复用
--- 土地信息显示
+-- Sliding multiplexing
+-- Land information display
 CompanyCtrl.static.landData = function(transform, idx)
     idx = idx + 1
     local item = LandInfoItem:new(transform, CompanyCtrl.landInfos[idx])
@@ -536,7 +535,7 @@ end
 CompanyCtrl.static.landClearData = function(transform)
 end
 
--- 建筑信息显示
+-- Building information display
 CompanyCtrl.static.buildingData = function(transform, idx)
     idx = idx + 1
     local item = BuildingInfoItem:new(transform, CompanyCtrl.buildingInfos[idx])
@@ -545,7 +544,7 @@ end
 CompanyCtrl.static.buildingClearData = function(transform)
 end
 
--- Eva选项2信息显示
+-- Eva option 2 information display
 CompanyCtrl.static.evaOptionTwoData = function(transform, idx)
     idx = idx + 1
     CompanyCtrl.optionTwoScript[idx] = OptionItem:new(transform, 2, idx)
@@ -554,7 +553,7 @@ end
 CompanyCtrl.static.evaOptionTwoClearData = function(transform)
 end
 
--- Eva选项3信息显示
+-- Eva option 3 information display
 CompanyCtrl.static.evaOptionThereData = function(transform, idx)
     idx = idx + 1
     CompanyCtrl.optionThereScript[idx] = OptionItem:new(transform, 3, idx)
@@ -563,7 +562,7 @@ end
 CompanyCtrl.static.evaOptionThereClearData = function(transform)
 end
 
--- 品牌信息显示
+-- Brand information display
 CompanyCtrl.static.brandData = function(transform, idx)
     idx = idx + 1
     CompanyCtrl.brandScript[idx] = BrandItem:new(transform, CompanyCtrl.static.companyMgr.partBrandData[idx])
@@ -572,25 +571,25 @@ end
 CompanyCtrl.static.brandClearData = function(transform)
 end
 
--- 网络回调
--- 服务器土地信息回调，创建新表，把各项信息分别放进去，用于显示各项土地个数，滑动则只显示选择的那一项
+-- Network callback
+-- The server land information callback, create a new table, put all the information into it, used to display the number of each land, slide to display only the selected item
 function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
     if groundInfos.info then
         CompanyPanel.noContentRoot.localScale = Vector3.zero
         CompanyCtrl.landTypeInfo = {{}, {}, {}, {}, {}}
         for _, v in ipairs(groundInfos.info) do
             if v.ownerId == DataManager.GetMyOwnerID() then
-                if v.rent and v.rent.renterId then -- 已出租
+                if v.rent and v.rent.renterId then -- Leased
                     table.insert(CompanyCtrl.landTypeInfo[2], v)
-                elseif v.rent and not v.rent.renterId then -- 出租中
+                elseif v.rent and not v.rent.renterId then -- For rent
                     table.insert(CompanyCtrl.landTypeInfo[3], v)
-                elseif v.sell then -- 出售中
+                elseif v.sell then -- For sale
                     table.insert(CompanyCtrl.landTypeInfo[4], v)
-                else -- 可使用
+                else -- be usable
                     table.insert(CompanyCtrl.landTypeInfo[5], v)
                 end
             else
-                if v.rent and v.rent.renterId then -- 租用中
+                if v.rent and v.rent.renterId then -- Renting
                     table.insert(CompanyCtrl.landTypeInfo[1], v)
                 end
             end
@@ -623,7 +622,7 @@ function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
             CompanyPanel.tipsText.text = GetLanguage(18020011)
         end
     else
-        -- 当没有土地需要显示时，各项数据皆为零
+        -- When no land needs to be displayed, all data are zero
         CompanyPanel.noContentRoot.localScale = Vector3.one
         CompanyPanel.tipsText.text = GetLanguage(18020011)
         CompanyPanel.landScroll:ActiveLoopScroll(self.landSource, 0, "View/Company/LandInfoItem")
@@ -637,7 +636,7 @@ function CompanyCtrl:c_OnGetGroundInfo(groundInfos)
     end
 end
 
--- 服务器建筑信息显示回调，不需要自己分类，服务器已经分好了，根据他的type判断就好啦
+-- The server building information display callback, no need to categorize it by yourself, the server is already divided, just judge according to his type
 function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
     if groundInfos.myBuildingInfo then
         CompanyPanel.noContentRoot.localScale = Vector3.zero
@@ -697,7 +696,7 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
         CompanyPanel.noContentRoot.localScale = Vector3.one
         CompanyPanel.tipsText.text = GetLanguage(18030002)
 
-        -- 当没有建筑需要显示时，各项数据皆为零
+        -- When there is no building to display, all data are zero
         CompanyPanel.buildingScroll:ActiveLoopScroll(self.buildingSource, 0, "View/Company/BuildingInfoItem")
         local buildingTitleItemMgrTab = CompanyCtrl.static.companyMgr:GetBuildingTitleItem()
         for i, v in ipairs(buildingTitleItemMgrTab) do
@@ -709,13 +708,13 @@ function CompanyCtrl:c_OnQueryMyBuildings(groundInfos)
     end
 end
 
--- 服务器查询Eva，并把Eva信息保存下來，并默认显示第一项
+--The server queries Eva, saves the Eva information, and displays the first item by default
 --function CompanyCtrl:c_OnQueryMyEva(evas)
 --    CompanyCtrl.static.companyMgr:SetEvaData(evas)
 --    CompanyCtrl.static.companyMgr:SetEvaDefaultState()
 --end
 
--- 加点后，更新Eva信息
+-- After adding points, update Eva information
 function CompanyCtrl:c_OnUpdateMyEva(eva)
     local data = {}
     data.id = eva.id
@@ -733,12 +732,12 @@ function CompanyCtrl:c_OnUpdateMyEva(eva)
     CompanyCtrl.static.companyMgr:UpdateMyEvaProperty(data)
 end
 
--- 收支返回
+-- Income and expenditure return
 function CompanyCtrl:c_OnQueryPlayerIncomePayCurve(curveInfo)
     local pay = 0
     local income = 0
 
-    -- 获得往期的收支
+    -- Get past revenues and expenditures
     if curveInfo.playerIncome then
         for _, v in pairs(curveInfo.playerIncome) do
             if v.income then
@@ -750,17 +749,17 @@ function CompanyCtrl:c_OnQueryPlayerIncomePayCurve(curveInfo)
         end
     end
 
-    -- 营收
+    -- Revenue
     if curveInfo.todayIncome then
         income = income + curveInfo.todayIncome
     end
 
-    -- 支出
+    -- expenditure
     if curveInfo.todayPay then
         pay = pay + curveInfo.todayPay
     end
 
-    -- 设置UI上的值
+    -- Set the value on the UI
     if income > 0 then
         CompanyPanel.incomeText.text = GetClientPriceString(income)
     else
@@ -772,51 +771,51 @@ function CompanyCtrl:c_OnQueryPlayerIncomePayCurve(curveInfo)
         CompanyPanel.expenditureText.text = "0"
     end
 
-    -- 生成曲线图
+    -- Generate a graph
     self:c_PromoteSignCurve(curveInfo.playerIncome,curveInfo.todayIncome,curveInfo.todayPay)
 end
 
--- 公司改名
+-- Company name change
 function CompanyCtrl:c_OnModifyCompanyName(roleInfo)
     CompanyPanel.companyNameText.text = roleInfo.companyName
     Event.Brocast("SmallPop",GetLanguage(18010008),80)
     DataManager.SetMyPersonalHomepageInfo(1,{roleInfo})
 end
 
--- 品牌返回
+-- Brand back
 function CompanyCtrl:c_OnMQueryMyBrands(MyAllBrands)
 
     CompanyCtrl.static.companyMgr:SetBrandData(MyAllBrands)
     CompanyCtrl.static.companyMgr:SetBrandDefaultState()
 end
 
--- 品牌改名返回
+-- Rebranding back
 function CompanyCtrl:c_OnModyfyMyBrandName(modyfyMyBrandName)
-    -- 刷新界面
+    -- Refresh the interface
     for _, v in ipairs(CompanyCtrl.brandScript) do
         v:ChangeName(modyfyMyBrandName)
     end
 
-    -- 刷新数据
+    -- Refresh data
     CompanyCtrl.static.companyMgr:SetBrandName(modyfyMyBrandName)
     Event.Brocast("SmallPop",GetLanguage(18040007),80)
 end
 
--- 刷新Eva滑动选项2的信息
+-- Refresh Eva sliding option 2 information
 --function CompanyCtrl:ShowOptionTwo(itemNumber)
 --    CompanyCtrl.optionTwoScript = {}
 --    CompanyPanel.optionTwoScroll:ActiveLoopScroll(self.evaOptionTwoSource, itemNumber, "View/Company/EvaBtnTwoItem")
 --    CompanyPanel.optionTwoScroll:RefillCells()
 --end
 
--- 刷新Eva滑动选项3的信息
+-- Refresh Eva sliding option 3 information
 --function CompanyCtrl:ShowOptionThere(itemNumber)
 --    CompanyCtrl.optionThereScript = {}
 --    CompanyPanel.optionThereScroll:ActiveLoopScroll(self.evaOptionThereSource, itemNumber, "View/Company/EvaBtnThereItem")
 --    CompanyPanel.optionThereScroll:RefillCells()
 --end
 
--- 刷新品牌的信息
+-- Refresh brand information
 function CompanyCtrl:ShowBrand(itemNumber)
     CompanyCtrl.brandScript = {}
     CompanyPanel.brandScroll:ActiveLoopScroll(self.brandSource, itemNumber, "View/Company/BrandItem")

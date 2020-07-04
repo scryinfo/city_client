@@ -5,50 +5,50 @@
 ---
 MapTypeConfig ={
     [1] = {
-        typeId = 1,  --原料
+        typeId = 1,  --raw material
         languageId = 20010002,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-Material.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-Material-grey.png",
     },
     [2] = {
-        typeId = 2,  --商品
+        typeId = 2,  --commodity
         languageId = 20010003,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-Goods-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-goods-grey.png",
     },
     [3] = {
-        typeId = 3,  --建筑
+        typeId = 3,  --building
         languageId = 20010010,
         name = "建筑",
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-land-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-deal-grey.png",
     },
     [4] = {
-        typeId = 4,  --科研
+        typeId = 4,  --research
         languageId = 20010004,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-research-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-research-grey.png",
     },
     [5] = {
-        typeId = 5,  --推广
+        typeId = 5,  --Promote
         languageId = 20010009,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-ad-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-ad-grey.png",
     },
     [6] = {
-        typeId = 6,  --土地交易
+        typeId = 6,  --Land transaction
         languageId = 20010006,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-land-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-deal-grey.png",
     },
     [7] = {
-        typeId = 7,  --土地拍卖
+        typeId = 7,  --Land auction
         languageId = 20010007,
         selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-land-red.png",
         disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-deal-grey.png",
     },
     --[7] = {
-    --    typeId = 7,  --签约
+    --    typeId = 7,  --Sign a contract
     --    languageId = 4301011,
     --    selectIconPath = "Assets/CityGame/Resources/Atlas/Map/red/icon-signing-red.png",
     --    disSelectIconPath = "Assets/CityGame/Resources/Atlas/Map/grey/icon-signing-grey.png",

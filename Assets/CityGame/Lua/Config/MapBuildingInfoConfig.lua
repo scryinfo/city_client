@@ -1,4 +1,4 @@
---小地图点击建筑之后右侧展示的信息配置
+--The information configuration displayed on the right after clicking the building on the small map
 MapBuildingInfoConfig={
     ["Revenue"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-turnover.png",
@@ -44,7 +44,7 @@ MapBuildingInfoConfig={
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-queue.png",
         ["languageId"] = 20100002,
     },
-    --点击其他人建筑显示的信息
+    --Click on the information displayed by others' buildings
     ["Price"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
         ["languageId"] = 20130001,
@@ -69,7 +69,7 @@ MapBuildingInfoConfig={
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Currentpromotion.png",
         ["languageId"] = 12345678,
     },
-    --土地交易
+    --Land transaction
     ["GroundRentTime"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
         ["languageId"] = 20150002,
@@ -78,7 +78,7 @@ MapBuildingInfoConfig={
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
         ["languageId"] = 20150003,
     },
-    --土地拍卖
+    --Land auction
     ["GAucPrice"] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-eee-s.png",
         ["languageId"] = 20160007,
@@ -87,38 +87,38 @@ MapBuildingInfoConfig={
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-time.png",
         ["languageId"] = 20160010,
     },
-    --建筑
-    ["Shelf"] = --货架
+    --building
+    ["Shelf"] = --Shelf
     {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/button-shelf.png",
         ["languageId"] = 20170001,
     },
-    ["Capacity"] = --入住情况
+    ["Capacity"] = --Check in
     {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Occupancyrate.png",
         ["languageId"] = 20090002,
     },
-    ["DayRent"] = --日租金
+    ["DayRent"] = --Daily rent
     {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Dailyrent.png",
         ["languageId"] = 20090003,
     },
-    ["CompetitivePower"] = --竞争力
+    ["CompetitivePower"] = --Competitiveness
     {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/button-competitive-s.png",
         ["languageId"] = 43010001,
     },
-    ["DataSale"] = --推广公司
+    ["DataSale"] = --Promotion company
     {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Datasale-s.png",
         ["languageId"] = 20170002,
     },
-    ["ResearchSale"] = --研究所
+    ["ResearchSale"] = --graduate School
     {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-shelf-s.png",
         ["languageId"] = 20170003,
     },
-    --广告公司的研究数量
+    --Number of research by advertising companies
     ["PromoteQuantity"] =
     {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/icon-Datasale-s.png",
@@ -132,8 +132,8 @@ MapBuildingInfoConfig={
     },
 }
 ------------------------------------------------------
---小地图点开推广搜索之后展示的信息
---这两个表需要一一对应
+--The information displayed after the mini-map promotion and search
+--These two tables need to correspond one to one
 MapPromotionInfoConfig={
     [1] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/Supermarket.png",
@@ -157,7 +157,7 @@ MapPromotionInfoConfig={
         ["type"] = 1600012,
     },
 }
---建筑二级菜单Items
+--Building secondary menuItems
 MapBuildInfoConfig={
     [1] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/MaterialFactory.png",
@@ -203,7 +203,7 @@ MapBuildInfoConfig={
     },
 }
 
---在evaConfig中的推广对应ID
+--Promotion corresponding ID in evaConfig
 MapPromotionConfig={
     [1] = 1651,
     [2] = 1652,
@@ -211,7 +211,7 @@ MapPromotionConfig={
     [4] = 1614,
 }
 ------------------------------------------------------
---小地图点开科研展示的信息
+--Small map to open the information displayed by scientific research
 MapTechnologyInfoConfig={
     [1] = {
         ["imgPath"] = "Assets/CityGame/Resources/Atlas/Map/MapSmallIcon/MaterialFactory.png",

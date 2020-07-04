@@ -10,7 +10,7 @@ require('Framework/UI/UIPage')
 local class = require 'Framework/class'
 
 TicketAdjustPopCtrl = class('TicketAdjustPopCtrl',UIPage)
-UIPage:ResgisterOpen(TicketAdjustPopCtrl) --注册打开的方法
+UIPage:ResgisterOpen(TicketAdjustPopCtrl) --How to open the registration
 
 function TicketAdjustPopCtrl:initialize()
     UIPage.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal);
@@ -30,7 +30,7 @@ function TicketAdjustPopCtrl:Awake(go)
     WagesAdjustBox:AddClick(TicketAdjustPopPanel.confirmBtn.gameObject,self.OnClick_confirm,self);
     WagesAdjustBox:AddClick(TicketAdjustPopPanel.closeBtn.gameObject,self.OnClick_close,self);
 end
---确定
+--determine
 function TicketAdjustPopCtrl:OnClick_confirm(obj)
     if(obj.m_data) then
         obj.m_data:callback()
@@ -38,11 +38,11 @@ function TicketAdjustPopCtrl:OnClick_confirm(obj)
     obj:Hide();
     Event.Brocast("SmallPop","Successful adjustment",57)
 end
---关闭
+--close
 function TicketAdjustPopCtrl:OnClick_close(obj)
     obj:Hide();
 end
---刷新
+--refresh
 function TicketAdjustPopCtrl:Refresh()
 
 end

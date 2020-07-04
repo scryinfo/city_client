@@ -59,7 +59,7 @@ function FlightSearchCtrl:Hide()
 end
 --
 function FlightSearchCtrl:_initData()
-    --默认出发地为北京，目的地为上海
+    --The default starting point is Beijing and the destination is Shanghai
     if self.startCode == nil then
         self.startCode = FlightConfig.DefaultStartCode
     end
@@ -73,7 +73,7 @@ function FlightSearchCtrl:_initData()
         local year = tonumber(os.date("%Y", os.time()))
         local month = tonumber(os.date("%m", os.time()))
         local day = tonumber(os.date("%d", os.time()))
-        self.timeValue = os.time({year = year, month = month, day = day})  --时间戳
+        self.timeValue = os.time({year = year, month = month, day = day})  --Timestamp
     end
     self:showTimeText(self.timeValue)
 end
@@ -91,28 +91,28 @@ function FlightSearchCtrl:backFunc()
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
---选择起飞地
+--Choose place of departure
 function FlightSearchCtrl:startChooseFunc()
     PlayMusEff(1002)
     ct.OpenCtrl("FlightChoosePlaceCtrl", {callback = function(data)
         self:startChooseResult(data)
     end})
 end
---选择目的地
+--Choose destination
 function FlightSearchCtrl:endChooseFunc()
     PlayMusEff(1002)
     ct.OpenCtrl("FlightChoosePlaceCtrl", {callback = function(data)
         self:endChooseResult(data)
     end})
 end
---选择时间
+--selection period
 function FlightSearchCtrl:timeChooseFunc()
     PlayMusEff(1002)
     ct.OpenCtrl("FlightChooseDateCtrl", {selectDate = self.timeValue, callback = function(data)
         self:timeChooseResult(data)
     end})
 end
---起始地目的地交换
+--Origin destination exchange
 function FlightSearchCtrl:exchangeBtnFunc()
     PlayMusEff(1002)
     local start = self.startCode
@@ -122,29 +122,29 @@ function FlightSearchCtrl:exchangeBtnFunc()
     FlightSearchPanel.startText.text = self.startCode
     FlightSearchPanel.endText.text = self.arriveCode
 end
---开始搜索
+--Start searching
 function FlightSearchCtrl:checkBtnFunc()
     PlayMusEff(1002)
     if self.startCode == self.arriveCode then
-        Event.Brocast("SmallPop", GetLanguage(32020035))  --起始地和目的地相同
+        Event.Brocast("SmallPop", GetLanguage(32020035))  --The origin and destination are the same
         return
     end
 
     local time = os.date("%Y-%m-%d", self.timeValue)
     FlightMainModel.m_ReqSearchFlight(self.arriveCode, self.startCode, time)
-    FlightMainModel.OpenFlightLoading()  --开始loading
+    FlightMainModel.OpenFlightLoading()  --Start loading
 end
---起点选择的回调
+--Callback for starting point selection
 function FlightSearchCtrl:startChooseResult(data)
     self.startCode = data.flightCode
     FlightSearchPanel.startText.text = self.startCode
 end
---终点选择的回调
+--Callback for endpoint selection
 function FlightSearchCtrl:endChooseResult(data)
     self.arriveCode = data.flightCode
     FlightSearchPanel.endText.text = self.arriveCode
 end
---起点选择的回调
+--Callback for starting point selection
 function FlightSearchCtrl:timeChooseResult(data)
     self.timeValue = data
     self:showTimeText(self.timeValue)
@@ -171,10 +171,10 @@ function FlightSearchCtrl:showTimeText(time)
     local dateStr = os.date("%Y-%m-%d", time)
     FlightSearchPanel.timeText.text = string.format("%s, %s", weekDayStr, dateStr)
 end
---服务器回调
+--Server callback
 function FlightSearchCtrl:_getSearchFlightResult(data)
     if data ~= nil and data.data ~= nil and #data.data > 0 then
-        --接到服务器回调之后再打开界面
+        --Open the interface after receiving the server callback
         ct.OpenCtrl("FlightChooseFlightCtrl", data.data)
     else
         Event.Brocast("SmallPop", GetLanguage(32030031))

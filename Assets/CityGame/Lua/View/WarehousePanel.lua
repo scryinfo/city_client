@@ -15,7 +15,7 @@ function WarehousePanel.InitPanel()
     --this.searchBtn = transform:Find("Button/searchBtn");
     this.returnBtn = transform:Find("Button/ReturnBtn");
     --this.openBtn = transform:Find("Button/SortingBtn/OpenBtn").gameObject;
-    this.arrowBtn = transform:Find("Button/Sorting/arrowBtn"):GetComponent("RectTransform"); -- Open下拉列表
+    this.arrowBtn = transform:Find("Button/Sorting/arrowBtn"):GetComponent("RectTransform"); --Open drop-down list
     this.warehouseImg = transform:Find("bg/warehouse");
 
     this.nowText = transform:Find("Button/Sorting/nowText"):GetComponent("Text");
@@ -24,7 +24,7 @@ function WarehousePanel.InitPanel()
     this.quantityBtn = transform:Find("ListTable/List/quantityBtn");
     this.shelfBtn = transform:Find("Button/shelfBtn");
     this.transportBtn = transform:Find("Button/transportBtn");
-    --Button shelf  右边面板
+    --Button shelf  Right panel
     this.rightInformation = transform:Find("RightInformation"):GetComponent("RectTransform");
     this.bg = transform:Find("RightInformation/bg"):GetComponent("RectTransform");
     this.shelf = transform:Find("RightInformation/bg/shelf").gameObject;
@@ -51,7 +51,7 @@ function WarehousePanel.InitPanel()
     --Scroll View
     this.ScrollView = transform:Find("ScrollView"):GetComponent("RectTransform");
     this.Content = transform:Find("ScrollView/Viewport/Content"):GetComponent("RectTransform");
-    --预制
+    --Prefab
     this.warehouseItem = transform:Find("ScrollView/Viewport/Content/WarehouseItem").gameObject
     this.DetailsItem = transform:Find("RightInformation/bg/shelf/ScrollView/Viewport/Content/DetailsItem").gameObject
     this.TransportItem = transform:Find("RightInformation/bg/transport/ScrollView/Viewport/Content/TransportItem").gameObject

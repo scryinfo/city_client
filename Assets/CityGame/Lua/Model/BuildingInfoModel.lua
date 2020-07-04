@@ -8,7 +8,7 @@
 BuildingInfoModel= {};
 local this = BuildingInfoModel;
 
---构建函数--
+--Constructor--
 function BuildingInfoModel.New()
     return this;
 end
@@ -17,14 +17,14 @@ function BuildingInfoModel.Awake()
     this:OnCreate();
 end
 
----测试
+---test
 function BuildingInfoModel.Update()
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.Q) then
         this.rightFinish = false
         this.bottomFinish = false
 
         local msgBuildTransfer = {}
-        local msgBuildTransferRightInfo = {}  --右侧需要显示的信息
+        local msgBuildTransferRightInfo = {}  --Information to be displayed on the right
         setmetatable(msgBuildTransfer, msgBuildTransferRightInfo)
 
         msgBuildTransferRightInfo.width = 2
@@ -42,7 +42,7 @@ function BuildingInfoModel.Update()
         this.CreatBuildingInfoPanel(msgBuildTransfer)
     end
 
-    --右侧加载完毕
+    --The right side is loaded
     if this.rightFinish and this.bottomFinish then
 
         BuildingInfoPanel.InitDate(this.buildingInfo)
@@ -50,32 +50,32 @@ function BuildingInfoModel.Update()
         this.bottomFinish = false
     end
 
-    --转让成功消息
+    --Successful transfer message
     if UnityEngine.Input.GetKeyDown(UnityEngine.KeyCode.W) then
         BuildingInfoPanel.TransferSuccess(256984)
         BuildingTransferPanel.Close()
     end
 end
 
---启动事件--
+--Start event--
 function BuildingInfoModel.OnCreate()
     --UpdateBeat:Add(this.Update, this);
-    --网络回调注册
+    --Network callback registration
     --CityEngineLua.Message:registerNetMsg(pb.gsCode.login,BuildingInfoModel.TransferSuccess);
 end
 
---创建信息UI
+--Create message UI
 function BuildingInfoModel.CreatBuildingInfoPanel(panelInfo)
     this.buildingInfo = panelInfo
     this.rightFinish = false
     this.bottomFinish = false
 
     panelMgr:LoadPrefab_A('BuildingInfo', nil, this.OnPanelCreated);
-    --将右侧的界面加入
+    --Add the interface on the right
     panelMgr:LoadPrefab_A('BuildingInfoRight', nil, this, this.OnRightPanelCreated);
 end
 
---当界面生成完毕之后，添加监听
+--When the interface is generated, add monitoring
 function BuildingInfoModel.OnPanelCreated(obj)
     local panelObj = ct.InstantiatePrefab(obj);
     local groundAuctionBehaviour = panelObj:GetComponent('LuaBehaviour');
@@ -87,23 +87,23 @@ function BuildingInfoModel.OnPanelCreated(obj)
     this.bottomFinish = true
 end
 
---右侧panel加载完毕
+--The right panel is loaded
 function BuildingInfoModel.OnRightPanelCreated(rightPanelObj)
     logDebug("转让界面，右侧加载完毕")
     BuildingInfoPanel.OnCreatRightInfo()
     this.rightFinish = true
 end
 
---打开转让界面
+--Open the transfer interface
 function BuildingInfoModel.OpenTransferPage()
     --panelMgr:LoadPrefab_A('BuildingTransfer', this.OnPanelCreated, this);
 end
 
---- 客户端请求 ---
---向服务器发送消息
+--- Client request ---
+--Send a message to the server
 function BuildingInfoModel.SendTransferInfoToServer(transferPrice)
-    --先暂定，服务器需要的是建筑ID和转让费
-    --等服务器的协议定好再添加
+    --Tentatively, the server needs the building ID and transfer fee
+    --Wait until the server's protocol is set before adding
 
     logDebug("确认转让："..transferPrice)
     local transferBubbleInfo = this.buildingInfo
@@ -117,51 +117,51 @@ function BuildingInfoModel.SendTransferInfoToServer(transferPrice)
             return
         end
         info.isTransfering = true
-        this.CreatBuildingInfoPanel(info)  --打开转让界面
+        this.CreatBuildingInfoPanel(info)  --Open the transfer interface
     end
 
     GameBubbleManager.CreatBubble(transferBubbleInfo)
 end
 
---买地
+--Buy land
 function BuildingInfoModel.SendBuyInfoToServer()
     logDebug("---- lalala 买别人转让的地了！！！")
-    --还需判断拥有者是不是自己才行 --目前不知道是不是直接在建筑信息里拿
+    --It is still necessary to determine whether the owner is himself-it is not known whether it is directly taken in the building information
 end
 
---取消转让
+--Cancel transfer
 function BuildingInfoModel.SendCancelTransferToServer()
     logDebug("---- aaaaa 取消转让 ！！！")
 
 end
 
---拆除
+--tear down
 function BuildingInfoModel.SendDismantleToServer()
     logDebug("---- bbbbb 拆除 ！！！")
 
 end
 
---- 服务器回调 ---
---转让成功
+--- Server callback ---
+--Successful transfer
 function BuildingInfoModel.TransferSuccess(stream)
-    --反序列化---
+    --Deserialization---
 
     BuildingInfoPanel.TransferSuccess(stream)
 end
 
---点进其他人的转让建筑时，转让金额发生了变化
+--When clicking into another person's transfer building, the transfer amount has changed
 function BuildingInfoModel.TransferInfoChange(stream)
     --temp--
     
     BuildingInfoPanel.TransferInfoChange(stream)
 end
 
---建筑信息改变 --这个Emmm 可以是自己的建筑，也可以是别人的建筑
+--Building information changes
 function BuildingInfoModel.BuildingInfoUpdate(stream)
     BuildingInfoRightPanel.UpdateInfo(stream)
 end
 
---关闭事件--
+--Close event--
 function BuildingInfoModel.Close()
     --Event.RemoveListener("OnLogin", this.OnLogin);
 end

@@ -16,11 +16,11 @@ function GroundAuctionPanel.Awake(obj)
     this.InitPanel()
 end
 
---初始化面板--
+--Initial panel--
 function GroundAuctionPanel.InitPanel()
     this.backBtn = transform:Find("bgBtn")
     --this.titleText = transform:Find("root/titleText"):GetComponent("Text")
-    this.timeDownText = transform:Find("root/timeDownRoot/timeDownText"):GetComponent("Text")  --倒计时
+    this.timeDownText = transform:Find("root/timeDownRoot/timeDownText"):GetComponent("Text")  --Countdown
     this.soonRoot = transform:Find("root/soon")
     this.soonStartTime = transform:Find("root/soon/startTime")
     this.soonPrice = transform:Find("root/soon/price")
@@ -33,7 +33,7 @@ function GroundAuctionPanel.InitPanel()
     this.bidInput = transform:Find("root/now/input"):GetComponent("InputField")
     this.bidBtn = transform:Find("root/now/bidBtn")
     this.bidBtnText = transform:Find("root/now/bidBtn/text"):GetComponent("Text")
-    --新加土地繁荣度，土地拍卖大小
+    --New land prosperity, size of land auction
     this.groundSizeText = transform:Find("root/now/groundSize/groundSizeText"):GetComponent("Text")
     this.groundSizeValue = transform:Find("root/now/groundSize/valueText"):GetComponent("Text")
     this.prosperityText = transform:Find("root/now/prosperity/prosperityText"):GetComponent("Text")
@@ -49,7 +49,7 @@ function GroundAuctionPanel.InitPanel()
     this.noneHistoryText04 = transform:Find("root/now/noneBid/noneBidText"):GetComponent("Text")
     this.tipText05 = transform:Find("root/now/tipText"):GetComponent("Text")
 end
---拍卖中有没有人出价
+--Did anyone bid in the auction
 function GroundAuctionPanel.setBidState(hasBid)
     if hasBid == true then
         this.historyRoot.localScale = Vector3.one
@@ -59,7 +59,7 @@ function GroundAuctionPanel.setBidState(hasBid)
         this.noneHistoryRoot.localScale = Vector3.one
     end
 end
---拍卖中或者即将拍卖
+--During or about to be auctioned
 function GroundAuctionPanel.setSoonAndNow(isNow)
     if isNow == true then
         this.soonRoot.localScale = Vector3.zero

@@ -1,6 +1,6 @@
 
 ReminderCtrl = class('ReminderCtrl',UIPanel)
-UIPanel:ResgisterOpen(ReminderCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(ReminderCtrl) --How to open the registration
 
 function ReminderCtrl:initialize()
     UIPanel.initialize(self,UIType.PopUp,UIMode.DoNothing,UICollider.Normal);

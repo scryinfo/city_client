@@ -31,7 +31,7 @@ function WagesAdjustBoxCtrl:Refresh()
     self:_initData()
 end
 
----寻找组件
+---Find components
 function WagesAdjustBoxCtrl:_getComponent(go)
     self.confirmBtn = go.transform:Find("root/confirmBtn")
     self.closeBtn = go.transform:Find("root/closeBtn")
@@ -45,7 +45,7 @@ function WagesAdjustBoxCtrl:_getComponent(go)
     self.totalWageText04 = go.transform:Find("root/center/total/Text01"):GetComponent("Text")
     self.tipText05 = go.transform:Find("root/Image/Text"):GetComponent("Text")
 end
----初始化
+---initialization
 function WagesAdjustBoxCtrl:_initData()
     self:_language()
     local dayWage = self.m_data.dayWage or 0

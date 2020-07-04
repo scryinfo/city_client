@@ -34,7 +34,7 @@ RaycastHit.__index = function(t,k)
 	return var
 end
 
---c# 创建
+--c# create
 function RaycastHit.New(collider, distance, normal, point, rigidbody, transform)
 	local hit = {collider = collider, distance = distance, normal = normal, point = point, rigidbody = rigidbody, transform = transform}
 	setmetatable(hit, RaycastHit)

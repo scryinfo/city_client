@@ -48,7 +48,7 @@ namespace LuaInterface
             }
         }
 
-        //beZip = false 在search path 中查找读取lua文件。否则从外部设置过来bundel文件中读取lua文件
+        //beZip = false Find and read the lua file in the search path. Otherwise, the lua file is read from the bundel file set from the outside
         public bool beZip = false;
         protected List<string> searchPaths = new List<string>();
         protected Dictionary<string, AssetBundle> zipMap = new Dictionary<string, AssetBundle>();
@@ -76,7 +76,7 @@ namespace LuaInterface
             }
         }
 
-        //格式: 路径/?.lua
+        //Format: path/?.lua
         public bool AddSearchPath(string path, bool front = false)
         {
             int index = searchPaths.IndexOf(path);

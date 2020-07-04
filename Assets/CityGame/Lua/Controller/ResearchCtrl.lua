@@ -56,7 +56,7 @@ function ResearchCtrl:Hide()
     UIPanel.Hide(self)
 end
 
--- 根据策划的配置表显示要研究的数据
+-- Display the data to be studied according to the planned configuration table
 function ResearchCtrl:_updateData()
     ResearchPanel.inputField.text = "1"
     LoadSprite(self.m_data.config.iconPath, ResearchPanel.iconImage, false)
@@ -68,7 +68,7 @@ function ResearchCtrl:_updateData()
     ResearchPanel.timeTitleText.text = GetLanguage(27050007)
 end
 
--------------------------------------按钮点击事件-------------------------------------
+-------------------------------------Button click event-------------------------------------
 function ResearchCtrl:OnBack(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()
@@ -76,7 +76,7 @@ end
 
 function ResearchCtrl:OnSure(go)
     PlayMusEff(1002)
-    --输入验证
+    --Input validation
     local inputValue = ResearchPanel.inputField.text
     if inputValue == nil or inputValue == "" then
         return
@@ -86,7 +86,7 @@ function ResearchCtrl:OnSure(go)
         return
     end
 
-    -- 调用ResearchInstituteModel，向服务器发送研究消息
+    -- Call ResearchInstituteModel to send research messages to the server
     DataManager.DetailModelRpcNoRet(go.m_data.buildingId, 'm_ReqAddScienceLine', {id = go.m_data.buildingId, itemId = go.m_data.type, targetNum = num})
     UIPanel.ClosePage()
 end

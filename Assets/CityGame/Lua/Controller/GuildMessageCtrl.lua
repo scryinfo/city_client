@@ -42,13 +42,13 @@ function GuildMessageCtrl:Active()
     UIPanel.Active(self)
     self:_addListener()
 
-    -- 多语言
+    -- multi-language
     GuildMessagePanel.memberTitleText.text = GetLanguage(12010006)
     GuildMessagePanel.timeTitleText.text = GetLanguage(12040002)
     GuildMessagePanel.messageTitleText.text = GetLanguage(12040003)
 end
 
--- 监听Model层网络回调
+-- Listen to the model layer network callback
 function GuildMessageCtrl:_addListener()
     Event.AddListener("c_MessageAdd", self.c_MessageAdd, self)
     Event.AddListener("c_ExitSociety", self.c_ExitSociety, self)
@@ -56,7 +56,7 @@ function GuildMessageCtrl:_addListener()
     Event.AddListener("c_MessageNewJoinReq", self.c_MessageNewJoinReq, self)
 end
 
---注销model层网络回调h
+--Unregister the model layer network callback h
 function GuildMessageCtrl:_removeListener()
     Event.RemoveListener("c_MessageAdd", self.c_MessageAdd, self)
     Event.RemoveListener("c_ExitSociety", self.c_ExitSociety, self)
@@ -69,7 +69,7 @@ function GuildMessageCtrl:Refresh()
     self:_showView()
 end
 
--- 打开model
+-- Open model
 function GuildMessageCtrl:initInsData()
     DataManager.OpenDetailModel(GuildMessageModel, OpenModelInsID.GuildMessageCtrl)
 end
@@ -79,21 +79,21 @@ function GuildMessageCtrl:Hide()
     UIPanel.Hide(self)
 end
 
--- 显示界面各项信息
+-- Display interface information
 function GuildMessageCtrl:_showView()
     local societyInfo = DataManager.GetGuildInfo()
     if societyInfo then
-        -- 显示公会的名字
+        -- Show the name of the guild
         GuildMessagePanel.guildNameText.text = societyInfo.name
-        -- 显示公会的人数
+        -- Show the number of guilds
         GuildMessagePanel.memberNumberText.text = societyInfo.allCount
-        -- 显示公会的时间
+        -- Show guild time
         local timeTab = getFormatUnixTime(societyInfo.createTs/1000)
         GuildMessagePanel.timeText.text = string.format("%s/%s/%s", timeTab.day, timeTab.month, timeTab.year)
-        -- 显示公会的消息提示
+        -- Show guild message prompts
         GuildMessageCtrl.societyNotice = societyInfo.notice
         GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
-        -- 显示公会的红点提示
+        -- Show guild's red dot reminder
         self:_showNotice()
     end
     local ownIdentity = GuildOwnCtrl.static.guildMgr:GetOwnGuildIdentity()
@@ -104,7 +104,7 @@ function GuildMessageCtrl:_showView()
     end
 end
 
--- 是否显示申请红点
+-- Whether to display the application red dot
 function GuildMessageCtrl:_showNotice()
     local societyInfo = DataManager.GetGuildInfo()
     if societyInfo then
@@ -116,34 +116,34 @@ function GuildMessageCtrl:_showNotice()
     end
 end
 
--- 显示消息提示
+-- Show message prompt
 function GuildMessageCtrl:_showScroll(playerData)
     GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
 end
 
--- 打开公会列表界面
+-- Open the guild list interface
 function GuildMessageCtrl:OnGuildList(go)
     ct.OpenCtrl("GuildListCtrl")
 end
 
--- 打开公会申请界面
+--Open the Guild Application Interface
 function GuildMessageCtrl:OnApplyList(go)
     ct.OpenCtrl("GuildApplyCtrl")
 end
 
--- 点击退出按钮
+-- Click the exit button
 function GuildMessageCtrl:OnQuit(go)
     local ownIdentity = GuildOwnCtrl.static.guildMgr:GetOwnGuildIdentity()
     local societyInfoMembers = DataManager.GetGuildMembers()
     if ownIdentity == "CHAIRMAN" and #societyInfoMembers ~= 1 then
-        --打开弹框
+        --Open box
         local showData = {}
         showData.titleInfo = "提示"
         showData.contentInfo = "转让主席后才可退出联盟！"
         showData.tipInfo = ""
         ct.OpenCtrl("BtnDialogPageCtrl", showData)
     else
-        --打开弹框
+        --Open box
         local showData = {}
         showData.titleInfo = "提示"
         showData.contentInfo = "确定退出联盟?"
@@ -155,7 +155,7 @@ function GuildMessageCtrl:OnQuit(go)
     end
 end
 
--- 滑动复用
+-- Sliding multiplexing
 GuildMessageCtrl.static.GuildNoticeProvideData = function(transform, idx)
     --idx = idx + 1
     GuildMessageItem:new(transform, GuildMessageCtrl.societyNotice[#GuildMessageCtrl.societyNotice - idx])
@@ -165,8 +165,8 @@ GuildMessageCtrl.static.GuildNoticeClearData = function(transform)
 
 end
 
--- 网络回调
--- 新增提示
+-- Network callback
+-- Added tips
 function GuildMessageCtrl:c_MessageAdd(societyNotice)
     --local idTemp = {}
     --if societyNotice.createId then
@@ -181,13 +181,13 @@ function GuildMessageCtrl:c_MessageAdd(societyNotice)
     GuildMessagePanel.guildInfoScroll:ActiveLoopScroll(self.guildNoticeSource, #GuildMessageCtrl.societyNotice, "View/Guild/GuildMessageItem")
 end
 
--- 退出公会返回
+-- Return from the Guild
 function GuildMessageCtrl:c_ExitSociety(byteBool)
     UIPanel.CloseAllPageExceptMain()
-    if byteBool.b then -- 自己主动退出
+    if byteBool.b then -- Quit yourself
         Event.Brocast("SmallPop","退出联盟成功！",80)
-    else -- 被踢
-        --打开弹框
+    else -- Kicked
+        --Open the bullet box
         local showData = {}
         showData.titleInfo = "提示"
         showData.contentInfo = "申请商业联盟通过"
@@ -196,17 +196,17 @@ function GuildMessageCtrl:c_ExitSociety(byteBool)
     end
 end
 
--- 删除已处理的入会请求
+-- Delete processed membership requests
 function GuildMessageCtrl:c_MessageDelJoinReq(joinReq)
     self:_showNotice()
 end
 
--- 新增入会请求
+-- New membership request
 function GuildMessageCtrl:c_MessageNewJoinReq(joinReq)
     self:_showNotice()
 end
 
--- 成员变更
+-- Member change
 function GuildMessageCtrl:c_MemberChanges(memberChanges)
     for _, v in ipairs(memberChanges.changeLists) do
         if v.type == "IDENTITY" and v.playerId == DataManager.GetMyOwnerID() then

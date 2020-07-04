@@ -39,7 +39,7 @@ namespace LuaInterface
 #endif
             LoadAssembly("mscorlib");
             LoadAssembly("UnityEngine");
-            //注释避免放在插件目录无法加载，需要可从lua代码loadassembly
+            //Note to avoid being unable to load in the plugin directory, you can load assembly from lua code
             //LoadAssembly("Assembly-CSharp"); 
         }
 

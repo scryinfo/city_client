@@ -5,16 +5,16 @@
 ---
 FlightRecordPageItem = class('FlightRecordPageItem')
 
---初始化方法
+--Initialization method
 function FlightRecordPageItem:initialize(viewRect, data)
     self.viewRect = viewRect.transform
 
     self.btn = self.viewRect:Find("btn"):GetComponent("Button")
-    self.flightText = self.viewRect:Find("flightText"):GetComponent("Text")  --航班名称
-    self.numText = self.viewRect:Find("timeText/numText"):GetComponent("Text")  --航班号
-    self.timeText = self.viewRect:Find("timeText"):GetComponent("Text")  --航班时间
-    self.betResultText = self.viewRect:Find("Text"):GetComponent("Text")  --输赢显示
-    self.moneyText = self.viewRect:Find("Text/moneyText"):GetComponent("Text")  --钱
+    self.flightText = self.viewRect:Find("flightText"):GetComponent("Text")  --Flight name
+    self.numText = self.viewRect:Find("timeText/numText"):GetComponent("Text")  --flight number
+    self.timeText = self.viewRect:Find("timeText"):GetComponent("Text")  --flight schedule
+    self.betResultText = self.viewRect:Find("Text"):GetComponent("Text")  --Win or lose display
+    self.moneyText = self.viewRect:Find("Text/moneyText"):GetComponent("Text")  --money
 
     self.btn.onClick:RemoveAllListeners()
     self.btn.onClick:AddListener(function ()
@@ -23,11 +23,11 @@ function FlightRecordPageItem:initialize(viewRect, data)
 
     self:initData(data)
 end
---刷新数据
+--Refresh data
 function FlightRecordPageItem:initData(data)
     self.data = data
     local flightData = data.data
-    self.timeText.text = self:_getDayStr(flightData.FlightDeptimePlanDate)  --计划起飞时间 --精确到天
+    self.timeText.text = self:_getDayStr(flightData.FlightDeptimePlanDate)  --Planned departure time  -- accurate to days
     self.flightText.text = ct.GetFlightCompanyName(flightData.FlightNo)
     self.numText.text = flightData.FlightNo  --CA4506
 
@@ -35,20 +35,20 @@ function FlightRecordPageItem:initData(data)
     self.timeText.rectTransform.sizeDelta = Vector2.New(trueWidth01, self.timeText.rectTransform.sizeDelta.y)
 
     if data.win == nil then
-        self.betResultText.text = GetLanguage(32040001)  --已投注
-        self.moneyText.text = data.amount  --投注金额
+        self.betResultText.text = GetLanguage(32040001)  --Bet
+        self.moneyText.text = data.amount  --Bet amount
         return
     end
 
     if data.win == true then
-        self.betResultText.text = GetLanguage(32040003)  --赢
-        self.moneyText.text = data.amount  --净赚积分
+        self.betResultText.text = GetLanguage(32040003)  --win
+        self.moneyText.text = data.amount  --Net earning points
     else
-        self.betResultText.text = GetLanguage(32040002)  --输
+        self.betResultText.text = GetLanguage(32040002)  --lose
         self.moneyText.text = "-"..data.amount
     end
 end
---获得2019-05-01格式的时间
+--Get the time in 2019-05-01 format
 function FlightRecordPageItem:_getDayStr(str)
     if str == nil or str == "" then
         return "--"
@@ -65,7 +65,7 @@ end
 function FlightRecordPageItem:_updateText()
     local str1 = self.flightText.text
     if str1 == "" then
-        str1 = GetLanguage(32030035)  --暂无数据
+        str1 = GetLanguage(32030035)  --No data
     end
     self.flightText.text = ct.getFlightSubString(str1, 33, 18)
 end

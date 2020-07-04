@@ -28,7 +28,7 @@ end
 function ResearchSaleChoiceCtrl:Active()
     UIPanel.Active(self)
 
-    -- 多语言
+    -- multi-language
     ResearchSaleChoicePanel.nullText.text = GetLanguage(28060002)
     ResearchSaleChoicePanel.titleText.text = GetLanguage(28060023)
 end
@@ -47,9 +47,9 @@ function ResearchSaleChoiceCtrl:Hide()
     end
 end
 
--- 初始化基本数据
+-- Initialize basic data
 function ResearchSaleChoiceCtrl:_updateData()
-    -- 根据数据生成ResearchMaterialItem
+    -- Generate ResearchMaterialItem based on data
     if not self.researchMaterialItems then
         self.researchMaterialItems = {}
         if self.m_data.store and self.m_data.store[1] then
@@ -69,7 +69,7 @@ function ResearchSaleChoiceCtrl:_updateData()
         end
     end
 end
--------------------------------------按钮点击事件-------------------------------------
+-------------------------------------Button click event------------------------------------
 function ResearchSaleChoiceCtrl:OnBack(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()

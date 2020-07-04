@@ -6,7 +6,7 @@
 
 ResearchLineItem = class("ResearchLineItem")
 
--- 初始化
+-- initialization
 function ResearchLineItem:initialize(prefab, data, buildingId)
     self.prefab = prefab
     self.data = data
@@ -27,17 +27,17 @@ function ResearchLineItem:initialize(prefab, data, buildingId)
     end)
 end
 
--- 设置置顶是否显示
+-- Set whether sticky is displayed
 function ResearchLineItem:SetTopBtnShow(isSelect)
     self.topBtn.localScale = isSelect and Vector3.one or Vector3.zero
 end
 
--- 点击删除，向服务器发消息
+-- Click Delete to send a message to the server
 function ResearchLineItem:_clickRemove()
     DataManager.DetailModelRpcNoRet(self.buildingId, 'm_ReqDelScienceLine', self.data.id)
 end
 
--- 点击置顶，向服务器发消息
+-- Click Sticky to send a message to the server
 function ResearchLineItem:_clickTop()
     DataManager.DetailModelRpcNoRet(self.buildingId, 'm_ReqSetScienceLineOrder', self.data.id)
 end

@@ -5,7 +5,7 @@
 ---
 
 CompanyInputCtrl = class('CompanyInputCtrl',UIPanel)
-UIPanel:ResgisterOpen(CompanyInputCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(CompanyInputCtrl) --How to open the registration
 
 function CompanyInputCtrl:initialize()
     UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
@@ -33,11 +33,11 @@ function CompanyInputCtrl:Refresh()
     self.luaBehaviour:AddClick(self.closeBtn, self._onClickClose, self)
     self.luaBehaviour:AddClick(self.confimBtn, self._onClickConfim, self)
     self.input.onValueChanged:AddListener(function ()
-        ct.log("cycle_w12_hosueServer", "----")  --敏感词检测
+        ct.log("cycle_w12_hosueServer", "----")  --Sensitive word detection
     end)
 end
 
---寻找组件
+--Find components
 function CompanyInputCtrl:_getComponent(go)
     self.titleText = go.transform:Find("Root/TitleText").gameObject:GetComponent("Text")
     self.closeBtn = go.transform:Find("Root/CloseBtn").gameObject
@@ -47,24 +47,24 @@ function CompanyInputCtrl:_getComponent(go)
     self.tipsText = go.transform:Find("Root/TipsText"):GetComponent("Text")
 end
 
---初始化
+--initialization
 function CompanyInputCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.tipsText.text = self.m_data.tipInfo
 
-    -- 输入框的默认值
+    -- Default value of input box
     if self.m_data.inputInfo then
         self.input.text = self.m_data.inputInfo
     end
 
-    -- 输入框的个数限制
+    -- Number of input boxes
     if self.m_data.characterLimit then
         self.input.characterLimit = self.m_data.characterLimit
     else
         self.input.characterLimit = 0
     end
 
-    -- 输入框的提示值
+    -- Prompt value of input box
     if self.m_data.inputDefaultStr ~= nil then
         self.inputPlaceholder.text = self.m_data.inputDefaultStr
     else
@@ -72,22 +72,22 @@ function CompanyInputCtrl:_initData()
     end
 end
 
---点击确认按钮
+--Click the confirm button
 function CompanyInputCtrl:_onClickConfim(ins)
-    ---在这的self 是传进来的btn组件，table才是实例
+    ---Here self is the btn component passed in, and table is the instance
     local inputValue = ins.input.text
     if inputValue == "" then
         return
     end
 
-    ---测试
+    ---test
     if ins.m_data.btnCallBack then
         ins.m_data.btnCallBack(inputValue)
     end
     ins:_onClickClose(ins)
 end
 
---点击关闭按钮
+--Click the close button
 function CompanyInputCtrl:_onClickClose(ins)
     PlayMusEff(1002)
     --ct.log("cycle_w12_hosueServer", "InputDialogPageCtrl:_onClickClose")

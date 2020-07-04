@@ -5,9 +5,9 @@
 ---
 
 GuildMemberItem = class("GuildMemberItem")
-GuildMemberItem.static.NomalColor = Vector3.New(255, 255, 255) -- 默认的背景色
-GuildMemberItem.static.OwnColor = Vector3.New(255, 247, 223) -- 自己的背景色
-GuildMemberItem.static.SelectColor = Vector3.New(193, 201, 229) -- 被选中的背景色
+GuildMemberItem.static.NomalColor = Vector3.New(255, 255, 255) -- Default background color
+GuildMemberItem.static.OwnColor = Vector3.New(255, 247, 223) -- Own background color
+GuildMemberItem.static.SelectColor = Vector3.New(193, 201, 229) -- Selected background color
 
 function GuildMemberItem:initialize(prefab, data)
     self.prefab = prefab
@@ -22,13 +22,13 @@ function GuildMemberItem:initialize(prefab, data)
 
     --self.nameText.text = self.data.id
     if self.data.identity == "CHAIRMAN" then
-        self.jobText.text = GetLanguage( 12030001) -- "会长"
+        self.jobText.text = GetLanguage( 12030001) -- "President"
     elseif self.data.identity == "VICE_CHAIRMAN" then
-        self.jobText.text = GetLanguage( 12030002) --"副会长"
+        self.jobText.text = GetLanguage( 12030002) --"Vice president"
     elseif self.data.identity == "ADMINISTRATOR" then
-        self.jobText.text = GetLanguage( 12030003) -- "管理"
+        self.jobText.text = GetLanguage( 12030003) -- "management"
     elseif self.data.identity == "MEMBER" then
-        self.jobText.text = GetLanguage( 12030004) -- "成员"
+        self.jobText.text = GetLanguage( 12030004) -- "member"
     end
     self.staffNumberText.text = self.data.staffCount
     local timeTab = getFormatUnixTime(self.data.joinTs/1000)
@@ -39,7 +39,7 @@ function GuildMemberItem:initialize(prefab, data)
 
     PlayerInfoManger.GetInfos({data.id}, self._showNameHead, self)
 
-    -- 自己的背景色为浅黄色且不能点击
+    -- Your background color is light yellow and cannot be clicked
     if data.id ==DataManager.GetMyOwnerID() then
         self:_setClickImageColor(false)
         self:_setButtonInteractable(false)
@@ -53,7 +53,7 @@ function GuildMemberItem:initialize(prefab, data)
     end
 end
 
--- 点击成员item打开操作菜单
+-- Click the member item to open the operation menu
 function GuildMemberItem:_openMenu()
     local position = self.prefab.transform.position
     self:_setButtonInteractable(false)
@@ -63,7 +63,7 @@ function GuildMemberItem:_openMenu()
     --GuildOwnCtrl.static.guildMgr:SetGuildMenuShow(true)
 end
 
--- 设置item的背景色
+-- Set the background color of the item
 function GuildMemberItem:_setClickImageColor(isDefault)
     if isDefault then
         self.clickImage.color = getColorByVector3(GuildMemberItem.static.NomalColor)
@@ -72,19 +72,19 @@ function GuildMemberItem:_setClickImageColor(isDefault)
     end
 end
 
--- 设置item是否能点击
+-- Set whether item can be clicked
 function GuildMemberItem:_setButtonInteractable(isinteractable)
     self.clickBtn.interactable = isinteractable
 end
 
--- 显示成员头像名字等基本信息
+-- Display basic information such as member avatar names
 function GuildMemberItem:_showNameHead(playerData)
     self.nameText.text = playerData[1].name
     self.data.playerData = playerData[1]
     self.avatarData = AvatarManger.GetSmallAvatar(playerData[1].faceId, self.memberHeadBg,0.2)
 end
 
--- 删除头像
+-- Delete avatar
 function GuildMemberItem:CloseAvatar()
     if self.avatarData then
         AvatarManger.CollectAvatar(self.avatarData)

@@ -1,13 +1,13 @@
 SpriteManager = {}
-local SpritePools = {}          --所有Sprite的对象池  key：id   value：Sprite
+local SpritePools = {}          --All Sprite object pools  key：id   value：Sprite
 
 local SpriteType = nil
 local function LoadSpriteToPool(path, spriteID)
-    --此处做重复加载判断
+    --Do repeated loading judgment here
     if SpritePools[spriteID] ~= nil then
         return
     end
-    --初始化加载类型
+    --Initial load type
     if SpriteType == nil then
         SpriteType = ct.getType(UnityEngine.Sprite)
     end
@@ -22,29 +22,29 @@ local function LoadSpriteToPool(path, spriteID)
     end)
 end
 
----初始化SpriteManager
---初始化所有spite
+---initializate SpriteManager
+--initialize all spite
 function SpriteManager.Init()
     SpritePools = {}
-    --初始化原料图片
+    --Initialized raw material picture
     for key, value in pairs(Material) do
         LoadSpriteToPool(value.img, key)
     end
-    --初始化商品图片
+    --Initial product picture
     for key, value in pairs(Good) do
         LoadSpriteToPool(value.img, key)
     end
-    --初始化赚钱图片
+    --Initialize money picture
     for key, value in pairs(MakeMoney) do
         LoadSpriteToPool(value.img, key)
     end
-    --初始化研究所与数据公司建筑图片
+    --Architectural pictures of the Initial Research Institute and Data Corporation
     for key, value in pairs(ResearchConfig) do
         LoadSpriteToPool(value.buildingPath, key)
     end
 end
 
---从对象池中拿到对应的Sprite
+--Get the corresponding Sprite from the object pool
 function SpriteManager.GetSpriteByPool(spriteID)
     if SpritePools ~= nil and SpritePools[spriteID] ~= nil then
         return SpritePools[spriteID]
@@ -54,7 +54,7 @@ function SpriteManager.GetSpriteByPool(spriteID)
 end
 
 MakeMoney = {
-    --住宅图片
+    --Residential pictures
     [0]={
         ["img"]="Assets/CityGame/Resources/View/iconImg/homehouse.png",
     },

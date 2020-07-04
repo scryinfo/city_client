@@ -14,8 +14,8 @@
     using MessageLength = System.UInt16;
 
     /*
-		包接收模块(与服务端网络部分的名称对应)
-		处理网络数据的接收
+		Packet receiving module (corresponding to the name of the server network part)
+        Handle network data reception
 	*/
 
     public class PacketReceiver
@@ -27,10 +27,10 @@
 
         private byte[] _buffer;
 
-        // socket向缓冲区写的起始位置
+        // The starting position where the socket writes to the buffer
         int _wpos = 0;
 
-        // 主线程读取数据的起始位置
+        // The starting position of the main thread to read data
         int _rpos = 0;
 
         public PacketReceiver(NetworkInterface networkInterface)
@@ -59,20 +59,20 @@
         {
             int t_wpos = Interlocked.Add(ref _wpos, 0);
                         
-            if (_rpos < t_wpos) //如果 _buffer 中写入的数据大于读取的数据，那么就把新增的数据转发到lua中解析
-            {   //缓冲右侧剩余空间足够的情况
+            if (_rpos < t_wpos) //If the data written in _buffer is greater than the read data, then the newly added data is forwarded to lua for analysis
+            {   //Buffer the situation where the remaining space on the right is sufficient
                 CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)_rpos, (UInt32)(t_wpos - _rpos) });
                 Interlocked.Exchange(ref _rpos, t_wpos);
             }
             else if (t_wpos < _rpos)
-            {  //缓冲右侧剩余空间不够的情况， _rpos 大于 t_wpos
+            {  //If the remaining space on the right side of the buffer is insufficient, _rpos is greater than t_wpos
                 CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)_rpos, (UInt32)(_buffer.Length - _rpos) });
                 CityLuaUtil.CallMethod("CityEngineLua.MessageReader", "process", new object[] { _buffer, (UInt32)0, (UInt32)t_wpos });
                 Interlocked.Exchange(ref _rpos, t_wpos);
             }
             else
             {
-                // 没有可读数据
+                // No readable data
             }
         }
 
@@ -117,7 +117,7 @@
 
             while (true)
             {
-                // 必须有空间可写，否则我们阻塞在线程中直到有空间为止
+                // There must be space to write, otherwise we block in the thread until there is space
                 int first = 0;
                 int space = _free();
 
@@ -156,7 +156,7 @@
 
                 if (bytesRead > 0)
                 {
-                    // 更新写位置
+                    // Update write location
                     Interlocked.Add(ref _wpos, bytesRead);
                     if (bytesRead >= NetworkInterface.TCP_PACKET_MAX)
                     {

@@ -23,7 +23,7 @@ public class NotiData {
 
 namespace LuaFramework {
     /// <summary>
-    /// 当前线程管理器，同时只能做一个任务
+    /// The current thread manager can only do one task at a time
     /// </summary>
     public class ThreadManager : Manager {
         private Thread thread;
@@ -48,7 +48,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 添加到事件队列
+        /// Add to event queue
         /// </summary>
         public void AddEvent(ThreadEvent ev, Action<NotiData> func) {
             lock (m_lockObject) {
@@ -58,12 +58,12 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 通知事件
+        /// Notification event
         /// </summary>
         /// <param name="state"></param>
         private void OnSyncEvent(NotiData data) {
-            if (this.func != null) func(data);  //回调逻辑层
-            facade.SendMessageCommand(data.evName, data.evParam); //通知View层
+            if (this.func != null) func(data);  //Callback logic layer
+            facade.SendMessageCommand(data.evName, data.evParam); //Notify the View layer
         }
 
         // Update is called once per frame
@@ -74,11 +74,11 @@ namespace LuaFramework {
                         ThreadEvent e = events.Dequeue();
                         try {
                             switch (e.Key) {
-                                case NotiConst.UPDATE_EXTRACT: {     //解压文件
+                                case NotiConst.UPDATE_EXTRACT: {     //unzip files
                                     OnExtractFile(e.evParams);
                                 }
                                 break;
-                                case NotiConst.UPDATE_DOWNLOAD: {    //下载文件
+                                case NotiConst.UPDATE_DOWNLOAD: {    //download file
                                     OnDownloadFile(e.evParams);
                                 }
                                 break;
@@ -93,7 +93,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 下载文件
+        /// download file
         /// </summary>
         void OnDownloadFile(List<object> evParams) {
             string url = evParams[0].ToString();    
@@ -128,18 +128,18 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 调用方法
+        /// Calling method
         /// </summary>
         void OnExtractFile(List<object> evParams) {
             UnityEngine.Debug.LogWarning("Thread evParams: >>" + evParams.Count);
 
-            ///------------------通知更新面板解压完成--------------------
+            ///------------------Notify that the update panel is decompressed--------------------
             NotiData data = new NotiData(NotiConst.UPDATE_DOWNLOAD, null);
             if (m_SyncEvent != null) m_SyncEvent(data);
         }
 
         /// <summary>
-        /// 应用程序退出
+        /// Application exit
         /// </summary>
         void OnDestroy() {
             thread.Abort();

@@ -16,9 +16,9 @@ end
 function FlightChooseFlightPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
 
-    this.timeText = transform:Find("placeRoot/timeText"):GetComponent("Text")  --时间
-    this.startCodeText = transform:Find("placeRoot/startCodeText"):GetComponent("Text")  --起始地code
-    this.startPlaceText = transform:Find("placeRoot/startPlaceText"):GetComponent("Text")  --起始地name
+    this.timeText = transform:Find("placeRoot/timeText"):GetComponent("Text")  --time
+    this.startCodeText = transform:Find("placeRoot/startCodeText"):GetComponent("Text")  --Starting code
+    this.startPlaceText = transform:Find("placeRoot/startPlaceText"):GetComponent("Text")  --Starting place name
     this.endCodeText = transform:Find("placeRoot/endCodeText"):GetComponent("Text")
     this.endPlaceText = transform:Find("placeRoot/endPlaceText"):GetComponent("Text")
 

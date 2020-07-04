@@ -16,21 +16,21 @@ function BuildingInfoRightPanel.Awake(obj)
 end
 
 function BuildingInfoRightPanel.InitPanel()
-    this.sizeText = transform:Find("bg/infoRoot/size/text").gameObject:GetComponent("Text");  --建筑大小
-    this.buildTimeText = transform:Find("bg/infoRoot/buildTime/text").gameObject:GetComponent("Text");  --建造时间
-    this.usedTimeText = transform:Find("bg/infoRoot/usedTime/text").gameObject:GetComponent("Text");  --已经使用的时间
-    this.oldPercentText = transform:Find("bg/infoRoot/oldPercent/text").gameObject:GetComponent("Text");  --折旧度
+    this.sizeText = transform:Find("bg/infoRoot/size/text").gameObject:GetComponent("Text");  --Building size
+    this.buildTimeText = transform:Find("bg/infoRoot/buildTime/text").gameObject:GetComponent("Text");  --Construction time
+    this.usedTimeText = transform:Find("bg/infoRoot/usedTime/text").gameObject:GetComponent("Text");  --Elapsed time
+    this.oldPercentText = transform:Find("bg/infoRoot/oldPercent/text").gameObject:GetComponent("Text");  --Depreciation
 
     this.initPanelFinish = true
 end
 
---设置父物体以及位置
+--Set parent object and position
 function BuildingInfoRightPanel.SetParentTran(parentTran)
     transform:SetParent(parentTran)
     transform.localPosition = Vector3.zero
 end
 
---显示右部的信息
+--Display the information on the right
 function BuildingInfoRightPanel.InitData(buildRightData)
     this.sizeText.text = buildRightData.width.."x"..buildRightData.height
     this.buildTimeText.text = buildRightData.buildTime
@@ -38,7 +38,7 @@ function BuildingInfoRightPanel.InitData(buildRightData)
     this.oldPercentText.text = buildRightData.oldPercent
 end
 
---界面信息改变 --已经使用的时间&折旧度
+--Change of face information - time used & depreciation
 function BuildingInfoRightPanel.UpdateInfo(updateInfo)
     this.oldPercentText.text = updateInfo.oldPercent
     this.usedTimeText.text = updateInfo.usedTime

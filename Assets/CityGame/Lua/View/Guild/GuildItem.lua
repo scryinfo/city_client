@@ -4,7 +4,7 @@
 --- DateTime: 2019/2/19 11:23
 ---
 
--- 联盟界面的Item
+-- Item in the alliance interface
 GuildItem = class("GuildItem")
 
 function GuildItem:initialize(prefab, data)
@@ -42,7 +42,7 @@ function GuildItem:initialize(prefab, data)
     end
 end
 
--- 申请加入公会
+-- Apply to join the guild
 function GuildItem:_applyGuild()
     PlayMusEff(1002)
     local data = {}
@@ -55,13 +55,13 @@ function GuildItem:_applyGuild()
     ct.OpenCtrl("CommonDialogCtrl", data)
 end
 
--- 显示头像
+-- Show avatar
 function GuildItem:_showNameHead(playerData)
     self.leaderNameText.text = playerData[1].name
     self.avatarData = AvatarManger.GetSmallAvatar(playerData[1].faceId, self.leaderHeadBg,0.2)
 end
 
--- 删除头像
+-- Delete avatar
 function GuildItem:CloseAvatar()
     if self.avatarData then
         AvatarManger.CollectAvatar(self.avatarData)

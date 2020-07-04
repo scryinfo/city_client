@@ -20,6 +20,6 @@ function ResearchChoicePanel.InitPanel()
     this.typeScrollContent = transform:Find("BottomRoot/TypeScroll/Viewport/Content")
     this.researchTypeItem = transform:Find("BottomRoot/TypeScroll/Viewport/Content/ResearchTypeItem").gameObject
 
-    -- 多语言
+    -- multi-language
     this.titleText = transform:Find("BottomRoot/TitleText"):GetComponent("Text")
 end

@@ -7,7 +7,7 @@ local GameWorld;
 local transform;
 local gameObject;
 local log = log
---构建函数--
+--Constructor--
 function GameWorldCtrl.New()
 	logWarn("GameWorldCtrl.New--->>");
 	return this;
@@ -18,7 +18,7 @@ function GameWorldCtrl.Awake()
 	panelMgr:LoadPrefab_A('GameWorld', nil,this, this.OnCreate);
 end
 
---启动事件--
+--Start event--
 function GameWorldCtrl.OnCreate(prefab)
 	gameObject = ct.InstantiatePrefab(prefab);
 
@@ -38,7 +38,7 @@ function GameWorldCtrl.OnCreate(prefab)
 	Event.AddListener("OnDie", this.OnDie);
 	Event.AddListener("ReceiveChatMessage", this.ReceiveChatMessage);
 
-	--做一些初始化工作
+	--Do some initialization
 	local p = CityEngineLua.player();
 	if p ~= nil then
 		this.OnDie(p.state);
@@ -46,7 +46,7 @@ function GameWorldCtrl.OnCreate(prefab)
 	this.SetSkillButton();
 end
 
---切换选择对象
+--Switch selection
 function GameWorldCtrl.OnTabTarget( )
     local player = CityEngineLua.player();
     if (player == nil) then
@@ -73,7 +73,7 @@ function GameWorldCtrl.OnTabTarget( )
     end
 end
 
---复活--
+--resurrection--
 function GameWorldCtrl.OnRelive(go)
 
 	local p = CityEngineLua.player();
@@ -82,12 +82,12 @@ function GameWorldCtrl.OnRelive(go)
 	end
 end
 
---关闭游戏--
+--Close game--
 function GameWorldCtrl.OnClose(go)
 	UnityEngine.Application.Quit();
 end
 
---发送聊天
+--Send chat
 function GameWorldCtrl.OnSendMessage(go)
 	local p = CityEngineLua.player();
 	if p ~= nil and string.len(GameWorldPanel.input_content.text) > 0 then
@@ -95,18 +95,18 @@ function GameWorldCtrl.OnSendMessage(go)
 	end
 end
 
---重置视角
+--Reset perspective
 function GameWorldCtrl.OnResetView(go)
 	CameraFollow.ResetView();
 end
 
---关闭事件--
+--Close event--
 function GameWorldCtrl.Close()
 	--panelMgr:ClosePanel(CtrlNames.Login);
 	destroy(gameObject);
 end
 
---设置技能按钮--
+--Set Skill Button--
 function GameWorldCtrl.SetSkillButton()
 	if #SkillBox.skills == 3 then
 		GameWorldPanel.btnSkill1.transform:Find("Text"):GetComponent("Text").text = SkillBox.skills[1].name;
@@ -127,7 +127,7 @@ function GameWorldCtrl.AttackSkill(skillID )
         local errorCode = player:useTargetSkill(skillID, target);
         if (errorCode == 1) then            
             ct.log("目标太远");
-            --逼近目标
+            --Approaching the target
             --SkillControl.MoveTo(target.renderObj.transform, SkillBox.Get(skillID).canUseDistMax-1, skillID);
         end
         if (errorCode == 2) then            
@@ -149,8 +149,8 @@ function GameWorldCtrl.OnAttackSkill3( )
 	this.AttackSkill(SkillBox.skills[3].id);
 end
 
-------------事件--
---死亡--
+------------event--
+--death--
 function GameWorldCtrl.OnDie(v)
 	if GameWorldPanel.PanelDie == nil then return end
 	if v == 1 then
@@ -160,7 +160,7 @@ function GameWorldCtrl.OnDie(v)
 	end
 end
 
---接受信息
+--receive the info
 function GameWorldCtrl.ReceiveChatMessage(msg)
 	local text = GameWorldPanel.textContent:GetComponent("Text");
 

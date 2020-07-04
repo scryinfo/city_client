@@ -83,7 +83,7 @@ namespace LuaInterface
             }            
         }
 
-        //慎用
+        //Use with caution
         public void Dispose(int generation)
         {                         
             if (count > generation)

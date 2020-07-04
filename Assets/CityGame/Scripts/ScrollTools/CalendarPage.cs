@@ -9,9 +9,9 @@ using UnityEngine.UI;
 public class CalendarPage : MonoBehaviour
 {
     ////[SerializeField]
-    ////private Transform mDayRootTran;  //dayItem的父物体
+    ////private Transform mDayRootTran;  //dayItem parent object
     ////[SerializeField]
-    ////private Text mYearAndMonthText;  //显示年月的文本框
+    ////private Text mYearAndMonthText;  //Text box showing year and month
 
     ////public Button subMonthBtn;
     ////public Button addMonthBtn;
@@ -34,7 +34,7 @@ public class CalendarPage : MonoBehaviour
     ////    addMonthBtn.onClick.AddListener(NextMonthFunc);
     ////}
 
-    //////更新界面显示
+    //////Update interface display
     ////private void UpdateView()
     ////{
     ////    int days = GetDaysByMonth(mCurrentDate.x, mCurrentDate.y);
@@ -43,7 +43,7 @@ public class CalendarPage : MonoBehaviour
 
     ////    mYearAndMonthText.text = string.Format("{0}年{1}月", mCurrentDate.x, mCurrentDate.y);
 
-    ////    //当月item
+    ////    //Item of the month
     ////    for (int i = 0; i < mDayItems.Count; i++)
     ////    {
     ////        if (i < dayWeek || i >= dayWeek + days)
@@ -89,13 +89,13 @@ public class CalendarPage : MonoBehaviour
     ////    UpdateView();
     ////}
 
-    //////获取某年某月有多少天
+    //////Get the number of days in a year and month
     ////private int GetDaysByMonth(int year, int month)
     ////{
     ////    return DateTime.DaysInMonth(year, month);
     ////}
 
-    ////// 根据年月返回月份1号的星期
+    ////// Return to the week of month 1 according to the year and month
     ////private DayOfWeek GetWeekNumByDay(int year, int month)
     ////{
     ////    return DateTime.Parse(year + "/" + month + "/" + 1).DayOfWeek;

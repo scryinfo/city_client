@@ -7,56 +7,56 @@ function ServerListModel:initialize(insId)
     self.insId = insId
     self:OnCreate()
 end
---启动事件--
+--Start event--
 function ServerListModel:OnCreate()
-    --注册本地事件
+    --Register local events
     Event.AddListener("m_loginRole", self.loginRole,self);
-    ----注册 AccountServer 消息
+    ----Register AccountServer Message
    -- ServerListModel.registerAsNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"ascode.OpCode","chooseGameServer","as.ChoseCameServerACK",self.n_ChooseGameServer,self)
 end
---关闭事件--
+--Close event--
 function ServerListModel:Close()
-    --清空本地UI事件1
+    --Clear local UI events1
    -- Event.RemoveListener("m_chooseGameServer", self.m_chooseGameServer);
     Event.RemoveListener("m_loginRole", self.loginRole,self);
 end
 function ServerListModel.registerAsNetMsg()
-    --as网络回调注册
+    --as Network callback registration
     CityEngineLua.Message:registerNetMsg(pbl.enum("ascode.OpCode","chooseGameServer"),ServerListModel.n_ChooseGameServer);
     --DataManager.ModelRegisterNetMsg(self.insId,"ascode.OpCode","chooseGameServer",self.n_ChooseGameServer)
    -- DataManager.ModelRegisterNetMsg(self.insId,"ascode.OpCode","chooseGameServer","as.ChoseCameServerACK",self.n_ChooseGameServer)
 end
 
---选择游戏服务器
+--Select game server
 function ServerListModel:m_chooseGameServer( data )
-    local serverIndex = data.Index --测试服务器列表索引 1 是公共服务器 2 是李宁的服务器
+    local serverIndex = data.Index 
     if data.serinofs[serverIndex].available == false then
         ct.MsgBox(GetLanguage(41010010), GetLanguage(41010002))
         return
     end
     local sid =  data.serinofs[serverIndex].serverId
     local ip =  data.serinofs[serverIndex].ip
-    local port =  data.serinofs[serverIndex].port --服务器返回1000，应该是 9001，不然连不上
+    local port =  data.serinofs[serverIndex].port --The server returns 1000, which should be 9001, otherwise it can’t be reached
     --local port = "9001"
 
-    --缓存选择的服务器信息
+    --- cache selected server information
     CityEngineLua.baseappIP = ip;
     CityEngineLua.baseappPort = tostring(port);
 
-    -- 保存交易服务器的信息
+    -- Save the information of the transaction server
     CityEngineLua.tradeappIP = data.serinofs[serverIndex].ssIp
     CityEngineLua.tradeappPort = tostring(data.serinofs[serverIndex].ssPort)
 
     --serverinfo.serverId
-    --更新服务器数据到UI，UI实现中缓存服务器数据，比如 serverId ，以备后用
+    --Update the server data to the UI, cache the server data in the UI implementation, such as serverId for later use
     DataManager.ModelSendNetMes("ascode.OpCode", "chooseGameServer","as.ChoseGameServer",{ serverId = sid})
 end
---选择游戏服务器后回调, 发送登录游戏服务器的请求
+---Callback after selecting the game server, sending a request to log in to the game server
 function ServerListModel:n_ChooseGameServer( msg )
-    ----反序列化，取出数据
+    ----Deserialization, take out the data
     --local msg = assert(pbl.decode("as.ChoseCameServerACK",stream), "LoginModel.n_ChooseGameServer: stream == nil")
-    ----处理数据：缓存服务器返回的 token
+    ----Processing data: cache server returns token
     CityEngineLua.token = msg.code
     --Event.Brocast("RobotTest_OnchooseServer",msg.code)
     ServerListModel.isClick = true
@@ -66,25 +66,25 @@ function ServerListModel:n_ChooseGameServer( msg )
     ServerListModel.isClick = false
 end
 function ServerListModel:m_GsOK()
-    --清除之前的所有注册的网络消息
+    --Clear all registered network messages before
     DataManager.UnAllModelRegisterNetMsg()
     DataManager.InitialNetMessages()
-    --注册gs的网络回调
+    --Register gs network callback
     ServerListModel:registerGsNetMsg()
     -----------------------------------------------------------------------------
-    ----临时单独处理的协议，后边统走datamanager
+    ----Temporary separate processing agreement, and follow the datamanager
     StopAndBuildModel.Awake()
     -----------------------------------------------------------------------------
-    GAucModel.registerNetMsg()  --拍卖的网络回调
-    GroundTransModel.registerNetMsg()  --土地交易网络回调
-    MapModel.registerNetMsg()  --小地图网络回调
-    FlightMainModel.registerNetMsg()  --航班预测网络回调
-    --连接gs
+    GAucModel.registerNetMsg()  --Network callback of auction
+    GroundTransModel.registerNetMsg()  --Callback of the land transaction network
+    MapModel.registerNetMsg()  --Small map network callback
+    FlightMainModel.registerNetMsg()  -- Flight forecast network callback
+    --Connect gs
     CityEngineLua.login_baseapp(true)
     --CityEngineLua.login_tradeapp(true)
 end
 function ServerListModel:registerGsNetMsg()
-    --gs网络回调注册
+    --gs Network callback registration
     CityEngineLua.Message:registerNetMsg(pbl.enum("common.OpCode","error"),CityEngineLua.Message.n_errorProcess);
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","login","gs.LoginACK",self.n_GsLoginSuccessfully,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","roleLogin","gs.Role",self.n_OnRoleLogin,self)
@@ -106,7 +106,7 @@ function ServerListModel:n_GsLoginSuccessfully( lMsg )
     end
     --Event.Brocast("RobotTest_OnGsLoginSuccessfully")
     --cache data
-    --同步服务器时间
+    --Synchronize server time
     if lMsg.ts ~= nil then
         TimeSynchronized.SynchronizationServerTime(lMsg.ts)
     else
@@ -114,7 +114,7 @@ function ServerListModel:n_GsLoginSuccessfully( lMsg )
     end
 end
 
---登录gs发包
+--Log in gs to send a package
 function ServerListModel:loginRole(info)
     DataManager.ModelSendNetMes("gscode.OpCode", "roleLogin","gs.Id",{ id = info.id })
 end
@@ -133,13 +133,14 @@ function ServerListModel:n_OnRoleLogin(pMsg)
         ct.log("[LoginModel.n_OnRoleLogin] succeed!")
         Event.Brocast("c_RoleLoginDataInit",pMsg);
         Event.Brocast("m_bagCapacity",pMsg.bagCapacity);
-        Event.Brocast("m_RoleLoginInExchangeModel", stream)  ---测试，获取登录之后的信息 cycle week 11
-        Event.Brocast("m_RoleLoginReqGroundAuction")  --请求拍卖信息
+        Event.Brocast("m_RoleLoginInExchangeModel", stream)  ---Test, get the information after login 11
+        Event.Brocast("m_RoleLoginReqGroundAuction")  --Request auction information
 
-        --上链测试，不要删除，要屏蔽请通过 test_group.lua 中注销对应注册即可
+
+        --On-chain testing, do not delete, to block, please log out the corresponding registration in test_group.lua
         UnitTest.Exec_now("abel_0531_ct_RechargeRequestReq", "e_abel_0531_ct_RechargeRequestReq",pMsg.id)
 
-        --激活相机脚本
+        --Activate the camera script
         --[[
         local camOjb = UnityEngine.Camera.main.gameObject:GetComponent("CameraScripts")
         if camOjb then
@@ -154,11 +155,11 @@ function ServerListModel:n_OnRoleLogin(pMsg)
         --logDebug(pMsg.role.position)
 
         Event.Brocast("c_GsLoginSuccess",pMsg.id);
-        --启动天气
+        --Start the weather
         ClimateManager.Star()
-        --启动跳钱
+        --Start jumping money
         MakeMoneyManager.Init()
-        -- 登录后查询离线通知
+        -- Query offline notification after login
         Event.Brocast("m_QueryOffLineInformation")
     end
 end

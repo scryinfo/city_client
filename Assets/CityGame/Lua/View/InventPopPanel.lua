@@ -3,13 +3,13 @@ local transform
 InventPopPanel = {}
 local this = InventPopPanel
 
---启动事件
+--Start event
 function InventPopPanel.Awake(obj)
     transform = obj.transform
     this.InitPanle()
 end
 
---初始化界面
+--Initialize the interface
 function InventPopPanel.InitPanle()
     this.countInp = findByName(transform,"countInput"):GetComponent("InputField")
     this.titleText = transform:Find("PopCommpent/titleText"):GetComponent("Text")

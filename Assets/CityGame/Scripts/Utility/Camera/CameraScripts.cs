@@ -9,28 +9,28 @@ using UnityEngine.EventSystems;
 
 public class CameraScripts : MonoBehaviour
 {
-    //要注意的是,这里的最大最小距离实际上并非摄像机父物体的Y值,而是相机本身的forward深度
-    public float minDistance = -5.0f;  //相机放大，与目标最小的距离
-    public float maxDistance = 30.0f;  //相机缩小，与目标最大的距离
+    //It should be noted that the maximum and minimum distances here are not actually the Y value of the parent object of the camera, but the forward depth of the camera itself
+    public float minDistance = -5.0f;  //Camera zoom in, minimum distance to target
+    public float maxDistance = 30.0f;  //Camera zooms out, maximum distance to target
 
-    public float m_smoothStopMaxSpeed = 30;  //缓冲时的最大速度
-    public float m_sutoScrollDamp = 100;  //数值越大，阻碍力越大
-    public float dragFactor = 1f;  //拖拽速度
-    public float scaleFactor = 100;  //缩放速度
+    public float m_smoothStopMaxSpeed = 30;  //Maximum speed when buffering
+    public float m_sutoScrollDamp = 100;  //The larger the value, the greater the resistance
+    public float dragFactor = 1f;  //Drag speed
+    public float scaleFactor = 100;  //Zoom speed
 
-    public Vector2 dragRange = new Vector2(0.1f, 1f); // 从最低距离到最高距离的距离缩放因子
+    public Vector2 dragRange = new Vector2(0.1f, 1f); // Distance scaling factor from lowest distance to highest distance
 
     public Vector2 m_camMoveLimiteLRV = new Vector2(0, 500);
-    public Vector2 m_camMoveLimiteUDV = new Vector2(0, 500);  //相机的移动范围
+    public Vector2 m_camMoveLimiteUDV = new Vector2(0, 500);  //Camera movement range
 
-    public Vector2 m_camMoveLimiteY = new Vector2(5, 15);  //相机Y的最高最低位置
+    public Vector2 m_camMoveLimiteY = new Vector2(5, 15);  //The highest and lowest position of camera Y
     private Camera m_mainCamera;
-    private Vector3 finalPosition = Vector3.zero; //相机的最终位置(忽略相机缩放的位置叠加的).
-    private float finalDistance = 0; //摄像机最终的距离
-    private Vector3 cameraZoomVector = Vector3.zero; //相机的forward叠加
-    private Vector3 m_smoothStopVelocity;  //相机缓冲移动的速度 --- 只需要获取一次
-    private float m_timeRealDragStop;  //记录滑动结束之后的时间
-    private Vector2 lastMoveVector; //记录鼠标最后移动的幅度,简单版本,复杂点可以做成多帧取样
+    private Vector3 finalPosition = Vector3.zero; //The final position of the camera (ignoring the superimposed position of the camera zoom).
+    private float finalDistance = 0; //The final distance of the camera
+    private Vector3 cameraZoomVector = Vector3.zero; //Camera's forward overlay
+    private Vector3 m_smoothStopVelocity;  //The speed of the camera buffer movement --- only need to get once
+    private float m_timeRealDragStop;  //Record the time after the end of the slide
+    private Vector2 lastMoveVector; //Record the amplitude of the last mouse movement, simple version, complex points can be made into multi-frame sampling
     private Vector2 screenCenter;
 
     private void Start()
@@ -43,7 +43,7 @@ public class CameraScripts : MonoBehaviour
 
     private void Update()
     {
-        //检测点击UI和射线冲突 -- 临时
+        //Detect click UI and ray conflict - temporary
         if (IsClickDownOverUI())
         {
             m_canHandleCam = false;
@@ -169,16 +169,16 @@ public class CameraScripts : MonoBehaviour
 
 
     /// <summary>
-    /// 测试测试测试
+    /// Test test test
     /// </summary>
-    private bool m_canHandleCam = true;  //玩家是否可以移动相机
-    private Vector3 m_moveTargetPos;  //目标移动位置
+    private bool m_canHandleCam = true;  //Can the player move the camera
+    private Vector3 m_moveTargetPos;  //Target moving position
     private void TestMoveCam()
     {
         m_canHandleCam = false;
     }
 
-    private float m_moveTotalTime = 3.0f;  //移动的总时间
+    private float m_moveTotalTime = 3.0f;  //Total time moved
     private float tempT = 0.0f;
     private void TestMoveTarget(Vector3 targetPos)
     {
@@ -202,7 +202,7 @@ public class CameraScripts : MonoBehaviour
         finalPosition = transform.localPosition;
     }
 
-    //更新相机位置
+    //Update camera position
     private void UpdateMove()
     {
         if (EventSystem.current.IsPointerOverGameObject())
@@ -210,7 +210,7 @@ public class CameraScripts : MonoBehaviour
             return;
         }
 
-        ////float factor = Mathf.Lerp(dragRange.x, dragRange.y, (finalDistance - minDistance) / (maxDistance - minDistance));  //根据相机的距离设置不同的因子,使拖动更自然
+        ////float factor = Mathf.Lerp(dragRange.x, dragRange.y, (finalDistance - minDistance) / (maxDistance - minDistance));  //Set different factors according to the distance of the camera to make dragging more natural
 
         ////m_smoothStopVelocity = Vector3.zero;
         ////var dragDeltaPosition = InputModule.Instance.DragDeltaPosition;
@@ -218,9 +218,9 @@ public class CameraScripts : MonoBehaviour
         ////Vector3 newDeltaPositionV3 = (Quaternion.AngleAxis(m_mainCamera.transform.localEulerAngles.y, new Vector3(0, 1, 0)) * v3) * dragFactor * factor;
         ////finalPosition -= newDeltaPositionV3 * Time.deltaTime;
 
-        //////惯性处理相关
+        //////Inertia related
         ////lastMoveVector = new Vector2(newDeltaPositionV3.x, newDeltaPositionV3.z);
-        //////限制最大速度,防止出现极大的惯性
+        //////Limit maximum speed to prevent extreme inertia
         ////if (lastMoveVector.sqrMagnitude > m_smoothStopMaxSpeed * m_smoothStopMaxSpeed)
         ////{
         ////    lastMoveVector = lastMoveVector.normalized * m_smoothStopMaxSpeed;
@@ -228,7 +228,7 @@ public class CameraScripts : MonoBehaviour
         ////m_smoothStopVelocity = lastMoveVector;
         ////m_timeRealDragStop = Time.realtimeSinceStartup;
 
-        float factor = Mathf.Lerp(dragRange.x, dragRange.y, (finalDistance - minDistance) / (maxDistance - minDistance));  //根据相机的距离设置不同的因子,使拖动更自然
+        float factor = Mathf.Lerp(dragRange.x, dragRange.y, (finalDistance - minDistance) / (maxDistance - minDistance));  //Set different factors according to the distance of the camera to make dragging more natural
 
         m_smoothStopVelocity = Vector3.zero;
         var dragDeltaPosition = InputModule.Instance.DragDeltaPosition;
@@ -236,9 +236,9 @@ public class CameraScripts : MonoBehaviour
         Vector3 newDeltaPositionV3 = (Quaternion.AngleAxis(m_mainCamera.transform.localEulerAngles.y, new Vector3(0, 1, 0)) * v3) * dragFactor * factor;
         finalPosition -= newDeltaPositionV3 * Time.deltaTime;
 
-        //惯性处理相关
+        //Inertia related
         lastMoveVector = new Vector2(newDeltaPositionV3.x, newDeltaPositionV3.z);
-        //限制最大速度,防止出现极大的惯性
+        //Limit maximum speed to prevent extreme inertia
         if (lastMoveVector.sqrMagnitude > m_smoothStopMaxSpeed * m_smoothStopMaxSpeed)
         {
             lastMoveVector = lastMoveVector.normalized * m_smoothStopMaxSpeed;
@@ -250,7 +250,7 @@ public class CameraScripts : MonoBehaviour
     }
 
 
-    //滑动结束，开始相机缓冲停止移动
+    //End of sliding, start camera buffer and stop moving
     private void SmoothStopFunc()
     {
         if (m_smoothStopVelocity != Vector3.zero)
@@ -282,7 +282,7 @@ public class CameraScripts : MonoBehaviour
     //////    cameraZoomVector = (m_mainCamera.transform.forward) * -finalDistance;
 
 
-    //////    //相机缩放中心点的偏移,直接应用到finalPosition中
+    //////    //The offset of the camera zoom center point is directly applied to finalPosition
     //////    ////Ray ray = m_mainCamera.ScreenPointToRay(InputModule.Instance.ZoomCenter);
     //////    ////Vector3 hV3 = ray.direction - m_mainCamera.transform.forward;
     //////    ////finalPosition += hV3 * (tempDistance - finalDistance);
@@ -296,7 +296,7 @@ public class CameraScripts : MonoBehaviour
     //////    //TestShowLog();
     //////}
 
-    ////////限制相机在2维的位置
+    ////////Limit camera position in 2 dimensions
     //////private Vector3 ClampPosition(Vector3 newPos)
     //////{
     //////    newPos.x = Mathf.Clamp(newPos.x, m_camMoveLimiteLRV.x, m_camMoveLimiteLRV.y);
@@ -314,13 +314,13 @@ public class CameraScripts : MonoBehaviour
         finalDistance -= deltaValue;
         finalDistance = Mathf.Clamp(finalDistance, minDistance, maxDistance);
 
-        //相机缩放中心点的偏移,直接应用到finalPosition中
+        //The offset of the camera zoom center point is directly applied to finalPosition
         Ray ray = m_mainCamera.ScreenPointToRay(InputModule.Instance.ZoomCenter);
         Vector3 hV3 = ray.direction - m_mainCamera.transform.forward;
 
         Vector3 tempZoomVector = (m_mainCamera.transform.forward) * -finalDistance;
         Vector3 tempV3 = finalPosition + hV3 * (tempDistance - finalDistance) + tempZoomVector;
-        if (tempV3.y > m_camMoveLimiteY.y || tempV3.y < m_camMoveLimiteY.x)  //限制因为缩放引起的y的变化
+        if (tempV3.y > m_camMoveLimiteY.y || tempV3.y < m_camMoveLimiteY.x)  //Limit changes in y due to scaling
         {
             ////Debug.Log("aaaaaaaaaaaaaaaaaaa");
             return;
@@ -358,7 +358,7 @@ public class CameraScripts : MonoBehaviour
         Util.CallMethod("UIBubbleCtrl", "static.RefreshLateUpdate");
     }
 
-    //限制相机在2维的位置
+    //Limit camera position in 2 dimensions
     private Vector3 ClampPosition(Vector3 newPos)
     {
         newPos.x = Mathf.Clamp(newPos.x, m_camMoveLimiteLRV.x, m_camMoveLimiteLRV.y);

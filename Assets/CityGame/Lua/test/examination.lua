@@ -33,10 +33,10 @@ UnitTest.Exec("abel_w4", "test_len",  function ()
 end)
 
 --[[
-1、 table.sort是排序函数，它要求要排序的目标table的必须是从1到n连续的，即中间不能有nil。
-2、 当比较函数没有写的时候，table.sort默认按照lua里面的排序规则升序排序；当额外写了比较函数时，
-    相当于用你额外写的比较函数重载了lua中自带的“<”操作符。这就有一个特别要注意的问题，
-    当两个数相等的时候，比较函数一定要返回false！
+1. table.sort is a sorting function, which requires that the target table to be sorted must be continuous from 1 to n, that is, there cannot be nil in the middle.
+2. When the comparison function is not written, table.sort defaults to sorting in ascending order in lua; when the comparison function is additionally written,
+    This is equivalent to overloading the "<" operator that comes with Lua with the comparison function you wrote. There is a special issue that needs attention.
+    When the two numbers are equal, the comparison function must return false!
 ]]--
 UnitTest.Exec("abel_w4", "test_table_sort",  function ()
     local a = 5
@@ -50,21 +50,21 @@ UnitTest.Exec("abel_w4", "test_table_sort",  function ()
         elseif first > second then
             return false
         else
-            return true--这里是不对的
+            return true
         end
     end )
 end)
 
---逻辑操作符---Lua: and,or,not 对比 C++：&&，||，!
+--Logical operators --- Lua: and, or, not vs. C++: &&, ||,!
 --https://www.cnblogs.com/pixs-union/p/4852731.html
 --[[
-采用短路求值（short-circuit evaluation）的策略。
-即：逻辑与和逻辑或操作符都是先求左侧运算对象的值再求右侧运算对象的值，
-当且仅当左侧运算对象无法确定表达式的结果时才会计算右侧运算对象的值。
+Use short-circuit evaluation (short-circuit evaluation) strategy.
+That is: the logical AND and logical OR operators are to first calculate the value of the left operation object and then the value of the right operation object,
+The value of the right operation object is calculated if and only if the left operation object cannot determine the result of the expression.
 ]]--
 
 --[[
-and连接多个操作数时，表达式的返回值就是从左到右第一个为假的值，若所有操作数值都不为假，则表达式的返回值为最后一个操作数；
+and connect multiple operands, the return value of the expression is the first value from left to right is false, if all operand values ​​are not false, the return value of the expression is the last operand;
 ]]--
 UnitTest.Exec("abel_w4", "test_and",  function ()
     ct.log("abel_w4","[test_and] 'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f' = ",'a' and 'b' and 'c' and 'd' and nil and false and 'e' and 'f')
@@ -79,7 +79,7 @@ UnitTest.Exec("abel_w4", "test_and",  function ()
 end)
 
 --[[
-or连接多个操作数时，表达式的返回值就是从左到右第一个不为假的值，若所有操作数值都为假，则表达式的返回值为最后一个操作数；
+or When connecting multiple operands, the return value of the expression is the first value from left to right that is not false. If all operand values ​​are false, the return value of the expression is the last operand;
 ]]--
 UnitTest.Exec("abel_w4", "test_or",  function ()
     ct.log("abel_w4","[test_or]  测试开始: ")
@@ -107,7 +107,7 @@ UnitTest.Exec("abel_w4", "test_or",  function ()
 end)
 
 --https://www.jianshu.com/p/7c25d5624c9e
---Lua中还会用到 "a and b or c ",这类似于C系语言中的表达式 a ? b : c： max = (a > b) and a or b
+--"A and b or c "is also used in Lua, which is similar to the expression in the C language a ? b : c： max = (a > b) and a or b
 UnitTest.Exec("abel_w4", "test_and_or",  function ()
     ct.log("abel_w4", "[test_and_or]  测试开始: ")
     local a = 666

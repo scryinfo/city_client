@@ -5,19 +5,19 @@
 ---
 Sprite_Chinese =
 {
-    --建议命名：英文以LE_开头，中文以LC_开头，其他不变，这样就可以直接复制粘贴统一修改了
+    --Suggested naming: English starts with LE_, Chinese starts with LC_, the others remain unchanged, so you can directly copy and paste to modify
     ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-sell.png",
     ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LC_bubble-rent.png",
-    --中心建筑
+    --Central building
     ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon-cityinfo-C.png",
     ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/central warehouse-C.png",
     ["CBSoon"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon-C.png",
-    --中心仓库
+    --Central warehouse
     ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/plat-centerwarehouse-C.png",
-    --建筑自带仓库、货架
+    --Building comes with warehouse, shelves
     ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse-C.png",
     ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf-C.png",
-    --使用点数
+    --Use points
     ["UsePoint"] = "Assets/CityGame/Resources/Atlas/DataCompany/chinese.png",
 }
 
@@ -25,47 +25,47 @@ Sprite_English={
 
    ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-sell.png",
    ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
-   --中心建筑
+   --Central building
    ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon -city info.png",
    ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/central warehouse1.png",
    ["CBSoon"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon.png",
-   --中心仓库
+   --Central warehouse
    ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/plat-centerwarehouse.png",
-    --建筑自带仓库、货架
+    --Building comes with warehouse, shelves
    ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
    ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
-    --使用点数
+    --Use points
    ["UsePoint"] = "Assets/CityGame/Resources/Atlas/DataCompany/English.png",
 }
 
 Sprite_Korean = {
     ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-sell.png",
     ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
-    --中心建筑
+    --Central building
     ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon -city info.png",
     ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/central warehouse1.png",
     ["CBSoon"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon.png",
-    --中心仓库
+    --Central warehouse
     ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/plat-centerwarehouse.png",
-    --建筑自带仓库、货架
+    --Building comes with warehouse, shelves
     ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
     ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
-    --使用点数
+    --Use points
     ["UsePoint"] = "Assets/CityGame/Resources/Atlas/DataCompany/korea.png",
 }
 
 Sprite_Japanese ={
     ["UIBubbleSell"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-sell.png",
     ["UIBubbleRent"] = "Assets/CityGame/Resources/Atlas/multilanguage/LE_bubble-rent.png",
-    --中心建筑
+    --Central building
     ["CBCityInfo"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon -city info.png",
     ["CBWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/central warehouse1.png",
     ["CBSoon"] = "Assets/CityGame/Resources/Atlas/BigImage/coming soon.png",
-    --中心仓库
+    --Central warehouse
     ["CenterWareHouse"] = "Assets/CityGame/Resources/Atlas/BigImage/plat-centerwarehouse.png",
-    --建筑自带仓库、货架
+    --Building comes with warehouse, shelves
     ["Warehouse"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-warehouse.png",
     ["Shelf"] = "Assets/CityGame/Resources/Atlas/multilanguage/plat-shelf.png",
-    --使用点数
+    --Use points
     ["UsePoint"] = "Assets/CityGame/Resources/Atlas/DataCompany/japan.png",
 }

@@ -74,7 +74,7 @@ function AddProductionLineCtrl:_initData()
 end
 
 function AddProductionLineCtrl:_changeAddLineData(posValue, itemId)
-    --在最开始的时候创建所有左右toggle信息，然后每次初始化的时候只需要设置默认值就行了
+    --Create all the left and right toggle information at the beginning, and then only need to set the default value each time you initialize
     if posValue == AddLineButtonPosValue.Left then
         AddProductionLinePanel.leftToggleMgr:initData(itemId)
         local matTypeId = AddProductionLinePanel.leftToggleMgr:getCurrentTypeId()
@@ -91,7 +91,7 @@ end
 ----
 
 
---根据itemId获得当前应该显示的状态
+--Get the status that should be displayed according to itemId
 function AddProductionLineCtrl.GetItemState(itemId)
     local data = {}
     data.enableShow = true
@@ -107,15 +107,15 @@ function AddProductionLineCtrl.GetItemState(itemId)
     return data
 end
 
---左边的detail被点击，需要改变中心线
+--The detail on the left is clicked and the centerline needs to be changed
 function AddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow)
     --AddProductionLinePanel.leftBtnParent.transform.position = rectPosition
     --AddProductionLinePanel.leftBtnParent.anchoredPosition = AddProductionLinePanel.leftBtnParent.anchoredPosition + Vector2.New(174, 0)
 
-    ct.log("system", "-----------选中 left: "..itemId)
+    ct.log("system", "-----------Selected left: "..itemId)
 
     self.selectItemMatToGoodIds = CompoundDetailConfig[itemId].matCompoundGoods
-    local lineDatas = {}  --获取线的数据
+    local lineDatas = {}  --Get line data
     for i, matData in ipairs(CompoundDetailConfig[self.selectItemMatToGoodIds[1]].goodsNeedMatData) do
         lineDatas[#lineDatas + 1] = matData
     end
@@ -130,12 +130,12 @@ function AddProductionLineCtrl:leftSetCenter(itemId, rectPosition, enableShow)
         AddProductionLinePanel.leftDisableImg.localScale = Vector3.one
     end
 end
---右侧的detail被点击，改变中心线
+--The detail on the right is clicked to change the centerline
 function AddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableShow)
     --AddProductionLinePanel.rightBtnParent.transform.position = rectPosition
     --AddProductionLinePanel.rightBtnParent.anchoredPosition = AddProductionLinePanel.rightBtnParent.anchoredPosition - Vector2.New(174, 0)
 
-    ct.log("system", "-----------选中 right: "..itemId)
+    ct.log("system", "-----------Selected right: "..itemId)
 
     local selectItemMatToGoodIds = CompoundDetailConfig[itemId].goodsNeedMatData
     self:_setLineDetailInfo(selectItemMatToGoodIds)
@@ -149,7 +149,7 @@ function AddProductionLineCtrl:rightSetCenter(itemId, rectPosition, enableShow)
         AddProductionLinePanel.rightDisableImg.localScale = Vector3.one
     end
 end
---设置原料线的信息  根据个数显示位置
+--Set the information of the raw material line to display the position according to the number
 function AddProductionLineCtrl:_setLineDetailInfo(datas)
     local lineCount = #datas
     if lineCount == 1 then
@@ -181,7 +181,7 @@ function AddProductionLineCtrl:_setLineDetailInfo(datas)
         AddProductionLinePanel.centerItems[3]:initData(datas[3])
     end
 end
---获取选中原料或商品当前的生产速度(含Eva加成值)
+--Get the current production speed of selected raw materials or commodities (including Eva bonus value)
 function AddProductionLineCtrl:getPresentSpeed(itemId)
     if self.m_data.buildingType == BuildingType.MaterialFactory then
         for key,value in pairs(self.m_data.items) do

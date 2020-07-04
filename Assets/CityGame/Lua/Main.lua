@@ -8,10 +8,10 @@ local protoc = require ("Framework/pbl/protoc")
 function OnInitProto()
 	ct.log("abel_w7_pkg","[OnInitProto] protoc:addpath")
 	ct.log("abel_w7_pkg","[OnInitProto] persistentDataPath: ",UnityEngine.Application.persistentDataPath)
-	--protoc:addpath("./Assets/CityGame/Lua/pb") --注意这种从 Assets 开始的相对路径是目前发现的PC上唯一能支持 loadfile 的相对路径
-	--protoc:addpath(UnityEngine.Application.persistentDataPath.."/CityGame/lua/pb") --这个路径是Android上能访问的路径
-	protoc:addpath(CityLuaUtil.getAssetsPath().."/Lua/pb") --注意这种从 Assets 开始的相对路径是目前发现的PC上唯一能支持 loadfile 的相对路径
-	protoc:addpath(CityLuaUtil.getAssetsPath().."/lua/pb") --这个路径是Android上能访问的路径
+--protoc:addpath("./Assets/CityGame/Lua/pb") --Note that this relative path starting from Assets is the only relative path on the PC currently found that can support loadfile
+--protoc:addpath(UnityEngine.Application.persistentDataPath.."/CityGame/lua/pb") --This path is the path that can be accessed on Android
+protoc:addpath(CityLuaUtil.getAssetsPath().."/Lua/pb") --Note that this relative path starting from Assets is the only relative path found on the PC that currently supports loadfile
+protoc:addpath(CityLuaUtil.getAssetsPath().."/lua/pb") -- this path is the path that can be accessed on Android
 
 	ct.log("abel_w7_pkg","[OnInitProto] protoc:loadfile")
 	--加载并编译所有的 .proto 文件
@@ -32,13 +32,13 @@ function OnInitProto()
 	assert(protoc:loadfile ("dddbind.proto"))
 end
 
---主入口函数。从这里开始lua逻辑
+-- The main entry function. Start lua logic from here
 function Main()
-	OnInitProto()	--加载 .proto
-	--testMain()		--测试入口
+	OnInitProto()	--load .proto
+	--testMain()		--Test entrance
 end
 
---场景切换通知
+--Scene switching notification
 function OnLevelWasLoaded(level)
 	Time.timeSinceLevelLoad = 0
 end

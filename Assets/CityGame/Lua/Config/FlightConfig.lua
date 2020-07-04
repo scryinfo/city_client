@@ -4,11 +4,11 @@ FlightConfig =
     ["MaxTime"] = 180,
     ["MinBet"] = 10,
     ["MaxBet"] = 100,
-    ["DefaultStartCode"] = "PEK",  --搜索界面的默认起飞机场三字码
-    ["DefaultArrCode"] = "PVG",  --默到达飞机场三字码
-    ["ChenDuZone"] = 8,  --成都时区
+    ["DefaultStartCode"] = "PEK",  --The default three-letter airport code for the search interface
+    ["DefaultArrCode"] = "PVG",  --Silently arrived at the airport three-letter code
+    ["ChenDuZone"] = 8,  --Chengdu time zone
 }
---航班状态表
+--Flight Status Table
 FlightStateConfig = {
     ["计划"] = 32020012,
     ["已到达"] = 32020013,
@@ -34,7 +34,7 @@ FlightStateConfig = {
     ["失联"] = 32020033,
     ["失事"] = 32020034,
 }
---航空公司二字码
+--Airline code
 FlightCompanyConfig = {
     ["AA"] = 40020001,
     ["DL"] = 40020002,
@@ -95,7 +95,7 @@ FlightCompanyConfig = {
     ["KE"] = 40020057,
     ["9C"] = 40020058,
 }
---机场三字码
+--Airport three-letter code
 FlightCodeNameConfig = {
     ["ATL"] = 40010001,
     ["PEK"] = 40010002,

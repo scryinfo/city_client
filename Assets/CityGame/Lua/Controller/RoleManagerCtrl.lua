@@ -12,8 +12,8 @@ function  RoleManagerCtrl:bundleName()
 end
 
 function RoleManagerCtrl:initialize()
-    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPage.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--Change password verification callback
+    --UIPage.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--You can go back, after opening the UI, do not hide other UI
 end
 
 function RoleManagerCtrl:OnCreate(obj)
@@ -22,7 +22,7 @@ function RoleManagerCtrl:OnCreate(obj)
     RoleManagerBehaviour:AddClick(RoleManagerPanel.startRoleButton.gameObject,self.OnStartGame,self);
 end
 
---开始游戏--
+--Start the game--
 function RoleManagerCtrl.OnStartGame()
     ct.log("rodger_w8_GameMainInterface","[test_OnStartGame]  测试完毕")
     UIPage:ClearAllPages()

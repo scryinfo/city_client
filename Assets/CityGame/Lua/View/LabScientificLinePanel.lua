@@ -25,13 +25,13 @@ function LabScientificLinePanel.InitPanel()
     this.researchScroll = transform:Find("bottomPageRoot/research/scroll"):GetComponent("ActiveLoopScrollRect")
     this.inventionScroll = transform:Find("bottomPageRoot/invention/scroll"):GetComponent("ActiveLoopScrollRect")
 
-    --提示框部分
+    --Prompt box part
     this.gridGroup = transform:Find("tipRoot/contentRoot/content"):GetComponent("GridLayoutGroup")
     this.changeStaffCountBtn = transform:Find("tipRoot/changeStaffCountBtn"):GetComponent("Button")
     this.researchTipItem = LabScientificChangeStaffItem:new(transform:Find("tipRoot/contentRoot/content/researchChangeStaffItem"), this.changeStaffCountBtn, this.gridGroup)
     this.inventTipItem = LabScientificChangeStaffItem:new(transform:Find("tipRoot/contentRoot/content/inventChangeStaffItem"), this.changeStaffCountBtn, this.gridGroup)
 end
----状态显示
+---Status Display
 function LabScientificLinePanel._researchToggleState(isOn)
     if isOn then
         this.researchOpen.localScale = Vector3.one

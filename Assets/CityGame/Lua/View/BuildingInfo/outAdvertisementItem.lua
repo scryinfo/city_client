@@ -10,7 +10,7 @@ local class = require 'Framework/class'
 
 outAdvertisementItem = class('outAdvertisementItem')
 
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function outAdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.prefab = prefab;
     self.prefabData = prefabData;
@@ -26,9 +26,9 @@ function outAdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, 
     self.adNameText=prefab.transform:Find("showPanel/nameImage/nameText"):GetComponent("Text")
 
     if prefabData.npcFlow then
-        --人流量
+        --human traffic
         self.peopleText.text=prefabData.npcFlow
-        --时间
+        --time
         local beginTs=tostring(prefabData.beginTs)
         beginTs=string.sub(beginTs,1,10)
         local passTime=os.time()-beginTs
@@ -44,7 +44,7 @@ function outAdvertisementItem:initialize(prefabData,prefab,inluabehaviour, mgr, 
 
 
 end
----删除
+---delete
 function outAdvertisementItem:OnClicl_XBtn(go)
     go.manager:_deleteGoods(go)
 end

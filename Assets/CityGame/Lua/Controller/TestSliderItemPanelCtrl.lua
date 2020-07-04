@@ -7,7 +7,7 @@
 
 TestSliderItemPanelCtrl = class('TestSliderItemPanelCtrl')
 
---初始化方法
+--Initialization method
 function TestSliderItemPanelCtrl:initialize(data)
     self.data = data;
 
@@ -16,12 +16,12 @@ function TestSliderItemPanelCtrl:initialize(data)
     self:_initData()
 end
 
---初始化界面
+--Initialize the interface
 function TestSliderItemPanelCtrl:_initData()
     self.text.text = self.data.text
 end
 
---点击
+--Click
 function TestSliderItemPanelCtrl:_clickToDoBtn(ins)
     ct.log("cycle_w8_exchange01_loopScroll", "啊啊啊啊 "..ins.data.text)
 end

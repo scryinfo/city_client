@@ -3,10 +3,10 @@
 ---
 AddLineMgrNew = class('AddLineMgrNew')
 
-AddLineMgrNew.static.togglePrefab = "View/items/AddLineChooseItems/AddLineToggleItem"  --左侧需要加载的预制
-AddLineMgrNew.static.detailPrefab = "View/items/AddLineChooseItems/AddLineDetailItem"  --右侧滑动需要加载的预制
+AddLineMgrNew.static.togglePrefab = "View/items/AddLineChooseItems/AddLineToggleItem"  --Prefabs to be loaded on the left
+AddLineMgrNew.static.detailPrefab = "View/items/AddLineChooseItems/AddLineDetailItem"  --Prefabricated on the right side to be loaded
 
---位于哪边，左右两边具有不同意义
+--Which side is located, the left and right sides have different meanings
 AddLineSideValue =
 {
     Left = 0,
@@ -34,15 +34,15 @@ function AddLineMgrNew:initialize(viewRect, sideValue)
             local go = UnityEngine.GameObject.Instantiate(self.togglePrefab)
             go.transform:SetParent(self.typeContent.transform)
             go.transform.localScale = Vector3.one
-            local tempData = {languageId = typeItem[1].name, typeId = i, createDetail = function (typeId)  --创建方法
+            local tempData = {languageId = typeItem[1].name, typeId = i, createDetail = function (typeId)  --How to create
                 self:_createDetail(typeId)
             end,
-            selectFunc = function (item)  --选中
+            selectFunc = function (item)  --Selected
                 self:_selectTypeItem(item)
             end}
             local item = AddLineTypeItemNew:new(go.transform, tempData, self.typeToggleGroup)
             self.toggleItems[#self.toggleItems + 1] = item
-            self.keyToggleItems[i] = item  --创建以typeId为key的表
+            self.keyToggleItems[i] = item  --Create a table with typeId as the key
         end
     end
     --UpdateBeat:Add(self._update, self)
@@ -67,18 +67,18 @@ function AddLineMgrNew:_language()
         end
     end
 end
---初始化
+--initialization
 function AddLineMgrNew:initData(chooseTypeId)
     self.detailContent.anchoredPosition = Vector2.zero
     FixedUpdateBeat:Add(self._update, self)
     self:_language()
 
-    --设置默认打开的类别
+    --Set the default open category
     for i, item in pairs(self.toggleItems) do
         self.toggleItems[i]:setToggleIsOn(false)
     end
 
-    --根据特定值去设置toggle  --暂时没找到用的地方
+    --According to toggle to set a specific value  -- could not find a place to temporarily use
     if chooseTypeId ~= nil then
         for i, item in pairs(self.toggleItems) do
             if self.toggleItems[i]:getTypeId() == chooseTypeId then
@@ -94,12 +94,12 @@ function AddLineMgrNew:initData(chooseTypeId)
     self.selectTypeItem = self.toggleItems[1]
     self.tempTypeId = self.toggleItems[1]:getTypeId()
 end
---获取当前选择的typeId
+--Get the currently selected typeId
 function AddLineMgrNew:getCurrentTypeId()
     return self.tempTypeId
 end
 
---根据typeId 和 itemId 获取对应的item，并显示选中状态
+--Get the corresponding item according to typeId and itemId and display the selected state
 function AddLineMgrNew:setToggleIsOnByType(itemId)
     local typeId = tonumber(string.sub(itemId, 1, 4))
     if self.tempDetailItemId ~= nil and itemId == self.tempDetailItemId then
@@ -136,12 +136,12 @@ function AddLineMgrNew:setToggleIsOnByType(itemId)
 end
 ---------
 function AddLineMgrNew:_selectTypeItem(selectTypeItem)
-    --清空之前的item状态
+    --Clear the previous item status
     if self.selectTypeItem ~= nil then
         self.selectTypeItem:setToggleIsOn(false)
     end
     self.selectTypeItem = selectTypeItem
-    selectTypeItem:setToggleIsOn(true)  --显示现在的item
+    selectTypeItem:setToggleIsOn(true)  --Show current item
 
     local typeId = selectTypeItem:getTypeId()
     self:_createDetail(typeId)
@@ -159,14 +159,14 @@ function AddLineMgrNew:_createDetail(typeId)
     self.contentItems = {}
     self.keyContentItems = {}
 
-    --暂时是直接使用content下的子物体，多了的就移出content
+    --For the time being, directly use the sub-objects under the content, and move out the content if there are more
     local data = CompoundTypeConfig[typeId]
     local count = #self.detailPrefabList - #data
     if count > 0 then
         for i = 1, count do
             self:_releaseObj(self.detailPrefabList[i - 1])
         end
-    end  --将多余的预制回收隐藏
+    end  --Hide excess prefabricated recycling
 
     for i, itemData in ipairs(data) do
         local go
@@ -184,17 +184,17 @@ function AddLineMgrNew:_createDetail(typeId)
         end}
         local item = AddLineDetailItemNew:new(go.transform, tempData, self.detailToggleGroup)
         self.contentItems[#self.contentItems + 1] = item
-        self.keyContentItems[itemData.itemId] = item  --创建以itemId为key的详情表
+        self.keyContentItems[itemData.itemId] = item  --Create detail table with itemId as key
     end
 end
 
---选择了某个item，显示线路
+--An item is selected and the line is displayed
 function AddLineMgrNew:_setLineShow(selectDetailItem)
     if self.selectDetailItem ~= nil then
         self.selectDetailItem:setToggleIsOn(false)
     end
     self.selectDetailItem = selectDetailItem
-    selectDetailItem:setToggleIsOn(true)  --显示已选中
+    selectDetailItem:setToggleIsOn(true)  --Show selected
     local itemId = selectDetailItem:getItemId()
     local rectPosition = selectDetailItem:getItemPos()
     local enableShow = selectDetailItem:getEnableShow()
@@ -209,13 +209,13 @@ function AddLineMgrNew:_setLineShow(selectDetailItem)
         Event.Brocast("rightSetCenter", itemId, rectPosition, enableShow)
     end
 end
---回收预制
+--Recycling prefabrication
 function AddLineMgrNew:_releaseObj(obj)
     obj.transform:SetParent(self.detailToggleGroup.transform)
     obj.transform.localScale = Vector3.zero
     obj.transform.localPosition = Vector3.zero
 end
---清空选中状态
+--Clear the selected state
 function AddLineMgrNew:_resetDetails()
     if self.contentItems then
         for i, item in ipairs(self.contentItems) do

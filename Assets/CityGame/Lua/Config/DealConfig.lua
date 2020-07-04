@@ -1,7 +1,7 @@
 DealConfig={
 
     [1] = {
-        name = 19030004,--名字
+        name = 19030004,--name
         childs = {
             [1] = {
                 name = 19030006,
@@ -18,7 +18,7 @@ DealConfig={
     },
 
     [2] = {
-        name = 19030007,--名字
+        name = 19030007,--name
         childs = {
             [1] ={
                 name = 2101001,
@@ -65,7 +65,7 @@ DealConfig={
         }
     },
     [3] = {
-        name = 19030008, --名字
+        name = 19030008, --name
         childs = {
             [1] = {
                 name = 20030002,
@@ -103,10 +103,10 @@ DealConfig={
                 }
             },
             --[2] = {
-            --    name = "副食",
+            --    name = "Non-staple food",
             --    childs = {
             --        [1] = {
-            --            name = "无",
+            --            name = "none",
             --            typeId = "000000",
             --             EX=2
             --        }
@@ -148,30 +148,30 @@ DealConfig={
                 },
             },
             -- [4] = {
-            --    name = "配饰",
+            --    name = "Accessories",
             --    childs = {
             --        [1] = {
-            --            name = "无",
+            --            name = "none",
             --            typeId = "0000000",
             --             EX=2
             --        }
             --    }
             --},
             --[5] = {
-            --    name = "运动",
+            --    name = sport,
             --    childs = {
             --        [1] = {
-            --            name = "无",
+            --            name = "none",
             --            typeId = "0000000",
             --             EX=2
             --        }
             --    }
             --},
             -- [6] = {
-            --    name = "数码",
+            --    name = "Digital",
             --    childs = {
             --        [1] = {
-            --            name = "无",
+            --            name = "none",
             --            typeId = "0000000",
             --             EX=2
             --        }
@@ -180,7 +180,7 @@ DealConfig={
         }
     },
         [4] = {
-            name = 19030009,--名字
+            name = 19030009,--name
             childs = {
                 [1] = {
                     name = 19030026,
@@ -206,7 +206,7 @@ DealConfig={
                             EX=4
                         },
                         --[2] = {
-                        --    name = "副食",
+                        --    name = "Non-staple food",
                         --    typeId= 52,
                         --    EX=4
                         --},
@@ -216,17 +216,17 @@ DealConfig={
                             EX=4
                         },
                         --[4] = {
-                        --    name = "配饰",
+                        --    name = "Accessories",
                         --    typeId= 54,
                         --    EX=4
                         --},
                         --[5] = {
-                        --    name = "运动",
+                        --    name = "sport",
                         --    typeId= 55,
                         --    EX=4
                         --},
                         --[6] = {
-                        --    name = "数码",
+                        --    name = "Digital",
                         --    typeId= 56,
                         --    EX=4
                         --},
@@ -235,7 +235,7 @@ DealConfig={
             }
         },
         [5] = {
-            name = 19030014,--名字
+            name = 19030014,--name
             childs = {
                 [1] = {
                     name = 19030015,
@@ -250,10 +250,10 @@ DealConfig={
             }
         },
         --[6] = {
-        --    name = "仓库租用", --名字
+        --    name = "Warehouse rental", --name
         --    childs = {
         --        [1] = {
-        --            name = "无",
+        --            name = "none",
         --            typeId = 17,
         --            EX=6,
         --        },

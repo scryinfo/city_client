@@ -5,7 +5,7 @@
 ---
 FlightDateBase = class('FlightDateBase')
 
-----初始化方法
+----Initialization method
 --function FlightDateBase:initialize(viewRect, data)
 --    self.viewRect = viewRect.transform
 --    self.data = data

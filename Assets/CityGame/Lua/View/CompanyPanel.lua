@@ -21,7 +21,7 @@ function CompanyPanel.InitPanel()
     ct.log("tina_w22_friends", "CompanyPanel:InitPanel()")
     this.backBtn = transform:Find("TopRoot/BackBtn").gameObject
 
-    -- 多语言EvaBtn
+    -- Multilingual EvaBtn
     this.titleText = transform:Find("TopRoot/TitleText"):GetComponent("Text")
     --this.incomeTitle = transform:Find("BottomRoot/BasicInfoRoot/IncomeImage/IncomeTitle"):GetComponent("Text")
     --this.expenditureTitle = transform:Find("BottomRoot/BasicInfoRoot/IncomeImage/ExpenditureTitle"):GetComponent("Text")
@@ -29,7 +29,7 @@ function CompanyPanel.InitPanel()
     --this.tips = transform:Find("BottomRoot/BusinessRecordsRoot/Tips"):GetComponent("Text")
     --this.tipsTextCom = transform:Find("BottomRoot/BusinessRecordsRoot/TipsText"):GetComponent("Text")
     --
-    -- 基础信息显示
+    -- Basic information display
     this.headImage = transform:Find("BottomRoot/InfoRoot/NameRoot/HeadBg")
     this.companyNameText = transform:Find("BottomRoot/InfoRoot/NameRoot/CompanyNameText"):GetComponent("Text")
     this.sexImage = transform:Find("BottomRoot/InfoRoot/NameRoot/NameText/SexImage"):GetComponent("Image")
@@ -39,7 +39,7 @@ function CompanyPanel.InitPanel()
     this.foundingTimeText = transform:Find("BottomRoot/InfoRoot/NameRoot/FoundingTimeText"):GetComponent("Text")
     this.companyRenameBtn = transform:Find("BottomRoot/InfoRoot/NameRoot/CompanyNameText/CompanyRenameBtn")
     this.yScaleRT = transform:Find("BottomRoot/InfoRoot/IEPic/yScale"):GetComponent("RectTransform")
-    this.detaiks = transform:Find("BottomRoot/InfoRoot/IEPic/detaiks").gameObject    --营收详情
+    this.detaiks = transform:Find("BottomRoot/InfoRoot/IEPic/detaiks").gameObject    --Revenue details
     this.detaiksText = transform:Find("BottomRoot/InfoRoot/IEPic/detaiks/Text"):GetComponent("Text")
     this.curve = transform:Find("BottomRoot/InfoRoot/IEPic/curveBg/curve")
     this.curveSlide = transform:Find("BottomRoot/InfoRoot/IEPic/curveBg/curve"):GetComponent("Slide")
@@ -47,18 +47,18 @@ function CompanyPanel.InitPanel()
     this.incomeText = transform:Find("BottomRoot/InfoRoot/IERoot/IncomeText"):GetComponent("Text")
     this.expenditureText = transform:Find("BottomRoot/InfoRoot/IERoot/ExpenditureText"):GetComponent("Text")
 
-    -- 交易记录
+    --Transaction Record
     --this.businessRecordsScroll = transform:Find("BottomRoot/BusinessRecordsRoot/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
     --this.tipsText = transform:Find("BottomRoot/BusinessRecordsRoot/TipsText").gameObject
 
-    -- 分页按钮
+    -- Paging button
     this.infoBtn = transform:Find("BottomRoot/LeftRoot/InfoBtn"):GetComponent("Button")
     this.landBtn = transform:Find("BottomRoot/LeftRoot/LandBtn"):GetComponent("Button")
     this.buildingBtn = transform:Find("BottomRoot/LeftRoot/BuildingBtn"):GetComponent("Button")
     --this.evaBtn = transform:Find("BottomRoot/LeftRoot/EvaBtn"):GetComponent("Button")
     this.brandBtn = transform:Find("BottomRoot/LeftRoot/BrandBtn"):GetComponent("Button")
 
-    -- 显示节点
+    -- Display node
     this.infoRoot = transform:Find("BottomRoot/InfoRoot")
     this.landRoot = transform:Find("BottomRoot/LandRoot")
     this.landTitleItem = transform:Find("BottomRoot/LandRoot/LandTitleItem").gameObject
@@ -66,16 +66,16 @@ function CompanyPanel.InitPanel()
     --this.evaRoot = transform:Find("BottomRoot/EvaRoot")
     this.brandRoot = transform:Find("BottomRoot/BrandRoot")
 
-    -- 土地显示
+    -- Land display
     this.landTitleContent = transform:Find("BottomRoot/LandRoot/TitleScroll/Viewport/Content")
     this.landScroll = transform:Find("BottomRoot/LandRoot/ContentScroll/Viewport"):GetComponent("ActiveLoopScrollRect")
 
-    -- 建筑显示
+    -- Building display
     this.buildingTitleContent = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content")
     this.buildingTitleRt = transform:Find("BottomRoot/BuildingRoot/TitleScroll/Viewport/Content"):GetComponent("RectTransform")
     this.buildingScroll = transform:Find("BottomRoot/BuildingRoot/ContentScroll/Viewport"):GetComponent("ActiveLoopScrollRect")
 
-    -- Eva显示
+    --Eva display
     --this.myEvaText = transform:Find("BottomRoot/EvaRoot/PropertyRoot/MyEvaText"):GetComponent("Text")
     --this.introductionBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/IntroductionBtn").gameObject
     --this.optionOneObj = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll").gameObject
@@ -85,7 +85,7 @@ function CompanyPanel.InitPanel()
     --this.propertyScroll = transform:Find("BottomRoot/EvaRoot/PropertyRoot/PropertyScroll/Content")
     --this.closeTipsBtn = transform:Find("BottomRoot/EvaRoot/PropertyRoot/CloseTipsBtn")
 
-    -- Eva界面调整
+    --Eva interface adjustment
     --this.optionRootRt = transform:Find("BottomRoot/EvaRoot/OptionRoot"):GetComponent("RectTransform")
     --this.bg2Rt = transform:Find("BottomRoot/EvaRoot/OptionRoot/Bg2")
     --this.optionOneRt = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionOneScroll/Content"):GetComponent("RectTransform")
@@ -93,7 +93,7 @@ function CompanyPanel.InitPanel()
     --this.optionThereT = transform:Find("BottomRoot/EvaRoot/OptionRoot/OptionThereScroll")
     --this.propertyRootRt = transform:Find("BottomRoot/EvaRoot/PropertyRoot"):GetComponent("RectTransform")
 
-    -- 品牌显示
+    -- Brand display
     this.brandTitleContent = transform:Find("BottomRoot/BrandRoot/TitleScroll/Viewport/Content")
     this.sizeBtn = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBtn")
     this.sizeBtnImage = transform:Find("BottomRoot/BrandRoot/ContentRoot/SizeBtn/Image")
@@ -106,11 +106,11 @@ function CompanyPanel.InitPanel()
     this.brandScroll = transform:Find("BottomRoot/BrandRoot/ContentRoot/ContentScroll"):GetComponent("ActiveLoopScrollRect")
     this.brandScrollContent = transform:Find("BottomRoot/BrandRoot/ContentRoot/ContentScroll/Content"):GetComponent("GridLayoutGroup")
 
-    -- 没内容提示
+    --No content tips
     this.noContentRoot = transform:Find("BottomRoot/NoContentRoot")
     this.tipsText = transform:Find("BottomRoot/NoContentRoot/TipsText"):GetComponent("Text")
 
-    -- 多语言
+    --multi-language
     this.infoBtnText = transform:Find("BottomRoot/LeftRoot/InfoBtn/Text"):GetComponent("Text")
     this.landBtnText = transform:Find("BottomRoot/LeftRoot/LandBtn/Text"):GetComponent("Text")
     this.buildingBtnText = transform:Find("BottomRoot/LeftRoot/BuildingBtn/Text"):GetComponent("Text")

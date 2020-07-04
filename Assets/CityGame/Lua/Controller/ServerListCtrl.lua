@@ -14,8 +14,8 @@ function  ServerListCtrl:bundleName()
 end
 
 function ServerListCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
-    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--可以回退，UI打开后，不隐藏其它的UI
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--You can go back and hide other panels after the UI opens
+    --UIPanel.initialize(self,UIType.Normal,UIMode.NeedBack,UICollider.None)--Can go back, after the UI is opened, other UI is not hidden
 end
 
 function ServerListCtrl:Awake()
@@ -26,7 +26,7 @@ function ServerListCtrl:Awake()
     serverListBehaviour:AddClick(ServerListPanel.back,self.c_OnBack,self);
     serverListBehaviour:AddClick(ServerListPanel.oKBtn,self.c_OnOK,self);
 
-    --普通消息注册
+    --Common message registration
     Event.AddListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.AddListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.AddListener("c_OnServer",self.c_OnServer,self)
@@ -55,7 +55,7 @@ function ServerListCtrl:c_OnBack(go)
     PlayMusEff(1002)
     local data={ReminderType = ReminderType.Warning,ReminderSelectType = ReminderSelectType.Select,
                 content = GetLanguage(10050004),func = function()
-            --清空item
+            --Empty the item
             if go.server then
                 for i, v in pairs(go.server) do
                     destroy(v.prefab.gameObject)
@@ -72,7 +72,7 @@ end
 
 function ServerListCtrl:Close()
     UIPanel.Close(self)
-    --注销事件
+    --Logout event
     Event.RemoveListener("c_GsCreateRole",self.c_GsCreateRole,self);
     Event.RemoveListener("c_GsLoginSuccess", self.c_GsLoginSuccess, self);
     Event.RemoveListener("c_OnServer",self.c_OnServer,self)
@@ -98,7 +98,7 @@ function ServerListCtrl:_initData()
 end
 
 
---选择服务器--
+--Select server--
 function ServerListCtrl:c_OnServer(go)
     if  tempTag ~= nil then
         tempTag.localScale = Vector3.zero
@@ -108,7 +108,7 @@ function ServerListCtrl:c_OnServer(go)
     Index = go.id;
 end
 
---点击确定--
+--Click determine-- -
 function ServerListCtrl:c_OnOK(go)
     PlayMusEff(1002)
     if Index == nil then

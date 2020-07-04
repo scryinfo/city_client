@@ -4,10 +4,10 @@
 --- DateTime: 2018/10/20 16:28
 ---
 local coroutine = require("coroutine")
-require('__require_first__') --前置包含
+require('__require_first__') --Front inclusion
 local AutoRequire = require "AutoRequire"
 
---自动包含目录
+--Automatically include directories
 AutoRequire.getInstance():require("Common")
 AutoRequire.getInstance():require("Framework/Interface")
 AutoRequire.getInstance():require("Framework/pbl")
@@ -16,8 +16,7 @@ AutoRequire.getInstance():require("test/testFrameWork/memory")
 AutoRequire.getInstance():require("test/testFrameWork")
 
 
-if CityLuaUtil.isluaLogEnable() == false then --如果 lua log 禁用， 那么禁用整个测试分组策略
-
+if CityLuaUtil.isluaLogEnable() == false then --If lua log is disabled, then disable the entire test grouping strategy
     function UnitTest.Exec_now(unitGroupId, event,...) return end
     function UnitTest.Exec(unitGroupId, funcName, func) return end
     ct.log = function(logid,s,...) return end
@@ -26,7 +25,7 @@ if CityLuaUtil.isluaLogEnable() == false then --如果 lua log 禁用， 那么�
     AutoRequire.getInstance():addCode("function UnitTest.Exec(unitGroupId, funcName, func) return end")
     AutoRequire.getInstance():addCode("ct.log = function(logid,s,...) return end")
 else
-    --单元测试
+    --unit test
     AutoRequire.getInstance():require("test/testFrameWork")
     AutoRequire.getInstance():require("test/testFrameWork/memory")
     AutoRequire.getInstance():require("test/group")
@@ -65,14 +64,14 @@ AutoRequire.getInstance():require("Items/NewAddLine")
 AutoRequire.getInstance():require("Items/OfflineNotificationItems")
 AutoRequire.getInstance():require("Terrain")
 AutoRequire.getInstance():requireLast("__require_last__")
---在磁盘上上述目录中如果新添了文件夹，需要把新文件夹添加到上述 “自动包含目录”中
+--If a new folder is added in the above directory on the disk, the new folder needs to be added to the above "automatically included directory"
 
 function PostRequire()
-    require('__require_last__') --后置包含
+    require('__require_last__') --Post contained
     AutoRequire.getInstance():FinishedRequire()
 end
 
---打包时，把 AutoRequire.requirePaths 写到 Require_RunTime.lua
+--When packaging, write AutoRequire.requirePaths to Require_RunTime.lua
 function Genfun()
     print("generate_RequireRT---------------------------------")
     AutoRequire.getInstance():WriteRuntimeRequire()

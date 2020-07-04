@@ -10,9 +10,9 @@ public class TestFOW : MonoBehaviour
 	// Use this for initialization
 	void Start () {
         IsRefresh = true;
-        // fow系统启动
+        // fow system start
         FOWLogic.instance.Startup();
-        // 通知角色出生
+        // Notify the character is born
         Messenger.Broadcast(MessageName.MN_CHARACTOR_BORN, 1);
     }
 	

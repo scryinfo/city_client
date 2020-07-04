@@ -40,8 +40,8 @@ namespace LuaInterface
         }
     }
 
-    //让byte[] 压入成为lua string 而不是数组 userdata
-    //也可以使用LuaByteBufferAttribute来标记byte[]
+     //Let byte[] be pushed into lua string instead of array userdata
+     //You can also use LuaByteBufferAttribute to mark byte[]
     public struct LuaByteBuffer
     {        
         public LuaByteBuffer(IntPtr source, int len)
@@ -91,7 +91,7 @@ namespace LuaInterface
     //public class LuaOutMetatable {}
     public class NullObject { }
 
-    //泛型函数参数null代替
+    //Generic function parameter null instead
     public struct nil { }
 
     public class LuaDelegate
@@ -111,7 +111,7 @@ namespace LuaInterface
             this.self = self;
         }
 
-        //如果count不是1，说明还有其他人引用，只能等待gc来处理
+        //If count is not 1, it means that there are other people quoting, and can only wait for gc to process
         public virtual void Dispose()
         {
             method = null;

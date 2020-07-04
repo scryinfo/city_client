@@ -8,13 +8,13 @@ CityEngineLua.Bundle = {}
 
 --[[
 newAndSendMsg:
-	1、 msgId：
-		协议id， 比如 pb.asCode_pb.login
-			proto25\asCode.proto 中定义了协议类型及ID， OpCode 这个枚举中的每一个标识符都对应一个协议类型，其枚举值代码协议的id
+1. msgId:
+Protocol id, such as pb.asCode_pb.login
+Proto25\asCode.proto defines the protocol type and ID. Each identifier in the OpCode enumeration corresponds to a protocol type, and its enumeration value codes the protocol id.
 
-	2、 pb_buffer：
-		protobuf 协议数据序列化之后的 stream 字节流
-		proto25\as.proto 定义具体的协议数据结构， 每个协议数据对应 asCode.proto 中 OpCode 的一个标识符
+2. pb_buffer:
+stream byte stream after protobuf protocol data serialization
+proto25\as.proto defines the specific protocol data structure, each protocol data corresponds to an identifier of OpCode in asCode.proto
 ]]--
 function CityEngineLua.Bundle:newAndSendMsg(msgId, pb_buffer)
 	local bundle = self:newNetMsg(msgId, pb_buffer);
@@ -66,13 +66,13 @@ function CityEngineLua.Bundle:newMessage(mt)
 	self.msgtype = mt;
 	self.numMessage = self.numMessage + 1;
 
-	--现在已经调整了包的顺序，第一个是包体长度，之后才是id； 这里不能写入id
-	--self:writeUint16(self.msgtype.id);
-	
-	--if(self.msgtype.msglen == -1) then
-	--	self:writeUint16(0);
-	--	self.messageLength = 0;
-	--end
+--Now the order of the packages has been adjusted, the first is the length of the package, and then the id; the id cannot be written here
+--self:writeUint16(self.msgtype.id);
+
+--if(self.msgtype.msglen == -1) then
+-- self:writeUint16(0);
+-- self.messageLength = 0;
+--end
 
 	self._curMsgStreamIndex = 0;
 end

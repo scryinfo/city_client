@@ -14,15 +14,15 @@ public class ActiveLoopScrollRect : MonoBehaviour
     {
         if (mLoopScrollRect == null)
         {
-            mLoopScrollRect = GetComponent<LoopScrollRect>();  //获取组件
+            mLoopScrollRect = GetComponent<LoopScrollRect>();  //Get components
         }
     }
     
     /// <summary>
-    /// 初始化组件
+    /// Initialization module
     /// </summary>
-    /// <param name="data">委托方法</param>
-    /// <param name="totalCount">总数，默认为0</param>
+    /// <param name="data">Delegate method</param>
+    /// <param name="totalCount">Total, default is 0</param>
     public void ActiveLoopScroll(LoopScrollDataSource data, int totalCount = 0, string prefabName = "")
     {
         if (mLoopScrollRect == null)
@@ -46,10 +46,10 @@ public class ActiveLoopScrollRect : MonoBehaviour
     }
     
     /// <summary>
-    /// 初始化 滑动中存在不同预制的item
+    /// There are different prefabricated items in the sliding
     /// </summary>
-    /// <param name="data">委托方法</param>
-    /// <param name="diffPrefabNameList">预制名字顺序表</param>
+    /// <param name="data">Delegate method</param>
+    /// <param name="diffPrefabNameList">Pre-made name sequence table</param>
     public void ActiveDiffItemLoop(LoopScrollDataSource data, string[] diffPrefabNameList = null)
     {
         if (mLoopScrollRect == null)

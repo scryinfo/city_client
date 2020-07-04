@@ -3,7 +3,7 @@
 local class = require 'Framework/class'
 BaseGroundModel = class('BaseGroundModel')
 
---初始化
+--initialization
 --将protobuf内数据拷贝出来
 function BaseGroundModel:initialize(data)
     self.Data = {}

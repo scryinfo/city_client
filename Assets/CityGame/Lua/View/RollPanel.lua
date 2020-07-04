@@ -1,5 +1,5 @@
 
---研究所掷点界面panel
+--Institute Throw Point Panel
 
 local transform
 --local gameObject
@@ -7,14 +7,14 @@ local transform
 RollPanel = {}
 local this = RollPanel
 
---启动事件
+--Start event
 function RollPanel.Awake(obj)
 
     transform = obj.transform
     this.InitPanle()
 
 end
---初始化界面
+--Initialize the interface
 function RollPanel.InitPanle()
 
     this.scrolParent = transform:Find("PopCommpent/Scroll/Viewport/Content")
@@ -29,7 +29,7 @@ function RollPanel.InitPanle()
     this.congratulation1 = transform:Find("resultRoot/Evaresultbg/CONGRATULATIONS!"):GetComponent("Text")
     this.congratulation2 = transform:Find("resultRoot/result/CONGRATULATIONS!"):GetComponent("Text")
 
-    this.emptyTrans = transform:Find("PopCommpent/empty")  --空提示
+    this.emptyTrans = transform:Find("PopCommpent/empty")  --Empty prompt
     this.emptyTransText01 = transform:Find("PopCommpent/empty/contentText"):GetComponent("Text")
 
     this.totalText = findByName(transform,"totalText"):GetComponent("Text")

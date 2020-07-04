@@ -10,76 +10,75 @@ local this = MapPanel
 MapPanel.MapShowInfoPoolName = "MapShowInfo"
 MapPanel.MapShowInfoHasImgPoolName = "MapShowInfoHasImg"
 
---启动事件--
+---Start event----
 function MapPanel.Awake(obj)
     transform = obj.transform
     this.InitPanel()
 end
 
---初始化面板--
+--Initialization panel--
 function MapPanel.InitPanel()
-    --按钮和滑动条
+    --Buttons and sliders
     this.scaleSlider = transform:Find("rightRoot/ScaleSlider"):GetComponent("Slider")
     this.enlargeBtn = transform:Find("rightRoot/enlargeBtn")
     this.narrowBtn = transform:Find("rightRoot/narrowBtn")
     this.backBtn = transform:Find("rightRoot/backBtn")
 
-    --预制
-    this.mapMatGoodRootItem = transform:Find("prefabRoot/MapMatGoodRootItem").gameObject  --原料商品详情根节点
-    this.mapMatGoodSearchItem = transform:Find("prefabRoot/MapMatGoodSearchItem").gameObject  --原料商品详情
-    this.mapSearchTypeItem = transform:Find("prefabRoot/MapSearchTypeItem").gameObject  --搜索类型
-    this.mapPromotionDetailItem = transform:Find("prefabRoot/MapPromotionDetailItem").gameObject  --推广item
-    this.mapTechnologyDetailItem = transform:Find("prefabRoot/MapTechnologyDetailItem").gameObject  --科研
-    this.mapBuildsDetailItem = transform:Find("prefabRoot/MapBulidsDetailItem").gameObject  --建筑item
+    --Prefab
+    this.mapMatGoodRootItem = transform:Find("prefabRoot/MapMatGoodRootItem").gameObject -- raw product details root node
+    this.mapMatGoodSearchItem = transform:Find("prefabRoot/MapMatGoodSearchItem").gameObject -- raw product details
+    this.mapSearchTypeItem = transform:Find("prefabRoot/MapSearchTypeItem").gameObject -- search type
+    this.mapPromotionDetailItem = transform:Find("prefabRoot/MapPromotionDetailItem").gameObject -- promote item
+    this.mapTechnologyDetailItem = transform:Find("prefabRoot/MapTechnologyDetailItem").gameObject -- scientific research
+    this.mapBuildsDetailItem = transform:Find("prefabRoot/MapBulidsDetailItem").gameObject --building item
     --
-    this.mapBuildingItem = transform:Find("centerRoot/prefabRoot/MapBuildingItem")  --建筑气泡
-    this.mapSystemItem = transform:Find("centerRoot/prefabRoot/MapSystemItem")  --系统建筑
-    this.mapSearchResultItem = transform:Find("centerRoot/prefabRoot/MapSearchResultItem")  --搜索结果
-    this.mapAllSearchItem = transform:Find("centerRoot/prefabRoot/MapAllSearchItem")  --搜索总览
-    this.mapGroundAucItem = transform:Find("centerRoot/prefabRoot/MapGroundAucItemNew")  --土地拍卖
-    this.mapGroundTransItem = transform:Find("centerRoot/prefabRoot/MapGroundTransItem")  --土地交易
+    this.mapBuildingItem = transform:Find("centerRoot/prefabRoot/MapBuildingItem") -- construction bubble
+    this.mapSystemItem = transform:Find("centerRoot/prefabRoot/MapSystemItem") -- system architecture
+    this.mapSearchResultItem = transform:Find("centerRoot/prefabRoot/MapSearchResultItem")--search results
+    this.mapAllSearchItem = transform:Find("centerRoot/prefabRoot/MapAllSearchItem") --Search overview
+    this.mapGroundAucItem = transform:Find("centerRoot/prefabRoot/MapGroundAucItemNew") -- land auction
+    this.mapGroundTransItem = transform:Find("centerRoot/prefabRoot/MapGroundTransItem") -- land transaction
 
-    --气泡层级root
-    this.mapRootRect = transform:Find("centerRoot/typeParent"):GetComponent("RectTransform")  --小地图
-    this.groundTransformRoot = transform:Find("centerRoot/typeParent/GroundTransformRoot")  --交易气泡
-    this.groundAuctionRoot = transform:Find("centerRoot/typeParent/GroundAuctionRoot")  --拍卖气泡
-    this.alwaysShowRoot = transform:Find("centerRoot/typeParent/AlwaysShowRoot")  --一直显示的界面，自己的建筑&系统建筑
-    this.allSearchRoot = transform:Find("centerRoot/typeParent/AllSearchRoot")  --搜索总览
-    this.detailSearchRoot = transform:Find("centerRoot/typeParent/DetailSearchRoot")  --搜索详情
+    --Bubble level root
+    this.mapRootRect = transform:Find("centerRoot/typeParent"):GetComponent("RectTransform") --small map
+    this.groundTransformRoot = transform:Find("centerRoot/typeParent/GroundTransformRoot")--transaction bubble
+    this.groundAuctionRoot = transform:Find("centerRoot/typeParent/GroundAuctionRoot") --Auction bubble
+    this.alwaysShowRoot = transform:Find("centerRoot/typeParent/AlwaysShowRoot")--the interface that has been displayed all the time, own building & system building
+    this.allSearchRoot = transform:Find("centerRoot/typeParent/AllSearchRoot") --Search overview
+    this.detailSearchRoot = transform:Find("centerRoot/typeParent/DetailSearchRoot") --Search details
 
-    --左侧搜索类型
-    this.openTypeBtnRect = transform:Find("leftRoot/openTypeBtn"):GetComponent("RectTransform")  --打开左侧搜索框的按钮
-    this.closeSearchBtn = transform:Find("leftRoot/typeOpen/closeSearchBtn"):GetComponent("RectTransform")  --关闭搜索主界面按钮
-    this.typeOpenRect = transform:Find("leftRoot/typeOpen"):GetComponent("RectTransform")  --搜索主界面
-    this.loadingImgTran = transform:Find("leftRoot/typeOpen/loadingRoot/loadingImg"):GetComponent("RectTransform")  --loading图
-    this.typeItemParent = transform:Find("leftRoot/typeOpen/typeItemParent")  --搜索类型父物体
+    --Search type on the left
+    this.openTypeBtnRect = transform:Find("leftRoot/openTypeBtn"):GetComponent("RectTransform") -- button to open the search box on the left
+    this.closeSearchBtn = transform:Find("leftRoot/typeOpen/closeSearchBtn"):GetComponent("RectTransform") -- close the search main interface button
+    this.typeOpenRect = transform:Find("leftRoot/typeOpen"):GetComponent("RectTransform") --Search the main interface
+    this.loadingImgTran = transform:Find("leftRoot/typeOpen/loadingRoot/loadingImg"):GetComponent("RectTransform") --loading diagram
+    this.typeItemParent = transform:Find("leftRoot/typeOpen/typeItemParent") -- Search for the type parent object
 
-    --搜索详情页面
-    this.detailPagesRect = transform:Find("leftRoot/detailPages"):GetComponent("RectTransform")  --
-    this.matPageToggleGroup = transform:Find("leftRoot/detailPages/matPage"):GetComponent("ToggleGroup")  --原料页面
-    this.goodsPageToggleGroup = transform:Find("leftRoot/detailPages/goodsPage"):GetComponent("ToggleGroup")  --商品页面
-    this.buildsPageToggleGroup = transform:Find("leftRoot/detailPages/buildsPage"):GetComponent("ToggleGroup")  --建筑页面
-    this.promotionPageGroup = transform:Find("leftRoot/detailPages/promotionPage"):GetComponent("ToggleGroup")  --推广
-    this.technologyPageGroup = transform:Find("leftRoot/detailPages/technologyPage"):GetComponent("ToggleGroup")  --科研
+    --Search details page
+    this.detailPagesRect = transform:Find("leftRoot/detailPages"):GetComponent("RectTransform") --
+    this.matPageToggleGroup = transform:Find("leftRoot/detailPages/matPage"):GetComponent("ToggleGroup") --raw material page
+    this.goodsPageToggleGroup = transform:Find("leftRoot/detailPages/goodsPage"):GetComponent("ToggleGroup") -- product page
+    this.buildsPageToggleGroup = transform:Find("leftRoot/detailPages/buildsPage"):GetComponent("ToggleGroup") --building page
+    this.promotionPageGroup = transform:Find("leftRoot/detailPages/promotionPage"):GetComponent("ToggleGroup") --Promotion
+    this.technologyPageGroup = transform:Find("leftRoot/detailPages/technologyPage"):GetComponent("ToggleGroup") --Scientific research
 
-    --右侧详情界面
-    --this.rightMatGoodPageItem = MapRightMatGoodPage:new(transform:Find("rightPageRoot/searchMatGood"))  --old
-    this.rightOtherPageRoot = transform:Find("rightPageRoot")  --
-    this.rightOtherBuildingPageItem = MapRightOtherBuildingPage:new(transform:Find("rightPageRoot/selectOtherBuilding"))  --点击搜索结果气泡打开建筑界面
-    this.rightGroundAucPageItem = MapRightGroundAucPage:new(transform:Find("rightPageRoot/searchGroundAuc"))  --点击拍卖气泡
-    this.rightGroundTransPageItem = MapRightGroundTransPage:new(transform:Find("rightPageRoot/searchGroundTrans"))  --土地交易
-    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(transform:Find("rightPageRoot/selectSelfBuilding"))  --自己的建筑
-    this.systemBuildingPageItem = MapRightSystemPage:new(transform:Find("rightPageRoot/selectSystemBuilding"))  --系统建筑
+    --Detail interface on the right
+    --this.rightMatGoodPageItem = MapRightMatGoodPage:new(transform:Find("rightPageRoot/searchMatGood")) --old
+    this.rightOtherPageRoot = transform:Find("rightPageRoot") --
+    this.rightOtherBuildingPageItem = MapRightOtherBuildingPage:new(transform:Find("rightPageRoot/selectOtherBuilding")) -- Click the search result bubble to open the building interface
+    this.rightGroundAucPageItem = MapRightGroundAucPage:new(transform:Find("rightPageRoot/searchGroundAuc")) -- Click on the auction bubble
+    this.rightGroundTransPageItem = MapRightGroundTransPage:new(transform:Find("rightPageRoot/searchGroundTrans")) -- land transaction
+    this.selfBuildingPageItem = MapRightSelfBuildingPage:new(transform:Find("rightPageRoot/selectSelfBuilding")) -- own building
+    this.systemBuildingPageItem = MapRightSystemPage:new(transform:Find("rightPageRoot/selectSystemBuilding")) -- system building
 
-    --
-    this.mapShowInfoParentTran = transform:Find("rightPageRoot/itemsRoot")  --下面两种预制的回收父物体
-    this.mapShowInfoItemTran = transform:Find("rightPageRoot/itemsRoot/noIconShowItem")  --不带icon的数据显示
-    this.mapShowInfoIconItemTran = transform:Find("rightPageRoot/itemsRoot/hasIconShowItem")  --带有icon的数据显示
+    this.mapShowInfoParentTran = transform:Find("rightPageRoot/itemsRoot")--the following two pre-made recycling parent objects
+    this.mapShowInfoItemTran = transform:Find("rightPageRoot/itemsRoot/noIconShowItem") --Data display without icon
+    this.mapShowInfoIconItemTran = transform: Find("rightPageRoot/itemsRoot/hasIconShowItem") -- data display with icon
     this.prefabPools = {}
     this.prefabPools[this.MapShowInfoPoolName] = LuaGameObjectPool:new(this.MapShowInfoPoolName, this.mapShowInfoItemTran, 5, Vector3.New(-999,-999,-999), this.mapShowInfoParentTran)
     this.prefabPools[this.MapShowInfoHasImgPoolName] = LuaGameObjectPool:new(this.MapShowInfoHasImgPoolName, this.mapShowInfoIconItemTran, 1, Vector3.New(-999,-999,-999), this.mapShowInfoParentTran)
 end
---根据类型显示二级菜单
+--Displays the secondary menu by type
 function MapPanel.showDetailPageByType(typeId)
     MapPanel.matPageToggleGroup.transform.localScale = Vector3.zero
     MapPanel.goodsPageToggleGroup.transform.localScale = Vector3.zero
@@ -99,7 +98,7 @@ function MapPanel.showDetailPageByType(typeId)
         MapPanel.technologyPageGroup.transform.localScale = Vector3.one
     end
 end
---返回二级菜单trans
+--Return to the secondary menu trans
 function MapPanel.getPageByType(typeId)
     local go
     if typeId == EMapSearchType.Material then

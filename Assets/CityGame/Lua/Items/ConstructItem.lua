@@ -15,23 +15,23 @@ function ConstructItem:initialize(data, viewTrans , contentWidth)
     self.sizeDeltaX = (viewRect.sizeDelta.x + contentWidth  + 12)
 end
 
---初始化界面
+--Initialize the interface
 function ConstructItem:_initData()
     local data = self.data
     local itemNameRect = self.viewTrans:Find("namebar/NameText"):GetComponent("RectTransform")
     local itemNameText = self.viewTrans:Find("namebar/NameText"):GetComponent("Text")
-    --设置名字（TODO：改为多语言）
+    --Set the name (TODO: change to multiple languages)
     itemNameText.text = GetLanguage(data.buildName)
-    --设置名字宽度（设置说明按钮位置）
+    --Set name width (set description button position)
     itemNameRect.sizeDelta = Vector2.New(itemNameText.preferredWidth,itemNameRect.sizeDelta.y)
-    --TODO:此处应该根据种类多少动态增加长度
+    --TODO: The length should be increased dynamically according to the type
     local type = ct.getType(UnityEngine.Sprite)
     for i, tempBuildID in ipairs(data.prefabRoute) do
-        --临时根据策划需求写死为只有3种大小建筑
+        --Temporarily write down to only three types of buildings according to planning needs
         if i > 3 then
             return
         end
-        --根据图片地址路径，赋值按钮图片
+        --According to the picture address path, assign the button picture
         --[[
         local tempBtnIcon =  self.viewTrans:Find("Btn_".. i  .."/icon"):GetComponent("Image")
         local www = UnityEngine.WWW(PlayerBuildingBaseData[tempBuildID]["imgPath"])
@@ -43,11 +43,11 @@ function ConstructItem:_initData()
             if obj ~= nil then
                 local texture = ct.InstantiatePrefab(obj)
                 tempBtnIcon.sprite = texture
-                --显示图片
+                --display image
                 tempBtnIcon.transform.localScale = Vector3.one
             end
         end)
-        --添加点击事件
+        --Add click event
         local tempBtn =  self.viewTrans:Find("Btn_".. i):GetComponent("Button")
         tempBtn.onClick:RemoveAllListeners();
         tempBtn.onClick:AddListener(function ()
@@ -56,7 +56,7 @@ function ConstructItem:_initData()
     end
 end
 
---点击建筑按钮
+--Click the building button
 function ConstructItem:_clickConstructBtn(tempID)
     PlayMusEff(1002)
     local tempVec = rayMgr:GetCoordinateByVector3(Vector3.New(UnityEngine.Screen.width / 2, UnityEngine.Screen.height / 2,0))

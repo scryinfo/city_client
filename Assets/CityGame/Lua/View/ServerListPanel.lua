@@ -5,7 +5,7 @@ ServerListPanel = {};
 local this = ServerListPanel;
 
 
---启动事件--
+---Start event-
 function ServerListPanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
@@ -14,7 +14,7 @@ function ServerListPanel.Awake(obj)
     logWarn("Awake lua--->>"..gameObject.name);
 end
 
---初始化面板--
+---Initial panel--
 function ServerListPanel.InitPanel()
     this.content = transform:Find("LeftServerList/Scroll View/Viewport/Content").gameObject;
     this.back = transform:Find("back").gameObject;

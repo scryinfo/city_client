@@ -1,9 +1,9 @@
 MakeMoneyItem = class('MakeMoneyItem')
 
 local mainCamera = nil
----初始化函数
---prefab：赚钱气泡Prefab
---data：赚钱气泡数据
+---Initialization function
+--prefab: Make money bubble Prefab
+--data: Make money bubble data
 function MakeMoneyItem:initialize(prefab,data)
     self.prefab = prefab
     self.rect = prefab.transform:GetComponent("RectTransform")
@@ -16,7 +16,7 @@ function MakeMoneyItem:initialize(prefab,data)
     self.moneyText.text = GetClientPriceString(data.money)
     self.canvasGroup = prefab.transform:GetComponent("CanvasGroup")
     self.canvasGroup.alpha = 0
-    --设置位置
+    --set position 
     local tempBuildBlockID =  TerrainManager.GridIndexTurnBlockID(data.pos)
     local tempPosition = TerrainManager.BlockIDTurnPosition(tempBuildBlockID)
     local basebuildData =  DataManager.GetBaseBuildDataByID(tempBuildBlockID)
@@ -28,7 +28,7 @@ function MakeMoneyItem:initialize(prefab,data)
     self.rect.anchoredPosition = ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(tempPosition))
     self.icon = prefab.transform:Find("Icon")
     self.icon.transform.localScale = Vector3.zero
-    --设置图片Icon
+    --Set picture Icon
     if data.itemId ~= nil then
         local tempSprite = SpriteManager.GetSpriteByPool(data.itemId)
         if tempSprite ~= nil then
@@ -41,7 +41,7 @@ function MakeMoneyItem:initialize(prefab,data)
     self:Show()
 end
 
---数据初始化完成后，展示
+--After data initialization is complete, show
 function MakeMoneyItem:Show()
     local sequence = DG.Tweening.DOTween.Sequence()
     sequence:Append( self.canvasGroup:DOFade(1,0.3):SetEase(DG.Tweening.Ease.OutCubic) )
@@ -57,7 +57,7 @@ function MakeMoneyItem:Show()
     end)
 end
 
---刷新位置
+--Refresh location
 function MakeMoneyItem:LateUpdate()
     if self.prefab ~= nil and self.Pos ~= nil then
         self.rect.anchoredPosition =ScreenPosTurnActualPos(UnityEngine.Camera.main:WorldToScreenPoint(self.Pos))

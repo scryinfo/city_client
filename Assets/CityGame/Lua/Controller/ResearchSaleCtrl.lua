@@ -65,14 +65,14 @@ function ResearchSaleCtrl:Awake(go)
         ResearchSalePanel.quantityInputField.text = tostring(value)
     end)
 
-    self:_awakeSliderInput()  --初始化
+    self:_awakeSliderInput()  --initialization
 end
 
 function ResearchSaleCtrl:Active()
     UIPanel.Active(self)
     Event.AddListener("c_OnqueryLaboratoryRecommendPrice",self.c_OnqueryLaboratoryRecommendPrice,self)
 
-    -- 多语言
+    -- Multilingual
     ResearchSalePanel.titleText.text = GetLanguage(28060009)
     ResearchSalePanel.priceRootTitleText.text = GetLanguage(28060013)
     ResearchSalePanel.quantityRootTitleText.text = GetLanguage(28060011)
@@ -92,10 +92,10 @@ function ResearchSaleCtrl:Hide()
     Event.RemoveListener("c_OnqueryLaboratoryRecommendPrice",self.c_OnqueryLaboratoryRecommendPrice,self)
 end
 
--- 初始化基本数据
+-- Initialize basic data
 function ResearchSaleCtrl:_updateData()
 
-    -- 根据useType判断是否需要显示下架
+    --According to useType, determine whether to display the shelf
     if self.m_data.data.index == 1 then
 
     else
@@ -133,7 +133,7 @@ function ResearchSaleCtrl:_updateData()
     ResearchSalePanel.nullText.text = self.m_data.data.storeNum + self.m_data.data.lockedNum
 end
 
---滑动条input联动
+--Slider input linkage
 function ResearchSaleCtrl:_awakeSliderInput()
     ResearchSalePanel.priceInputField.onValueChanged:AddListener(function (str)
         if str == "" or str == "." or self.guidePrice == nil then
@@ -141,10 +141,10 @@ function ResearchSaleCtrl:_awakeSliderInput()
         end
         local finalStr = ct.getCorrectPrice(str)
         if finalStr ~= str then
-            ResearchSalePanel.priceInputField.text = finalStr  --限制用户小数输入
+            ResearchSalePanel.priceInputField.text = finalStr  --Limit user decimal input
             return
         end
-        local temp = ct.CalculationLaboratoryCompetitivePower(self.guidePrice, tonumber(str) * 10000, self.mySaleTypeId)  --计算竞争力
+        local temp = ct.CalculationLaboratoryCompetitivePower(self.guidePrice, tonumber(str) * 10000, self.mySaleTypeId)  --Computational competitiveness
         if temp >= functions.maxCompetitive then
             ResearchSalePanel.competitivenessText.text = ">"..temp
         elseif temp <= functions.minCompetitive then
@@ -152,14 +152,14 @@ function ResearchSaleCtrl:_awakeSliderInput()
         else
             ResearchSalePanel.competitivenessText.text = string.format("%0.1f", temp)
         end
-        ResearchSaleCtrl.sliderCanChange = false  --当input输入时，禁用slider
+        ResearchSaleCtrl.sliderCanChange = false  --When input is input, the slider is disabled
         ResearchSalePanel.priceSlider.value = temp
     end)
     --
     EventTriggerMgr.Get(ResearchSalePanel.priceSlider.gameObject).onSelect = function()
         ResearchSaleCtrl.sliderCanChange = true
     end
-    EventTriggerMgr.Get(ResearchSalePanel.priceSlider.gameObject).onUpdateSelected = function()  --当slider被选中，则可以改变input的值
+    EventTriggerMgr.Get(ResearchSalePanel.priceSlider.gameObject).onUpdateSelected = function()  --When slider is selected, you can change the value of input
         ResearchSaleCtrl.sliderCanChange = true
     end
     ResearchSalePanel.priceSlider.onValueChanged:AddListener(function (value)
@@ -170,7 +170,7 @@ function ResearchSaleCtrl:_awakeSliderInput()
         ResearchSalePanel.priceInputField.text = GetClientPriceString(price)
     end)
 end
--------------------------------------按钮点击事件-------------------------------------
+-------------------------------------Button click event-------------------------------------
 function ResearchSaleCtrl:OnBack(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()
@@ -178,7 +178,7 @@ end
 
 function ResearchSaleCtrl:OnSure(go)
     PlayMusEff(1002)
-    -- 向服务器发送上架消息
+    -- Send listing message to server
     local temp = {
         buildingId = go.m_data.buildingId,
         item = {
@@ -196,7 +196,7 @@ function ResearchSaleCtrl:OnStopSale(go)
     PlayMusEff(1002)
     local data={ReminderType = ReminderType.Common,ReminderSelectType = ReminderSelectType.Select,
                 content = "Make sure to take down the data packages?",func = function()
-            -- 向服务器发送下架消息
+            -- Send a delisting message to the server
             local temp = {
                 buildingId = go.m_data.buildingId,
                 item = {
@@ -212,7 +212,7 @@ end
 
 function ResearchSaleCtrl:OnChange(go)
     PlayMusEff(1002)
-    -- 向服务器发送修改消息
+    --Send a modification message to the server
     local temp = {
     buildingId = go.m_data.buildingId,
     item = {

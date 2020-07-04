@@ -51,7 +51,7 @@ function SignOnPanel.InitPanel()
     this.endnumText=transform:Find("agreement/bg/endtime/daily rent/num"):GetComponent("Text")
 
 end
---数据初始化
+--Data initialization
 function SignOnPanel.InitDate(AdvertisementPosData)
     this.materialData = AdvertisementPosData;
 end

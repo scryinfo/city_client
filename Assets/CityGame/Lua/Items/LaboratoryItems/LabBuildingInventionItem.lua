@@ -4,7 +4,7 @@
 --- DateTime: 2018/11/28 17:36
 ---
 LabBuildingInventionItem = class('LabBuildingInventionItem')
-LabBuildingInventionItem.static.NoRollColor = Vector3.New(22, 38, 94)  --没有成果时候的颜色
+LabBuildingInventionItem.static.NoRollColor = Vector3.New(22, 38, 94)  --Color when there is no fruit
 
 function LabBuildingInventionItem:initialize(data, viewRect)
     self.viewRect = viewRect
@@ -48,7 +48,7 @@ function LabBuildingInventionItem:_initData(data)
         self.progressSlider.value = 0
     end
 
-    --显示阶段状态
+    --Show stage status
     self.phaseStates = {}
     for i = 1, self.formularData.phase do
         self.phaseStates[i] = LabInventionItemPhaseState.Null
@@ -59,7 +59,7 @@ function LabBuildingInventionItem:_initData(data)
     for i = 1, data.phase do
         self.phaseStates[i] = LabInventionItemPhaseState.Finish
     end
-    self.phaseItems:showState(self.phaseStates)  --显示5个阶段的状态
+    self.phaseItems:showState(self.phaseStates)  --Show the status of 5 stages
     if data.run then
         self.startTimeDown = true
         self.currentTime = os.time()
@@ -69,7 +69,7 @@ function LabBuildingInventionItem:_initData(data)
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
---倒计时
+--Countdown
 function LabBuildingInventionItem:_update()
     if self.startTimeDown then
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime

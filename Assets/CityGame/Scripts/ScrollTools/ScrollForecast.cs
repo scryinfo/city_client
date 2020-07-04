@@ -19,16 +19,16 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     private RectTransform mRect;
 
     private List<string> mTempRightConfig;
-    private List<Vector3> mRightTempPos;  //右侧item的UGUI坐标
+    private List<Vector3> mRightTempPos;  //UGUI coordinates of the item on the right
 
-    private float mScreenRatio = 1;  //屏幕坐标缩放尺寸
-    private int mRightSelectId = 0;  //右侧导航栏选择的Id
+    private float mScreenRatio = 1;  //Screen coordinate scaling
+    private int mRightSelectId = 0;  //Id selected in the right navigation bar
 
-    private float mDragDir = 0;  //滑动方向
-    private Vector2 mCurrentPointPos = Vector2.zero;  //当前位置
+    private float mDragDir = 0;  //Sliding direction
+    private Vector2 mCurrentPointPos = Vector2.zero;  //current position
     private List<GameObject> mObjList = new List<GameObject>();
 
-    //delta是一段时间内，所移动的距离，+代表上移，-代表下移，划得越快delta绝对值越大
+    //delta is the distance moved in a period of time, + represents upward movement,-represents downward movement, the faster the stroke, the greater the absolute value of delta
     void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
     {
         mCurrentPointPos = eventData.position;
@@ -73,19 +73,19 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         }
     }
 
-    //创建右侧导航
+    //Create right navigation
     private void CreateRight(List<string> list, float totalHeight)
     {
         if (mTempRightPrefab == null)
             return;
 
-        float elmH = totalHeight / list.Count;  //单个elm的高度
+        float elmH = totalHeight / list.Count;  //The height of a single elm
         float pos = elmH / 2;
         mRightTempPos = new List<Vector3>();
 
         for (int i = 0; i < list.Count; i++)
         {
-            ////GameObject go = Instantiate(mTempRightPrefab);  //用对象池来做，不然退出页面时要做销毁处理
+            ////GameObject go = Instantiate(mTempRightPrefab);  //Use the object pool to do it, or destroy it when exiting the page
             GameObject go = ScrollPool.GetInstance().GetValuableItem(mTempRightPrefab.name);
             go.transform.SetParent(transform);
             go.transform.localScale = Vector3.one;
@@ -99,7 +99,7 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         }
     }
 
-    //按下
+    //Press
     private void PointDownFunc(PointerEventData eventData)
     {
         float min = 1000;
@@ -117,7 +117,7 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         PosIndexOnce(mRightSelectId);
     }
 
-    //滑动
+    //slide
     private void DragFunc(PointerEventData eventData)
     {
         if (eventData.delta.y == 0)
@@ -127,7 +127,7 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
             return;
         }
         float currentDir = eventData.delta.y > 0 ? 1 : -1;
-        //同向
+        //In the same direction
         if ((currentDir > 0 && mDragDir >= 0) || (currentDir < 0 && mDragDir <= 0))
         {
             Vector2 pos = eventData.position;
@@ -142,7 +142,7 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         }
         else
         {
-            mCurrentPointPos = eventData.position;  //不同向则重新设置初始值
+            mCurrentPointPos = eventData.position;  //If the direction is different, reset the initial value
         }
         mDragDir = currentDir;
     }
@@ -164,7 +164,7 @@ public class ScrollForecast : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         }
     }
 
-    //定位，移动到某个值
+    //Position, move to a certain value
     private void PosIndexOnce(int targetIndex)
     {
         if (mScrollPos != null)

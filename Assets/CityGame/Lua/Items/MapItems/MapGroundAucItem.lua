@@ -10,13 +10,13 @@ MapGroundAucItem.selectColor = Vector3.New(251, 88, 88)
 
 EGAucState =
 {
-    NowBid = 1,  --正在拍卖
-    WaitToBid = 2,  --等待出价
-    Soon = 3  --即将拍卖
+    NowBid = 1,  --Auctioning
+    WaitToBid = 2,  --Waiting for bid
+    Soon = 3  --Coming soon
 }
 --
 function MapGroundAucItem:_childInit()
-    self.scaleRoot = self.viewRect.transform:Find("root")  --需要缩放的部分
+    self.scaleRoot = self.viewRect.transform:Find("root")  --The part to be zoomed
 
     local tran = self.viewRect.transform
     self.nowBgTran = tran:Find("root/bgRoot/nowBg")
@@ -36,7 +36,7 @@ function MapGroundAucItem:_childInit()
         self:_openGroundAucFunc()
     end)
 
-    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --拍卖信息更新
+    Event.AddListener("c_BidInfoUpdate", self._bidInfoUpdate, self)  --Auction information update
 
     self.nowWaitStateText01.text = GetLanguage(21010001)
     self:initData(self.data)
@@ -48,7 +48,7 @@ function MapGroundAucItem:initData(data)
     self.timeDown = true
     self.selectBgTran.localScale = Vector3.zero
     if self.data.detailData.isStartAuc == true then
-        --判断是否有出价
+        --Determine if there is a bid
         if data.detailData.bidHistory == nil or #data.detailData.bidHistory == 0 then
             self.isStartBid = false
             self.state = EGAucState.WaitToBid
@@ -76,9 +76,9 @@ function MapGroundAucItem:_toggleState(state)
         self.typeText.color = getColorByVector3(MapGroundAucItem.nowColor)
         self.bottomBgImg.color = getColorByVector3(MapGroundAucItem.nowColor)
         self.nowBgTran.localScale = Vector3.one
-        self.soonBgTran.localScale = Vector3.zero  --背景切换
+        self.soonBgTran.localScale = Vector3.zero  --Background switching
         self.normalState.localScale = Vector3.one
-        self.nowWaitState.localScale = Vector3.zero  --状态切换，是待出价或者now/soon
+        self.nowWaitState.localScale = Vector3.zero  --Status switch, is to bid or now/soon
 
     elseif state == EGAucState.Soon then
         self.typeText.text = GetLanguage(21010009)
@@ -118,7 +118,7 @@ function MapGroundAucItem:_itemTimer()
         self:SoonTimeDownFunc()
     end
 end
---打开右侧地图拍卖page
+--Open the map auction page on the right
 function MapGroundAucItem:_openGroundAucFunc()
     if self.data == nil then
         return
@@ -127,7 +127,7 @@ function MapGroundAucItem:_openGroundAucFunc()
     Event.Brocast("c_MapOpenRightGAucPage", self)
 end
 
---信息更新
+--information update
 function MapGroundAucItem:_bidInfoUpdate(data)
     if data.id == self.data.detailData.id then
         --if self.data.detailData.bidHistory == nil then
@@ -143,7 +143,7 @@ function MapGroundAucItem:_bidInfoUpdate(data)
         self:_toggleState(self.state)
     end
 end
---判断是否是最高价
+--Determine whether it is the highest price
 function MapGroundAucItem:_checkHighestPrice(data)
     if self.data.detailData.bidHistory == nil then
         self.data.detailData.bidHistory = {}
@@ -169,7 +169,7 @@ function MapGroundAucItem:_childClose()
         self.m_Timer:Stop()
     end
 end
---正在拍卖的倒计时
+--Countdown on auction
 function MapGroundAucItem:NowTimeDownFunc()
     if self.isStartBid == true then
         if self.data.detailData.endTs == nil then
@@ -189,7 +189,7 @@ function MapGroundAucItem:NowTimeDownFunc()
         self.timeText.text = timeStr
     end
 end
---即将拍卖的倒计时
+--Countdown to upcoming auction
 function MapGroundAucItem:SoonTimeDownFunc()
     if self == nil or self.data == nil then
         return
@@ -199,10 +199,10 @@ function MapGroundAucItem:SoonTimeDownFunc()
         local remainTime = startAucTime - TimeSynchronized.GetTheCurrentServerTime()
         if remainTime <= 0 then
             self.data.detailData.isStartAuc = true
-            --开始拍卖
+            --Start auction
             self.state = EGAucState.WaitToBid
             self:_toggleState(self.state)
-            Event.Brocast("c_BidStart", self.data.detailData)  --切换界面
+            Event.Brocast("c_BidStart", self.data.detailData)  --Switch interface
             return
         end
 

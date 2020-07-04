@@ -1,67 +1,68 @@
-1、 项目介绍
 
-	这是ScryCity项目的客户端数据仓，负责City项目在终端上的呈现。 该项目是居于Unity3D游戏引擎开发的，
-	其中定制化的内容包括两部分：
-	
-	1、 City项目的逻辑代码
-	
-	2、 City项目的美术资源
-	
-	目前该数据仓仅包括逻辑代码，没有美术资源。 因为美术资源非容量常大，不适于使用git进行版本管理。
-	后边可能会把相关资源放到合适的地方，以便下载
-	
-2、 City项目的逻辑代码介绍
+1. Project introduction
 
-	City项目包括项目Lua代码，Unity引擎C#代码和Tolua框架三部分， 其中：
-	
-	项目Lua代码路径为：
-	
+	This is the client data warehouse of the ScryCity project, which is responsible for the presentation of the City project on the terminal. This project is developed by Unity3D game engine,
+	The customized content includes two parts:
+	The
+	1. The logic code of the City project
+	The
+	2. Art resources of the City project
+
+	Currently, the data warehouse only includes logic codes and no art resources. Because the art resources are not very large, they are not suitable for version management using git.
+	The relevant resources may be put in the right place for downloading
+
+2. Introduction to the logic code of the City project
+
+	The City project includes three parts: project Lua code, Unity engine C# code and Tolua framework, among which:
+
+	The project Lua code path is:
+
 		city_client/Assets/CityGame/Lua/
-		
-	C#代码路径为：
-	
-		city_client/Assets/CityGame/Scripts/
-		
-	Tolua框架部分：
-	
-		city_client/Assets/CityGame/ToLua/
-		
-3、编译和运行
 
-	1、 该项目通过控制Unity引擎编辑器中的宏设置来实现不同版本的编译，涉及到如下宏：
-	
+	The C# code path is:
+
+		city_client/Assets/CityGame/Scripts/
+
+	Tolua framework part:
+
+		city_client/Assets/CityGame/ToLua/
+
+3. Compile and run
+
+	1. This project realizes the compilation of different versions by controlling the macro settings in the Unity engine editor, which involves the following macros:
+
 		HOTUP;LUA_BUNDEL;RES_BUNDEL;PUB_BUILD;LUA_LOG;ASYNC_MODE
+
+		HOTUP controls whether to enable hot resource update
+
+		LUA_BUNDEL whether to enable the bundle mode of Lua script
+
+		RES_BUNDEL Whether to enable the bundle mode of art resources
+
+		PUB_BUILD Whether to open the external network mode
+
+		LUA_LOG Whether to enable script log printing and test grouping
+
+		ASYNC_MODE Whether to enable the asynchronous mode for loading art resources
 		
-		HOTUP 控制是否开启热资源更新
-		
-		LUA_BUNDEL 是否开启Lua脚本的 bundle 模式
-		
-		RES_BUNDEL 是否开启美术资源的 bundle 模式
-		
-		PUB_BUILD	是否开启外网模式
-		
-		LUA_LOG	是否开启脚本的日志打印及测试分组
-		
-		ASYNC_MODE 是否开启美术资源加载的异步模式
-		
-	2、 开发时的推荐宏设置
-	
-		* 内网
-		
+	2. Recommended macro settings during development
+
+		* Intranet
+
 			HOTUP1;LUA_BUNDEL1;RES_BUNDEL1;PUB_BUILD1;LUA_LOG;ASYNC_MODE
-			
-		* 外网
-		
+
+		* Extranet
+
 			HOTUP1;LUA_BUNDEL1;RES_BUNDEL1;PUB_BUILD;LUA_LOG;ASYNC_MODE
-			
-	3、 打包时的推荐宏设置
-	
-		* 内网
-		
+
+	3. Recommended macro settings when packaging
+
+		* Intranet
+
 			HOTUP;LUA_BUNDEL;RES_BUNDEL;PUB_BUILD1;LUA_LOG1;ASYNC_MODE
-			
-		* 外网
-		
+
+				* Extranet
+
 			HOTUP;LUA_BUNDEL;RES_BUNDEL;PUB_BUILD;LUA_LOG1;ASYNC_MODE
 			
 

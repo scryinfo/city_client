@@ -4,11 +4,11 @@
 --- DateTime: 2018/12/25/025 17:50
 ---
 
----====================================================================================框架函数==============================================================================================
+---====================================================================================Framework==============================================================================================
 
 StopAndBuildCtrl = class('StopAndBuildCtrl',UIPanel)
-UIPanel:ResgisterOpen(StopAndBuildCtrl) --注册打开的方法
---构建函数
+UIPanel:ResgisterOpen(StopAndBuildCtrl) --How to open the registration
+--Build function
 function StopAndBuildCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -23,15 +23,15 @@ end
 
 local panel
 
---todo：刷新
+--todo：Refresh
 function StopAndBuildCtrl:Refresh()
     self:ChangeLanguage()
     local data=self.m_data
     self:switchRoot(panel.buildingInfoRoot,panel.buildingSelectedInfoBtn)
 
-    ----刷新人物信息
+    ----Refresh character information
     self:updateBuildingInfo(data)
-    ----刷新按钮
+    ----Refresh button
     self:updateBtn(data)
 end
 
@@ -75,8 +75,8 @@ function StopAndBuildCtrl:Awake(go)
     end
 end
 
----====================================================================================点击函数==============================================================================================
---改名
+---====================================================================================click function==============================================================================================
+--Rename
 function StopAndBuildCtrl:OnClick_changeName(ins)
     PlayMusEff(1002)
     local data = {}
@@ -91,24 +91,24 @@ function StopAndBuildCtrl:OnClick_changeName(ins)
     ct.OpenCtrl("InputDialogPageCtrl", data)
 end
 
---返回
+--return
 function StopAndBuildCtrl:OnClick_backBtn(ins)
     ins.CloseBtn()
     UIPanel.ClosePage()
     PlayMusEff(1002)
 end
 
---点击建筑信息
+--Click building information
 function StopAndBuildCtrl:OnClick_build(ins)
     ins:switchRoot(panel.buildingInfoRoot,panel.buildingSelectedInfoBtn)
 end
 
---点击土地信息
+--Click on Land Information
 function StopAndBuildCtrl:OnClick_land(ins)
     ins:switchRoot(panel.landInfoRoot,panel.landInfomationSelectedBtn)
 end
 
---拆除
+--remove
 function StopAndBuildCtrl:OnClick_remove(ins)
     local data={ ins= ins,func= function()
                         Event.Brocast("m_delBuilding",ins.m_data.id )
@@ -121,7 +121,7 @@ function StopAndBuildCtrl:OnClick_remove(ins)
     PlayMusEff(1002)
 end
 
---停业
+--Closed
 function StopAndBuildCtrl:OnClick_stop(ins)
      local data={ins = ins,func = function()
                        Event.Brocast("m_shutdownBusiness",ins.m_data.id)
@@ -160,10 +160,10 @@ end
 function StopAndBuildCtrl:OnClick_greenBtn9(ins)
     ins:switchGroundBtn(ins,9,self)
 end
----====================================================================================业务代码==============================================================================================
+---====================================================================================Business code==============================================================================================
 local root,btn
 local select
---刷新按钮
+---Refresh button
 function StopAndBuildCtrl:updateBtn(buildinghInfo)
     if buildinghInfo.ownerId == DataManager.GetMyOwnerID() then
         panel.nameBtn.localScale = Vector3.one
@@ -226,14 +226,14 @@ function StopAndBuildCtrl:updateBtn(buildinghInfo)
         end
     end
 
-    --默认开启左上角（第一个）
+    --The upper left corner (the first one) is turned on by default
     self:updateGroundInfo(self.datas[1])
     panel.select1.localScale = Vector3.one
     select=panel.select1
     panel.greenBtn1.parent:SetAsLastSibling()
 end
 
---刷新建筑信息
+--Refresh building information
 function StopAndBuildCtrl:updateBuildingInfo(data)
 
     local peronInfo=data.ctrl.groundOwnerDatas[#data.ctrl.groundOwnerDatas]
@@ -253,12 +253,12 @@ function StopAndBuildCtrl:updateBuildingInfo(data)
     panel.buildTimeText.text=time.year.."/"..time.month.."/"..time.day
 end
 
---刷新土地信息
+--Update land information
 function StopAndBuildCtrl:updateGroundInfo(data)
     local personData=data.personData
     local groundData=data.groundData
 
-    if groundData  and  groundData.Data and  groundData.Data.rent then            --租聘者
+    if groundData  and  groundData.Data and  groundData.Data.rent then            --Hirer
         panel.leasePersonInfoRoot.localScale=Vector3.one
         panel.owenerPersonInfoRoot.localScale=Vector3.zero
 
@@ -280,7 +280,7 @@ function StopAndBuildCtrl:updateGroundInfo(data)
             panel.sexIma.localScale=Vector3.zero
             panel.sexIma1.localScale=Vector3.one
         end
-    else                                                                            --土地主人
+    else                                                                            --Landowner
         panel.leasePersonInfoRoot.localScale=Vector3.zero
         panel.owenerPersonInfoRoot.localScale=Vector3.one
 
@@ -296,7 +296,7 @@ function StopAndBuildCtrl:updateGroundInfo(data)
     end
 end
 
---切换土地按钮
+--Toggle land button
 function StopAndBuildCtrl:switchGroundBtn(ins,num,btn)
     ins:updateGroundInfo(ins.datas[num])
     btn.transform.parent:Find("select").localScale=Vector3.one
@@ -305,7 +305,7 @@ function StopAndBuildCtrl:switchGroundBtn(ins,num,btn)
     PlayMusEff(1002)
 end
 
---切换面板
+--Switch panel
 function StopAndBuildCtrl:switchRoot(panel,btN)
     if root then
         --root.localScale=Vector3.zero
@@ -321,7 +321,7 @@ function StopAndBuildCtrl:switchRoot(panel,btN)
     btn=btN
 end
 
---初始化的时候，将所有按钮隐藏
+--During initialization, hide all buttons
 function StopAndBuildCtrl.CloseBtn()
     panel.greenBtn1.localScale = Vector3.zero
     panel.greenBtn2.localScale = Vector3.zero
@@ -345,7 +345,7 @@ function StopAndBuildCtrl.CloseBtn()
     panel.select1.localScale = Vector3.zero
 end
 
---多语言
+--multi-language
 function StopAndBuildCtrl.ChangeLanguage()
     --panel.topicText
     --panel.buildingInfoText

@@ -1,8 +1,8 @@
 local class = require 'Framework/class'
 ArchitectureView = class('ArchitectureView')
 
---初始化
---将protobuf内数据拷贝出来
+--Initialization
+--Copy the data in protobuf
 function ArchitectureView:initialize()
 
 end

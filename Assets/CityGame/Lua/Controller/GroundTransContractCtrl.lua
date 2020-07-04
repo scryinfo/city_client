@@ -41,7 +41,7 @@ function GroundTransContractCtrl:Active()
     GroundTransContractPanel.prosperityText.text = GetLanguage(20170003)
     GroundTransContractPanel.priceText.text = GetLanguage(20150001)
     GroundTransContractPanel.minersfeeText.text = "矿工费用:"
-    GroundTransContractPanel.minersfeeValue.text = "0.4%"--暂时写死，后边改成读表
+    GroundTransContractPanel.minersfeeValue.text = "0.4%"--Temporarily write dead, later changed to read the table
     GroundTransContractPanel.totalText08.text = GetLanguage(22040005)
 end
 
@@ -59,15 +59,15 @@ function GroundTransContractCtrl:Close()
     UIPanel.Close(self)
 end
 
----初始化
+---initialization
 function GroundTransContractCtrl:_initPanelData()
     if self.m_data then
         self:_setShowState(self.m_data)
     end
 end
---根据状态显示界面
+--Display interface according to status
 function GroundTransContractCtrl:_setShowState(data)
-    --随便挑了个只有rent状态才有的字段来判断
+    --Just pick a field that is only in the rent state to judge
     if data.rentDay then
         --GroundTransContractPanel.titleText01.text = GetLanguage(22050003)
         --GroundTransContractPanel.rentTipText.text = GetLanguage(22050008)
@@ -95,7 +95,7 @@ function GroundTransContractCtrl:_setShowState(data)
     --GroundTransContractPanel.rentAreaText.text = "1x1"
     --GroundTransContractPanel.buyAreaText.text = "1x1"
     if data.ownerInfo ~= nil then
-        --A是土地拥有者，B是合约方--自己
+        --A is the owner of the land, B is the contractor-himself
         self.partAAvatar = AvatarManger.GetBigAvatar(data.ownerInfo.faceId, GroundTransContractPanel.APortraitImg.transform,0.5)
         self.partBAvatar = AvatarManger.GetBigAvatar(DataManager.GetMyPersonalHomepageInfo().faceId, GroundTransContractPanel.BPortraitImg.transform,0.5)
         GroundTransContractPanel.AText02.text = data.ownerInfo.companyName
@@ -105,19 +105,19 @@ function GroundTransContractCtrl:_setShowState(data)
     end
 end
 
----按钮方法
---点其他地方则关闭整个堆栈，打开主界面
+---Button method
+--Click elsewhere to close the entire stack and open the main interface
 function GroundTransContractCtrl:_closeBtnFunc()
     PlayMusEff(1002)
     GroundTransSetPriceCtrl._closeBackToMain()
 end
---返回按钮
+--Back button
 function GroundTransContractCtrl:_backBtnFunc()
     PlayMusEff(1002)
     UIPanel:ClosePage()
 end
 
---点击购买按钮
+--Click the buy button
 function GroundTransContractCtrl:_buyBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data.groundInfo.sell.price then
@@ -130,7 +130,7 @@ function GroundTransContractCtrl:_buyBtnFunc(ins)
         GroundTransSetPriceCtrl._closeBackToMain()
     end
 end
---点击租房按钮
+--Click the rent button
 --function GroundTransContractCtrl:_rentBtnFunc(ins)
 --    PlayMusEff(1002)
 --    if ins.m_data.groundInfo.rent then

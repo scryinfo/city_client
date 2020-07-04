@@ -1,25 +1,6 @@
 using UnityEngine;
 using System.Threading;
 using System.Collections.Generic;
-/// <summary>
-/// 说明：由TasharenFogOfWar插件移植而来，NGUI作者发布
-///       对原模块进行了精简和优化，具体有：
-///     1）Revealer类改为IFOWRevealer，适应项目扩展，并使用缓存池，避免GC
-///     2）去掉高度图HeightMap
-///     3）只留下使用radius刷图的方式，其它刷图方式一并移除
-///     4）Shader后处理改为网格模型方式
-///     5）Shader纹理贴图由原来的两张优化到一张
-///     6）增加多个控制选项：系统开关、渲染开关、迷雾开关等
-/// 
-/// 注意：
-///     1）FOWSysetem作为战争迷雾表现的数据模型系统已经足够，扩展时不应该牵涉到游戏逻辑
-/// 
-/// TODO：可做的优化
-///     1）静态视野（如建筑）理论上不需要每次都去刷，一次刷新后可Cache，考虑Cache策略
-///     2）同理，不动的角色也可以设置“脏位”决定是否刷新
-/// 
-/// @by wsh 2017-05-18
-/// </summary>
 
 public class FOWSystem : MonoSingletons<FOWSystem>
 {
@@ -177,8 +158,6 @@ public class FOWSystem : MonoSingletons<FOWSystem>
 	{
 		mTrans = transform;
         
-        // TODO：实际项目中，自己根据场景地图设置位置信息
-        // 这里为了简单，战争迷雾Transform直接居中，原点位置为左下角
         mTrans.localPosition = new Vector3(0f, 0f, 0f);
 		mOrigin = mTrans.position;
         mOrigin.x -= worldSize * 0.5f;
@@ -529,25 +508,7 @@ public class FOWSystem : MonoSingletons<FOWSystem>
 
     public bool IsVisible(Vector3 pos)
     {
-        // 说明：
-        // 原判断式为：mBuffer0[index].r > 0 || mBuffer1[index].r > 0, ===> 缺陷是角色消退得太慢，原因是游戏设定混合周期太长导致
-        // 之后修改为：Blend(mBuffer0[index], mBuffer1[index]).r > 0, ===> 结果出现诡异的抖动和飞行物全图乱飞的现象
-        // 最后确定为：mBuffer0[index].r > value1 || mBuffer1[index].r > value2, ===> 两个value独立可调，前面一个决定消退延迟，后一个决定出现延迟
-        //
-        // 第二种方式出现Bug的原因是：mBuffer0.rg总是渐变的，而mBuffer1.rg在计算过程中会出现跳变（见351行）
-        // 结果导致当判断Blend.r(混合值) > value，value为非0值时，则IsVisible判断结果可能会出现跳动
-        // 更具体来说，可能在连续的3帧内，本来持续可见的角色会被判定为出现这样的现象：可见--->不可见--->可见
-        // 以上现象对游戏造成的历史bug有：
-        // 1）人物血条闪动---本来全程可见的血条在连续的3帧内，中间帧判断不可见导致一次缓存池回收
-        // 2）飞行物凭空消失一帧---同理，中间帧误判为不可见导致飞行物突然隐藏一帧又莫名出现
-        // 
-        // 注意：===>******（很重要）
-        // 1）严格来说，角色跑动时依然可能导致逻辑上的可见性跳动===>不一定在连续的3帧内，但在帧数很短时视觉上就会抖动。
-        // 2）所以为了防止表现层抖动，理想的处理方式有两种：
-        //    A）如果在逻辑层控制表现，则当角色可见以后，设定一个逻辑延迟（如1秒），在这段时间内强行保持角色的可见性
-        //    B）表现层的可见性与逻辑分离，使用本函数判断可见性，并且适当调整上述说明的两个value值来“缓和”抖动现象===>******推荐，简单暴力
-        //
-        // by wsh @ 2017-07-29
+        
         if (mBuffer0 == null || mBuffer1 == null)
         {
             return false;

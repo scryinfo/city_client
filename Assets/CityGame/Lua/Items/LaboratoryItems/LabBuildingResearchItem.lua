@@ -4,7 +4,7 @@
 --- DateTime: 2018/11/28 17:37
 ---
 LabBuildingResearchItem = class('LabBuildingResearchItem')
-LabBuildingResearchItem.static.NoRollColor = Vector3.New(22, 38, 94)  --没有成果时候的颜色
+LabBuildingResearchItem.static.NoRollColor = Vector3.New(22, 38, 94)  --Color when there is no fruit
 
 function LabBuildingResearchItem:initialize(data, viewRect)
     self.viewRect = viewRect
@@ -48,7 +48,7 @@ function LabBuildingResearchItem:_initData(data)
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
---倒计时
+--Countdown
 function LabBuildingResearchItem:_update()
     if self.startTimeDown then
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime

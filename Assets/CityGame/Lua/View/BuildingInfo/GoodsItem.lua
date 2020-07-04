@@ -14,7 +14,7 @@ GoodsItem.AddedItem_Path="View/GoodsItem/MapAdvertisementItem"
 
 local fontPatn="Assets/CityGame/Resources/Atlas/Municipal/"
 
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function GoodsItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self.prefab = prefab;
     self.prefabData = prefabData;
@@ -39,41 +39,41 @@ function GoodsItem:initialize(prefabData,prefab,inluabehaviour, mgr, id)
     self._luabehaviour:AddClick(prefab.gameObject, self.OnClick_Add, self);
 
 end
----添加
+---Add to
 function GoodsItem:OnClick_Add(go)
-    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--自已进入
-        ---顶部处理
+    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--Enter yourself
+        ---Top treatment
         go.manager.index=go.manager.index+1
-        ---创建映射广告
+        ---Create mapping ads
         local item=go.manager:c_creatGoods(GoodsItem.AddedItem_Path,go.manager.transform)
-        ---给映射广告赋值数据
+        ---Assign data to mapped ads
         local prefabData={metaId=go.itemId,path=go.path,name=go.name,personName=DataManager.GetName()}
         MapAdvertisementItem:new(prefabData,item,go._luabehaviour,go.manager,go.manager.index)
-        ---选中广告不可在点击
+        ---Selected ads cannot be clicked
         self:GetComponent("Image").raycastTarget=false;
-        ---管理器表添加
+        ---Manager table addition
         go.manager.addedItemList[go.manager.index]=item
         go.manager.selectItemList[go.manager.index]=self
         go.manager.AdvertisementDataList[go.manager.index]={count=1,type=0,ADperson=1001,metaId=go.itemId}
 
         ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
-    else--他人进入
-        ---顶部处理
+    else--Others enter
+        ---Top treatment
         go.manager.index=go.manager.index+1
-        ---创建映射广告
+        ---Create mapping ads
         local item=go.manager:c_creatGoods(GoodsItem.AddedItem_Path,go.manager.transform)
-        ---给映射广告赋值数据
+        ---Assign data to mapped ads
         local prefabData={metaId=go.itemId,path=go.path,name=go.name}
         MapAdvertisementItem:new(prefabData,item,go._luabehaviour,go.manager,go.manager.index)
-        ---选中广告不可在点击
+        ---Selected ads cannot be clicked
         self:GetComponent("Image").raycastTarget=false;
-        ---管理器表添加
+        ---Manager table addition
         go.manager.addedItemList[go.manager.index]=item
         go.manager.selectItemList[go.manager.index]=self
         go.manager.AdvertisementDataList[go.manager.index]={count=1,type=0,ADperson=1001,metaId=go.itemId,slots=go.manager.current.slots}
-        ---数字文本加减
+        ---Digital text addition and subtraction
         go.manager.current.numText.text=go.manager.current.updateAcount-1
-        ---选中广告不可在点击
+        ---Selected ads cannot be clicked
         self:GetComponent("Image").raycastTarget=false;
         ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
     end

@@ -119,7 +119,7 @@ namespace City {
 
         public void pushLong(long ld)
         {
-            byte[] bts = BitConverter.GetBytes(ld);  //这里与ccapi服务器不一致， 是大小端不匹配，正好相反      
+            byte[] bts = BitConverter.GetBytes(ld);  //This is inconsistent with the ccapi server, it is the size end does not match, just the opposite    
             Array.Reverse(bts);
             _datas.Add(bts);
             _dataLen += bts.Length;
@@ -174,7 +174,7 @@ namespace City {
         
         public bool verifyByPbyKey(ref byte[] publicKey, byte[] signature)
         {
-            //根据数据计算哈希
+            //Calculate the hash based on the data
             byte[] datahash = getDataHash();
 
             var curve = SecNamedCurves.GetByName("secp256k1");
@@ -231,18 +231,18 @@ namespace City {
             EthECKey ek = new EthECKey(stringToSHA256(privateKeyStr), true);
             byte[] pk = ek.GetPubKey();
 
-            //签名
+            //signature
             EthECDSASignature signature = ek.Sign(hash);
             byte[] ob = signature.To64ByteArray();
-            return signature.To64ByteArray();           //把签名转为64位字符byte数组     
+            return signature.To64ByteArray();           //Convert the signature to a 64-bit character byte array    
         }
 
         public bool verify(byte[] publicKey, byte[] sig64)
         {
             byte[] hash = getDataHash();
-            EthECKey vk = new EthECKey(publicKey, false);               //使用公钥
-            var vsig = CityLuaUtil.sigFrom64ByteArray(sig64);           //使用64byte字符串生成签名 
-            return vk.Verify(hash, vsig);                               //验证通过
+            EthECKey vk = new EthECKey(publicKey, false);               //Use public key
+            var vsig = CityLuaUtil.sigFrom64ByteArray(sig64);           //Use 64byte string to generate signature
+            return vk.Verify(hash, vsig);                               //Verified
         }
 
         static readonly string SaltKey = "S@LT&KEY";
@@ -293,7 +293,7 @@ namespace City {
         {
             signer_ct sm = new signer_ct();
             var privateKeyStr = "asdfqwper234123412341234lkjlkj2342ghhg5j";
-            //公钥私钥
+            //Public key & private key
             EthECKey ek = new EthECKey(stringToSHA256(privateKeyStr), true);
             byte[] pk = ek.GetPubKey();
             string pkstr = Hex.ToHexString(pk);
@@ -304,38 +304,38 @@ namespace City {
             sm.pushHexSting("123456");   //meta
             sm.pushHexSting(pkstr);
 
-            //计算数据哈希
+            //Calculate data hashes
             var datahash = sm.getDataHash();
             var datahashstr = Hex.ToHexString(datahash);
 
             
-            //测试通过-----------------------------------------------------------------
-            //签名
+            //Test passed-----------------------------------------------------------------
+            //signature
             EthECDSASignature signature = ek.Sign(datahash);
-            byte[] sig64 = signature.To64ByteArray();           //把签名转为64位字符串     
+            byte[] sig64 = signature.To64ByteArray();           //Convert the signature to a 64-bit string    
             string sig64Str = Hex.ToHexString(sig64);
 
 
-            //验证
-            EthECKey vk = new EthECKey(pk, false);              //使用公钥
-            var vsig = CityLuaUtil.sigFrom64ByteArray(sig64);   //使用64byte字符串生成签名 
-            var passv = vk.Verify(datahash, vsig);              //验证通过
-            //测试通过-----------------------------------------------------------------       
+            //verification
+            EthECKey vk = new EthECKey(pk, false);              //Use public key
+            var vsig = CityLuaUtil.sigFrom64ByteArray(sig64);   //Use 64byte string to generate signature 
+            var passv = vk.Verify(datahash, vsig);              //Verified
+            //Test passed-----------------------------------------------------------------       
 
             byte[] sig64_1 = sm.sign(privateKeyStr);
             bool pass = sm.verify(pk,sig64_1);
 
-            //本地私钥保护-------------------------------------------------------------测试尚未通过            
-            //1、 生成私钥的原始字符串,有这个字符串，就可以生成私钥，所以，只需要保护这个字符串就行
+            //Local private key protection-------------------------------------------------------------The test has not passed            
+            //1、 Generate the original string of the private key. With this string, you can generate the private key, so you only need to protect this string.
             string privateKeyToProtect = GetPrivateKeyFromString(System.Guid.NewGuid().ToString().Replace("-", ""));
-            //2、 使用一个6位数字的密码来保护保护私钥字符串
+            //2、 Use a 6-digit password to protect the private key string
             string password = "123456";            
             string Encryptedkey = signer_ct.Encrypt(password,privateKeyToProtect);
 
             string privateKeyDecrypted = signer_ct.Decrypt(password, Encryptedkey);
             string privateKeyDecryptedWrong = signer_ct.Decrypt("123123", Encryptedkey);
 
-            //本地私钥保护-------------------------------------------------------------
+            //Local private key protection-------------------------------------------------------------
             int t = 1;
         }
     }

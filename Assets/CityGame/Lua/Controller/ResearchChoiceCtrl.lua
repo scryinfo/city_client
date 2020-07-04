@@ -31,7 +31,7 @@ function ResearchChoiceCtrl:Active()
 end
 
 function ResearchChoiceCtrl:Refresh()
-    -- 向服务器发消息查询获取生产线信息(研究所（包含宝箱信息）、推广公司)
+    -- Send a message to the server to query and obtain information on the production line (Institute (including treasure chest information), promotion company)
     --DataManager.ModelSendNetMes("gscode.OpCode", "getScienceItemSpeed","gs.Id",{ id = self.m_data.info.id})
     --DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqGetScienceItemSpeed', self.m_data.insId)
     self:_showScienceItemSpeed(self.m_data)
@@ -48,14 +48,15 @@ function ResearchChoiceCtrl:Hide()
     end
 end
 
--------------------------------------按钮点击-------------------------------------
+-------------------------------------Button click -----------------------------------------
 function ResearchChoiceCtrl:OnBack(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
 
--------------------------------------事件回调-------------------------------------
--- 根据服务器的返回生成可以选择的研究项 ResearchTypeItem
+-------------------------------------Event callback----------- --------------------------
+-- Generate selectable research items based on the server's return ResearchTypeItem
+
 function ResearchChoiceCtrl:_showScienceItemSpeed(scienceItemSpeed)
     if not self.researchTypeItems then
         self.researchTypeItems = {}

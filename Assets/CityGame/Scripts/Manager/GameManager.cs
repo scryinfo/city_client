@@ -14,11 +14,11 @@ namespace LuaFramework
     {
         protected static bool initialize = false;
         private List<string> downloadFiles = new List<string>();
-        private GameObject startPanel;  //加载界面
-        private CanvasGroup startGroup; //加载界面BG显影
+        private GameObject startPanel;  //Loading interface
+        private CanvasGroup startGroup; //Loading interface BG development
         private GameObject Loadcanvas;
         /// <summary>
-        /// 初始化游戏管理器
+        /// Initialize the game manager
         /// </summary>
         void Awake()
         {
@@ -33,14 +33,14 @@ namespace LuaFramework
                 Init();
             }
         }
-        //游戏加载界面
+        //Game loading interface
         void StartLoadPanel()
         {
             startPanel = Instantiate(Resources.Load<GameObject>("View/GameStartPanel"));
             startGroup = startPanel.transform.Find("bg").GetComponent<CanvasGroup>();
             StartCoroutine(GroupFade());
         }
-        //加载界面淡入淡出
+        //Loading interface fades in and out
         IEnumerator GroupFade()
         {
             startGroup.DOFade(1, 5);
@@ -51,7 +51,7 @@ namespace LuaFramework
         }
        
         /// <summary>
-        /// 初始化游戏管理器
+        /// Initialize the game manager
         /// </summary>
         private Text content;
         private Text progress;
@@ -71,20 +71,20 @@ namespace LuaFramework
         }
 
         /// <summary>
-        /// 初始化
+        /// initialization
         /// </summary>
         void Init()
         {
-            DontDestroyOnLoad(gameObject);  //防止销毁自己
+            DontDestroyOnLoad(gameObject);  //Prevent destroying yourself
 
-            CheckExtractResource(); //释放资源
+            CheckExtractResource(); //Free up resources
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
-            QualitySettings.vSyncCount = 0;//关闭垂直同步
+            QualitySettings.vSyncCount = 0;//Turn off vertical sync
             Application.targetFrameRate = AppConst.GameFrameRate;
         }
 
         /// <summary>
-        /// 释放资源
+        /// Free up resources
         /// </summary>
         public void CheckExtractResource()
         {
@@ -93,15 +93,15 @@ namespace LuaFramework
             if (isExists || AppConst.DebugMode)
             {
                 StartCoroutine(OnUpdateResource());
-                return;   //文件已经解压过了，自己可添加检查文件列表逻辑
+                return;   //The file has been decompressed, you can add the check file list logic
             }
-            StartCoroutine(OnExtractResource());    //启动释放协成 
+            StartCoroutine(OnExtractResource());    //Start release co-production 
         }
 
         IEnumerator OnExtractResource()
         {
-            string dataPath = Util.DataPath;  //数据目录
-            string resPath = Util.AppContentPath(); //游戏包资源目录
+            string dataPath = Util.DataPath;  //Data directory
+            string resPath = Util.AppContentPath(); //Game package resource directory
 
             if (Directory.Exists(dataPath)) Directory.Delete(dataPath, true);
             Directory.CreateDirectory(dataPath);
@@ -127,7 +127,7 @@ namespace LuaFramework
             else File.Copy(infile, outfile, true);
             yield return new WaitForEndOfFrame();
 
-            //释放所有文件到数据目录
+            //Free all files to the data directory
             string[] files = File.ReadAllLines(outfile);
             foreach (var file in files)
             {
@@ -168,12 +168,12 @@ namespace LuaFramework
             yield return new WaitForSeconds(0.1f);
 
             message = string.Empty;
-            //释放完成，开始启动更新资源
+            //After the release is complete, start to update resources
             StartCoroutine(OnUpdateResource());
         }
         List<m_boject> m_ojects = new List<m_boject>();
         /// <summary>
-        /// 启动更新下载，这里只是个思路演示，此处可启动线程下载更新
+        /// Start the update download, here is just a demo of the idea, here you can start the thread to download the update
         /// </summary>
         IEnumerator OnUpdateResource()
         {
@@ -182,7 +182,7 @@ namespace LuaFramework
                 OnResourceInited();
                 yield break;
             }
-            string dataPath = Util.DataPath;  //数据目录
+            string dataPath = Util.DataPath;  //Data directory
             string url = AppConst.WebUrl;
             string message = string.Empty;
             //string random = DateTime.Now.ToString("yyyymmddhhmmss");
@@ -225,7 +225,7 @@ namespace LuaFramework
                     if (canUpdate) File.Delete(localfile);
                 }
                 if (canUpdate)
-                {   //本地缺少文件
+                {   //Local missing files
                     // Debug.Log(fileUrl);
                     message = "downloading>>" + fileUrl;
                     facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
@@ -237,7 +237,7 @@ namespace LuaFramework
                     }
                     File.WriteAllBytes(localfile, www.bytes);
                      */
-                    //这里都是资源文件
+                    //Here are resource files
                     m_ojects.Add(new m_boject(fileUrl, localfile));
                     // BeginDownload(fileUrl, localfile);
 
@@ -245,9 +245,9 @@ namespace LuaFramework
                 }
             }
             yield return new WaitForEndOfFrame();
-            // 这里都是资源文件，用线程下载
+            // Here are resource files, download with threads
 
-            //判断是否需要更新
+            //Determine if it needs to be updated
             if (m_ojects.Count >= 1)
             {
                 //StartLoadReminderPanel();
@@ -262,7 +262,7 @@ namespace LuaFramework
                 Loadcanvas.SetActive(true);
             }
         }
-        //游戏加载提示界面
+        //Game loading prompt interface
         private GameObject reminder;
         private Button cancel;
         private Button confirm;
@@ -283,14 +283,14 @@ namespace LuaFramework
             string message = "更新失败!>" + file;
             facade.SendMessageCommand(NotiConst.UPDATE_MESSAGE, message);
         }
-        //点击取消
+        //Click to cancel
         void OnCancel()
         {
             print("退出游戏");
             Application.Quit();
 
         }
-        //点击确定
+        //Click ok
         void OnConfirm()
         {
             confirm.enabled = false;
@@ -298,18 +298,18 @@ namespace LuaFramework
             {
                 if (Application.internetReachability == NetworkReachability.NotReachable)
                 {
-                    //Debug.Log("没有联网！！！");
+                    //Debug.Log("No internet connection! ! !");
                 }
                 if (Application.internetReachability == NetworkReachability.ReachableViaLocalAreaNetwork)
                 {
                     Destroy(reminder);
                     contentBg.localScale = Vector3.one;
-                    //Debug.Log("使用Wi-Fi！！！");
+                    //Debug.Log("Use Wi-Fi! !！");
                     StartCoroutine(StartDownLoad(m_ojects));
                 }
                 if (Application.internetReachability == NetworkReachability.ReachableViaCarrierDataNetwork)
                 {
-                    //Debug.Log("使用移动网络！！！");
+                    //Debug.Log("Use the mobile network! ! !");
                     contentText.text = "Detected that you are not connected to wifi.Do you want to continue downloading?";
                     confirm.enabled = true;
                 }
@@ -322,7 +322,7 @@ namespace LuaFramework
             }
             isDown = false;
         }
-        //开始下载
+        //start download
         IEnumerator StartDownLoad(List<m_boject> m_ojects)
         {
             float num = 0;
@@ -330,7 +330,7 @@ namespace LuaFramework
             {
 
                 BeginDownload(m_ojects[i].fileUrl, m_ojects[i].localfile);
-                //print("下载中" + ">>>" + m_ojects[i].localfile);
+                //print("downloading" + ">>>" + m_ojects[i].localfile);
 
                 while (!(IsDownOK(m_ojects[i].localfile)))
                 {
@@ -354,7 +354,7 @@ namespace LuaFramework
             Loadcanvas.SetActive(true);
         }
         /// <summary>
-        /// 是否下载完成
+        /// Whether the download is complete
         /// </summary>
         bool IsDownOK(string file)
         {
@@ -362,37 +362,37 @@ namespace LuaFramework
         }
 
         /// <summary>
-        /// 线程下载
+        /// Thread download
         /// </summary>
         void BeginDownload(string url, string file)
-        {     //线程下载
+        {     //Thread download
             object[] param = new object[2] { url, file };
 
             ThreadEvent ev = new ThreadEvent();
             ev.Key = NotiConst.UPDATE_DOWNLOAD;
             ev.evParams.AddRange(param);
-            ThreadManager.AddEvent(ev, OnThreadCompleted);   //线程下载
+            ThreadManager.AddEvent(ev, OnThreadCompleted);   //Thread download
         }
 
         /// <summary>
-        /// 线程完成
+        /// Thread completion
         /// </summary>
         /// <param name="data"></param>
         void OnThreadCompleted(NotiData data)
         {
             switch (data.evName)
             {
-                case NotiConst.UPDATE_EXTRACT:  //解压一个完成
+                case NotiConst.UPDATE_EXTRACT:  //Unzip a complete
                                                 //
                     break;
-                case NotiConst.UPDATE_DOWNLOAD: //下载一个完成
+                case NotiConst.UPDATE_DOWNLOAD: //Download one complete
                     downloadFiles.Add(data.evParam.ToString());
                     break;
             }
         }
 
         /// <summary>
-        /// 资源初始化结束
+        /// End of resource initialization
         /// </summary>
         public void OnResourceInited()
         {
@@ -411,9 +411,9 @@ namespace LuaFramework
         {
             Debug.Log("GameManager:OnInitialize Invoked !!!");
             LuaManager.InitStart();
-            //LuaManager.DoFile("Logic/Game");         //加载游戏
-            LuaManager.DoFile("Game");         //加载游戏
-            Util.CallMethod("Game", "OnInitOK");     //初始化完成
+            //LuaManager.DoFile("Logic/Game");         //Load game
+            LuaManager.DoFile("Game");         //Load game
+            Util.CallMethod("Game", "OnInitOK");     //Load game
 
             CityMain km = GameObject.Find("ClientApp").GetComponent<CityMain>();
             if (km != null)
@@ -422,13 +422,13 @@ namespace LuaFramework
             }
 
             Debug.Log("GameManager:OnInitialize CallMethod Game OnPostInitOK !!!");
-            Util.CallMethod("Game", "OnPostInitOK");     //初始化完成
+            Util.CallMethod("Game", "OnPostInitOK");     //Load game
             //Destroy(GameObject.Find("LoadCanvas"));
             initialize = true;
         }
 
         /// <summary>
-        /// 析构函数
+        /// Destructor
         /// </summary>
         void OnDestroy()
         {

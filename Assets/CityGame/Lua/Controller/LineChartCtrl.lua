@@ -7,7 +7,7 @@
 LineChartCtrl = class('LineChartCtrl',UIPanel)
 
 
---构建函数--
+--Building function--
 function LineChartCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.DoNothing,UICollider.None)
 end
@@ -25,13 +25,13 @@ function LineChartCtrl:Refresh()
     ct.log("abel_w7_LineChart","[LineChartCtrl:Refresh] UI数据刷新， 数据为: m_data =",self.m_data);
 end
 
---启动事件--
+----Startup event----
 function LineChartCtrl:OnCreate(go)
     UIPanel.OnCreate(self,go)
     local LuaBehaviour = self.gameObject:GetComponent('LuaBehaviour');
-    --获取LineChart组件
+    --Get LineChart component
     local GameObject = LineChartPanel.LineChartParent:GetComponent('LineChart');
-    --两条曲线的测试数据
+    --Test data of two curves
     local verts={
         Vector2.New(0.0, 0.4),
         Vector2.New(0.1, 0.3),
@@ -58,12 +58,12 @@ function LineChartCtrl:OnCreate(go)
         Vector2.New(0.9, 0.2),
         Vector2.New(1.0, 0.3)
     }
-    --传入曲线数据及其颜色值
+    --Incoming curve data and its color value
     GameObject:InjectDatas(verts,Color.New(1,1,1,1))
     GameObject:InjectDatas(verts1,Color.New(0,1,0,1))
 end
 
---关闭事件--
+--Close event--
 function LineChartCtrl:Close()
     destroy(self.gameObject);
 end

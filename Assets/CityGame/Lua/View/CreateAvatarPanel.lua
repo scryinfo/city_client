@@ -4,7 +4,7 @@ local gameObject;
 CreateAvatarPanel = {};
 local this = CreateAvatarPanel;
 
---启动事件--
+--Start event-
 function CreateAvatarPanel.Awake(obj)
 	gameObject = obj;
 	transform = obj.transform;
@@ -13,7 +13,7 @@ function CreateAvatarPanel.Awake(obj)
 	logWarn("Awake lua--->>"..gameObject.name);
 end
 
---初始化面板--
+--Start event--
 function CreateAvatarPanel.InitPanel()
 	this.btnCreateAvatar = transform:Find("Button_CreateAvatar").gameObject;
 	this.btnCancel = transform:Find("Button_Cancel").gameObject;
@@ -24,7 +24,7 @@ function CreateAvatarPanel.InitPanel()
 	this.textStatus = transform:Find("Text_status").gameObject;
 end
 
---单击事件--
+--Click event--
 function CreateAvatarPanel.OnDestroy()
 	logWarn("OnDestroy---->>>");
 end

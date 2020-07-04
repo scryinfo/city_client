@@ -23,7 +23,7 @@
 //#define LOG_ALL_MESSAGES
 //#define LOG_ADD_LISTENER
 //#define LOG_BROADCAST_MESSAGE
-//#define REQUIRE_LISTENER 是否必须添加接收监听
+//#define REQUIRE_LISTENER  Do you have to add a receiver listener
  
 using System;
 using System.Collections.Generic;

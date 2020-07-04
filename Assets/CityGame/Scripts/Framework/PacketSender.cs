@@ -14,8 +14,8 @@
 	using MessageLength = System.UInt16;
 	
 	/*
-		包发送模块(与服务端网络部分的名称对应)
-		处理网络数据的发送
+		Packet sending module (corresponding to the name of the server network part)
+        Handling the transmission of network data
 	*/
     public class PacketSender 
     {
@@ -23,8 +23,8 @@
 
 		private byte[] _buffer;
 
-		int _wpos = 0;				// 写入的数据位置
-		int _spos = 0;				// 发送完毕的数据位置
+		int _wpos = 0;				// Write data location
+		int _spos = 0;				// Data location after sending
 		int _sending = 0;
 		
 		private NetworkInterface _networkInterface = null;
@@ -116,8 +116,8 @@
 
 		void _startSend()
 		{
-			// 由于socket用的是非阻塞式，因此在这里不能直接使用socket.send()方法
-			// 必须放到另一个线程中去做
+			// Since the socket uses a non-blocking type, the socket.send() method cannot be used directly here
+            // Must be put in another thread
 			_asyncSendMethod.BeginInvoke(_asyncCallback, null);
 		}
 
@@ -155,7 +155,7 @@
 
 				int spos = Interlocked.Add(ref _spos, bytesSent);
 
-				// 所有数据发送完毕了
+				// All data is sent
 				if (spos == Interlocked.Add(ref _wpos, 0))
 				{
 					Interlocked.Exchange(ref _sending, 0);

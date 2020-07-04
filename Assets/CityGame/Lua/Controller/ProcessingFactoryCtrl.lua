@@ -6,10 +6,10 @@
 -----
 
 ProcessingFactoryCtrl = class('ProcessingFactoryCtrl',UIPanel)
-UIPanel:ResgisterOpen(ProcessingFactoryCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(ProcessingFactoryCtrl) --How to open the registration-
 
 local this
---构建函数
+--Build function
 function ProcessingFactoryCtrl:initialize()
     UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None);
 end
@@ -43,15 +43,15 @@ end
 
 function ProcessingFactoryCtrl:initializeData()
     if self.m_data then
-        --向服务器请求建筑详情
+        --Request building details from the server
         DataManager.OpenDetailModel(ProcessingFactoryModel,self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqOpenprocessing',self.m_data.insId)
     end
 end
 
---刷新原料厂信息
+--Refresh the raw material factory information
 function ProcessingFactoryCtrl:refreshprocessingDataInfo(processingDataInfo)
-    --初始化
+ 
     ProcessingFactoryPanel.openBusinessItem:initData(processingDataInfo.info, BuildingType.ProcessingFactory)
     local insId = self.m_data.insId
     self.m_data = processingDataInfo
@@ -65,7 +65,7 @@ function ProcessingFactoryCtrl:refreshprocessingDataInfo(processingDataInfo)
         end)
     end
 
-    --判断是自己还是别人打开了界面
+    --Determine if you or someone else has opened the interface
     if processingDataInfo.info.ownerId ~= DataManager.GetMyOwnerID() then
         self.m_data.isOther = true
     else
@@ -164,9 +164,9 @@ function ProcessingFactoryCtrl:_clickCloseBtn()
         self.groupMgr:Destroy()
         self.groupMgr = nil
     end
-    --关闭加工厂推送
+    --Close the processing plant push
     Event.Brocast("m_ReqCloseprocessing",self.m_data.insId)
-    --关闭当前建筑Model
+    --Close the current building
     DataManager.CloseDetailModel(self.m_data.insId)
     self.m_data = nil
     RevenueDetailsMsg.close()

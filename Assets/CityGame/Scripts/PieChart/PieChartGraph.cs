@@ -1,5 +1,4 @@
-﻿//饼图暴露给lua的方法
-//徐雅芳
+﻿//Pie chart exposed to Lua
 
 
 using System.Collections;
@@ -10,22 +9,22 @@ using ChartAndGraph;
 
 public class PieNeedData
 {
-    public float piePercent;  //显示的百分比
-    public string pieName;  //显示的名字
-    public Color showColor;  //显示的颜色
-    public bool hideLine;  //是否需要隐藏线和信息
+    public float piePercent;  //Displayed percentage
+    public string pieName;  //Displayed name
+    public Color showColor;  //Display color
+    public bool hideLine;  //Do you need to hide lines and information
 }
 
 public static class PieChartGraph
 {
     private static PieChart m_pieChart = null;
-    private static GameObject m_piePrefab = null;  //预制
+    private static GameObject m_piePrefab = null;  //Prefab
 
     /// <summary>
-    /// 创建饼状图
+    /// Create a pie chart
     /// </summary>
-    /// <param name="dataList">创建饼状图需要的信息</param>
-    /// <param name="showArea">需要显示的父物体的宽高</param>
+    /// <param name="dataList">Information needed to create a pie chart</param>
+    /// <param name="showArea">The width and height of the parent object to be displayed</param>
     public static void CratePieChartFunc(GameObject pieChartPrefab, PieNeedData[] dataList, RectTransform parentRect)
     {
         GameObject pieTest = null;
@@ -56,7 +55,7 @@ public static class PieChartGraph
         }
     }
 
-    //设置饼图的旋转量
+    //Set the rotation amount of the pie chart
     public static void SetStartAngle(float angle)
     {
         if (m_pieChart != null)
@@ -65,7 +64,7 @@ public static class PieChartGraph
         }
     }
     
-    //设置块的偏移量
+    //Set block offset
     public static void SetExtrusion(float value)
     {
         if (m_pieChart != null)
@@ -74,7 +73,7 @@ public static class PieChartGraph
         }
     }
 
-    //刷新饼图数据
+    //Refresh the pie chart data
     public static void RefreshPieChart(PieNeedData[] dataList, RectTransform parentRect)
     {
         m_pieChart.DataSource.Clear();
@@ -93,13 +92,13 @@ public static class PieChartGraph
     ////    float temp = Vector2.Lerp(Vector2.zero, new Vector2(360, 0), time).x;
     ////}
 
-    //销毁饼状图
+    //Destroy pie chart
     public static void DestoryPieChart()
     {
         GameObject.Destroy(m_pieChart.gameObject);
     }
 
-    //由整数得到对应颜色值
+    //Get the corresponding color value from an integer
     public static Color GetColor(float r, float b, float g, float a = 1.0f)
     {
         float value1 = r / 255;
@@ -108,12 +107,12 @@ public static class PieChartGraph
         return new Color(value1, value2, value3, a);
     }
 
-    //获取已经排好的数据 --第二个参数是一个象限最多显示的个数
+    //Get the sorted data - the second parameter is the maximum number of displays in a quadrant
     private static PieNeedData[] GetFixedList(PieNeedData[] dataList, int maxShowCount)
     {
         List<PieNeedData> newDatas = new List<PieNeedData>();
         System.Array.Sort(dataList, SortByPiePercentLower);
-        //设置最多显示多少数据
+        //Set up to show how much data
         float totalPercent = 0;
         int index = 0;
         for (int i = 0; i < dataList.Length; i++)
@@ -134,7 +133,7 @@ public static class PieChartGraph
             }
         }
 
-        //将最小的排布在x正轴
+        //Place the smallest on the positive x axis
         List<PieNeedData> tailList = new List<PieNeedData>();
         for (int i = 0; i < dataList.Length; i++)
         {

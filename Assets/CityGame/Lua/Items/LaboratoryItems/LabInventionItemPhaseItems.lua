@@ -29,7 +29,7 @@ function LabInventionItemPhaseItems:initialize(transform, needShowNum)
         self.itemRects[i] = itemData
     end
 end
----显示
+---display
 function LabInventionItemPhaseItems:showState(datas)
     if #datas ~= #self.itemRects then
         ct.log("cycle_w13_laboratory", "场景中的item个数与期望显示的个数不一致，或者传入的不是顺序表")
@@ -59,7 +59,7 @@ function LabInventionItemPhaseItems:showState(datas)
                 self.itemRects[i].text.transform.localScale = Vector3.one
             end
 
-            --发明界面有种情况是只有null和finish状态的，而且当为null状态时，需要显示成功率
+            --There is a case where the invention interface is only in the null and finish state, and when the state is null, the success rate needs to be displayed
             --if itemData.percentData then
             --    itemData.text.text = tostring(itemData.percentData)
             --end

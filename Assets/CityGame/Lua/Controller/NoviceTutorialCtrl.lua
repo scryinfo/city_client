@@ -34,7 +34,7 @@ end
 function NoviceTutorialCtrl:Active()
     UIPanel.Active(self)
 
-    -- 多语言适配
+    -- Multilingual adaptation
     NoviceTutorialPanel.titleText.text = GetLanguage(44010001)
 end
 
@@ -65,7 +65,7 @@ function NoviceTutorialCtrl:Hide()
     UIPanel.Hide(self)
 end
 
----------------------------------------------------------------按钮点击事件---------------------------------------------------------
+-----------------------------------------------------------------Button click event----------------------------------------------------
 function NoviceTutorialCtrl:OnBack(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()
@@ -79,8 +79,8 @@ function NoviceTutorialCtrl:_setBtnState(choiceBtn)
     self.selectBtn = choiceBtn
 end
 
--------------------------------------------------------------- 滑动复用相关 --------------------------------------------------------
--- Eva选项2信息显示
+-------------------------------------------------------------- Sliding multiplexing --------------------------------------------------------
+-- Eva option 2 information display
 NoviceTutorialCtrl.static.tutorialVideoData = function(transform, idx)
     idx = idx + 1
     TutorialVideoItem:new(transform, NoviceTutorialCtrl.data[idx])
@@ -89,7 +89,7 @@ end
 NoviceTutorialCtrl.static.tutorialVideoClearData = function(transform)
 end
 
--- 刷新Eva滑动选项2的信息
+-- Refresh Eva sliding option 2 information
 function NoviceTutorialCtrl:ShowVideo(itemNumber)
     NoviceTutorialCtrl.data = NoviceTutorialConfig[itemNumber].videos
     NoviceTutorialPanel.urlScroll:ActiveLoopScroll(self.tutorialVideoSource, #NoviceTutorialCtrl.data, "View/NoviceTutorial/TutorialVideoItem")

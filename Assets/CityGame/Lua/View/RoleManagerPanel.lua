@@ -5,7 +5,7 @@ local gameObject;
 RoleManagerPanel = {};
 local this = RoleManagerPanel;
 
---启动事件--
+--Start event--
 function RoleManagerPanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
@@ -14,7 +14,7 @@ function RoleManagerPanel.Awake(obj)
     logWarn("Awake lua--->>"..gameObject.name);
 end
 
---初始化面板--
+--Initialize the panel--
 function RoleManagerPanel.InitPanel()
     this.createRoleButton = transform:Find("DownPanel/CreateRoleButton").gameObject;
     this.selectRoleButton = transform:Find("DownPanel/SelectRoleButton").gameObject;

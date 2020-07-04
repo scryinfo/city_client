@@ -1,6 +1,6 @@
 BuildingInformationIcon =
 {
-    --原料厂
+    --Raw material factory
     [1100001] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/MaterialBuilding_1x1.png"
     },
@@ -10,7 +10,7 @@ BuildingInformationIcon =
     [1100003] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/MaterialBuilding_3x3.png"
     },
-    --加工厂
+    --Processing plant
     [1200001] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/Factory_1x1.png"
     },
@@ -20,7 +20,7 @@ BuildingInformationIcon =
     [1200003] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/Factory_3x3.png"
     },
-    --零售店
+    --Retail store
     [1300001] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/SuperMarket_1x1.png"
     },
@@ -30,7 +30,7 @@ BuildingInformationIcon =
     [1300003] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/SuperMarket_3x3.png"
     },
-    --住宅
+    --Residential
     [1400001] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/HomeHouse_1x1.png"
     },
@@ -40,7 +40,7 @@ BuildingInformationIcon =
     [1400003] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/HomeHouse_3X3.png"
     },
-    --研究所
+    --graduate School
     [1500001] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/Technology_1x1.png"
     },
@@ -50,7 +50,7 @@ BuildingInformationIcon =
     [1500003] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/Technology_3x3.png"
     },
-    --广告公司(推广公司)
+    --Advertising company (promotion company)
     [1600001] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/Advertising_1x1.png"
     },
@@ -60,7 +60,7 @@ BuildingInformationIcon =
     [1600003] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/Advertising_3x3.png"
     },
-    --集散中心
+    --Distribution center
     [1700001] = {
         ["imgPath"] ="Assets/CityGame/Resources/Atlas/BuildingInformation/BuildingIcon/WareHouse_1x1.png"
     },

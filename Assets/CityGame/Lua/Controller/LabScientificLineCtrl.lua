@@ -6,10 +6,10 @@
 LabScientificLineCtrl = class('LabScientificLineCtrl',UIPanel)
 UIPanel:ResgisterOpen(LabScientificLineCtrl)
 
-LabScientificLineCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --按钮的预制
-LabScientificLineCtrl.static.LabResearchItemPath = "View/Items/LaboratoryItems/LabResearchItem"  --研究
-LabScientificLineCtrl.static.LabInventionItemPath = "View/Items/LaboratoryItems/LabInventionItem"  --发明
-LabScientificLineCtrl.static.LabRemainStaffColor = "#4a7ff6"  --员工颜色
+LabScientificLineCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --Button prefabrication
+LabScientificLineCtrl.static.LabResearchItemPath = "View/Items/LaboratoryItems/LabResearchItem"  --research
+LabScientificLineCtrl.static.LabInventionItemPath = "View/Items/LaboratoryItems/LabInventionItem"  --invention
+LabScientificLineCtrl.static.LabRemainStaffColor = "#4a7ff6"  --Employee color
 
 function LabScientificLineCtrl:initialize()
     UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -36,22 +36,22 @@ function LabScientificLineCtrl:Awake(go)
         self:_inventionLineOpen()
     end)
 
-    --滑动复用部分
-    self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  --研究
+    --Sliding multiplexing section
+    self.researchSource = UnityEngine.UI.LoopScrollDataSource.New()  
     self.researchSource.mProvideData = LabScientificLineCtrl.static.researchProvideData
     self.researchSource.mClearData = LabScientificLineCtrl.static.researchClearData
-    self.inventionSource = UnityEngine.UI.LoopScrollDataSource.New()  --发明
+    self.inventionSource = UnityEngine.UI.LoopScrollDataSource.New()  
     self.inventionSource.mProvideData = LabScientificLineCtrl.static.inventionProvideData
     self.inventionSource.mClearData = LabScientificLineCtrl.static.inventionClearData
 end
 
 function LabScientificLineCtrl:Refresh()
-    Event.AddListener("c_OpenChangeStaffTip", self._openTip, self)  --打开更改员工悬框
+    Event.AddListener("c_OpenChangeStaffTip", self._openTip, self)  --Open Change Employee Hover
     self:_initPanelData()
 end
 
 function LabScientificLineCtrl:Hide()
-    Event.RemoveListener("c_OpenChangeStaffTip", self._openTip, self)  --打开更改员工悬框
+    Event.RemoveListener("c_OpenChangeStaffTip", self._openTip, self)  --Open Change Employee Hover
 end
 
 function LabScientificLineCtrl:_initPanelData()
@@ -79,7 +79,7 @@ function LabScientificLineCtrl:_initPanelData()
         end
     end)
 end
----按钮切页
+---Button cut
 function LabScientificLineCtrl:_researchLineOpen()
     LabScientificLinePanel._researchToggleState(true)
     LabScientificLinePanel._inventionToggleState(false)
@@ -94,13 +94,13 @@ function LabScientificLineCtrl:_inventionLineOpen()
 
     self:onReceiveLabInventionData(self.inventionDatas)
 end
---更新界面员工数
+--Number of employees in the update interface
 function LabScientificLineCtrl:_updateWorker(remainWorker, maxWorkerNum)
     LabScientificLinePanel.staffCountText.text = string.format("<color=%s>%d</color>/%d", LabScientificLineCtrl.static.LabRemainStaffColor, remainWorker, maxWorkerNum)
 end
 
----滑动复用
---研究
+---Sliding multiplexing
+--research
 LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.researchEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
@@ -115,7 +115,7 @@ LabScientificLineCtrl.static.researchProvideData = function(transform, idx)
 end
 LabScientificLineCtrl.static.researchClearData = function(transform)
 end
---发明
+--invention
 LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
         LabScientificLineCtrl.inventionEmptyBtn = LabScrollEmptyBtn:new(transform, function ()
@@ -130,8 +130,8 @@ LabScientificLineCtrl.static.inventionProvideData = function(transform, idx)
 end
 LabScientificLineCtrl.static.inventionClearData = function(transform)
 end
----刷新数据
---研究
+---Refresh data
+--research
 function LabScientificLineCtrl:onReceiveLabResearchData(datas)
     self.researchDatas = datas
     local researchInfoData = ct.deepCopy(datas)
@@ -139,14 +139,14 @@ function LabScientificLineCtrl:onReceiveLabResearchData(datas)
     for i, item in pairs(researchInfoData) do
         researchPrefabList[i] = LabScientificLineCtrl.static.LabResearchItemPath
     end
-    --预留第一个数据给按钮
+    --Reserve the first data for the button
     table.insert(researchInfoData, 1, {})
     table.insert(researchPrefabList, 1, LabScientificLineCtrl.static.EmptyBtnPath)
 
     LabScientificLineCtrl.researchInfoData = researchInfoData
     LabScientificLinePanel.researchScroll:ActiveDiffItemLoop(self.researchSource, researchPrefabList)
 
-    --特殊情况处理，如果是临时线的话，则打开调整员工状态
+    --Handle special cases, if it is a temporary line, open to adjust the status of employees
     if #researchInfoData >= 2 and not researchInfoData[2].id then
         LabScientificLinePanel.inventTipItem:_hideSelf()
         DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
@@ -157,7 +157,7 @@ function LabScientificLineCtrl:onReceiveLabResearchData(datas)
         LabScientificLinePanel.researchTipItem:_hideSelf()
     end
 end
---发明
+--invention
 function LabScientificLineCtrl:onReceiveLabInventionData(datas)
     self.inventionDatas = datas
     local inventionInfoData = ct.deepCopy(datas)
@@ -165,14 +165,14 @@ function LabScientificLineCtrl:onReceiveLabInventionData(datas)
     for i, item in pairs(inventionInfoData) do
         inventionPrefabList[i] = LabScientificLineCtrl.static.LabInventionItemPath
     end
-    --预留第一个数据给按钮
+    --Reserve the first data for the button
     table.insert(inventionInfoData, 1, {})
     table.insert(inventionPrefabList, 1, LabScientificLineCtrl.static.EmptyBtnPath)
 
     LabScientificLineCtrl.inventionInfoData = inventionInfoData
     LabScientificLinePanel.inventionScroll:ActiveDiffItemLoop(self.inventionSource, inventionPrefabList)
 
-    --特殊情况处理，如果是临时线的话，则打开调整员工状态
+    --Handle special cases, if it is a temporary line, open to adjust the status of employees
     if #inventionInfoData >= 2 and not inventionInfoData[2].id then
         LabScientificLinePanel.researchTipItem:_hideSelf()
         DataManager.DetailModelRpc(LabScientificLineCtrl.static.buildingId, 'm_GetWorkerCount', function (remainWorker)
@@ -184,8 +184,8 @@ function LabScientificLineCtrl:onReceiveLabInventionData(datas)
     end
 end
 
----提示框部分
---打开弹框
+---Prompt box part
+--Open the bullet box
 function LabScientificLineCtrl:_openTip(lineData, itemRect)
     if lineData.type == 0 then
         LabScientificLinePanel.inventTipItem:_hideSelf()

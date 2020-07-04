@@ -3,14 +3,14 @@ Dbg = {}
 
 local this = Dbg;
 
---输出日志--
+--Output log--
 local loginner = print
 DEBUGLEVEL = {
     DEBUG = 0,
     INFO = 1,
     WARNING = 2,
     ERROR = 3,
-    NOLOG = 4,  -- 放在最后面，使用这个时表示不输出任何日志（!!!慎用!!!）
+    NOLOG = 4,  -- Put it at the end, when using this, it means that no logs will be output (!!!Use with caution!!!)
 }
 
 if ct.G_DEBUGLOG then
@@ -76,19 +76,19 @@ this.ERROR_MSG = function(s)
     end
 end
 
---debug输出日志--
+--debug output log--
 function logDebug(str,...)
     assert(str,"logdebug nil")
     Dbg.DEBUG_MSG(str,...);
 end
 
---错误日志--
+--Error log--
 function logError(str)
     assert(str,"logError nil")
     Dbg.ERROR_MSG(str);
 end
 
---警告日志--
+--Warning log--
 function logWarn(str)
     assert(str,"logWarn nil")
     Dbg.WARNING_MSG(str);

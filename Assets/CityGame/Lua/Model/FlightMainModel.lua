@@ -14,12 +14,12 @@ end
 function FlightMainModel.Awake()
     this:OnCreate()
 end
---启动事件--
+--Start event--
 function FlightMainModel.OnCreate()
     --本地的回调注册
     --Event.AddListener("m_OpenFlightLoading", this.OpenFlightLoading)
 end
---网络回调注册
+--Network callback registration
 function FlightMainModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getAllFlight","gs.Flights",FlightMainModel.n_OnGetAllFlight)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","betFlight","gs.BetFlight",FlightMainModel.n_OnBetFlight)
@@ -29,7 +29,7 @@ function FlightMainModel.registerNetMsg()
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","searchFlight","gs.FlightSearchResult",FlightMainModel.n_OnGetSearchFlight)
 
 end
---关闭事件--
+--Close event--
 function FlightMainModel.Close()
     --Event.RemoveListener("m_OpenFlightLoading", this.OpenFlightLoading)
 end
@@ -44,7 +44,7 @@ function FlightMainModel.CloseFlightLoading()
     UIPanel.CloseAllFixedPanel()
 end
 
---客户端请求---------------------------------------------------------------------------------
+--Client request---------------------------------------------------------------------------------
 --
 function FlightMainModel.m_ReqAllFlight()
     local msgId = pbl.enum("gscode.OpCode","getAllFlight")
@@ -69,7 +69,7 @@ function FlightMainModel.m_ReqSearchFlight(arrCode, depCode, date)
     local pMsg = assert(pbl.encode("gs.SearchFlight", lMsg))
     CityEngineLua.Bundle:newAndSendMsg(msgId, pMsg)
 end
---服务器回调---------------------------------------------------------------------------------
+--Server callback---------------------------------------------------------------------------------
 --
 function FlightMainModel.n_OnGetAllFlight(data, msgId)
     FlightMainModel.mSearchFlight = {}  --清掉之前的搜索数据

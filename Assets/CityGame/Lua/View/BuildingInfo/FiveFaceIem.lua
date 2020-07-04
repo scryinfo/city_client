@@ -8,7 +8,7 @@ FiveFaceItem = class('FiveFaceItem')
 
 local ctrl = nil
 local path="Assets/CityGame/Resources/Atlas/Avtar/panelSource/icon-"
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function FiveFaceItem:initialize(prefab,luaBehaviour,data,ctr)
     self.prefab = prefab
     self.text = prefab.transform:Find("name"):GetComponent("Text")
@@ -25,12 +25,12 @@ function FiveFaceItem:initialize(prefab,luaBehaviour,data,ctr)
     luaBehaviour:AddClick(prefab,self.c_OnClick_switchKind,self)
     self:saveData(data)
 end
----添加
+---Add to
 function FiveFaceItem:updateData(data)
     self:saveData(data)
 end
 
---选中左侧效果【不做修改】
+--Select the left effect [without modification]
 function FiveFaceItem:c_OnClick_switchKind(ins)
     PlayMusEff(1002)
     if ctrl ~= nil then
@@ -41,7 +41,7 @@ function FiveFaceItem:c_OnClick_switchKind(ins)
     end
 end
 
---刷新数据【不做修改】
+--Refresh the data [without modification]
 function FiveFaceItem:saveData(data)
     self.id = data.id
     self.text.text = GetLanguage(data.name)

@@ -4,7 +4,7 @@ local gameObject;
 TargetHeadPanel = {};
 local this = TargetHeadPanel;
 
---启动事件--
+---Initial panel---
 function TargetHeadPanel.Awake(obj)
 
 	gameObject = obj;
@@ -14,13 +14,13 @@ function TargetHeadPanel.Awake(obj)
 	logWarn("Awake lua--->>"..gameObject.name);
 end
 
---初始化面板--
+---Initial panel----
 function TargetHeadPanel.InitPanel()
 	this.sliderHp = transform:Find("Slider_targetHP"):GetComponent("Slider");
 	this.textTargetName = transform:Find("Text_targetName"):GetComponent("Text");
 end
 
---单击事件--
+--Click event--
 function TargetHeadPanel.OnDestroy()
 	logWarn("OnDestroy---->>>");
 end

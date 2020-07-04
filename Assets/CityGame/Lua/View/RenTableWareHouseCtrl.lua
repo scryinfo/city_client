@@ -55,7 +55,7 @@ function RenTableWareHouseCtrl:Hide()
     UIPanel.Hide(self)
 end
 
---关闭界面
+--Close the interface
 function RenTableWareHouseCtrl:_closeFunc()
     UIPanel.ClosePage()
 end
@@ -79,14 +79,14 @@ function RenTableWareHouseCtrl:_init(data)
     RenTableWareHousePanel.perSlider.maxValue = data.rentCapacity - data.rentUsedCapacity
 end
 
---更新租用时间
+--Update lease time
 function RenTableWareHouseCtrl:_scrollbartimeInfo(data)
     timenum = RenTableWareHousePanel.timeTextSlider.value;
     RenTableWareHousePanel.timeInput.text = timenum
     RenTableWareHousePanel.totalprice.text = timenum * spacenumber * price
 end
 
---更新租用空间
+--Update leased space
 function RenTableWareHouseCtrl:_scrollbarspaceInfo(data)
     spacenumber = RenTableWareHousePanel.perSlider.value;
     RenTableWareHousePanel.perText.text = spacenumber

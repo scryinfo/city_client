@@ -4,14 +4,14 @@ local transform;
 InventSetPopPanel = {};
 local this = InventSetPopPanel;
 
---启动事件
+--Start event
 function InventSetPopPanel.Awake(obj)
 
     transform = obj.transform;
     this.InitPanle();
 
 end
---初始化界面
+--Initialization interface
 function InventSetPopPanel.InitPanle()
 
     this.xBtn = transform:Find("set/xBtn").gameObject
@@ -28,7 +28,7 @@ function InventSetPopPanel.InitPanle()
     this.external = transform:Find("set/open/external"):GetComponent("Text")
     this.closeText = transform:Find("set/close/closeText"):GetComponent("Text")
 
-    --竞争力
+    --Competitiveness
     this.conpetitivebess = transform:Find("set/conpetitivebess")
     this.conpetitivebessText = transform:Find("set/conpetitivebess/conpetitivebessText"):GetComponent("Text")
     this.value = transform:Find("set/conpetitivebess/valueText"):GetComponent("Text")

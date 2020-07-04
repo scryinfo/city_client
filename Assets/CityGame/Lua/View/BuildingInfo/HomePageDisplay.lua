@@ -1,12 +1,12 @@
 HomePageDisplay = class('HomePageDisplay')
 
---初始化
+--initialization
 function HomePageDisplay:initialize(type,goodsDataInfo,prefab)
     if type == ct.homePage.shelf then
         self:homePageShelf(goodsDataInfo,prefab)
     end
 end
---主页货架
+--Home shelves
 function HomePageDisplay:homePageShelf(homePageShelfInfo,prefab)
     self.prefab = prefab;
     self.itemId = homePageShelfInfo.k.id

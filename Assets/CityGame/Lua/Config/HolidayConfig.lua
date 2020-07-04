@@ -1,4 +1,4 @@
---员工休息表  --0为工作日
+--Employee rest table - 0 is working day
 HolidayConfig={
 [20190101] = 2,
 [20190102] = 0,

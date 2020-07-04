@@ -600,10 +600,10 @@ EvaConfig = {
         },
     },
     --[7] = {
-    --    name = "集散中心",
+    --    name = "Distribution center",
     --    property = {
     --        [1] = {
-    --            name = "仓库提升",
+    --            name = "Warehouse promotion",
     --            Atype = 17,
     --            Btype = "WarehouseUpgrade",
     --            b = 0,

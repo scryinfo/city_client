@@ -1,4 +1,4 @@
-﻿//滑动翻页优化，场景中只有固定页的item存在，实现复用
+﻿//Optimization of sliding page turning, only items with fixed pages exist in the scene to realize reuse
 
 using System.Collections;
 using System.Collections.Generic;
@@ -19,32 +19,32 @@ public class ScrollPageEventData
     public DlgClearData mClearData = null;
     public DlgLeftEnd mLeftEndFunc = null;
     public DlgRightEnd mRightEndFunc = null;
-    public DlgBtnNomal mBtnNomalFunc = null;  //左右按钮正常状态
+    public DlgBtnNomal mBtnNomalFunc = null;  //Normal state of left and right buttons
 }
 
 public class ScrollPageOptimize : MonoBehaviour
 {
-    public GameObject mPageItemPrefab;  //page中的详细item预制
+    public GameObject mPageItemPrefab;  //Detailed item prefabrication in the page
     public ScrollRect mScrollRect;  //
 
-    public int mGridCount = 4;  //每页需要显示的个数
-    public Vector2Int mPageRowColV2 = Vector2Int.zero;  //行列数
-    public Vector2 mPageHVSpacingV2 = Vector2.zero;  //item在page的左上间距
-    public Vector2 mItemSizeData = Vector2.zero;  //item的宽高
+    public int mGridCount = 4;  //Number of pages to display
+    public Vector2Int mPageRowColV2 = Vector2Int.zero;  //Number of rows and columns
+    public Vector2 mPageHVSpacingV2 = Vector2.zero;  //item is in the top left of the page
+    public Vector2 mItemSizeData = Vector2.zero;  //item width and height
 
-    private Dictionary<int, List<GameObject>> mCurrentPageDic = new Dictionary<int, List<GameObject>>();  //当前生成的page
-    private int mTotalPageCount = 0;  //总的页数
-    private int mTotalItemCount = 0;  //总的item数
+    private Dictionary<int, List<GameObject>> mCurrentPageDic = new Dictionary<int, List<GameObject>>();  //The currently generated page
+    private int mTotalPageCount = 0;  //Total pages
+    private int mTotalItemCount = 0;  //Total number of items
 
-    private Vector2 mItemSpacingV2 = Vector2.zero;  //item之间的横纵间隔
-    private Vector2 mPageTotalHVV2 = Vector2.zero;  //page的宽高
-    private Vector2 mContentPos = Vector2.zero;  //content的位置
+    private Vector2 mItemSpacingV2 = Vector2.zero;  //horizontal and vertical spacing between items
+    private Vector2 mPageTotalHVV2 = Vector2.zero;  //page width and height
+    private Vector2 mContentPos = Vector2.zero;  //content's location
 
-    private int mCurrentPageId = 0;  //当前页的Id
-    private bool mNeedReuse = false;  //是否需要复用
-    private int mInitCreatePage = 3;  //预加载page个数
+    private int mCurrentPageId = 0;  //Id of current page
+    private bool mNeedReuse = false;  //Whether to reuse
+    private int mInitCreatePage = 3;  //Number of preloaded pages
 
-    private List<int> mShowPageIds = new List<int>();  //应该显示的ids
+    private List<int> mShowPageIds = new List<int>();  //Ids that should be displayed
 
     private HorizontalScrollSnap mScrollSnap;
     private ScrollPageEventData mEvent = new ScrollPageEventData();
@@ -118,7 +118,7 @@ public class ScrollPageOptimize : MonoBehaviour
         mContentPos = new Vector2(0, mPageTotalHVV2.y / 2);
     }
 
-    //初始化数据
+    //Initialization data
     private void InitShowPage()
     {
         mTotalPageCount = Mathf.CeilToInt((float)mTotalItemCount / (float)mGridCount);
@@ -137,20 +137,20 @@ public class ScrollPageOptimize : MonoBehaviour
         }
         if (mTotalPageCount > mInitCreatePage)
         {
-            mNeedReuse = true;  //需要复用
+            mNeedReuse = true;  //Need to reuse
             for (int i = 0; i < mInitCreatePage; i++)
             {
-                mShowPageIds.Add(i);  //需要显示的id
+                mShowPageIds.Add(i);  //Id to be displayed
             }
         }
 
         if (mEvent.mLeftEndFunc != null)
         {
-            mEvent.mLeftEndFunc();  //已经到达最左侧
+            mEvent.mLeftEndFunc();  //Has reached the far left
         }
     }
 
-    //计算每个item的间距
+    //Calculate the spacing of each item
     private void GetItemSpacing()
     {
         float x = mPageTotalHVV2.x - mPageHVSpacingV2.x * 2 - mItemSizeData.x;
@@ -158,7 +158,7 @@ public class ScrollPageOptimize : MonoBehaviour
         mItemSpacingV2 = new Vector2(x, y);
     }
 
-    //根据页数Id生成page
+    //Generate page based on page number Id
     private void CreateItemsByPage(int pageIndex)
     {
         if (pageIndex > mTotalPageCount - 1 || pageIndex < 0)
@@ -181,10 +181,10 @@ public class ScrollPageOptimize : MonoBehaviour
         }
 
         List<GameObject> list = new List<GameObject>();
-        int dataIndex = pageIndex * mGridCount;  //起始id
+        int dataIndex = pageIndex * mGridCount;  //Starting id
         Vector2 startPos = new Vector2(mPageTotalHVV2.x * pageIndex + mPageHVSpacingV2.x, -mPageHVSpacingV2.y);
-        int row = Mathf.CeilToInt((float)remainCount / (float)mPageRowColV2.x);  //行
-        int col = remainCount >= mPageRowColV2.y ? mPageRowColV2.y : remainCount;  //列
+        int row = Mathf.CeilToInt((float)remainCount / (float)mPageRowColV2.x);  //Row
+        int col = remainCount >= mPageRowColV2.y ? mPageRowColV2.y : remainCount;  //Column
         for (int i = 0; i < row; i++)
         {
             float posy = startPos.y - mItemSpacingV2.y * i;
@@ -219,7 +219,7 @@ public class ScrollPageOptimize : MonoBehaviour
         mScrollRect.content.DOAnchorPosX(-mPageTotalHVV2.x * pageIndex, 0.5f);
     }
 
-    //匹配Snap下一页
+    //Match SnapNext
     private void SnapNext(int targetPage)
     {
         if (mEvent.mBtnNomalFunc != null)
@@ -228,12 +228,12 @@ public class ScrollPageOptimize : MonoBehaviour
         }
         if (targetPage == mTotalPageCount - 1 && mEvent.mRightEndFunc != null)
         {
-            mEvent.mRightEndFunc();  //已经到达最右侧
+            mEvent.mRightEndFunc();  //Has reached the far right
         }
 
-        targetPage = targetPage > mTotalPageCount - 1 ? mTotalPageCount - 1 : targetPage;  //判断是否是尾部
+        targetPage = targetPage > mTotalPageCount - 1 ? mTotalPageCount - 1 : targetPage;  //Determine if it is the tail
         CreateItemsByPage(targetPage);
-        MoveToPage(targetPage);  //移动定位
+        MoveToPage(targetPage);  //Mobile positioning
 
         if (mNeedReuse)
         {
@@ -259,7 +259,7 @@ public class ScrollPageOptimize : MonoBehaviour
         }
         mCurrentPageId = targetPage;
     }
-    //匹配Snap上一页
+    //Match Snap Previous
     private void SnapPrev(int targetPage)
     {
         if (mEvent.mBtnNomalFunc != null)
@@ -268,7 +268,7 @@ public class ScrollPageOptimize : MonoBehaviour
         }
         if (targetPage == 0 && mEvent.mLeftEndFunc != null)
         {
-            mEvent.mLeftEndFunc();  //已经到达最左侧
+            mEvent.mLeftEndFunc();  //Has reached the far left
         }
 
         targetPage = targetPage > 0 ? targetPage : 0;

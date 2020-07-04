@@ -1,7 +1,7 @@
 BuyDetailsItem = class('BuyDetailsItem')
 
 local Math_Floor = math.floor
---初始化方法
+--Initialization method
 function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.prefab = prefab;
     self.goodsDataInfo = goodsDataInfo;
@@ -30,7 +30,7 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
     self.numberScrollbar.value = 0;
     self.moneyText.text = 0;
 
-    --点击事件
+    --Click event
     self._luabehaviour:AddClick(self.closeBtn.gameObject,self.OnClick_closeBtn,self);
 
     self.numberScrollbar.onValueChanged:AddListener(function()
@@ -40,19 +40,19 @@ function BuyDetailsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id)
         self:inputInfo();
     end);
 end
---删除
+--delete
 function BuyDetailsItem:OnClick_closeBtn(ins)
     PlayMusEff(1002)
     Event.Brocast("SelectedGoodsItem",ins);
 end
---刷新滑动条
+--Refresh slider
 function BuyDetailsItem:scrollbarInfo()
     local number = self.numberScrollbar.value;
     self.inputNumber.text = number;
     self.tempPrice = GetClientPriceString(number * self.goodsDataInfo.price)
     self.moneyText.text = getPriceString(GetClientPriceString(number * self.goodsDataInfo.price),39,35);
 end
---刷新输入框
+--Refresh the input box
 function BuyDetailsItem:inputInfo()
     local number = self.inputNumber.text;
     if number ~= "" then

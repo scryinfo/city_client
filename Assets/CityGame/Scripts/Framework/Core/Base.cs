@@ -15,7 +15,7 @@ public class Base : MonoBehaviour {
     private ObjectPoolManager m_ObjectPoolMgr;
 
     /// <summary>
-    /// 注册消息
+    /// Registration news
     /// </summary>
     /// <param name="view"></param>
     /// <param name="messages"></param>
@@ -25,7 +25,7 @@ public class Base : MonoBehaviour {
     }
 
     /// <summary>
-    /// 移除消息
+    /// Remove message
     /// </summary>
     /// <param name="view"></param>
     /// <param name="messages"></param>

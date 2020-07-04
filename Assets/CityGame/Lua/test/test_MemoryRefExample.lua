@@ -16,14 +16,14 @@ UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
 
         --UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "1")
         ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 1")
-        -- 打印当前 Lua 虚拟机的所有内存引用快照到文件(或者某个对象的所有引用信息快照)到本地文件。
-        UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "1",_G.Author) --方便测试，先只看 _G.Author
+        -- Print all memory reference snapshots of the current Lua virtual machine to a file (or a snapshot of all reference information of an object) to a local file.
+        UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "1",_G.Author) -- to facilitate testing, just look at _G.Author
         ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 1 finished")
-        -- strSavePath - 快照保存路径，不包括文件名。
-        -- strExtraFileName - 添加额外的信息到文件名，可以为 "" 或者 nil。
-        -- nMaxRescords - 最多打印多少条记录，-1 打印所有记录。
-        -- strRootObjectName - 遍历的根节点对象名称，"" 或者 nil 时使用 tostring(cRootObject)
-        -- cRootObject - 遍历的根节点对象，默认为 nil 时使用 debug.getregistry()。
+        -- strSavePath-Snapshot save path, excluding file name.
+        -- strExtraFileName-Add additional information to the file name, can be "" or nil.
+        -- nMaxRescords-Maximum number of records to print, -1 print all records.
+        -- strRootObjectName-the root node object name to be traversed, tostring(cRootObject) when "" or nil
+        -- cRootObject-The root node object to be traversed. Use debug.getregistry() when the default is nil.
         -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshot(strSavePath, strExtraFileName, nMaxRescords, strRootObjectName, cRootObject)
         -- Add a global variable.
 
@@ -53,44 +53,44 @@ UnitTest.Exec("abel_w10_MemRef_all", "test_MemRef_all",  function ()
             _G.Author = author
             --UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "2")
             ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 2")
-            UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "2",_G.Author) --方便测试，先只看 _G.Author
+            UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "2",_G.Author) --For easy testing, just look at _G.Author
             ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 2 finished")
             return author
         end
         g_testValue = reffun()
         --UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "3")
         ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 3")
-        UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "3",_G.Author) --方便测试，先只看 _G.Author
+        UnitTest.MemoryReferenceAll("abel_w10_MemRef_all", "3",_G.Author) --For easy testing, just look at _G.Author
         ct.log("abel_w10_MemRef_all","[abel_w10_MemRef_all]  MemoryReferenceAll 3 finished")
     end
 
-    --获取内存中的引用数据
-    getReffun() --暂时屏蔽，以便测试结果比对路径
+    --Get reference data in memory
+    getReffun() --Temporarily block, so that the test results can be compared
 
-    -- 打印当前 Lua 虚拟机中某一个对象的所有相关引用。
-    -- strSavePath - 快照保存路径，不包括文件名。
-    -- strExtraFileName - 添加额外的信息到文件名，可以为 "" 或者 nil。
-    -- nMaxRescords - 最多打印多少条记录，-1 打印所有记录。
-    -- strObjectName - 对象显示名称。
-    -- cObject - 对象实例。
+    -- Print all relevant references of an object in the current Lua virtual machine.
+    -- strSavePath-Snapshot save path, excluding file name.
+    -- strExtraFileName-Add additional information to the file name, can be "" or nil.
+    -- nMaxRescords-Maximum number of records to print, -1 print all records.
+    -- strObjectName-Object display name.
+    -- cObject-object instance.
     -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshotSingleObject(strSavePath, strExtraFileName, nMaxRescords, strObjectName, cObject)
 
-    -- 比较两份内存快照结果文件，打印文件 strResultFilePathAfter 相对于 strResultFilePathBefore 中新增的内容。
-    -- strSavePath - 快照保存路径，不包括文件名。
-    -- strExtraFileName - 添加额外的信息到文件名，可以为 "" 或者 nil。
-    -- nMaxRescords - 最多打印多少条记录，-1 打印所有记录。
-    -- strResultFilePathBefore - 第一个内存快照文件。
-    -- strResultFilePathAfter - 第二个用于比较的内存快照文件。
+    -- Compare two memory snapshot result files and print the file strResultFilePathAfter relative to the new content in strResultFilePathBefore.
+    -- strSavePath-Snapshot save path, excluding file name.
+    -- strExtraFileName-Add additional information to the file name, can be "" or nil.
+    -- nMaxRescords-Maximum number of records to print, -1 print all records.
+    -- strResultFilePathBefore-The first memory snapshot file.
+    -- strResultFilePathAfter-The second memory snapshot file for comparison.
     -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshotComparedFile(strSavePath, strExtraFileName, nMaxRescords, strResultFilePathBefore, strResultFilePathAfter)
     UnitTest.MemoryRefResaultCompared("abel_w10_MemRef_all", "1", "2")
     UnitTest.MemoryRefResaultCompared("abel_w10_MemRef_all", "2", "3")
-    --mri.m_cMethods.DumpMemorySnapshotComparedFile("./", "Compared", -1, "./LuaMemRefInfo-All-[1-Before].txt", "./LuaMemRefInfo-All-[2-After].txt")
+    --mri.m_cMethods.DumpMemorySnapshotComparedFile("./", "Compared", -1, "./LuaMemRefInfo-All-[1-Before].txt", "./LuaMemRefInfo-All-[2-After].txt ")
 
-    -- 按照关键字过滤一个内存快照文件然后输出到另一个文件.
-    -- strFilePath - 需要被过滤输出的内存快照文件。
-    -- strFilter - 过滤关键字
-    -- bIncludeFilter - 包含关键字(true)还是排除关键字(false)来输出内容。
-    -- bOutputFile - 输出到文件(true)还是 console 控制台(false)。
+    -- Filter a memory snapshot file according to keywords and output to another file.
+    -- strFilePath-Memory snapshot file that needs to be filtered and output.
+    -- strFilter-filter keywords
+    -- bIncludeFilter-Include keywords (true) or exclude keywords (false) to output content.
+    -- bOutputFile-output to file (true) or console (false).
     -- MemoryReferenceInfo.m_cBases.OutputFilteredResult(strFilePath, strFilter, bIncludeFilter, bOutputFile)
     -- Filter all result include keywords: "Author".
     UnitTest.MemoryRefResaultFiltered("abel_w10_MemRef_all", "1", "Author", true)
@@ -118,12 +118,12 @@ UnitTest.Exec("abel_w10_MemRef_table", "test_MemRef_table",  function ()
             return "My answer is for your question: " .. question .. "."
         end
     }
-    -- 打印当前 Lua 虚拟机中某一个对象的所有相关引用。
-    -- strSavePath - 快照保存路径，不包括文件名。
-    -- strExtraFileName - 添加额外的信息到文件名，可以为 "" 或者 nil。
-    -- nMaxRescords - 最多打印多少条记录，-1 打印所有记录。
-    -- strObjectName - 对象显示名称。
-    -- cObject - 对象实例。
+    -- Print all references to an object in the current Lua virtual machine.
+    -- strSavePath-Snapshot save path, excluding file name.
+    -- strExtraFileName-Add additional information to the file name, can be "" or nil.
+    -- nMaxRescords-Maximum number of records to print, -1 print all records.
+    -- strObjectName-Object display name.
+    -- cObject-object instance.
     -- MemoryReferenceInfo.m_cMethods.DumpMemorySnapshotSingleObject(strSavePath, strExtraFileName, nMaxRescords, strObjectName, cObject)
     _G.Author = author_2
     UnitTest.MemoryReferenceOne("abel_w10_MemRef_table", "Author_2",_G.Author)

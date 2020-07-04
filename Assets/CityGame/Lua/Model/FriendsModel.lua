@@ -12,20 +12,19 @@ function FriendsModel:initialize(insId)
 end
 
 function FriendsModel:OnCreate()
-    -- 注册事件
+    -- Registration issue
     Event.AddListener("m_QueryPlayerInfo", self.m_QueryPlayerInfo)
     Event.AddListener("m_SearchPlayer", self.m_SearchPlayer)
     Event.AddListener("m_AddFriends", self.m_AddFriends)
     Event.AddListener("m_AddFriendsReq", self.m_AddFriendsReq)
     Event.AddListener("m_DeleteFriend", self.m_DeleteFriend)
     Event.AddListener("m_DeleteBlacklist", self.m_DeleteBlacklist)
-
-    -- 网络回调注册
+    -- Network callback registration
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","searchPlayer","gs.RoleInfos", self.n_OnReceiveSearchPlayerInfo, self)
 end
 
 function FriendsModel.Close()
-    -- 清空事件
+    -- Clear event
 end
 
 -- 向服务器查询好友信息

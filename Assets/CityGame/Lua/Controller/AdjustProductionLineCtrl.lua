@@ -1,9 +1,9 @@
 AdjustProductionLineCtrl = class('AdjustProductionLineCtrl',UIPanel);
-UIPanel:ResgisterOpen(AdjustProductionLineCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(AdjustProductionLineCtrl) --How to open the registration
 
---原料厂实例
+--Examples of raw material plants
 AdjustProductionLineCtrl.materialProductionLine = {};
---添加生产线临时表
+--Add production line temporary table
 AdjustProductionLineCtrl.tempProductionLine = {}
 
 AdjustProductionLineCtrl.idleWorkerNums = 0
@@ -51,7 +51,7 @@ function AdjustProductionLineCtrl:Refresh()
     AdjustProductionLinePanel.capacity_Slider.maxValue = PlayerBuildingBaseData[self.data.info.mId].storeCapacity;
     AdjustProductionLinePanel.locked_Slider.value = WarehouseCtrl:getWarehouseCapacity(self.data.store);
     AdjustProductionLinePanel.capacity_Slider.value = WarehouseCtrl:getWarehouseNum(self.data.store);
-    AdjustProductionLineCtrl.warehouseCapacity = WarehouseCtrl:getWarehouseCapacity(self.data.store)  --刷新时间用
+    AdjustProductionLineCtrl.warehouseCapacity = WarehouseCtrl:getWarehouseCapacity(self.data.store)  --Refresh time
     local lockedNum = WarehouseCtrl:getLockedNum(self.data.store)
     local numTab = {}
     numTab["num1"] = AdjustProductionLinePanel.locked_Slider.value
@@ -61,7 +61,7 @@ function AdjustProductionLineCtrl:Refresh()
     numTab["col2"] = "black"
     numTab["col3"] = "Teal"
     AdjustProductionLinePanel.numberText.text = getColorString(numTab)
-    --剩余容量
+    --The remaining capacity
     AdjustProductionLineCtrl.residualCapacity = tonumber(AdjustProductionLinePanel.capacity_Slider.maxValue) - tonumber(AdjustProductionLinePanel.capacity_Slider.value)
     self.buildingMaxWorkerNum = PlayerBuildingBaseData[self.data.info.mId].maxWorkerNum
     self.idleWorkerNum = self:getWorkerNum()
@@ -111,7 +111,7 @@ function AdjustProductionLineCtrl:OnClick_addBtn(go)
 
 end
 
---计算一条生产线总时间
+--Calculate the total time of a production line
 function AdjustProductionLineCtrl:calculateTime(msg)
     if not msg then
         return
@@ -130,7 +130,7 @@ function AdjustProductionLineCtrl:calculateTime(msg)
         end
     end
 end
---计算一条线每分钟的产量
+--Calculate the output per minute of a line
 function AdjustProductionLineCtrl:calculateMinuteNum(msg)
     local number = 0
     local materialKey,goodsKey = 21,22
@@ -146,7 +146,7 @@ function AdjustProductionLineCtrl:calculateMinuteNum(msg)
         end
     end
 end
---删除生产中或生产完的生产线
+--Delete production lines that are in production or finished
 function AdjustProductionLineCtrl:_deleteProductionLine(msg)
     if not msg then
         return;
@@ -172,10 +172,10 @@ function AdjustProductionLineCtrl:_deleteProductionLine(msg)
         i = i +1
     end
 end
---获取剩余员工人数
+--Get the number of remaining employees
 function AdjustProductionLineCtrl:getWorkerNum()
-    local workerNum = 0  --剩余员工数量
-    local workNum = 0    --工作的员工数量
+    local workerNum = 0  --Number of remaining employees
+    local workNum = 0    --Number of employees working
     if not self.m_data.line then
         workerNum = self.buildingMaxWorkerNum
         return workerNum
@@ -187,7 +187,7 @@ function AdjustProductionLineCtrl:getWorkerNum()
         return workerNum
     end
 end
---添加生产线成功后回调刷新剩余人数
+--Call back and refresh the remaining number of people after adding the production line successfully
 function AdjustProductionLineCtrl:refreshSubtractWorkerNum(msg)
     self.idleWorkerNum = self.idleWorkerNum - msg.line.workerNum
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
@@ -202,7 +202,7 @@ function AdjustProductionLineCtrl:refreshSubtractWorkerNum(msg)
         v.sNumberScrollbar.maxValue = v.sNumberScrollbar.value + AdjustProductionLineCtrl.idleWorkerNums / 5
     end
 end
---删除生产线成功后回调刷新剩余人数
+--After successfully deleting the production line, callback and refresh the remaining number
 function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
     self.idleWorkerNum = self.idleWorkerNum + number * 5
     AdjustProductionLineCtrl.idleWorkerNums = self.idleWorkerNum
@@ -217,7 +217,7 @@ function AdjustProductionLineCtrl:refreshAddWorkerNum(number)
         v.sNumberScrollbar.maxValue = v.sNumberScrollbar.value + AdjustProductionLineCtrl.idleWorkerNums / 5
     end
 end
---添加界面获取仓库库存数量
+--Add interface to get warehouse inventory quantity
 function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
     if not itemId then
         return
@@ -234,7 +234,7 @@ function AdjustProductionLineCtrl.getGoodInventoryNum(itemId)
         local number = 0
         return number
 end
-----读取生产线，初始化时间
+----Read production line, initialization time
 --function AdjustProductionLineCtrl:refreshTime(infoTab)
 --    if not infoTab then
 --        return
@@ -256,7 +256,7 @@ end
 --        end
 --    end
 --end
---接收回调刷新产量
+--Receive callback to refresh output
 function AdjustProductionLineCtrl:refreshNowConte(msg)
     if not msg then
         return;
@@ -269,7 +269,7 @@ function AdjustProductionLineCtrl:refreshNowConte(msg)
         end
     end
 end
---调整生产线回调调整员工人数
+--Adjust the production line and adjust the number of employees
 function AdjustProductionLineCtrl:callbackDataInfo(DataInfo)
     if not DataInfo then
         return
@@ -308,7 +308,7 @@ function AdjustProductionLineCtrl:callbackDataInfo(DataInfo)
         end
     end
 end
---关闭面板时清空UI信息，以备其他模块调用
+--Clear the UI information when closing the panel in case other modules call
 function AdjustProductionLineCtrl:deleteObjInfo()
     if not AdjustProductionLineCtrl.materialProductionLine or AdjustProductionLineCtrl.materialProductionLine == {} then
         return;
@@ -320,9 +320,9 @@ function AdjustProductionLineCtrl:deleteObjInfo()
         AdjustProductionLineCtrl.materialProductionLine = {};
     end
 end
---清理临时表
+--Clean up temporary tables
 function AdjustProductionLineCtrl:deleteTempTable()
-    --添加了但是没有生产的
+    --Added but not produced
     if not AdjustProductionLineCtrl.materialProductionLine or AdjustProductionLineCtrl.materialProductionLine == {} then
         return
     else
@@ -335,7 +335,7 @@ function AdjustProductionLineCtrl:deleteTempTable()
     end
 end
 
---清除所有SmallProductionLineItem的改变情况
+--Clear all changes to SmallProductionLineItem
 function AdjustProductionLineCtrl.ClearOtherChangeState()
     if AdjustProductionLineCtrl.materialProductionLine ~= nil then
         for key, tempItem in pairs(AdjustProductionLineCtrl.materialProductionLine) do

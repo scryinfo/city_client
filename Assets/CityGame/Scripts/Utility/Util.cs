@@ -48,7 +48,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 搜索子物体组件-GameObject版
+        /// Search sub-object components-GameObject version
         /// </summary>
         public static T Get<T>(GameObject go, string subnode) where T : Component {
             if (go != null) {
@@ -59,7 +59,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 搜索子物体组件-Transform版
+        /// Search sub-object components-Transform version
         /// </summary>
         public static T Get<T>(Transform go, string subnode) where T : Component {
             if (go != null) {
@@ -70,14 +70,14 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 搜索子物体组件-Component版
+        /// Search sub-object components-Component version
         /// </summary>
         public static T Get<T>(Component go, string subnode) where T : Component {
             return go.transform.Find(subnode).GetComponent<T>();
         }
 
         /// <summary>
-        /// 添加组件
+        /// Add components
         /// </summary>
         public static T Add<T>(GameObject go) where T : Component {
             if (go != null) {
@@ -91,21 +91,21 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 添加组件
+        /// Add components
         /// </summary>
         public static T Add<T>(Transform go) where T : Component {
             return Add<T>(go.gameObject);
         }
 
         /// <summary>
-        /// 查找子对象
+        /// Find child objects
         /// </summary>
         public static GameObject Child(GameObject go, string subnode) {
             return Child(go.transform, subnode);
         }
 
         /// <summary>
-        /// 查找子对象
+        /// Find child objects
         /// </summary>
         public static GameObject Child(Transform go, string subnode) {
             Transform tran = go.Find(subnode);
@@ -114,14 +114,14 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 取平级对象
+        /// Flat object
         /// </summary>
         public static GameObject Peer(GameObject go, string subnode) {
             return Peer(go.transform, subnode);
         }
 
         /// <summary>
-        /// 取平级对象
+        /// Flat object
         /// </summary>
         public static GameObject Peer(Transform go, string subnode) {
             Transform tran = go.parent.Find(subnode);
@@ -130,7 +130,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 计算字符串的MD5值
+        /// Calculate the MD5 value of a string
         /// </summary>
         public static string md5(string source) {
             MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
@@ -147,7 +147,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 计算文件的MD5值
+        /// Calculate the MD5 value of a string
         /// </summary>
         public static string md5file(string file) {
             try {
@@ -167,7 +167,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 清除所有子节点
+        /// Clear all child nodes
         /// </summary>
         public static void ClearChild(Transform go) {
             if (go == null) return;
@@ -177,7 +177,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 清理内存
+        /// Clean up memory
         /// </summary>
         public static void ClearMemory() {
             GC.Collect(); Resources.UnloadUnusedAssets();
@@ -186,7 +186,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 取得数据存放目录
+        /// Get data storage directory
         /// </summary>
         public static string DataPath {
             get {
@@ -215,14 +215,14 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 取得行文本
+        /// Get line text
         /// </summary>
         public static string GetFileText(string path) {
             return File.ReadAllText(path);
         }
 
         /// <summary>
-        /// 网络可用
+        /// Network available
         /// </summary>
         public static bool NetAvailable {
             get {
@@ -231,7 +231,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 是否是无线
+        /// Whether it is wireless
         /// </summary>
         public static bool IsWifi {
             get {
@@ -240,7 +240,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 应用程序内容路径
+        /// Application content path
         /// </summary>
         public static string AppContentPath() {
             string path = string.Empty;
@@ -271,7 +271,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 防止初学者不按步骤来操作
+        /// Prevent beginners from not following the steps
         /// </summary>
         /// <returns></returns>
         public static int CheckRuntimeFile() {
@@ -298,7 +298,7 @@ namespace LuaFramework {
         }
 
         /// <summary>
-        /// 执行Lua方法
+        /// Run Lua method
         /// </summary>
         public static object[] CallMethod(string module, string func, params object[] args) {
             LuaManager luaMgr = AppFacade.Instance.GetManager<LuaManager>(ManagerName.Lua);
@@ -314,7 +314,7 @@ namespace LuaFramework {
         }
 
                 /// <summary>
-        /// 检查运行环境
+        /// Check the operating environment
         /// </summary>
         public static bool CheckEnvironment() {
 #if UNITY_EDITOR

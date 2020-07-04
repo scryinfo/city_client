@@ -1,4 +1,4 @@
---不同建筑对应的工资影响效果  --7.1版本暂时没用到
+--Effect of wages corresponding to different buildings - Version 7.1 is temporarily not used
 BuildingSalaryEffectConfig={
 	[1100001] = {
 		languageId = 7000409,

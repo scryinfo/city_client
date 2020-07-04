@@ -18,17 +18,17 @@ end
 
 function FriendsPanel.InitPanel()
     this.backBtn = transform:Find("BackBtn").gameObject
-    --好友群组节点
+    --Friends Group Node
     this.friendsRoot = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot").gameObject
 
-    --好友群组数量
+    --Number of friend groups
     this.friendsNumberText = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/TopRoot/NumberText"):GetComponent("Text")
 
-    --好友群组滑动框显示
+    --Friend group slide box display
     this.friendsView = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/Scroll View/Viewport"):GetComponent("ActiveLoopScrollRect")
     this.friendsContent = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/Scroll View/Viewport/Content")
 
-    --好友按钮群组（管理、黑名单、加好友、申请列表、申请列表红点、申请列表的申请个数）
+    --Friends button group (management, blacklist, add friends, application list, application list red dots, application list number of applications)
     this.friendsManageBtn = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ManageBtn").gameObject
     this.blacklistBtn = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/BlacklistBtn").gameObject
     this.addFriendsBtn = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/AddFriendsBtn").gameObject
@@ -36,10 +36,10 @@ function FriendsPanel.InitPanel()
     this.applicationlistNotice = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ApplicationlistBtn/Notice").gameObject
     this.applicationlistNoticeText = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/BtnRoot/ApplicationlistBtn/Notice/Text"):GetComponent("Text")
 
-    -- 没有好友的小狐狸显示
+    -- Little fox without friends shows
     this.friendsNoContentRoot = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/NoContentRoot").gameObject
 
-    -- 多语言
+    -- multi-language
     this.titleText = transform:Find("MiddleRoot/TopRoot/Bg/TitleText"):GetComponent("Text")
     this.NoContentText = transform:Find("MiddleRoot/MiddleRoot/FriendsRoot/NoContentRoot/Image/Bg/Text"):GetComponent("Text")
 end

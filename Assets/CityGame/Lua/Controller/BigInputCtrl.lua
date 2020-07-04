@@ -6,7 +6,7 @@
 
 
 BigInputCtrl = class('BigInputCtrl',UIPanel)
-UIPanel:ResgisterOpen(BigInputCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(BigInputCtrl) --How to open
 
 function BigInputCtrl:initialize()
     UIPanel.initialize(self, UIType.PopUp, UIMode.DoNothing, UICollider.Normal)
@@ -41,7 +41,7 @@ function BigInputCtrl:Hide()
     UIPanel.Hide(self)
 end
 
--- 寻找组件
+-- Find components
 function BigInputCtrl:_getComponent(go)
     self.titleText = go.transform:Find("root/titleText").gameObject:GetComponent("Text")
     self.closeBtn = go.transform:Find("root/closeBtn").gameObject
@@ -51,25 +51,25 @@ function BigInputCtrl:_getComponent(go)
 
     self.tipsText = go.transform:Find("root/tipsText").gameObject:GetComponent("Text")
 end
--- 初始化
+-- initialization
 function BigInputCtrl:_initData()
     self.titleText.text = self.m_data.titleInfo
     self.tipsText.text = self.m_data.tipInfo
     self.rentInput.text = ""
 
-    --设置默认显示str
+    --Set the default display str
     if self.m_data.contentStr ~= nil and self.m_data.contentStr ~= "" then
         self.rentInput.text = self.m_data.contentStr
     end
 
-    -- 输入框的个数限制
+    -- Number of input boxes
     if self.m_data.characterLimit then
         self.rentInput.characterLimit = self.m_data.characterLimit
     else
         self.rentInput.characterLimit = 0
     end
 
-    -- 输入法的提示值
+    -- Prompt value for input method
     if self.m_data.inputDefaultStr ~= nil then
         self.rentInputPlaceholderText.text = self.m_data.inputDefaultStr
     else
@@ -77,7 +77,7 @@ function BigInputCtrl:_initData()
     end
 end
 
--- 点击确认按钮
+-- Click the confirm button
 function BigInputCtrl:_onClickConfim(ins)
     PlayMusEff(1002)
     local inputValue = ins.rentInput.text
@@ -92,7 +92,7 @@ function BigInputCtrl:_onClickConfim(ins)
     UIPanel.ClosePage()
 end
 
--- 点击关闭按钮
+-- Click the close button
 function BigInputCtrl:_onClickClose()
     PlayMusEff(1002)
     UIPanel.ClosePage()

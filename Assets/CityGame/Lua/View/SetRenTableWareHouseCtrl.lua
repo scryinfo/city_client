@@ -42,19 +42,19 @@ function SetRenTableWareHouseCtrl:Hide()
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
---设置多语言
+--Set up multiple languages
 function SetRenTableWareHouseCtrl:_language()
     SetRenTableWareHousePanel.topNameText.text = "SET RENTABLE WAREHOUSE"
-    --self.placeholderText.text = "设置可出租仓库 "
+    --self.placeholderText.text = "Set up a rentable warehouse"
     --SetRenTableWareHousePanel.priceText.text = "0.0000"
 end
------------------------------------------------------------------点击函数----------------------------------------------------------------------------
---直接关闭页面后刷新数据
+-------------------------------------------------- --------------- click function --------------------------------- -------------------------------------------
+--Refresh data after directly closing the page
 function SetRenTableWareHouseCtrl:_clickCloseBtn()
     UIPanel.ClosePage()
 end
 
---设置后确认刷新数据
+--Confirm refresh data after setting
 function SetRenTableWareHouseCtrl:_clickstartBtn(go)
         local data = {}
         data.buildingId = go.m_data.insId
@@ -63,18 +63,15 @@ function SetRenTableWareHouseCtrl:_clickstartBtn(go)
         data.maxHourToRent = SetRenTableWareHousePanel.maxtimeText.text
         data.rent = SetRenTableWareHousePanel.priceText.text
         data.enableRent = true
-        DataManager.OpenDetailModel(BuidingWareHouseModel,data.buildingId)
-        DataManager.DetailModelRpcNoRet(data.buildingId, 'm_ReqSentHouseDetailInfo',data)
+        DataManager.OpenDetailModel(BuidingWareHouseModel, data.buildingId)
+        DataManager.DetailModelRpcNoRet(data.buildingId,'m_ReqSentHouseDetailInfo',data)
         UIPanel.ClosePage()
 end
 
---取消页面
+--Cancel page
 function SetRenTableWareHouseCtrl:_clickshutBtn(go)
     ct.OpenCtrl("MyShutDownCtrl",go)
 end
-
-
-
 
 
 

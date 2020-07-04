@@ -11,14 +11,14 @@ local gameObject;
 TicketAdjustPopPanel = {};
 local this = TicketAdjustPopPanel;
 
---启动事件
+--Start event
 function TicketAdjustPopPanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
 
     this.InitPanle();
 end
---初始化界面
+--Initialize the interface
 function TicketAdjustPopPanel.InitPanle()
     this.confirmBtn = transform:Find("root/confirmBtn");
     this.closeBtn = transform:Find("root/closeBtn");

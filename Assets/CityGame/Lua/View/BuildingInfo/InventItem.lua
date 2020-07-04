@@ -2,7 +2,7 @@
 InventItem = class('InventItem')
 
 
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function InventItem:initialize(prefab,luaBehaviour,data,ctr)
     self.prefab = prefab
     local transform = prefab.transform
@@ -14,8 +14,8 @@ function InventItem:initialize(prefab,luaBehaviour,data,ctr)
     luaBehaviour:AddClick(prefab,self.c_OnClick_addLine,self);
     self:Refresh(data)
 end
----==========================================================================================点击函数=============================================================================
---添加发明
+---==========================================================================================Click function=============================================================================
+--Add invention
 function InventItem:c_OnClick_addLine(ins)
         ins.buildInfo = ins.ctrl.m_data.info
         local data={ins = ins,func = function(Ins)
@@ -31,7 +31,7 @@ function InventItem:c_OnClick_addLine(ins)
 
         ct.OpenCtrl("InventPopCtrl",data)
 end
----==========================================================================================业务逻辑=============================================================================
+---==========================================================================================Business logic=============================================================================
 
 function InventItem:updateData(data)
     self.type=data.type

@@ -18,11 +18,11 @@ end
 function GuildApplyPanel.InitPanel()
     this.backBtn = transform:Find("MiddleRoot/BackBtn").gameObject
 
-    -- 申请信息
+    -- Application Information
     this.guildInfoScroll = transform:Find("MiddleRoot/Bg/Scroll View"):GetComponent("ActiveLoopScrollRect")
     this.noContentImage = transform:Find("MiddleRoot/NoContentImage")
 
-    -- 多语言
+    -- multi-language
     this.panelNameText = transform:Find("MiddleRoot/TitleBg/PanelNameText"):GetComponent("Text")
     this.noContentText = transform:Find("MiddleRoot/NoContentImage/Bg/Text"):GetComponent("Text")
 end

@@ -1,4 +1,4 @@
---	持久化引擎协议，在检测到协议版本发生改变时会清理协议
+--	The persistence engine protocol will clean up the protocol when it detects a protocol version change
 
 CityEngineLua.PersistentInfos = {}
 
@@ -86,7 +86,7 @@ function CityEngineLua.PersistentInfos:onScriptVersionNotMatch(verInfo, serVerIn
 end
 
 function CityEngineLua.PersistentInfos:onServerDigest(currserver, serverProtocolMD5, serverEntitydefMD5)
-	-- 我们不需要检查网关的协议， 因为登录loginapp时如果协议有问题已经删除了旧的协议
+	--We do not need to check the protocol of the gateway, because the old protocol has been deleted if there is a problem with the loginapp login
 	if(currserver == "baseapp") then
 		return;
 	end

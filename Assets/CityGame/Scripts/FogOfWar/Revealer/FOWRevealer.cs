@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// 说明：视野对象基类
-/// 
-/// @by wsh 2017-05-20
+/// Description: Base class of view object
 /// </summary>
 
 public class FOWRevealer : PooledClassObject, IFOWRevealer
 {
-    // 共享数据
+    // Share data
     protected bool m_isValid;
     protected Vector3 m_position;
     protected float m_radius;
@@ -60,6 +58,6 @@ public class FOWRevealer : PooledClassObject, IFOWRevealer
 
     public virtual void Update(int deltaMS)
     {
-        // 更新所有共享数据，m_isValid最后更新
+        // Update all shared data, m_isValid last update
     }
 }

@@ -5,24 +5,24 @@
 ---
 FlightMainPageItem = class('FlightMainPageItem')
 
---初始化方法
+--Initialization method
 function FlightMainPageItem:initialize(viewRect, data)
     self.viewRect = viewRect.transform
 
     self.btn = self.viewRect:Find("btn"):GetComponent("Button")
-    --self.rateText = self.viewRect:Find("rateText"):GetComponent("Text")  --准点率
-    self.flightText = self.viewRect:Find("flightText"):GetComponent("Text")  --航空公司
-    self.numText = self.viewRect:Find("timeText/numText"):GetComponent("Text")  --航班号
-    self.betMoneyText = self.viewRect:Find("betMoney"):GetComponent("Text")  --累积投注
-    self.timeText = self.viewRect:Find("timeText"):GetComponent("Text")  --航班时间
-    self.startPlaceText = self.viewRect:Find("startPlaceText"):GetComponent("Text")  --起始位置
-    self.endPlaceText = self.viewRect:Find("endPlaceText"):GetComponent("Text")  --目的地
-    self.startCodeText = self.viewRect:Find("startCodeText"):GetComponent("Text")  --起始位置code
-    self.endCodeText = self.viewRect:Find("endCodeText"):GetComponent("Text")  --目的地code
-    self.alreadyTran = self.viewRect:Find("alreadyRoot")  --已投注的标识
+    --self.rateText = self.viewRect:Find("rateText"):GetComponent("Text")  --Punctuality rate
+    self.flightText = self.viewRect:Find("flightText"):GetComponent("Text")  --airline
+    self.numText = self.viewRect:Find("timeText/numText"):GetComponent("Text")  --flight number
+    self.betMoneyText = self.viewRect:Find("betMoney"):GetComponent("Text")  --Cumulative betting
+    self.timeText = self.viewRect:Find("timeText"):GetComponent("Text")  --flight schedule
+    self.startPlaceText = self.viewRect:Find("startPlaceText"):GetComponent("Text")  --starting point
+    self.endPlaceText = self.viewRect:Find("endPlaceText"):GetComponent("Text")  --destination
+    self.startCodeText = self.viewRect:Find("startCodeText"):GetComponent("Text")  --Starting position code
+    self.endCodeText = self.viewRect:Find("endCodeText"):GetComponent("Text")  --Destination code
+    self.alreadyTran = self.viewRect:Find("alreadyRoot")  --Bet logo
 
-    self.betMoneyText01 = self.viewRect:Find("betMoney/Text"):GetComponent("Text")  --累积押注
-    self.alreadyTranText02 = self.viewRect:Find("alreadyRoot/Text"):GetComponent("Text")  --已押注
+    self.betMoneyText01 = self.viewRect:Find("betMoney/Text"):GetComponent("Text")  --Cumulative bet
+    self.alreadyTranText02 = self.viewRect:Find("alreadyRoot/Text"):GetComponent("Text")  --Bet
     self.btn.onClick:RemoveAllListeners()
     self.btn.onClick:AddListener(function ()
         self:ClickFunc()
@@ -31,7 +31,7 @@ function FlightMainPageItem:initialize(viewRect, data)
     self:Language()
     self:initData(data)
 end
---刷新数据
+--Refresh data
 function FlightMainPageItem:initData(data)
     if data == nil then
         return
@@ -45,7 +45,7 @@ function FlightMainPageItem:initData(data)
     self.betMoneyText.text = data.sumBetAmount
     local flightData = data.data
     local timeTemp = string.sub(flightData.FlightDeptimePlanDate, 1, 10)
-    self.timeText.text = timeTemp  --计划起飞时间
+    self.timeText.text = timeTemp  --Planned departure time
     self.flightText.text = ct.GetFlightCompanyName(flightData.FlightNo)
     self.numText.text = flightData.FlightNo  --CA4506
     self.endCodeText.text = flightData.FlightArrcode
@@ -73,7 +73,7 @@ end
 function FlightMainPageItem:_updateText()
     local str1 = self.flightText.text
     if str1 == "" then
-        str1 = GetLanguage(32030035)  --暂无数据
+        str1 = GetLanguage(32030035)  --No data
     end
     self.flightText.text = ct.getFlightSubString(str1)
     local str2 = self.endPlaceText.text

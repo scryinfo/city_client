@@ -19,8 +19,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-//优先读取persistentDataPath/系统/Lua 目录下的文件（默认下载目录）
-//未找到文件怎读取 Resources/Lua 目录下文件（仍没有使用LuaFileUtil读取）
+//Priority to read files in the persistentDataPath/system/Lua directory (default download directory)
+//How to read files under Resources/Lua directory if no files are found (still not read using LuaFileUtil)
 using UnityEngine;
 using LuaInterface;
 using System.IO;

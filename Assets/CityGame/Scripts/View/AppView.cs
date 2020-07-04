@@ -6,7 +6,7 @@ public class AppView : View {
     private string message;
 
     ///<summary>
-    /// 监听的消息
+    /// Monitored messages
     ///</summary>
     List<string> MessageList {
         get {
@@ -26,23 +26,23 @@ public class AppView : View {
     }
 
     /// <summary>
-    /// 处理View消息
+    /// Handle View messages
     /// </summary>
     /// <param name="message"></param>
     public override void OnMessage(IMessage message) {
         string name = message.Name;
         object body = message.Body;
         switch (name) {
-            case NotiConst.UPDATE_MESSAGE:      //更新消息
+            case NotiConst.UPDATE_MESSAGE:      //Update message
                 UpdateMessage(body.ToString());
             break;
-            case NotiConst.UPDATE_EXTRACT:      //更新解压
+            case NotiConst.UPDATE_EXTRACT:      //Update and unzip
                 UpdateExtract(body.ToString());
             break;
-            case NotiConst.UPDATE_DOWNLOAD:     //更新下载
+            case NotiConst.UPDATE_DOWNLOAD:     //Update download
                 UpdateDownload(body.ToString());
             break;
-            case NotiConst.UPDATE_PROGRESS:     //更新下载进度
+            case NotiConst.UPDATE_PROGRESS:     //Update download progress
                 UpdateProgress(body.ToString());
             break;
         }

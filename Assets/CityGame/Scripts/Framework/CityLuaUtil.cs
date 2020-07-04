@@ -162,7 +162,7 @@ namespace City
         {
             Debug.Log("测试静态方法");
             List<Byte[]> test = new List<byte[]>();
-            //字符串
+            //String
             //var publicKeyBytes = Hex.Decode(publicKey);
             test.Add(Hex.Decode("he哈哈"));
             //long
@@ -181,7 +181,7 @@ namespace City
     }
     public static class CityLuaUtil
     {
-        //调用检测钱包是否可用
+        //Call to check if the wallet is available
         public static void CallDetectWall()
         {
             AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -473,7 +473,7 @@ namespace City
             return UIRoot.getPopupRoot();
         }
 
-        // go 是脚本要挂到的目标对象，一般是一个prefab实例； luaPath 是要挂到目标对象上的lua脚本的路径
+        // go is the target object to which the script is to be attached, generally a prefab instance; luaPath is the path of the lua script to be attached to the target object
         public static Component AddLuaComponent(GameObject go, string luaPath)
         {
             LuaComponent com = go.AddComponent<LuaComponent>() as LuaComponent;
@@ -524,7 +524,7 @@ namespace City
             callFunction = null;
         }
         /// <summary>
-        /// 执行Lua方法..
+        /// Execute Lua method
         /// </summary>
         public static object[] CallMethod(string module, string func, params object[] args)
         {

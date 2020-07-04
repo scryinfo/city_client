@@ -56,7 +56,7 @@ function SignContractCtrl:Close()
     UIPanel.Close(self)
 end
 
----初始化
+---initialization
 function SignContractCtrl:_initPanelData()
     if self.m_data == nil then
         return
@@ -83,12 +83,12 @@ function SignContractCtrl:_showPartAInfo(info)
         SignContractPanel.ACompanyText.text = data.companyName
     end
 end
---返回按钮
+--Back button
 function SignContractCtrl:_backBtnFunc()
     PlayMusEff(1002)
     UIPanel:ClosePage()
 end
---确认按钮
+--Confirm button
 function SignContractCtrl:_confirmFunc()
     PlayMusEff(1002)
     local needPrice = self.m_data.contractInfo.price * self.m_data.contractInfo.hours
@@ -99,7 +99,7 @@ function SignContractCtrl:_confirmFunc()
         Event.Brocast("SmallPop", "您的钱不够", 300)
     end
 end
---签约
+--Sign a contract
 function SignContractCtrl:m_ReqContract(buildingId, price, hours)
     local msgId = pbl.enum("gscode.OpCode","signContract")
     local pMsg = assert(pbl.encode("gs.SignContract", {buildingId = buildingId, price = price, hours = hours}))

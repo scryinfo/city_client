@@ -7,7 +7,7 @@ local CreateAvatar;
 local transform;
 local gameObject;
 
---构建函数--
+--Build function--
 function CreateAvatarCtrl.New()
 	logWarn("CreateAvatarCtrl.New--->>");
 	return this;
@@ -20,7 +20,7 @@ function CreateAvatarCtrl.Awake()
 	Event.AddListener("onCreateAvatarResult", this.onCreateAvatarResult);
 end
 
---启动事件--
+--Start event--
 function CreateAvatarCtrl.OnCreate(obj)
 	gameObject = ct.InstantiatePrefab(obj);
 
@@ -52,14 +52,14 @@ end
 
 function  CreateAvatarCtrl.OnCancel()
 	this.Close();
-	--新建选择角色界面
+	--New select role interface
     local ctrl = CtrlManager.GetCtrl(CtrlNames.SelectAvatar);
     if ctrl ~= nil then
         ctrl.Awake();
     end
 end
 
---------------回调--------------------------------------------------
+--------------Callback--------------------------------------------------
 function CreateAvatarCtrl.onCreateAvatarResult( errorCode, dic )
 	if errorCode ~= 0 then
 		CreateAvatarPanel.textStatus:GetComponent('Text').text = "创建失败，错误码："..errorCode;
@@ -67,7 +67,7 @@ function CreateAvatarCtrl.onCreateAvatarResult( errorCode, dic )
 	end
 
 	this.Close();
-	--新建选择角色界面
+	--New select role interface
     local ctrl = CtrlManager.GetCtrl(CtrlNames.SelectAvatar);
     if ctrl ~= nil then
         ctrl.Awake();
@@ -75,7 +75,7 @@ function CreateAvatarCtrl.onCreateAvatarResult( errorCode, dic )
     end
 end
 
---关闭事件--
+--Close event--
 function CreateAvatarCtrl.Close()
 	destroy(gameObject);
 end

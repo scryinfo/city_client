@@ -5,7 +5,7 @@
 ---
 FlightDateYearItem = class('FlightDateYearItem', FlightDateBase)
 
---初始化方法
+--Initialization method
 function FlightDateYearItem:initialize(viewRect, data)
     self.viewRect = viewRect.transform
     self.rect = viewRect.transform:GetComponent("RectTransform")

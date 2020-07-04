@@ -9,18 +9,18 @@ function AddLineTypeItemNew:initialize(viewRect, data, toggleGroup)
     self.chooseTran = viewRect:Find("choose")
     self.nameText = viewRect:Find("nameText"):GetComponent("Text")
 
-    self.data.createDetail(self.data.typeId)  --先生成items
+    self.data.createDetail(self.data.typeId)  --Generate items first
     self:_language()
     self.bgBtn.onClick:AddListener(function()
         self:_btnClickFunc()
     end)
 end
---外部设置显示状态
+--External settings display status
 function AddLineTypeItemNew:setToggleIsOn(isOn)
     self.select = isOn
     self:showState(isOn)
 end
---显示状态，选中或者未选中
+--Display status, selected or unselected
 function AddLineTypeItemNew:showState(select)
     if select == true then
         self.chooseTran.localScale = Vector3.one
@@ -28,7 +28,7 @@ function AddLineTypeItemNew:showState(select)
         self.chooseTran.localScale = Vector3.zero
     end
 end
---外部获取typeId
+--Get typeId externally
 function AddLineTypeItemNew:getTypeId()
     return self.data.typeId
 end
@@ -36,11 +36,11 @@ end
 function AddLineTypeItemNew:_language()
     self.nameText.text = GetLanguage(self.data.languageId)
 end
---点击按钮
+--Click button
 function AddLineTypeItemNew:_btnClickFunc()
     if self.select == nil or self.select == false then
         self.data.selectFunc(self)
-        --ct.log("system","-------------------选中了type："..self.data.typeId)
+        --ct.log("system","-------------------Type selected: "..self.data.typeId)
     end
 end
 --
@@ -48,5 +48,5 @@ function AddLineTypeItemNew:_selectType()
     self.select = true
     self:showState(true)
     self.data.selectFunc(self)
-    --ct.log("system","-------------------选中了type："..self.data.typeId)
+    --ct.log("system","-------------------Type selected: "..self.data.typeId)
 end

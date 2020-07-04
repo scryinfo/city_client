@@ -62,7 +62,7 @@ function MainRenTableWarehouseCtrl:_setsFunc(go)
 
 end
 
---滑动互用
+--Sliding interoperability
 MainRenTableWarehouseCtrl.static.researchProvideData = function(transform, idx)
     idx = idx + 1
     local item = RenterItem:new(data[idx],transform,idx)
@@ -72,7 +72,7 @@ MainRenTableWarehouseCtrl.static.researchClearData = function(transform)
 
 end
 
---租户
+---Tenant
 MainRenTableWarehouseCtrl.static.inventionProvideData = function(transform, idx)
     if idx == 0 then
         MainRenTableWarehouseCtrl.inventionEmptyBtn = MainRenTableWarehouseCtrl:new(transform, function ()
@@ -86,12 +86,12 @@ MainRenTableWarehouseCtrl.static.inventionProvideData = function(transform, idx)
     MainRenTableWarehouseCtrl.static.inventionItems[idx] = item
 end
 
---租用滑条
+--Rental slider
 function MainRenTableWarehouseCtrl:_earningScrollFunc(go)
     if data == nil then
         return
     else
-        renter = UnityEngine.UI.LoopScrollDataSource.New()  --租户
+        renter = UnityEngine.UI.LoopScrollDataSource.New()  ---Tenant
         renter.mProvideData = MainRenTableWarehouseCtrl.static.researchProvideData
         renter.mClearData = MainRenTableWarehouseCtrl.static.researchClearData
         MainRenTableWarehousePanel.earningScroll:ActiveLoopScroll(renter, #data)

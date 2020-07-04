@@ -5,7 +5,7 @@ ConstructPanel = {};
 local this = ConstructPanel;
 
 
---启动事件--
+--Start event--
 function ConstructPanel.Awake(obj)
     gameObject = obj;
     transform = obj.transform;
@@ -13,14 +13,14 @@ function ConstructPanel.Awake(obj)
     this.InitPanel();
 end
 
---初始化面板--
+--Initialization panel---
 function ConstructPanel.InitPanel()
     this.btn_back = transform:Find("backBtn").gameObject;
     this.root_content = transform:Find("bottomScroll/Viewport/Content").gameObject;
-    --TODO：根据建筑配置表创造建筑
+    --TODO：Create buildings according to the building configuration table
 end
 
---单击事件--
+--Click event--
 function ConstructPanel.OnDestroy()
 
 end

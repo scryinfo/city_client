@@ -6,7 +6,7 @@
 
 ResearchTypeItem = class("ResearchTypeItem")
 
--- 初始化
+-- initialization
 function ResearchTypeItem:initialize(prefab, data)
     self.prefab = prefab
     self.data = data
@@ -21,7 +21,7 @@ function ResearchTypeItem:initialize(prefab, data)
     end)
 end
 
--- 点击item，打开研究界面，向服务器发消息进行研究
+-- Click item to open the research interface and send a message to the server to conduct research
 function ResearchTypeItem:_clickPrefab()
     ct.OpenCtrl("ResearchCtrl",self.data)
 end

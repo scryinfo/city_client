@@ -33,7 +33,7 @@ public class AppFacade : Facade
     }
 
     /// <summary>
-    /// 启动框架
+    /// Start frame
     /// </summary>
     public void StartUp() {
         SendMessageCommand(NotiConst.START_UP);

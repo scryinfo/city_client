@@ -10,7 +10,7 @@ local class = require 'Framework/class'
 
 serverMapAdvertisementItem = class('serverMapAdvertisementItem')
 
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function serverMapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,mgr,index)
 
     self.prefabData = prefabData;
@@ -74,17 +74,17 @@ function serverMapAdvertisementItem:initialize(prefabData,prefab,inluabehaviour,
 
 end
 
----添加
+---Add to
 function serverMapAdvertisementItem:OnClick_cut(go)
     ManageAdvertisementPosPanel.greyBtn.gameObject:SetActive(false);
-    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--自已进入
+    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId then--Enter yourself
         if go.numtext.text-1==0 then
             go.manager.serverMapAdvertisementINSList[go.metaId].updatecount=0
-            ---消除自身
+            ---Eliminate itself
             self.transform.parent.parent.parent.gameObject:SetActive(false)
-            ---对应广告还原
+            ---Corresponding advertisement restoration
             -- go.manager.selectItemList[go.index]:GetComponent("Image").raycastTarget=true;
-            ---表数据清除
+            ---Table data clear
             --self.manager.serverMapAdvertisementItemList[go.index]=nil
             go.manager.insList[go.metaId].prefab.transform:GetComponent("Image").raycastTarget=true;
             return
@@ -92,16 +92,16 @@ function serverMapAdvertisementItem:OnClick_cut(go)
         go.numtext.text=go.numtext.text-1
         go.updatecount=go.numtext.text
 
-    else---他人进入
+    else---Others enter
 
         if  go.numtext.text=="0" then
             go.manager.insList[go.metaId].prefab.transform:GetComponent("Image").raycastTarget=true;
             return
         end
-        --自身数量减少
+        --Self-reduction
         go.numtext.text=go.numtext.text-1
         go.updatecount=go.numtext.text
-        --槽位增加
+        --Slot increase
         if   go.manager.current then
             go.manager.current.angleRoot.localScale=Vector3.zero
         end
@@ -118,17 +118,17 @@ function serverMapAdvertisementItem:OnClick_cut(go)
 end
 
 function serverMapAdvertisementItem:OnClick_Plus(ins)
-    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId  then--自已进入
+    if DataManager.GetMyOwnerID()==DataManager.GetDetailModelByID(MunicipalPanel.buildingId).buildingOwnerId  then--Enter yourself
         ins.numtext.text=ins.numtext.text+1
         ins.updatecount=ins.numtext.text
 
-    else-----他人进入
-        --限制上限
+    else-----Others enter
+        --Upper limit
 
         if ins.manager.current.numText.text=="0" then
             return
         end
-        --自身数量增加
+        --Increase in number
         ins.numtext.text=ins.numtext.text+1
         ins.updatecount=ins.numtext.text
         if   ins.manager.current then
@@ -142,7 +142,7 @@ function serverMapAdvertisementItem:OnClick_Plus(ins)
                 ins.manager.current=addItemIns
             end
         end
-        --槽位减少
+        --Slot reduction
         ins.manager.current.numText.text=ins.manager.current.numText.text-1
     end
 

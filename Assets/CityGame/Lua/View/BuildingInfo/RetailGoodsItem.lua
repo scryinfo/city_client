@@ -1,6 +1,6 @@
 RetailGoodsItem = class('RetailGoodsItem')
 
---初始化
+--initialization
 function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,state)
     self.id = id;
     self.prefab = prefab;
@@ -20,7 +20,7 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,state
     self.numberText = self.prefab.transform:Find("details/numberText"):GetComponent("Text");
     self.icon = self.prefab.transform:Find("details/icon"):GetComponent("Image");
     -----------------------------------------------------------------------------
-    --暂时屏蔽
+    --Temporarily block
     self.brandValueObj = self.prefab.transform:Find("details/brandValue")
     self.qualityValueObj = self.prefab.transform:Find("details/qualityValue")
     -----------------------------------------------------------------------------
@@ -33,12 +33,12 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,state
     self.XBtn = self.prefab.transform:Find("XBtn");
 
     -----------------------------------------------------------------------------
-    --暂时屏蔽
+    --Temporarily block
     self.brandValueObj.gameObject:SetActive(false)
     self.qualityValueObj.gameObject:SetActive(false)
     -----------------------------------------------------------------------------
 
-    --UI信息赋值
+    --UI information assignment
     self.nameText.text = GetLanguage(self.goodsDataInfo.k.id)
     self.numberText.text = self.goodsDataInfo.n
     self.brandName.text = GetLanguage(4301011)
@@ -51,7 +51,7 @@ function RetailGoodsItem:initialize(goodsDataInfo,prefab,inluabehaviour,id,state
     self.inluabehaviour:AddClick(self.detailsBtn.gameObject,self.OnClick_detailsBtn,self)
     self:initializeUiState()
 end
---初始化UI状态
+--Initialize the UI state
 function RetailGoodsItem:initializeUiState()
     if self.state then
         self.XBtn.transform.localScale = Vector3.zero

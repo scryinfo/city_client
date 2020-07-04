@@ -9,7 +9,7 @@ public class BaseLineChart : ILineChart
     protected LineChartData basis;
     protected Dictionary<int, VertexStream> lines;
     /// <summary>
-    /// 画出折线图
+    /// Draw a line chart
     /// </summary>
     /// <param name="vh"></param>
     /// <param name="vRect"></param>
@@ -27,7 +27,7 @@ public class BaseLineChart : ILineChart
         return vh;
     }
     /// <summary>
-    /// 画出轴
+    /// Draw the axis
     /// </summary>
     /// <param name="vh"></param>
     /// <returns></returns>
@@ -67,7 +67,7 @@ public class BaseLineChart : ILineChart
         return vh;
     }
     /// <summary>
-    /// 画网格
+    /// Draw grid
     /// </summary>
     /// <param name="vh"></param>
     /// <returns></returns>
@@ -75,10 +75,10 @@ public class BaseLineChart : ILineChart
     {
         if (!basis.IsDrawMeshX && !basis.IsDrawMeshY)
             return vh;
-        //画X轴
+        //Draw X axis
         if (basis.IsDrawMeshX)
         {
-            //是否是虚线或实线
+            //Whether it is dashed or solid
             if (!basis.IsImaginaryLine)
             {
                 for (float y = 0; y <= size.y; y += basis.MeshCellSize.y)
@@ -105,10 +105,10 @@ public class BaseLineChart : ILineChart
                 }
             }
         }
-        //画Y轴
+        //Draw Y axis
         if (basis.IsDrawMeshY)
         {
-            //是否是虚线或实线
+            //Whether it is dashed or solid
             if (!basis.IsImaginaryLine)
             {
                 for (float x = 0; x <= size.x; x += basis.MeshCellSize.x)
@@ -138,7 +138,7 @@ public class BaseLineChart : ILineChart
         return vh;
     }
     /// <summary>
-    /// 以两点划线
+    /// Dotted line
     /// </summary>
     /// <param name="startPos"></param>
     /// <param name="endPos"></param>
@@ -164,7 +164,7 @@ public class BaseLineChart : ILineChart
         return vertex;
     }
     /// <summary>
-    /// 获得ui顶点
+    /// Get ui vertices
     /// </summary>
     /// <param name="point"></param>
     /// <param name="color0"></param>

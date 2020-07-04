@@ -26,7 +26,7 @@ namespace LuaFramework {
             return ResourceManager.getBundleName(ref releativePath);
         }
 
-        /// Lua中用的异步加载资源方法，必须传入Lua的回调                
+        /// The asynchronous resource loading method used in Lua must be passed in the Lua callback             
         public void LoadPrefab_A(string releativePath, System.Type type = null, object objInstance = null, LuaFunction func = null,Action<UnityEngine.Object[], AssetBundle> csFunc = null)
         {
             string assetName = releativePath;
@@ -88,9 +88,7 @@ namespace LuaFramework {
 #endif
         }
 
-        /// <summary>
-        /// �ر����
-        /// </summary>
+       
         /// <param name="name"></param>
         public void ClosePanel(string name) {
             var panelName = name + "Panel";

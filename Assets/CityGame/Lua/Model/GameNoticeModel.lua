@@ -12,7 +12,7 @@ function GameNoticeModel:initialize(insId)
 end
 
 function GameNoticeModel:OnCreate()
-    --网络回调
+    --Online registration
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","mailRead","gs.Id",self.n_OnMailRead,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","delMail","gs.Id",self.n_OnDeleMails,self)
     DataManager.ModelRegisterNetMsg(nil,"gscode.OpCode","getOneSocietyInfo","gs.SocietyInfo",self.n_OnSocietyInfo,self)
@@ -20,9 +20,9 @@ function GameNoticeModel:OnCreate()
 end
 
 function GameNoticeModel:Close()
-    --清空本地UI事件
+    --Clear local UI events
 end
---客户端请求--
+--Client request--
 
 --读取邮件
 function GameNoticeModel:m_mailRead(mailId)
@@ -46,7 +46,7 @@ function GameNoticeModel:m_queryBuildingName(buildingId)
     DataManager.ModelSendNetMes("gscode.OpCode","queryBuildingName" ,"gs.Id",{id = buildingId})
 end
 
---服务器回调--
+--Server callback--
 
 --查看
 function GameNoticeModel:n_OnMailRead(lMsg)

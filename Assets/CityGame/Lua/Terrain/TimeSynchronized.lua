@@ -1,11 +1,11 @@
---与服务器同步时间数据
---TODO:应做时间处理.放置用户修改本地时间（目前不修改，因服务器会做校验）
+-- Synchronize time data with the server
+--TODO:Time processing should be done. Place the user to modify the local time (currently not modified, because the server will do the verification)
 TimeSynchronized = {}
 
---本地时间与服务器时间比较
+--Comparison of local time and server time
 local m_TimeOffset = nil
 
---同步服务器时间
+--Sync server time
 function  TimeSynchronized.SynchronizationServerTime(ServerTime)
     if m_TimeOffset == nil then
         ClimateManager.Init()
@@ -14,7 +14,7 @@ function  TimeSynchronized.SynchronizationServerTime(ServerTime)
 
 end
 
---本地判断时间是否同步
+-- judge whether the time is synchronized locally
 local function JudgeIsRightTimeOffset()
     if m_TimeOffset == nil then
         ct.log("system","Error: 还未与服务器同步时间！！！")
@@ -26,7 +26,7 @@ local function JudgeIsRightTimeOffset()
     return false
 end
 
---获取服务器的当前时间(毫秒)
+--Get the server's current time (milliseconds)
 function TimeSynchronized.GetTheCurrentServerTime()
     if JudgeIsRightTimeOffset() == true then
         return tolua.gettime() * 1000 + m_TimeOffset
@@ -34,7 +34,7 @@ function TimeSynchronized.GetTheCurrentServerTime()
     return nil
 end
 
---获取与服务器同步的当前时间(秒)
+--Get the current time (seconds) synchronized with the server
 function TimeSynchronized.GetTheCurrentTime()
     if JudgeIsRightTimeOffset() == true then
         return (tolua.gettime() * 1000 + m_TimeOffset) / 1000
@@ -42,8 +42,8 @@ function TimeSynchronized.GetTheCurrentTime()
     return nil
 end
 
---获取目标时间与当前时间（服务器）的差值
---若大于0则表示时间未到
+--Get the difference between the target time and the current time (server)
+--- If it is greater than 0, it means that the time has not arrived
 function TimeSynchronized.GetTheDifferenceFromTheCurrentTime(targetTime)
     if JudgeIsRightTimeOffset() == true then
         return targetTime - (tolua.gettime() * 1000 + m_TimeOffset)
@@ -52,7 +52,7 @@ function TimeSynchronized.GetTheDifferenceFromTheCurrentTime(targetTime)
 end
 
 
---退出登录时做清空处理
+--Empty processing when logging out
 function TimeSynchronized.ExitTheServer()
     m_TimeOffset = nil
 end

@@ -31,15 +31,15 @@ function GuoundAuctionSuccessBoxCtrl:_getComponent(go)
     self.twoText = go.transform:Find("reminderBg/tipObj/twoText/Text"):GetComponent("Text")
     self.confirmBtn = go.transform:Find("reminderBg/notChoose/confirm")
 end
-------------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
---多语言
+------------------------------------------------------------------------Initialization function------------------------------------------------------------------------------------------
+--multi-language
 function GuoundAuctionSuccessBoxCtrl:_language()
     self.name.text = "提示"
     self.contentText.text = "土地竞价成功"
     self.oneText.text = "Higher bids,we`ll pop you up."
     self.twoText.text = "如果拍卖成功，交易金额的0.03%将被扣除到奖金池中。"
 end
-------------------------------------------------------------------------点击函数--------------------------------------------------------------------------------------------
+------------------------------------------------------------------------Click function------------------------------------------------------------------------------------------
 function GuoundAuctionSuccessBoxCtrl:clickConfirmBtn()
     PlayMusEff(1002)
     UIPanel.ClosePage()

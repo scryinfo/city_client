@@ -6,7 +6,7 @@
 
 ResearchEvaBoxItem = class("ResearchEvaBoxItem")
 
--- 初始化
+-- initialization
 function ResearchEvaBoxItem:initialize(prefab, data, fuc)
     self.prefab = prefab
     self.data = data

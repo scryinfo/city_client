@@ -17,42 +17,42 @@ function FlightDetailPanel.InitPanel()
     this.backBtn = transform:Find("topRoot/backBtn")
     this.ruleBtn = transform:Find("topRoot/ruleBtn")
 
-    this.flightText = transform:Find("centerRoot/flightText"):GetComponent("Text")  --机场名字
-    this.timeText = transform:Find("centerRoot/timeText"):GetComponent("Text")  --时间
-    this.numText = transform:Find("centerRoot/timeText/numText"):GetComponent("Text")  --航班号
-    this.startCodeText = transform:Find("centerRoot/startCodeText"):GetComponent("Text")  --起始地code
-    this.startPlaceText = transform:Find("centerRoot/startPlaceText"):GetComponent("Text")  --起始地name
+    this.flightText = transform:Find("centerRoot/flightText"):GetComponent("Text")  --Airport name
+    this.timeText = transform:Find("centerRoot/timeText"):GetComponent("Text")  --time
+    this.numText = transform:Find("centerRoot/timeText/numText"):GetComponent("Text")  --flight number
+    this.startCodeText = transform:Find("centerRoot/startCodeText"):GetComponent("Text")  --Starting code
+    this.startPlaceText = transform:Find("centerRoot/startPlaceText"):GetComponent("Text")  --Starting place name
     this.endCodeText = transform:Find("centerRoot/endCodeText"):GetComponent("Text")
     this.endPlaceText = transform:Find("centerRoot/endPlaceText"):GetComponent("Text")
     --hot
     this.hotTran = transform:Find("centerRoot/hot")
-    this.hotPlanTimeText = transform:Find("centerRoot/hot/left/Text01/planTimeText"):GetComponent("Text")  --计划起飞时间
-    this.hotTrueTimeText = transform:Find("centerRoot/hot/left/Text02/trueTimeText"):GetComponent("Text")  --实际起飞时间
-    this.hotJoinCountText = transform:Find("centerRoot/hot/right/Text01/joinCountText"):GetComponent("Text")  --今日参与人数
-    this.hotMoneyText = transform:Find("centerRoot/hot/right/Text02/moneyText"):GetComponent("Text")  --投注积分
+    this.hotPlanTimeText = transform:Find("centerRoot/hot/left/Text01/planTimeText"):GetComponent("Text")  --Planned departure time
+    this.hotTrueTimeText = transform:Find("centerRoot/hot/left/Text02/trueTimeText"):GetComponent("Text")  --Actual departure time
+    this.hotJoinCountText = transform:Find("centerRoot/hot/right/Text01/joinCountText"):GetComponent("Text")  --Number of participants today
+    this.hotMoneyText = transform:Find("centerRoot/hot/right/Text02/moneyText"):GetComponent("Text")  --Betting points
     --history
     this.historyTran = transform:Find("centerRoot/history")
-    this.historyPlanTimeText = transform:Find("centerRoot/history/left/Text01/planTimeText"):GetComponent("Text")  --计划起飞时间
-    this.historyTrueTimeText = transform:Find("centerRoot/history/left/Text02/trueTimeText"):GetComponent("Text")  --实际起飞时间
+    this.historyPlanTimeText = transform:Find("centerRoot/history/left/Text01/planTimeText"):GetComponent("Text")  --Planned departure time
+    this.historyTrueTimeText = transform:Find("centerRoot/history/left/Text02/trueTimeText"):GetComponent("Text")  --Actual departure time
 
-    this.resultRoot = transform:Find("centerRoot/resultRoot")  --结果
-    this.value01Text = transform:Find("centerRoot/resultRoot/01/valueText"):GetComponent("Text")  --预测延误时间
-    this.value02Text = transform:Find("centerRoot/resultRoot/02/valueText"):GetComponent("Text")  --实际延误时间
-    this.value03Text = transform:Find("centerRoot/resultRoot/03/valueText"):GetComponent("Text")  --净赚积分
+    this.resultRoot = transform:Find("centerRoot/resultRoot")  --result
+    this.value01Text = transform:Find("centerRoot/resultRoot/01/valueText"):GetComponent("Text")  --Predict delay time
+    this.value02Text = transform:Find("centerRoot/resultRoot/02/valueText"):GetComponent("Text")  --Actual delay time
+    this.value03Text = transform:Find("centerRoot/resultRoot/03/valueText"):GetComponent("Text")  --Net earning points
     this.betBtn = transform:Find("centerRoot/betBtn")  --
-    this.infoRoot = transform:Find("centerRoot/infoRoot")  --提示信息
+    this.infoRoot = transform:Find("centerRoot/infoRoot")  --Prompt message
     this.infoText = transform:Find("centerRoot/infoRoot/Text"):GetComponent("Text")  --
 
     this.titleText01 = transform:Find("topRoot/Text"):GetComponent("Text")
-    this.planTimeText02 = transform:Find("centerRoot/hot/left/Text01"):GetComponent("Text")  --计划起飞时间
-    this.trueTimeText03 = transform:Find("centerRoot/hot/left/Text02"):GetComponent("Text")  --实际起飞时间
-    this.joinCountText04 = transform:Find("centerRoot/hot/right/Text01"):GetComponent("Text")  --今日参与人数
-    this.moneyText05 = transform:Find("centerRoot/hot/right/Text02"):GetComponent("Text")  --投注积分
-    this.value01Text06 = transform:Find("centerRoot/resultRoot/01/Text"):GetComponent("Text")  --预测延误时间
-    this.value02Text07 = transform:Find("centerRoot/resultRoot/02/Text"):GetComponent("Text")  --实际延误时间
-    this.value03Text08 = transform:Find("centerRoot/resultRoot/03/Text"):GetComponent("Text")  --净赚积分
+    this.planTimeText02 = transform:Find("centerRoot/hot/left/Text01"):GetComponent("Text")  --Planned departure time
+    this.trueTimeText03 = transform:Find("centerRoot/hot/left/Text02"):GetComponent("Text")  --Actual departure time
+    this.joinCountText04 = transform:Find("centerRoot/hot/right/Text01"):GetComponent("Text")  --Number of participants today
+    this.moneyText05 = transform:Find("centerRoot/hot/right/Text02"):GetComponent("Text")  --Betting points
+    this.value01Text06 = transform:Find("centerRoot/resultRoot/01/Text"):GetComponent("Text")  --Predict delay time
+    this.value02Text07 = transform:Find("centerRoot/resultRoot/02/Text"):GetComponent("Text")  --Actual delay time
+    this.value03Text08 = transform:Find("centerRoot/resultRoot/03/Text"):GetComponent("Text")  --Net earning points
     this.betBtnText09 = transform:Find("centerRoot/betBtn/Text"):GetComponent("Text")  --BET
     this.ruleBtnText10 = transform:Find("topRoot/ruleBtn/Text"):GetComponent("Text")  --RULE
-    this.historyPlanTimeText11 = transform:Find("centerRoot/history/left/Text01"):GetComponent("Text")  --计划起飞时间
-    this.historyTrueTimeText12 = transform:Find("centerRoot/history/left/Text02"):GetComponent("Text")  --实际起飞时间
+    this.historyPlanTimeText11 = transform:Find("centerRoot/history/left/Text01"):GetComponent("Text")  --Planned departure time
+    this.historyTrueTimeText12 = transform:Find("centerRoot/history/left/Text02"):GetComponent("Text")  --Actual departure time
 end

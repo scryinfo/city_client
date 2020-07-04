@@ -4,8 +4,8 @@
 --- DateTime: 2018/11/19 15:20
 ---
 LabInventionLineItem = class('LabInventionLineItem')
-LabInventionLineItem.static.NoRollColor = Vector3.New(22, 38, 94)  --没有成果时候的颜色
-LabInventionLineItem.static.FinishBulbHight = 176  --进度完成时灯泡背景的最高高度
+LabInventionLineItem.static.NoRollColor = Vector3.New(22, 38, 94)  --Color when there is no fruit
+LabInventionLineItem.static.FinishBulbHight = 176  --The highest height of the bulb background when the progress is complete
 
 function LabInventionLineItem:initialize(data, viewRect)
     self.viewRect = viewRect
@@ -46,7 +46,7 @@ function LabInventionLineItem:initialize(data, viewRect)
     Event.AddListener("c_LabLineWorkerNumChange", self._workerNumChange, self)
 end
 
---初始化界面
+--Initialize the interface
 function LabInventionLineItem:_initData(data)
     self.data = data
     local itemInfo = Material[data.itemId]
@@ -75,7 +75,7 @@ function LabInventionLineItem:_initData(data)
         self.progressCountText.text = tostring(data.roll)
     end
 
-    --显示阶段状态
+    --Show stage status
     self.data.phaseStates = {}
     for i = 1, self.formularData.phase do
         self.data.phaseStates[i] = LabInventionItemPhaseState.Null
@@ -90,7 +90,7 @@ function LabInventionLineItem:_initData(data)
             self.data.phaseStates[i] = LabInventionItemPhaseState.Finish
         end
     end
-    self.phaseItems:showState(self.data.phaseStates)  --显示5个阶段的状态
+    self.phaseItems:showState(self.data.phaseStates)  --Show the status of 5 stages
     self.startTimeDown = true
     self.timeDownText.transform.localScale = Vector3.one
     self.currentTime = os.time()
@@ -99,12 +99,12 @@ function LabInventionLineItem:_initData(data)
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
---刷新数据
+--Refresh data
 function LabInventionLineItem:_updateInfo(data)
     if data.id ~= self.data.id then
         return
     end
-    --成果展示
+    --Achievement display
     self.data.roll = data.roll
     self.data.leftSec = data.leftSec
     self.data.run = data.run
@@ -118,7 +118,7 @@ function LabInventionLineItem:_updateInfo(data)
         self.bulbImg.color = getColorByVector3(LabInventionLineItem.static.NoRollColor)
         self.progressCountText.transform.localScale = Vector3.zero
     end
-    --阶段显示
+    --Stage display
     for i = 1, data.phase do
         self.phaseStates[i] = LabInventionItemPhaseState.Finish
     end
@@ -130,7 +130,7 @@ function LabInventionLineItem:_updateInfo(data)
         self.timeDownText.transform.localScale = Vector3.zero
     end
 end
---员工数量改变
+--Number of employees changed
 function LabInventionLineItem:_workerNumChange(lineId, totalTime, finishTime, workerNum)
     if lineId == self.data.id then
         self.currentTime = os.time()
@@ -140,7 +140,7 @@ function LabInventionLineItem:_workerNumChange(lineId, totalTime, finishTime, wo
         --self.staffSlider.value = workerNum
     end
 end
---点击删除按钮
+--Click the delete button
 function LabInventionLineItem:_clickDeleteBtn()
     local info = {}
     info.titleInfo = "WARNING"
@@ -151,7 +151,7 @@ function LabInventionLineItem:_clickDeleteBtn()
     end
     ct.OpenCtrl("BtnDialogPageCtrl", info)
 end
---倒计时
+--Countdown
 function LabInventionLineItem:_update()
     if self.startTimeDown then
         self.currentTime = self.currentTime + UnityEngine.Time.unscaledDeltaTime

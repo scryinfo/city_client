@@ -13,7 +13,7 @@ LabResearchBtnState =
 LabResearchCtrl = class('LabResearchCtrl',UIPanel)
 UIPanel:ResgisterOpen(LabResearchCtrl)
 
-LabResearchCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --按钮的预制
+LabResearchCtrl.static.EmptyBtnPath = "View/Items/LaboratoryItems/EmptyBtn"  --Button prefabrication
 
 function LabResearchCtrl:initialize()
     UIPanel.initialize(self, UIType.Normal, UIMode.HideOther, UICollider.None)
@@ -36,7 +36,7 @@ function LabResearchCtrl:Awake(go)
     self.luaBehaviour:AddClick(LabResearchPanel.progressSuccessBtn.gameObject, function()
         if LabScientificLineCtrl.static.buildingId and self.m_data.id then
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabRoll', self.m_data.id)
-            --roll之后减掉roll的次数，设置run为false状态
+            --Reduce the number of rolls after roll and set run to false
             self.m_data.roll = 0
             self.m_data.run = false
             DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabLineInfoAfterRoll', self.m_data)
@@ -78,7 +78,7 @@ function LabResearchCtrl:_update()
         local timeTable = getTimeBySec(remainTime)
         local timeStr = timeTable.hour..":"..timeTable.minute..":"..timeTable.second
         LabResearchPanel.timeDownText.text = timeStr
-        LabResearchPanel.progressWorkingImg.fillAmount = 1 - remainTime / self.m_data.totalTime  --设置图片进度
+        LabResearchPanel.progressWorkingImg.fillAmount = 1 - remainTime / self.m_data.totalTime  --Set picture progress
 
         if self.currentTime >= self.m_data.finishTime then
             self.m_data.bulbState = LabInventionBulbItemState.Finish
@@ -88,7 +88,7 @@ function LabResearchCtrl:_update()
         end
     end
 end
---初始化数据
+--Initialization data
 function LabResearchCtrl:_initPanelData()
     self.m_data.type = 0
     self.currentTime = os.time()
@@ -111,7 +111,7 @@ function LabResearchCtrl:_initPanelData()
     LabResearchPanel.iconImg:SetNativeSize()
     LabResearchPanel.itemNameText.text = Good[self.m_data.itemId].name
 
-    if not self.m_data.id then    --没有id则为临时添加的线
+    if not self.m_data.id then    --No id is the temporarily added line
         self.backToCompose = true
         self.m_data.bulbState = LabInventionBulbItemState.Empty
         LabResearchPanel.setBulbState(self.m_data.bulbState)
@@ -126,11 +126,11 @@ function LabResearchCtrl:_initPanelData()
         end
     else
         self.backToCompose = false
-        if self.m_data.run then    --如果还在倒计时，则正在工作状态
+        if self.m_data.run then    --If it is still counting down, it is working
             self.m_data.bulbState = LabInventionBulbItemState.Working
             self:_setResearchBtnState(LabResearchBtnState.Working)
         else
-            if self.m_data.roll == 0 then    --没有倒计时结束，且没有roll，则为从暂停的线点进来
+            if self.m_data.roll == 0 then    --If there is no end of the countdown and there is no roll, it will come in from the paused line.
                 self.m_data.bulbState = LabInventionBulbItemState.Empty
                 self:_setResearchBtnState(LabResearchBtnState.EnableClick)
                 LabResearchPanel.researchBtn.onClick:RemoveAllListeners()
@@ -146,33 +146,33 @@ function LabResearchCtrl:_initPanelData()
     end
 end
 function LabResearchCtrl:_setResearchBtnState(state)
-    if state == LabResearchBtnState.EnableClick then  --默认可以点击
+    if state == LabResearchBtnState.EnableClick then  --Clickable by default
         LabResearchPanel.researchBtn.transform.localScale = Vector3.one
         LabResearchPanel.notEnoughImgTran.localScale = Vector3.zero
         LabResearchPanel.workingImgTran.localScale = Vector3.zero
-    elseif state == LabResearchBtnState.NotEnough then  --不够的状态/不可点击状态
+    elseif state == LabResearchBtnState.NotEnough then  --Insufficient state/not clickable state
         LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
         LabResearchPanel.notEnoughImgTran.localScale = Vector3.one
         LabResearchPanel.workingImgTran.localScale = Vector3.zero
-    elseif state == LabResearchBtnState.Working then  --工作中
+    elseif state == LabResearchBtnState.Working then  --at work
         LabResearchPanel.researchBtn.transform.localScale = Vector3.zero
         LabResearchPanel.notEnoughImgTran.localScale = Vector3.zero
         LabResearchPanel.workingImgTran.localScale = Vector3.one
     end
 end
---添加临时线，返回科技线
+--Add temporary line, return to technology line
 function LabResearchCtrl:_creatTempLine()
     local data = {itemId = self.m_data.itemId, type = 0, phase = 1, workerNum = 0}
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_AddTempLineData', data, self.usedData)
     UIPanel.ClosePage()
 end
---继续研究，返回科技线
+--Continue research and return to the technology line
 function LabResearchCtrl:_launchLine()
     DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_ReqLabLaunchLine', self.m_data.id, 1)
-    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabStore', self.usedData)  --更新仓库库存
+    DataManager.DetailModelRpcNoRet(LabScientificLineCtrl.static.buildingId, 'm_UpdateLabStore', self.usedData)  --Update warehouse inventory
     UIPanel.ClosePage()
 end
---关闭自己，返回科技线界面
+--Close yourself and return to the tech line interface
 function LabResearchCtrl:_backToScientificCtrl()
     local info = {}
     info.titleInfo = "SUCCESS"

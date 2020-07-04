@@ -107,24 +107,24 @@ function SocialityManager:SetMyReadChatInfo(index, id)
     end
 end
 
---1 获取世界消息 2 获取好友消息 3 获取陌生人消息 4获取公会消息
+--1 Get world news 2 Get friend news 3 Get stranger news 4 Get guild news
 function SocialityManager:GetMyChatInfo(index)
     return self.m_chatByType[index]
 end
 
---全部信息
+--all info 
 function SocialityManager:GetMyAllChatInfo()
     return self.m_chatInfo
 end
 
---获取自己好友申请信息
+--Get your friend's application information
 function SocialityManager:GetMyFriendsApply()
     return self.m_friendsApply
 end
 
---刷新自己好友申请信息
---参数： tempData==>  RequestFriend
---如果需要删除好友申请，ByteBool={ id = "XXXXXXXX",name = nil }
+--Refresh your friend application information
+--Parameter: tempData==> RequestFriend
+--If you need to delete your friend application,ByteBool={ id = "XXXXXXXX",name = nil }
 function SocialityManager:SetMyFriendsApply(tempData)
     if tempData.id and tempData.name then
         for i, v in ipairs(self.m_friendsApply) do
@@ -139,14 +139,14 @@ function SocialityManager:SetMyFriendsApply(tempData)
     end
 end
 
---获取自己黑名单
+--Get yourself blacklist
 function SocialityManager:GetMyBlacklist()
     return self.m_blacklist
 end
 
---刷新自己黑名单
---参数： tempData==>  Bytes
---如果需要删除黑名单，tempData={ id = "XXXXXXXX",name = nil }
+--Refresh yourself blacklist
+--Parameter: tempData==> Bytes
+--If you need to delete the blacklist,tempData={ id = "XXXXXXXX",name = nil }
 function SocialityManager:SetMyBlacklist(tempData)
     if tempData.id and tempData.name then
         table.insert(self.m_blacklist, tempData)
@@ -160,7 +160,7 @@ function SocialityManager:SetMyBlacklist(tempData)
     end
 end
 
--- 保存聊天记录
+-- Save chat history
 function SocialityManager:SaveFriendsChat()
     local tempUnreadCommunication = {}
     if self.unread then
@@ -224,37 +224,37 @@ function SocialityManager:ReadFriendsChat()
     --local cRoleCommunication = msg.allRoleCom[1].cRoleCommunication[1].readCommunication[1].name
 end
 
--- 查找上次未读信息
+-- Find the last unread message
 function SocialityManager:GetUnread()
     return self.unread
 end
 
--- 清空陌生人的聊天消息
+-- Clear chat messages from strangers
 function SocialityManager:SetStrangersInfo(id)
     self.m_chatByType[3][id] = nil
 end
 
--- 获得好友所有聊天纪录
+-- Get all chat history of friends
 function SocialityManager:GetChatRecords()
     return self.mySaveRoleCom.readCommunication
 end
 
--- 删除聊天记录
+-- Delete chat history
 function SocialityManager:SetChatRecords(index)
     table.remove(self.mySaveRoleCom.readCommunication, index)
 end
 
--- 清空公会的聊天消息
+-- Clear guild chat messages
 function SocialityManager:SetGuildChatInfo()
     self.m_chatByType[4] = {}
 end
 
--- 获得联盟聊天是否查看信息
+-- Get the information about whether to view the affiliate chat
 function SocialityManager:GetIsReadGuildChatInfo()
     return  self.isReadGuildChatInfo
 end
 
--- 设置联盟聊天是否查看信息
+-- Set whether or not to view information in affiliate chat
 function SocialityManager:SetIsReadGuildChatInfo(read)
     self.isReadGuildChatInfo = read
 end

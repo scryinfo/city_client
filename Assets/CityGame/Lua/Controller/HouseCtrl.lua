@@ -53,10 +53,10 @@ function HouseCtrl:Hide()
 end
 
 
---创建好建筑之后，每个建筑会存基本数据，比如id
+--After creating a building, each building will store basic data, such as id
 function HouseCtrl:_initData()
     if self.m_data then
-        --向服务器请求建筑详情
+        --Request building details from the server
         DataManager.OpenDetailModel(HouseModel,self.m_data.insId)
         RevenueDetailsMsg.m_getPrivateBuildingCommonInfo(self.m_data.insId)
         DataManager.DetailModelRpcNoRet(self.m_data.insId, 'm_ReqHouseDetailInfo',self.m_data.insId)
@@ -72,14 +72,14 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
             self:_clickCloseBtn(self)
         end)
     end
-    HousePanel.openBusinessItem:initData(houseDetailData.info, BuildingType.House)  --初始化
+    HousePanel.openBusinessItem:initData(houseDetailData.info, BuildingType.House)  --initialization
     houseDetailData.info.buildingType = BuildingType.House
 
     local insId = self.m_data.insId
     self.m_data = houseDetailData
     self.m_data.insId = insId  --temp
 
-    if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --判断是自己还是别人打开了界面
+    if houseDetailData.info.ownerId ~= DataManager.GetMyOwnerID() then  --Determine if you or someone else has opened the interface
         self.m_data.isOther = true
         HousePanel.bubbleMessageBtn.localScale = Vector3.zero
     else
@@ -91,9 +91,9 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
         end
     end
     if self.groupMgr == nil then
-        if houseDetailData.info.state == "OPERATE" then -- 营业中
+        if houseDetailData.info.state == "OPERATE" then --in operation
             self.groupMgr = BuildingInfoMainGroupMgr:new(HousePanel.groupTrans, self.houseBehaviour)
-            if self.m_data.isOther then -- 别人
+            if self.m_data.isOther then -- other people
                 self.groupMgr:AddParts(BuildingRentPart, 1)
                 --self.groupMgr:AddParts(BuildingSignPart, 0)
                 self.groupMgr:AddParts(TurnoverPart, 0)
@@ -108,7 +108,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
             HousePanel.groupTrans.localScale = Vector3.one
             self.groupMgr:RefreshData(self.m_data)
             self.groupMgr:TurnOffAllOptions()
-        else -- 未营业
+        else -- Closed
             HousePanel.groupTrans.localScale = Vector3.zero
         end
     else
@@ -116,7 +116,7 @@ function HouseCtrl:_receiveHouseDetailInfo(houseDetailData)
     end
 end
 
---点击开业按钮方法
+--Click the Open button method
 function HouseCtrl:_openBuildingBtnFunc(ins)
     PlayMusEff(1002)
     if ins.m_data then
@@ -173,21 +173,21 @@ function HouseCtrl:_refreshRent(data)
         self.groupMgr:RefreshData(self.m_data)
     end
 end
---关闭显示
+--Close display
 function HouseCtrl:_selfCloseSign()
     self.m_data.contractInfo.isOpen = false
     self.m_data.contractInfo.price = nil
     self.m_data.contractInfo.hours = nil
     self.groupMgr:RefreshData(self.m_data)
 end
---开启/调整签约
+--Open/adjust contract
 function HouseCtrl:_changeSignInfo(data)
     self.m_data.contractInfo.isOpen = true
     self.m_data.contractInfo.price = data.price
     self.m_data.contractInfo.hours = data.hours
     self.groupMgr:RefreshData(self.m_data)
 end
---自己取消自己的签约
+--Cancel your own contract
 function HouseCtrl:_selfCancelSign()
     self.m_data.contractInfo.isOpen = false
     self.m_data.contractInfo.price = nil
@@ -195,7 +195,7 @@ function HouseCtrl:_selfCancelSign()
     self.m_data.contractInfo.contract = nil
     self.groupMgr:RefreshData(self.m_data)
 end
---签约成功
+--Signed successfully
 function HouseCtrl:_signSuccess(data)
     self.m_data.contractInfo.contract = data
     self.groupMgr:RefreshData(self.m_data)
@@ -205,8 +205,8 @@ function HouseCtrl:c_Revenue(info)
     TurnoverPart:_initFunc(info)
     TurnoverDetailPart:_setValue(info)
 end
---竞争力
+--Competitiveness
 function HouseCtrl:_getApartmentGuidePrice(data)
-    --BuildingRentPartDetail:_getGuidePrice(data)  --rent需要用
+    --BuildingRentPartDetail:_getGuidePrice(data)  --rent needed
     Event.Brocast("c_getHouseGuidePrice", data)
 end

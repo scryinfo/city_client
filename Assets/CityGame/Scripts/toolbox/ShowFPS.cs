@@ -7,10 +7,10 @@ namespace LuaFramework
     public class ShowFPS : MonoBehaviour
     {
 
-        public float fpsMeasuringDelta = 2.0f;  //时间间隔
-        public string version = "v0.0.6";  //时间间隔
-        public int disfontSize = 20;             //字体大小
-        public int offset = 0;                  //向右的偏移量
+        public float fpsMeasuringDelta = 2.0f;  //time interval
+        public string version = "v0.0.6";  //time interval
+        public int disfontSize = 20;             //font size
+        public int offset = 0;                  //Right offset
 
         private float timePassed;
         private int m_FrameCount = 0;
@@ -38,11 +38,11 @@ namespace LuaFramework
         private void OnGUI()
         {
             GUIStyle bb = new GUIStyle();
-            bb.normal.background = null;    //这是设置背景填充的
-            bb.normal.textColor = new Color(1.0f, 0.5f, 0.0f);   //设置字体颜色的
-            bb.fontSize = disfontSize;       //当然，这是字体大小
+            bb.normal.background = null;    //This is set to fill the background
+            bb.normal.textColor = new Color(1.0f, 0.5f, 0.0f);   //Set font color
+            bb.fontSize = disfontSize;       //Of course, this is the font size
 
-            //居中显示FPS
+            //Center FPS
             //GUI.Label(new Rect((Screen.width / 2) - 40, 0, 200, 200), "FPS: " + m_FPS, bb);
             GUI.Label(new Rect(Screen.width - 320 - offset , 0, 400, 200), version + " FPS: " + m_FPS , bb);
         }

@@ -12,7 +12,7 @@ namespace UnityEngine.UI
         public int poolSize = 5;
 
         private bool inited = false;
-        private bool nomalData = true;  //正常的连续的预制信息
+        private bool nomalData = true;  //Normal continuous pre-made information
 
         private List<string> mPrefabNameList = new List<string>();
         private Dictionary<string, string> mObjNameDic = new Dictionary<string, string>();
@@ -31,13 +31,13 @@ namespace UnityEngine.UI
             return AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).Get(prefabName);
         }
 
-        //预制相同 初始化
+        //The same prefabrication
         public virtual void InitPrefabData(string prefabName)
         {
             nomalData = true;
             this.prefabName = prefabName;
         }
-        //存在不同的预制 初始化
+        //There are different pre-made initializations
         public virtual void InitDiffPrefabData(List<string> prefabIndexList)
         {
             nomalData = true;
@@ -53,7 +53,7 @@ namespace UnityEngine.UI
         {
             if (nomalData)
             {
-                //Debug.Log("初始化的时候并没有传入index对应的预制名称");
+                //Debug.Log("During initialization, no pre-made name corresponding to index is passed in");
                 return GetObject();
             }
 
@@ -90,7 +90,7 @@ namespace UnityEngine.UI
             GameObject go = AppFacade.Instance.GetManager<ObjectPoolManager>(ManagerName.ObjectPool).Get(tempPrefabName);
             if (!mObjNameDic.ContainsKey(go.name))
             {
-                mObjNameDic.Add(go.name, tempPrefabName);  //obj名字为key，对应的预制对象为value
+                mObjNameDic.Add(go.name, tempPrefabName);  //The obj name is key, and the corresponding prefabricated object is value
             }
             return go;
         }

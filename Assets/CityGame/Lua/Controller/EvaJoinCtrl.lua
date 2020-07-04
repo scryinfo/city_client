@@ -6,8 +6,8 @@
 
 EvaJoinCtrl = class("EvaJoinCtrl", UIPanel)
 UIPanel:ResgisterOpen(EvaJoinCtrl)
-EvaJoinCtrl.static.NumberColor = "#09FCFD" -- 介绍特殊颜色
-EvaJoinCtrl.static.languageTab = -- 多语言配置表
+EvaJoinCtrl.static.NumberColor = "#09FCFD" -- Introducing special colors
+EvaJoinCtrl.static.languageTab = -- Multilingual configuration table
 {
     --{}
 }
@@ -51,14 +51,14 @@ function EvaJoinCtrl:Awake()
     luaBehaviour:AddClick(closeBtn.gameObject, self.OnClose, self)
 end
 
--- 跳转Eva界面
+-- Jump to Eva interface
 function EvaJoinCtrl:OnGoEva(go)
     PlayMusEff(1002)
     UIPanel.ClosePage()
     ct.OpenCtrl("EvaCtrl")
 end
 
--- 显示GoEva
+-- Show GoEva
 function EvaJoinCtrl:OnClose(go)
     PlayMusEff(1002)
     self.transform.localScale = Vector3.zero

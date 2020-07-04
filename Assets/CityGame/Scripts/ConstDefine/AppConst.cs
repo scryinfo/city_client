@@ -1,4 +1,4 @@
-﻿//#define CLOSE_RES_BUNDELMODE  //关闭资源的 boundle 模式
+﻿//#define CLOSE_RES_BUNDELMODE  //Turn off the resource's boundle mode
 
 using UnityEngine;
 using System;
@@ -8,70 +8,70 @@ using System.Collections.Generic;
 namespace LuaFramework {
 
     public class AppConst {
-        public const bool DebugMode = true;                       //调试模式-用于内部测试
+        public const bool DebugMode = true;                       //Debug mode-for internal testing
 
         /// <summary>
-        /// 如果开启更新模式，前提必须启动框架自带服务器端。
-        /// 否则就需要自己将StreamingAssets里面的所有内容
-        /// 复制到自己的Webserver上面，并修改下面的WebUrl。
+        /// If the update mode is enabled, the premise must start the server that comes with the framework.
+        /// Otherwise, you will need to copy everything in StreamingAssets
+        /// Copy it to your own Webserver and modify the following WebUrl.
         /// </summary>
 #if HOTUP
-        public const bool UpdateMode = true;                       //更新模式-打开
+        public const bool UpdateMode = true;                       //Update Mode-Open
 #else
-        public const bool UpdateMode = false;                       //更新模式-关闭 
+        public const bool UpdateMode = false;                       //Update mode-off
 #endif
-        //public const bool UpdateMode = false;                       //更新模式-默认关闭 
-        public const bool LuaByteMode = false;                       //Lua字节码模式-默认关闭
+        //public const bool UpdateMode = false;                       //Update mode-off by default
+        public const bool LuaByteMode = false;                       //Lua bytecode mode-off by default
 #if LUA_BUNDEL
-    public const bool LuaBundleMode = true;                    //Lua代码AssetBundle模式          
+    public const bool LuaBundleMode = true;                    //Lua code AssetBundle mode         
 #else
-    public const bool LuaBundleMode = false;                    //Lua代码AssetBundle模式            
+    public const bool LuaBundleMode = false;                    //Lua code AssetBundle mode          
 #endif
 
         public const int TimerInterval = 1;
-        public const int GameFrameRate = 30;                        //游戏帧频
-        public const int vSyncCount = 0;                            //垂直同步，0为关
+        public const int GameFrameRate = 30;                        //Game frame rate
+        public const int vSyncCount = 0;                            //Vertical synchronization, 0 is off
 
-        public const string AppName = "CityGame";               //应用程序名称
-        public const string LuaTempDir = "Lua/";                    //临时目录
-        public const string AppPrefix = AppName + "_";              //应用程序前缀
-        public const string BundleExt = ".unity3d";                   //bundle扩展名
-        public const string AssetDir = "StreamingAssets";           //素材目录 
+        public const string AppName = "CityGame";               //Application name
+        public const string LuaTempDir = "Lua/";                    //Temporary directory
+        public const string AppPrefix = AppName + "_";              //Application prefix
+        public const string BundleExt = ".unity3d";                   //bundle extension
+        public const string AssetDir = "StreamingAssets";           //Material catalog
 #if PUB_BUILD
-        public const string asServerIp = "139.217.115.231";                   //国内
-                                                                              //public const string asServerIp = "52.177.192.219";                  //国外 
+        public const string asServerIp = "139.217.115.231";                   //domestic
+                                                                              //public const string asServerIp = "52.177.192.219";                  //foreign 
 #elif PUB_BUILD0
         public const string asServerIp = "42.159.89.63";
 #elif PUB_BUILD_209
-        public const string asServerIp = "47.110.156.209";  //用于压测
+        public const string asServerIp = "47.110.156.209";  //For pressure testing
 #elif PUB_BUILD_242
-        public const string asServerIp = "47.97.249.242";   //用于新功能开发及测试
+        public const string asServerIp = "47.97.249.242";   //Used for new function development and testing
 #elif PUB_BUILD_42
-        public const string asServerIp = "47.96.97.42";   //用于新功能开发及测试
+        public const string asServerIp = "47.96.97.42";   //Used for new function development and testing
 #elif PUB_BUILD_99
-        public const string asServerIp = "47.111.11.99";   //用于策划推演的服务器
+        public const string asServerIp = "47.111.11.99";   //Server for planning deduction
 #elif PUB_BUILD_188
-        public const string asServerIp = "192.168.0.188";   //用于策划推演的服务器
+        public const string asServerIp = "192.168.0.188";   //Server for planning deduction
 #else
         public const string asServerIp = "192.168.0.191";
-        //public const string WebUrl = "http://192.168.0.191:8080/CityHotUp/";      //测试更新地址
+        //public const string WebUrl = "http://192.168.0.191:8080/CityHotUp/";      //Test update address
 #endif
 
 #if HOT_CATA1
-        public const string WebUrl = "http://40.73.5.184:8080/HotFixed01/";       //测试更新地址
+        public const string WebUrl = "http://40.73.5.184:8080/HotFixed01/";       //Test update address
 #elif HOT_CATA2
-        public const string WebUrl = "http://40.73.5.184:8080/HotFixed02/";       //测试更新地址
+        public const string WebUrl = "http://40.73.5.184:8080/HotFixed02/";       //Test update address
 #elif HOT_CATA3
-        public const string WebUrl = "http://40.73.5.184:8080/HotFixed03/";       //测试更新地址
+        public const string WebUrl = "http://40.73.5.184:8080/HotFixed03/";       //Test update address
 #elif HOT_CATA4
-        public const string WebUrl = "http://192.168.0.191:8080/CityHotUp/";      //测试更新地址
+        public const string WebUrl = "http://192.168.0.191:8080/CityHotUp/";      //Test update address
 #elif HOT_42
-        public const string WebUrl = "http://192.168.0.191:8080/42/";      //测试更新地址
+        public const string WebUrl = "http://192.168.0.191:8080/42/";      //Test update address
 #else
-        public const string WebUrl = "http://40.73.5.184:8080/city/";       //测试更新地址
+        public const string WebUrl = "http://40.73.5.184:8080/city/";       //Test update address
 #endif
 
-        public const string AssetDir_CloseBundleMode = "View";        //关闭资源 BundleMode 后的资源读取路径
+        public const string AssetDir_CloseBundleMode = "View";        //Resource read path after closing resource BundleMode
         public static string FrameworkRoot {
             get {
                 return Application.dataPath + "/" + AppName;

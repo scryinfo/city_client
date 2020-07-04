@@ -16,7 +16,7 @@ function RetailShelfCtrl:Awake(go)
     retailShelf:AddClick(RetailShelfPanel.return_Btn.gameObject, self.OnClick_return_Btn, self)
     retailShelf:AddClick(RetailShelfPanel.addBtn.gameObject,self.OnClick_addBtn,self)
 
-    self.shelfDatas = {}  --货架上的数据
+    self.shelfDatas = {}  --Data on the shelf
 end
 function RetailShelfCtrl:Active()
     UIPanel.Active(self)
@@ -53,35 +53,35 @@ function RetailShelfCtrl:Hide()
     self:_removeListener()
     return {insId = self.m_data.info.id,self.m_data}
 end
-----------------------------------------------------------------------初始化函数------------------------------------------------------------------------------------------
---自己
+----------------------------------------------------------------------Initialization function------------------------------------------------------------------------------------------
+--self
 function RetailShelfCtrl:MeInitializeData()
     RetailShelfPanel.retailAddItem.gameObject:SetActive(true)
     self:CreateGoodsItems(self.shelf.good,RetailShelfPanel.RetailGoodsItem,RetailShelfPanel.content,RetailGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
     self.ShelfImgSetActive(self.shelfDatas,5,0)
 end
---别人
+--0thers
 function RetailShelfCtrl:OthersInitializeData()
     RetailShelfPanel.retailAddItem.gameObject:SetActive(false)
     self:CreateGoodsItems(self.shelf.good,RetailShelfPanel.RetailGoodsItem,RetailShelfPanel.content,RetailGoodsItem,self.luabehaviour,self.shelfDatas,self.isOther,self.buildingId)
     self.ShelfImgSetActive(self.shelfDatas,5,1)
 end
-----------------------------------------------------------------------点击函数------------------------------------------------------------------------------------------
+----------------------------------------------------------------------Click function -----------------------------------------------------------------------------------------
 function RetailShelfCtrl:OnClick_return_Btn(ins)
     PlayMusEff(1002)
     UIPanel.ClosePage()
 end
---打开仓库
+--Open warehouse
 function RetailShelfCtrl:OnClick_addBtn(go)
     PlayMusEff(1002)
     go.m_data.isShelf = true
     ct.OpenCtrl("RetailWarehouseCtrl",go.m_data)
 end
-----------------------------------------------------------------------回调函数------------------------------------------------------------------------------------------
+----------------------------------------------------------------------Callback function------------------------------------------------------------------------------------------
 function RetailShelfCtrl:RefreshShelfData(dataInfo)
     for key,value in pairs(self.shelfDatas) do
         if value.itemId == dataInfo.item.key.id then
-            --如果是调整价格
+            --If it is price adjustment
             if dataInfo.price then
                 for key,value in pairs(self.shelfDatas) do
                     if value.itemId == dataInfo.item.key.id then
@@ -95,7 +95,7 @@ function RetailShelfCtrl:RefreshShelfData(dataInfo)
             if value.goodsDataInfo.n == dataInfo.item.n then
                 self:deleteGoodsItem(self.shelfDatas,key)
 
-                --下架后要把下架的商品数量添加到仓库
+                --After the shelf is removed, the quantity of the shelf product should be added to the warehouse
                 if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
                     local inHand = {}
                     local goodsData = {}
@@ -129,7 +129,7 @@ function RetailShelfCtrl:RefreshShelfData(dataInfo)
                 value.numberText.text = value.num - dataInfo.item.n
                 value.goodsDataInfo.n = tonumber(value.numberText.text)
                 value.num = tonumber(value.numberText.text)
-                --下架数量改变后同时改变模拟服务器数据
+                --After the shelf is removed, the quantity of the shelf product should be added. After the quantity is changed, the simulated server data is also changed to the warehouse.
                 if not self.m_data.store.inHand or next(self.m_data.store.inHand) == nil then
                     local goodsData = {}
                     local key = {}
@@ -175,7 +175,7 @@ function RetailShelfCtrl:RefreshShelfData(dataInfo)
     Event.Brocast("SmallPop",GetLanguage(27010003),300)
 end
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
---获取货架容量
+--Get shelf capacity
 function RetailShelfCtrl:GetShelfNum(dataTable)
     local warehouseNum = 0
     if not dataTable.good then
@@ -187,7 +187,7 @@ function RetailShelfCtrl:GetShelfNum(dataTable)
         return warehouseNum
     end
 end
---刷新货架容量
+--Refresh shelf capacity
 function RetailShelfCtrl:RefreshCapacity(dataInfo)
     RetailShelfPanel.capacitySlider.maxValue = PlayerBuildingBaseData[self.m_data.info.mId].storeCapacity
     RetailShelfPanel.capacitySlider.value = RetailShelfPanel.capacitySlider.value - dataInfo.item.n
@@ -198,7 +198,7 @@ function RetailShelfCtrl:RefreshCapacity(dataInfo)
     numTab["col2"] ="white"
     RetailShelfPanel.numberText.text = getColorString(numTab)
 end
---货架点击Item详情弹框
+--Shelf click Item Details box
 function RetailShelfCtrl:OpenDetailsBox(ins)
     ins.buildingType = self.m_data.buildingType
     ins.isOther = self.m_data.isOther
@@ -275,17 +275,17 @@ end
 --    numTab["col2"] = "white"
 --    RetailShelfPanel.numberText.text = getColorString(numTab)
 --end
-----打开名字数量价格排序
+----Open name quantity price sorting
 --function RetailShelfCtrl:OnClick_arrowBtn(go)
 --    PlayMusEff(1002)
 --    go:OnClick_OpenList(not isShowList,0)
 --end
-----打开等级评分排序
+----Open rank rating sort
 --function RetailShelfCtrl:OnClick_levelArrowBtn(go)
 --    PlayMusEff(1002)
 --    go:OnClick_OpenList(not isShowLists,1)
 --end
-----排序列表
+----Sorted list
 --function RetailShelfCtrl:OnClick_OpenList(isShow,number)
 --    if isShow then
 --        if number == 0 then
@@ -310,7 +310,7 @@ end
 --    end
 --end
 --
-----点击添加按钮Add
+----Click the Add button
 --function RetailShelfCtrl:OnClick_addBtn(go)
 --    PlayMusEff(1002)
 --    if go.m_data.info.state == "OPERATE" then
@@ -324,7 +324,7 @@ end
 --        Event.Brocast("SmallPop",GetLanguage(35040013),300)
 --    end
 --end
-----其他玩家购买窗口
+----Other players purchase window
 --function RetailShelfCtrl:OnClick_playerBuy(go)
 --    PlayMusEff(1002)
 --    go:openPlayerBuy(not switchIsShow)
@@ -335,7 +335,7 @@ end
 --        RetailShelfPanel.bg:DOScale(Vector3.New(1,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
 --        --Event.Brocast("c_buyGoodsItemChoose")
 --        RetailShelfPanel.content.offsetMax = Vector2.New(-740,0);
---        --当右边购买界面打开时，重新刷新架子上的东西，求余 id%5 == 1 的时候打开架子
+--        --When the purchase interface on the right opens, refresh the contents on the shelf, and open the shelf when id%5 == 1
 --        --self:shelfImgSetActive(self.GoodsUnifyMgr.shelfLuaTab,3)
 --    else
 --        RetailShelfPanel.bg:DOScale(Vector3.New(0,1,1),0.1):SetEase(DG.Tweening.Ease.OutCubic);
@@ -346,7 +346,7 @@ end
 --    switchIsShow = isShow
 --end
 --
-------购买物品
+------Purchase items
 ----function RetailShelfCtrl:OnClcik_buyConfirmBtn(ins)
 ----    if not ins.GoodsUnifyMgr.shelfBuyGoodslItems or #ins.GoodsUnifyMgr.shelfBuyGoodslItems < 1 then
 ----        return;
@@ -383,49 +383,49 @@ end
 ----    end
 ----end
 --
-----名字排序
+----Sort by name
 --function RetailShelfCtrl:OnClick_OnName(go)
 --    PlayMusEff(1002)
 --    RetailShelfPanel.nowText.text = "By name";
 --    go:OnClick_OpenList(not isShowList,0)
 --end
-----数量排序
+----Sort by quantity
 --function RetailShelfCtrl:OnClick_OnNumber(go)
 --    PlayMusEff(1002)
 --    RetailShelfPanel.nowText.text = "By quantity";
 --    go:OnClick_OpenList(not isShowList,0)
 --end
-----价格排序
+----Price order
 --function RetailShelfCtrl:OnClick_OnPrice(go)
 --    PlayMusEff(1002)
 --    RetailShelfPanel.nowText.text = "By price";
 --    go:OnClick_OpenList(not isShowList,0)
 --end
-----全部排序
+----Sort all
 --function RetailShelfCtrl:OnClick_OnAll(go)
 --    PlayMusEff(1002)
 --    RetailShelfPanel.levelnowText.text = "All";
 --    go:OnClick_OpenList(not isShowLists,1)
 --end
-----低等级排序
+----Low rank
 --function RetailShelfCtrl:OnClick_OnNormal(go)
 --    PlayMusEff(1002)
 --    RetailShelfPanel.levelnowText.text = "Normal";
 --    go:OnClick_OpenList(not isShowLists,1)
 --end
-----中等级排序
+----Medium rank sorting
 --function RetailShelfCtrl:OnClick_OnMiddle(go)
 --    PlayMusEff(1002)
 --    RetailShelfPanel.levelnowText.text = "Middle";
 --    go:OnClick_OpenList(not isShowLists,1)
 --end
-----高等级排序
+----High rank
 --function RetailShelfCtrl:OnClick_OnSenior(go)
 --    PlayMusEff(1002)
 --    RetailShelfPanel.levelnowText.text = "Senior";
 --    go:OnClick_OpenList(not isShowLists,1)
 --end
-----获取零售店货架容量
+----Get retail store shelf capacity
 --function RetailShelfCtrl:getShelfCapacity(shelfData)
 --    local shelfCapacity = 0;
 --    if not shelfData then
@@ -438,7 +438,7 @@ end
 --        return shelfCapacity;
 --    end
 --end
-----架子隐藏和显示
+----Hidden and displayed shelves
 --function RetailShelfCtrl:shelfImgSetActive(table,num)
 --    if not table then
 --        return

@@ -6,7 +6,7 @@
 
 ResultTwoItem = class("ResultTwoItem")
 
--- 初始化
+-- initialization
 function ResultTwoItem:initialize(transform)
     self.transform = transform
     self.titleText = transform:Find("TitleText"):GetComponent("Text")
@@ -17,7 +17,7 @@ function ResultTwoItem:initialize(transform)
     self.contentText = transform:Find("ContentTitleText/ContentText"):GetComponent("Text")
 end
 
--- 初始化数据
+-- Initialization data
 function ResultTwoItem:_initData(data, configData)
     self.configData = configData
     self.data = data
@@ -32,7 +32,7 @@ function ResultTwoItem:_initData(data, configData)
     --self:_showData(data.lv)
 end
 
--- 显示数据
+-- Display Data
 function ResultTwoItem:_showData(lv)
     --if self.configData.Btype == "Quality" then
     self.contentText.text = GetEvaData(1, self.configData, lv)
@@ -42,12 +42,12 @@ function ResultTwoItem:_showData(lv)
     --end
 end
 
--- 设置是否显示
+-- Set whether to display
 function ResultTwoItem:_isShow(isShow)
     self.transform.localScale = isShow and Vector3.one or Vector3.zero
 end
 
--- 设置位置
+-- Set location
 function ResultTwoItem:SetPosition(v3)
     self.transform:GetComponent("RectTransform").anchoredPosition = v3 -- Vector3.New(0, 0, 0)
 end

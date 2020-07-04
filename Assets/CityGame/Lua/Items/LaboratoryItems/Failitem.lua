@@ -7,7 +7,7 @@
 Failitem = class('Failitem')
 
 
----初始化方法   数据（读配置表）
+---Initialization method data (read configuration table)
 function Failitem:initialize(prefab,luaBehaviour,data,ctrl)
     self.prefab=prefab
     local transform = prefab.transform
@@ -17,12 +17,12 @@ function Failitem:initialize(prefab,luaBehaviour,data,ctrl)
     luaBehaviour:AddClick(self.closeBtn.gameObject,self._closeFunc,self)
     self:Refresh(data)
 end
----========================================================================================点击函数=============================================================================
+---========================================================================================Click function=============================================================================
 function Failitem:_closeFunc(ins)
     destroy(ins.prefab.gameObject)
     RollPanel.resultRoot.localScale = Vector3.zero
 end
----==========================================================================================业务逻辑=============================================================================
+---==========================================================================================Business logic=============================================================================
 
 function Failitem:updateData(data)
     self.data=data

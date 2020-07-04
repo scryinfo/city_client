@@ -7,7 +7,7 @@ local selectAvatar;
 local transform;
 local gameObject;
 
---构建函数--
+--Building function--
 function SelectAvatarCtrl.New()
 	logWarn("SelectAvatarCtrl.New--->>");
 	Event.AddListener("onRemoveAvatar", this.onRemoveAvatar);
@@ -19,7 +19,7 @@ function SelectAvatarCtrl.Awake()
 	panelMgr:LoadPrefab_A('SelectAvatar', nil, this, this.OnCreate);
 end
 
---启动事件--
+--Start event--
 function SelectAvatarCtrl.OnCreate(obj)
 	gameObject = ct.InstantiatePrefab(obj);
 	transform = gameObject.transform;
@@ -32,7 +32,7 @@ function SelectAvatarCtrl.OnCreate(obj)
 	selectAvatar:AddClick(SelectAvatarPanel.btnEnterGame, this.OnReqEnterGame);
 	--resMgr:LoadPrefab('prompt', { 'PromptItem' }, this.InitPanel);
 
-	--新建好了之后进行控件操作
+	--After the new is created, control operations
 	this.UpdateAvatarList();
 	
 end
@@ -53,17 +53,17 @@ function SelectAvatarCtrl.UpdateAvatarList()
 end
 
 function  SelectAvatarCtrl.OnReqCreateAvatar(go)
-    --打开创建角色界面
+    --Open the role creation interface
     local ctrl = CtrlManager.GetCtrl(CtrlNames.CreateAvatar);
     if ctrl ~= nil then
         ctrl.Awake();
     end
 
-    --关闭当前界面
+    --Close the current interface
     this.Close();
 end
 
---删除角色--
+--Delete character--
 function SelectAvatarCtrl.OnReqRemoveAvatar(go)
 	local name = "";
 	for i=1,3 do
@@ -97,7 +97,7 @@ function SelectAvatarCtrl.OnReqEnterGame(go)
 	end
 end
 
---------------------数据发过来的事件-----------------------------
+--------------------Events sent by data-----------------------------
 
 
 function SelectAvatarCtrl.onRemoveAvatar( dbid, dic )
@@ -107,7 +107,7 @@ end
 
 
 
---关闭事件--
+--Close event--
 function SelectAvatarCtrl.Close()
 	--panelMgr:ClosePanel(CtrlNames.SelectAvatar);
 	destroy(gameObject);

@@ -7,7 +7,7 @@ local TargetHead;
 local transform;
 local gameObject;
 
---构建函数--
+--Build Function--
 function TargetHeadCtrl.New()
 	logWarn("TargetHeadCtrl.New--->>");
 	return this;
@@ -19,7 +19,7 @@ function TargetHeadCtrl.Awake()
 
 end
 
---启动事件--
+--Startup event--
 function TargetHeadCtrl.OnCreate(prefab)
 	gameObject = ct.InstantiatePrefab(prefab);
 	gameObject.transform.position = Vector3.New(87.5, 337, 0);
@@ -61,7 +61,7 @@ function TargetHeadCtrl.UpdateTargetUI()
     this.SetName(this.target.name);
 end
 
---关闭事件--
+--Close event--
 function TargetHeadCtrl.Close()
 	destroy(gameObject);
 end

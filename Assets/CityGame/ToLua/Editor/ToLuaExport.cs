@@ -90,19 +90,19 @@ public static class ToLuaExport
     static Dictionary<string, int> nameCounter = new Dictionary<string, int>();
     static FieldInfo[] fields = null;
     static PropertyInfo[] props = null;    
-    static List<PropertyInfo> propList = new List<PropertyInfo>();  //非静态属性
+    static List<PropertyInfo> propList = new List<PropertyInfo>();  //Non-static properties
     static List<PropertyInfo> allProps = new List<PropertyInfo>();
     static EventInfo[] events = null;
     static List<EventInfo> eventList = new List<EventInfo>();
     static List<_MethodBase> ctorList = new List<_MethodBase>();
     static List<ConstructorInfo> ctorExtList = new List<ConstructorInfo>();
-    static List<_MethodBase> getItems = new List<_MethodBase>();   //特殊属性
+    static List<_MethodBase> getItems = new List<_MethodBase>();   //Special attributes
     static List<_MethodBase> setItems = new List<_MethodBase>();
 
     static BindingFlags binding = BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase;
         
     static ObjAmbig ambig = ObjAmbig.NetObj;    
-    //wrapClaaName + "Wrap" = 导出文件名，导出类名
+    //wrapClaaName + "Wrap" = export file name, export class name
     public static string wrapClassName = "";
 
     public static string libClassName = "";

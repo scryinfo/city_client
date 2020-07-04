@@ -22,7 +22,7 @@ function DetailGuidPanel.InitPanel()
     this.btnCon=transform:Find("bg/bg/top/Scroll View/Viewport/Content")
     this.scroll=transform:Find("bg/bg/top/Scroll View")
 end
---数据初始化
+--Data initialization
 function DetailGuidPanel.InitDate(MunicipalData)
     this.materialData = MunicipalData;
 end

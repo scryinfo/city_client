@@ -21,7 +21,7 @@ public abstract class Singleton<T> where T : class, new()
 	}
 
     /*
-     * 没有任何实现的函数，用于保证MonoSingleton在使用前已创建
+     * -----------------------MonoSingleton--------------------------
      */
     public void Startup()
     {

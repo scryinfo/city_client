@@ -19,7 +19,7 @@ public class Packager {
 
     ///-----------------------------------------------------------
     static string[] exts = { ".txt", ".xml", ".lua", ".assetbundle", ".json" };
-    static bool CanCopy(string ext) {   //能不能复制
+    static bool CanCopy(string ext) {   //Can copy?
         foreach (string e in exts) {
             if (ext.Equals(e)) return true;
         }
@@ -46,7 +46,7 @@ public class Packager {
     {
         BuildAssetResourceOnly(BuildTarget.Android);
     }
-    //新增的Lua文件必须执行 BuildAndroidResource，非新增的Lua改动执行 BuildAndroidLua 即可 
+    //The newly added Lua file must execute BuildAndroidResource, and the non-new Lua changes can be executed by BuildAndroidLua
     [MenuItem("LuaFramework/Update Android LuaBundle Only", false, 102)]
     public static void BuildAndroidLua()
     {
@@ -98,7 +98,7 @@ public class Packager {
         files.Clear();
         string luaPath = "Assets/" + AppConst.AssetDir + "/lua";
 
-        //生成 Require_RunTime.lua        
+        //Generate Require_RunTime.lua      
         if (LuaFramework.LuaManager.generate_RequireRT() == false)
             return;
 
@@ -131,7 +131,7 @@ public class Packager {
     }
 
     /// <summary>
-    /// 生成绑定素材
+    /// Generate binding material
     /// </summary>
     public static void BuildAssetResourceOnly(BuildTarget target, bool buildLuaOnly = false)
     {
@@ -150,7 +150,7 @@ public class Packager {
         maps.Clear();
         files.Clear();
 
-        HandleResBundle();//资源打包
+        HandleResBundle();//Resource packaging
 
         string resPath = "Assets/" + AppConst.AssetDir;
         BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle |
@@ -165,11 +165,11 @@ public class Packager {
 
         //HandleNoneLuaBundleInLua();
         string streamResPath = AppDataPath + "/StreamingAssets/";
-        ///----------------------创建文件列表-----------------------
+        ///----------------------Create file list-----------------------
         string newFilePath = streamResPath + "/files.txt";
         if (File.Exists(newFilePath)) File.Delete(newFilePath);
 
-        //生成总表
+        //Generate a summary table
         string resllistPath = streamResPath + "assetBundleList.bin";
         ResourceManager.Serialize(assetBundleList, File.Open(resllistPath, FileMode.Create));
         files.Add(resllistPath);
@@ -192,7 +192,7 @@ public class Packager {
     }
 
     /// <summary>
-    /// 生成绑定素材
+    /// Generate binding material
     /// </summary>
     public static void BuildAssetResource(BuildTarget target, bool buildLuaOnly = false) {
         if (Directory.Exists(Util.DataPath))
@@ -210,7 +210,7 @@ public class Packager {
         maps.Clear();
         files.Clear();
 
-        //生成 Require_RunTime.lua        
+        //Generate Require_RunTime.lua        
         if (LuaFramework.LuaManager.generate_RequireRT() == false)
             return;
 
@@ -219,7 +219,7 @@ public class Packager {
         } else {
             HandleLuaFile();
         }        
-        HandleResBundle();//资源打包
+        HandleResBundle();//Resource packaging
         
         string resPath = "Assets/" + AppConst.AssetDir;
         BuildAssetBundleOptions options = BuildAssetBundleOptions.DeterministicAssetBundle | 
@@ -338,7 +338,7 @@ public class Packager {
     }
 
     /// <summary>
-    /// 处理Lua代码包
+    /// Handling Lua code packages
     /// </summary>
     static void HandleLuaBundle() {
         string streamDir = Application.dataPath + "/" + AppConst.LuaTempDir;
@@ -387,7 +387,7 @@ public class Packager {
         if (!Directory.Exists(streamDir)) Directory.CreateDirectory(streamDir);
 
         string[] srcDirs = { CustomSettings.cityLuaDir+ "3rd", CustomSettings.cityLuaDir + "pb", CustomSettings.FrameworkPath + "/ToLua/Lua" };
-        //-------------------------------处理Lua文件夹中非Lua文件----------------------------------
+        //-------------------------------Handle non-Lua files in the Lua folder----------------------------------
         string luaPath = AppDataPath + "/StreamingAssets/lua/";
         for (int i = 0; i < srcDirs.Length; i++)
         {
@@ -421,11 +421,11 @@ public class Packager {
         }
 
         string resPath = AppDataPath + "/StreamingAssets/";
-        ///----------------------创建文件列表-----------------------
+        ///----------------------Create file list-----------------------
         string newFilePath = resPath + "/files.txt";
         if (File.Exists(newFilePath)) File.Delete(newFilePath);
 
-        //生成总表
+        //Generate a summary table
         string resllistPath = AppDataPath + "/StreamingAssets/" + "assetBundleList.bin";
         ResourceManager.Serialize(assetBundleList, File.Open(resllistPath, FileMode.Create));
         files.Add(resllistPath);
@@ -485,7 +485,7 @@ public class Packager {
     }
 
     /// <summary>
-    /// 处理自定义框架实例包
+    /// Handle custom framework instance packages
     /// </summary>
     static void HandleResBundle()
     {
@@ -497,7 +497,7 @@ public class Packager {
         pkginfo.assetBundleName = null;
 
         AddBuildMapOp(ref curPath, ref patterns, false);
-        //Avatar大图单独打包
+        //Avatar Big picture packed separately
         curPath = "Assets/CityGame/Resources/Atlas/Avtar/Man";
         AddBuildMapOp(ref curPath, ref patterns, false);
         curPath = "Assets/CityGame/Resources/Atlas/Avtar/Woman";
@@ -522,7 +522,7 @@ public class Packager {
         curPath = "Assets/CityGame/Resources/Building";
         AddBuildMapOp(ref curPath, ref patterns, true);
 
-        //view中的building太大，打单独包
+        //view中的building too big, individually packaged
 //         curPath = "Assets/CityGame/Resources/View/Building";
 //         AddBuildMapOp(ref curPath, ref patterns, false);
 
@@ -532,13 +532,13 @@ public class Packager {
     }
 
     /// <summary>
-    /// 处理Lua文件
+    /// Processing Lua files
     /// </summary>
     static void HandleLuaFile() {
         string resPath = AppDataPath + "/StreamingAssets/";
         string luaPath = resPath + "lua/";
 
-        //----------复制Lua文件----------------
+        //----------Copy Lua files----------------
         if (!Directory.Exists(luaPath)) {
             Directory.CreateDirectory(luaPath); 
         }
@@ -576,20 +576,20 @@ public class Packager {
 
     static void BuildFileIndex() {
         string resPath = AppDataPath + "/StreamingAssets/";
-        ///----------------------创建文件列表-----------------------        
+        ///----------------------Create file list-----------------------        
         paths.Clear(); 
         Recursive(resPath, false);
     }
 
     /// <summary>
-    /// 数据目录
+    /// Data directory
     /// </summary>
     static string AppDataPath {
         get { return Application.dataPath.ToLower(); }
     }
 
     /// <summary>
-    /// 遍历目录及其子目录
+    /// Traverse the directory and its subdirectories
     /// </summary>
     static void Recursive(string path, bool excludeMata = true) {
         Recursive(path, ref files, ref paths, excludeMata);        

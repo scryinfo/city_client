@@ -1,4 +1,4 @@
-﻿//简易池
+﻿//Simple pool
 
 using System.Collections;
 using System.Collections.Generic;

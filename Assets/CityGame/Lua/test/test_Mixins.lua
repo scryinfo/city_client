@@ -62,9 +62,9 @@ function SpeakFunClass.speak()
     return 1
 end
 
---调用派生类自己的方法比调用从基类继承而来的方法和混入的方法
---1千万次调用 执行时间要快30%
---50亿次调用  执行却时间非常接近（为什么？）
+--Calling your own methods of derived classes is better than calling methods inherited from base classes and mixed methods
+--10 million calls with 30% faster execution time
+--5 billion calls with very close execution time
 UnitTest.Exec("abel_w6_UIFrame_performance", "test_mixin_inherited_method",  function ()
     local bee = Bee() -- or Bee:new()
     --local count = 5000000000
@@ -95,7 +95,7 @@ UnitTest.Exec("abel_w6_UIFrame_performance", "test_mixin_inherited_method",  fun
         end
     end)
 
-    Bee:include(SpeakFunClass) --include class 的话，会导致原来的方法被抹掉
+    Bee:include(SpeakFunClass) --Include class will cause the original method to be erased
     local bee1 = Bee() -- or Bee:new()
     UnitTest.PerformanceTest("abel_w6_UIFrame_performance",'include method invocation', function()
         for i = 1, count do --10000000
@@ -107,8 +107,8 @@ UnitTest.Exec("abel_w6_UIFrame_performance", "test_mixin_inherited_method",  fun
     local bee2 = Bee() -- or Bee:new()
     local bat = Bat() -- or Bat:new()
     bee2:speak()
-    --bee2.fun() --这个会失败， 原有方法在 include class 后被覆盖
-    --bee2:fun() --这个会失败， 原有方法在 include class 后被覆盖
+    --bee2.fun() --This will fail, the original method is overwritten after include class
+    --bee2:fun() --This will fail, the original method is overwritten after include class
     local xxx = 0
 
 end)

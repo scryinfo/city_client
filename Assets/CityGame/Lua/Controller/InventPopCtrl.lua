@@ -1,7 +1,7 @@
 
 InventPopCtrl = class('InventPopCtrl',UIPanel)
-UIPanel:ResgisterOpen(InventPopCtrl) --注册打开的方法
----====================================================================================框架函数==============================================================================================
+UIPanel:ResgisterOpen(InventPopCtrl) --How to open the registration
+---====================================================================================Frame function==============================================================================================
 local panel
 local buildInfo
 local deatailBuildInfo
@@ -35,12 +35,12 @@ function InventPopCtrl:Close()
     self:RemoveLis()
 end
 
--- 注册监听事件
+-- Register to listen to events
 function InventPopCtrl:Active()
     UIPanel.Active(self)
     --self:_addListener()
 
-    -- 多语言适配
+    -- Multilingual adaptation
     self:ChangeLan()
 end
 
@@ -49,7 +49,7 @@ function InventPopCtrl:Refresh()
     buildInfo = modelData.info
     deatailBuildInfo = modelData
     local data = self.m_data
-    self.count = 1  --默认为1
+    self.count = 1  --The default is 1
     self.popCompent:RefeshData(data)
 
     if self.m_data.ins.type ~= "eva" then
@@ -65,13 +65,13 @@ function InventPopCtrl:Refresh()
         LoadSprite("Assets/CityGame/Resources/Atlas/Laboratory/chooseInventPop/EVA-100%.png", InventPopPanel.icon, true)
     end
 
-    if DataManager.GetMyOwnerID() ~= buildInfo.ownerId then -- 不是建筑主人
+    if DataManager.GetMyOwnerID() ~= buildInfo.ownerId then -- Not the building owner
         self:other()
         panel.buyRoot.localScale = Vector3.one
         panel.sellRoot.localScale = Vector3.zero
         panel.price.localScale = Vector3.one
         self.popCompent:SetConfirmPos(Vector3.New(352, -285, 0))
-    else -- 是建筑主人
+    else -- Is the building owner
         panel.countInput1.onValueChanged:AddListener( function( string )
             if string == ""  then
                 self.count=0
@@ -97,11 +97,11 @@ end
 
 
 
----====================================================================================点击函数==============================================================================================
+---====================================================================================Click function ==============================================================================================
 
----====================================================================================业务逻辑==============================================================================================
+---====================================================================================Business logic==============================================================================================
 function InventPopCtrl:ChangeLan()
-    if self.m_data.ins.type and self.m_data.ins.type == "eva" then  --判断研究类型
+    if self.m_data.ins.type and self.m_data.ins.type == "eva" then  --Determine the type of study
         InventPopPanel.titleText.text = GetLanguage(28040029)
     else
         InventPopPanel.titleText.text = GetLanguage(28040030)

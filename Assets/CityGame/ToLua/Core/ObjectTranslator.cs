@@ -93,7 +93,7 @@ namespace LuaInterface
 #endif
         }
 
-        //fixed 枚举唯一性问题（对象唯一，没有实现__eq操作符）
+        //fixed enumeration uniqueness problem (the object is unique, the __eq operator is not implemented)
         void RemoveObject(object o, int udata)
         {
             int index = -1;
@@ -104,10 +104,10 @@ namespace LuaInterface
             }
         }
 
-        //lua gc一个对象(lua 库不再引用，但不代表c#没使用)
+        //lua gc an object (lua library is no longer referenced, but does not mean that c# is not used)
         public void RemoveObject(int udata)
         {            
-            //只有lua gc才能移除
+            //Only lua gc can be removed
             object o = objects.Remove(udata);
 
             if (o != null)
@@ -129,7 +129,7 @@ namespace LuaInterface
             return objects.TryGetValue(udata);         
         }
 
-        //预删除，但不移除一个lua对象(移除id只能由gc完成)
+        //Pre-delete, but do not remove a lua object (removal id can only be done by gc)
         public void Destroy(int udata)
         {            
             object o = objects.Destroy(udata);
@@ -148,7 +148,7 @@ namespace LuaInterface
             }
         }
 
-        //Unity Object 延迟删除
+        //Unity Object Delayed Deletion
         public void DelayDestroy(int id, float time)
         {
             UnityEngine.Object obj = (UnityEngine.Object)GetObject(id);
@@ -188,7 +188,7 @@ namespace LuaInterface
             return false;
         }
         
-        //延迟删除处理
+        //Delayed delete processing
         void DestroyUnityObject(int udata, UnityEngine.Object obj)
         {
             object o = objects.TryGetValue(udata);
@@ -196,7 +196,7 @@ namespace LuaInterface
             if (object.ReferenceEquals(o, obj))
             {
                 RemoveObject(o, udata);
-                //一定不能Remove, 因为GC还可能再来一次
+                //Must not Remove, because GC may still come again
                 objects.Destroy(udata);     
 
                 if (LogGC)

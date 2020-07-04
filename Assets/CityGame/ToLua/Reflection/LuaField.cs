@@ -26,7 +26,7 @@ using System.Reflection;
 
 namespace LuaInterface
 {    
-    //代表一个反射属性
+    //Represents a reflection property
     public sealed class LuaField
     {
         FieldInfo field = null;

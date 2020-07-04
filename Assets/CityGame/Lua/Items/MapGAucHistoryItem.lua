@@ -32,14 +32,14 @@ function MapGAucHistoryItem:_initData(data)
         PlayerInfoManger.GetInfos({[1] = data.biderId}, self._getInfo, self)
     end
 end
---点击头像
+--Click on the avatar
 function MapGAucHistoryItem:_clickProtaitFunc()
     if self.playerInfo == nil then
         return
     end
     ct.OpenCtrl("PersonalHomeDialogPageCtrl", self.playerInfo)
 end
---拿到信息
+--Get information
 function MapGAucHistoryItem:_getInfo(data)
     local playerData = data[1]
     if playerData ~= nil and playerData.id == self.data.biderId then
@@ -53,7 +53,7 @@ function MapGAucHistoryItem:close()
     if self.avatar ~= nil then
         AvatarManger.CollectAvatar(self.avatar)
     end
-    Event.Brocast("c_ReturnGAucHistoryObj", self.viewRect.gameObject)  --回收item
+    Event.Brocast("c_ReturnGAucHistoryObj", self.viewRect.gameObject)  --Recycle item
     self.data = nil
     self.playerInfo = nil
     self = nil

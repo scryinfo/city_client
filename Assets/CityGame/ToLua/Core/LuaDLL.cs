@@ -100,8 +100,8 @@ namespace LuaInterface
 
     public static class ToLuaFlags
     {
-        public const int INDEX_ERROR = 1;       //Index 失败提示error信息，false返回nil
-        public const int USE_INT64 = 2;         //是否luavm内部支持原生int64(目前用的vm都不支持, 默认false)
+        public const int INDEX_ERROR = 1;       //Index failure error message, false returns nil
+        public const int USE_INT64 = 2;         //Whether Luavm supports native int64 internally (none of the currently used VMs support, default false)
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -272,7 +272,7 @@ namespace LuaInterface
          * state manipulation
          */
         //[DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
-        //public static extern IntPtr lua_newstate(LuaAlloc f, IntPtr ud);                      //luajit64位不能用这个函数
+        //public static extern IntPtr lua_newstate(LuaAlloc f, IntPtr ud);                      //Luajit64 cannot use this function
 
         [DllImport(LUADLL, CallingConvention = CallingConvention.Cdecl)]
         public static extern void lua_close(IntPtr luaState);

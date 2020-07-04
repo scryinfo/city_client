@@ -5,7 +5,7 @@
 ---
 
 DetailGuidCtrl = class('DetailGuidCtrl',UIPanel)
-UIPanel:ResgisterOpen(DetailGuidCtrl) --注册打开的方法
+UIPanel:ResgisterOpen(DetailGuidCtrl) --How to open the registration
 
 local luaBehaviour;
 local panel;
@@ -15,14 +15,14 @@ DetailGuidCtrl.detailItem_Path="View/GoodsItem/detailItem"
 DetailGuidCtrl.detailItem1_Path="View/GoodsItem/detailItem1"
 
 function DetailGuidCtrl:initialize()
-    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--可以回退，UI打开后，隐藏其它面板
+    UIPanel.initialize(self,UIType.Normal,UIMode.HideOther,UICollider.None)--You can go back and hide other panels after the UI opens
 end
 
 function  DetailGuidCtrl:bundleName()
     return "Assets/CityGame/Resources/View/DetailGuidPanel.prefab"
 end
 
---启动事件--
+--Start event--
 function DetailGuidCtrl:OnCreate(obj)
     UIPanel.OnCreate(self,obj)
 end
@@ -42,7 +42,7 @@ end
 
 function DetailGuidCtrl:Refresh()
     local data=self.m_data
-    ---刷新Item
+    ---Refresh Item
     self:updateItem(data.name)
 ---******************************************************--
     DetailGuidPanel.detailIma.localScale=Vector3.one
@@ -61,27 +61,27 @@ function DetailGuidCtrl:onClick_Close(ins)
 
 end
 
----刷新按钮
+---Refresh button
 function DetailGuidCtrl:updateItem(names)
         for i, v in pairs(GuidBookConfig) do
             if i==names then
                 local temp= GuidBookConfig[names]
                 local tempList={}
-                --刷新按钮
+                --Refresh button
                 for btnname, arr in pairs(temp) do
-                    if self.btnInsList[1]then--有实例
+                    if self.btnInsList[1]then--There are examples
                         self.btnInsList[1]:updateData(names,btnname)
                         self.btnInsList[1].prefab:SetActive(true)
                         table.insert(tempList,self.btnInsList[1])
                         table.remove(self.btnInsList,1)
-                    else--无实例
+                    else--No instance
                         local prefab =creatGoods(DetailGuidCtrl.btnItem_Path,panel.btnCon)
                         local ins=BuidBtnItem:new(prefab,luaBehaviour,self)
                         ins:updateData(names,btnname)
                         table.insert(tempList,ins)
                     end
                 end
-                ---还原
+                ---reduction
               --  if #self.btnInsList>0 then
                     for key, ins in pairs(self.btnInsList) do
                         ins.prefab:SetActive(false)
@@ -105,7 +105,7 @@ function DetailGuidCtrl:updateItem(names)
       self:updateIntroduce(names,default)
 end
 
----刷新介绍
+---Refresh introduction
 function DetailGuidCtrl:updateIntroduce(topicName,mainName)
     local temp= GuidBookConfig[topicName]
     local num=1
@@ -113,7 +113,7 @@ function DetailGuidCtrl:updateIntroduce(topicName,mainName)
     local tempList1={}
     for name, content in pairs(temp) do
 
-        if mainName then--选择
+        if mainName then--select
             if name==mainName then
                 panel.detailText.text=GetLanguage(tonumber(mainName))
                 for key,string in pairs(content) do
@@ -147,7 +147,7 @@ function DetailGuidCtrl:updateIntroduce(topicName,mainName)
                     end
                     num=num+1
                 end
-                ---还原
+                ---reduction
                 --if #self.detailInsList>0 then
                     for i, ins in pairs(self.detailInsList) do
                         ins.prefab:SetActive(false)
